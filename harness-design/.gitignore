@@ -1,0 +1,45 @@
+# 项目根 .gitignore — 敏感文件 + 常见忽略
+
+# 敏感文件（禁止提交）
+.env
+.env.local
+.env.production
+.env.staging
+*.pem
+*.key
+id_rsa
+id_ed25519
+credentials.json
+service-account*.json
+
+# 依赖
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# 构建产物
+dist/
+build/
+.next/
+.nuxt/
+out/
+
+# 日志
+*.log
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# harness-design 安装/运行残留
+.workbuddy/
+.harness-design-tmp-*/
+
+# 系统
+.DS_Store
+Thumbs.db

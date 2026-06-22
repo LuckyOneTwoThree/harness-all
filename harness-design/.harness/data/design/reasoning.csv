@@ -1,0 +1,7 @@
+ui_category,recommended_pattern,style_priority,color_mood,typography_mood,key_effects,anti_patterns,decision_rules,severity
+SaaS Dashboard,data-dense-table,minimal+clean+functional,neutral+blue,inter+monospace,subtle-shadow+micro-interaction,heavy-gradient+3d-decoration,"{""if_data_heavy"":""increase-density"",""if_realtime"":""add-pulse-animation""}",HIGH
+E-commerce,hero-centric+product-grid,bold+vibrant+trust,warm+accent,display+body,hover-zoom+smooth-transition,cluttered-layout+hidden-cta,"{""if_luxury"":""switch-to-minimal"",""if_checkout"":""emphasize-trust-color""}",HIGH
+Fintech,trust-focused+data-visualization,clean+professional+secure,blue+green,inter+monospace,subtle-animation+loading-state,playful-color+emoji,"{""if_finance_data"":""use-green-red-semantic"",""if_payment"":""emphasize-security""}",CRITICAL
+Healthcare,calm+accessible+clean,soft+minimal+trustworthy,calm+green+blue,readable+medical,gentle-transition+clear-icon,aggressive-color+complex-animation,"{""if_patient_facing"":""increase-font-size"",""if_medical_data"":""use-semantic-color""}",HIGH
+Education,engaging+structured+friendly,friendly+modern+structured,warm+accent,rounded+readable,playful-micro-interaction+progress,corporate-cold+text-heavy,"{""if_k12"":""increase-playfulness"",""if_higher_ed"":""increase-density""}",MEDIUM
+Beauty/Spa,hero-centric+soft-ui,soft+elegant+calming,calming+gold+accent,serif+elegant,smooth-transition+subtle-glow,harsh-color+angular,"{""if_luxury"":""switch-to-liquid-glass"",""if_booking"":""emphasize-cta""}",MEDIUM

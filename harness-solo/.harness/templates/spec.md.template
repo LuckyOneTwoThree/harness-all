@@ -1,0 +1,39 @@
+# <功能名>
+
+> 来源：由 writing-plans skill 产出。
+> 加载时机：executing-plans / tdd / verify 读取。
+> 文件语义：覆盖写入（只保留最终通过的规格）。
+
+## 目标
+
+[一句话目标，来自 brainstorming]
+
+## 验收标准
+
+### 工程 AC（来自 pm-to-solo.md / brainstorming）
+
+- AC-001: [可测试的描述]
+- AC-002: [可测试的描述]
+- AC-003: [可测试的描述]
+
+### 设计 AC（来自 design-to-solo.md，如涉及前端）
+
+> DAC-xxx = Design-derived AC，沿用 design-to-solo.md 的 AC-xxx 编号，加 D 前缀区分来源。
+> 如无 design-to-solo.md，跳过本章节。
+
+- DAC-001: [设计可测试描述，如"对比度 ≥4.5:1"]
+- DAC-002: [设计可测试描述，如"375px 无溢出"]
+
+## 任务拆解
+
+- [ ] T1: [任务1，2-5 分钟能完成]
+- [ ] T2: [任务2]
+- [ ] T3: [任务3]
+
+## 技术方案
+
+[简要：改哪些文件、新增什么模块、关键设计决策]
+
+## 不做的事
+
+[明确边界，避免范围蔓延]

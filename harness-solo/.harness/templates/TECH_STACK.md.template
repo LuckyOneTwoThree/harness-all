@@ -1,0 +1,37 @@
+# 技术栈决策
+
+> 立项时填写。verify skill 跑测试时按本文件声明的命令执行。
+> 加载时机：brainstorming / writing-plans / verify 读取。
+
+## 语言与框架
+
+- 前端：[如 React + TypeScript + Vite]
+- 后端：[如 Node.js + Hono]
+- 测试：[如 Vitest]
+
+## 命令
+
+| 操作 | 命令 |
+|------|------|
+| 安装依赖 | `npm install` |
+| 运行测试 | `npm test` |
+| 类型检查 | `npm run typecheck` |
+| lint | `npm run lint` |
+| 构建 | `npm run build` |
+
+## 部署
+
+- 目标：[如 Cloudflare Workers / Vercel / 自托管]
+- 命令：`[部署命令]`
+
+## 数据库（如有）
+
+- 类型：[如 PostgreSQL / SQLite]
+- ORM：[如 Drizzle / Prisma]
+- 迁移工具：[如 drizzle-kit / prisma migrate]
+
+## 决策记录
+
+| 日期 | 决策 | 理由 |
+|------|------|------|
+| YYYY-MM-DD | [选型决策] | [为什么] |

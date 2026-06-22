@@ -1,0 +1,26 @@
+# ADR-NNN: <决策标题>
+
+> 来源：由 writing-documentation skill 产出。
+> 存放路径：docs/decisions/ADR-NNN-<short-title>.md
+> 编号规则：用 Glob 扫描 docs/decisions/ADR-*，取最大编号 +1
+
+## Status
+PROPOSED | ACCEPTED | SUPERSEDED by ADR-XXX | DEPRECATED
+
+## Date
+YYYY-MM-DD
+
+## Context
+[为什么需要做这个决策？当前面临什么问题？]
+
+## Decision
+[决定是什么？]
+
+## Alternatives Considered
+- 方案A：[描述] — 为什么没选
+- 方案B：[描述] — 为什么没选
+
+## Consequences
+- 正面：[好处]
+- 负面：[代价]
+- 风险：[需关注的点]

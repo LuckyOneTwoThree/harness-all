@@ -1,0 +1,125 @@
+# 设计系统配置
+
+> 立项时填写。design-system / design-token / component-design skill 维护。
+> 加载时机：design-brief / visual-design / interaction-design / verify 读取。
+
+## 色彩系统
+
+### 主色（Primary）
+
+| 令牌名 | HEX | RGB | 用途 | 对比度（白底） |
+|--------|-----|-----|------|---------------|
+| color-primary-500 | [#xxxxxx] | [rgb()] | 品牌主色 | [X:1] |
+| color-primary-600 | [#xxxxxx] | [rgb()] | 主色 hover | [X:1] |
+| color-primary-700 | [#xxxxxx] | [rgb()] | 主色 active | [X:1] |
+
+### 辅色（Secondary）
+
+| 令牌名 | HEX | RGB | 用途 | 对比度（白底） |
+|--------|-----|-----|------|---------------|
+| color-secondary-500 | [#xxxxxx] | [rgb()] | 辅助色 | [X:1] |
+
+### 中性色（Neutral）
+
+| 令牌名 | HEX | RGB | 用途 |
+|--------|-----|-----|------|
+| color-gray-100 | [#xxxxxx] | [rgb()] | 背景色 |
+| color-gray-500 | [#xxxxxx] | [rgb()] | 辅助文字 |
+| color-gray-900 | [#xxxxxx] | [rgb()] | 主文字 |
+
+### 语义色
+
+| 令牌名 | HEX | 用途 | 对比度（白底） |
+|--------|-----|------|---------------|
+| color-success | [#xxxxxx] | 成功 | [X:1] |
+| color-warning | [#xxxxxx] | 警告 | [X:1] |
+| color-error | [#xxxxxx] | 错误 | [X:1] |
+| color-info | [#xxxxxx] | 信息 | [X:1] |
+
+## 字体系统
+
+### 字体族
+
+| 令牌名 | 字体栈 | 用途 |
+|--------|--------|------|
+| font-family-sans | ["Inter", "Noto Sans SC", sans-serif] | 正文 |
+| font-family-mono | ["JetBrains Mono", monospace] | 代码 |
+
+### 字号阶梯
+
+| 令牌名 | 值 | 用途 |
+|--------|-----|------|
+| font-size-sm | [0.875rem] | 辅助文字 |
+| font-size-md | [1rem] | 正文 |
+| font-size-lg | [1.125rem] | 副标题 |
+| font-size-xl | [1.25rem] | 标题 |
+| font-size-2xl | [1.5rem] | 大标题 |
+
+### 字重
+
+| 令牌名 | 值 | 用途 |
+|--------|-----|------|
+| font-weight-regular | [400] | 正文 |
+| font-weight-medium | [500] | 强调 |
+| font-weight-bold | [700] | 标题 |
+
+### 行高
+
+| 令牌名 | 值 | 用途 |
+|--------|-----|------|
+| line-height-tight | [1.25] | 标题 |
+| line-height-normal | [1.5] | 正文 |
+| line-height-relaxed | [1.625] | 长文 |
+
+## 间距系统
+
+基准间距：[8px]
+
+| 令牌名 | 值 | 用途 |
+|--------|-----|------|
+| spacing-1 | [0.25rem / 4px] | 小间距 |
+| spacing-2 | [0.5rem / 8px] | 组件内 |
+| spacing-4 | [1rem / 16px] | 组件间 |
+| spacing-6 | [1.5rem / 24px] | 区块间 |
+| spacing-8 | [2rem / 32px] | 大区块间 |
+
+## 阴影系统
+
+| 令牌名 | 值 | 用途 |
+|--------|-----|------|
+| shadow-sm | [0 1px 2px rgba(0,0,0,0.05)] | 轻微 |
+| shadow-md | [0 4px 6px rgba(0,0,0,0.1)] | 卡片 |
+| shadow-lg | [0 10px 15px rgba(0,0,0,0.1)] | 悬浮 |
+
+## 圆角系统
+
+| 令牌名 | 值 | 用途 |
+|--------|-----|------|
+| radius-sm | [0.25rem / 4px] | 小圆角 |
+| radius-md | [0.5rem / 8px] | 中圆角 |
+| radius-lg | [1rem / 16px] | 大圆角 |
+| radius-full | [9999px] | 圆形 |
+
+## 断点系统
+
+| 令牌名 | 值 | 目标设备 |
+|--------|-----|---------|
+| breakpoint-sm | [640px] | 大手机/小平板竖屏 |
+| breakpoint-md | [768px] | 平板竖屏 |
+| breakpoint-lg | [1024px] | 平板横屏/小桌面 |
+| breakpoint-xl | [1280px] | 桌面 |
+| breakpoint-2xl | [1536px] | 大桌面 |
+
+## 可访问性合规
+
+- [ ] 所有文字对比度 ≥ 4.5:1（AA）
+- [ ] 大文字对比度 ≥ 3:1（AA）
+- [ ] 正文字号 ≥ 16px
+- [ ] 行高 ≥ 1.5
+- [ ] 触摸目标 ≥ 44px
+
+## 决策记录
+
+| 日期 | 决策 | 理由 |
+|------|------|------|
+| YYYY-MM-DD | [选型决策] | [为什么] |

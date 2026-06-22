@@ -1,0 +1,7 @@
+pattern_name,section_order,primary_cta_placement,color_strategy,recommended_effects,conversion_optimization
+Hero-Centric+Feature-Grid,"Hero+Features+Social-Proof+Pricing+CTA+Footer",Hero-bottom+Sticky-top,Accent-on-CTA,smooth-scroll+hover-lift,Single-CTA+social-proof-above-fold
+Hero-Centric+Product-Grid,"Hero+Categories+Products+Testimonial+Newsletter+Footer",Hero-bottom+Product-card,Warm-primary+Accent-on-sale,hover-zoom+quick-view,Category-filter+product-visibility
+Trust-Focused+Data-Viz,"Hero+Trust-Badge+Data-Viz+Features+Testimonial+CTA+Footer",Hero-bottom+Data-CTA,Blue-primary+Green-semantic,chart-animation+counter-up,Trust-badge-prominent+data-driven
+Calm+Accessible,"Hero+Services+About+Testimonial+Contact+Footer",Hero-bottom+Contact,Calming-primary+soft-accent,gentle-fade+smooth-scroll,Accessible-form+clear-hierarchy
+Feature-Grid+Testimonial,"Hero+Feature-Grid+Testimonial+Pricing+CTA+Footer",Hero-bottom+Pricing-CTA,Warm-primary+accent-on-feature,hover-lift+smooth-scroll,Feature-comparison+testimonial-prominent
+Hero-Centric+Service-Menu,"Hero+Services+Pricing+About+Booking+Footer",Hero-bottom+Booking,Calming-primary+gold-accent,smooth-transition+subtle-glow,Booking-prominent+service-clarity

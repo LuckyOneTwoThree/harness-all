@@ -1,0 +1,11 @@
+category,issue,platform,description,do,dont,severity
+Animation,Loading State,Web+Mobile,Show loading state within 200ms,Use skeleton screen or spinner,Show blank screen or freeze,HIGH
+Accessibility,Contrast,Web+Mobile,Text contrast must meet WCAG AA,Use 4.5:1 for normal text,Use 3:1 for normal text,CRITICAL
+Accessibility,Touch Target,Mobile,Touch targets must be ≥44pt,Use 44x44pt minimum,Use smaller targets,HIGH
+Interaction,Hover State,Web,Interactive elements need hover state,Use subtle color/elevation change,Use no hover feedback,MEDIUM
+Layout,Spacing,Web+Mobile,Use consistent spacing scale,Use 4/8dp grid,Use arbitrary spacing,HIGH
+Layout,Alignment,Web+Mobile,Maintain visual alignment,Use grid system,Use manual alignment,MEDIUM
+Navigation,Breadcrumb,Web,Show breadcrumb for deep navigation,Show path hierarchy,Hide current page,MEDIUM
+Forms,Error Message,Web+Mobile,Show clear error messages,Use plain language+solution,Use technical jargon,HIGH
+Forms,Required Fields,Web+Mobile,Mark required fields clearly,Use asterisk+label,Use color only,MEDIUM
+Content,Empty State,Web+Mobile,Design meaningful empty states,Use illustration+action,Show blank screen,HIGH

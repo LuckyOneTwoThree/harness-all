@@ -1,0 +1,30 @@
+---
+name: skill-name                    # 必填，与目录名一致
+description: 一句话描述，用于 INDEX.md 引用  # 必填
+triggers:                           # 必填，什么时候用这个 skill
+  - 场景1
+  - 场景2
+reads:                              # 可选，依赖的文件（Agent 执行时自动拉取）
+  - rules/security.md
+  - loops/LOOP.md
+writes:                             # 可选，产出的文件（帮助 Agent 理解副作用）
+  - loops/specs/<task>/state.yaml
+---
+
+# Skill 标题
+
+## 铁律 / 核心原则
+[不可违反的规则，放在最前面，避免 lost-in-the-middle]
+
+## 流程
+1. 步骤1
+2. 步骤2
+3. 步骤3
+
+## 禁止事项
+- 不做X
+- 不做Y
+
+## 与 LOOP 的关系
+[对应 LOOP 的哪个阶段（PLAN/DESIGN/REVIEW），如何交互]
+[如果不在 LOOP 内，说明触发时机]

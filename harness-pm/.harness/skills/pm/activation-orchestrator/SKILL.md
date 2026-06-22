@@ -1,0 +1,143 @@
+---
+name: activation-orchestrator
+description: 当需要识别Aha Moment或设计Onboarding流程时使用。用户激活指挥官，调度activation-aha/onboarding。关键词：用户激活、Aha Moment、Onboarding、新用户引导、新手引导、激活率。
+metadata:
+  module: "产品增长与运营"
+  sub-module: "激活"
+  type: "orchestrator"
+  version: "7.0"
+  domain_tags: ["电商", "社交", "工具", "通用"]
+  trigger_examples:
+    - "找到Aha Moment"
+    - "设计新手引导流程"
+    - "提升用户激活率"
+    - "优化Onboarding"
+---
+
+# 用户激活指挥官
+
+## 核心原则
+
+**Aha Moment是用户留存的起点**
+
+用户激活的本质是帮助用户尽快到达Aha Moment——那个让用户感受到产品核心价值的瞬间。没有Aha Moment的激活只是流程完成，不是价值传递。
+
+## 编排理念
+
+1. **Aha Moment锚定Onboarding**：先识别Aha Moment，再以Aha Moment为终点设计Onboarding路径，确保引导有明确目标
+2. **数据从识别流向设计**：Aha Moment的到达率和路径数据直接驱动Onboarding的流程设计
+
+## 编排协议
+
+遵循 [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) 编排协议。
+
+## Pipeline
+
+```yaml
+pipeline: activation-orchestrator
+version: 7.0
+
+post_pipeline:
+  - action: stage-summary
+    output: output/phase-reports/activation-orchestrator.json
+
+stages:
+  - id: phase-1
+    name: "Aha Moment识别"
+    depends_on: []
+    skills: [activation-aha]
+    gate:
+      condition: "至少产出1个Aha Moment候选行为，含留存提升和到达率数据"
+      fail_action: "扩大行为搜索范围"
+
+  - id: phase-2
+    name: "Onboarding设计"
+    depends_on: [phase-1]
+    skills: [activation-onboarding]
+    gate:
+      condition: "各用户分群的Onboarding路径和内容已设计"
+      fail_action: "补充分群数据或延长分析周期"
+```
+
+## 阶段执行计划
+
+#### 调用 activation-aha
+
+```
+Skill: activation-aha
+输入:
+  retention_data: analysis-retention → retention_analysis.json
+  user_behavior_data: 用户提供
+  user_segment_data: 用户提供（可选）
+输出: docs/growth/growth-strategy.md（“Aha Moment”章节）
+验证: Aha候选通过相关性筛选（≥0.5）和显著性检验；到达率分析包含时间分布和路径分析；最短路径识别包含摩擦点分析；Onboarding优化建议可直接执行
+模式: 🤖→👤
+```
+
+#### 调用 activation-onboarding
+
+```
+Skill: activation-onboarding
+输入:
+  onboarding_data: 用户提供
+  aha_moment_data: docs/growth/growth-strategy.md（“Aha Moment”章节）
+  user_segment_data: 用户提供（可选）
+输出: docs/growth/growth-strategy.md（“Onboarding”章节）
+验证: Onboarding阶段定义完整（欢迎→激活完成）；流失分析覆盖各阶段和用户分群；个性化引导与用户分群匹配；A/B测试包含护栏指标（后续留存、付费转化）
+模式: 🤖→👤
+```
+
+### 阶段总结（post_pipeline）
+
+所有子Skill执行完成后，必须生成阶段总结文档，写入 `output/phase-reports/activation-orchestrator.json`，包含以下6项结构（均不可为空）：
+
+1. **执行概览**：编排器名称与版本、执行时间、子Skill执行状态（成功/失败/降级）
+2. **关键发现**：每个子Skill的核心输出摘要（1-3条）、跨子Skill的交叉洞察
+3. **决策记录**：人类决策点及决策结果、AI自动决策及依据
+4. **产出清单**：所有输出文件路径及内容摘要、产出质量评估（是否通过验证）
+5. **风险与待办**：未通过验证的项、降级执行的项、建议后续跟进的事项
+6. **下游衔接**：本编排器产出可被哪些下游编排器消费、推荐的下一步编排器
+
+| 参数 | 值 |
+|------|-----|
+| 子Skill输出路径 | docs/growth/ |
+| 总结输出路径 | output/phase-reports/activation-orchestrator.json |
+| 审批记录路径 | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
+
+下游衔接:
+  primary: retention-orchestrator（用户激活优化完成，防止用户流失）
+  alternatives:
+    - target: growth-orchestrator
+      reason: 激活不是当前瓶颈，回退到增长诊断重新评估
+      condition: 激活率优化效果不达预期或激活非当前最大瓶颈时
+    - target: experiment-orchestrator
+      reason: 激活策略需A/B测试验证
+      condition: Onboarding方案变更需量化验证时
+  special_cases:
+    - target: activation-aha
+      reason: 仅需识别Aha Moment，无需完整激活编排
+      condition: 已有Onboarding方案，仅需确认Aha Moment时
+
+## 阶段卡口
+
+| 卡口 | 条件 | 未通过处理 |
+|------|------|------------|
+| Aha Moment候选已识别 | activation-aha输出文件已生成且非空 | 扩大行为搜索范围 |
+| Onboarding策略已生成 | activation-onboarding输出文件已生成且非空 | 补充分群数据或延长分析周期 |
+| 阶段总结已生成 | output/phase-reports/activation-orchestrator.json 已生成且6项结构均非空 | 补充缺失结构项后重新生成 |
+
+## 人类决策点
+
+| 决策点 | 触发条件 | 决策内容 |
+|--------|----------|----------|
+| Aha Moment确认 | Aha Moment候选识别完成 | 确认主Aha Moment的选择和Onboarding路径设计 |
+
+## 异常处理
+
+| 异常类型 | 处理策略 |
+|----------|----------|
+| Aha Moment无候选通过筛选阈值 | 降低相关性阈值至0.3重新搜索；仍无结果则基于产品功能推断候选，标注"待数据验证" |
+| Onboarding数据完全缺失 | 基于Aha Moment数据设计通用Onboarding框架，标注"待Onboarding数据补充" |
+| 子Skill输出校验未通过 | 回退至当前阶段重新执行，最多重试1次；仍失败则标记异常并上报人类 |
+| 上下游数据格式不兼容 | 按下游子Skill输入Schema做字段映射和默认值填充，记录映射关系 |
+| 阶段总结生成失败 | 基于已完成的子Skill输出生成部分总结，缺失项标注"数据缺失"，不阻塞编排完成 |

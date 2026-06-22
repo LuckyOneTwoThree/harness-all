@@ -1,0 +1,44 @@
+# 运维变更单：[变更名称]
+
+> 存储在 `.harness/loops/specs/<task-name>/spec.md`。定义单次部署或运维变更的详细计划。
+
+## 1. 变更背景与目标（Context）
+
+- **触发源**：`[例如：来自 harness-solo 的 v2.3 版本交接单，或监控大盘显示的 DB 扩容需求]`
+- **变更内容摘要**：`[例如：将生产环境的 backend 服务从 3 个副本扩充到 5 个，并更新镜像标签为 v2.3]`
+- **预期影响**：`[例如：部署期间可能会有 2 秒的接口毛刺，不影响整体服务可用性]`
+
+## 2. 详细执行方案（Provision Plan）
+
+- **依赖项准备**：`[例如：需要先在配置中心新建两个变量 XXX 和 YYY]`
+- **执行命令与脚本**：
+  ```bash
+  # 例如：
+  kubectl set image deployment/backend backend=myregistry/backend:v2.3 -n production
+  ```
+
+## 3. 验证标准（Verification Metrics）
+
+- **核心验证指标（Primary Metric）**：`[例如：发布完成后，接口 /api/health 返回 200，且生产环境大盘 5xx 错误率为 0%]`
+- **护栏指标（Guardrail Metrics）**：`[例如：新版本 Pod 的 CPU 和内存占用不能比上个版本高出 20%]`
+- **验证手段**：`[例如：跑自动化的冒烟测试脚本，或查看 Grafana 上的实时曲线]`
+
+## 4. 失败回滚方案（Rollback Plan）
+
+- **触发回滚的阈值**：`[例如：部署后如果日志中连续出现数据库连接超时报错，或 P99 延迟超过 2 秒]`
+- **回滚操作指令**：
+  ```bash
+  # 例如：
+  kubectl rollout undo deployment/backend -n production
+  ```
+
+---
+
+## 5. 变更执行记录（Execution Log）
+
+| 迭代 | 时间 | 阶段 | 结果 | 关键日志/证据 |
+|-----|------|------|------|-------------|
+| 1 | 2026-XX-XX | PROVISION | 成功 | [镜像替换完成] |
+| 1 | 2026-XX-XX | VERIFY | 失败 | [新版本启动 OOM，触发回滚] |
+| 2 | 2026-XX-XX | PROVISION | 成功 | [增加内存 Limit 后重新发布] |
+| 2 | 2026-XX-XX | VERIFY | 成功 | [大盘指标正常，发布完成] |

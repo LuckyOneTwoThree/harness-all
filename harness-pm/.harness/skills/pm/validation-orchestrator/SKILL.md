@@ -1,0 +1,187 @@
+---
+name: validation-orchestrator
+description: 当需要验证产品方案时使用。方案验证子模块指挥官，调度子Skill：validation-assumption-map、validation-mvp、validation-experiment、validation-usability。关键词：方案验证、假设验证、MVP、可用性测试、实验设计、假设地图、风险评估、验证想法、最小可行产品。
+metadata:
+  module: "产品构思与设计"
+  sub-module: "方案验证"
+  type: "orchestrator"
+  version: "6.1"
+  domain_tags: ["通用"]
+  trigger_examples:
+    - "验证一下产品方案"
+    - "设计MVP范围"
+    - "做一下假设验证"
+    - "评估一下方案风险"
+---
+
+# 方案验证指挥官
+
+## 核心原则
+
+1. **验证的是假设不是方案**——用最小成本获取最大置信度，MVP的目标是学习而非交付
+2. **假设驱动验证顺序**——最大风险假设优先验证，验证结果决定方案走向
+3. **验证闭环必须完整**——假设→实验→数据→结论→决策，任何环节断裂都是浪费
+
+## 异常处理
+
+| 异常类型 | 处理策略 |
+|----------|----------|
+| 子Skill输出文件缺失 | 阻塞当前阶段，提示人类补充上游输入或提供替代数据 |
+| 假设地图功能点覆盖不全 | 标注缺失功能点，建议人类确认是否补充假设 |
+| MVP占比超过60% | 升级人类判断，输出裁剪建议，确认是否调整MVP范围 |
+| 实验方案无法满足统计显著性 | 降低置信水平或增加样本量，标注"统计功效不足" |
+| 可用性测试参与者不足5人 | 结果仅供参考，标注"样本量不足"，建议补充测试 |
+| 人类决策超时未响应 | 暂停编排流程，保留当前状态，等待人类决策后继续 |
+| 上下文接近上限 | 优先保留当前阶段内容，将已完成阶段的输出摘要为关键结论写入文件 |
+| 阶段总结生成失败 | 基于已完成的子Skill输出生成部分总结，缺失项标注"数据缺失"，不阻塞编排完成 |
+
+## 编排协议
+
+遵循 [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) 编排协议。
+
+## Pipeline
+
+```yaml
+pipeline: validation-orchestrator
+version: 6.1
+
+post_pipeline:
+  - action: stage-summary
+    output: output/phase-reports/validation-orchestrator.json
+
+stages:
+  - id: phase-1
+    name: "假设地图"
+    depends_on: []
+    skills: [validation-assumption-map]
+    gate:
+      condition: "最大风险假设已识别，每个功能点至少1个假设"
+      fail_action: "每个功能点至少1个假设，最大风险假设必须有验证计划"
+
+  - id: phase-2
+    name: "MVP范围界定"
+    depends_on: [phase-1]
+    skills: [validation-mvp]
+    gate:
+      condition: "MVP占比<60%，Must Have功能都有假设关联"
+      fail_action: "MVP占比>60%升级人类判断，确认是否调整"
+
+  - id: phase-3
+    name: "实验设计"
+    depends_on: [phase-1, phase-2]
+    skills: [validation-experiment]
+    gate:
+      condition: "实验方案人类已审核，含验证方法、样本量、时长、终止条件"
+      fail_action: "所有实验方案必须人类审核"
+
+  - id: phase-4
+    name: "可用性测试"
+    depends_on: [phase-1, phase-2, phase-3]  # phase-3 为条件依赖：当 phase-3 选择可用性测试时，phase-4 消费 phase-3 的方法选择
+    skills: [validation-usability]
+    gate:
+      condition: "问题严重程度分级合理（P0/P1/P2/P3），洞察与假设地图有对应关系"
+      fail_action: "测试执行必须由人类研究员主持"
+```
+
+## 阶段执行计划
+
+#### 调用 validation-assumption-map
+
+```
+Skill: validation-assumption-map
+输入:
+  design_output: 用户提供或 harness-design 产出（可选）
+  prd: docs/product/PRD.md
+输出: docs/product/PRD.md（“假设图”章节）
+验证: 最大风险假设已识别，每个功能点至少1个假设
+模式: 🤖
+```
+
+#### 调用 validation-mvp
+
+```
+Skill: validation-mvp
+输入:
+  design_output: 用户提供或 harness-design 产出（可选）
+  assumption_map: docs/product/PRD.md（“假设图”章节）
+  resource_constraints: 可选
+输出: docs/product/PRD.md（“MVP方案”章节）
+验证: MVP占比<60%，Must Have功能都有假设关联
+模式: 🤖→👤
+```
+
+#### 调用 validation-experiment
+
+```
+Skill: validation-experiment
+输入:
+  assumption_map: docs/product/PRD.md（“假设图”章节）
+  mvp_scope: docs/product/PRD.md（“MVP方案”章节）
+  traffic_data: 可选（可用流量/用户数据）
+输出: docs/metrics/experiment-report.md（“实验设计”章节）
+验证: 实验方案人类已审核，含验证方法、样本量、时长、终止条件
+模式: 🤖→👤
+```
+
+#### 调用 validation-usability
+
+```
+Skill: validation-usability
+输入:
+  test_plan: docs/product/PRD.md（“假设图”章节）
+  participants: 用户提供
+  test_scenarios: 用户提供或 harness-design 产出
+  experiment_method: docs/metrics/experiment-report.md（“实验设计”章节）
+输出: docs/product/PRD.md（“可用性测试”章节）
+验证: 问题严重程度分级合理（P0/P1/P2/P3），洞察与假设地图有对应关系
+模式: 👤→🤖
+```
+
+### 阶段总结（post_pipeline）
+
+所有子Skill执行完成后，必须生成阶段总结文档，写入 `output/phase-reports/validation-orchestrator.json`，包含以下6项结构（均不可为空）：
+
+1. **执行概览**：编排器名称与版本、执行时间、子Skill执行状态（成功/失败/降级）
+2. **关键发现**：每个子Skill的核心输出摘要（1-3条）、跨子Skill的交叉洞察
+3. **决策记录**：人类决策点及决策结果、AI自动决策及依据
+4. **产出清单**：所有输出文件路径及内容摘要、产出质量评估（是否通过验证）
+5. **风险与待办**：未通过验证的项、降级执行的项、建议后续跟进的事项
+6. **下游衔接**：本编排器产出可被哪些下游编排器消费、推荐的下一步编排器
+
+| 参数 | 值 |
+|------|-----|
+| 子Skill输出路径 | docs/product/ 与 docs/metrics/ |
+| 总结输出路径 | output/phase-reports/validation-orchestrator.json |
+| 审批记录路径 | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
+
+下游衔接:
+  primary: prd-orchestrator（方案验证完成，基于验证结论更新PRD）
+  alternatives:
+    - target: experiment-orchestrator
+      reason: 验证结论需A/B测试进一步确认
+      condition: 验证结果不确定（置信度<80%），需量化实验验证时
+    - target: ideation-workshop
+      reason: 验证否定当前方案，需重新创意发散
+      condition: MVP验证结论为否定，核心假设不成立时
+  special_cases:
+    - target: validation-usability
+      reason: 仅需可用性测试，无需完整验证流程
+      condition: 方案已通过假设验证，仅需用户体验测试时
+
+## 阶段卡口
+
+| 卡口 | 条件 | 未通过处理 |
+|------|------|------------|
+| 假设地图完成 | validation-assumption-map输出文件已生成且非空 | 每个功能点至少1个假设，最大风险假设必须有验证计划 |
+| MVP范围完成 | validation-mvp输出文件已生成且非空 | MVP占比>60%升级人类判断，确认是否调整 |
+| 实验设计完成 | 实验方案人类已审核 | 所有实验方案必须人类审核 |
+| 可用性测试完成 | validation-usability输出文件已生成且非空 | 测试执行必须由人类研究员主持 |
+| 阶段总结已生成 | output/phase-reports/validation-orchestrator.json 已生成且6项结构均非空 | 补充缺失结构项后重新生成 |
+
+## 人类决策点
+
+| 决策点 | 触发条件 | 决策内容 |
+|--------|----------|----------|
+| MVP范围确认 | MVP范围界定完成，MVP占比>60%或Must Have有争议 | 人类审批并决定最终MVP范围 |
+| 实验方案审核 | 实验方案设计完成 | 人类审核并批准实验方案 |
+| 验证结论决策 | 可用性测试完成，验证数据已整理 | 人类做最终产品方案决策 |

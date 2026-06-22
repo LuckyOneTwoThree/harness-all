@@ -1,0 +1,305 @@
+---
+name: growth-orchestrator
+description: 当需要制定增长策略或系统化推进增长时使用。增长策略总指挥官，先诊断增长模式，再按需调度获客/激活/留存/变现子编排器。关键词：增长策略、增长模式、AARRR、增长飞轮、增长体系、用户增长、增长瓶颈、增长诊断。
+metadata:
+  module: "产品增长与运营"
+  sub-module: "增长模式"
+  type: "orchestrator"
+  version: "8.0"
+  domain_tags: ["电商", "社交", "游戏", "教育", "通用"]
+  trigger_examples:
+    - "帮我制定增长策略"
+    - "用户增长遇到瓶颈"
+    - "诊断一下增长问题"
+    - "建立增长体系"
+---
+
+# 增长策略总指挥官
+
+## 核心原则
+
+**先诊断模式，再分发执行**
+
+增长不是盲目堆渠道，而是先搞清楚产品适合哪种增长模式，再把资源精准投入到最高杠杆的环节。增长模式决定了获客、激活、留存、变现的策略组合。
+
+## 编排理念
+
+1. **模式先行**：先诊断增长模式（PLG/SLG/MLG/混合），再决定各环节策略
+2. **杠杆优先**：基于飞轮模型识别当前最高杠杆环节，集中资源突破
+3. **数据驱动归因**：从增长模式到各环节全链路归因，量化每个动作的贡献
+4. **闭环迭代**：增长策略通过数据持续验证和迭代
+
+## 编排协议
+
+遵循 [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) 编排协议。
+
+## Pipeline
+
+```yaml
+pipeline: growth-orchestrator
+version: 8.0
+
+post_pipeline:
+  - action: stage-summary
+    output: output/phase-reports/growth-orchestrator.json
+
+stages:
+  - id: phase-1
+    name: "增长模式诊断"
+    depends_on: []
+    skills: [growth-model]
+    gate:
+      condition: "增长模式已确定，飞轮模型已构建"
+      fail_action: "补充产品特征和用户数据"
+
+  - id: phase-2
+    name: "获客优化"
+    depends_on: [phase-1]
+    skills: [acquisition-orchestrator]
+    trigger: growth-model输出中 bottleneck == "acquisition" 或获客转化率低于行业基准50%
+    gate:
+      condition: "渠道评估完成且漏斗优化方案已生成"
+      fail_action: "补充缺失渠道数据或延长分析周期"
+
+  - id: phase-3
+    name: "激活优化"
+    depends_on: [phase-1]
+    skills: [activation-orchestrator]
+    trigger: growth-model输出中 bottleneck == "activation" 或激活率低于40%
+    gate:
+      condition: "Aha Moment候选已识别且Onboarding策略已生成"
+      fail_action: "扩大行为搜索范围或补充分群数据"
+
+  - id: phase-4
+    name: "留存优化"
+    depends_on: [phase-1]
+    skills: [retention-orchestrator]
+    trigger: growth-model输出中 bottleneck == "retention" 或7日留存率低于20%
+    gate:
+      condition: "流失预警模型已构建且用户分层已完成"
+      fail_action: "优化模型或补充训练数据"
+
+  - id: phase-5
+    name: "变现优化"
+    depends_on: [phase-1]
+    skills: [revenue-orchestrator]
+    trigger: growth-model输出中 bottleneck == "revenue" 或付费转化率低于2%
+    gate:
+      condition: "付费漏斗分析完成且NRR追踪已建立"
+      fail_action: "补充漏斗步骤定义或数据"
+
+  - id: phase-6
+    name: "增长策略报告"
+    depends_on: [phase-1, phase-2, phase-3, phase-4, phase-5]
+    skills: [growth-strategy-report]
+    gate:
+      condition: "增长策略报告经人类确认"
+      fail_action: "调整策略方向和执行路线图"
+
+  - id: phase-7
+    name: "GTM策略"
+    depends_on: [phase-1]
+    skills: [gtm-strategy]
+    trigger: 新产品上市/市场拓展
+    gate:
+      condition: "GTM策略经人类确认"
+      fail_action: "确认上市路径和渠道策略"
+
+  - id: phase-8
+    name: "运营手册"
+    depends_on: [phase-1]
+    skills: [product-operations-manual]
+    trigger: 运营手册制定需求
+    gate:
+      condition: "运营手册经人类确认"
+      fail_action: "确认运营SOP和应急流程"
+```
+
+## 阶段执行计划
+
+### 阶段1：增长模式诊断
+
+#### 调用 growth-model
+
+```
+Skill: growth-model
+输入:
+  product_features: 用户提供（产品特征）
+  user_data: analysis-retention → retention_analysis.json
+  business_model: 用户提供（商业模式）
+输出: docs/growth/growth-strategy.md（“增长模型”章节）
+验证: 北极星指标与≥1个OKR Objective直接关联；增长模型包含≥3个可量化变量；增长飞轮包含≥4个节点且形成闭环；瓶颈约束识别≤5个，每个有量化影响评估
+模式: 🤖→👤
+```
+
+### 阶段2：瓶颈环节优化（条件分支）
+
+根据阶段1诊断的瓶颈环节，调度对应的子编排器。
+
+#### 调用 acquisition-orchestrator
+
+```
+Skill: acquisition-orchestrator
+输入:
+  growth_model: docs/growth/growth-strategy.md（“增长模型”章节）
+  channel_data: 用户提供
+  funnel_data: 用户提供
+输出: docs/growth/growth-strategy.md（“获客分析”章节）
+验证: 渠道评估覆盖19种渠道；获客漏斗各层转化分析完成，优化建议已输出
+模式: 🤖→👤
+```
+
+#### 调用 activation-orchestrator
+
+```
+Skill: activation-orchestrator
+输入:
+  growth_model: docs/growth/growth-strategy.md（“增长模型”章节）
+  user_behavior_data: 用户提供
+  retention_data: analysis-retention → retention_analysis.json
+输出: docs/growth/growth-strategy.md（“Aha Moment”章节）
+验证: Aha Moment候选已识别；Onboarding策略已生成
+模式: 🤖→👤
+```
+
+#### 调用 retention-orchestrator
+
+```
+Skill: retention-orchestrator
+输入:
+  growth_model: docs/growth/growth-strategy.md（“增长模型”章节）
+  user_behavior_data: 用户提供
+  churn_history: 用户提供（流失历史数据）
+输出: docs/growth/growth-strategy.md（“留存管理”章节）
+验证: 流失预警模型已构建；用户分层已完成
+模式: 🤖→👤
+```
+
+#### 调用 revenue-orchestrator
+
+```
+Skill: revenue-orchestrator
+输入:
+  growth_model: docs/growth/growth-strategy.md（“增长模型”章节）
+  payment_funnel_data: 用户提供（付费漏斗数据）
+  revenue_data: 用户提供（收入数据）
+输出: docs/growth/growth-strategy.md（“收入漏斗”章节）
+验证: 付费漏斗分析完成；NRR追踪已建立
+模式: 🤖→👤
+```
+
+> **多瓶颈场景**：若多个环节均为瓶颈，按飞轮顺序依次调度子编排器（获客→激活→留存→变现）。
+
+### 阶段3：增长策略报告
+
+#### 调用 growth-strategy-report
+
+```
+Skill: growth-strategy-report
+输入:
+  growth_model: docs/growth/growth-strategy.md（“增长模型”章节）
+  acquisition_plan: docs/growth/growth-strategy.md（“获客分析”章节）
+  activation_plan: docs/growth/growth-strategy.md（“Aha Moment”章节）
+  retention_plan: docs/growth/growth-strategy.md（“留存管理”章节）
+  revenue_plan: docs/growth/growth-strategy.md（“收入漏斗”章节）
+  business_goal: 用户提供（可选）
+输出: docs/growth/growth-strategy.md（汇总覆盖）
+验证: 飞轮模型完整性（至少3个节点+2条因果关系）；策略与瓶颈一致；路线图可执行；漏斗数据完整（AARRR至少3个环节有数据）
+模式: 🤖→👤
+```
+
+### 附加阶段（按需触发）
+
+#### 调用 gtm-strategy
+
+```
+Skill: gtm-strategy
+输入:
+  positioning: positioning-strategy（可选）
+  business_model: business-model-canvas（可选）
+  pricing: business-pricing（可选）
+  growth_model: docs/growth/growth-strategy.md（“增长模型”章节）
+  product_info: 用户提供
+输出: docs/growth/gtm.md
+验证: ICP画像具体（至少包含行业、规模、角色3个维度）；上市路径有依据；渠道预算可执行；成功指标可量化
+模式: 🤖→👤
+```
+
+#### 调用 product-operations-manual
+
+```
+Skill: product-operations-manual
+输入:
+  growth_model: docs/growth/growth-strategy.md（“增长模型”章节）
+  activation_strategy: docs/growth/growth-strategy.md（“Onboarding”章节）
+  retention_strategy: docs/growth/growth-strategy.md（“留存管理”章节）
+  revenue_strategy: docs/growth/growth-strategy.md（“收入漏斗”章节）
+  product_info: 用户提供
+输出: docs/growth/operations-manual.md
+验证: SOP可执行；分层策略完整（至少覆盖新/活跃/沉默/流失4类用户）；应急流程可操作（P0-P3均有响应SLA和升级路径）；模板可直接使用
+模式: 🤖→👤
+```
+
+### 阶段总结（post_pipeline）
+
+> 本总结是面向编排器的执行审计日志，记录子Skill执行状态和交叉洞察，不重复 growth-strategy-report 的策略内容。
+
+所有子Skill执行完成后，必须生成阶段总结文档，写入 `output/phase-reports/growth-orchestrator.json`，包含以下6项结构（均不可为空）：
+
+1. **执行概览**：编排器名称与版本、执行时间、子Skill执行状态（成功/失败/降级）
+2. **关键发现**：每个子Skill的核心输出摘要（1-3条）、跨子Skill的交叉洞察
+3. **决策记录**：人类决策点及决策结果、AI自动决策及依据
+4. **产出清单**：所有输出文件路径及内容摘要、产出质量评估（是否通过验证）
+5. **风险与待办**：未通过验证的项、降级执行的项、建议后续跟进的事项
+6. **下游衔接**：本编排器产出可被哪些下游编排器消费、推荐的下一步编排器
+
+| 参数 | 值 |
+|------|-----|
+| 子Skill输出路径 | docs/growth/ |
+| 总结输出路径 | output/phase-reports/growth-orchestrator.json |
+| 审批记录路径 | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
+
+下游衔接:
+  primary: acquisition-orchestrator（增长策略制定完成，进入获客优化执行）
+  alternatives:
+    - target: experiment-orchestrator
+      reason: 增长方案需A/B测试验证效果
+      condition: 增长方案涉及重大策略变更需量化验证时
+    - target: release-orchestrator
+      reason: 增长方案已验证，直接全量发布
+      condition: 增长方案已有充分数据支撑，无需实验验证时
+    - target: growth-orchestrator
+      reason: 新产品需上市，进入GTM策略阶段（内部phase-7）
+      condition: 增长诊断结论为新产品需上市时
+  special_cases: []
+
+## 阶段卡口
+
+| 卡口 | 条件 | 未通过处理 |
+|------|------|------------|
+| 增长模式诊断完成 | growth-model输出文件已生成且非空 | 补充产品特征和用户数据 |
+| 瓶颈环节已识别 | growth-model输出文件已生成且非空 | 延长分析周期或扩大数据范围 |
+| 增长策略报告已确认 | 增长策略报告经人类确认 | 调整策略方向和执行路线图 |
+| 阶段总结已生成 | output/phase-reports/growth-orchestrator.json 已生成且6项结构均非空 | 补充缺失结构项后重新生成 |
+
+## 人类决策点
+
+| 决策点 | 触发条件 | 决策内容 |
+|--------|----------|----------|
+| 增长模式确认 | growth-model诊断完成 | 确认最终增长模式（PLG/SLG/MLG/混合） |
+| 瓶颈优先级确认 | 瓶颈环节识别完成 | 确认资源分配优先级 |
+| 飞轮模型确认 | 飞轮模型构建完成 | 确认飞轮节点和因果关系 |
+| 增长策略报告确认 | growth-strategy-report生成完成 | 确认策略方向和执行路线图 |
+| GTM策略确认 | gtm-strategy生成完成 | 确认上市路径和渠道策略 |
+| 运营手册确认 | product-operations-manual生成完成 | 确认运营SOP和应急流程 |
+
+## 异常处理
+
+| 异常类型 | 处理策略 |
+|----------|----------|
+| 增长模式诊断无法收敛（多种模式得分接近） | 标注为混合模式，列出各模式得分和依据，由人类决策确认 |
+| 子编排器执行超时或失败 | 跳过该瓶颈环节，继续执行其他瓶颈环节，最终报告中标注"该环节待补充" |
+| 多瓶颈场景下上下文溢出 | 按飞轮顺序仅执行最高优先级瓶颈，其余瓶颈记录待办，分批执行 |
+| 子Skill输出校验未通过 | 回退至当前阶段重新执行，最多重试1次；仍失败则标记异常并上报人类 |
+| 上下游数据格式不兼容 | 按下游子Skill输入Schema做字段映射和默认值填充，记录映射关系 |
+| 阶段总结生成失败 | 基于已完成的子Skill输出生成部分总结，缺失项标注"数据缺失"，不阻塞编排完成 |

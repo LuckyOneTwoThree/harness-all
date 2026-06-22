@@ -1,0 +1,7 @@
+product_type,primary,on_primary,secondary,accent,background,foreground,card,muted,border,destructive,ring,notes
+SaaS Analytics,#3B82F6,#FFFFFF,#64748B,#F59E0B,#FFFFFF,#0F172A,#F8FAFC,#64748B,#E2E8F0,#EF4444,#3B82F6,Blue primary+neutral surface
+E-commerce Store,#EA580C,#FFFFFF,#16A34A,#DC2626,#FFFBEB,#1C1917,#FFFFFF,#78716C,#E7E5E4,#DC2626,#EA580C,Warm primary+trust green
+Fintech App,#1E40AF,#FFFFFF,#059669,#DC2626,#F8FAFC,#0F172A,#FFFFFF,#64748B,#E2E8F0,#DC2626,#1E40AF,Trust blue+semantic green/red
+Healthcare Portal,#059669,#FFFFFF,#0EA5E9,#F59E0B,#F0FDFA,#0F172A,#FFFFFF,#64748B,#E2E8F0,#DC2626,#059669,Calm green+accessible
+Education Platform,#7C3AED,#FFFFFF,#F59E0B,#10B981,#FFFBEB,#1C1917,#FFFFFF,#78716C,#E7E5E4,#DC2626,#7C3AED,Engaging purple+warm
+Beauty Spa,#D4A574,#FFFFFF,#8B4513,#F5E6D3,#FDF8F3,#3D2914,#FFFAF5,#8B7355,#E8DDD0,#B85450,#D4A574,Warm gold+elegant brown

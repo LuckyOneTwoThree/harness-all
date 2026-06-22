@@ -1,0 +1,33 @@
+# harness-ops gitignore
+
+# 运维敏感文件（绝不提交）
+.env
+.env.*
+*.pem
+*.key
+kubeconfig
+credentials.json
+*.tfvars
+!*.tfvars.example
+
+# Terraform 状态
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Ansible vault
+*.vault
+
+# 临时文件
+.harness-ops-tmp-*/
+*.tmp
+*.bak
+
+# 归档与日志
+.harness/memory/archives/
+*.log
+
+# 系统文件
+.DS_Store
+Thumbs.db

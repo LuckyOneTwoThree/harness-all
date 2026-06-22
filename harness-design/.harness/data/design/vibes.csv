@@ -1,0 +1,9 @@
+vibe_keywords,style_direction,color_palette,typography,radius,shadow,texture
+"温暖,复古,小众",editorial-vintage,"#D4A574/#8B4513/#F5E6D3","Cormorant Garamond+Lora",2-4px,none,paper
+"极简,现代,克制",minimal-clean,"#000000/#FFFFFF/#F5F5F5","Inter+JetBrains Mono",0px,none,flat
+"大胆,活泼,年轻",bold-playful,"#FF6B6B/#4ECDC4/#FFE66D","Space Grotesk+Inter",8-16px,medium,gradient
+"优雅,精致,高端",elegant-sophisticated,"#1C1917/#FAFAF9/#D4A574","Playfair Display+Source Sans 3",2px,subtle,matte
+"柔和,治愈,自然",soft-calming,"#F0FDFA/#059669/#FFFFFF","Lora+Source Sans 3",8-12px,soft,organic
+"科技,未来,冷峻",tech-futuristic,"#0F172A/#3B82F6/#FFFFFF","JetBrains Mono+Inter",0-2px,glow,digital
+"商务,专业,可信",business-trust,"#1E40AF/#FFFFFF/#F8FAFC","Inter+Source Sans 3",4px,subtle,clean
+"童趣,可爱,友好",playful-cute,"#FF6B6B/#FFE66D/#4ECDC4","Quicksand+Nunito",12-24px,soft,rounded
