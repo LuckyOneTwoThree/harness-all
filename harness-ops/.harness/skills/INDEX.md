@@ -1,75 +1,75 @@
 # Skills Index — harness-ops
 
-> 纯索引，80 行内。需要选 Skill 时读此文件，然后读对应 SKILL.md。
-> 工作流编排见 `workflows/`。
+> Pure index, within 80 lines. Read this file when selecting a Skill, then read the corresponding SKILL.md.
+> For workflow orchestration, see `workflows/`.
 
-## Meta Skill（4 个，✅ 已建设）
+## Meta Skills (4, ✅ built)
 
-- **session-start** — 会话启动，加载上下文恢复工作状态
-- **session-end** — 会话收尾，归档 + 产出 ops-to-pm.md
-- **skill-maintenance** — skill 健康检查
-- **memory-maintenance** — memory retention 清理
+- **session-start** — Session startup, loads context and restores working state
+- **session-end** — Session wrap-up, archive + produce ops-to-pm.md
+- **skill-maintenance** — Skill health check
+- **memory-maintenance** — Memory retention cleanup
 
-## 模块1 部署交付（4 个，✅ 已建设）
+## Module 1 Deployment & Delivery (4, ✅ built)
 
-- **deployment-pipeline** — CI/CD 流水线编排与执行
-- **release-strategy** — 发布策略选择（蓝绿/灰度/滚动）
-- **rollback** — 回滚操作与验证
-- **deployment-verify** — 部署验证与健康检查
+- **deployment-pipeline** — CI/CD pipeline orchestration and execution
+- **release-strategy** — Release strategy selection (blue-green / canary / rolling)
+- **rollback** — Rollback operations and verification
+- **deployment-verify** — Deployment verification and health check
 
-## 模块2 基础设施（4 个，✅ 已建设）
+## Module 2 Infrastructure (4, ✅ built)
 
-- **infrastructure-as-code** — Terraform/Ansible IaC 管理
-- **kubernetes-manifest** — K8s YAML 生成与维护
-- **helm-management** — Helm chart 管理与维护
-- **gitops-sync** — ArgoCD/Flux GitOps 同步管理
+- **infrastructure-as-code** — Terraform/Ansible IaC management
+- **kubernetes-manifest** — K8s YAML generation and maintenance
+- **helm-management** — Helm chart management and maintenance
+- **gitops-sync** — ArgoCD/Flux GitOps sync management
 
-## 模块3 监控可观测（4 个，✅ 已建设）
+## Module 3 Monitoring & Observability (4, ✅ built)
 
-- **monitoring-setup** — Prometheus/Grafana 监控体系部署
-- **alerting-rules** — 告警规则生成与调优
-- **log-analysis** — 日志查询与分析（LogQL/ES DSL）
-- **dashboard-design** — Grafana Dashboard 生成
+- **monitoring-setup** — Prometheus/Grafana monitoring stack deployment
+- **alerting-rules** — Alert rule generation and tuning
+- **log-analysis** — Log query and analysis (LogQL/ES DSL)
+- **dashboard-design** — Grafana Dashboard generation
 
-## 模块4 故障响应（4 个，✅ 已建设）
+## Module 4 Incident Response (4, ✅ built)
 
-- **incident-detection** — 故障检测与分类
-- **root-cause-analysis** — 根因分析（多源数据关联）
-- **incident-mitigation** — 故障止血（白名单操作）
-- **post-mortem** — 事后复盘报告
+- **incident-detection** — Incident detection and classification
+- **root-cause-analysis** — Root cause analysis (multi-source data correlation)
+- **incident-mitigation** — Incident mitigation (whitelisted operations)
+- **post-mortem** — Post-mortem report
 
-## 模块5 安全合规（4 个，✅ 已建设）
+## Module 5 Security & Compliance (4, ✅ built)
 
-- **secret-management** — Secret 引用管理（不接触明文）
-- **policy-as-code** — Kyverno 策略生成
-- **security-scan** — Trivy/kube-bench 安全扫描
-- **audit-review** — 审计日志分析
+- **secret-management** — Secret reference management (no contact with plaintext)
+- **policy-as-code** — Kyverno policy generation
+- **security-scan** — Trivy/kube-bench security scanning
+- **audit-review** — Audit log analysis
 
-## 模块6 容量成本（3 个，✅ 已建设）
+## Module 6 Capacity & Cost (3, ✅ built)
 
-- **resource-right-sizing** — 资源右 sizing 建议
-- **cost-analysis** — 云成本分析与优化
-- **capacity-planning** — 容量规划建议
+- **resource-right-sizing** — Resource right-sizing recommendations
+- **cost-analysis** — Cloud cost analysis and optimization
+- **capacity-planning** — Capacity planning recommendations
 
-## 模块7 容灾备份（3 个，✅ 已建设）
+## Module 7 Disaster Recovery & Backup (3, ✅ built)
 
-- **backup-management** — Velero 备份管理
-- **recovery-drill** — 恢复演练
-- **disaster-recovery-plan** — 容灾预案设计
+- **backup-management** — Velero backup management
+- **recovery-drill** — Recovery drill
+- **disaster-recovery-plan** — Disaster recovery plan design
 
-## 模块8 运维审查（2 个，✅ 已建设）
+## Module 8 Ops Review (2, ✅ built)
 
-- **ops-review** — 运维回顾报告 + 产出 ops-to-pm.md
-- **sla-report** — SLA 计算与报告
+- **ops-review** — Ops review report + produce ops-to-pm.md
+- **sla-report** — SLA calculation and reporting
 
-## 工作流（7 个，✅ 全部已建设）
+## Workflows (7, ✅ all built)
 
-> `default_mode`：deep=强制探索 / standard=模块边界暂停 / skip=直接执行（用户可随时切换）
+> `default_mode`: deep = forced exploration / standard = pause at module boundaries / skip = direct execution (user can switch at any time)
 
-- **deployment-workflow** — 部署全流程 [skip]
-- **incident-response-workflow** — 故障响应全流程 [skip]
-- **infrastructure-setup-workflow** — 基础设施搭建 [deep]
-- **monitoring-deployment-workflow** — 监控体系部署 [standard]
-- **security-audit-workflow** — 安全审计 [deep]
-- **disaster-recovery-workflow** — 容灾演练 [skip]
-- **ops-review-workflow** — 运维回顾 [skip]
+- **deployment-workflow** — Full deployment workflow [skip]
+- **incident-response-workflow** — Full incident response workflow [skip]
+- **infrastructure-setup-workflow** — Infrastructure setup [deep]
+- **monitoring-deployment-workflow** — Monitoring stack deployment [standard]
+- **security-audit-workflow** — Security audit [deep]
+- **disaster-recovery-workflow** — Disaster recovery drill [skip]
+- **ops-review-workflow** — Ops review [skip]

@@ -1,10 +1,10 @@
 ---
 name: keyword-research
-description: 关键词研究，含种子词扩展/意图分类/难度评估/优先级排序
+description: Keyword research, including seed word expansion / intent classification / difficulty assessment / priority ranking
 triggers:
-  - 需要做SEO但没有关键词清单时
-  - SEO优化Loop的PLAN阶段
-  - 用户要求"研究关键词"
+  - When SEO is needed but there's no keyword list
+  - PLAN phase of the SEO optimization Loop
+  - User asks to "research keywords"
 reads:
   - memory/knowledge-base.md
   - docs/handoff/pm-to-growth.md
@@ -15,74 +15,74 @@ quality_gates: []
 max_iterations: 2
 ---
 
-# Keyword Research — 关键词研究
+# Keyword Research — Keyword Research
 
-## 铁律
-- 关键词必须按**搜索意图**分类（信息/导航/交易），不同意图对应不同内容形态
-- 必须查知识库的"SEO 资产库"，避免重复已优化的关键词
-- 难度评估必须基于数据（搜索量/竞品数/SERP 权威度），不拍脑袋
+## Iron Rules
+- Keywords must be classified by **search intent** (informational / navigational / transactional); different intents map to different content forms
+- Must check the "SEO asset library" in the knowledge base to avoid repeating already-optimized keywords
+- Difficulty assessment must be based on data (search volume / competitor count / SERP authority), not gut feeling
 
-## 流程
+## Process
 
-1. **收集种子词**
-   - 从业务核心词根扩展（产品名/功能名/行业术语/用户痛点词）
-   - 读取 `docs/handoff/pm-to-growth.md`（如有）获取产品定位和目标受众
-   - 读取知识库的"SEO 资产库"，排除已优化的关键词
-   - 从用户反馈/客服记录中挖掘长尾词
+1. **Collect seed words**
+   - Expand from business core word roots (product names / feature names / industry terms / user pain-point words)
+   - Read `docs/handoff/pm-to-growth.md` (if available) to get product positioning and target audience
+   - Read the "SEO asset library" in the knowledge base to exclude already-optimized keywords
+   - Mine long-tail words from user feedback / customer service records
 
-2. **关键词扩展**
-   - 使用关键词扩展方法：
-     - 同义词/近义词扩展
-     - 长尾扩展（how to / what is / best / vs / alternatives）
-     - 问题型扩展（为什么/如何/什么是）
-     - 修饰词扩展（2026/免费/工具/教程）
-   - 目标：每个种子词扩展 10-20 个相关词
+2. **Keyword expansion**
+   - Use keyword expansion methods:
+     - Synonym / near-synonym expansion
+     - Long-tail expansion (how to / what is / best / vs / alternatives)
+     - Question-type expansion (why / how / what is)
+     - Modifier expansion (2026 / free / tool / tutorial)
+   - Goal: expand 10-20 related words per seed word
 
-3. **搜索意图分类**
-   | 意图类型 | 特征词 | 对应内容形态 |
-   |---------|--------|-------------|
-   | 信息型 | how/what/why/教程/指南 | 博客长文/FAQ |
-   | 导航型 | 品牌名/产品名 | 官网/落地页 |
-   | 交易型 | best/compare/buy/price | 对比文/购买指南 |
-   | 本地型 | near me/城市名 | 本地落地页 |
+3. **Search intent classification**
+   | Intent type | Characteristic words | Corresponding content form |
+   |-------------|----------------------|----------------------------|
+   | Informational | how/what/why/tutorial/guide | Blog long-form / FAQ |
+   | Navigational | brand name / product name | Official site / landing page |
+   | Transactional | best/compare/buy/price | Comparison article / buying guide |
+   | Local | near me / city name | Local landing page |
 
-4. **难度评估**
-   对每个关键词评估：
-   - **搜索量**：月搜索量（高/中/低）
-   - **竞争度**：SERP Top10 的域名权威度
-   - **CPC**：商业价值参考（高 CPC = 高商业意图）
-   - **趋势**：搜索趋势（上升/稳定/下降）
+4. **Difficulty assessment**
+   For each keyword, assess:
+   - **Search volume**: monthly search volume (high / medium / low)
+   - **Competition**: domain authority of SERP Top 10
+   - **CPC**: commercial value reference (high CPC = high commercial intent)
+   - **Trend**: search trend (rising / stable / declining)
 
-5. **优先级排序**
-   关键词优先级 = 搜索量 × 商业价值 × (1 / 难度)
+5. **Priority ranking**
+   Keyword priority = search volume × business value × (1 / difficulty)
 
    ```
-   | 关键词 | 意图 | 月搜索量 | 难度 | CPC | 优先级 | 目标页面 | 内容形态 |
-   |--------|------|---------|------|-----|--------|---------|---------|
-   | how to do X | 信息 | 1200 | 中 | $2.5 | 高 | /blog/how-to-x | 长文 |
-   | X vs Y | 交易 | 800 | 低 | $5.0 | 高 | /blog/x-vs-y | 对比 |
+   | Keyword | Intent | Monthly volume | Difficulty | CPC | Priority | Target page | Content form |
+   |---------|--------|----------------|------------|-----|----------|-------------|--------------|
+   | how to do X | Informational | 1200 | Medium | $2.5 | High | /blog/how-to-x | Long-form |
+   | X vs Y | Transactional | 800 | Low | $5.0 | High | /blog/x-vs-y | Comparison |
    ```
 
-6. **写入关键词研究报告**
-   产出 `docs/seo/keyword-research.md`，含：
-   - 种子词清单
-   - 扩展关键词全表
-   - 意图分类统计
-   - 优先级排序 Top 20
-   - 内容规划建议（每个高优关键词对应什么内容）
+6. **Write the keyword research report**
+   Produce `docs/seo/keyword-research.md`, including:
+   - Seed word list
+   - Full expanded keyword table
+   - Intent classification stats
+   - Top 20 priority ranking
+   - Content planning recommendations (what content each high-priority keyword maps to)
 
-7. **更新知识库**
-   将高优关键词写入 `memory/knowledge-base.md` 的"SEO 资产库"（状态标为"待优化"）
+7. **Update knowledge base**
+   Write high-priority keywords to the "SEO asset library" in `memory/knowledge-base.md` (status marked "to be optimized")
 
-## 禁止事项
-- 不选与业务无关的高搜索量词（有流量无转化）
-- 不忽视长尾词（长尾词难度低、意图明确、转化率高）
-- 不重复已优化的关键词（查 SEO 资产库）
-- 不只看搜索量不看难度（高搜索量+高难度=短期内无法排名）
+## Prohibitions
+- Don't pick high-volume keywords unrelated to the business (traffic without conversion)
+- Don't ignore long-tail words (long-tail words have low difficulty, clear intent, high conversion rate)
+- Don't repeat already-optimized keywords (check the SEO asset library)
+- Don't look only at search volume and ignore difficulty (high volume + high difficulty = can't rank in the short term)
 
-## 与 LOOP 的关系
-本 skill 在 LOOP(seo) 的 **PLAN 阶段**执行。
+## Relationship to LOOP
+This skill runs in the **PLAN phase** of LOOP(seo).
 PLAN(keyword-research → serp-analysis → onpage-optimization) → EXPERIMENT → MEASURE
 
-## 与 Workflow 的关系
-本 skill 是 **seo-optimization-workflow** 的第 1 步。
+## Relationship to Workflow
+This skill is step 1 of **seo-optimization-workflow**.

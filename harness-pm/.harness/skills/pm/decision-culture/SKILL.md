@@ -1,21 +1,21 @@
 ---
 name: decision-culture
-description: 当需要推动团队数据驱动决策文化时使用。数据文化自动化，通过每日、每周、每月、每季的自动化报告体系，推动数据驱动决策文化的落地。确保团队始终基于数据做决策。关键词：数据文化、数据驱动、决策文化、数据素养、报告体系、让团队看数据做决定、培养数据习惯、定期发数据报告。
+description: Use when you need to drive a team's data-driven decision culture. Data culture automation, driving the implementation of data-driven decision culture through an automated reporting system of daily, weekly, monthly, and quarterly reports. Ensures the team always makes decisions based on data. Keywords: data culture, data-driven, decision culture, data literacy, reporting system, get teams to make decisions with data, build data habits, regular data report delivery.
 metadata:
-  module: "产品度量运营"
-  sub-module: "决策闭环"
+  module: "Product Metrics & Operations"
+  sub-module: "Decision Loop"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["通用"]
+  domain_tags: ["General"]
   trigger_examples:
-    - "团队不习惯看数据，怎么推动"
-    - "帮我建立数据驱动的文化"
-    - "设置定期的数据报告推送"
+    - "Team doesn't habitually look at data, how to drive change"
+    - "Help me build a data-driven culture"
+    - "Set up regular data report delivery"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "仅输出每日摘要和异常告警推送"
-  deep_description: "完整报告体系 + 数据素养评估 + 决策影响追踪 + 文化成熟度评分 + 改进路线图"
+  quick_description: "Only output daily summary and anomaly alert delivery"
+  deep_description: "Complete reporting system + data literacy assessment + decision impact tracking + culture maturity score + improvement roadmap"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -26,110 +26,110 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 数据文化自动化
+# Data Culture Automation
 
-## 核心原则
+## Core Principles
 
-1. **无异常不打扰**：报告的价值不在于数量而在于信噪比，噪音报告会杀死数据文化
-2. **节奏即习惯**：每日/每周/每月/每季的自动化节奏，让数据驱动从"要求"变成"习惯"
-3. **行动导向**：每份报告都要有明确的下一步，没有行动建议的报告是数据堆砌
-4. **度量决策规范**：所有决策必须遵循规范的决策流程，确保决策可追溯、可复盘
+1. **No disturbance without anomalies**: The value of reports lies in signal-to-noise ratio, not quantity; noisy reports kill data culture
+2. **Rhythm becomes habit**: Daily/weekly/monthly/quarterly automated rhythm transforms data-driven from "requirement" to "habit"
+3. **Action-oriented**: Every report must have clear next steps; reports without action recommendations are data dumps
+4. **Metrics-driven decision standards**: All decisions must follow a standardized decision process, ensuring decisions are traceable and reviewable
 
-## 度量决策规范
+## Metrics-driven Decision Standards
 
-### 决策类型与所需数据
+### Decision Types and Required Data
 
-| 决策类型 | 所需数据 | 数据来源 |
+| Decision Type | Required Data | Data Source |
 |---------|---------|---------|
-| 功能优先级调整 | 功能使用率、留存影响、ROI预估 | 数据分析平台、实验结果 |
-| 资源分配决策 | 各模块ROI、业务目标进度、瓶颈分析 | 财务数据、产品数据、工程数据 |
-| 发布时机决策 | 实验结果、当前指标状态、风险评估 | 实验平台、监控系统 |
-| 实验停止决策 | 统计显著性、p值、置信区间、业务影响 | 实验分析平台 |
+| Feature priority adjustment | Feature usage rate, retention impact, ROI estimate | Data analysis platform, experiment results |
+| Resource allocation decision | Module ROI, business objective progress, bottleneck analysis | Financial data, product data, engineering data |
+| Release timing decision | Experiment results, current metric status, risk assessment | Experiment platform, monitoring system |
+| Experiment stop decision | Statistical significance, p-value, confidence interval, business impact | Experiment analysis platform |
 
-### 决策流程
+### Decision Process
 
 ```
-1. 明确决策目标
-2. 收集所需数据
-3. 分析数据得出结论
-4. 评估备选方案
-5. 做出决策并记录
-6. 跟进决策结果并复盘
+1. Clarify the decision objective
+2. Collect required data
+3. Analyze data and draw conclusions
+4. Evaluate alternative options
+5. Make a decision and record it
+6. Follow up on decision results and review
 ```
 
-### 决策记录模板
+### Decision Record Template
 
 ```yaml
 decision_record:
   decision_id: "DEC-2024-001"
   decision_date: "2024-01-15"
   decision_maker: "Product Manager"
-  decision_context: "简化注册流程是否全量发布"
-  data_sources: ["实验结果", "功能数据", "用户反馈"]
-  key_insights: ["实验组转化率提升8.2%", "用户反馈正面", "无显著负面影响"]
-  decision: "全量发布"
-  rationale: "实验结果统计显著，用户反馈正面，风险可控"
-  expected_outcome: "整体转化率提升7-9%"
+  decision_context: "Whether to fully release the simplified registration flow"
+  data_sources: ["Experiment results", "Feature data", "User feedback"]
+  key_insights: ["Experimental group conversion rate improved 8.2%", "Positive user feedback", "No significant negative impact"]
+  decision: "Full release"
+  rationale: "Experiment results statistically significant, positive user feedback, controllable risk"
+  expected_outcome: "Overall conversion rate improvement 7-9%"
   follow_up_date: "2024-01-22"
 ```
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Input
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| OKR数据 | object | 是 | docs/metrics/decision-report.md（“DACE决策”章节） | 目标与关键结果、进度追踪数据 |
-| 决策记录 | object | 是 | docs/metrics/decision-report.md（“DACE决策”章节） | 团队历史决策及数据支撑情况 |
-| 团队反馈 | object | ○ | 用户提供 | 报告使用率、数据素养评估 |
+| OKR Data | object | Yes | docs/metrics/decision-report.md ("DACE Decisions" section) | Objectives and Key Results, progress tracking data |
+| Decision Records | object | Yes | docs/metrics/decision-report.md ("DACE Decisions" section) | Team historical decisions and data support status |
+| Team Feedback | object | ○ | User-provided | Report usage rate, data literacy assessment |
 
-## 执行步骤
+## Execution Steps
 
-### 执行节奏
+### Execution Rhythm
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                   数据文化节奏                            │
+│                   Data Culture Rhythm                     │
 ├─────────────────────────────────────────────────────────┤
 │                                                         │
-│  每日      异常检测 → 每日摘要（无异常不打扰）            │
+│  Daily      Anomaly detection → Daily summary (no disturbance without anomalies)  │
 │  │                                                        │
 │  ▼                                                        │
-│  每周      功能Review → 实验汇总 → 周度报告              │
+│  Weekly     Feature Review → Experiment summary → Weekly report  │
 │  │                                                        │
 │  ▼                                                        │
-│  每月      完整报告 → OKR追踪 → 月度Review               │
+│  Monthly    Complete report → OKR tracking → Monthly Review  │
 │  │                                                        │
 │  ▼                                                        │
-│  每季      指标体系复盘 → 战略Review（人类主导）         │
+│  Quarterly  Metrics system review → Strategic Review (human-led)  │
 │                                                         │
 └─────────────────────────────────────────────────────────┘
 ```
 
-### 每日节奏
+### Daily Rhythm
 
-#### 异常检测（自动） [核心]
+#### Anomaly Detection (Automated) [Core]
 
 ```
-每小时执行
-├── 核心指标健康检查
-├── 异常检测
-└── 如有异常：触发告警
+Executed hourly
+├── Core metrics health check
+├── Anomaly detection
+└── If anomaly detected: trigger alert
 ```
 
-#### 每日摘要（无异常不打扰） [核心]
+#### Daily Summary (No disturbance without anomalies) [Core]
 
 ```yaml
 daily_summary:
   generated_at: "2024-01-15T20:00:00Z"
   date: "2024-01-15"
   
-  # 状态
+  # Status
   status: "no_alerts"  # no_alerts / alerts_handled / critical
   
-  # 关键指标
+  # Key metrics
   key_metrics:
     dau:
       value: 10850000
@@ -148,48 +148,48 @@ daily_summary:
       vs_yesterday: +0.5%
       status: "healthy"
   
-  # 实验状态
+  # Experiment status
   experiments:
     running: 3
     summary:
       - id: "exp_001"
-        name: "简化注册流程"
+        name: "Simplified Registration Flow"
         day: 7
         current_lift: "+8.5%"
         status: "on_track"
         
       - id: "exp_002"
-        name: "新版首页"
+        name: "New Homepage"
         day: 4
         current_lift: "+2.1%"
         status: "monitoring"
         
       - id: "exp_003"
-        name: "新定价策略"
+        name: "New Pricing Strategy"
         day: 2
         current_lift: "+0.3%"
         status: "early_monitoring"
   
-  # 告警记录（如有）
+  # Alert records (if any)
   alerts:
     count: 0
     details: []
   
-  # 今日要点
+  # Today's highlights
   highlights:
-    - "所有核心指标正常，无告警"
-    - "简化注册实验进展顺利，预计提前完成"
-    - "今日无重大产品变更"
+    - "All core metrics normal, no alerts"
+    - "Simplified registration experiment progressing well, expected to complete early"
+    - "No major product changes today"
     
-  # 明日预告
+  # Tomorrow's preview
   tomorrow:
-    - "exp_001 预计达到统计显著性"
-    - "计划发布 v2.5.1 小版本"
+    - "exp_001 expected to reach statistical significance"
+    - "Planned release of v2.5.1 minor version"
 ```
 
-### 每周节奏
+### Weekly Rhythm
 
-#### 周一：功能Review [条件]
+#### Monday: Feature Review [Conditional]
 
 ```yaml
 weekly_feature_review:
@@ -197,7 +197,7 @@ weekly_feature_review:
   review_date: "2024-01-15"
   
   features_reviewed:
-    - feature: "简化注册流程"
+    - feature: "Simplified Registration Flow"
       release_date: "2024-01-08"
       status: "released"
       
@@ -208,9 +208,9 @@ weekly_feature_review:
           lift: +8.2%
         user_feedback: "positive"
         
-      verdict: "功能成功，维持现状"
+      verdict: "Feature successful, maintain current state"
       
-    - feature: "首页推荐优化"
+    - feature: "Homepage Recommendation Optimization"
       release_date: "2024-01-10"
       status: "monitoring"
       
@@ -220,10 +220,10 @@ weekly_feature_review:
           after: 0.128
           lift: +6.7%
           
-      verdict: "指标正向，继续监控2周"
+      verdict: "Metrics positive, continue monitoring for 2 weeks"
 ```
 
-#### 周中：实验汇总 [条件]
+#### Mid-week: Experiment Summary [Conditional]
 
 ```yaml
 weekly_experiment_summary:
@@ -237,27 +237,27 @@ weekly_experiment_summary:
     
     details:
       - id: "exp_reg_001"
-        name: "简化注册实验"
+        name: "Simplified Registration Experiment"
         result: "positive"
         lift: "+8.2%"
-        decision: "全量发布"
+        decision: "Full release"
         
       - id: "exp_pricing_001"
-        name: "新定价实验"
+        name: "New Pricing Experiment"
         result: "inconclusive"
         lift: "+2.1%"
-        decision: "继续实验"
+        decision: "Continue experiment"
         
   learnings:
-    - "简化操作步骤对转化有显著正向影响"
-    - "定价改动需要更长时间验证"
+    - "Simplifying operation steps has a significant positive impact on conversion"
+    - "Pricing changes require longer validation"
     
   recommendations:
-    - "继续简化产品核心流程"
-    - "定价类实验延长到3-4周"
+    - "Continue simplifying core product flows"
+    - "Extend pricing experiments to 3-4 weeks"
 ```
 
-#### 周五：周度报告 [条件]
+#### Friday: Weekly Report [Conditional]
 
 ```yaml
 weekly_report:
@@ -265,14 +265,14 @@ weekly_report:
   period: "2024-01-08 to 2024-01-14"
   generated_at: "2024-01-14T18:00:00Z"
   
-  # 执行摘要
+  # Executive summary
   executive_summary: |
-    本周整体表现良好。
-    - DAU较上周增长2.1%，达到1085万
-    - 注册转化率提升8.2%（实验组）
-    - 完成2个实验，1个正向，1个待定
+    Overall performance this week was good.
+    - DAU grew 2.1% vs. last week, reaching 10.85 million
+    - Registration conversion rate improved 8.2% (experimental group)
+    - Completed 2 experiments, 1 positive, 1 inconclusive
     
-  # OKR进度
+  # OKR progress
   okr_progress:
     obj_1_dau:
       target: 12000000
@@ -281,12 +281,12 @@ weekly_report:
       on_track: true
       
     obj_2_revenue:
-      target: 50000000  # 月度
-      current: 15500000  # 本月累计
+      target: 50000000  # Monthly
+      current: 15500000  # Month-to-date
       progress: 31%
       on_track: true
   
-  # 核心指标周报
+  # Core metrics weekly
   metrics_weekly:
     dau:
       this_week_avg: 10820000
@@ -303,72 +303,72 @@ weekly_report:
       last_week_avg: 1480000
       change: +5.4%
   
-  # 实验总结
+  # Experiment summary
   experiments:
     total: 5
     running: 3
     completed: 2
     positive_rate: 0.5
     
-  # 洞察与行动
+  # Insights and actions
   insights:
-    - "简化注册流程效果显著，建议扩展到其他注册场景"
-    - "iOS用户转化优于Android，需针对性优化"
+    - "Simplified registration flow effect is significant, recommend extending to other registration scenarios"
+    - "iOS user conversion outperforms Android, needs targeted optimization"
     
   actions_for_next_week:
-    - "全量发布简化注册流程"
-    - "启动Android注册流程优化实验"
-    - "新首页功能灰度测试"
+    - "Full release of simplified registration flow"
+    - "Launch Android registration flow optimization experiment"
+    - "New homepage feature grayscale testing"
 ```
 
-### 每月节奏
+### Monthly Rhythm
 
-#### 月度OKR追踪 [条件]
+#### Monthly OKR Tracking [Conditional]
 
 ```yaml
 monthly_okr_review:
   month: "2024-01"
   review_date: "2024-01-31"
   
-  # OKR状态
+  # OKR status
   objectives:
     - id: "obj_1"
-      text: "提升用户活跃度"
+      text: "Improve user engagement"
       progress: 72%
       status: "on_track"
       
       key_results:
-        - kr: "DAU达到1200万"
+        - kr: "DAU reaches 12 million"
           progress: 35%
-          assessment: "需要加速"
+          assessment: "Needs acceleration"
           
-        - kr: "D7留存达到30%"
+        - kr: "D7 retention reaches 30%"
           progress: 70%
-          assessment: "进展良好"
+          assessment: "Good progress"
           
     - id: "obj_2"
-      text: "提升商业化收入"
+      text: "Improve commercial revenue"
       progress: 65%
       status: "on_track"
       
       key_results:
-        - kr: "月收入达到5000万"
+        - kr: "Monthly revenue reaches 50 million"
           progress: 31%
-          assessment: "时间过半，任务完成31%，需关注"
+          assessment: "Half time passed, 31% completed, needs attention"
   
-  # 偏差分析
+  # Deviation analysis
   deviation_analysis:
-    - kr: "DAU目标"
+    - kr: "DAU target"
       gap: 1150000
       reasons:
-        - "新用户获取不及预期"
-        - "老用户流失率略高"
+        - "New user acquisition below expectations"
+        - "Existing user churn rate slightly high"
       recommendations:
-        - "加大渠道投放"
-        - "提升老用户召回"
+        - "Increase channel investment"
+        - "Improve existing user re-engagement"
 ```
 
-#### 月度完整报告 [条件]
+#### Monthly Complete Report [Conditional]
 
 ```yaml
 monthly_report:
@@ -376,11 +376,11 @@ monthly_report:
   generated_at: "2024-01-31T18:00:00Z"
   
   executive_summary: |
-    一月份整体表现符合预期。
-    DAU增长2.1%，注册转化提升8.2%。
-    重点功能简化注册流程已全量发布。
+    January overall performance met expectations.
+    DAU grew 2.1%, registration conversion improved 8.2%.
+    Key feature simplified registration flow has been fully released.
     
-  # 核心指标
+  # Core metrics
   core_metrics:
     dau:
       monthly_avg: 10750000
@@ -398,7 +398,7 @@ monthly_report:
       arpu: 4.35
       trend: "stable"
   
-  # 实验总结
+  # Experiment summary
   experiments:
     total_this_month: 8
     positive: 4
@@ -406,11 +406,11 @@ monthly_report:
     inconclusive: 2
     
     key_findings:
-      - "流程简化对转化有普遍正向影响"
-      - "个性化推荐效果显著"
-      - "定价策略需要更长时间验证"
+      - "Flow simplification has a broadly positive impact on conversion"
+      - "Personalized recommendations have significant effects"
+      - "Pricing strategy requires longer validation"
   
-  # 数据文化建设
+  # Data culture building
   data_culture:
     decisions_made: 15
     data_driven: 12
@@ -421,65 +421,65 @@ monthly_report:
       weekly_report_read_rate: 0.85
 ```
 
-### 每季节奏
+### Quarterly Rhythm
 
-#### 季度指标体系复盘 [深度]
+#### Quarterly Metrics System Review [Deep]
 
 ```yaml
 quarterly_metrics_review:
   quarter: "2024_Q1"
   
-  # 指标有效性
+  # Metric effectiveness
   metric_effectiveness:
     high_value:
-      - name: "注册转化率"
-        reason: "直接反映产品易用性"
+      - name: "Registration conversion rate"
+        reason: "Directly reflects product usability"
         
-      - name: "D7留存"
-        reason: "核心健康指标"
+      - name: "D7 retention"
+        reason: "Core health metric"
         
     low_value:
-      - name: "功能使用率"
-        reason: "定义模糊，需重新定义"
+      - name: "Feature usage rate"
+        reason: "Vague definition, needs redefinition"
         
-  # 调整建议
+  # Adjustment recommendations
   recommended_changes:
-    - action: "新增指标：核心动作完成率"
-      rationale: "更好地衡量用户价值"
+    - action: "Add metric: Core action completion rate"
+      rationale: "Better measure of user value"
       
-    - action: "调整权重：D7留存权重提高"
-      rationale: "更关注用户粘性"
+    - action: "Adjust weight: Increase D7 retention weight"
+      rationale: "Greater focus on user stickiness"
 ```
 
-#### 季度战略Review（人类主导） [深度]
+#### Quarterly Strategic Review (Human-led) [Deep]
 
 ```
-人类主导的季度Review
-├── 复盘Q1目标完成情况
-├── 制定Q2策略方向
-├── 调整OKR体系
-└── 确定重点实验
+Human-led quarterly review
+├── Review Q1 objective completion
+├── Set Q2 strategic direction
+├── Adjust OKR system
+└── Determine priority experiments
 ```
 
-## 自动化报告配置
+## Automated Report Configuration
 
 ```yaml
 automation_config:
-  # 每日报告
+  # Daily report
   daily:
     enabled: true
     time: "20:00"
     channels: ["slack", "email"]
     skip_if_no_alerts: true
     
-  # 每周报告
+  # Weekly report
   weekly:
     enabled: true
     day: "Friday"
     time: "18:00"
     channels: ["slack", "email", "wiki"]
     
-  # 每月报告
+  # Monthly report
   monthly:
     enabled: true
     day: "last_day"
@@ -487,136 +487,136 @@ automation_config:
     channels: ["email", "presentation"]
     include_okr_review: true
     
-  # 每季报告
+  # Quarterly report
   quarterly:
     enabled: true
     channels: ["presentation", "meeting"]
     human_dominated: true
 ```
 
-## 团队数据文化指标
+## Team Data Culture Metrics
 
 ```yaml
 data_culture_metrics:
-  # 决策质量
+  # Decision quality
   decision_quality:
     data_driven_decisions: 45
     total_decisions: 52
     rate: 0.87
     
-  # 报告使用
+  # Report usage
   report_usage:
     daily_summary_open: 0.95
     weekly_report_read: 0.88
     monthly_report_engagement: 0.75
     
-  # 实验文化
+  # Experimentation culture
   experimentation:
     experiments_per_month: 8
     experiment_decision_rate: 0.92
     fast_iteration_speed: "2 weeks avg"
     
-  # 数据素养
+  # Data literacy
   data_literacy:
     self_service_usage: 0.70
     sql_query_growth: "+20%"
 ```
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| report_type | string | 是 | 报告类型，枚举值：daily/weekly/monthly/quarterly |
-| report_date | string | 是 | 报告日期 |
-| key_metrics | array | 是 | 关键指标列表，至少1项 |
-| key_metrics[].name | string | 是 | 指标名称 |
-| key_metrics[].value | number | 是 | 当前值 |
-| key_metrics[].change | string | 是 | 变化趋势 |
-| key_metrics[].status | string | 是 | 状态，枚举值：healthy/warning/critical |
-| anomalies | array | 否 | 异常指标列表 |
-| action_items | array | 是 | 行动项列表 |
-| action_items[].description | string | 是 | 行动描述 |
-| action_items[].owner | string | 否 | 负责人 |
-| action_items[].deadline | string | 否 | 截止日期 |
-| engagement_stats | object | 否 | 报告参与度统计 |
+| report_type | string | Yes | Report type, enum values: daily/weekly/monthly/quarterly |
+| report_date | string | Yes | Report date |
+| key_metrics | array | Yes | Key metrics list, at least 1 item |
+| key_metrics[].name | string | Yes | Metric name |
+| key_metrics[].value | number | Yes | Current value |
+| key_metrics[].change | string | Yes | Change trend |
+| key_metrics[].status | string | Yes | Status, enum values: healthy/warning/critical |
+| anomalies | array | No | Anomaly metrics list |
+| action_items | array | Yes | Action items list |
+| action_items[].description | string | Yes | Action description |
+| action_items[].owner | string | No | Owner |
+| action_items[].deadline | string | No | Deadline |
+| engagement_stats | object | No | Report engagement statistics |
 
-## 上游变更响应
+## Upstream Change Response
 
-当上游输入发生变更时，本Skill的响应策略：
+When upstream inputs change, this Skill's response strategy:
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| OKR数据变更 | OKR追踪章节 | 更新OKR进度，重新评估偏差分析 |
-| 决策记录变更 | 数据文化指标 | 更新数据驱动决策率，重新评估文化健康度 |
-| 团队反馈变更 | 报告模板和推送策略 | 调整报告格式和推送时机 |
+| OKR data change | OKR tracking section | Update OKR progress, re-evaluate deviation analysis |
+| Decision record change | Data culture metrics | Update data-driven decision rate, re-evaluate culture health |
+| Team feedback change | Report template and delivery strategy | Adjust report format and delivery timing |
 
-当文化报告自身变更时，对下游的通知机制：
+When culture reports themselves change, the notification mechanism for downstream:
 
-| 报告变更类型 | 通知范围 | 通知方式 |
+| Report Change Type | Notification Scope | Notification Method |
 |-------------|----------|----------|
-| OKR进度落后>20% | decision-dace | 标记进度风险，触发DACE Conclude |
-| 数据驱动决策率下降 | 全部下游 | 标记文化风险，触发培训建议 |
-| 报告参与度下降 | decision-culture | 标记参与度问题，触发报告优化 |
+| OKR progress behind >20% | decision-dace | Mark progress risk, trigger DACE Conclude |
+| Data-driven decision rate decline | All downstream | Mark culture risk, trigger training recommendations |
+| Report engagement decline | decision-culture | Mark engagement issue, trigger report optimization |
 
 ---
 
-## 决策规则
+## Decision Rules
 
-| 情况 | 处理方式 |
+| Situation | Handling |
 |------|----------|
-| 核心指标异常（↓>5%） | 即时推送告警，触发专项分析 |
-| OKR进度落后>20% | 周报中标注风险，建议调整策略 |
-| 数据驱动决策率<70% | 推送数据文化培训建议 |
-| 报告打开率持续下降 | 优化报告格式和推送时机 |
+| Core metric anomaly (↓>5%) | Immediate alert delivery, trigger focused analysis |
+| OKR progress behind >20% | Annotate risk in weekly report, recommend strategy adjustment |
+| Data-driven decision rate <70% | Deliver data culture training recommendations |
+| Report open rate consistently declining | Optimize report format and delivery timing |
 
-## 质量检查
+## Quality Check
 
-- [ ] 每日摘要无异常时未产生噪音告警（P0）
-- [ ] 周报包含OKR进度和实验汇总（P1）
-- [ ] 月报包含完整指标趋势和偏差分析（P1）
-- [ ] 报告中所有数据引用可追溯至数据源（P0）
-- [ ] 季度复盘包含指标体系健康度评估（P2）
-- [ ] 战略Review包含文化成熟度评分（P2）
+- [ ] Daily summary produces no noisy alerts when no anomalies exist (P0)
+- [ ] Weekly report includes OKR progress and experiment summary (P1)
+- [ ] Monthly report includes complete metric trends and deviation analysis (P1)
+- [ ] All data references in reports are traceable to data sources (P0)
+- [ ] Quarterly review includes metrics system health assessment (P2)
+- [ ] Strategic review includes culture maturity score (P2)
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失范围 | 降级方案 | 输出影响 |
+| Missing Scope | Degradation Plan | Output Impact |
 |----------|----------|----------|
-| 各分析模块输出缺失 | 用户提供关键指标 → 生成摘要报告 | 报告内容基于用户提供的指标，缺乏自动分析深度 |
-| 异常检测输出缺失 | 每日摘要使用用户提供的指标数据 | 每日报告可能遗漏未关注异常 |
-| 实验结果输出缺失 | 周报中实验汇总章节标注"待补充" | 实验进展追踪缺失 |
-| 各分析模块输出均缺失 | 用户提供关键指标 → 生成摘要报告 | 输出基础摘要报告，各分析维度标注"待补充" |
+| Analysis module outputs missing | User provides key metrics → Generate summary report | Report content based on user-provided metrics, lacks automated analysis depth |
+| Anomaly detection output missing | Daily summary uses user-provided metric data | Daily report may miss unattended anomalies |
+| Experiment results output missing | Experiment summary section in weekly report annotated "to be supplemented" | Experiment progress tracking missing |
+| All analysis module outputs missing | User provides key metrics → Generate summary report | Output basic summary report, analysis dimensions annotated "to be supplemented" |
 
-### 数据获取说明
+### Data Acquisition Instructions
 
-当上游文件缺失时，需用户提供以下信息以支撑降级生成：
-- **关键指标**：需要追踪的核心指标名称和当前值
-- **指标目标**（可选）：各指标的目标值和基线值
-- **团队关注点**（可选）：当前团队最关注的业务问题
+When upstream files are missing, the user needs to provide the following information to support degraded generation:
+- **Key metrics**: Core metric names and current values to track
+- **Metric targets** (optional): Target values and baselines for each metric
+- **Team focus areas** (optional): Current business issues the team is most concerned about
 
-## 输出
+## Output
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["report_type", "report_date", "key_metrics"],
   "properties": {
-    "report_type": {"type": "string", "description": "报告类型：daily/weekly/monthly/quarterly"},
-    "report_date": {"type": "string", "description": "报告日期"},
-    "key_metrics": {"type": "array", "description": "关键指标列表，包含名称、当前值和变化趋势"},
-    "anomalies": {"type": "array", "description": "异常指标列表"},
-    "action_items": {"type": "array", "description": "行动项列表"},
-    "engagement_stats": {"type": "object", "description": "报告参与度统计"}
+    "report_type": {"type": "string", "description": "Report type: daily/weekly/monthly/quarterly"},
+    "report_date": {"type": "string", "description": "Report date"},
+    "key_metrics": {"type": "array", "description": "Key metrics list, including name, current value, and change trend"},
+    "anomalies": {"type": "array", "description": "Anomaly metrics list"},
+    "action_items": {"type": "array", "description": "Action items list"},
+    "engagement_stats": {"type": "object", "description": "Report engagement statistics"}
   }
 }
 ```
 
 ```
-docs/metrics/decision-report.md（“数据文化”章节）
+docs/metrics/decision-report.md ("Data Culture" section)
 ├── culture/
 │   ├── daily/
 │   │   └── {date}_daily_summary.md
@@ -633,14 +633,14 @@ docs/metrics/decision-report.md（“数据文化”章节）
     └── report_analytics.yaml
 ```
 
-输出文件：{date}_daily_summary.md、{week}_weekly_report.md、{month}_monthly_report.md、{quarter}_quarterly_report.md、daily_dashboard.yaml、metrics_overview.yaml、report_analytics.yaml
+Output files: {date}_daily_summary.md, {week}_weekly_report.md, {month}_monthly_report.md, {quarter}_quarterly_report.md, daily_dashboard.yaml, metrics_overview.yaml, report_analytics.yaml
 
-## 文化推广原则
+## Culture Promotion Principles
 
-| 原则 | 说明 |
+| Principle | Description |
 |-----|------|
-| 无异常不打扰 | 减少噪音，只在需要时打扰 |
-| 数据一致性 | 所有报告使用同一数据源 |
-| 行动导向 | 每份报告都要有明确的下一步 |
-| 持续迭代 | 根据反馈优化报告形式 |
-| 透明公开 | 所有人都能看到数据 |
+| No disturbance without anomalies | Reduce noise, only disturb when needed |
+| Data consistency | All reports use the same data source |
+| Action-oriented | Every report must have clear next steps |
+| Continuous iteration | Optimize report format based on feedback |
+| Transparency | Everyone can see the data |

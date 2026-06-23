@@ -1,10 +1,10 @@
 ---
 name: churn-rescue
-description: 流失预警模型设计+召回campaign设计，含成本门控
+description: Churn early-warning model design + win-back campaign design, with cost gating
 triggers:
-  - 用户流失率高时
-  - 用户运营Workflow
-  - 用户要求"设计召回策略"
+  - When user churn rate is high
+  - User operations Workflow
+  - User asks to "design a win-back strategy"
 reads:
   - docs/operations/segments.md
   - memory/knowledge-base.md
@@ -16,78 +16,78 @@ quality_gates: []
 max_iterations: 2
 ---
 
-# Churn Rescue — 流失预警与召回
+# Churn Rescue — Churn Early Warning and Win-Back
 
-## 铁律
-- 召回成本必须低于用户 LTV/3——否则不划算
-- 必须在用户**完全流失前**干预——太晚干预无效
-- 召回触达必须**差异化**——不同流失原因用不同召回策略
+## Iron Rules
+- Win-back cost must be lower than user LTV/3 — otherwise it's not worth it
+- Must intervene **before the user fully churns** — too-late intervention is ineffective
+- Win-back outreach must be **differentiated** — different churn causes need different win-back strategies
 
-## 流程
+## Process
 
-1. **定义流失**
-   - 什么算"流失"？（30天/60天/90天无活跃？）
-   - 什么算"流失风险"？（活跃度下降 X%？）
-   - 不同产品定义不同（SaaS=月级，社交=日级）
+1. **Define churn**
+   - What counts as "churned"? (30/60/90 days inactive?)
+   - What counts as "churn risk"? (activity dropped X%?)
+   - Different products define it differently (SaaS = monthly, social = daily)
 
-2. **流失预警模型**
-   识别流失前兆信号：
+2. **Churn early-warning model**
+   Identify pre-churn signals:
    ```
-   | 信号 | 含义 | 预警阈值 | 干预时机 |
-   |------|------|---------|---------|
-   | 活跃频次下降 | 核心动作频次 < 基线 50% | 连续 7 天 | 立即 |
-   | 会话时长缩短 | 平均时长 < 基线 50% | 连续 3 次 | 立即 |
-   | 功能使用减少 | 使用功能数 < 基线 50% | 连续 7 天 | 1 周内 |
-   | 未完成关键流程 | 卡在某步骤 | 24h 未完成 | 24h 内 |
-   | 负面反馈 | 提交投诉/低评分 | 立即 | 立即 |
-   ```
-
-3. **分群流失原因分析**
-   不同用户流失原因不同：
-   | 流失原因 | 占比 | 特征 | 召回策略 |
-   |---------|------|------|---------|
-   | 未到 aha moment | 40% | 首日未完成核心动作 | 重新引导 onboarding |
-   | 价值不匹配 | 25% | 活跃后逐渐减少 | 调研+产品改进 |
-   | 竞品替代 | 15% | 曾活跃后转向竞品 | 差异化价值强调 |
-   | 体验问题 | 10% | 有负面反馈 | 修复+补偿 |
-   | 自然流失 | 10% | 使用场景消失 | 低成本触达 |
-
-4. **设计召回 Campaign**
-   对不同流失原因设计差异化召回：
-   ```
-   | 分群 | 触达渠道 | 触达内容 | 激励 | 预期召回率 | 成本/人 |
-   |------|---------|---------|------|-----------|--------|
-   | 未到aha | 邮件+push | 新功能引导 | 无 | 15% | ¥2 |
-   | 价值不匹配 | 邮件 | 调研问卷 | 优惠券 | 8% | ¥5 |
-   | 竞品替代 | 邮件 | 差异化对比 | 折扣 | 5% | ¥10 |
+   | Signal | Meaning | Warning threshold | Intervention timing |
+   |--------|---------|-------------------|---------------------|
+   | Activity frequency drop | Core action frequency < 50% of baseline | 7 consecutive days | Immediately |
+   | Session duration shortened | Average duration < 50% of baseline | 3 consecutive sessions | Immediately |
+   | Feature usage reduction | Number of features used < 50% of baseline | 7 consecutive days | Within 1 week |
+   | Key flow not completed | Stuck at a step | Not completed within 24h | Within 24h |
+   | Negative feedback | Submitted complaint / low rating | Immediately | Immediately |
    ```
 
-5. **成本门控**
+3. **Segmented churn cause analysis**
+   Different users churn for different reasons:
+   | Churn cause | Share | Characteristics | Win-back strategy |
+   |-------------|-------|-----------------|-------------------|
+   | Didn't reach aha moment | 40% | Didn't complete core action on day 1 | Re-guide onboarding |
+   | Value mismatch | 25% | Gradually decreased after being active | Research + product improvement |
+   | Competitor substitution | 15% | Was active then switched to competitor | Emphasize differentiated value |
+   | Experience issues | 10% | Has negative feedback | Fix + compensate |
+   | Natural churn | 10% | Use case disappeared | Low-cost outreach |
+
+4. **Design win-back campaign**
+   Design differentiated win-back for different churn causes:
    ```
-   召回成本 = 触达成本 + 激励成本
-   预期 LTV = 用户回归后的预期生命周期价值
-   成本门控: 召回成本 ≤ LTV/3
+   | Segment | Outreach channel | Outreach content | Incentive | Expected win-back rate | Cost/person |
+   |---------|------------------|------------------|-----------|-----------------------|-------------|
+   | Didn't reach aha | Email + push | New feature guidance | None | 15% | ¥2 |
+   | Value mismatch | Email | Survey | Coupon | 8% | ¥5 |
+   | Competitor substitution | Email | Differentiated comparison | Discount | 5% | ¥10 |
    ```
 
-6. **设计触发时机**
-   - 预警阶段（活跃下降）：低成本触达（push/邮件）
-   - 早期流失（7-30天无活跃）：中成本触达（+激励）
-   - 深度流失（30+天）：高成本触达（+大激励）或不召回
+5. **Cost gating**
+   ```
+   Win-back cost = Outreach cost + Incentive cost
+   Expected LTV = Expected lifetime value after the user returns
+   Cost gating: Win-back cost ≤ LTV/3
+   ```
 
-7. **产出召回方案**
-   写入 `docs/operations/churn-rescue-plan.md`
+6. **Design trigger timing**
+   - Warning stage (activity decline): low-cost outreach (push/email)
+   - Early churn (7-30 days inactive): medium-cost outreach (+ incentive)
+   - Deep churn (30+ days): high-cost outreach (+ large incentive) or no win-back
 
-8. **更新知识库**
-   将分群和召回策略写入 `memory/knowledge-base.md` 的"用户分群库"
+7. **Produce win-back plan**
+   Write to `docs/operations/churn-rescue-plan.md`
 
-## 禁止事项
-- 不在用户完全流失后才召回（太晚=无效）
-- 不用通用召回策略（不同流失原因需差异化）
-- 不忽略成本门控（召回成本 > LTV/3 = 不划算）
-- 不频繁打扰用户（触达频次控制，避免退订）
+8. **Update knowledge base**
+   Write segments and win-back strategies to the "user segment library" in `memory/knowledge-base.md`
 
-## 与 LOOP 的关系
-本 skill 在 LOOP(lifecycle) 的 **EXPERIMENT 阶段**执行。
+## Prohibitions
+- Don't win back only after the user has fully churned (too late = ineffective)
+- Don't use a generic win-back strategy (different churn causes need differentiation)
+- Don't ignore cost gating (win-back cost > LTV/3 = not worth it)
+- Don't frequently disturb users (control outreach frequency to avoid unsubscriptions)
 
-## 与 Workflow 的关系
-本 skill 是 **lifecycle-operations-workflow** 的第 5 步。
+## Relationship to LOOP
+This skill runs in the **EXPERIMENT phase** of LOOP(lifecycle).
+
+## Relationship to Workflow
+This skill is step 5 of **lifecycle-operations-workflow**.

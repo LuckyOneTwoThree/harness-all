@@ -1,71 +1,71 @@
-# [项目名称] — 产品策略文档
+# [project name] — Product strategy document
 
-> 来源：由模块2（商业战略）的 planning-orchestrator / business-orchestrator 产出，或 setup 工作流引导填写。
-> 加载时机：探索发现 / 构思设计 / 验收发布 读取。
-> 定位：战略阶段建立基线，策略变更时追加修订记录。
-> 与 PRD.md 的分工：本文件是**战略定义**（目标用户+成功指标），PRD.md 是**需求定义**（功能+验收标准）。
+> Source: produced by planning-orchestrator / business-orchestrator in module 2 (business strategy), or guided by the setup workflow.
+> Load timing: read by discovery / ideation and design / acceptance and release.
+> Positioning: establish the baseline in the strategy phase; append revision records when the strategy changes.
+> Division of labor with PRD.md: this file is the **strategy definition** (target users + success metrics), PRD.md is the **requirements definition** (features + acceptance criteria).
 
-## 产品概述
+## Product overview
 
-[一句话描述：解决什么问题、给谁用、核心价值]
+[One sentence: what problem to solve, for whom, core value]
 
-## 背景与动机
+## Background and motivation
 
-[为什么要做这个产品？市场机会是什么？]
+[Why build this product? What is the market opportunity?]
 
-## 目标用户
+## Target users
 
-| 用户角色 | 典型场景 | 核心痛点 | 价值诉求 |
+| User role | Typical scenario | Core pain point | Value proposition |
 |---------|---------|---------|---------|
-| [角色1] | [场景描述] | [痛点描述] | [价值] |
-| [角色2] | [场景描述] | [痛点描述] | [价值] |
+| [role 1] | [scenario description] | [pain point description] | [value] |
+| [role 2] | [scenario description] | [pain point description] | [value] |
 
-## 核心价值主张
+## Core value proposition
 
-[产品为用户提供的核心价值，一句话]
+[The core value the product provides to users, in one sentence]
 
-## 商业模式
+## Business model
 
-[如何创造价值、传递价值、获取价值]
+[How to create value, deliver value, capture value]
 
-## 产品定位
+## Product positioning
 
-[在市场中的定位，差异化优势]
+[Positioning in the market, differentiated advantage]
 
-## 成功指标（可量化）
+## Success metrics (quantifiable)
 
-[产品做完后，用什么指标衡量成功？达标即成功]
+[After the product is done, what metrics measure success? Meeting the bar means success]
 
-- 指标1：[如：DAU > 10000]
-- 指标2：[如：用户留存率（次日）> 40%]
-- 指标3：[如：付费转化率 > 5%]
+- Metric 1: [e.g., DAU > 10000]
+- Metric 2: [e.g., D1 user retention > 40%]
+- Metric 3: [e.g., paid conversion rate > 5%]
 
-> 指标必须可量化，不是"用户喜欢"，而是具体数字。
+> Metrics must be quantifiable — not "users like it", but specific numbers.
 
-## 不做的事（边界）
+## Out of scope (boundaries)
 
-[明确排除的范围，避免蔓延]
+[Explicitly excluded scope to avoid creep]
 
-- 不做 [功能X]，因为 [原因]
-- 不支持 [场景Y]，因为 [原因]
+- No [feature X], because [reason]
+- No support for [scenario Y], because [reason]
 
-## 里程碑
+## Milestones
 
-| 阶段 | 目标 | 产出 |
+| Phase | Goal | Output |
 |------|------|------|
-| M1 | MVP 验证核心假设 | 核心功能上线 |
-| M2 | 增长验证 | 增长指标达标 |
-| M3 | 商业化验证 | 收入指标达标 |
+| M1 | MVP validates the core hypothesis | Core features go live |
+| M2 | Growth validation | Growth metrics met |
+| M3 | Commercialization validation | Revenue metrics met |
 
-## 依赖与风险
+## Dependencies and risks
 
-| 类型 | 描述 | 影响 | 应对 |
+| Type | Description | Impact | Response |
 |------|------|------|------|
-| 依赖 | [如：依赖 XX 数据源] | [高/中/低] | [措施] |
-| 风险 | [如：市场变化] | [高/中/低] | [措施] |
+| Dependency | [e.g., depends on XX data source] | [high/medium/low] | [action] |
+| Risk | [e.g., market change] | [high/medium/low] | [action] |
 
-## 修订记录
+## Revision history
 
-| 日期 | 修订内容 | 原因 |
+| Date | Revision | Reason |
 |------|---------|------|
-| YYYY-MM-DD | 初始版本 | 项目立项 |
+| YYYY-MM-DD | Initial version | Project initiation |

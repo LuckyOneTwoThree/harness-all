@@ -4,92 +4,104 @@ name: diagnosis
 default_mode: skip
 ---
 
-# 工作流 F：产品诊断与下线
+# Workflow F: Product Diagnosis & Sunset
 
-> 适用场景：产品健康度下降、竞品威胁追踪、产品下线决策
-> 核心模式：调用 diagnosis-orchestrator 完成诊断 → 人类审批 → 下游衔接
+> Applicable scenario: Product health decline, competitor threat tracking, product sunset decision
+> Core mode: Call diagnosis-orchestrator to complete diagnosis → human approval → downstream connection
 
-## 与其他工作流的差异
+## Differences from Other Workflows
 
-| 维度 | optimization | health-check | **diagnosis** |
+| Dimension | optimization | health-check | **diagnosis** |
 |------|--------------|--------------|---------------|
-| 目标 | 数据驱动优化 | 定期体检 | **被动诊断/下线决策** |
-| 触发 | 主动优化 | 定期 | **被动（健康度下降/竞品动作/下线需求）** |
-| 深度 | 方案设计+验证 | 快速体检 | **深度诊断+下线方案** |
-| LOOP | research→validate | 无 | **无（诊断为主，下线方案需人类审批）** |
+| Goal | Data-driven optimization | Periodic checkup | **Reactive diagnosis/sunset decision** |
+| Trigger | Proactive optimization | Periodic | **Reactive (health decline/competitor moves/sunset need)** |
+| Depth | Solution design + validation | Quick checkup | **Deep diagnosis + sunset plan** |
+| LOOP | research→validate | None | **None (diagnosis-focused, sunset plan requires human approval)** |
 
-## 流程
+## Process
 
 ```
 ┌─────────────────┐
-│ session-start   │  加载上下文，确认诊断触发原因
+│ session-start   │  Load context, confirm diagnosis trigger reason
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ 模块7：产品诊断                          │
+│ Module 7: Product Diagnosis             │
 │                                         │
 │  - diagnosis-orchestrator               │
-│    （内部调度 4 个 phase：               │
-│     健康度诊断 → 竞品追踪 →             │
-│     竞品监控报告 → 产品下线方案[条件]）  │
+│    (Internally schedules 4 phases:      │
+│     health diagnosis → competitor       │
+│     tracking → competitor monitoring    │
+│     report → product sunset plan        │
+│     [conditional])                      │
 │                                         │
-│  触发场景决定执行哪些 phase：            │
-│  - 健康度下降 → phase 1-3               │
-│  - 竞品动作 → phase 2-3                 │
-│  - 下线需求 → phase 1-4                 │
-│  - 定期检查 → phase 1                   │
+│  Trigger scenario determines which       │
+│  phases execute:                        │
+│  - Health decline → phase 1-3           │
+│  - Competitor moves → phase 2-3         │
+│  - Sunset need → phase 1-4              │
+│  - Periodic check → phase 1             │
 │                                         │
-│  产出：docs/monitoring/diagnosis-report.md │
+│  Output: docs/monitoring/diagnosis-report.md │
 └────────┬────────────────────────────────┘
          │
          ▼
 ┌─────────────────────────────────────────┐
-│ 人类决策点（★ 必审批）                   │
+│ Human Decision Point (★ must approve)   │
 │                                         │
-│ - 健康度评分校准（偏差>±10%时）          │
-│ - 竞品监控报告确认（威胁评估+应对建议）  │
-│ - 产品下线方案确认（时间线+迁移方案）    │
+│ - Health score calibration (when        │
+│   deviation >±10%)                      │
+│ - Competitor monitoring report          │
+│   confirmation (threat assessment +     │
+│   response suggestions)                 │
+│ - Product sunset plan confirmation      │
+│   (timeline + migration plan)           │
 └────────┬────────────────────────────────┘
          │
          ▼
 ┌─────────────────────────────────────────┐
-│ 下游衔接（根据诊断结论选择）             │
+│ Downstream Connection (choose based on  │
+│   diagnosis conclusion)                 │
 │                                         │
-│ - 诊断完成 → iteration-orchestrator      │
-│   （调整迭代计划）                       │
-│ - 缺乏监控覆盖 → monitoring-orchestrator │
-│ - 增长乏力 → growth-orchestrator         │
-│ - 健康度极低且无改善 → product-sunset-plan│
-│ - 仅需健康检查 → monitoring-orchestrator │
+│ - Diagnosis complete → iteration-       │
+│   orchestrator (adjust iteration plan)  │
+│ - Lack of monitoring coverage →         │
+│   monitoring-orchestrator               │
+│ - Growth stagnation → growth-           │
+│   orchestrator                          │
+│ - Extremely low health and no           │
+│   improvement → product-sunset-plan     │
+│ - Only health check needed →            │
+│   monitoring-orchestrator               │
 └────────┬────────────────────────────────┘
          ▼
 ┌─────────────────┐
-│ session-end     │  归档 + 更新 progress.md
-│                 │  + 记录诊断结论到 memory/knowledge-base.md
-│                 │  + 如有下线方案，产出交接文档
+│ session-end     │  Archive + update progress.md
+│                 │  + Record diagnosis conclusion to memory/knowledge-base.md
+│                 │  + If sunset plan exists, output handoff document
 └─────────────────┘
 ```
 
-## 关键检查点
+## Key Checkpoints
 
-- [ ] 健康度评分模型校准了吗？（偏差<±10%）
-- [ ] 竞品动态追踪完整吗？（产品/市场/舆论3维度）
-- [ ] 竞品监控报告人类审核了吗？
-- [ ] 如有下线需求，下线方案人类确认了吗？
-- [ ] 阶段总结6项结构都生成了吗？
+- [ ] Health score model calibrated? (Deviation <±10%)
+- [ ] Competitor dynamics tracking complete? (Product/market/public opinion 3 dimensions)
+- [ ] Competitor monitoring report human-reviewed?
+- [ ] If sunset need exists, sunset plan human-confirmed?
+- [ ] All 6 structures of phase summary generated?
 
-## 失败处理
+## Failure Handling
 
-| 失败点 | 处理方式 |
+| Failure point | Handling |
 |--------|---------|
-| 健康度评分偏差>±15% | 暂停自动诊断，人工校准评分模型权重后重新运行 |
-| 竞品数据源不可用 | 基于历史报告生成快照分析，标注"数据源不可用" |
-| 子Skill输出校验未通过 | 回退至当前阶段重新执行，最多重试1次 |
-| 下线方案未通过人类审核 | 补充分析或修改迁移方案，重新提交审核 |
+| Health score deviation >±15% | Pause auto diagnosis, manually calibrate score model weights then rerun |
+| Competitor data source unavailable | Generate snapshot analysis based on historical report, mark "data source unavailable" |
+| Sub-skill output validation failed | Roll back to current phase and re-execute, max 1 retry |
+| Sunset plan not human-approved | Supplement analysis or modify migration plan, resubmit for review |
 
-## 下一步
+## Next Steps
 
-- 诊断后需调整迭代 → 进入 **iteration** 工作流
-- 诊断发现增长瓶颈 → 进入 **growth** 工作流
-- 诊断后需数据驱动优化 → 进入 **optimization** 工作流
-- 诊断后需加强监控 → 进入 **launch** 工作流的监控准备
+- Need iteration adjustment after diagnosis → enter **iteration** workflow
+- Diagnosis discovers growth bottleneck → enter **growth** workflow
+- Need data-driven optimization after diagnosis → enter **optimization** workflow
+- Need enhanced monitoring after diagnosis → enter **launch** workflow's monitoring preparation

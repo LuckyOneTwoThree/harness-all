@@ -1,23 +1,23 @@
 ---
 name: iteration-retrospective
-description: 当需要辅助迭代回顾时使用。迭代回顾工具，负责完成情况分析、问题识别、改进建议和沟通草稿生成。关键词：迭代回顾、完成分析、问题识别、改进建议、Retro。
+description: Used when assisting with iteration retrospectives. Iteration retrospective tool responsible for completion analysis, problem identification, improvement suggestions, and communication draft generation. Keywords: iteration retrospective, completion analysis, problem identification, improvement suggestions, Retro.
 metadata:
-  module: "产品监控与迭代"
-  sub-module: "迭代优化"
+  module: "Product Monitoring & Iteration"
+  sub-module: "Iteration Optimization"
   type: "pipeline"
   version: "2.0"
-  domain_tags: ["互联网", "软件", "通用"]
+  domain_tags: ["Internet", "Software", "General"]
   trigger_examples:
-    - "这期迭代要复盘"
-    - "sprint结束了怎么总结"
-    - "迭代效果怎么样"
-    - "迭代计划要调整怎么办"
-    - "需求要加塞怎么排"
+    - "Need to retrospective this iteration"
+    - "Sprint is over, how to summarize"
+    - "How did the iteration go"
+    - "Need to adjust the iteration plan, what to do"
+    - "Need to insert a requirement, how to reorder"
   interaction_mode: "human_ai_collaborate"
 execution_depth:
   default: standard
-  quick_description: "仅输出迭代回顾核心结论"
-  deep_description: "完整回顾 + 变更影响评估 + 调整方案 + 风险评估 + 沟通草案 + 竞品迭代对比"
+  quick_description: "Only output iteration retrospective core conclusions"
+  deep_description: "Full retrospective + change impact assessment + adjustment plan + risk assessment + communication draft + competitor iteration comparison"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -28,90 +28,90 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 迭代回顾与调整 🤖
+# Iteration Retrospective & Adjustment 🤖
 
-## 核心原则
+## Core Principles
 
-1. **复盘的目的是改进不是追责**：复盘必须建立心理安全感，否则团队只会报喜不报忧
-2. **数据驱动归因，而非主观印象**：用指标数据验证"感觉"，避免印象偏差掩盖真实问题
-3. **改进建议必须可追踪可验证**：每条改进建议都要有责任人和验证标准，否则复盘就是走过场
-4. **优先级调整不是重新排序，而是重新分配资源**：每次调整都意味着已有承诺的打破，必须评估连锁影响
-5. **变更影响评估先于调整决策**：先量化影响再决定调整，避免拍脑袋调整导致更大的混乱
-6. **风险评估是调整的护栏**：每次调整必须附带风险评估，确保不会因调整引入更大的问题
+1. **The purpose of retrospectives is improvement, not blame**: Retrospectives must establish psychological safety, otherwise the team will only report good news and hide problems
+2. **Data-driven attribution, not subjective impressions**: Validate "feelings" with metric data to avoid impression bias masking real problems
+3. **Improvement suggestions must be trackable and verifiable**: Every improvement suggestion must have an owner and validation criteria, otherwise the retrospective is just going through the motions
+4. **Priority adjustment is not re-sorting, but reallocating resources**: Every adjustment means breaking existing commitments; cascading impacts must be assessed
+5. **Change impact assessment precedes adjustment decisions**: Quantify impact before deciding on adjustments—avoid knee-jerk adjustments that cause greater chaos
+6. **Risk assessment is the guardrail for adjustments**: Every adjustment must come with a risk assessment to ensure it doesn't introduce bigger problems
 
-### 触发条件
+### Trigger Conditions
 
-| 触发条件 | 描述 | 优先级 |
+| Trigger Condition | Description | Priority |
 |----------|------|--------|
-| 监控异常 | 监控系统检测到异常 | P0 |
-| 重大反馈 | 大量用户投诉或重要客户反馈 | P0 |
-| 战略变化 | 业务战略或市场环境重大变化 | P1 |
-| 资源变化 | 团队成员增减或可用时间变化 | P2 |
-| 迭代结束 | Sprint周期结束，需要回顾 | P1 |
+| Monitoring anomaly | Monitoring system detects an anomaly | P0 |
+| Major feedback | Large volume of user complaints or key customer feedback | P0 |
+| Strategic change | Significant change in business strategy or market environment | P1 |
+| Resource change | Team member additions/reductions or available time changes | P2 |
+| Iteration end | Sprint cycle ends, retrospective needed | P1 |
 
-## 基本信息
+## Basic Information
 
-| 项目 | 值 |
+| Item | Value |
 |------|-----|
-| 模块 | 产品监控与迭代 |
-| 子模块 | 迭代优化 |
-| 类型 | pipeline |
-| 版本 | 2.0 |
-| 交互模式 | 人机协作 |
-| 执行深度 | standard（默认） |
+| Module | Product Monitoring & Iteration |
+| Sub-module | Iteration Optimization |
+| Type | pipeline |
+| Version | 2.0 |
+| Interaction Mode | Human-AI collaboration |
+| Execution Depth | standard (default) |
 
-## 交互模式
+## Interaction Mode
 
-👤↔🤖 人机协作
+👤↔🤖 Human-AI collaboration
 
-- 人类提供迭代执行情况、团队反馈和调整需求
-- AI自动完成数据分析、问题识别、改进建议生成和调整方案评估
-- 人类审批重点：问题归因是否准确、改进建议是否可执行、调整方案风险是否可接受
-- 人类可要求AI补充分析维度或调整方案，AI重新生成
-- 改进建议和调整方案经团队确认后正式生效
+- Human provides iteration execution status, team feedback, and adjustment needs
+- AI automatically completes data analysis, problem identification, improvement suggestion generation, and adjustment plan evaluation
+- Human approval focus: whether problem attribution is accurate, whether improvement suggestions are executable, whether adjustment plan risks are acceptable
+- Human can ask AI to supplement analysis dimensions or adjustment plans; AI regenerates
+- Improvement suggestions and adjustment plans take effect after team confirmation
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 当前迭代计划 | JSON | 是 | 用户提供或项目管理系统 | Sprint Backlog、承诺内容，作为回顾和调整的基准 |
-| 迭代完成情况 | JSON | 是 | 用户提供或项目管理系统 | 已完成/未完成项、故事点，用于完成情况分析 |
-| 资源约束 | JSON | ○ | 用户提供或项目管理系统 | 团队容量、可用时间、依赖，用于调整方案容量验证 |
-| 触发事件 | JSON | ○ | 监控系统/反馈系统 → 触发事件 | 异常详情、反馈内容、战略变化，用于变更影响评估 |
-| 变更需求 | JSON | ○ | 用户提供 | 新增/修改/删除的项，用于调整方案生成 |
-| 质量指标 | JSON | 是 | 测试平台/CI/CD → 质量数据 | 缺陷数、代码覆盖率、返工率，用于质量分析 |
-| 团队反馈 | JSON | ○ | Retro工具 → 团队反馈 | Retro 会议记录、投票结果，用于协作分析 |
-| 监控数据 | JSON | ○ | docs/monitoring/monitoring-config.md（“预警规则”章节） | 稳定性、性能变化数据，用于稳定性分析 |
-| 监控告警 | JSON | ○ | docs/monitoring/monitoring-config.md（“预警规则”章节） | 迭代期间的告警，用于问题识别 |
+| Current iteration plan | JSON | Yes | User-provided or project management system | Sprint Backlog, commitments, as baseline for retrospective and adjustment |
+| Iteration completion | JSON | Yes | User-provided or project management system | Completed/incomplete items, story points, for completion analysis |
+| Resource constraints | JSON | ○ | User-provided or project management system | Team capacity, available time, dependencies, for adjustment plan capacity validation |
+| Trigger event | JSON | ○ | Monitoring system/feedback system → Trigger event | Anomaly details, feedback content, strategic changes, for change impact assessment |
+| Change requirements | JSON | ○ | User-provided | Added/modified/removed items, for adjustment plan generation |
+| Quality metrics | JSON | Yes | Test platform/CI/CD → Quality data | Defect count, code coverage, rework rate, for quality analysis |
+| Team feedback | JSON | ○ | Retro tool → Team feedback | Retro meeting notes, voting results, for collaboration analysis |
+| Monitoring data | JSON | ○ | docs/monitoring/monitoring-config.md ("Alert Rules" section) | Stability, performance change data, for stability analysis |
+| Monitoring alerts | JSON | ○ | docs/monitoring/monitoring-config.md ("Alert Rules" section) | Alerts during iteration, for problem identification |
 
-**重要**：本 Skill 的迭代计划与完成情况数据由用户提供或从项目管理系统导出，无跨模块硬依赖，可独立执行。
+**Important**: This Skill's iteration plan and completion data are provided by the user or exported from the project management system, with no cross-module hard dependencies; it can execute independently.
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 变更影响评估 [核心]
+### Step 1: Change Impact Assessment [Core]
 
-**目标**：基于触发事件评估对当前迭代的影响，为调整决策提供量化依据
+**Goal**: Assess the impact on the current iteration based on trigger events, providing quantitative basis for adjustment decisions
 
-#### 1.1 影响维度评估 [核心]
+#### 1.1 Impact Dimension Assessment [Core]
 
-**影响维度**：
+**Impact Dimensions**:
 
-| 维度 | 评估内容 | 指标 |
+| Dimension | Assessment Content | Metric |
 |------|----------|------|
-| 范围影响 | 哪些项需要调整 | 项数、故事点 |
-| 进度影响 | 对交付时间的影响 | 天数延期 |
-| 质量影响 | 对质量标准的影响 | 风险等级 |
-| 团队影响 | 对团队士气和效率的影响 | 工作量变化 |
-| 业务影响 | 对业务目标的影响 | KPI 变化 |
+| Scope impact | Which items need adjustment | Item count, story points |
+| Schedule impact | Impact on delivery time | Days delayed |
+| Quality impact | Impact on quality standards | Risk level |
+| Team impact | Impact on team morale and efficiency | Workload change |
+| Business impact | Impact on business goals | KPI changes |
 
-**影响计算**：
+**Impact Calculation**:
 
 ```yaml
 impact_assessment:
   trigger_event:
     type: monitoring_alert | user_feedback | strategic_change | resource_change
     severity: P0 | P1 | P2
-    description: 支付服务错误率突增
+    description: Payment service error rate spike
   scope_impact:
     affected_items:
       - item_id: US-110
@@ -132,28 +132,28 @@ impact_assessment:
     context_switches: 2
   business_impact:
     kpis_affected: [payment_success_rate, conversion_rate]
-    impact_assessment: 支付成功率下降影响GMV
+    impact_assessment: Payment success rate decline affects GMV
 ```
 
-#### 1.2 调整方案生成 [核心]
+#### 1.2 Adjustment Plan Generation [Core]
 
-**方案类型**：
+**Plan Types**:
 
-| 方案类型 | 适用场景 | 代价 |
+| Plan Type | Applicable Scenario | Cost |
 |----------|----------|------|
-| 加塞 | P0 紧急问题必须处理 | 延期其他项 |
-| 替换 | 有同等价值的低优先级项 | 放弃部分功能 |
-| 推迟 | 低优先级项可以延后 | 延后交付 |
-| 拆分 | 部分功能可以先行交付 | 分批交付 |
+| Insert | P0 urgent issue must be handled | Delay other items |
+| Replace | Low-priority item of equal value available | Forfeit some features |
+| Postpone | Low-priority items can be delayed | Delayed delivery |
+| Split | Some features can be delivered first | Phased delivery |
 
-**方案生成**：
+**Plan Generation**:
 
 ```yaml
 adjustment_options:
   - option_id: OPT-001
     option_type: insert | replace | postpone | split
-    title: 加塞支付修复并推迟报表优化
-    description: 将支付修复插入当前迭代，报表优化推迟至下迭代
+    title: Insert payment fix and postpone report optimization
+    description: Insert payment fix into current iteration, postpone report optimization to next iteration
     changes:
       items_to_add:
         - item_id: US-201
@@ -162,34 +162,34 @@ adjustment_options:
       items_to_remove:
         - item_id: US-105
           story_points: 5
-          reason: 优先级低于支付修复
+          reason: Priority lower than payment fix
       items_to_modify:
         - item_id: US-110
-          modification: 拆分为前端和后端两个子任务
+          modification: Split into frontend and backend subtasks
     tradeoffs:
-      scope: "放弃 报表导出功能"
-      schedule: "延期 3 天"
-      quality: "引入 测试覆盖不足风险"
-      business: "影响 报表相关KPI"
+      scope: "Forfeit report export feature"
+      schedule: "Delay 3 days"
+      quality: "Introduce insufficient test coverage risk"
+      business: "Affects report-related KPIs"
     risks:
-      - risk: 测试时间压缩可能导致缺陷泄漏
+      - risk: Compressed testing time may cause defect leakage
         likelihood: high | medium | low
-        mitigation: 增加回归测试用例覆盖
+        mitigation: Increase regression test case coverage
     recommendation_score: 78
 ```
 
-#### 1.3 风险评估 [条件]
+#### 1.3 Risk Assessment [Conditional]
 
-**风险矩阵**：
+**Risk Matrix**:
 
-| 风险类别 | 评估维度 | 评分方法 |
+| Risk Category | Assessment Dimensions | Scoring Method |
 |----------|----------|----------|
-| 技术风险 | 复杂度、依赖、技术挑战 | 1-5 分 |
-| 进度风险 | 时间压力、变更频率 | 1-5 分 |
-| 质量风险 | 测试覆盖、缺陷率 | 1-5 分 |
-| 沟通风险 | 干系人满意度、期望管理 | 1-5 分 |
+| Technical risk | Complexity, dependencies, technical challenges | 1-5 score |
+| Schedule risk | Time pressure, change frequency | 1-5 score |
+| Quality risk | Test coverage, defect rate | 1-5 score |
+| Communication risk | Stakeholder satisfaction, expectation management | 1-5 score |
 
-**风险评估输出**：
+**Risk Assessment Output**:
 
 ```yaml
 risk_assessment:
@@ -198,64 +198,64 @@ risk_assessment:
   risk_breakdown:
     technical_risk:
       score: 3
-      concerns: [支付模块复杂度高]
+      concerns: [High complexity of payment module]
     schedule_risk:
       score: 4
-      concerns: [迭代时间已过半]
+      concerns: [Iteration time already half elapsed]
     quality_risk:
       score: 2
-      concerns: [回归测试覆盖充分]
+      concerns: [Adequate regression test coverage]
     communication_risk:
       score: 3
-      concerns: [需同步PO和干系人]
+      concerns: [Need to sync PO and stakeholders]
   mitigation_plan:
-    - risk: 测试时间不足
+    - risk: Insufficient testing time
       strategy: avoid | mitigate | transfer | accept
-      action: 增加测试资源并优先回归测试
+      action: Add testing resources and prioritize regression testing
 ```
 
-#### 1.4 沟通草案 [深度]
+#### 1.4 Communication Draft [Deep]
 
-**干系人**：
-- 团队成员
-- 产品负责人
-- 利益相关者
-- 客户（如适用）
+**Stakeholders**:
+- Team members
+- Product Owner
+- Stakeholders
+- Customers (if applicable)
 
-**沟通模板**：
+**Communication Template**:
 
 ```yaml
 communication_draft:
   recipients:
     - team_members
-  subject: "迭代 Sprint-26 变更通知"
+  subject: "Iteration Sprint-26 Change Notice"
   sections:
     change_summary:
-      content: "因支付服务告警，本次迭代加塞支付修复任务"
+      content: "Due to payment service alert, this iteration inserts payment fix task"
     impact:
-      content: "影响范围：2个故事点替换，迭代延期3天"
+      content: "Impact scope: 2 story points replaced, iteration delayed 3 days"
     decisions:
-      content: "决策：加塞US-201，推迟US-105至下迭代"
+      content: "Decision: Insert US-201, postpone US-105 to next iteration"
     timeline:
-      content: "新计划完成日期：2026-07-03"
+      content: "New planned completion date: 2026-07-03"
     questions_contact:
-      content: "如有疑问请联系PO张三"
+      content: "Contact PO Zhang San for any questions"
 ```
 
-### Step 2: 数据收集 [条件]
+### Step 2: Data Collection [Conditional]
 
-**目标**：收集迭代执行期间的交付、质量、团队反馈和监控数据
+**Goal**: Collect delivery, quality, team feedback, and monitoring data during iteration execution
 
-**数据源**：
+**Data Sources**:
 
-| 数据类型 | 数据源 | 采集方式 |
+| Data Type | Data Source | Collection Method |
 |----------|--------|----------|
-| 交付数据 | 项目管理系统 | API/导出 |
-| 质量数据 | 测试平台、CI/CD | API/导出 |
-| 团队反馈 | Retro 工具、会议记录 | 文本/导出 |
-| 监控数据 | 监控系统、日志平台 | API/导出 |
+| Delivery data | Project management system | API/Export |
+| Quality data | Test platform, CI/CD | API/Export |
+| Team feedback | Retro tool, meeting notes | Text/Export |
+| Monitoring data | Monitoring system, log platform | API/Export |
 
-**数据收集范围**：
+**Data Collection Scope**:
 
 ```yaml
 data_collection:
@@ -277,7 +277,7 @@ data_collection:
     deployment_frequency: 3
   team_feedback:
     retro_items: 8
-    top_votes: [需求变更频繁, 测试环境不稳定]
+    top_votes: [Frequent requirement changes, Unstable test environment]
     sentiment: positive | neutral | negative
   monitoring_data:
     availability: 99.2%
@@ -285,21 +285,21 @@ data_collection:
     incidents: 1
 ```
 
-### Step 3: 多维度分析 [条件]
+### Step 3: Multi-Dimensional Analysis [Conditional]
 
-**目标**：从交付、质量、协作、效率四个维度分析迭代执行效果
+**Goal**: Analyze iteration execution effectiveness across delivery, quality, collaboration, and efficiency dimensions
 
-#### 3.1 交付分析 [条件]
+#### 3.1 Delivery Analysis [Conditional]
 
-**指标**：
+**Metrics**:
 
-| 指标 | 定义 | 目标 |
+| Metric | Definition | Target |
 |------|------|------|
-| 交付完成率 | 完成故事点 / 计划故事点 | ≥ 85% |
-| 交付预测准确性 | 实际 / 计划 | 0.9-1.1 |
-| 需求变更率 | 变更项数 / 总项数 | < 15% |
+| Delivery completion rate | Completed story points / Planned story points | ≥ 85% |
+| Delivery forecast accuracy | Actual / Planned | 0.9-1.1 |
+| Requirement change rate | Changed items / Total items | < 15% |
 
-**分析**：
+**Analysis**:
 
 ```yaml
 delivery_analysis:
@@ -310,21 +310,21 @@ delivery_analysis:
   change_rate: 12%
   carry_over_items:
     - item_id: US-108
-      reason: 依赖外部接口未就绪
+      reason: Dependent external interface not ready
   assessment: good | acceptable | needs_improvement
 ```
 
-#### 3.2 质量分析 [条件]
+#### 3.2 Quality Analysis [Conditional]
 
-**指标**：
+**Metrics**:
 
-| 指标 | 定义 | 目标 |
+| Metric | Definition | Target |
 |------|------|------|
-| Bug 密度 | Bug 数 / 故事点数 | < 0.5 |
-| Bug 泄漏率 | 生产 Bug / 测试发现 Bug | < 5% |
-| 代码覆盖率 | 覆盖代码行 / 总代码行 | ≥ 80% |
+| Bug density | Bug count / Story point count | < 0.5 |
+| Bug leakage rate | Production Bugs / Test-discovered Bugs | < 5% |
+| Code coverage | Covered code lines / Total code lines | ≥ 80% |
 
-**分析**：
+**Analysis**:
 
 ```yaml
 quality_analysis:
@@ -337,42 +337,42 @@ quality_analysis:
   assessment: good | acceptable | needs_improvement
 ```
 
-#### 3.3 协作分析 [深度]
+#### 3.3 Collaboration Analysis [Deep]
 
-**指标**：
+**Metrics**:
 
-| 指标 | 定义 | 数据来源 |
+| Metric | Definition | Data Source |
 |------|------|----------|
-| 团队满意度 | 团队对迭代的满意度评分 | Retro |
-| 跨团队协作 | 与其他团队的协作效果 | Retro |
-| 沟通效率 | 信息对齐程度 | 主观评价 |
+| Team satisfaction | Team satisfaction score for iteration | Retro |
+| Cross-team collaboration | Collaboration effectiveness with other teams | Retro |
+| Communication efficiency | Information alignment level | Subjective evaluation |
 
-**分析**：
+**Analysis**:
 
 ```yaml
 collaboration_analysis:
   team_satisfaction_score: 3.8
   top_positives:
-    - 跨团队协作顺畅
+    - Smooth cross-team collaboration
   top_pain_points:
-    - 需求变更沟通不及时
+    - Untimely communication of requirement changes
   cross_team_collaboration:
     score: 3.5
-    issues: [接口联调延迟]
+    issues: [Interface integration delays]
   assessment: good | acceptable | needs_improvement
 ```
 
-#### 3.4 效率分析 [深度]
+#### 3.4 Efficiency Analysis [Deep]
 
-**指标**：
+**Metrics**:
 
-| 指标 | 定义 | 计算方式 |
+| Metric | Definition | Calculation Method |
 |------|------|----------|
-| 团队吞吐量 | 故事点 / 人天 | 总点 / 总人天 |
-| 上下文切换 | 任务中断次数 | 统计数据 |
-| 阻塞时间占比 | 阻塞时间 / 总时间 | 日志统计 |
+| Team throughput | Story points / Person-days | Total points / Total person-days |
+| Context switching | Task interruption count | Statistics |
+| Blocked time ratio | Blocked time / Total time | Log statistics |
 
-**分析**：
+**Analysis**:
 
 ```yaml
 efficiency_analysis:
@@ -382,67 +382,67 @@ efficiency_analysis:
     total: 24
   blocked_time_percentage: 15%
   dependency_issues:
-    - issue: 等待设计团队交付视觉稿
+    - issue: Waiting for design team to deliver visual assets
       duration: 2
       impact: 5
   assessment: good | acceptable | needs_improvement
 ```
 
-### Step 4: 问题识别 [条件]
+### Step 4: Problem Identification [Conditional]
 
-**目标**：基于多维度分析识别迭代中的问题，进行根因分析
+**Goal**: Identify problems in the iteration based on multi-dimensional analysis and perform root cause analysis
 
-**问题分类**：
+**Problem Classification**:
 
-| 类别 | 识别方法 | 优先级 |
+| Category | Identification Method | Priority |
 |------|----------|--------|
-| 流程问题 | 重复出现的阻塞、变更 | P1 |
-| 技术问题 | 缺陷模式、性能瓶颈 | P1 |
-| 协作问题 | 沟通不畅、依赖问题 | P2 |
-| 环境问题 | 工具不稳定、环境问题 | P2 |
+| Process problems | Recurring blockers, changes | P1 |
+| Technical problems | Defect patterns, performance bottlenecks | P1 |
+| Collaboration problems | Communication issues, dependency issues | P2 |
+| Environment problems | Tool instability, environment issues | P2 |
 
-**问题识别输出**：
+**Problem Identification Output**:
 
 ```yaml
 problem_identification:
   - problem_id: PRB-001
     category: process | technical | collaboration | environment
     severity: P1 | P2 | P3
-    description: 需求在迭代中途变更2次
+    description: Requirements changed twice mid-iteration
     evidence:
       - metric: change_rate
         value: 12%
         baseline: 5%
         deviation: +7%
     root_cause_analysis:
-      - question: "为什么 需求变更频繁？"
-        answer: "PO与业务方对齐不足"
+      - question: "Why are requirement changes frequent?"
+        answer: "Insufficient alignment between PO and business stakeholders"
     impact:
       items_affected: 3
       effort_lost: 5
-      quality_impact: 返工导致测试时间压缩
+      quality_impact: Rework caused compressed testing time
 ```
 
-### Step 5: 改进建议 [深度]
+### Step 5: Improvement Suggestions [Deep]
 
-**目标**：基于问题识别生成可追踪、可验证的改进建议
+**Goal**: Generate trackable, verifiable improvement suggestions based on problem identification
 
-**建议格式**：
+**Suggestion Format**:
 
 ```yaml
 improvement_suggestions:
   - suggestion_id: IMP-001
     problem_id: PRB-001
     category: process | technical | collaboration | environment
-    title: 建立需求变更评审机制
-    description: 迭代中需求变更需经PO和Tech Lead双重确认
+    title: Establish requirement change review mechanism
+    description: Requirement changes during iteration require dual confirmation from PO and Tech Lead
     expected_outcome:
       metric_improvement:
         - metric: change_rate
           current: 12%
           target: 5%
     action_items:
-      - action: 制定需求变更流程文档
+      - action: Create requirement change process document
         owner: PO
         deadline: 2026-06-25
     effort_required:
@@ -452,43 +452,43 @@ improvement_suggestions:
     recommendation_score: 8.5
 ```
 
-## 输出
+## Output
 
-**输出文件路径**：`docs/monitoring/iteration-retrospective.md`
+**Output file path**: `docs/monitoring/iteration-retrospective.md`
 
-### 输出深度分级
+### Output Depth Levels
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 迭代回顾核心结论 | 核心结论 + 最小可行产物，仅输出完成情况分析和关键问题 |
-| standard | 完整迭代回顾（当前默认） | 完整产物，包含Step 1-5全部输出 |
-| deep | 完整回顾 + 扩展分析 | 完整产物 + 竞品迭代对比 + 长期路线评估 + 决策记录 |
+| quick | Iteration retrospective core conclusions | Core conclusions + minimum viable deliverable, only completion analysis and key problems |
+| standard | Full iteration retrospective (current default) | Full deliverable, includes all Step 1-5 outputs |
+| deep | Full retrospective + extended analysis | Full deliverable + competitor iteration comparison + long-term roadmap assessment + decision records |
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["iteration_id", "summary", "metrics_analysis"],
   "properties": {
-    "generated_at": {"type": "string", "description": "生成时间"},
-    "iteration_id": {"type": "string", "description": "迭代ID"},
-    "period": {"type": "object", "description": "迭代周期，包含起止时间"},
-    "trigger_id": {"type": "string", "description": "触发事件ID（如有调整）"},
-    "trigger_type": {"type": "string", "description": "触发类型：monitoring_alert/feedback/strategy_change"},
-    "impact_assessment": {"type": "object", "description": "变更影响评估，包含范围/进度/质量影响"},
-    "recommended_option": {"type": "string", "description": "推荐调整方案ID"},
-    "options": {"type": "array", "description": "可选调整方案列表，包含类型、评分和权衡"},
-    "needs_human_decision": {"type": "boolean", "description": "是否需要人工决策"},
-    "summary": {"type": "object", "description": "迭代总结，包含完成率、质量状态和评分"},
-    "metrics_analysis": {"type": "object", "description": "指标分析，包含交付/质量/协作/效率四维度"},
-    "problem_identification": {"type": "object", "description": "问题识别，包含总数和P1/P2计数"},
-    "improvement_suggestions": {"type": "array", "description": "改进建议列表，每项须含负责人和验证标准"}
+    "generated_at": {"type": "string", "description": "Generation time"},
+    "iteration_id": {"type": "string", "description": "Iteration ID"},
+    "period": {"type": "object", "description": "Iteration period, including start and end times"},
+    "trigger_id": {"type": "string", "description": "Trigger event ID (if adjusted)"},
+    "trigger_type": {"type": "string", "description": "Trigger type: monitoring_alert/feedback/strategy_change"},
+    "impact_assessment": {"type": "object", "description": "Change impact assessment, including scope/schedule/quality impact"},
+    "recommended_option": {"type": "string", "description": "Recommended adjustment plan ID"},
+    "options": {"type": "array", "description": "Optional adjustment plan list, including type, score, and trade-offs"},
+    "needs_human_decision": {"type": "boolean", "description": "Whether human decision is required"},
+    "summary": {"type": "object", "description": "Iteration summary, including completion rate, quality status, and score"},
+    "metrics_analysis": {"type": "object", "description": "Metrics analysis, including delivery/quality/collaboration/efficiency four dimensions"},
+    "problem_identification": {"type": "object", "description": "Problem identification, including total count and P1/P2 counts"},
+    "improvement_suggestions": {"type": "array", "description": "Improvement suggestion list, each item must have owner and validation criteria"}
   }
 }
 ```
 
-**输出文件结构**：
+**Output File Structure**:
 
 ```
 ├── iteration-retrospective.json
@@ -512,110 +512,110 @@ improvement_suggestions:
         └── retrospective_report.md
 ```
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| iteration_id | string | 是 | 迭代ID，不可为空 |
-| summary | object | 是 | 迭代总结，须含delivery_completion/quality_status/overall_score |
-| metrics_analysis | object | 是 | 指标分析，须含delivery/quality/collaboration/efficiency四维度 |
-| impact_assessment | object | 否 | 变更影响评估，须含affected_items/scope/severity |
-| adjustment_options | array | 否 | 调整方案列表，至少2个方案 |
-| adjustment_options[].recommendation_score | number | 否 | 推荐评分，范围0-100 |
-| risk_assessment | object | 否 | 风险评估，须含risk_level/mitigation |
-| communication_draft | object | 否 | 沟通草案，须含stakeholders/message |
-| problem_identification | object | 否 | 问题识别，须含total_problems/p1_count |
-| improvement_suggestions | array | 否 | 改进建议列表，每项须含负责人和验证标准 |
+| iteration_id | string | Yes | Iteration ID, cannot be empty |
+| summary | object | Yes | Iteration summary, must contain delivery_completion/quality_status/overall_score |
+| metrics_analysis | object | Yes | Metrics analysis, must contain delivery/quality/collaboration/efficiency four dimensions |
+| impact_assessment | object | No | Change impact assessment, must contain affected_items/scope/severity |
+| adjustment_options | array | No | Adjustment plan list, at least 2 plans |
+| adjustment_options[].recommendation_score | number | No | Recommendation score, range 0-100 |
+| risk_assessment | object | No | Risk assessment, must contain risk_level/mitigation |
+| communication_draft | object | No | Communication draft, must contain stakeholders/message |
+| problem_identification | object | No | Problem identification, must contain total_problems/p1_count |
+| improvement_suggestions | array | No | Improvement suggestion list, each item must have owner and validation criteria |
 
-## 决策规则
+## Decision Rules
 
-| 场景 | 决策规则 |
+| Scenario | Decision Rule |
 |------|----------|
-| P0 监控异常 | 自动推荐加塞，标记需人工确认 |
-| 影响 > 50% 范围 | 标记需要 PO 决策 |
-| 多个可选方案 | 推荐评分最高方案，列出对比 |
-| 无可用替换项 | 建议延期或拆分 |
-| 团队反对 | 标记需额外沟通 |
-| 完成率 < 70% | 标记重点问题，分析根本原因 |
-| Bug 泄漏率 > 10% | 触发质量流程审查 |
-| 团队满意度 < 3/5 | 标记协作问题，需专项改进 |
-| 连续两期同类问题 | 标记为系统性缺陷 |
-| 无法自动识别根因 | 建议人工专项分析 |
+| P0 monitoring anomaly | Auto-recommend insertion, mark for human confirmation |
+| Impact > 50% scope | Mark as requiring PO decision |
+| Multiple options available | Recommend highest-scored option, list comparison |
+| No available replacement items | Suggest postponement or split |
+| Team opposition | Mark as requiring additional communication |
+| Completion rate < 70% | Flag key problems, analyze root causes |
+| Bug leakage rate > 10% | Trigger quality process review |
+| Team satisfaction < 3/5 | Flag collaboration problems, require dedicated improvement |
+| Same type of problem in two consecutive iterations | Mark as systemic defect |
+| Cannot auto-identify root cause | Recommend dedicated manual analysis |
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失的上游输入 | 降级方案 | 输出影响 |
+| Missing Upstream Input | Degradation Plan | Output Impact |
 |---------------|---------|---------|
-| 当前迭代计划 | 用户描述需要调整的原因和期望，AI基于描述生成调整方案 | 基于用户描述的调整方案，缺乏计划数据验证 |
-| 迭代完成情况 | 用户提供迭代完成情况（完成/未完成项、故事点），AI基于提供数据生成复盘 | 基于用户输入的复盘报告，缺乏系统数据 |
-| 资源约束 | 跳过容量验证，方案中标注"需人工确认容量" | 无容量验证的调整方案 |
-| 触发事件 | 用户提供调整触发原因（异常/反馈/战略变化），AI据此评估 | 基于用户输入的影响评估 |
-| 变更需求 | 用户口述需要增删改的项，AI整理为结构化变更需求 | 用户口述转结构化的变更清单 |
-| 质量指标 | 用户提供缺陷数和返工情况，AI直接进行质量分析 | 基于用户输入的质量分析 |
-| 团队反馈 | 跳过协作分析维度，标注"缺少团队反馈数据" | 缺少协作维度的复盘 |
-| 监控数据 | 跳过监控数据分析，在复盘中标注"缺少稳定性数据" | 缺少稳定性维度的复盘 |
-| 监控告警 | 跳过告警关联分析，紧急优先策略不可用 | 无告警关联的调整方案 |
+| Current iteration plan | User describes reasons and expectations for adjustment, AI generates adjustment plan based on description | Adjustment plan based on user description, lacks plan data validation |
+| Iteration completion | User provides iteration completion (completed/incomplete items, story points), AI generates retrospective based on provided data | Retrospective report based on user input, lacks system data |
+| Resource constraints | Skip capacity validation, mark "manual capacity confirmation required" in plan | Adjustment plan without capacity validation |
+| Trigger event | User provides adjustment trigger reason (anomaly/feedback/strategic change), AI assesses accordingly | Impact assessment based on user input |
+| Change requirements | User dictates items to add/remove/modify, AI organizes into structured change requirements | User dictation converted to structured change list |
+| Quality metrics | User provides defect count and rework data, AI performs quality analysis directly | Quality analysis based on user input |
+| Team feedback | Skip collaboration analysis dimension, mark "team feedback data missing" | Retrospective without collaboration dimension |
+| Monitoring data | Skip monitoring data analysis, mark "stability data missing" in retrospective | Retrospective without stability dimension |
+| Monitoring alerts | Skip alert correlation analysis, urgent priority strategy unavailable | Adjustment plan without alert correlation |
 
-### 数据获取说明
+### Data Acquisition Instructions
 
-当上游文件缺失时，通过以下方式获取必要数据：
+When upstream files are missing, obtain necessary data through the following methods:
 
-1. **当前迭代计划缺失**：请用户描述需要调整的原因（如"支付功能出现线上问题需要加塞"），AI将基于描述生成调整方案，包含加塞/替换/推迟等选项
-2. **迭代完成情况缺失**：请用户提供迭代完成情况，包括：计划完成的故事点/实际完成的故事点、未完成项及原因、需求变更情况，AI将基于提供的数据生成复盘报告
-3. **资源约束缺失**：方案生成时跳过容量匹配验证，所有方案标注"需人工确认团队容量是否支持"，建议后续补充资源数据
-4. **触发事件缺失**：请用户说明调整触发原因和紧迫程度，AI将据此进行影响评估和方案生成
-5. **变更需求缺失**：请用户口述需要增删改的项，AI整理为结构化变更清单
-6. **质量指标缺失**：请用户提供关键质量数据（Bug数量、严重程度分布、返工次数），AI将据此进行质量维度分析
-7. **团队反馈缺失**：跳过协作分析维度，复盘中标注该维度数据缺失，建议后续通过Retro会议补充
-8. **监控数据缺失**：跳过稳定性分析，复盘中标注缺少稳定性数据，建议从监控系统导出补充
-9. **监控告警缺失**：跳过告警关联分析，无法自动提升紧急项优先级，建议用户手动标注紧急项
+1. **Current iteration plan missing**: Please describe the reason for adjustment (e.g., "payment feature has online issue requiring insertion"), AI will generate adjustment plan based on description, including insert/replace/postpone options
+2. **Iteration completion missing**: Please provide iteration completion, including: planned story points/actual completed story points, incomplete items and reasons, requirement changes; AI will generate retrospective report based on provided data
+3. **Resource constraints missing**: Skip capacity matching validation during plan generation, all plans marked "manual team capacity confirmation required"; recommend supplementing resource data later
+4. **Trigger event missing**: Please explain the adjustment trigger reason and urgency, AI will perform impact assessment and plan generation accordingly
+5. **Change requirements missing**: Please dictate items to add/remove/modify, AI will organize into structured change list
+6. **Quality metrics missing**: Please provide key quality data (Bug count, severity distribution, rework count); AI will perform quality dimension analysis accordingly
+7. **Team feedback missing**: Skip collaboration analysis dimension, mark this dimension as data missing in retrospective; recommend supplementing through Retro meeting later
+8. **Monitoring data missing**: Skip stability analysis, mark stability data missing in retrospective; recommend exporting from monitoring system to supplement
+9. **Monitoring alerts missing**: Skip alert correlation analysis, cannot auto-promote urgent item priority; recommend user manually flag urgent items
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 迭代ID非空
-- [ ] 完成情况分析覆盖率 100%
-- [ ] 调整方案数量 ≥ 2（如有触发事件）
+- [ ] Iteration ID non-empty
+- [ ] Completion analysis coverage 100%
+- [ ] Adjustment plan count ≥ 2 (if trigger event exists)
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 变更影响评估覆盖率 100%（如有触发事件）
-- [ ] Sprint 容量匹配
-- [ ] 无关键依赖遗漏
-- [ ] 风险评估完整性
-- [ ] 决策标记准确性
-- [ ] 方案可执行性 ≥ 80%
-- [ ] 数据收集完整率 ≥ 95%
-- [ ] 分析覆盖所有四个维度
-- [ ] 问题识别准确率 ≥ 80%
-- [ ] 建议可执行率 ≥ 75%
-- [ ] 改进建议有明确负责人
+- [ ] Change impact assessment coverage 100% (if trigger event exists)
+- [ ] Sprint capacity matched
+- [ ] No critical dependencies missed
+- [ ] Risk assessment completeness
+- [ ] Decision marking accuracy
+- [ ] Plan executability ≥ 80%
+- [ ] Data collection completeness ≥ 95%
+- [ ] Analysis covers all four dimensions
+- [ ] Problem identification accuracy ≥ 80%
+- [ ] Suggestion executability ≥ 75%
+- [ ] Improvement suggestions have clear owners
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (must pass for deep only)
 
-- [ ] 沟通草案覆盖所有干系人
-- [ ] 与上一迭代对比分析完整
-- [ ] 竞品迭代对比已完成（竞品功能迭代节奏、策略差异分析、市场趋势对标）
-- [ ] 长期路线评估已生成（3-6个月迭代路线图、关键里程碑、资源需求预测）
+- [ ] Communication draft covers all stakeholders
+- [ ] Comparison with previous iteration complete
+- [ ] Competitor iteration comparison completed (competitor feature iteration cadence, strategy difference analysis, market trend benchmarking)
+- [ ] Long-term roadmap assessment generated (3-6 month iteration roadmap, key milestones, resource demand forecast)
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游来源 | 变更类型 | 影响范围 | 响应动作 |
+| Upstream Source | Change Type | Impact Scope | Response Action |
 |----------|----------|----------|----------|
-| 项目管理系统 | 迭代计划变更 | 变更影响评估基准 | 重新评估变更影响 |
-| 项目管理系统 | 资源约束变更 | 方案容量验证 | 重新验证方案可行性 |
-| 项目管理系统 | 迭代完成数据更新 | 交付维度分析 | 更新完成率和故事点统计 |
-| 测试平台/CI/CD | 质量指标变更 | 质量维度分析 | 更新缺陷统计和覆盖率 |
-| monitoring-alert-detection | 告警数据更新 | 紧急优先策略 | 更新告警关联和优先级提升 |
+| Project management system | Iteration plan change | Change impact assessment baseline | Reassess change impact |
+| Project management system | Resource constraint change | Plan capacity validation | Re-validate plan feasibility |
+| Project management system | Iteration completion data update | Delivery dimension analysis | Update completion rate and story point statistics |
+| Test platform/CI/CD | Quality metrics change | Quality dimension analysis | Update defect statistics and coverage |
+| monitoring-alert-detection | Alert data update | Urgent priority strategy | Update alert correlation and priority promotion |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 下游消费者 | 通知条件 | 通知方式 | 通知内容 |
+| Downstream Consumer | Notification Condition | Notification Method | Notification Content |
 |------------|----------|----------|----------|
-| iteration-orchestrator | 迭代回顾全流程完成 | 输出文件更新 | 回顾完成状态和关键结论 |
-| iteration-backlog-grooming | 改进建议生成完成 | 输出文件更新 | 改进项回流至Backlog供下轮整理 |
+| iteration-orchestrator | Iteration retrospective full process complete | Output file update | Retrospective completion status and key conclusions |
+| iteration-backlog-grooming | Improvement suggestions generation complete | Output file update | Improvement items flow back to Backlog for next grooming round |

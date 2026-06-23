@@ -2,9 +2,9 @@
 name: design-system-refactor
 description: Scans design system and suggests merges/abstractions/tokenization. Use when design system has accumulated redundancy. Use for design system evolution.
 triggers:
-  - 设计系统有冗余
-  - 组件数量膨胀
-  - 需要设计系统重构
+  - Design system has redundancy
+  - Component count is bloating
+  - Design system refactor needed
 reads:
   - docs/design-system/DESIGN.md
   - docs/design-system/tokens.json
@@ -18,155 +18,155 @@ writes:
 
 ## Overview
 
-扫描现有设计系统，建议合并/抽象/token 化。设计系统是活文档，需要持续演进。不重构的技术债更 risky，累积后无法挽回。
+Scans the existing design system and recommends merges / abstractions / tokenization. The design system is a living document that needs continuous evolution. Not refactoring is riskier—technical debt accumulates and becomes unrecoverable.
 
 ## When to Use
 
-- ✅ 设计系统有冗余（相似组件 ≥3 个）
-- ✅ 组件数量膨胀（>20 个组件）
-- ✅ 需要设计系统重构
-- ❌ NOT for 初次创建设计系统（用 design-system skill）
+- ✅ Design system has redundancy (≥3 similar components)
+- ✅ Component count is bloating (>20 components)
+- ✅ Design system refactor needed
+- ❌ NOT for initial design system creation (use the design-system skill)
 
 ## Process
 
-### 1. 扫描所有组件
+### 1. Scan All Components
 
-读取以下目录的所有组件定义：
-- `docs/design-system/DESIGN.md`（第 4 段 Component Stylings + 第 10 段 Semantic Vocabulary）
-- `docs/visual/*.md`（视觉设计中的组件使用）
-- `docs/interaction/*.md`（交互设计中的组件状态）
+Read all component definitions from the following directories:
+- `docs/design-system/DESIGN.md` (Section 4 Component Stylings + Section 10 Semantic Vocabulary)
+- `docs/visual/*.md` (component usage in visual design)
+- `docs/interaction/*.md` (component states in interaction design)
 
-### 2. 识别重复/相似组件
+### 2. Identify Duplicate/Similar Components
 
-#### 名称相似
+#### Name Similarity
 
-Grep 组件名，识别名称相似的组件：
+Grep component names to identify similarly named components:
 - PrimaryButton / MainButton / ActionButton
 - ProductCard / ItemCard / ListCard
 
-#### 结构相似
+#### Structural Similarity
 
-对比组件的 props 和 states，识别仅 props 差异的组件：
-- 3 个按钮仅在 padding 上不同
-- 5 个卡片共享相同结构，仅 token 差异
+Compare component props and states to identify components differing only in props:
+- 3 buttons differ only in padding
+- 5 cards share the same structure, differing only in tokens
 
-#### 视觉相似
+#### Visual Similarity
 
-对比组件的 token 使用，识别仅 token 差异的组件：
-- 12 处硬编码 #3B82F6 应该用 token color.primary
+Compare component token usage to identify components differing only in tokens:
+- 12 hardcoded #3B82F6 instances should use the token color.primary
 
-### 3. 生成重构建议
+### 3. Generate Refactor Recommendations
 
-#### 合并建议
-
-```
-发现：PrimaryButton / MainButton / ActionButton 三个组件
-分析：仅在 padding 上不同（8px / 12px / 16px）
-建议：合并为 Button + size prop（sm/md/lg）
-影响：组件数 3 → 1，维护成本降低
-```
-
-#### 抽象建议
+#### Merge Recommendation
 
 ```
-发现：ProductCard / ItemCard / ListCard 共享相同结构
-分析：仅 token 差异（variant: product/item/list）
-建议：抽象为 Card + variant prop
-影响：组件数 3 → 1，扩展性提升
+Finding: PrimaryButton / MainButton / ActionButton—three components
+Analysis: Differ only in padding (8px / 12px / 16px)
+Recommendation: Merge into Button + size prop (sm/md/lg)
+Impact: Component count 3 → 1, lower maintenance cost
 ```
 
-#### Token 化建议
+#### Abstraction Recommendation
 
 ```
-发现：12 处硬编码 #3B82F6
-分析：应统一用 token color.primary
-建议：替换所有硬编码为 token 引用
-影响：可维护性提升，主题切换可用
+Finding: ProductCard / ItemCard / ListCard share the same structure
+Analysis: Differ only in tokens (variant: product/item/list)
+Recommendation: Abstract into Card + variant prop
+Impact: Component count 3 → 1, improved extensibility
 ```
 
-### 4. 输出重构报告
+#### Tokenization Recommendation
 
-写入 `docs/design-system/REFACTOR_REPORT.md`：
+```
+Finding: 12 hardcoded #3B82F6 instances
+Analysis: Should uniformly use the token color.primary
+Recommendation: Replace all hardcoded values with token references
+Impact: Improved maintainability, theme switching enabled
+```
+
+### 4. Output Refactor Report
+
+Write to `docs/design-system/REFACTOR_REPORT.md`:
 
 ```markdown
 # Design System Refactor Report
 
-## 扫描范围
-- 组件总数：<N>
-- token 总数：<N>
-- 扫描日期：<ISO 8601>
+## Scan Scope
+- Total components: <N>
+- Total tokens: <N>
+- Scan date: <ISO 8601>
 
-## 合并建议
+## Merge Recommendations
 
-### R001: 合并 3 个按钮组件
-- 涉及组件：PrimaryButton / MainButton / ActionButton
-- 差异：仅 padding（8px / 12px / 16px）
-- 建议：合并为 Button + size prop
-- Before: 3 个独立组件
-- After: 1 个组件 + size prop
-- 影响范围：<列出引用文件>
+### R001: Merge 3 button components
+- Components involved: PrimaryButton / MainButton / ActionButton
+- Difference: Only padding (8px / 12px / 16px)
+- Recommendation: Merge into Button + size prop
+- Before: 3 separate components
+- After: 1 component + size prop
+- Impact scope: <list of referencing files>
 
-## 抽象建议
+## Abstraction Recommendations
 
-### R002: 抽象 Card 组件
-- 涉及组件：ProductCard / ItemCard / ListCard
-- 差异：仅 variant token
-- 建议：抽象为 Card + variant prop
-- Before: 3 个独立组件
-- After: 1 个组件 + variant prop
+### R002: Abstract the Card component
+- Components involved: ProductCard / ItemCard / ListCard
+- Difference: Only variant token
+- Recommendation: Abstract into Card + variant prop
+- Before: 3 separate components
+- After: 1 component + variant prop
 
-## Token 化建议
+## Tokenization Recommendations
 
-### R003: 替换硬编码颜色
-- 涉及位置：12 处
-- 当前值：#3B82F6（硬编码）
-- 建议值：var(--color-primary)
-- 影响范围：<列出文件>
+### R003: Replace hardcoded colors
+- Locations involved: 12 instances
+- Current value: #3B82F6 (hardcoded)
+- Recommended value: var(--color-primary)
+- Impact scope: <list of files>
 
-## 执行优先级
-- P0: R003（token 化，零风险）
-- P1: R001（合并按钮，低风险）
-- P2: R002（抽象 Card，中风险）
+## Execution Priority
+- P0: R003 (tokenization, zero risk)
+- P1: R001 (merge buttons, low risk)
+- P2: R002 (abstract Card, medium risk)
 ```
 
-### 5. 用户确认后执行重构
+### 5. Execute Refactor After User Confirmation
 
-用户确认后，更新：
-- `docs/design-system/DESIGN.md`（第 4 段 Component Stylings）
-- `docs/design-system/tokens.json`（新增/合并 token）
-- `docs/handoff/component-map.json`（更新映射）
+After user confirmation, update:
+- `docs/design-system/DESIGN.md` (Section 4 Component Stylings)
+- `docs/design-system/tokens.json` (add/merge tokens)
+- `docs/handoff/component-map.json` (update mappings)
 
-### 6. 重构后验证
+### 6. Post-Refactor Verification
 
-运行 design-lint 确认重构未引入错误。
+Run design-lint to confirm the refactor introduced no errors.
 
 ## Common Rationalizations
 
-| 借口 | 现实 |
-|------|------|
-| "设计系统建好就不用动" | 设计系统是活文档，需要持续演进 |
-| "重构太 risky" | 不重构的技术债更 risky，累积后无法挽回 |
-| "组件多了再抽象" | 过早抽象是债，过晚抽象也是债，3 个相似就该抽象 |
-| "硬编码颜色也能用" | 硬编码破坏主题切换和可维护性 |
+| Excuse | Reality |
+|--------|---------|
+| "Once the design system is built, it doesn't need to change" | The design system is a living document that needs continuous evolution |
+| "Refactoring is too risky" | Not refactoring is riskier—technical debt accumulates and becomes unrecoverable |
+| "Abstract when there are more components" | Premature abstraction is debt, but so is late abstraction; 3 similar components should be abstracted |
+| "Hardcoded colors also work" | Hardcoding breaks theme switching and maintainability |
 
 ## Red Flags
 
-- 未扫描所有组件目录
-- 重构建议无 Before/After 对比
-- 未标注执行优先级
-- 重构后未运行 design-lint 验证
+- Not scanning all component directories
+- Refactor recommendations without Before/After comparison
+- No execution priority annotated
+- Not running design-lint to verify after refactoring
 
 ## Verification
 
-- [ ] 扫描覆盖所有组件目录（证据：扫描范围记录）
-- [ ] 每条建议有 Before/After 对比（证据：报告内容）
-- [ ] 执行优先级已标注（证据：P0/P1/P2 标记）
-- [ ] 重构后 design-lint 通过（证据：lint-report.md 无 error）
-- [ ] DESIGN.md + tokens.json + component-map.json 已更新（证据：文件 diff）
+- [ ] Scan covers all component directories (evidence: scan scope record)
+- [ ] Each recommendation has a Before/After comparison (evidence: report content)
+- [ ] Execution priority annotated (evidence: P0/P1/P2 markers)
+- [ ] design-lint passes after refactoring (evidence: lint-report.md has no errors)
+- [ ] DESIGN.md + tokens.json + component-map.json updated (evidence: file diff)
 
-## 与 LOOP 的关系
+## Relationship with LOOP
 
-- 不在 LOOP 内运行（在 LOOP 后的设计系统维护阶段运行）
-- 读取 LOOP 产出的 docs/visual/ + docs/interaction/ 作为扫描输入
-- 重构后调用 design-lint skill 验证未引入错误（复用 LOOP 内的 lint skill，但不进入循环）
-- 产出的 REFACTOR_REPORT.md 供用户确认后执行合并/抽象/token 化
+- Not run inside LOOP (runs in the post-LOOP design system maintenance stage)
+- Reads LOOP-produced docs/visual/ + docs/interaction/ as scan input
+- After refactoring, calls the design-lint skill to verify no errors were introduced (reuses the in-LOOP lint skill but does not enter the loop)
+- The REFACTOR_REPORT.md produced is for the user to confirm before executing merges / abstractions / tokenization

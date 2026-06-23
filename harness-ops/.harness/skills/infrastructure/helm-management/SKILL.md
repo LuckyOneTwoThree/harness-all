@@ -1,12 +1,12 @@
 ---
 name: helm-management
-description: Helm chart 管理与维护，生成/升级/回滚 Helm release，管理 values 文件
+description: Helm chart management and maintenance, generating / upgrading / rolling back Helm releases and managing values files
 triggers:
-  - 使用 Helm 部署应用时
-  - 需要升级 Helm chart 版本时
-  - Helm release 异常需要排查时
-  - 用户要求"用 Helm 部署"时
-  - 需要自定义 Helm values 时
+  - When deploying an application with Helm
+  - When upgrading a Helm chart version
+  - When a Helm release is abnormal and needs troubleshooting
+  - When the user requests "deploy with Helm"
+  - When custom Helm values are needed
 reads:
   - docs/infrastructure/OPS_STRATEGY.md
   - docs/handoff/solo-to-ops.md
@@ -23,42 +23,42 @@ operation_tier: propose
 requires_approval: false
 ---
 
-# Helm Management — Helm Chart 管理与维护
+# Helm Management — Helm Chart Management and Maintenance
 
-## 铁律
+## Ground Rules
 
-1. **values 文件分环境** —— dev/staging/production 各一份，不混用
-2. **chart 版本固定** —— 不使用 latest，显式指定 chart 版本
-3. **不直接修改 upstream chart** —— 通过 values 覆盖，fork 需谨慎
-4. **helm upgrade 必须 --atomic** —— 失败自动回滚
-5. **release 命名规范** —— `<app-name>-<env>`，如 `payment-production`
+1. **values files separated by environment** — one each for dev/staging/production; do not mix
+2. **Pin chart version** — do not use latest; explicitly specify the chart version
+3. **Do not modify upstream charts directly** — override via values; forking requires caution
+4. **helm upgrade must use --atomic** — auto-rollback on failure
+5. **Release naming convention** — `<app-name>-<env>`, e.g., `payment-production`
 
-## 流程
+## Process
 
-### 1. 评估 Helm 需求
+### 1. Assess Helm Requirements
 
-确定部署方式：
-- **upstream chart**：使用社区/官方 chart（如 bitnami/redis）
-- **自定义 chart**：项目专有 chart
-- **umbrella chart**：组合多个子 chart
+Determine the deployment method:
+- **upstream chart**: use a community/official chart (e.g., bitnami/redis)
+- **custom chart**: project-specific chart
+- **umbrella chart**: combine multiple sub-charts
 
-### 2. 生成/维护 values 文件
+### 2. Generate/Maintain values Files
 
-#### 环境分层 values
+#### Environment-tiered values
 ```
 charts/payment-service/
-├── values.yaml              # 基础配置（默认值）
-├── values-dev.yaml          # dev 环境覆盖
-├── values-staging.yaml      # staging 环境覆盖
-└── values-production.yaml   # production 环境覆盖
+├── values.yaml              # base config (defaults)
+├── values-dev.yaml          # dev environment overrides
+├── values-staging.yaml      # staging environment overrides
+└── values-production.yaml   # production environment overrides
 ```
 
-#### values.yaml 示例
+#### values.yaml example
 ```yaml
-# 基础配置
+# Base config
 image:
   repository: registry.example.com/payment-service
-  tag: v1.2.3  # 固定版本
+  tag: v1.2.3  # pinned version
   pullPolicy: IfNotPresent
 
 replicaCount: 2
@@ -97,9 +97,9 @@ autoscaling:
   targetCPUUtilizationPercentage: 70
 ```
 
-#### values-production.yaml 示例
+#### values-production.yaml example
 ```yaml
-# production 环境覆盖
+# production environment overrides
 replicaCount: 5
 
 resources:
@@ -114,7 +114,7 @@ autoscaling:
   minReplicas: 5
   maxReplicas: 30
 
-# production 专属配置
+# production-specific config
 podDisruptionBudget:
   enabled: true
   minAvailable: 3
@@ -123,7 +123,7 @@ networkPolicy:
   enabled: true
 ```
 
-### 3. 生成/维护自定义 Chart（如需）
+### 3. Generate/Maintain Custom Charts (if needed)
 
 ```
 charts/payment-service/
@@ -154,11 +154,11 @@ dependencies:
     condition: redis.enabled
 ```
 
-### 4. 执行 Helm 操作
+### 4. Execute Helm Operations
 
-#### 首次安装
+#### First-time Install
 ```bash
-# lint 检查
+# lint check
 helm lint charts/payment-service/
 
 # dry-run
@@ -166,93 +166,93 @@ helm install payment-staging charts/payment-service/ \
   -f values-staging.yaml \
   --dry-run
 
-# 实际安装（staging）
+# actual install (staging)
 helm install payment-staging charts/payment-service/ \
   -f values-staging.yaml \
   -n staging
 
-# 实际安装（production，需人类确认）
+# actual install (production, requires human confirmation)
 helm install payment-production charts/payment-service/ \
   -f values-production.yaml \
   -n production
 ```
 
-#### 升级
+#### Upgrade
 ```bash
-# 升级（必须 --atomic 失败回滚）
+# Upgrade (must use --atomic for rollback on failure)
 helm upgrade payment-production charts/payment-service/ \
   -f values-production.yaml \
   --atomic \
   --timeout 5m \
   -n production
 
-# 查看升级历史
+# View upgrade history
 helm history payment-production -n production
 ```
 
-#### 回滚
+#### Rollback
 ```bash
-# 回滚到上一版本
+# Roll back to the previous version
 helm rollback payment-production 1 -n production
 
-# 查看可回滚的版本
+# View rollback-able versions
 helm history payment-production -n production
 ```
 
-### 5. Helm release 排查
+### 5. Helm Release Troubleshooting
 
 ```bash
-# 查看所有 release
+# List all releases
 helm list -A
 
-# 查看 release 状态
+# View release status
 helm status payment-production -n production
 
-# 查看 release 的 Manifest
+# View the release Manifest
 helm get manifest payment-production -n production
 
-# 查看 release 的 values
+# View the release values
 helm get values payment-production -n production
 
-# 查看 release 的 hooks
+# View the release hooks
 helm get hooks payment-production -n production
 ```
 
-### 6. 更新 IaC 资产库
+### 6. Update IaC Asset Library
 
-`memory/knowledge-base.md` 的 IaC 资产库追加：
+Append to the IaC asset library in `memory/knowledge-base.md`:
 ```
-| Release 名 | Chart | 版本 | 环境 | 命名空间 | 最后升级 |
+| Release Name | Chart | Version | Environment | Namespace | Last Upgrade |
 |------------|-------|------|------|---------|---------|
 | payment-production | payment-service | 1.2.3 | production | production | 2026-06-22 |
 ```
 
-## 禁止事项
+## Prohibitions
 
-- 不使用 latest chart 版本
-- 不在生产环境执行 helm upgrade 不带 --atomic
-- 不直接修改 upstream chart（通过 values 覆盖）
-- 不删除 release 不验证依赖（helm uninstall 需确认）
-- 不在 values 中硬编码 Secret（使用 secrets.yaml + 外部管理）
+- Do not use the latest chart version
+- Do not run helm upgrade in production without --atomic
+- Do not modify upstream charts directly (override via values)
+- Do not delete a release without verifying dependencies (helm uninstall requires confirmation)
+- Do not hardcode Secrets in values (use secrets.yaml + external management)
 
-## 与 LOOP 的关系
+## Relationship to LOOP
 
-**所属 LOOP 类型**：provision
+**LOOP type**: provision
 
 ```
 LOOP(provision):
-  PLAN:       评估需求 → 生成/修改 values → lint 检查
+  PLAN:       Assess requirements → generate/modify values → lint check
   PROVISION:  helm install / upgrade --atomic
   VERIFY:     helm status + deployment-verify
-  通过? DONE : helm rollback → 分析原因 → 回到 PLAN
+  Pass? DONE : helm rollback → analyze cause → back to PLAN
 ```
 
-## 操作分级
+## Operation Tiers
 
-| 操作 | staging | production |
+| Operation | staging | production |
 |------|---------|------------|
 | helm lint | Agent | Agent |
-| helm install | Agent | 人类确认后 |
-| helm upgrade --atomic | Agent | 人类确认后 |
-| helm rollback | Agent 自动 | Agent 建议+人类确认 |
-| helm uninstall | 人类确认 | 人类双重确认 |
+| helm install | Agent | After human confirmation |
+| helm upgrade --atomic | Agent | After human confirmation |
+| helm rollback | Agent auto | Agent recommends + human confirms |
+| helm uninstall | Human confirmation | Human double confirmation |

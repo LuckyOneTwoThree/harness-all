@@ -2,373 +2,373 @@
 
 # harness-pm
 
-### 产品管理框架 · 让 Agent 按产品方法论做正确的事
+### Product Management Framework · Let Agents Do the Right Things via Product Methodology
 
-**只管"做正确的事"** · 产品探索 · 市场分析 · PRD 生成 · 度量运营 · 增长监控
+**Focus on "doing the right things"** · Product Discovery · Market Analysis · PRD Generation · Metrics Operations · Growth Monitoring
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-cross--platform-green.svg)](#跨平台兼容)
-[![Principles](https://img.shields.io/badge/principles-PM%204-orange.svg)](#产品四原则详解)
-[![Workflows](https://img.shields.io/badge/workflows-10-purple.svg)](#工作流详解)
-[![Skills](https://img.shields.io/badge/skills-82-red.svg)](#核心特性)
+[![Platform](https://img.shields.io/badge/platform-cross--platform-green.svg)](#cross-platform-compatibility)
+[![Principles](https://img.shields.io/badge/principles-PM%204-orange.svg)](#product-four-principles-in-detail)
+[![Workflows](https://img.shields.io/badge/workflows-10-purple.svg)](#workflows-in-detail)
+[![Skills](https://img.shields.io/badge/skills-82-red.svg)](#core-features)
 
-**[快速开始](#快速开始)** · **[目录结构](#目录结构)**
+**[Quick Start](#quick-start)** · **[Directory Structure](#directory-structure)**
 
 </div>
 
 ---
 
-> 工程开发 / UI 设计 / 运营增长见 harness 家族其他成员，通过 `docs/handoff/` 交接。
+> For engineering / UI design / growth operations, see other members of the harness family; hand off via `docs/handoff/`.
 
-## 这是什么
+## What Is This
 
-harness-pm 是一套**给 AI Agent 用的产品管理框架**。它不是代码库，而是一套规则 + 技能 + 工作流 + 状态管理机制，让 Agent 在帮你做产品工作时：
+harness-pm is a **product management framework for AI Agents**. It is not a codebase, but a set of rules + skills + workflows + state management mechanisms that let Agents help you with product work by:
 
-- **探索先行**（Discovery First）—— 不假设需求，用研究数据说话
-- **契约驱动**（Contract-Driven）—— PRD 驱动设计，定位驱动品牌
-- **数据决策**（Data-Driven）—— 用数据减少猜测，但决策权在人类
-- **闭环迭代**（Closed-Loop）—— 度量→监控→迭代→反馈
+- **Discovery First** — Don't assume requirements, let research data speak
+- **Contract-Driven** — PRD drives design, positioning drives brand
+- **Data-Driven** — Use data to reduce guessing, but humans keep the decision authority
+- **Closed-Loop** — Measure → Monitor → Iterate → Feedback
 
-这四条是产品方法论的核心约束，也是本框架的设计基础。
+These four are the core constraints of the product methodology and the design foundation of this framework.
 
-## 核心特性
+## Core Features
 
-### 产品四原则（已整合到 AGENTS.md + SOUL.md）
+### Product Four Principles (Integrated into AGENTS.md + SOUL.md)
 
-| 原则 | 含义 | 落地方式 |
+| Principle | Meaning | Implementation |
 |------|------|---------|
-| Discovery First | 不假设需求，用研究数据说话 | 用户研究硬门：需求模糊时停下问 |
-| Contract-Driven | PRD 驱动设计，定位驱动品牌 | design-prd 4 道质量门禁 + 变更影响分析 |
-| Data-Driven | 用数据减少猜测，决策权在人类 | 置信度分级：≥0.7 自动传递，<0.3 阻断 |
-| Closed-Loop | 度量→监控→迭代→反馈 | LOOP 循环：plan→research→validate |
+| Discovery First | Don't assume requirements, let research data speak | User research hard gate: stop and ask when requirements are vague |
+| Contract-Driven | PRD drives design, positioning drives brand | design-prd 4 quality gates + change impact analysis |
+| Data-Driven | Use data to reduce guessing, humans keep decision authority | Confidence grading: ≥0.7 auto-pass, <0.3 blocked |
+| Closed-Loop | Measure → Monitor → Iterate → Feedback | LOOP cycle: plan → research → validate |
 
-### LOOP 循环引擎
-
-```
-PLAN → RESEARCH → VALIDATE → 通过？DELIVER : 回到 RESEARCH/PLAN
-```
-
-- 每任务一个 `state.yaml`，支持断点续传
-- 迭代上限保护：单任务超 5 次迭代回到 PLAN，总循环超 10 次请求人类介入
-- 证据驱动：没有数据支撑不声称结论成立
-
-### 10 个工作流覆盖完整产品周期
+### LOOP Cycle Engine
 
 ```
-setup（立项）→ new-product/iteration/growth/optimization/pivot（产品工作）→ launch（发布）
+PLAN → RESEARCH → VALIDATE → Pass? DELIVER : Back to RESEARCH/PLAN
+```
+
+- One `state.yaml` per task, supports checkpoint resume
+- Iteration limit protection: single task exceeding 5 iterations returns to PLAN; total cycle exceeding 10 requests human intervention
+- Evidence-driven: no claiming conclusions hold without data support
+
+### 10 Workflows Cover the Full Product Lifecycle
+
+```
+setup (project initiation) → new-product/iteration/growth/optimization/pivot (product work) → launch (release)
                                                     ↓
-                                    diagnosis/incident-response/health-check（诊断与响应）
+                                    diagnosis/incident-response/health-check (diagnosis and response)
 ```
 
-| 工作流 | 场景 | 迭代上限 |
+| Workflow | Scenario | Iteration Limit |
 |--------|------|:---:|
-| setup | PM 项目立项引导 | 无 LOOP |
-| new-product | 从 0 到 1 做新产品 | 5 |
-| iteration | 已有产品功能迭代 | 3 |
-| growth | 增长突破 | 3 |
-| optimization | 数据驱动优化 | 3 |
-| launch | 验收发布 | 无 LOOP |
-| diagnosis | 产品诊断与下线 | 无 LOOP |
-| pivot | 战略调整 | 5 |
-| incident-response | 危机响应（P0事故） | 无 LOOP |
-| health-check | 定期健康检查 | 无 LOOP |
+| setup | PM project initiation guide | No LOOP |
+| new-product | Build a new product from 0 to 1 | 5 |
+| iteration | Iterate on existing product features | 3 |
+| growth | Growth breakthrough | 3 |
+| optimization | Data-driven optimization | 3 |
+| launch | Acceptance and release | No LOOP |
+| diagnosis | Product diagnosis and sunset | No LOOP |
+| pivot | Strategic pivot | 5 |
+| incident-response | Crisis response (P0 incident) | No LOOP |
+| health-check | Periodic health check | No LOOP |
 
-### 82 个 PM Skill（7 个模块 = 19 orchestrator + 63 pipeline）
+### 82 PM Skills (7 modules = 19 orchestrators + 63 pipelines)
 
-**模块 1 探索发现**：10 pipeline + 2 orchestrator = 12（user-research / market，insight/opportunity 退化壳已删）
-**模块 2 商业战略**：11 pipeline + 2 orchestrator = 13（business / planning，positioning/stakeholder 退化壳已删）
-**模块 3 构思设计**：7 pipeline + 2 orchestrator = 9（prd / validation，ideation 退化壳已删，视觉交互已交 harness-design）
-**模块 4 度量设计**：3 pipeline + 1 orchestrator = 4（metrics）
-**模块 5 度量运营**：8 pipeline + 3 orchestrator = 11（analysis / decision / experiment）
-**模块 6 增长运营**：11 pipeline + 5 orchestrator = 16（growth / acquisition / activation / retention / revenue）
-**模块 7 监控迭代**：13 pipeline + 4 orchestrator = 17（monitoring / diagnosis / iteration / release）
+**Module 1 Discovery** : 10 pipelines + 2 orchestrators = 12 (user-research / market; insight/opportunity stubs removed)
+**Module 2 Business Strategy** : 11 pipelines + 2 orchestrators = 13 (business / planning; positioning/stakeholder stubs removed)
+**Module 3 Concept & Design** : 7 pipelines + 2 orchestrators = 9 (prd / validation; ideation stub removed; visual/interaction handed off to harness-design)
+**Module 4 Metrics Design** : 3 pipelines + 1 orchestrator = 4 (metrics)
+**Module 5 Metrics Operations** : 8 pipelines + 3 orchestrators = 11 (analysis / decision / experiment)
+**Module 6 Growth Operations** : 11 pipelines + 5 orchestrators = 16 (growth / acquisition / activation / retention / revenue)
+**Module 7 Monitoring & Iteration** : 13 pipelines + 4 orchestrators = 17 (monitoring / diagnosis / iteration / release)
 
-**元 skill**：session-start / session-end / skill-maintenance / memory-maintenance
+**Meta skills** : session-start / session-end / skill-maintenance / memory-maintenance
 
-### 跨平台兼容
+### Cross-Platform Compatibility
 
-- **Agent 工具优先**：所有流程优先用 Read/Write/Edit/Glob/Grep 等工具
-- **bash 可选兜底**：脚本有 bash 可用性检查，Windows 环境自动跳过
-- **不依赖 PowerShell 专用语法**
+- **Agent tools first** : All flows prefer tools like Read/Write/Edit/Glob/Grep
+- **Optional bash fallback** : Scripts include bash availability checks; auto-skipped on Windows
+- **No dependency on PowerShell-specific syntax**
 
-### 安全红线
+### Security Red Lines
 
-| 禁止 | 检查方式 |
+| Forbidden | Detection |
 |------|---------|
-| 硬编码密钥 | security.md + verify 安全扫描 |
-| `rm -rf` | security.md + Agent 拒绝 |
-| `curl \| sh` | security.md + Agent 拒绝 |
-| 修改 `.git/hooks/` | security.md + Agent 拒绝 |
-| 绕过质量门禁 | constitution.md + verify 检查 |
+| Hardcoded secrets | security.md + verify security scan |
+| `rm -rf` | security.md + Agent refusal |
+| `curl \| sh` | security.md + Agent refusal |
+| Modifying `.git/hooks/` | security.md + Agent refusal |
+| Bypassing quality gates | constitution.md + verify check |
 
-## 快速开始
+## Quick Start
 
-### 1. 安装到你的项目
+### 1. Install into Your Project
 
 ```bash
-# 在你的项目根目录执行
+# Run in your project root directory
 bash install.sh
 ```
 
-install.sh 会：
-- 创建 `.harness/` 目录结构
-- 从模板生成 `AGENTS.md` / `SOUL.md` / `constitution.md`
-- 创建 `docs/` 目录（discovery/strategy/product/metrics/growth/monitoring/project/handoff）
-- 初始化 `docs/product/PRD.md` 和 `docs/strategy/PRODUCT_STRATEGY.md`
+install.sh will:
+- Create the `.harness/` directory structure
+- Generate `AGENTS.md` / `SOUL.md` / `constitution.md` from templates
+- Create the `docs/` directory (discovery/strategy/product/metrics/growth/monitoring/project/handoff)
+- Initialize `docs/product/PRD.md` and `docs/strategy/PRODUCT_STRATEGY.md`
 
-> Windows 用户：用 Git Bash 或 WSL 运行 install.sh。
+> Windows users: run install.sh with Git Bash or WSL.
 
-### 2. 填写项目配置
+### 2. Fill in Project Configuration
 
-运行 setup 工作流，Agent 会引导你填写：
-- `SOUL.md`：人格 + 产品偏好
-- `constitution.md`：项目宪法（不可协商原则）
-- `docs/strategy/PRODUCT_STRATEGY.md`：产品策略（含目标用户和成功指标）
-- `docs/product/PRD.md`：产品需求文档
+Run the setup workflow; the Agent will guide you to fill in:
+- `SOUL.md` : Persona + product preferences
+- `constitution.md` : Project constitution (non-negotiable principles)
+- `docs/strategy/PRODUCT_STRATEGY.md` : Product strategy (including target users and success metrics)
+- `docs/product/PRD.md` : Product requirements document
 
-### 3. 开始产品工作
+### 3. Start Product Work
 
-对 Agent 说：
-- "我要做一个新产品" → 进入 new-product 工作流
-- "已有产品需要迭代" → 进入 iteration 工作流
-- "需要增长突破" → 进入 growth 工作流
-- "分析数据优化产品" → 进入 optimization 工作流
-- "准备发布" → 进入 launch 工作流
+Tell the Agent:
+- "I want to build a new product" → enters new-product workflow
+- "Existing product needs iteration" → enters iteration workflow
+- "Need a growth breakthrough" → enters growth workflow
+- "Analyze data to optimize the product" → enters optimization workflow
+- "Prepare to launch" → enters launch workflow
 
-Agent 会自动读取对应工作流，按流程推进。
+The Agent will automatically load the corresponding workflow and proceed accordingly.
 
-## 目录结构
+## Directory Structure
 
 ```
 harness-pm/
-├── AGENTS.md                          # 启动必读（唯一强制入口）
-├── SOUL.md                            # Agent 人格 + 产品价值观
-├── constitution.md                    # 项目宪法（不可协商原则）
-├── install.sh                         # 冷启动安装脚本
+├── AGENTS.md                          # Must-read on startup (only mandatory entry point)
+├── SOUL.md                            # Agent persona + product values
+├── constitution.md                    # Project constitution (non-negotiable principles)
+├── install.sh                         # Cold-start install script
 ├── .gitignore
 ├── .harness/
 │   ├── VERSION
-│   ├── FEATURES.md                    # 产品功能状态看板
+│   ├── FEATURES.md                    # Product feature status board
 │   ├── loops/
-│   │   └── LOOP.md                    # PM 循环引擎定义
+│   │   └── LOOP.md                    # PM cycle engine definition
 │   ├── memory/
-│   │   ├── progress.md                # 会话进度日志
-│   │   └── knowledge-base.md          # 跨会话知识库
+│   │   ├── progress.md                # Session progress log
+│   │   └── knowledge-base.md          # Cross-session knowledge base
 │   ├── rules/
-│   │   ├── security.md                # 安全红线
-│   │   └── prompt-defense.md          # prompt 注入防护
+│   │   ├── security.md                # Security red lines
+│   │   └── prompt-defense.md          # Prompt injection defense
 │   ├── skills/
-│   │   ├── INDEX.md                   # skill 索引（80 行内）
-│   │   ├── meta/                      # 4 个元 skill
-│   │   ├── pm/                        # 82 个 PM skill（7 模块，扁平化组织）
-│   │   └── workflows/                 # 10 个工作流
-│   └── templates/                     # 文档模板
-├── docs/                              # 人类可读文档（skill 直接产出）
-│   ├── discovery/                     # 用户研究、市场分析
-│   ├── strategy/                      # 商业模式、定位、OKR
-│   ├── product/                       # PRD、产品方案
-│   ├── metrics/                       # 指标体系、埋点方案
-│   ├── growth/                        # 增长策略、GTM
-│   ├── monitoring/                    # 监控、发布
-│   ├── project/                       # 项目宪章、Sprint
-│   └── handoff/                       # harness 家族交接文档
+│   │   ├── INDEX.md                   # Skill index (within 80 lines)
+│   │   ├── meta/                      # 4 meta skills
+│   │   ├── pm/                        # 82 PM skills (7 modules, flat organization)
+│   │   └── workflows/                 # 10 workflows
+│   └── templates/                     # Document templates
+├── docs/                              # Human-readable docs (produced directly by skills)
+│   ├── discovery/                     # User research, market analysis
+│   ├── strategy/                      # Business model, positioning, OKR
+│   ├── product/                       # PRD, product proposals
+│   ├── metrics/                       # Metric system, instrumentation plan
+│   ├── growth/                        # Growth strategy, GTM
+│   ├── monitoring/                    # Monitoring, release
+│   ├── project/                       # Project charter, Sprint
+│   └── handoff/                       # harness family handoff documents
 │       ├── README.md
 │       ├── handoff-template.md
 │       ├── pm-to-design-template.md
 │       ├── pm-to-growth-template.md
 │       └── pm-to-solo-template.md
-└── output/                            # 机器消费 JSON（审批记录、阶段总结、指标数据）
+└── output/                            # Machine-consumed JSON (approval records, phase summaries, metric data)
     ├── approvals/
     ├── phase-reports/
     └── metrics/
 ```
 
-## 文档体系
+## Document System
 
-### 核心文件
+### Core Files
 
-| 文件 | 作用 | 谁写 |
+| File | Purpose | Author |
 |------|------|------|
-| `AGENTS.md` | 启动入口，核心规则 + 产品四原则 | 框架提供，项目可定制 |
-| `SOUL.md` | Agent 人格 + 产品偏好 | setup 工作流引导填写 |
-| `constitution.md` | 项目宪法（不可协商原则） | setup 工作流引导填写 |
-| `docs/strategy/PRODUCT_STRATEGY.md` | 产品策略（目标用户+成功指标） | 模块2 产出 |
-| `docs/product/PRD.md` | 产品需求文档（功能+AC） | design-prd skill 产出 |
-| `.harness/FEATURES.md` | 动态功能状态看板 | session-end 批量同步 |
+| `AGENTS.md` | Entry point, core rules + product four principles | Provided by framework, customizable per project |
+| `SOUL.md` | Agent persona + product preferences | Filled via setup workflow |
+| `constitution.md` | Project constitution (non-negotiable principles) | Filled via setup workflow |
+| `docs/strategy/PRODUCT_STRATEGY.md` | Product strategy (target users + success metrics) | Produced by Module 2 |
+| `docs/product/PRD.md` | Product requirements document (features + AC) | Produced by design-prd skill |
+| `.harness/FEATURES.md` | Dynamic feature status board | Batch-synced at session-end |
 
-### 文档间职责分工
+### Responsibility Division Across Documents
 
-| 维度 | PRODUCT_STRATEGY.md | PRD.md | FEATURES.md |
+| Dimension | PRODUCT_STRATEGY.md | PRD.md | FEATURES.md |
 |------|---------------------|--------|-------------|
-| 定位 | 战略定义 | 需求定义 | 状态看板 |
-| 时机 | 战略阶段写 | 设计阶段写 | 开发中更新 |
-| AC 层级 | 项目级成功指标 | 功能级验收标准 | — |
-| 状态 | 不含状态列 | 不含状态列 | 含状态列 |
+| Positioning | Strategic definition | Requirement definition | Status board |
+| Timing | Written in strategy phase | Written in design phase | Updated during development |
+| AC level | Project-level success metrics | Feature-level acceptance criteria | — |
+| Status | No status column | No status column | Has status column |
 
-## 工作流详解
+## Workflows in Detail
 
-### setup（立项引导）
-
-```
-install.sh 执行 → 引导填写 SOUL/constitution/PRODUCT_STRATEGY → 验证配置完整性
-```
-
-### new-product（从 0 到 1 做新产品）
+### setup (Project Initiation Guide)
 
 ```
-session-start → 模块1探索发现 → 模块2商业战略 → 模块3构思设计（PRD）→ 模块4度量设计 → session-end
+install.sh execution → Guide filling SOUL/constitution/PRODUCT_STRATEGY → Validate configuration completeness
 ```
 
-**探索硬门**（5 项检查，任何一条不满足停下问）：
-- 目标用户是否清晰？
-- 核心问题是否验证？
-- 市场机会是否成立？
-- 商业模式是否可行？
-- 用户是否确认？
-
-### iteration（已有产品迭代）
+### new-product (Build a New Product from 0 to 1)
 
 ```
-session-start → 模块3设计（变更影响分析）→ LOOP(模块5数据分析→模块7迭代决策) → session-end
+session-start → Module 1 Discovery → Module 2 Business Strategy → Module 3 Concept & Design (PRD) → Module 4 Metrics Design → session-end
 ```
 
-### growth（增长突破）
+**Discovery hard gate** (5 checks; stop and ask if any one is not met):
+- Are target users clear?
+- Is the core problem validated?
+- Is the market opportunity valid?
+- Is the business model feasible?
+- Has the user confirmed?
+
+### iteration (Existing Product Iteration)
 
 ```
-session-start → 模块6增长诊断 → LOOP(瓶颈子编排器→实验验证) → 模块7发布 → session-end
+session-start → Module 3 Design (change impact analysis) → LOOP(Module 5 data analysis → Module 7 iteration decision) → session-end
 ```
 
-### optimization（数据驱动优化）
+### growth (Growth Breakthrough)
 
 ```
-session-start → 模块5数据诊断 → 模块7迭代决策 → LOOP(模块3设计→模块7验证) → session-end
+session-start → Module 6 growth diagnosis → LOOP(bottleneck sub-orchestrator → experiment validation) → Module 7 release → session-end
 ```
 
-### launch（验收发布）
+### optimization (Data-Driven Optimization)
 
 ```
-session-start → 发版前置检查（硬门）→ 模块7验收 → 发布说明 → 交接文档 → session-end
+session-start → Module 5 data diagnosis → Module 7 iteration decision → LOOP(Module 3 design → Module 7 validation) → session-end
 ```
 
-**发版硬门**：
-- PRD 所有功能验收通过
-- 成功指标达标
-- 埋点方案已实施
-- 安全合规检查通过
-- constitution 合规
+### launch (Acceptance and Release)
 
-### project-mgmt（项目管理，贯穿全程）
+```
+session-start → Pre-release checks (hard gate) → Module 7 acceptance → Release notes → Handoff document → session-end
+```
 
-> 已移除：原依赖的 pm-08 项目管理 skill 集已删除。迭代复盘能力由 iteration 工作流覆盖。
+**Release hard gate**:
+- All PRD features passed acceptance
+- Success metrics met
+- Instrumentation plan implemented
+- Security compliance check passed
+- constitution compliance
 
-## LOOP 循环引擎
+### project-mgmt (Project Management, Throughout the Process)
+
+> Removed: the pm-08 project management skill set that this originally depended on has been deleted. Iteration retrospective capability is covered by the iteration workflow.
+
+## LOOP Cycle Engine
 
 ### state.yaml Schema
 
 ```yaml
-# 必填
+# Required
 current_task: 001-market-research
 iteration: 2
 stage: research      # plan / research / validate / revise
 status: running      # running / retrying / done / failed
 started_at: "2026-06-21T14:30:00"
 
-# 可选（失败时）
-last_error: "数据不足：用户反馈 < 500 条"
+# Optional (on failure)
+last_error: "Insufficient data: user feedback < 500 entries"
 last_error_at: "2026-06-21T14:45:00"
 
-# 可选（子阶段）
+# Optional (sub-stage)
 substage: "voice-analysis"
 ```
 
-### 断点续传
+### Checkpoint Resume
 
-会话中断后，session-start 读取 `state.yaml`，恢复到中断点继续。
+After a session interruption, session-start reads `state.yaml` and resumes from the interruption point.
 
-### 超限保护
+### Over-Limit Protection
 
-| 工作流 | 迭代上限 | 超限处理 |
+| Workflow | Iteration Limit | Over-Limit Handling |
 |--------|:---:|---------|
-| new-product | 5 | 请求人类介入 |
-| iteration | 3 | 请求人类介入 |
-| growth | 3 | 请求人类介入 |
-| optimization | 3 | 请求人类介入 |
-| 总循环 | 10 | 请求人类介入 |
+| new-product | 5 | Request human intervention |
+| iteration | 3 | Request human intervention |
+| growth | 3 | Request human intervention |
+| optimization | 3 | Request human intervention |
+| Total cycle | 10 | Request human intervention |
 
-## harness 家族
+## harness Family
 
-harness-pm 是 harness 家族的**产品管理**成员，专注做正确的事。其他成员通过文档交接协作：
+harness-pm is the **product management** member of the harness family, focused on doing the right things. Other members collaborate via document handoff:
 
-| 家族成员 | 职责 | 交接方式 |
+| Family Member | Responsibility | Handoff |
 |---------|------|---------|
-| **harness-pm（本框架）** | **产品研究/市场/PRD/度量** | 产出 `docs/handoff/pm-to-solo.md` → 交给工程 |
-| harness-solo | 工程开发 | 消费本框架的 PRD，产出 `solo-to-growth.md` |
-| harness-design | UI/视觉设计（按需） | 消费本框架的 PRD 和定位陈述 |
-| harness-growth | 内容/SEO/数据（按需） | 消费本框架的指标体系和增长策略 |
+| **harness-pm (this framework)** | **Product research / market / PRD / metrics** | Produces `docs/handoff/pm-to-solo.md` → handed to engineering |
+| harness-solo | Engineering development | Consumes this framework's PRD, produces `solo-to-growth.md` |
+| harness-design | UI/visual design (on demand) | Consumes this framework's PRD and positioning statement |
+| harness-growth | Content/SEO/data (on demand) | Consumes this framework's metric system and growth strategy |
 
-## 产品四原则详解
+## Product Four Principles in Detail
 
-### 1. 探索先行（Discovery First）
+### 1. Discovery First
 
-**不假设用户需求，用研究数据说话。**
+**Don't assume user requirements; let research data speak.**
 
-- 需求模糊时，先列出假设让用户验证
-- 用户说的和做的不一样，VOC 和行为数据必须交叉验证
-- 访谈是验证不是探索，脚本必须锚定待验证假设
-- 没有数据时标注"探索性结论"，置信度 ≤ 0.5
+- When requirements are vague, list assumptions first for the user to validate
+- What users say and do may differ; VOC and behavioral data must cross-validate
+- Interviews are for validation, not discovery; scripts must anchor on hypotheses to validate
+- Without data, label as "exploratory conclusion"; confidence ≤ 0.5
 
-### 2. 契约驱动（Contract-Driven）
+### 2. Contract-Driven
 
-**PRD 驱动设计，定位驱动品牌，埋点驱动数据。**
+**PRD drives design, positioning drives brand, instrumentation drives data.**
 
-- 关键产出是下游契约，变更需走变更影响分析
-- PRD 必须可追溯到上游需求和业务目标
-- 埋点方案驱动后续度量运营
-- 契约产出必须通过质量门禁
+- Key outputs are downstream contracts; changes require change impact analysis
+- PRD must be traceable to upstream requirements and business goals
+- Instrumentation plan drives subsequent metrics operations
+- Contract outputs must pass quality gates
 
-### 3. 数据决策（Data-Driven Decisions）
+### 3. Data-Driven Decisions
 
-**用数据减少猜测，但决策权在人类。**
+**Use data to reduce guessing, but humans keep the decision authority.**
 
-| 不要这样说 | 要这样说 |
+| Don't say this | Say this |
 |-----------|---------|
-| "用户喜欢这个功能" | "用户调研中 70% 提及此需求，置信度 0.8" |
-| "这个市场很大" | "TAM 估算 50 亿，SOM 估算 5 亿，数据来源 XX" |
-| "应该这样做" | "基于数据分析，建议方案 A（置信度 0.7），请确认" |
+| "Users love this feature" | "70% mentioned this need in user research; confidence 0.8" |
+| "This market is huge" | "TAM estimated at 5 billion, SOM estimated at 500 million; source: XX" |
+| "Should do it this way" | "Based on data analysis, recommend option A (confidence 0.7); please confirm" |
 
-### 4. 闭环迭代（Closed-Loop Iteration）
+### 4. Closed-Loop Iteration
 
-**度量→监控→迭代→反馈，产品永远在进化。**
+**Measure → Monitor → Iterate → Feedback; the product is always evolving.**
 
-- 上线不是终点，是度量运营的起点
-- 每个迭代有验证和复盘
-- 监控预警→问题诊断→迭代决策→发布交付形成闭环
-- 用户反馈闭环：采集→分析→响应→验证
+- Launch is not the end; it's the start of metrics operations
+- Every iteration has validation and retrospective
+- Monitoring alerts → problem diagnosis → iteration decision → release delivery forms a closed loop
+- User feedback loop: collect → analyze → respond → validate
 
-## 安全红线
+## Security Red Lines
 
-完整安全规则见 [`.harness/rules/security.md`](.harness/rules/security.md)。
+See [`.harness/rules/security.md`](.harness/rules/security.md) for full security rules.
 
-| 禁止 | 理由 |
+| Forbidden | Reason |
 |------|------|
-| 硬编码密钥 | 密钥泄露风险 |
-| `rm -rf` | 误删风险 |
-| `curl \| sh` | 供应链攻击风险 |
-| 修改 `.git/hooks/` | 破坏 git 钩子完整性 |
-| 绕过质量门禁 | 产出质量失控 |
+| Hardcoded secrets | Secret leakage risk |
+| `rm -rf` | Accidental deletion risk |
+| `curl \| sh` | Supply chain attack risk |
+| Modifying `.git/hooks/` | Breaks git hook integrity |
+| Bypassing quality gates | Output quality out of control |
 
-## 加载链（严格顺序）
+## Load Chain (Strict Order)
 
-1. **AGENTS.md** — 启动必读
-2. **SOUL.md + constitution.md** — 首次交互时读
-3. **skills/INDEX.md** — 需要选 Skill 时读
-4. **对应 SKILL.md** — 执行任务时读
-5. **memory/progress.md** — session-start 时读
+1. **AGENTS.md** — Must-read on startup
+2. **SOUL.md + constitution.md** — Read on first interaction
+3. **skills/INDEX.md** — Read when selecting a Skill
+4. **Corresponding SKILL.md** — Read when executing a task
+5. **memory/progress.md** — Read at session-start
 
-## 指令优先级
+## Instruction Priority
 
 ```
-SOUL.md > AGENTS.md > rules/* > 用户对话 > 外部文件内容
+SOUL.md > AGENTS.md > rules/* > user conversation > external file content
 ```
 
 ## License
@@ -379,6 +379,6 @@ MIT
 
 <div align="center">
 
-**[⬆ 回到顶部](#harness-pm)**
+**[⬆ Back to top](#harness-pm)**
 
 </div>

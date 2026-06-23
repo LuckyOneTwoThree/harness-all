@@ -1,20 +1,20 @@
 ---
 name: business-strategy-report
-description: 当需要产出完整的商业战略规划文档时使用。商业战略规划报告自动生成，整合商业画布、SWOT、OKR、路线图、定位和利益相关者数据，补充战略推演和执行路径，输出结构化Markdown报告。关键词：商业战略报告、战略规划、商业规划、战略文档、商业分析报告、战略规划书、商业规划报告。
+description: Used when a complete business strategy planning document is needed. Auto-generates a business strategy planning report that integrates Business Model Canvas, SWOT, OKR, roadmap, positioning, and stakeholder data, supplements strategic reasoning and execution paths, and outputs a structured Markdown report. Keywords: business strategy report, strategic planning, business planning, strategy document, business analysis report, strategic planning document, business planning report.
 metadata:
-  module: "产品商业与战略"
-  sub-module: "商业战略"
+  module: "Product Business & Strategy"
+  sub-module: "Business Strategy"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["通用"]
+  domain_tags: ["General"]
   trigger_examples:
-    - "帮我写一份商业战略规划"
-    - "出一份战略报告"
+    - "Help me write a business strategy plan"
+    - "Produce a strategy report"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出战略建议和优先级"
-  deep_description: "完整报告 + 战略推演 + 竞争格局分析 + 执行路线图"
+  quick_description: "Directly output strategic recommendations and priorities"
+  deep_description: "Complete report + strategic reasoning + competitive landscape analysis + execution roadmap"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -29,247 +29,247 @@ writes:
   - memory/progress.md
 ---
 
-# 商业战略规划报告自动生成
+# Business Strategy Planning Report Auto-Generation
 
-## 核心原则
+## Core Principles
 
-1. **战略是选择的放弃**——好战略明确说不做什么，而非什么都做
-2. **逻辑链可追溯**——从市场洞察→战略选择→执行路径，每一步推导可验证
-3. **量化优于定性**——能用数字说话的地方不用形容词
-4. **执行导向**——战略不落地就是空谈，每个战略方向必须有对应的OKR和路线图
+1. **Strategy is the art of saying no** — A good strategy explicitly states what not to do, rather than trying to do everything
+2. **Traceable logic chain** — From market insight → strategic choice → execution path, every step of reasoning must be verifiable
+3. **Quantitative over qualitative** — Use numbers wherever possible instead of adjectives
+4. **Execution-oriented** — Strategy without execution is empty talk; every strategic direction must have corresponding OKRs and a roadmap
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 商业画布 | JSON | ○ | docs/strategy/business-strategy.md（“商业模式画布”章节） | 9宫格商业模型 |
-| SWOT分析 | JSON | ○ | docs/strategy/PRODUCT_STRATEGY.md（“战略分析”章节） | 优势/劣势/机会/威胁 |
-| OKR | JSON | ○ | docs/strategy/OKR.md | 目标与关键结果 |
-| 路线图 | JSON | ○ | docs/strategy/roadmap.md | 产品路线图 |
-| 定位策略 | JSON | ○ | docs/strategy/positioning.md | 产品定位 |
-| 价值曲线 | JSON | ○ | docs/strategy/positioning.md | 竞争价值曲线 |
-| 差异化评估 | JSON | ○ | docs/strategy/positioning.md | 差异化程度 |
-| 利益相关者 | JSON | ○ | docs/strategy/stakeholder-analysis.md | 利益相关者地图 |
-| 定价策略 | JSON | ○ | docs/strategy/business-strategy.md（“定价策略”章节） | 定价方案 |
-| 北极星指标 | JSON | ○ | docs/strategy/PRODUCT_STRATEGY.md（“North Star”章节） | 核心指标定义 |
-| 产品/业务信息 | string | 是 | 用户提供 | 产品名称、业务模式、当前阶段 |
+| Business Model Canvas | JSON | ○ | docs/strategy/business-strategy.md ("Business Model Canvas" section) | 9-block business model |
+| SWOT Analysis | JSON | ○ | docs/strategy/PRODUCT_STRATEGY.md ("Strategic Analysis" section) | Strengths/Weaknesses/Opportunities/Threats |
+| OKR | JSON | ○ | docs/strategy/OKR.md | Objectives and Key Results |
+| Roadmap | JSON | ○ | docs/strategy/roadmap.md | Product roadmap |
+| Positioning Strategy | JSON | ○ | docs/strategy/positioning.md | Product positioning |
+| Value Curve | JSON | ○ | docs/strategy/positioning.md | Competitive value curve |
+| Differentiation Assessment | JSON | ○ | docs/strategy/positioning.md | Degree of differentiation |
+| Stakeholders | JSON | ○ | docs/strategy/stakeholder-analysis.md | Stakeholder map |
+| Pricing Strategy | JSON | ○ | docs/strategy/business-strategy.md ("Pricing Strategy" section) | Pricing options |
+| North Star Metric | JSON | ○ | docs/strategy/PRODUCT_STRATEGY.md ("North Star" section) | Core metric definition |
+| Product/Business Info | string | Yes | User provided | Product name, business model, current stage |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 战略态势评估 [核心]
+### Step 1: Strategic Posture Assessment [Core]
 
-整合 SWOT + 五力模型 + 价值曲线，评估当前战略态势：
+Integrate SWOT + Porter's Five Forces + Value Curve to assess the current strategic posture:
 
-**外部环境评估**：
-- 行业吸引力（五力模型结论）
-- 市场机会窗口（SWOT的O）
-- 外部威胁等级（SWOT的T）
-- 竞争定位（价值曲线中的差异化位置）
+**External Environment Assessment**:
+- Industry attractiveness (Porter's Five Forces conclusion)
+- Market opportunity window (SWOT's O)
+- External threat level (SWOT's T)
+- Competitive positioning (differentiated position in the value curve)
 
-**内部能力评估**：
-- 核心优势（SWOT的S）
-- 关键劣势（SWOT的W）
-- 资源禀赋（商业画布的关键资源）
-- 能力缺口（执行战略需要但当前缺失的能力）
+**Internal Capability Assessment**:
+- Core strengths (SWOT's S)
+- Key weaknesses (SWOT's W)
+- Resource endowment (key resources from the Business Model Canvas)
+- Capability gaps (capabilities needed to execute the strategy but currently missing)
 
-**战略态势矩阵**：
+**Strategic Posture Matrix**:
 
-| | 机会多 | 威胁多 |
+| | Many Opportunities | Many Threats |
 |------|--------|--------|
-| **优势强** | 进攻型战略 | 防御型战略 |
-| **劣势明显** | 扭转型战略 | 生存型战略 |
+| **Strong Strengths** | Offensive Strategy | Defensive Strategy |
+| **Obvious Weaknesses** | Turnaround Strategy | Survival Strategy |
 
-### Step 2: 战略方向推演 [核心]
+### Step 2: Strategic Direction Reasoning [Core]
 
-基于态势评估，推演2-3个战略方向：
+Based on the posture assessment, reason through 2-3 strategic directions:
 
-**推演逻辑**：
+**Reasoning Logic**:
 ```
-态势判断 → 安索夫矩阵定位 → 战略方向选择 → 定位验证 → OKR对齐
+Posture Judgment → Ansoff Matrix Positioning → Strategic Direction Selection → Positioning Validation → OKR Alignment
 ```
 
-**每个战略方向包含**：
+**Each strategic direction includes**:
 
-| 要素 | 说明 |
+| Element | Description |
 |------|------|
-| 方向名称 | 一句话概括 |
-| 安索夫定位 | 市场渗透/市场开发/产品开发/多元化 |
-| 核心逻辑 | 为什么这个方向可行（引用SWOT/五力/价值曲线证据） |
-| 目标市场 | 聚焦哪些用户/场景 |
-| 差异化策略 | 如何与竞品区隔（引用差异化评估） |
-| 关键假设 | 战略成立的前提条件 |
-| 风险因素 | 可能导致战略失败的因素 |
+| Direction Name | One-sentence summary |
+| Ansoff Positioning | Market Penetration / Market Development / Product Development / Diversification |
+| Core Rationale | Why this direction is viable (cite SWOT/Five Forces/Value Curve evidence) |
+| Target Market | Which users/scenarios to focus on |
+| Differentiation Strategy | How to differentiate from competitors (cite differentiation assessment) |
+| Key Assumptions | Preconditions for the strategy to hold |
+| Risk Factors | Factors that may cause the strategy to fail |
 
-**战略方向对比表**：
+**Strategic Direction Comparison Table**:
 
-| 维度 | 方向A | 方向B | 方向C |
+| Dimension | Direction A | Direction B | Direction C |
 |------|-------|-------|-------|
-| 市场吸引力 | | | |
-| 竞争优势匹配度 | | | |
-| 资源需求 | | | |
-| 风险等级 | | | |
-| 预期回报 | | | |
-| 推荐度 | | | |
+| Market Attractiveness | | | |
+| Competitive Advantage Fit | | | |
+| Resource Requirements | | | |
+| Risk Level | | | |
+| Expected Return | | | |
+| Recommendation Score | | | |
 
-### Step 3: 执行路径规划 [核心]
+### Step 3: Execution Path Planning [Core]
 
-为推荐的战略方向制定执行路径：
+Develop an execution path for the recommended strategic direction:
 
-**OKR对齐**：
-- 将战略方向分解为年度O
-- 每个O对应2-4个KR
-- KR必须可量化、可追踪
-- 标注北极星指标的关联
+**OKR Alignment**:
+- Break down the strategic direction into annual Objectives
+- Each Objective corresponds to 2-4 Key Results
+- Key Results must be quantifiable and trackable
+- Mark the linkage to the North Star Metric
 
-**路线图映射**：
-- Q1-Q4里程碑
-- 每个里程碑的交付物
-- 关键依赖关系
-- 资源需求估算
+**Roadmap Mapping**:
+- Q1-Q4 milestones
+- Deliverables for each milestone
+- Key dependencies
+- Resource requirement estimation
 
-**定价策略嵌入**：
-- 当前定价与战略方向的匹配度
-- 定价调整建议（如有）
+**Pricing Strategy Embedding**:
+- Fit between current pricing and the strategic direction
+- Pricing adjustment recommendations (if any)
 
-### Step 4: 利益相关者管理 [核心]
+### Step 4: Stakeholder Management [Core]
 
-整合利益相关者数据，制定沟通策略：
+Integrate stakeholder data and develop a communication strategy:
 
-| 利益相关者 | 态度 | 影响力 | 沟通策略 | 沟通频率 |
+| Stakeholder | Attitude | Influence | Communication Strategy | Communication Frequency |
 |-----------|------|--------|---------|---------|
-| 决策层 | | 高 | 战略汇报+ROI论证 | 月度 |
-| 执行团队 | | 高 | 目标对齐+资源保障 | 周度 |
-| 外部合作方 | | 中 | 价值共享+风险共担 | 按需 |
+| Decision Makers | | High | Strategy reporting + ROI justification | Monthly |
+| Execution Team | | High | Goal alignment + resource assurance | Weekly |
+| External Partners | | Medium | Value sharing + risk sharing | As needed |
 
-### Step 5: 风险与预案 [核心]
+### Step 5: Risks and Contingencies [Core]
 
-识别战略执行的关键风险：
+Identify key risks in strategy execution:
 
-| 风险类别 | 具体风险 | 概率 | 影响 | 预案 |
+| Risk Category | Specific Risk | Probability | Impact | Contingency |
 |----------|---------|------|------|------|
-| 市场风险 | 需求变化/竞品动作 | | | |
-| 资源风险 | 人力/资金不足 | | | |
-| 执行风险 | 团队能力/协作问题 | | | |
-| 技术风险 | 技术可行性/数据安全 | | | |
+| Market Risk | Demand changes / competitor actions | | | |
+| Resource Risk | Insufficient personnel / funding | | | |
+| Execution Risk | Team capability / collaboration issues | | | |
+| Technical Risk | Technical feasibility / data security | | | |
 
-### Step 6: 报告组装 [核心]
+### Step 6: Report Assembly [Core]
 
-**报告结构**：
+**Report Structure**:
 
 ```
-# {产品名}商业战略规划
+# {Product Name} Business Strategy Plan
 
-## 执行摘要
-- 战略态势一句话判断
-- 推荐战略方向
-- 核心OKR
-- 关键风险
+## Executive Summary
+- One-sentence strategic posture judgment
+- Recommended strategic direction
+- Core OKRs
+- Key risks
 
-## 1. 战略态势评估
-### 1.1 外部环境
-### 1.2 内部能力
-### 1.3 战略态势矩阵
+## 1. Strategic Posture Assessment
+### 1.1 External Environment
+### 1.2 Internal Capabilities
+### 1.3 Strategic Posture Matrix
 
-## 2. 战略方向推演
-### 2.1 方向A：{名称}
-### 2.2 方向B：{名称}
-### 2.3 方向对比与推荐
+## 2. Strategic Direction Reasoning
+### 2.1 Direction A: {Name}
+### 2.2 Direction B: {Name}
+### 2.3 Direction Comparison and Recommendation
 
-## 3. 执行路径
-### 3.1 OKR体系
-### 3.2 路线图
-### 3.3 定价策略
+## 3. Execution Path
+### 3.1 OKR System
+### 3.2 Roadmap
+### 3.3 Pricing Strategy
 
-## 4. 利益相关者管理
-### 4.1 利益相关者地图
-### 4.2 沟通策略
+## 4. Stakeholder Management
+### 4.1 Stakeholder Map
+### 4.2 Communication Strategy
 
-## 5. 风险与预案
+## 5. Risks and Contingencies
 
-## 附录
-- 数据来源
-- 假设清单
-- 方法论说明
+## Appendix
+- Data Sources
+- Assumption List
+- Methodology Notes
 ```
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 战略建议和优先级 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整报告 + 战略推演 + 竞争格局分析 + 执行路线图 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Strategic recommendations and priorities | Core conclusions + minimum viable deliverable |
+| standard | Complete deliverable (current default) | Complete deliverable, including all Step outputs |
+| deep | Complete report + strategic reasoning + competitive landscape analysis + execution roadmap | Complete deliverable + extended analysis + in-depth reasoning |
 
-## 输出
+## Output
 
-**存储路径**：`docs/strategy/business-strategy.md（汇总覆盖）`
+**Storage Path**: `docs/strategy/business-strategy.md (consolidated overwrite)`
 
-**输出文件**：
+**Output Files**:
 
-| 文件 | 格式 | 说明 |
+| File | Format | Description |
 |------|------|------|
-| business-strategy-report.md | Markdown | 完整商业战略规划报告 |
-| business-strategy-report.json | JSON | 结构化数据（供下游Skill引用） |
+| business-strategy-report.md | Markdown | Complete business strategy planning report |
+| business-strategy-report.json | JSON | Structured data (for downstream Skill reference) |
 
-### 输出校验规则
+### Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| report_metadata.product | string | 是 | 产品名称 |
-| report_metadata.generated_at | string | 是 | 生成时间戳 |
-| report_metadata.data_sources | array | 是 | 数据来源列表 |
-| report_metadata.overall_confidence | number | 是 | 整体置信度0-1 |
-| executive_summary.strategic_posture | string | 是 | 进攻/防御/扭转/生存 |
-| executive_summary.recommended_direction | string | 是 | 推荐战略方向 |
-| executive_summary.core_okr | object | 是 | 核心OKR |
-| executive_summary.key_risks | array | 是 | 关键风险列表 |
-| strategic_assessment.external | object | 是 | 外部环境评估 |
-| strategic_assessment.external.industry_attractiveness | string | 是 | 行业吸引力评估，不可为空 |
-| strategic_assessment.external.opportunities | array | 是 | 外部机会列表，不可为空 |
-| strategic_assessment.external.threats | array | 是 | 外部威胁列表，不可为空 |
-| strategic_assessment.external.competitive_position | string | 是 | 竞争定位描述 |
-| strategic_assessment.internal | object | 是 | 内部能力评估 |
-| strategic_assessment.internal.strengths | array | 是 | 核心优势列表，不可为空 |
-| strategic_assessment.internal.weaknesses | array | 是 | 关键劣势列表，不可为空 |
-| strategic_assessment.internal.key_resources | array | 否 | 关键资源列表 |
-| strategic_assessment.internal.capability_gaps | array | 否 | 能力缺口列表 |
-| strategic_assessment.posture_matrix.quadrant | string | 是 | 态势象限 |
-| strategic_directions | array | 是 | 至少2个战略方向 |
-| strategic_directions[].name | string | 是 | 方向名称，不可为空 |
-| strategic_directions[].rationale | string | 是 | 方向逻辑，不可为空 |
-| strategic_directions[].target_market | string | 否 | 目标市场 |
-| strategic_directions[].differentiation | string | 否 | 差异化策略 |
-| strategic_directions[].key_assumptions | array | 否 | 关键假设列表 |
-| strategic_directions[].risk_factors | array | 否 | 风险因素列表 |
-| execution_path.okr | object | 是 | OKR体系 |
-| execution_path.roadmap | object | 是 | 路线图 |
-| stakeholder_management | array | 否 | 利益相关者管理策略 |
-| stakeholder_management[].stakeholder | string | 是 | 利益相关者名称 |
-| stakeholder_management[].attitude | string | 否 | 态度 |
-| stakeholder_management[].influence | string | 否 | 影响力等级 |
-| stakeholder_management[].communication_strategy | string | 否 | 沟通策略 |
-| risks_and_contingencies | array | 是 | 风险与预案 |
-| risks_and_contingencies[].risk_category | string | 是 | 风险类别 |
-| risks_and_contingencies[].probability | string | 否 | 概率评估 |
-| risks_and_contingencies[].impact | string | 否 | 影响评估 |
-| risks_and_contingencies[].contingency | string | 否 | 预案 |
+| report_metadata.product | string | Yes | Product name |
+| report_metadata.generated_at | string | Yes | Generation timestamp |
+| report_metadata.data_sources | array | Yes | Data source list |
+| report_metadata.overall_confidence | number | Yes | Overall confidence 0-1 |
+| executive_summary.strategic_posture | string | Yes | Offensive/Defensive/Turnaround/Survival |
+| executive_summary.recommended_direction | string | Yes | Recommended strategic direction |
+| executive_summary.core_okr | object | Yes | Core OKR |
+| executive_summary.key_risks | array | Yes | Key risk list |
+| strategic_assessment.external | object | Yes | External environment assessment |
+| strategic_assessment.external.industry_attractiveness | string | Yes | Industry attractiveness assessment, cannot be empty |
+| strategic_assessment.external.opportunities | array | Yes | External opportunities list, cannot be empty |
+| strategic_assessment.external.threats | array | Yes | External threats list, cannot be empty |
+| strategic_assessment.external.competitive_position | string | Yes | Competitive positioning description |
+| strategic_assessment.internal | object | Yes | Internal capability assessment |
+| strategic_assessment.internal.strengths | array | Yes | Core strengths list, cannot be empty |
+| strategic_assessment.internal.weaknesses | array | Yes | Key weaknesses list, cannot be empty |
+| strategic_assessment.internal.key_resources | array | No | Key resources list |
+| strategic_assessment.internal.capability_gaps | array | No | Capability gaps list |
+| strategic_assessment.posture_matrix.quadrant | string | Yes | Posture quadrant |
+| strategic_directions | array | Yes | At least 2 strategic directions |
+| strategic_directions[].name | string | Yes | Direction name, cannot be empty |
+| strategic_directions[].rationale | string | Yes | Direction rationale, cannot be empty |
+| strategic_directions[].target_market | string | No | Target market |
+| strategic_directions[].differentiation | string | No | Differentiation strategy |
+| strategic_directions[].key_assumptions | array | No | Key assumptions list |
+| strategic_directions[].risk_factors | array | No | Risk factors list |
+| execution_path.okr | object | Yes | OKR system |
+| execution_path.roadmap | object | Yes | Roadmap |
+| stakeholder_management | array | No | Stakeholder management strategies |
+| stakeholder_management[].stakeholder | string | Yes | Stakeholder name |
+| stakeholder_management[].attitude | string | No | Attitude |
+| stakeholder_management[].influence | string | No | Influence level |
+| stakeholder_management[].communication_strategy | string | No | Communication strategy |
+| risks_and_contingencies | array | Yes | Risks and contingencies |
+| risks_and_contingencies[].risk_category | string | Yes | Risk category |
+| risks_and_contingencies[].probability | string | No | Probability assessment |
+| risks_and_contingencies[].impact | string | No | Impact assessment |
+| risks_and_contingencies[].contingency | string | No | Contingency plan |
 
-**business-strategy-report.json 结构**：
+**business-strategy-report.json Structure**:
 
 ```json
 {
   "report_metadata": {
-    "product": "产品名",
-    "generated_at": "时间戳",
+    "product": "Product Name",
+    "generated_at": "Timestamp",
     "data_sources": [],
     "overall_confidence": 0.0
   },
   "executive_summary": {
-    "strategic_posture": "进攻/防御/扭转/生存",
+    "strategic_posture": "Offensive/Defensive/Turnaround/Survival",
     "recommended_direction": "",
     "core_okr": {},
     "key_risks": []
@@ -294,7 +294,7 @@ writes:
   },
   "strategic_directions": [
     {
-      "name": "方向名称",
+      "name": "Direction Name",
       "strategic_position": "",
       "rationale": "",
       "target_market": "",
@@ -314,66 +314,66 @@ writes:
 }
 ```
 
-## 决策规则
+## Decision Rules
 
-| 条件 | 决策 |
+| Condition | Decision |
 |------|------|
-| SWOT数据缺失 | 基于产品信息和AI知识推导态势评估，标注"缺乏SWOT数据" |
-| OKR数据缺失 | 基于战略方向推导OKR，标注"建议人工校准" |
-| 路线图数据缺失 | 基于OKR推导里程碑，标注"建议补充时间线" |
-| 定位数据缺失 | 战略方向缺少定位验证环节，标注"建议补充定位分析" |
-| 所有上游数据均缺失 | 基于产品信息和AI知识库生成，整体置信度降低 |
+| SWOT data missing | Derive posture assessment from product info and AI knowledge, mark "lacks SWOT data" |
+| OKR data missing | Derive OKRs from strategic direction, mark "manual calibration recommended" |
+| Roadmap data missing | Derive milestones from OKRs, mark "timeline supplementation recommended" |
+| Positioning data missing | Strategic direction lacks positioning validation, mark "positioning analysis supplementation recommended" |
+| All upstream data missing | Generate from product info and AI knowledge base, overall confidence reduced |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 执行摘要包含态势判断+推荐方向+核心OKR
-- [ ] 战略态势矩阵已生成
+- [ ] Executive summary includes posture judgment + recommended direction + core OKR
+- [ ] Strategic posture matrix generated
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 至少2个战略方向对比
-- [ ] OKR可量化、可追踪
-- [ ] 路线图包含Q1-Q4里程碑
-- [ ] 关键风险有预案
-- [ ] 所有推断标注置信度
+- [ ] At least 2 strategic directions compared
+- [ ] OKRs are quantifiable and trackable
+- [ ] Roadmap includes Q1-Q4 milestones
+- [ ] Key risks have contingencies
+- [ ] All inferences annotated with confidence
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (must pass for deep only)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (in-depth reasoning and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
-## 降级策略
+## Degradation Strategy
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Instructions |
 |---------------|---------|---------|------------|
-| bmc缺失 | 基于产品信息推导商业模式 | 商业模式分析可能不够完整，缺乏9格画布结构化支撑 | 要求用户提供产品功能、收入模式和成本结构描述或上传bmc.json文件 |
-| swot缺失 | 基于产品信息和AI知识推导态势 | 态势评估缺乏结构化依据，战略方向可能偏主观 | 要求用户提供产品优势、劣势、机会和威胁描述或上传strategic-analysis.json文件 |
-| okr缺失 | 基于战略方向推导OKR | OKR需人工校准，可量化性可能不足 | 要求用户提供业务目标和关键结果预期或上传okr.json文件 |
-| roadmap缺失 | 基于OKR推导里程碑 | 时间线需人工调整，里程碑依赖关系可能不准确 | 要求用户提供功能优先级和时间约束或上传roadmap.json文件 |
-| positioning缺失 | 战略方向缺少定位验证 | 差异化策略需补充验证，竞争定位可能模糊 | 要求用户提供产品差异化描述或上传positioning-strategy输出文件 |
-| 产品/业务信息（用户提供） | 若用户未提供产品/业务信息，提示用户提供或跳过该输入相关步骤 | 报告无法生成核心内容 | 要求用户提供产品名称、核心功能、目标用户和业务目标 |
+| bmc missing | Derive business model from product info | Business model analysis may be incomplete, lacking 9-block canvas structured support | Require user to provide product features, revenue model, and cost structure description or upload bmc.json file |
+| swot missing | Derive posture from product info and AI knowledge | Posture assessment lacks structured basis, strategic direction may be subjective | Require user to provide product strengths, weaknesses, opportunities, and threats description or upload strategic-analysis.json file |
+| okr missing | Derive OKRs from strategic direction | OKRs need manual calibration, quantifiability may be insufficient | Require user to provide business objectives and expected key results or upload okr.json file |
+| roadmap missing | Derive milestones from OKRs | Timeline needs manual adjustment, milestone dependencies may be inaccurate | Require user to provide feature priorities and time constraints or upload roadmap.json file |
+| positioning missing | Strategic direction lacks positioning validation | Differentiation strategy needs supplementary validation, competitive positioning may be vague | Require user to provide product differentiation description or upload positioning-strategy output file |
+| Product/Business Info (user provided) | If user does not provide product/business info, prompt user to provide or skip related steps | Report cannot generate core content | Require user to provide product name, core features, target users, and business objectives |
 
 ---
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| bmc.json商业模式变更 | 战略态势内部能力评估、执行路径商业模型 | 重新评估内部能力，更新执行路径中的商业模型部分 |
-| strategic-analysis.json战略分析更新 | 战略态势评估、战略方向推演 | 重新执行Step 1和Step 2，更新态势矩阵和方向推荐 |
-| okr.json OKR调整 | 执行路径OKR对齐 | 重新执行Step 3，更新OKR体系和路线图映射 |
-| roadmap.json路线图变更 | 执行路径里程碑 | 重新执行Step 3路线图映射部分 |
-| positioning定位变更 | 战略方向差异化策略 | 重新评估战略方向的差异化逻辑 |
+| bmc.json business model change | Strategic posture internal capability assessment, execution path business model | Reassess internal capabilities, update business model section in execution path |
+| strategic-analysis.json strategy analysis update | Strategic posture assessment, strategic direction reasoning | Re-execute Step 1 and Step 2, update posture matrix and direction recommendation |
+| okr.json OKR adjustment | Execution path OKR alignment | Re-execute Step 3, update OKR system and roadmap mapping |
+| roadmap.json roadmap change | Execution path milestones | Re-execute Step 3 roadmap mapping section |
+| positioning positioning change | Strategic direction differentiation strategy | Reassess differentiation logic of strategic direction |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 变更类型 | 影响范围 | 通知方式 |
+| Change Type | Impact Scope | Notification Method |
 |----------|----------|----------|
-| 战略方向调整 | stakeholder-analysis | 输出文件版本号+变更摘要 |
-| OKR变更 | planning-roadmap | 输出文件版本号+变更摘要 |
-| 风险预案更新 | stakeholder-analysis | 输出文件版本号+变更摘要 |
-| 态势评估变更 | strategic-analysis | 输出文件版本号+变更摘要 |
+| Strategic direction adjustment | stakeholder-analysis | Output file version number + change summary |
+| OKR change | planning-roadmap | Output file version number + change summary |
+| Risk contingency update | stakeholder-analysis | Output file version number + change summary |
+| Posture assessment change | strategic-analysis | Output file version number + change summary |

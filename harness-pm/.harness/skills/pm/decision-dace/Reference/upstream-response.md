@@ -1,29 +1,29 @@
-<!-- 从 SKILL.md 提取的参考材料，按需查阅 -->
+<!-- Reference material extracted from SKILL.md, consult as needed -->
 
-# 上游变更响应
+# Upstream Change Response
 
-## 上游输入变更响应策略
+## Upstream Input Change Response Strategy
 
-当上游输入发生变更时，本Skill的响应策略：
+When upstream inputs change, this Skill's response strategy:
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| OKR数据变更 | Define阶段目标定义 | 重新定义目标，更新KR基线和目标值 |
-| KR进度变更 | Analyze阶段数据分析 | 更新偏差分析，重新评估Conclude选项 |
-| 实验结果变更 | Analyze和Conclude阶段 | 更新实验数据，重新评估决策选项 |
-| 分析结果更新 | 洞察叙述和决策选项 | 更新洞察叙述，重新评估决策选项 |
-| 业务上下文变更 | 行动建议和优先级 | 重新评估行动建议，更新优先级 |
-| 历史洞察库更新 | 重复洞察检测 | 执行去重检查，合并相似洞察 |
+| OKR data change | Define phase goal definition | Redefine goals, update KR baselines and target values |
+| KR progress change | Analyze phase data analysis | Update deviation analysis, re-evaluate Conclude options |
+| Experiment results change | Analyze and Conclude phases | Update experiment data, re-evaluate decision options |
+| Analysis results update | Insight narrative and decision options | Update insight narrative, re-evaluate decision options |
+| Business context change | Action recommendations and priority | Re-evaluate action recommendations, update priority |
+| Historical insight library update | Duplicate insight detection | Perform deduplication check, merge similar insights |
 
-## 下游通知机制
+## Downstream Notification Mechanism
 
-当DACE状态/洞察自身变更时，对下游的通知机制：
+When DACE status/insights themselves change, the notification mechanism for downstream:
 
-| 状态/洞察变更类型 | 通知范围 | 通知方式 |
+| Status/Insight Change Type | Notification Scope | Notification Method |
 |-------------------|----------|----------|
-| Conclude阶段决策完成 | decision-culture | 标记决策完成，触发报告更新 |
-| Execute阶段执行效果 | decision-culture | 标记执行效果，触发文化报告更新 |
-| KR进度落后>20% | decision-culture | 标记进度风险，触发周报风险标注 |
-| data_decision类型洞察 | decision-culture | 标记可自动执行，触发报告更新 |
-| data_reference类型洞察 | decision-culture | 标记需人类确认，触发报告更新 |
-| 洞察合并/置信度提升 | decision-culture | 标记洞察更新，触发报告更新 |
+| Conclude phase decision completed | decision-culture | Mark decision complete, trigger report update |
+| Execute phase execution effectiveness | decision-culture | Mark execution effectiveness, trigger culture report update |
+| KR progress behind >20% | decision-culture | Mark progress risk, trigger weekly report risk annotation |
+| data_decision type insight | decision-culture | Mark as auto-executable, trigger report update |
+| data_reference type insight | decision-culture | Mark as requiring human confirmation, trigger report update |
+| Insight merge/confidence increase | decision-culture | Mark insight update, trigger report update |

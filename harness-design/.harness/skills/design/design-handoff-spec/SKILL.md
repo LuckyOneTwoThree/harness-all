@@ -2,9 +2,9 @@
 name: design-handoff-spec
 description: Produces engineering-consumable handoff with component-map.json. Use after design-review passes. Use for design-to-engineering delivery.
 triggers:
-  - 设计交付
-  - design-review 通过后
-  - 需要交接给工程
+  - Design handoff
+  - After design-review passes
+  - Need to hand off to engineering
 reads:
   - .harness/data/design/ux-guidelines.csv
   - .harness/craft/common-rules.md
@@ -28,69 +28,69 @@ writes:
 
 ## Overview
 
-工程可消费的结构化交付。把"设计到代码"从"魔法导出"变成"显式映射"，可审查、可版本控制、可测试。
+Engineering-consumable structured handoff. Turns "design to code" from "magic export" into "explicit mapping"—reviewable, version-controllable, testable.
 
 ## When to Use
 
-- ✅ 设计交付
-- ✅ design-review 通过后
-- ✅ 需要交接给工程（harness-solo）
-- ❌ NOT for 设计阶段（用 visual-design 等skill）
+- ✅ Design handoff
+- ✅ After design-review passes
+- ✅ Need to hand off to engineering (harness-solo)
+- ❌ NOT for the design stage (use visual-design and other skills)
 
 ## Process
 
-### 1. 汇总产出
+### 1. Aggregate Outputs
 
-读取已批准的设计产出：
-- `docs/visual/<page>.md`：视觉设计
-- `docs/interaction/<page>.md`：交互设计
-- `docs/prototype/wireframe.md`：线框图
-- `docs/design-system/DESIGN.md`：设计系统
-- `docs/design-system/tokens.json`：token 定义
-- `docs/handoff/pm-to-design.md`：PM 交接文档（沿用 AC-xxx 编号，不重新编号）
+Read approved design outputs:
+- `docs/visual/<page>.md`: Visual design
+- `docs/interaction/<page>.md`: Interaction design
+- `docs/prototype/wireframe.md`: Wireframe
+- `docs/design-system/DESIGN.md`: Design system
+- `docs/design-system/tokens.json`: Token definitions
+- `docs/handoff/pm-to-design.md`: PM handoff document (reuse AC-xxx numbering; do not renumber)
 
-### 2. 生成 design-to-solo.md（人类可读完整说明）
+### 2. Generate design-to-solo.md (Human-readable Full Specification)
 
-> 完整模板见 `docs/handoff/design-to-solo-template.md`，以下为核心结构。
+> Full template at `docs/handoff/design-to-solo-template.md`; below is the core structure.
 
 ```markdown
 # Design Handoff: <Project Name>
 
-## 概述
-<设计目标 + 范围>
+## Overview
+<Design goals + scope>
 
-## 设计系统
-- DESIGN.md 路径：docs/design-system/DESIGN.md
-- tokens.json 路径：docs/design-system/tokens.json
-- tokens.css 路径：docs/design-system/tokens.css
+## Design System
+- DESIGN.md path: docs/design-system/DESIGN.md
+- tokens.json path: docs/design-system/tokens.json
+- tokens.css path: docs/design-system/tokens.css
 
-## 页面清单
-| 页面 | 视觉稿 | 交互稿 | 线框图 |
-|------|--------|--------|--------|
+## Page Inventory
+| Page | Visual Mockup | Interaction Spec | Wireframe |
+|------|---------------|------------------|-----------|
 | Home | docs/visual/home.md | docs/interaction/home.md | - |
 | Login | docs/visual/login.md | docs/interaction/login.md | - |
 
-## 组件清单
-<组件列表 + 状态 + 变体>
+## Component Inventory
+<Component list + states + variants>
 
-## 验收标准（AC-xxx）
-> 沿用 harness-pm PRD 的 acceptance_criteria 编号，不重新编号。
-> 设计阶段新增的验收点使用 DAC-xxx 前缀（D = Design-derived）。
+## Acceptance Criteria (AC-xxx)
+> Reuses the acceptance_criteria numbering from the harness-pm PRD; do not renumber.
+> Acceptance points added during the design stage use the DAC-xxx prefix (D = Design-derived).
 
-- [ ] AC-001: <沿用 PRD 的可测试描述>
-- [ ] AC-002: <沿用 PRD 的可测试描述>
-- [ ] DAC-001: <设计阶段新增的可测试描述>
+- [ ] AC-001: <Testable description reused from PRD>
+- [ ] AC-002: <Testable description reused from PRD>
+- [ ] DAC-001: <Testable description added during design stage>
 
-## 交互流程
-<关键流程描述>
+## Interaction Flows
+<Description of key flows>
 
-## 注意事项
-<工程实现需注意的点>
+## Notes
+<Points engineering should be aware of during implementation>
 ```
 
-### 3. 生成 component-spec.md（组件规格）
+### 3. Generate component-spec.md (Component Specification)
 
-写入 `docs/interaction/component-spec.md`：
+Write to `docs/interaction/component-spec.md`:
 
 ```markdown
 # Component Specification
@@ -99,10 +99,10 @@ writes:
 ### Props
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| variant | primary/secondary/ghost | primary | 视觉变体 |
-| size | sm/md/lg | md | 尺寸 |
-| disabled | boolean | false | 禁用态 |
-| loading | boolean | false | 加载态 |
+| variant | primary/secondary/ghost | primary | Visual variant |
+| size | sm/md/lg | md | Size |
+| disabled | boolean | false | Disabled state |
+| loading | boolean | false | Loading state |
 
 ### States
 | State | Style |
@@ -114,18 +114,18 @@ writes:
 | loading | spinner + disabled |
 ```
 
-### 4. 生成 component-map.json（显式映射层）
+### 4. Generate component-map.json (Explicit Mapping Layer)
 
-**核心创新**（来自 Stitch）：设计组件 → 工程组件的显式映射，可版本控制。
+**Core innovation** (from Stitch): explicit mapping from design components to engineering components, version-controllable.
 
-**框架无关约束**：props 的 Type 声明必须与 `docs/visual/DESIGN_BRIEF.md` 中定义的 Tech Stack 匹配。
-- React 项目 → `ReactNode` / `JSX.Element`
-- Vue 项目 → `VNode` / `Slot`
-- Svelte 项目 → `Snippet` / `Component`
-- 原生/Web Components → `HTMLElement` / `Slot`
-- 未明确技术栈 → 用中性抽象类型（`Slot` / `Component`），并在 notes 标注"待工程确认"
+**Framework-agnostic constraint**: The Type declaration of props must match the Tech Stack defined in `docs/visual/DESIGN_BRIEF.md`.
+- React project → `ReactNode` / `JSX.Element`
+- Vue project → `VNode` / `Slot`
+- Svelte project → `Snippet` / `Component`
+- Native/Web Components → `HTMLElement` / `Slot`
+- Tech stack unclear → use neutral abstract types (`Slot` / `Component`), and annotate "pending engineering confirmation" in notes
 
-写入 `docs/handoff/component-map.json`：
+Write to `docs/handoff/component-map.json`:
 
 ```json
 {
@@ -134,14 +134,14 @@ writes:
     "engineeringComponent": "Button",
     "props": { "variant": "primary", "size": "md" },
     "states": ["default", "hover", "active", "disabled", "loading"],
-    "notes": "主操作按钮，每屏最多 1 个"
+    "notes": "Primary action button, max 1 per screen"
   },
   "ProductCard": {
     "designToken": "card.product",
     "engineeringComponent": "Card",
     "props": { "variant": "product", "elevation": "sm" },
     "states": ["default", "hover", "selected"],
-    "notes": "产品列表卡片，支持选中态"
+    "notes": "Product list card, supports selected state"
   },
   "EmptyState": {
     "designToken": "empty-state",
@@ -153,53 +153,53 @@ writes:
       "action": "Slot"
     },
     "states": ["default"],
-    "notes": "空状态组件，DESIGN.md 第 10 段定义。action 类型取决于 Tech Stack，见框架无关约束"
+    "notes": "Empty state component, defined in Section 10 of DESIGN.md. action type depends on Tech Stack, see framework-agnostic constraint"
   }
 }
 ```
 
-### 5. 生成 flow.md（交互流程图）
+### 5. Generate flow.md (Interaction Flow Diagram)
 
-写入 `docs/prototype/flow.md`，描述关键用户流程。
+Write to `docs/prototype/flow.md`, describing key user flows.
 
-### 6. Pre-Delivery Checklist（交付前检查）
+### 6. Pre-Delivery Checklist
 
-来自 UI UX Pro Max：
+From UI UX Pro Max:
 
-- [ ] 运行 UX 验证扫描（Grep ux-guidelines.csv 的 animation/accessibility/z-index/loading）
-- [ ] 过一遍 Common Rules §1-§3（CRITICAL + HIGH 级别）
-- [ ] 在 375px（小手机）和横屏下测试
-- [ ] 开启 reduced-motion 验证
-- [ ] 独立验证暗色模式对比度
-- [ ] 确认所有触控目标 ≥44pt
+- [ ] Run UX validation scan (Grep ux-guidelines.csv for animation/accessibility/z-index/loading)
+- [ ] Walk through Common Rules §1-§3 (CRITICAL + HIGH levels)
+- [ ] Test at 375px (small phone) and landscape
+- [ ] Verify with reduced-motion enabled
+- [ ] Independently verify dark mode contrast
+- [ ] Confirm all touch targets ≥44pt
 
 ## Common Rationalizations
 
-| 借口 | 现实 |
-|------|------|
-| "markdown 交付够了" | 工程需要 component-map.json 做映射，不只是 markdown |
-| "工程自己看设计稿就行" | 显式映射比魔法导出更可靠，可审查可测试 |
-| "Pre-Delivery Checklist 太繁琐" | 6 项检查是交付质量的最低保障 |
+| Excuse | Reality |
+|--------|---------|
+| "Markdown handoff is enough" | Engineering needs component-map.json for mapping, not just markdown |
+| "Engineering can read the design mockups themselves" | Explicit mapping is more reliable than magic export—reviewable and testable |
+| "Pre-Delivery Checklist is too tedious" | 6 checks are the minimum guarantee of handoff quality |
 
 ## Red Flags
 
-- 未生成 component-map.json
-- component-map.json 缺少 states 字段
-- component-map.json 的 props Type 与 DESIGN_BRIEF.md 的 Tech Stack 不匹配（如 Vue 项目用了 ReactNode）
-- 未执行 Pre-Delivery Checklist
-- 交付物路径与 AGENTS.md 约定不一致
+- component-map.json not generated
+- component-map.json missing the states field
+- component-map.json props Type mismatched with DESIGN_BRIEF.md Tech Stack (e.g., ReactNode used in a Vue project)
+- Pre-Delivery Checklist not executed
+- Handoff artifact paths inconsistent with AGENTS.md conventions
 
 ## Verification
 
-- [ ] design-to-solo.md 已生成（证据：文件存在）
-- [ ] component-map.json 已生成（证据：JSON 合法 + 含 states 字段）
-- [ ] component-spec.md 已生成（证据：文件含 Props/States 表）
-- [ ] flow.md 已生成（证据：文件含关键流程）
-- [ ] Pre-Delivery Checklist 全部 ✓（证据：6 项检查记录）
+- [ ] design-to-solo.md generated (evidence: file exists)
+- [ ] component-map.json generated (evidence: JSON valid + contains states field)
+- [ ] component-spec.md generated (evidence: file contains Props/States tables)
+- [ ] flow.md generated (evidence: file contains key flows)
+- [ ] Pre-Delivery Checklist all ✓ (evidence: 6 check records)
 
-## 与 LOOP 的关系
+## Relationship with LOOP
 
-- 不在 LOOP 内运行（在 LOOP 外门禁通过后的交付阶段运行）
-- 读取 LOOP 产出的所有设计稿（docs/visual/ + docs/interaction/ + docs/prototype/）作为汇总输入
-- 读取 LOOP 外门禁的通过证据（design-review + accessibility-audit 的 evidence.md）
-- 产出的 component-map.json 是 Stitch 核心创新，供 harness-solo 工程实现阶段消费
+- Not run inside LOOP (runs in the handoff stage after the out-of-LOOP gate passes)
+- Reads all design mockups produced by LOOP (docs/visual/ + docs/interaction/ + docs/prototype/) as aggregated input
+- Reads the pass evidence from the out-of-LOOP gate (design-review + accessibility-audit evidence.md)
+- The component-map.json produced is the core Stitch innovation, consumed by the harness-solo engineering implementation stage

@@ -1,12 +1,12 @@
 ---
 name: incident-detection
-description: 故障检测与分类，接收告警/用户反馈，分类故障等级，触发应急响应流程
+description: Incident detection and classification, receiving alerts/user feedback, classifying incident severity, and triggering the emergency response process
 triggers:
-  - 收到 Prometheus/Alertmanager 告警时
-  - 用户报告"线上故障"或"服务异常"时
-  - 监控指标异常波动时
-  - 错误率/延迟突然飙升时
-  - session-start 发现进行中的 incident LOOP 时
+  - When a Prometheus/Alertmanager alert is received
+  - When a user reports "production incident" or "service anomaly"
+  - When monitoring metrics fluctuate abnormally
+  - When error rate / latency suddenly spikes
+  - When session-start detects an in-progress incident LOOP
 reads:
   - docs/infrastructure/OPS_STRATEGY.md
   - rules/security.md
@@ -24,74 +24,74 @@ operation_tier: inspect
 requires_approval: false
 ---
 
-# Incident Detection — 故障检测与分类
+# Incident Detection — Incident Detection and Classification
 
-## 铁律
+## Ground Rules
 
-1. **先止血再查因** —— 检测到故障后优先恢复服务，根因分析其次
-2. **不隐瞒故障** —— 任何故障必须记录，不因"已恢复"而跳过归档
-3. **不低估等级** —— 拿不准时按高等级处理，宁可虚惊
-4. **不独自决策 P0** —— P0 故障必须立即通知人类，Agent 不独自处置
+1. **Stop the bleeding before investigating the cause** — after detecting an incident, prioritize service recovery; root cause analysis comes second
+2. **Do not conceal incidents** — every incident must be recorded; do not skip archiving because it "already recovered"
+3. **Do not underestimate severity** — when unsure, treat as higher severity; better a false alarm
+4. **Do not decide P0 alone** — P0 incidents must immediately notify humans; the Agent does not handle them alone
 
-## 流程
+## Process
 
-### 1. 接收故障信号
+### 1. Receive Incident Signals
 
-信号来源：
-- **告警系统**：Prometheus Alertmanager / 云厂商监控告警
-- **用户反馈**：用户报告"服务不可用"/"响应慢"/"数据错误"
-- **自动检测**：Agent 主动巡检发现异常
-- **上游通知**：solo/growth 框架反馈异常
+Signal sources:
+- **Alerting system**: Prometheus Alertmanager / cloud provider monitoring alerts
+- **User feedback**: users report "service unavailable" / "slow response" / "data error"
+- **Automatic detection**: Agent proactively detects anomalies during patrol
+- **Upstream notification**: solo/growth framework reports anomalies
 
-### 2. 初步评估
+### 2. Initial Assessment
 
 ```
-## 故障初步评估
-- 检测时间: [ISO 8601]
-- 信号来源: [告警/用户/巡检/上游]
-- 故障现象: [详细描述]
-- 影响范围: [哪些服务/哪些用户/多少流量]
-- 持续时间: [已持续多久]
-- 是否仍在恶化: [是/否]
+## Initial Incident Assessment
+- Detection time: [ISO 8601]
+- Signal source: [alert / user / patrol / upstream]
+- Phenomenon: [detailed description]
+- Impact scope: [which services / which users / how much traffic]
+- Duration: [how long it has lasted]
+- Still deteriorating: [yes/no]
 ```
 
-### 3. 故障分级
+### 3. Incident Severity Classification
 
-| 等级 | 判定标准 | 响应时效 | 决策权 |
+| Severity | Criteria | Response SLA | Decision Authority |
 |------|---------|---------|--------|
-| **P0** | 核心功能不可用/数据丢失/安全事件 | 立即响应，5 分钟内介入 | 人类 + Agent |
-| **P1** | 部分功能异常/性能严重下降 | 15 分钟内介入 | 人类 + Agent |
-| **P2** | 非核心功能异常/间歇性问题 | 1 小时内介入 | Agent + 通知人类 |
-| **P3** | 潜在风险/优化建议 | 排期处理 | Agent |
+| **P0** | Core functionality unavailable / data loss / security event | Immediate response, engage within 5 minutes | Human + Agent |
+| **P1** | Partial functionality abnormal / severe performance degradation | Engage within 15 minutes | Human + Agent |
+| **P2** | Non-core functionality abnormal / intermittent issues | Engage within 1 hour | Agent + notify human |
+| **P3** | Potential risk / optimization suggestion | Schedule for handling | Agent |
 
-**分级示例**：
-- P0：支付接口 500 错误率 > 5%
-- P1：登录接口 p95 延迟 > 5 秒
-- P2：后台管理页面间歇性 404
-- P3：某 Pod CPU 使用率持续 > 80%
+**Classification examples**:
+- P0: Payment API 500 error rate > 5%
+- P1: Login API p95 latency > 5 seconds
+- P2: Admin page intermittent 404
+- P3: A Pod's CPU utilization persistently > 80%
 
-### 4. 创建故障记录
+### 4. Create Incident Record
 
 ```
 loops/specs/INC-<date>-<short-desc>/
-├── spec.md          ← 故障规格（覆盖）
-├── state.yaml       ← 循环状态
-├── evidence.md      ← 证据（覆盖）
-└── iterations.log   ← 处置历史（追加）
+├── spec.md          ← Incident spec (overwrite)
+├── state.yaml       ← Loop state
+├── evidence.md      ← Evidence (overwrite)
+└── iterations.log   ← Handling history (append)
 ```
 
-**spec.md 内容**：
+**spec.md content**:
 ```yaml
 incident_id: INC-2026-06-22-payment-500
 severity: P0
 detected_at: "2026-06-22T14:30:00"
-phenomenon: "支付接口返回 500 错误，错误率 8%"
+phenomenon: "Payment API returns 500 errors, error rate 8%"
 affected_services: [payment-service, order-service]
-affected_users: "约 30% 支付用户"
-impact: "无法完成支付，直接影响营收"
+affected_users: "about 30% of payment users"
+impact: "Cannot complete payment, directly affects revenue"
 ```
 
-**state.yaml 初始化**：
+**state.yaml initialization**:
 ```yaml
 current_task: INC-2026-06-22-payment-500
 iteration: 0
@@ -100,49 +100,49 @@ status: running
 started_at: "2026-06-22T14:30:00"
 ```
 
-### 5. 触发应急响应
+### 5. Trigger Emergency Response
 
-- **P0/P1**：立即通知人类（AskUserQuestion），同时启动 `incident-response-workflow`
-- **P2**：启动 `incident-response-workflow`，通知人类
-- **P3**：记录到 FEATURES.md，排期处理
+- **P0/P1**: Immediately notify humans (AskUserQuestion), and start `incident-response-workflow`
+- **P2**: Start `incident-response-workflow`, notify humans
+- **P3**: Record to FEATURES.md, schedule for handling
 
-### 6. 查询历史知识库
+### 6. Query Historical Knowledge Base
 
-读取 `memory/knowledge-base.md`：
-- 是否有类似故障的历史记录？
-- 是否有已知的根因模式？
-- 是否有验证过的处置方案？
+Read `memory/knowledge-base.md`:
+- Are there historical records of similar incidents?
+- Are there known root cause patterns?
+- Are there verified handling procedures?
 
-**如找到匹配**：直接应用历史方案，跳过部分诊断步骤。
-**如无匹配**：进入 `root-cause-analysis` skill 全面诊断。
+**If a match is found**: directly apply the historical solution, skip some diagnostic steps.
+**If no match**: enter the `root-cause-analysis` skill for full diagnosis.
 
-## 禁止事项
+## Prohibitions
 
-- 不延迟 P0/P1 故障的响应
-- 不独自决策 P0 故障的处置（必须人类参与）
-- 不因"已自动恢复"而跳过记录
-- 不在故障未恢复时声称"已完成"
-- 不篡改故障等级（降级需人类确认）
+- Do not delay response to P0/P1 incidents
+- Do not decide P0 incident handling alone (human participation required)
+- Do not skip recording because it "auto-recovered"
+- Do not claim "done" while the incident is not recovered
+- Do not tamper with incident severity (downgrade requires human confirmation)
 
-## 与 LOOP 的关系
+## Relationship to LOOP
 
-**所属 LOOP 类型**：incident（最大迭代 5 次）
+**LOOP type**: incident (max 5 iterations)
 
-本 skill 是 incident LOOP 的入口，在 PLAN 阶段执行：
+This skill is the entry point of the incident LOOP, executing in the PLAN stage:
 ```
 LOOP(incident):
-  PLAN(detect):     incident-detection → 分级 → 创建记录
-  PROVISION:        incident-mitigation → 止血
-  VERIFY:           deployment-verify → 确认恢复
-    ↓ 未恢复
-  DEBUG:            root-cause-analysis → 深度诊断
-    ↓ 回到 PROVISION（新处置方案）
+  PLAN(detect):     incident-detection → classify → create record
+  PROVISION:        incident-mitigation → stop the bleeding
+  VERIFY:           deployment-verify → confirm recovery
+    ↓ not recovered
+  DEBUG:            root-cause-analysis → deep diagnosis
+    ↓ back to PROVISION (new handling plan)
 ```
 
-**stage 字段写入**：plan
+**stage field value**: plan
 
-## 与其他 skill 的关系
+## Relationship to Other Skills
 
-- **下游**：触发 `incident-mitigation`（止血）、`root-cause-analysis`（根因）
-- **协作**：调用 `rollback`（如需回滚）、`log-analysis`（日志查询）
-- **归档**：故障恢复后由 `post-mortem` 产出复盘报告
+- **Downstream**: triggers `incident-mitigation` (stop the bleeding), `root-cause-analysis` (root cause)
+- **Collaboration**: invokes `rollback` (if rollback is needed), `log-analysis` (log query)
+- **Archive**: after incident recovery, `post-mortem` produces the post-mortem report

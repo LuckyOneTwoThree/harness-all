@@ -1,12 +1,12 @@
 ---
 name: alerting-rules
-description: 告警规则生成与调优，基于 SLO 定义告警阈值，避免告警风暴
+description: Alerting rule generation and tuning, defining alert thresholds based on SLOs to prevent alert storms
 triggers:
-  - 需要配置告警规则时
-  - 告警风暴需要调优时
-  - SLO 定义后需要生成告警时
-  - monitoring-setup 部署后配置告警时
-  - 用户要求"配置告警"时
+  - When alerting rules need to be configured
+  - When alert storms need tuning
+  - When alerts need to be generated after SLO definition
+  - When configuring alerts after monitoring-setup deployment
+  - When the user requests "configure alerts"
 reads:
   - docs/infrastructure/OPS_STRATEGY.md
   - rules/security.md
@@ -22,31 +22,31 @@ operation_tier: propose
 requires_approval: false
 ---
 
-# Alerting Rules — 告警规则生成与调优
+# Alerting Rules — Alerting Rule Generation and Tuning
 
-## 铁律
+## Ground Rules
 
-1. **告警必须可执行** —— 每个告警都要有人知道怎么处理
-2. **告警必须有优先级** —— P0/P1/P2 分级，不同级别不同响应
-3. **告警必须去重** —— 同一问题不重复告警
-4. **告警阈值基于 SLO** —— 不凭感觉设阈值
-5. **告警风暴必须抑制** —— 关联告警聚合，不逐条发送
+1. **Alerts must be actionable** — every alert must have someone who knows how to handle it
+2. **Alerts must have priority** — P0/P1/P2 tiers, with different responses per tier
+3. **Alerts must be deduplicated** — do not alert repeatedly on the same issue
+4. **Alert thresholds are based on SLOs** — do not set thresholds by feel
+5. **Alert storms must be suppressed** — aggregate correlated alerts; do not send one by one
 
-## 流程
+## Process
 
-### 1. 定义 SLO（Service Level Objective）
+### 1. Define SLOs (Service Level Objectives)
 
 ```
-## SLO 定义示例
+## SLO Definition Example
 
 ### payment-service
-- 可用性 SLO: 99.9%（每月宕机 < 43 分钟）
-- 延迟 SLO: p95 < 200ms（95% 请求在 200ms 内完成）
-- 错误率 SLO: < 0.1%（错误请求占比）
-- 吞吐量 SLO: > 1000 req/s（最低吞吐）
+- Availability SLO: 99.9% (monthly downtime < 43 minutes)
+- Latency SLO: p95 < 200ms (95% of requests complete within 200ms)
+- Error rate SLO: < 0.1% (proportion of error requests)
+- Throughput SLO: > 1000 req/s (minimum throughput)
 ```
 
-### 2. 生成告警规则
+### 2. Generate Alerting Rules
 
 #### PrometheusRule
 ```yaml
@@ -62,7 +62,7 @@ spec:
   - name: payment-service.rules
     interval: 30s
     rules:
-    # P0: 服务不可用
+    # P0: service unavailable
     - alert: PaymentServiceDown
       expr: up{job="payment-service"} == 0
       for: 1m
@@ -74,7 +74,7 @@ spec:
         description: "{{ $labels.instance }} has been down for 1 minute"
         runbook: "https://wiki.example.com/runbooks/payment-down"
 
-    # P0: 高错误率
+    # P0: high error rate
     - alert: PaymentServiceHighErrorRate
       expr: |
         sum(rate(http_requests_total{service="payment-service",status=~"5.."}[5m]))
@@ -89,7 +89,7 @@ spec:
         description: "Current error rate: {{ $value | humanizePercentage }}"
         runbook: "https://wiki.example.com/runbooks/payment-errors"
 
-    # P1: 高延迟
+    # P1: high latency
     - alert: PaymentServiceHighLatency
       expr: |
         histogram_quantile(0.95,
@@ -103,7 +103,7 @@ spec:
         summary: "Payment service p95 latency > 500ms"
         description: "Current p95: {{ $value }}s"
 
-    # P2: 资源使用高
+    # P2: high resource usage
     - alert: PaymentServiceHighCPU
       expr: |
         avg(rate(container_cpu_usage_seconds_total{pod=~"payment-service-.*"}[5m]))
@@ -116,7 +116,7 @@ spec:
         summary: "Payment service CPU > 80%"
 ```
 
-### 3. 配置 Alertmanager 路由
+### 3. Configure Alertmanager Routing
 
 ```yaml
 # alertmanager.yaml
@@ -164,18 +164,18 @@ receivers:
     channel: '#alerts-default'
 ```
 
-### 4. 告警抑制规则
+### 4. Alert Inhibition Rules
 
 ```yaml
 inhibit_rules:
-# 服务下线时，抑制该服务的其他告警
+# When a service is down, inhibit other alerts for that service
 - source_match:
     alertname: PaymentServiceDown
   target_match:
     service: payment-service
   equal: ['service']
 
-# 节点故障时，抑制该节点上的 Pod 告警
+# When a node fails, inhibit Pod alerts on that node
 - source_match:
     alertname: NodeDown
   target_match_re:
@@ -183,45 +183,45 @@ inhibit_rules:
   equal: ['node']
 ```
 
-### 5. 告警调优
+### 5. Alert Tuning
 
-#### 告警风暴处理
-- 识别频繁告警（同一告警 1 小时内 > 5 次）
-- 调整 `for` 持续时间（延长避免抖动）
-- 调整阈值（基于历史数据）
-- 添加抑制规则
+#### Alert Storm Handling
+- Identify frequent alerts (same alert > 5 times within 1 hour)
+- Adjust the `for` duration (extend to avoid flapping)
+- Adjust thresholds (based on historical data)
+- Add inhibition rules
 
-#### 告警质量审计
+#### Alert Quality Audit
 ```
-## 告警质量审计（每月）
+## Alert Quality Audit (Monthly)
 
-| 告警名 | 触发次数 | 误报率 | 平均处理时间 | 是否需要 |
+| Alert Name | Trigger Count | False Positive Rate | Avg Handling Time | Needed? |
 |--------|---------|--------|------------|---------|
-| PaymentServiceDown | 2 | 0% | 5min | 是 |
-| PaymentServiceHighCPU | 50 | 80% | - | 调优阈值 |
-| PaymentServiceHighLatency | 10 | 20% | 15min | 是 |
+| PaymentServiceDown | 2 | 0% | 5min | Yes |
+| PaymentServiceHighCPU | 50 | 80% | - | Tune threshold |
+| PaymentServiceHighLatency | 10 | 20% | 15min | Yes |
 ```
 
-### 6. 更新监控配置库
+### 6. Update Monitoring Config Library
 
-`memory/knowledge-base.md` 追加：
+Append to `memory/knowledge-base.md`:
 ```
-| 告警规则 | 严重度 | 触发条件 | 响应人 | Runbook | 最后调优 |
+| Alert Rule | Severity | Trigger Condition | Responder | Runbook | Last Tuned |
 |---------|--------|---------|--------|---------|---------|
 | PaymentServiceDown | P0 | up==0 for 1m | @oncall | /runbooks/down | 2026-06-22 |
 ```
 
-## 禁止事项
+## Prohibitions
 
-- 不配置无 runbook 的告警（不知道怎么处理就别告）
-- 不配置 P0 告警不通知人类（P0 必须有人响应）
-- 不配置重复告警不抑制
-- 不凭感觉设阈值（基于 SLO 和历史数据）
-- 不在 Alertmanager 配置中硬编码 webhook URL（用 Secret）
+- Do not configure alerts without a runbook (do not alert if no one knows how to handle it)
+- Do not configure P0 alerts without notifying humans (P0 must have a human responder)
+- Do not configure duplicate alerts without inhibition
+- Do not set thresholds by feel (based on SLOs and historical data)
+- Do not hardcode webhook URLs in Alertmanager config (use Secrets)
 
-## 与 LOOP 的关系
+## Relationship to LOOP
 
-**所属 LOOP 类型**：无（配置类 skill）
+**LOOP type**: none (configuration skill)
 
-本 skill 在 monitoring-setup 的 PLAN 阶段被调用，生成告警规则配置。
-调优时可作为独立 skill 执行（基于告警历史数据优化阈值）。
+This skill is invoked during the PLAN stage of monitoring-setup to generate alerting rule config.
+It can also be executed as a standalone skill for tuning (optimizing thresholds based on alert history).

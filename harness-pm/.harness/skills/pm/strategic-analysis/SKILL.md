@@ -1,25 +1,25 @@
 ---
 name: strategic-analysis
-description: 当需要进行产品战略分析、竞争战略判断或战略框架选择时使用。根据产品阶段和行业特征自动选择适用的战略框架（SWOT/Ansoff/波特五力）。关键词：战略分析、SWOT、Ansoff矩阵、波特五力、战略规划。
+description: Used when product strategy analysis, competitive strategy judgment, or strategy framework selection is needed. Automatically selects applicable strategy frameworks (SWOT/Ansoff/Porter's Five Forces) based on product stage and industry characteristics. Keywords: strategic analysis, SWOT, Ansoff Matrix, Porter's Five Forces, strategic planning.
 metadata:
-  module: "产品商业与战略"
-  sub-module: "战略规划与路线图"
+  module: "Product Business & Strategy"
+  sub-module: "Strategy Planning & Roadmap"
   type: "pipeline"
   version: "3.0"
-  domain_tags: ["通用"]
+  domain_tags: ["General"]
   trigger_examples:
-    - "帮我分析一下优劣势"
-    - "我们的机会和威胁是什么"
-    - "我们该怎么扩张市场"
-    - "下一步增长方向在哪"
-    - "这个行业值得进入吗"
-    - "分析一下行业竞争格局"
-    - "做一下战略分析"
+    - "Help me analyze strengths and weaknesses"
+    - "What are our opportunities and threats"
+    - "How should we expand the market"
+    - "Where is the next growth direction"
+    - "Is this industry worth entering"
+    - "Analyze the industry competitive landscape"
+    - "Do a strategic analysis"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出战略分析结论和建议"
-  deep_description: "完整分析 + 战略推演 + 竞争格局模拟 + 战略路线图"
+  quick_description: "Directly output strategic analysis conclusions and recommendations"
+  deep_description: "Full analysis + strategic projection + competitive landscape simulation + strategic roadmap"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -31,444 +31,444 @@ writes:
   - memory/progress.md
 ---
 
-# Strategic Analysis — 战略分析
+# Strategic Analysis
 
-## 核心原则
+## Core Principles
 
-1. **框架选择先于执行**——根据产品阶段和行业特征自动选择1-2个最适用的战略框架，不是所有框架都适用所有场景
-2. **内外交叉验证**——SWOT的S/W来自内部能力评估，O/T来自外部数据，不可混淆来源；Ansoff路径必须与SWOT优势/劣势交叉验证
-3. **证据强制标注**——每项分析条目必须有数据或事实支撑，标注置信度，低置信度自动升级人类校准
-4. **风险递增原则**——从市场渗透到多元化，风险递增需显式标注；五力评分中行业吸引力总评必须人类决策
-5. **双路径推演**——Ansoff至少推荐2条增长路径，含风险等级和可行性评估
-6. **五力全覆盖**——新进入者、替代品、供应商、买家、同业竞争五种力量缺一不可
+1. **Framework selection before execution** — Automatically select 1-2 most applicable strategy frameworks based on product stage and industry characteristics. Not all frameworks apply to all scenarios.
+2. **Internal-external cross-validation** — SWOT's S/W come from internal capability assessment, O/T come from external data. Sources cannot be confused. Ansoff paths must cross-validate with SWOT strengths/weaknesses.
+3. **Mandatory evidence annotation** — Each analysis item must be supported by data or facts, with confidence annotated. Low confidence automatically escalates to human calibration.
+4. **Increasing risk principle** — From market penetration to diversification, risk increases and must be explicitly annotated. In Five Forces scoring, the overall industry attractiveness rating must be a human decision.
+5. **Dual-path projection** — Ansoff recommends at least 2 growth paths, including risk level and feasibility assessment.
+6. **Five Forces full coverage** — New entrants, substitutes, suppliers, buyers, and competitive rivalry — all five forces are indispensable.
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI 建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 探索阶段输出 | JSON | 是 | user-research-user-modeling / opportunity-definition | 用户痛点、需求洞察 |
-| 竞品分析数据 | JSON | 是 | docs/discovery/market-analysis.md（“竞品分析”章节） | 竞品定位、功能对比 |
-| BMC商业模式画布 | JSON | ○ | docs/strategy/business-strategy.md（“商业模式画布”章节） | 价值主张、核心资源 |
-| 市场数据 | JSON | ○ | docs/discovery/market-analysis.md（“市场规模”章节） | 市场规模、增长率 |
-| 行业信息 | JSON | ○ | docs/discovery/market-analysis.md（“PEST分析”章节） | 政策法规、技术动态 |
-| 内部能力评估 | JSON | ○ | 用户提供 | 技术/品牌/资源/财务能力 |
-| 当前产品定义 | string | ○ | 用户提供 | 产品核心功能和价值主张描述 |
-| 当前市场定义 | string | ○ | 用户提供 | 目标市场、用户群体描述 |
-| 增长目标 | string | ○ | docs/strategy/OKR.md | 期望的增长方向和目标 |
+| Exploration stage output | JSON | Yes | user-research-user-modeling / opportunity-definition | User pain points, requirement insights |
+| Competitive analysis data | JSON | Yes | docs/discovery/market-analysis.md ("Competitive Analysis" section) | Competitor positioning, feature comparison |
+| BMC business model canvas | JSON | ○ | docs/strategy/business-strategy.md ("Business Model Canvas" section) | Value proposition, key resources |
+| Market data | JSON | ○ | docs/discovery/market-analysis.md ("Market Size" section) | Market size, growth rate |
+| Industry info | JSON | ○ | docs/discovery/market-analysis.md ("PEST Analysis" section) | Policies/regulations, technology dynamics |
+| Internal capability assessment | JSON | ○ | User-provided | Technology/brand/resource/financial capability |
+| Current product definition | string | ○ | User-provided | Product core features and value proposition description |
+| Current market definition | string | ○ | User-provided | Target market, user group description |
+| Growth objectives | string | ○ | docs/strategy/OKR.md | Expected growth direction and objectives |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 框架选择 [核心]
+### Step 1: Framework Selection [Core]
 
-根据输入的产品阶段和行业特征，自动选择1-2个最适用的战略框架。
+Automatically select 1-2 most applicable strategy frameworks based on the input product stage and industry characteristics.
 
-**框架选择规则**：
+**Framework selection rules:**
 
-| 场景特征 | 推荐框架 | 选择理由 |
+| Scenario Characteristic | Recommended Framework | Selection Rationale |
 |----------|----------|----------|
-| 新产品/新市场进入 | SWOT + 波特五力 | 需要同时评估内部能力和外部行业吸引力 |
-| 现有产品增长决策 | SWOT + Ansoff | 需要评估优劣势并确定增长路径 |
-| 行业竞争格局分析 | 波特五力 | 聚焦行业结构和竞争强度 |
-| 战略定位与方向选择 | SWOT | 聚焦内外交叉分析生成战略方向 |
-| 市场扩张决策 | Ansoff + 波特五力 | 需要评估增长路径和目标市场吸引力 |
-| 完整战略规划 | SWOT + Ansoff + 波特五力 | 全方位战略分析 |
+| New product/new market entry | SWOT + Porter's Five Forces | Need to assess both internal capability and external industry attractiveness |
+| Existing product growth decision | SWOT + Ansoff | Need to assess strengths/weaknesses and determine growth path |
+| Industry competitive landscape analysis | Porter's Five Forces | Focus on industry structure and competitive intensity |
+| Strategic positioning and direction selection | SWOT | Focus on internal-external cross-analysis to generate strategic direction |
+| Market expansion decision | Ansoff + Porter's Five Forces | Need to assess growth path and target market attractiveness |
+| Complete strategic planning | SWOT + Ansoff + Porter's Five Forces | Comprehensive strategic analysis |
 
-**选择逻辑**：
+**Selection logic:**
 
-1. 若用户提供内部能力评估 → SWOT适用
-2. 若用户提供产品/市场定义 → Ansoff适用
-3. 若用户提供竞品和市场数据 → 波特五力适用
-4. 默认推荐：SWOT（通用性最强）
-5. 最多选择2个框架（避免分析过度），若3个均适用则优先SWOT + Ansoff
+1. If user provides internal capability assessment → SWOT applies
+2. If user provides product/market definition → Ansoff applies
+3. If user provides competitor and market data → Porter's Five Forces applies
+4. Default recommendation: SWOT (most general)
+5. Select at most 2 frameworks (avoid over-analysis); if all 3 apply, prioritize SWOT + Ansoff
 
-### Step 2: 执行分析 [核心]
+### Step 2: Execute Analysis [Core]
 
-按选择的框架执行战略分析。
+Execute strategic analysis according to the selected frameworks.
 
-#### 2a: SWOT分析
+#### 2a: SWOT Analysis
 
-**Step 2a-1: 内部优势识别 (Strengths)**
+**Step 2a-1: Internal Strengths Identification**
 
-分析企业内部优势：核心技术和专利、品牌知名度和声誉、用户基础和忠诚度、渠道和网络资源、人才和组织能力、财务资源和现金流
+Analyze internal strengths: core technology and patents, brand awareness and reputation, user base and loyalty, channel and network resources, talent and organizational capability, financial resources and cash flow.
 
-**Step 2a-2: 内部劣势识别 (Weaknesses)**
+**Step 2a-2: Internal Weaknesses Identification**
 
-分析企业内部劣势：技术或产品差距、品牌认知不足、资源或能力缺陷、组织结构问题、财务限制
+Analyze internal weaknesses: technology or product gaps, insufficient brand awareness, resource or capability deficiencies, organizational structure issues, financial constraints.
 
-**Step 2a-3: 外部机会识别 (Opportunities)**
+**Step 2a-3: External Opportunities Identification**
 
-分析外部市场机会：市场规模和增长、政策支持、技术变革带来的机会、细分市场空白、合作伙伴机会、用户需求变化
+Analyze external market opportunities: market size and growth, policy support, opportunities from technological change, segment market gaps, partnership opportunities, user demand changes.
 
-**Step 2a-4: 外部威胁识别 (Threats)**
+**Step 2a-4: External Threats Identification**
 
-分析外部市场威胁：竞争对手动作、替代品威胁、政策法规风险、技术颠覆风险、市场萎缩、经济环境变化
+Analyze external market threats: competitor actions, substitute threats, policy/regulatory risks, technology disruption risks, market shrinkage, economic environment changes.
 
-**Step 2a-5: 战略方向生成**
+**Step 2a-5: Strategic Direction Generation**
 
-基于SWOT交叉分析生成4种战略：
+Generate 4 strategies based on SWOT cross-analysis:
 
-| 策略类型 | 含义 |
+| Strategy Type | Meaning |
 |----------|------|
-| SO策略 (Strengths-Opportunities) | 利用优势抓住机会 |
-| ST策略 (Strengths-Threats) | 利用优势规避威胁 |
-| WO策略 (Weaknesses-Opportunities) | 利用机会弥补劣势 |
-| WT策略 (Weaknesses-Threats) | 收缩防御，最小化劣势和威胁 |
+| SO Strategy (Strengths-Opportunities) | Use strengths to seize opportunities |
+| ST Strategy (Strengths-Threats) | Use strengths to avoid threats |
+| WO Strategy (Weaknesses-Opportunities) | Use opportunities to compensate for weaknesses |
+| WT Strategy (Weaknesses-Threats) | Retrench and defend, minimize weaknesses and threats |
 
-#### 2b: Ansoff矩阵分析
+#### 2b: Ansoff Matrix Analysis
 
-**Step 2b-1: 当前象限判断**
+**Step 2b-1: Current Quadrant Determination**
 
 ```
-                    │ 现有产品      │ 新产品
+                    │ Existing Products │ New Products
 ────────────────────┼───────────────┼──────────────
-    现有市场        │ 市场渗透      │ 产品开发
+    Existing Market │ Market Penetration │ Product Development
                     │ (Penetration) │ (Development)
 ────────────────────┼───────────────┼──────────────
-    新市场          │ 市场开发      │ 多元化
+    New Market      │ Market Development │ Diversification
                     │ (Development) │ (Diversification)
 ```
 
-**Step 2b-2: 增长路径推荐**
+**Step 2b-2: Growth Path Recommendation**
 
-基于SWOT和增长目标，推荐1-2条增长路径，每条路径包含：
-- 路径名称和类型
-- 风险等级 (High/Medium/Low)
-- 资源需求 (High/Medium/Low)
-- 预期回报 (High/Medium/Low)
-- 时间线 (周期)
-- 可行性评估（市场吸引力、能力匹配度、资源可获得性、风险可控性）
+Based on SWOT and growth objectives, recommend 1-2 growth paths. Each path includes:
+- Path name and type
+- Risk level (High/Medium/Low)
+- Resource requirement (High/Medium/Low)
+- Expected return (High/Medium/Low)
+- Timeline (cycle)
+- Feasibility assessment (market attractiveness, capability match, resource availability, risk controllability)
 
-**Step 2b-3: 路径可行性评估**
+**Step 2b-3: Path Feasibility Assessment**
 
-评估每条路径的可行性：市场吸引力、能力匹配度、资源可获得性、风险可控性
+Assess the feasibility of each path: market attractiveness, capability match, resource availability, risk controllability.
 
-#### 2c: 波特五力分析
+#### 2c: Porter's Five Forces Analysis
 
-**Force 1: 新进入者威胁**
+**Force 1: Threat of New Entrants**
 
-| 得分 | 标准 |
+| Score | Standard |
 |------|------|
-| 1 | 进入壁垒极高，几乎不可能进入 |
-| 2 | 进入壁垒较高，新进入者困难 |
-| 3 | 中等壁垒，存在一定进入可能 |
-| 4 | 进入壁垒较低，容易进入 |
-| 5 | 进入壁垒很低，极易进入 |
+| 1 | Entry barriers extremely high, almost impossible to enter |
+| 2 | Entry barriers relatively high, difficult for new entrants |
+| 3 | Medium barriers, some possibility of entry |
+| 4 | Entry barriers relatively low, easy to enter |
+| 5 | Entry barriers very low, extremely easy to enter |
 
-评估因素：进入门槛高低、品牌忠诚度、规模经济要求、转换成本、资本要求、分销渠道控制
+Assessment factors: entry threshold, brand loyalty, scale economy requirements, switching costs, capital requirements, distribution channel control.
 
-**Force 2: 替代品威胁**
+**Force 2: Threat of Substitutes**
 
-| 得分 | 标准 |
+| Score | Standard |
 |------|------|
-| 1 | 几乎没有替代品 |
-| 2 | 替代品较少，转换成本高 |
-| 3 | 存在一定替代品 |
-| 4 | 替代品较多，价格优势明显 |
-| 5 | 大量替代品，威胁极大 |
+| 1 | Almost no substitutes |
+| 2 | Few substitutes, high switching costs |
+| 3 | Some substitutes exist |
+| 4 | Many substitutes, clear price advantages |
+| 5 | Abundant substitutes, major threat |
 
-评估因素：替代品数量和质量、转换成本、替代品价格优势、用户对替代品的接受度
+Assessment factors: substitute quantity and quality, switching costs, substitute price advantages, user acceptance of substitutes.
 
-**Force 3: 供应商议价能力**
+**Force 3: Bargaining Power of Suppliers**
 
-| 得分 | 标准 |
+| Score | Standard |
 |------|------|
-| 1 | 供应商分散，议价能力弱 |
-| 2 | 供应商较多，选择余地大 |
-| 3 | 供应商能力中等 |
-| 4 | 供应商集中，议价能力强 |
-| 5 | 供应商垄断，议价能力极强 |
+| 1 | Suppliers dispersed, weak bargaining power |
+| 2 | Many suppliers, plenty of choices |
+| 3 | Supplier power medium |
+| 4 | Suppliers concentrated, strong bargaining power |
+| 5 | Supplier monopoly, extremely strong bargaining power |
 
-评估因素：供应商数量和集中度、切换供应商成本、前向整合可能性、供应商产品差异化、供应商规模
+Assessment factors: supplier quantity and concentration, cost of switching suppliers, forward integration possibility, supplier product differentiation, supplier scale.
 
-**Force 4: 买家议价能力**
+**Force 4: Bargaining Power of Buyers**
 
-| 得分 | 标准 |
+| Score | Standard |
 |------|------|
-| 1 | 买家分散，议价能力弱 |
-| 2 | 买家较多，选择余地大 |
-| 3 | 买家能力中等 |
-| 4 | 买家集中，议价能力强 |
-| 5 | 买家垄断，议价能力极强 |
+| 1 | Buyers dispersed, weak bargaining power |
+| 2 | Many buyers, plenty of choices |
+| 3 | Buyer power medium |
+| 4 | Buyers concentrated, strong bargaining power |
+| 5 | Buyer monopoly, extremely strong bargaining power |
 
-评估因素：买家数量和集中度、转换成本、价格敏感度、买家信息透明度、购买量大小
+Assessment factors: buyer quantity and concentration, switching costs, price sensitivity, buyer information transparency, purchase volume.
 
-**Force 5: 同业竞争强度**
+**Force 5: Competitive Rivalry Intensity**
 
-| 得分 | 标准 |
+| Score | Standard |
 |------|------|
-| 1 | 竞争温和，市场稳定 |
-| 2 | 竞争适中，有序发展 |
-| 3 | 竞争中等，波动明显 |
-| 4 | 竞争激烈，价格战常见 |
-| 5 | 竞争白热化，淘汰频繁 |
+| 1 | Competition mild, market stable |
+| 2 | Competition moderate, orderly development |
+| 3 | Competition medium, noticeable fluctuation |
+| 4 | Competition fierce, price wars common |
+| 5 | Competition white-hot, frequent elimination |
 
-评估因素：竞争者数量和规模、行业增长率、产品差异化程度、退出壁垒高低、竞争策略多样性
+Assessment factors: competitor quantity and scale, industry growth rate, product differentiation degree, exit barrier height, competitive strategy diversity.
 
-### Step 3: 战略结论整合 [核心]
+### Step 3: Strategic Conclusion Integration [Core]
 
-将各框架的分析结论进行整合，生成统一的战略建议。
+Integrate the analysis conclusions of each framework to generate unified strategic recommendations.
 
-**整合规则**：
+**Integration rules:**
 
-1. SWOT战略方向 + Ansoff增长路径交叉验证：SO策略与Ansoff推荐路径是否一致
-2. 波特五力行业吸引力 + Ansoff路径可行性：行业吸引力低时，增长路径风险需上调
-3. SWOT优势 + 波特五力竞争壁垒：优势是否构成竞争壁垒，壁垒是否可维持
-4. 生成整合后的战略建议列表，按优先级排序
+1. SWOT strategic direction + Ansoff growth path cross-validation: Whether SO strategy is consistent with Ansoff recommended path
+2. Porter's Five Forces industry attractiveness + Ansoff path feasibility: When industry attractiveness is low, growth path risk needs to be adjusted upward
+3. SWOT strengths + Porter's Five Forces competitive barriers: Whether strengths constitute competitive barriers, whether barriers are sustainable
+4. Generate integrated strategic recommendation list, sorted by priority
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 战略分析结论和建议 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整分析 + 战略推演 + 竞争格局模拟 + 战略路线图 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Strategic analysis conclusions and recommendations | Core conclusions + minimum viable artifact |
+| standard | Full artifact (current default) | Full artifact, including all Step outputs |
+| deep | Full analysis + strategic projection + competitive landscape simulation + strategic roadmap | Full artifact + extended analysis + deep projection |
 
-## 输出
+## Output
 
-输出路径：`docs/strategy/PRODUCT_STRATEGY.md（“战略分析”章节）`
+Output path: `docs/strategy/PRODUCT_STRATEGY.md ("Strategic Analysis" section)`
 
-输出文件：strategic-analysis.json + strategic-analysis.md
+Output files: strategic-analysis.json + strategic-analysis.md
 
-### 输出Schema
+### Output Schema
 
 ```json
 {
   "type": "object",
   "required": ["framework_selection", "swot", "ansoff", "porter", "strategic_conclusions", "metadata"],
   "properties": {
-    "framework_selection": {"type": "object", "description": "框架选择结果及理由"},
-    "swot": {"type": "object", "description": "SWOT分析结果，未选择时为null"},
-    "ansoff": {"type": "object", "description": "Ansoff矩阵分析结果，未选择时为null"},
-    "porter": {"type": "object", "description": "波特五力分析结果，未选择时为null"},
-    "strategic_conclusions": {"type": "object", "description": "整合后的战略结论"},
-    "metadata": {"type": "object", "description": "元数据，含版本、时间戳和来源文件"}
+    "framework_selection": {"type": "object", "description": "Framework selection results and rationale"},
+    "swot": {"type": "object", "description": "SWOT analysis results, null when not selected"},
+    "ansoff": {"type": "object", "description": "Ansoff matrix analysis results, null when not selected"},
+    "porter": {"type": "object", "description": "Porter's Five Forces analysis results, null when not selected"},
+    "strategic_conclusions": {"type": "object", "description": "Integrated strategic conclusions"},
+    "metadata": {"type": "object", "description": "Metadata, including version, timestamp, and source files"}
   }
 }
 ```
 
-### 输出校验规则
+### Output Validation Rules
 
-#### framework_selection 校验
+#### framework_selection Validation
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| `framework_selection.selected_frameworks` | array | 是 | 选择的框架列表，1-2个，必须为swot/ansoff/porter之一 |
-| `framework_selection.selection_rationale` | string | 是 | 选择理由，不可为空 |
+| `framework_selection.selected_frameworks` | array | Yes | Selected framework list, 1-2, must be one of swot/ansoff/porter |
+| `framework_selection.selection_rationale` | string | Yes | Selection rationale, cannot be empty |
 
-#### swot 校验（选择时必填）
+#### swot Validation (required when selected)
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| `swot.strengths` | array | 是 | 优势列表，每项含item、confidence、evidence |
-| `swot.weaknesses` | array | 是 | 劣势列表，每项含item、confidence、evidence |
-| `swot.opportunities` | array | 是 | 机会列表，每项含item、confidence、evidence |
-| `swot.threats` | array | 是 | 威胁列表，每项含item、confidence、evidence |
-| `swot.strategies` | array | 是 | 4种战略方向 |
-| `swot.strategies[].type` | string | 是 | SO/ST/WO/WT |
-| `swot.strategies[].strategy` | string | 是 | 战略名称 |
-| `swot.strategies[].key_actions` | array | 是 | 关键行动列表 |
-| `swot.strategies[].expected_outcome` | string | 是 | 预期成果 |
+| `swot.strengths` | array | Yes | Strengths list, each item contains item, confidence, evidence |
+| `swot.weaknesses` | array | Yes | Weaknesses list, each item contains item, confidence, evidence |
+| `swot.opportunities` | array | Yes | Opportunities list, each item contains item, confidence, evidence |
+| `swot.threats` | array | Yes | Threats list, each item contains item, confidence, evidence |
+| `swot.strategies` | array | Yes | 4 strategic directions |
+| `swot.strategies[].type` | string | Yes | SO/ST/WO/WT |
+| `swot.strategies[].strategy` | string | Yes | Strategy name |
+| `swot.strategies[].key_actions` | array | Yes | Key actions list |
+| `swot.strategies[].expected_outcome` | string | Yes | Expected outcome |
 
-#### ansoff 校验（选择时必填）
+#### ansoff Validation (required when selected)
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| `ansoff.current_position.quadrant` | string | 是 | 当前象限 |
-| `ansoff.current_position.description` | string | 是 | 当前定位描述 |
-| `ansoff.current_position.rationale` | array | 是 | 定位理由列表 |
-| `ansoff.growth_paths` | array | 是 | 至少2条增长路径 |
-| `ansoff.growth_paths[].path` | string | 是 | 路径名称 |
-| `ansoff.growth_paths[].quadrant` | string | 是 | 目标象限 |
-| `ansoff.growth_paths[].risk_level` | string | 是 | high/medium/low |
-| `ansoff.growth_paths[].feasibility.overall` | number | 是 | 可行性综合评分0-1 |
-| `ansoff.growth_paths[].key_actions` | array | 是 | 关键行动列表 |
-| `ansoff.growth_paths[].risks` | array | 是 | 风险列表，含mitigation |
-| `ansoff.recommendations.primary` | string | 是 | 推荐主路径 |
-| `ansoff.recommendations.rationale` | string | 是 | 推荐理由 |
+| `ansoff.current_position.quadrant` | string | Yes | Current quadrant |
+| `ansoff.current_position.description` | string | Yes | Current positioning description |
+| `ansoff.current_position.rationale` | array | Yes | Positioning rationale list |
+| `ansoff.growth_paths` | array | Yes | At least 2 growth paths |
+| `ansoff.growth_paths[].path` | string | Yes | Path name |
+| `ansoff.growth_paths[].quadrant` | string | Yes | Target quadrant |
+| `ansoff.growth_paths[].risk_level` | string | Yes | high/medium/low |
+| `ansoff.growth_paths[].feasibility.overall` | number | Yes | Feasibility overall score 0-1 |
+| `ansoff.growth_paths[].key_actions` | array | Yes | Key actions list |
+| `ansoff.growth_paths[].risks` | array | Yes | Risk list, including mitigation |
+| `ansoff.recommendations.primary` | string | Yes | Recommended primary path |
+| `ansoff.recommendations.rationale` | string | Yes | Recommendation rationale |
 
-#### porter 校验（选择时必填）
+#### porter Validation (required when selected)
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| `porter.new_entrant_threat.score` | number | 是 | 1-5分 |
-| `porter.new_entrant_threat.key_factors` | array | 是 | 关键影响因素列表 |
-| `porter.substitutes_threat.score` | number | 是 | 1-5分 |
-| `porter.substitutes_threat.key_factors` | array | 是 | 关键影响因素列表 |
-| `porter.supplier_power.score` | number | 是 | 1-5分 |
-| `porter.supplier_power.key_factors` | array | 是 | 关键影响因素列表 |
-| `porter.buyer_power.score` | number | 是 | 1-5分 |
-| `porter.buyer_power.key_factors` | array | 是 | 关键影响因素列表 |
-| `porter.competitive_rivalry.score` | number | 是 | 1-5分 |
-| `porter.competitive_rivalry.key_factors` | array | 是 | 关键影响因素列表 |
-| `porter.industry_attractiveness.overall_score` | number | 是 | 综合评分 |
-| `porter.industry_attractiveness.rating` | string | 是 | 吸引力等级 |
-| `porter.key_recommendations` | array | 是 | 战略建议列表 |
+| `porter.new_entrant_threat.score` | number | Yes | 1-5 score |
+| `porter.new_entrant_threat.key_factors` | array | Yes | Key influencing factors list |
+| `porter.substitutes_threat.score` | number | Yes | 1-5 score |
+| `porter.substitutes_threat.key_factors` | array | Yes | Key influencing factors list |
+| `porter.supplier_power.score` | number | Yes | 1-5 score |
+| `porter.supplier_power.key_factors` | array | Yes | Key influencing factors list |
+| `porter.buyer_power.score` | number | Yes | 1-5 score |
+| `porter.buyer_power.key_factors` | array | Yes | Key influencing factors list |
+| `porter.competitive_rivalry.score` | number | Yes | 1-5 score |
+| `porter.competitive_rivalry.key_factors` | array | Yes | Key influencing factors list |
+| `porter.industry_attractiveness.overall_score` | number | Yes | Overall score |
+| `porter.industry_attractiveness.rating` | string | Yes | Attractiveness rating |
+| `porter.key_recommendations` | array | Yes | Strategic recommendations list |
 
-#### strategic_conclusions 校验
+#### strategic_conclusions Validation
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| `strategic_conclusions.integrated_recommendations` | array | 是 | 整合后的战略建议列表，不可为空 |
-| `strategic_conclusions.integrated_recommendations[].recommendation` | string | 是 | 战略建议 |
-| `strategic_conclusions.integrated_recommendations[].priority` | string | 是 | 优先级：high/medium/low |
-| `strategic_conclusions.integrated_recommendations[].supporting_frameworks` | array | 是 | 支撑该建议的框架列表 |
-| `strategic_conclusions.integrated_recommendations[].evidence` | string | 是 | 证据依据 |
-| `strategic_conclusions.cross_validation_notes` | array | 是 | 跨框架交叉验证说明 |
-| `strategic_conclusions.human_decisions_needed` | array | 是 | 需人类决策的事项列表 |
+| `strategic_conclusions.integrated_recommendations` | array | Yes | Integrated strategic recommendations list, cannot be empty |
+| `strategic_conclusions.integrated_recommendations[].recommendation` | string | Yes | Strategic recommendation |
+| `strategic_conclusions.integrated_recommendations[].priority` | string | Yes | Priority: high/medium/low |
+| `strategic_conclusions.integrated_recommendations[].supporting_frameworks` | array | Yes | List of frameworks supporting this recommendation |
+| `strategic_conclusions.integrated_recommendations[].evidence` | string | Yes | Evidence basis |
+| `strategic_conclusions.cross_validation_notes` | array | Yes | Cross-framework validation notes |
+| `strategic_conclusions.human_decisions_needed` | array | Yes | List of items needing human decision |
 
-### Output JSON 示例
+### Output JSON Example
 
 ```json
 {
   "framework_selection": {
     "selected_frameworks": ["swot", "ansoff"],
-    "selection_rationale": "用户提供内部能力评估和产品/市场定义，适合SWOT+Ansoff组合分析"
+    "selection_rationale": "User provided internal capability assessment and product/market definition, suitable for SWOT+Ansoff combined analysis"
   },
   "swot": {
     "strengths": [
-      { "item": "拥有自研AI自适应学习引擎", "confidence": 0.85, "evidence": "专利号ZL2023XXXXXX，A/B测试显示学习效率提升32%" }
+      { "item": "Owns self-developed AI adaptive learning engine", "confidence": 0.85, "evidence": "Patent No. ZL2023XXXXXX, A/B testing shows 32% improvement in learning efficiency" }
     ],
     "weaknesses": [
-      { "item": "K12学科内容资源不足", "confidence": 0.75, "evidence": "内容SKU对比：竞品A覆盖12学科vs我方3学科" }
+      { "item": "Insufficient K12 subject content resources", "confidence": 0.75, "evidence": "Content SKU comparison: Competitor A covers 12 subjects vs our 3 subjects" }
     ],
     "opportunities": [
-      { "item": "职业教育政策红利期", "confidence": 0.80, "evidence": "国务院2024年《职业教育改革实施方案》" }
+      { "item": "Vocational education policy dividend period", "confidence": 0.80, "evidence": "State Council 2024 'Vocational Education Reform Implementation Plan'" }
     ],
     "threats": [
-      { "item": "互联网巨头以免费策略切入市场", "confidence": 0.70, "evidence": "竞品B 2024Q3推出免费基础版" }
+      { "item": "Internet giants entering market with free strategy", "confidence": 0.70, "evidence": "Competitor B launched free basic version in 2024 Q3" }
     ],
     "strategies": [
-      { "type": "SO", "strategy": "AI引擎+企业培训市场渗透", "key_actions": ["与50家中大型企业签订培训平台试点协议"], "expected_outcome": "6个月内企业客户数增长40%" }
+      { "type": "SO", "strategy": "AI engine + enterprise training market penetration", "key_actions": ["Sign training platform pilot agreements with 50 mid-to-large enterprises"], "expected_outcome": "Enterprise customer count grows 40% within 6 months" }
     ]
   },
   "ansoff": {
     "current_position": {
-      "quadrant": "市场渗透",
-      "description": "当前定位于现有市场中的现有产品",
-      "rationale": ["产品成熟稳定"]
+      "quadrant": "Market Penetration",
+      "description": "Currently positioned as existing product in existing market",
+      "rationale": ["Product mature and stable"]
     },
     "growth_paths": [
       {
-        "path": "市场开发",
-        "quadrant": "市场开发",
+        "path": "Market Development",
+        "quadrant": "Market Development",
         "risk_level": "medium",
         "resource_requirement": "medium",
         "expected_return": "medium",
-        "timeline": "6-12个月",
+        "timeline": "6-12 months",
         "feasibility": { "overall": 0.70, "market_attractiveness": 0.75, "capability_match": 0.80, "resource_availability": 0.65, "risk_controllability": 0.60 },
-        "key_actions": ["识别目标新市场细分"],
-        "risks": [{ "risk": "市场认知不足", "mitigation": "品牌联合推广" }]
+        "key_actions": ["Identify target new market segments"],
+        "risks": [{ "risk": "Insufficient market awareness", "mitigation": "Brand joint promotion" }]
       }
     ],
     "recommendations": {
-      "primary": "市场开发",
-      "rationale": "风险可控，资源需求适中，与现有能力匹配度高"
+      "primary": "Market Development",
+      "rationale": "Controllable risk, moderate resource requirements, high match with existing capabilities"
     }
   },
   "porter": null,
   "strategic_conclusions": {
     "integrated_recommendations": [
-      { "recommendation": "优先执行市场开发策略，利用AI引擎优势开拓企业培训新市场", "priority": "high", "supporting_frameworks": ["swot", "ansoff"], "evidence": "SO策略与Ansoff市场开发路径一致，可行性评分0.70" }
+      { "recommendation": "Prioritize market development strategy, use AI engine advantage to explore enterprise training new market", "priority": "high", "supporting_frameworks": ["swot", "ansoff"], "evidence": "SO strategy consistent with Ansoff market development path, feasibility score 0.70" }
     ],
     "cross_validation_notes": [
-      "SWOT SO策略与Ansoff市场开发路径方向一致，相互验证"
+      "SWOT SO strategy consistent with Ansoff market development path direction, mutually validated"
     ],
     "human_decisions_needed": [
-      { "item": "战略方向选择", "context": "SO策略（市场渗透）vs WO策略（内容补强）vs 市场开发路径，需人类决策最终方向", "urgency": "高" }
+      { "item": "Strategic direction selection", "context": "SO strategy (market penetration) vs WO strategy (content reinforcement) vs market development path, human decision needed for final direction", "urgency": "high" }
     ]
   },
   "metadata": {
     "version": "3.0",
     "generated_at": "2026-05-14T21:00:00Z",
     "source_files": [
-      "docs/discovery/market-analysis.md（“竞品分析”章节）
+      "docs/discovery/market-analysis.md (\"Competitive Analysis\" section)"
     ]
   }
 }
 ```
 
-## 决策规则
+## Decision Rules
 
-1. **SWOT置信度升级**：置信度 < 0.6的项目自动升级人类校准
-2. **SWOT战略选择**：4种战略方向必须人类最终选择
-3. **Ansoff增长路径选择**：必须人类最终决策
-4. **Ansoff风险评估**：人类判断风险接受程度
-5. **波特五力评分校准**：各力量评分需人类校准确认
-6. **波特五力行业吸引力**：总评必须人类判断
-7. **框架选择可覆盖**：AI自动选择的框架人类可调整，人类指定框架时优先执行
+1. **SWOT confidence escalation**: Items with confidence < 0.6 automatically escalate to human calibration
+2. **SWOT strategy selection**: 4 strategic directions must be finally selected by human
+3. **Ansoff growth path selection**: Must be finally decided by human
+4. **Ansoff risk assessment**: Human judges risk acceptance level
+5. **Porter's Five Forces score calibration**: Each force score needs human calibration confirmation
+6. **Porter's Five Forces industry attractiveness**: Overall rating must be human judgment
+7. **Framework selection override**: AI-selected frameworks can be adjusted by human; when human specifies a framework, execute it first
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (quick/standard/deep must all pass)
 
-- [ ] 框架选择合理（selected_frameworks非空且选择理由充分）
-- [ ] SWOT每项分析有数据支撑（evidence字段非空）
+- [ ] Framework selection reasonable (selected_frameworks non-empty and selection rationale sufficient)
+- [ ] Each SWOT analysis item has data support (evidence field non-empty)
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (standard/deep must pass)
 
-- [ ] SWOT 4种战略方向都已生成（strategies包含SO/ST/WO/WT）
-- [ ] SWOT置信度评估已完成（每项有confidence值）
-- [ ] Ansoff 4个象限都已分析（当前定位已确定）
-- [ ] Ansoff 1-2条增长路径已推荐（growth_paths非空）
-- [ ] Ansoff 每条路径有风险等级标注（risk_level非空）
-- [ ] Ansoff 可行性评估已完成（feasibility非空）
-- [ ] 波特五力5种力量都已评估（5个force均有score）
-- [ ] 波特五力评分有数据依据（key_factors非空）
-- [ ] 波特五力行业吸引力总评已完成（industry_attractiveness非空）
-- [ ] 战略结论已整合（integrated_recommendations非空）
-- [ ] 跨框架交叉验证已完成（cross_validation_notes非空）
-- [ ] 人类决策项已列出（human_decisions_needed非空）
+- [ ] All 4 SWOT strategic directions generated (strategies include SO/ST/WO/WT)
+- [ ] SWOT confidence assessment completed (each item has confidence value)
+- [ ] All 4 Ansoff quadrants analyzed (current positioning determined)
+- [ ] 1-2 Ansoff growth paths recommended (growth_paths non-empty)
+- [ ] Each Ansoff path has risk level annotated (risk_level non-empty)
+- [ ] Ansoff feasibility assessment completed (feasibility non-empty)
+- [ ] All 5 Porter's Five Forces assessed (all 5 forces have score)
+- [ ] Porter's Five Forces scores have data basis (key_factors non-empty)
+- [ ] Porter's Five Forces industry attractiveness overall rating completed (industry_attractiveness non-empty)
+- [ ] Strategic conclusions integrated (integrated_recommendations non-empty)
+- [ ] Cross-framework validation completed (cross_validation_notes non-empty)
+- [ ] Human decision items listed (human_decisions_needed non-empty)
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep projection and roadmap generated)
+- [ ] Decision record complete (key decisions have basis and alternatives)
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-当上游文件不存在时，本Skill仍可独立执行：
+When upstream files do not exist, this Skill can still execute independently:
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Notes |
 |---------------|---------|----------|------------|
-| exploration_outputs（persona / opportunity-definition等） | 用户提供产品现状描述 → 基于描述生成分析 | 缺乏探索阶段数据，O/T可能缺乏用户端实证 | 要求用户提供用户画像和机会定义描述或上传persona.json/opportunity-definition.json文件 |
-| competitor-analysis.json | 用户提供产品/行业现状描述 → 基于描述生成分析 | 缺乏竞品分析数据，T和部分O缺乏竞品参照，波特五力同业竞争评分可能不够精准 | 要求用户提供竞品名称、定位和差异化描述或上传competitor-analysis.json文件 |
-| bmc.json | 用户提供产品现状描述 → 基于描述生成分析 | 缺乏BMC数据，S/W与商业模型关联度可能偏弱 | 要求用户提供商业模式关键要素或上传bmc.json文件 |
-| 市场数据（tam-som / pest） | 用户提供行业信息 → 基于AI知识评估 | 缺乏市场数据，行业吸引力评估缺乏量化依据 | 要求用户提供市场规模和行业趋势数据或上传tam-som.json/pest.json文件 |
-| 内部能力评估（用户提供） | 提示用户提供或跳过该输入相关步骤 | S/W缺乏内部数据支撑，可能偏主观 | 要求用户提供团队能力、技术栈和资源约束等内部评估信息 |
-| 当前产品/市场定义 | 用户提供产品现状 → 定位Ansoff象限 | 缺乏结构化产品市场定义，象限定位可能不够精准 | 要求用户提供当前产品定位和目标市场描述 |
-| 所有上游文件均缺失 | 提示用户先执行前序阶段，或基于用户提供的产品现状描述直接生成分析 | 整体置信度显著降低，分析主要为AI推断 | 要求用户提供产品现状、行业信息和内部能力评估 |
+| exploration_outputs (persona / opportunity-definition, etc.) | User provides product status description → generate analysis based on description | Lacking exploration stage data, O/T may lack user-side empirical evidence | Require user to provide persona and opportunity definition descriptions or upload persona.json/opportunity-definition.json files |
+| competitor-analysis.json | User provides product/industry status description → generate analysis based on description | Lacking competitive analysis data, T and some O lack competitor reference, Porter's Five Forces competitive rivalry score may not be precise enough | Require user to provide competitor names, positioning, and differentiation descriptions or upload competitor-analysis.json file |
+| bmc.json | User provides product status description → generate analysis based on description | Lacking BMC data, S/W correlation with business model may be weak | Require user to provide key business model elements or upload bmc.json file |
+| Market data (tam-som / pest) | User provides industry info → assess based on AI knowledge | Lacking market data, industry attractiveness assessment lacks quantitative basis | Require user to provide market size and industry trend data or upload tam-som.json/pest.json files |
+| Internal capability assessment (user-provided) | Prompt user to provide or skip input-related steps | S/W lacks internal data support, may be subjective | Require user to provide internal assessment info such as team capability, tech stack, and resource constraints |
+| Current product/market definition | User provides product status → position Ansoff quadrant | Lacking structured product market definition, quadrant positioning may not be precise enough | Require user to provide current product positioning and target market description |
+| All upstream files missing | Prompt user to execute prior stages first, or generate analysis directly based on user-provided product status description | Overall confidence significantly lowered, analysis mainly AI inference | Require user to provide product status, industry info, and internal capability assessment |
 
-## 数据获取说明
+## Data Acquisition Notes
 
-本Skill需要探索输出、竞品分析和BMC数据，请通过以下方式之一提供：
-  1. 直接描述产品现状、优势和挑战
-  2. 上传competitor-analysis.json / bmc.json等文件
-  3. 提供数据文件路径
-- AI不负责外部数据采集，仅负责分析
+This Skill requires exploration output, competitive analysis, and BMC data. Please provide via one of the following:
+  1. Directly describe product status, strengths, and challenges
+  2. Upload competitor-analysis.json / bmc.json and other files
+  3. Provide data file paths
+- AI is not responsible for external data collection, only analysis
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游数据源 | 变更类型 | 影响维度 | 影响描述 | 响应策略 |
+| Upstream Data Source | Change Type | Affected Dimension | Impact Description | Response Strategy |
 |-----------|----------|----------|----------|----------|
-| persona/opportunity-definition | 用户洞察更新 | SWOT的O和T | 用户洞察变化影响机会和威胁评估 | 重新执行SWOT Step 3-4，更新机会和威胁 |
-| competitor-analysis.json | 竞品数据更新 | SWOT的T和部分O / 波特五力Force1和Force5 | 竞品变化影响威胁评估和竞争分析 | 重新执行SWOT Step 3-4和波特五力Force1/5 |
-| bmc.json | 商业模式变更 | SWOT的S和W | 商业模式变化影响优势和劣势 | 重新执行SWOT Step 1-2 |
-| tam-som.json | 市场规模变更 | 波特五力行业吸引力 / Ansoff可行性 | 市场数据变化影响吸引力评估 | 重新计算行业吸引力综合评分和Ansoff可行性 |
-| pest.json | 政策/技术环境变更 | 波特五力多项因素 | 环境变化影响多力评估 | 重新评估受影响的力 |
-| okr.json | 增长目标调整 | Ansoff增长路径推荐 | 增长目标变化影响路径方向 | 重新执行Ansoff Step 2 |
+| persona/opportunity-definition | User insight update | SWOT's O and T | User insight changes affect opportunity and threat assessment | Re-execute SWOT Steps 3-4, update opportunities and threats |
+| competitor-analysis.json | Competitor data update | SWOT's T and some O / Porter's Five Forces Force1 and Force5 | Competitor changes affect threat assessment and competitive analysis | Re-execute SWOT Steps 3-4 and Porter's Five Forces Force1/5 |
+| bmc.json | Business model change | SWOT's S and W | Business model changes affect strengths and weaknesses | Re-execute SWOT Steps 1-2 |
+| tam-som.json | Market size change | Porter's Five Forces industry attractiveness / Ansoff feasibility | Market data changes affect attractiveness assessment | Recalculate industry attractiveness overall score and Ansoff feasibility |
+| pest.json | Policy/technology environment change | Multiple factors in Porter's Five Forces | Environment changes affect multiple force assessments | Re-assess affected forces |
+| okr.json | Growth objective adjustment | Ansoff growth path recommendation | Growth objective changes affect path direction | Re-execute Ansoff Step 2 |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 下游消费者 | 通知字段 | 通知时机 | 通知内容 |
+| Downstream Consumer | Notification Field | Notification Timing | Notification Content |
 |-----------|----------|----------|----------|
-| planning-okr | `strategic_conclusions.integrated_recommendations` | 战略结论变更后 | 通知战略方向调整及优先级变化 |
-| planning-roadmap | `strategic_conclusions.integrated_recommendations` | 战略结论变更后 | 通知战略方向调整 |
-| business-strategy-report | `swot.strategies` / `ansoff.growth_paths` / `porter.industry_attractiveness` | 各框架分析变更后 | 通知分析结果变化 |
+| planning-okr | `strategic_conclusions.integrated_recommendations` | After strategic conclusions change | Notify strategic direction adjustment and priority changes |
+| planning-roadmap | `strategic_conclusions.integrated_recommendations` | After strategic conclusions change | Notify strategic direction adjustment |
+| business-strategy-report | `swot.strategies` / `ansoff.growth_paths` / `porter.industry_attractiveness` | After each framework analysis changes | Notify analysis result changes |

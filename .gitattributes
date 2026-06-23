@@ -1,23 +1,23 @@
-# .gitattributes — harness-all 全局换行符策略
+# .gitattributes — harness-all global line ending policy
 #
-# 核心原则：所有 Shell 脚本（.sh）必须使用 LF 换行符
-# 原因：Git Bash (MINGW64) 无法执行 CRLF 脚本，会报错：
+# Core principle: all shell scripts (.sh) must use LF line endings
+# Reason: Git Bash (MINGW64) cannot execute CRLF scripts; it errors with:
 #   \r: command not found
 #   /bin/bash^M: bad interpreter
 #
-# 即使 Windows 用户开启了 core.autocrlf=true，
-# .gitattributes 的 eol=lf 也会覆盖本地设置，确保工作区检出为 LF
+# Even when Windows users enable core.autocrlf=true,
+# eol=lf in .gitattributes overrides local settings, ensuring the working tree checks out as LF
 
-# Shell 脚本 — 强制 LF（最关键）
+# Shell scripts — force LF (most critical)
 *.sh text eol=lf
 
-# Git hook 脚本（无扩展名）— 强制 LF
-# 注意：.git/hooks/ 下的文件不受 .gitattributes 管理，
-# 但 .harness/hooks/ 下的源文件受管理
+# Git hook scripts (no extension) — force LF
+# Note: files under .git/hooks/ are not managed by .gitattributes,
+# but source files under .harness/hooks/ are managed
 .harness/hooks/* text eol=lf
 .harness/hooks/guards/* text eol=lf
 
-# 通用文本文件 — 自动规范化（检出时跟随本地设置，提交时转 LF）
+# General text files — auto-normalize (follow local settings on checkout, convert to LF on commit)
 *.md text auto
 *.yaml text auto
 *.yml text auto
@@ -26,7 +26,7 @@
 *.txt text auto
 *.csv text auto
 
-# Web/代码文件 — 强制 LF
+# Web/code files — force LF
 *.js text eol=lf
 *.ts text eol=lf
 *.jsx text eol=lf
@@ -36,13 +36,13 @@
 *.html text eol=lf
 *.py text eol=lf
 
-# 配置文件 — 强制 LF
+# Config files — force LF
 .gitignore text eol=lf
 .gitattributes text eol=lf
 .editorconfig text eol=lf
 .env.example text eol=lf
 
-# 二进制文件 — 不做转换
+# Binary files — no conversion
 *.png binary
 *.jpg binary
 *.jpeg binary

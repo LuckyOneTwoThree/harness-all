@@ -1,94 +1,94 @@
-# 交接：harness-growth → harness-pm
+# Handoff: harness-growth → harness-pm
 
-> 本模板是 harness-growth 的**产出模板**，用于生成 `growth-to-pm.md` 反馈给 harness-pm。
-> session-end skill 产出本契约文档时，复制本模板填写实际内容。
+> This template is the **producer template** for harness-growth, used to generate `growth-to-pm.md` as feedback to harness-pm.
+> When the session-end skill produces this contract document, copy this template and fill in the actual content.
 
-## 阶段总结
+## Phase Summary
 
-<本阶段做了什么，一句话概括。如：完成 Q2 增长实验 3 轮，内容渠道 CAC 从 120 元降至 65 元>
+<One-sentence summary of what was done in this phase. e.g., Completed 3 rounds of Q2 growth experiments, content channel CAC reduced from $17 to $9>
 
-## 实验结果
+## Experiment Results
 
-| 实验编号 | 实验名称 | 假设 | 主要指标 | 结论 | 统计显著性 |
+| Experiment ID | Experiment name | Hypothesis | Primary metric | Conclusion | Statistical significance |
 |---------|---------|------|---------|------|-----------|
-| G-001 | <实验名> | <做 X 会让 Y 提升 Z%> | <指标名: 基线→实验> | 有效/无效/不确定 | p<0.05 / 置信区间 |
-| G-002 | <实验名> | <假设> | <指标> | <结论> | <p 值> |
+| G-001 | <experiment name> | <doing X will increase Y by Z%> | <metric name: baseline → experiment> | Effective/Ineffective/Inconclusive | p<0.05 / confidence interval |
+| G-002 | <experiment name> | <hypothesis> | <metric> | <conclusion> | <p-value> |
 
-### 实验详情
+### Experiment Details
 
-> 每个实验展开描述：实验设计、样本量、时长、分组、数据、结论。
+> Expand on each experiment: design, sample size, duration, groups, data, conclusion.
 
-#### G-001: <实验名>
+#### G-001: <experiment name>
 
-- **假设**：<做 X 会让 Y 提升 Z%>
-- **主要度量**：<指标名>（基线 <值> → 目标 <值>）
-- **护栏度量**：<指标名>（防止副作用）
-- **实验设计**：样本 <N>，时长 <天>，分组 <A/B>
-- **结果**：<实际数据>
-- **结论**：有效 / 无效 / 不确定
-- **行动建议**：放大 / 停止 / 重新设计
+- **Hypothesis**: <doing X will increase Y by Z%>
+- **Primary metric**: <metric name> (baseline <value> → target <value>)
+- **Guardrail metric**: <metric name> (to prevent side effects)
+- **Experiment design**: sample <N>, duration <days>, groups <A/B>
+- **Result**: <actual data>
+- **Conclusion**: Effective / Ineffective / Inconclusive
+- **Action recommendation**: Scale up / Stop / Redesign
 
-## 用户反馈
+## User Feedback
 
-| 反馈来源 | 内容摘要 | 优先级 | 建议动作 |
+| Feedback source | Content summary | Priority | Suggested action |
 |---------|---------|--------|---------|
-| <渠道：客服/社媒/问卷> | <反馈摘要> | P0/P1/P2 | <建议> |
-| <渠道> | <反馈摘要> | <优先级> | <建议> |
+| <channel: support / social media / survey> | <feedback summary> | P0/P1/P2 | <suggestion> |
+| <channel> | <feedback summary> | <priority> | <suggestion> |
 
-### 反馈分析
+### Feedback Analysis
 
-<对采集到的用户反馈做分类聚合，提炼共性问题和机会点。>
+<Categorize and aggregate the collected user feedback to distill common issues and opportunities.>
 
-## 增长建议
+## Growth Recommendations
 
-基于实验数据和用户反馈，对产品下一步的建议：
+Based on experiment data and user feedback, recommendations for the next product steps:
 
-| 建议 | 依据 | 优先级 | 影响范围 |
+| Recommendation | Basis | Priority | Impact scope |
 |------|------|--------|---------|
-| <建议1：如"优化注册流程"> | <实验 G-001 数据 + 用户反馈> | P0 | <获客转化> |
-| <建议2：如"增加 X 功能"> | <用户反馈聚合> | P1 | <留存> |
-| <建议3> | <依据> | <优先级> | <范围> |
+| <Recommendation 1: e.g., "Optimize registration flow"> | <Experiment G-001 data + user feedback> | P0 | <Acquisition conversion> |
+| <Recommendation 2: e.g., "Add feature X"> | <User feedback aggregation> | P1 | <Retention> |
+| <Recommendation 3> | <basis> | <priority> | <scope> |
 
-## 指标异动（如有）
+## Metric Anomalies (if any)
 
-| 指标 | 基线 | 当前 | 变化 | 原因分析 |
+| Metric | Baseline | Current | Change | Cause analysis |
 |------|------|------|------|---------|
-| <指标名> | <值> | <值> | <±X%> | <归因分析> |
+| <metric name> | <value> | <value> | <±X%> | <attribution analysis> |
 
-> 仅记录异常波动（超出正常波动范围），常规波动不记录。
+> Record only anomalous fluctuations (outside the normal range); do not record routine fluctuations.
 
-## 关键决策
+## Key Decisions
 
-| 决策 | 理由 | 影响范围 |
+| Decision | Rationale | Impact scope |
 |------|------|---------|
-| 放大实验 X | 转化率提升 15%，统计显著 | 全站推广 |
-| 停止渠道 Y | ROI < 1，持续 3 个月无改善 | 资源转移 |
+| Scale up experiment X | Conversion rate increased 15%, statistically significant | Roll out site-wide |
+| Stop channel Y | ROI < 1, no improvement for 3 consecutive months | Reallocate resources |
 
-## 未决事项
+## Open Items
 
-需 harness-pm 处理或与 harness-growth 确认的问题：
+Issues for harness-pm to handle or confirm with harness-growth:
 
-- 待定 1: <问题描述>
-- 待定 2: <问题描述>
+- TBD 1: <issue description>
+- TBD 2: <issue description>
 
-## 建议下一步
+## Suggested Next Steps
 
-harness-pm 应优先处理：
+harness-pm should prioritize:
 
-1. 消费本文件的实验结论 + 增长建议
-2. 将有效实验纳入迭代规划（iteration-orchestrator）
-3. 将用户反馈纳入需求池（backlog-grooming）
+1. Consume the experiment conclusions + growth recommendations in this file
+2. Incorporate effective experiments into iteration planning (iteration-orchestrator)
+3. Incorporate user feedback into the backlog (backlog-grooming)
 
-## 风险提示
+## Risk Notes
 
-| 风险 | 等级 | 缓解措施 |
+| Risk | Level | Mitigation |
 |------|------|---------|
-| 增长瓶颈 X | 高/中/低 | <措施> |
-| 指标异动 Y | 高/中/低 | <措施> |
+| Growth bottleneck X | High/Medium/Low | <action> |
+| Metric anomaly Y | High/Medium/Low | <action> |
 
 ---
 
-## 下游框架使用说明
+## Downstream Framework Usage Notes
 
-harness-pm 的 insight / iteration skill 会自动检测本文件并读取实验结论 + 增长建议。
-如未自动识别，可手动指向本文件路径让 Agent 读取。
+harness-pm's insight / iteration skills will auto-detect this file and read the experiment conclusions + growth recommendations.
+If not auto-detected, you can manually point the Agent to this file path to read it.

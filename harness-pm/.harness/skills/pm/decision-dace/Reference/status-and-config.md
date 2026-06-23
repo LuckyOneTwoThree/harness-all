@@ -1,8 +1,8 @@
-<!-- 从 SKILL.md 提取的参考材料，按需查阅 -->
+<!-- Reference material extracted from SKILL.md, consult as needed -->
 
-# DACE 状态追踪 / OKR 配置 / 自动触发机制
+# DACE Status Tracking / OKR Configuration / Auto-trigger Mechanism
 
-## DACE状态追踪
+## DACE Status Tracking
 
 ```yaml
 dace_status:
@@ -13,22 +13,22 @@ dace_status:
     - phase: "Define"
       started: "2024-01-01"
       completed: "2024-01-05"
-      output: "Q1 OKR体系"
+      output: "Q1 OKR system"
 
     - phase: "Analyze"
       started: "2024-01-05"
       completed: "2024-01-15"
-      output: "综合分析报告 + 故事化洞察"
+      output: "Comprehensive analysis report + narrative insights"
 
     - phase: "Conclude"
       started: "2024-01-15"
       completed: "2024-01-18"
-      output: "决策建议 + 审批"
+      output: "Decision recommendations + approval"
 
     - phase: "Execute"
       started: "2024-01-18"
       status: "in_progress"
-      output: "追踪结果"
+      output: "Tracking results"
 
   insights:
     total_insights: 12
@@ -49,17 +49,17 @@ dace_status:
     target_on_track: 2
 ```
 
-## 自动触发机制
+## Auto-trigger Mechanism
 
-| 触发条件 | DACE响应 |
+| Trigger Condition | DACE Response |
 |---------|---------|
-| OKR更新 | 重新Define |
-| 异常检测 | 优先Analyze，触发Conclude |
-| 实验完成 | Analyze结果，触发Conclude |
-| 决策执行 | 进入Execute追踪 |
-| 周期结束 | 完成当前循环，准备下一周期 |
+| OKR update | Re-Define |
+| Anomaly detection | Prioritize Analyze, trigger Conclude |
+| Experiment completion | Analyze results, trigger Conclude |
+| Decision execution | Enter Execute tracking |
+| Cycle end | Complete current cycle, prepare for next cycle |
 
-## OKR追踪配置
+## OKR Tracking Configuration
 
 ```yaml
 okr_tracking:
@@ -72,11 +72,11 @@ okr_tracking:
     recalibration: "monthly"
 
   alert_rules:
-    - condition: "KR进度落后 > 20%"
+    - condition: "KR progress behind > 20%"
       severity: "high"
-      action: "触发Conclude"
+      action: "Trigger Conclude"
 
-    - condition: "KR无法完成"
+    - condition: "KR cannot be completed"
       severity: "critical"
-      action: "升级 + OKR调整"
+      action: "Escalation + OKR adjustment"
 ```

@@ -4,116 +4,129 @@ name: incident-response
 default_mode: skip
 ---
 
-# 工作流 I：危机响应
+# Workflow I: Incident Response
 
-> 适用场景：P0 级线上事故、重大用户投诉、安全漏洞等紧急情况
-> 核心模式：检测 → 诊断 → 修复发布 → 复盘（无 LOOP，快速响应）
+> Applicable scenario: P0-level online incidents, major user complaints, security vulnerabilities and other emergencies
+> Core mode: Detection → diagnosis → fix release → retrospective (no LOOP, rapid response)
 
-## 与其他工作流的差异
+## Differences from Other Workflows
 
-| 维度 | diagnosis | launch | **incident-response** |
+| Dimension | diagnosis | launch | **incident-response** |
 |------|-----------|--------|----------------------|
-| 紧急度 | 低（被动诊断） | 中（计划发布） | **高（紧急响应）** |
-| 目标 | 诊断问题 | 验收发布 | **快速止血+复盘** |
-| LOOP | 无 | 无 | **无（快速通道）** |
-| 人类介入 | 报告审核 | 发布审批 | **全程人类指挥** |
+| Urgency | Low (reactive diagnosis) | Medium (planned release) | **High (emergency response)** |
+| Goal | Diagnose problem | Acceptance & release | **Quick stop bleeding + retrospective** |
+| LOOP | None | None | **None (fast track)** |
+| Human intervention | Report review | Release approval | **Human command throughout** |
 
-## 触发条件
+## Trigger Conditions
 
-- P0 级线上事故（核心功能不可用）
-- 重大安全漏洞
-- 大规模用户投诉
-- 数据泄露事件
-- 监管合规问题
+- P0-level online incident (core feature unavailable)
+- Major security vulnerability
+- Large-scale user complaints
+- Data breach incident
+- Regulatory compliance issues
 
-## 流程
+## Process
 
 ```
 ┌─────────────────┐
-│ session-start   │  紧急加载，确认事故等级
-│                 │  ★ 全程人类指挥，AI 辅助
+│ session-start   │  Emergency load, confirm incident level
+│                 │  ★ Human command throughout, AI assists
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ 模块7：事故检测与归因（快速通道）         │
+│ Module 7: Incident Detection &          │
+│ Attribution (fast track)                │
 │                                         │
 │  - monitoring-orchestrator              │
-│    （监控预警+异常归因，快速定位）        │
+│    (Monitoring alerts + anomaly         │
+│     attribution, quick location)        │
 │  - diagnosis-orchestrator               │
-│    （健康度诊断+竞品排查，仅phase-1/2）  │
+│    (Health diagnosis + competitor       │
+│     check, phase-1/2 only)              │
 │                                         │
-│  ★ 快速通道：跳过完整诊断，仅做根因定位   │
-│  产出：docs/monitoring/diagnosis-report.md │
+│  ★ Fast track: skip full diagnosis,     │
+│    only do root cause location          │
+│  Output: docs/monitoring/diagnosis-report.md │
 └────────┬────────────────────────────────┘
-         │ 根因定位
+         │ Root cause located
          ▼
 ┌─────────────────────────────────────────┐
-│ 人类决策点（★ 必审批）                   │
+│ Human Decision Point (★ must approve)   │
 │                                         │
-│ - 修复方案选择（热修复/回滚/降级）        │
-│ - 影响范围评估确认                       │
-│ - 沟通策略审批（内部/外部/监管）          │
+│ - Fix solution selection (hotfix/       │
+│   rollback/degradation)                 │
+│ - Impact scope assessment confirmation  │
+│ - Communication strategy approval       │
+│   (internal/external/regulatory)        │
 └────────┬────────────────────────────────┘
          │
          ▼
 ┌─────────────────────────────────────────┐
-│ 模块7：紧急修复发布                      │
+│ Module 7: Emergency Fix Release         │
 │                                         │
 │  - release-orchestrator                 │
-│    （紧急发布通道）                      │
-│    ├── quality-acceptance（快速验收）    │
-│    ├── release-auto-checklist（紧急检查）│
-│    ├── release-gradual（直接全量或快速灰度）│
-│    └── release-notes（事故修复说明）     │
+│    (Emergency release channel)          │
+│    ├── quality-acceptance (quick        │
+│    │   acceptance)                      │
+│    ├── release-auto-checklist (emergency│
+│    │   check)                           │
+│    ├── release-gradual (direct full or  │
+│    │   quick gradual)                   │
+│    └── release-notes (incident fix      │
+│        notes)                           │
 │                                         │
-│  产出：docs/monitoring/release-notes.md   │
+│  Output: docs/monitoring/release-notes.md │
 └────────┬────────────────────────────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ 模块7：复盘（事后）                      │
+│ Module 7: Retrospective (post-incident) │
 │                                         │
 │  - iteration-orchestrator               │
-│    （迭代复盘：根因+改进措施+预防方案）   │
-│  - monitoring-orchestrator               │
-│    （补充监控，防止复发）                 │
+│    (Iteration retrospective: root       │
+│     cause + improvement measures +      │
+│     prevention plan)                    │
+│  - monitoring-orchestrator              │
+│    (Supplement monitoring, prevent      │
+│     recurrence)                         │
 │                                         │
-│  产出：docs/monitoring/monitoring-config.md │
+│  Output: docs/monitoring/monitoring-config.md │
 └────────┬────────────────────────────────┘
          ▼
 ┌─────────────────┐
-│ session-end     │  归档事故报告
-│                 │  + 更新 FEATURES.md
-│                 │  + 记录到 memory/knowledge-base.md
-│                 │  + 产出事故复盘文档
+│ session-end     │  Archive incident report
+│                 │  + Update FEATURES.md
+│                 │  + Record to memory/knowledge-base.md
+│                 │  + Output incident retrospective document
 └─────────────────┘
 ```
 
-## 关键检查点
+## Key Checkpoints
 
-- [ ] 事故根因定位了吗？（不是表面现象）
-- [ ] 修复方案人类审批了吗？
-- [ ] 影响范围评估了吗？
-- [ ] 沟通策略执行了吗？（内部/外部）
-- [ ] 复盘完成了吗？（根因+改进+预防）
-- [ ] 监控补充了吗？（防止复发）
+- [ ] Incident root cause located? (Not surface symptoms)
+- [ ] Fix solution human-approved?
+- [ ] Impact scope assessed?
+- [ ] Communication strategy executed? (Internal/external)
+- [ ] Retrospective complete? (Root cause + improvement + prevention)
+- [ ] Monitoring supplemented? (Prevent recurrence)
 
-## 失败处理
+## Failure Handling
 
-| 失败点 | 处理方式 |
+| Failure point | Handling |
 |--------|---------|
-| 根因无法快速定位 | 先回滚止血，事后深入诊断 |
-| 修复方案有风险 | 优先回滚，再制定修复方案 |
-| 监控缺失 | 紧急补充监控，不裸奔 |
+| Root cause cannot be quickly located | Rollback to stop bleeding first, deep diagnosis afterward |
+| Fix solution has risk | Prioritize rollback, then plan fix solution |
+| Monitoring missing | Emergency supplement monitoring, no blind operation |
 
-## 安全原则
+## Safety Principles
 
-1. **人类全程指挥**：AI 辅助分析，决策权在人类
-2. **止血优先**：先恢复服务，再追求完美修复
-3. **沟通必备**：事故必须及时沟通，不隐瞒
-4. **复盘必做**：每起事故必须有复盘，不重复踩坑
+1. **Human command throughout**: AI assists analysis, decision power with humans
+2. **Stop bleeding first**: Restore service first, then pursue perfect fix
+3. **Communication required**: Incidents must be communicated timely, no hiding
+4. **Retrospective required**: Every incident must have retrospective, no repeating mistakes
 
-## 下一步
+## Next Steps
 
-- 事故修复后需深度优化 → 进入 **optimization** 工作流
-- 事故暴露战略问题 → 进入 **pivot** 工作流
-- 事故涉及功能变更 → 进入 **iteration** 工作流
+- Need deep optimization after incident fix → enter **optimization** workflow
+- Incident exposes strategic issues → enter **pivot** workflow
+- Incident involves feature changes → enter **iteration** workflow

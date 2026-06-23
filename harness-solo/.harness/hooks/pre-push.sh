@@ -1,32 +1,32 @@
 #!/bin/bash
-# pre-push.sh — 推送前检查
-# git hook 调用：在 .git/hooks/pre-push 软链或拷贝本文件
+# pre-push.sh — Pre-push checks
+# Git hook usage: symlink or copy this file to .git/hooks/pre-push
 #
-# 职责：推送前运行测试（如果有），防止破坏性推送
+# Responsibility: run tests before pushing (if any), prevent destructive pushes
 
-# CRLF 防御：Windows 下 core.autocrlf 可能导致脚本含 \r，Git Bash 无法执行
+# CRLF defense: on Windows, core.autocrlf may cause scripts to contain \r, which Git Bash cannot execute
 if grep -qI $'\r' "$0" 2>/dev/null; then
   exec bash < <(tr -d '\r' < "$0")
 fi
 
 set -e
 
-# 1. 防止 force push 到 main/master
-# pre-push hook 通过 stdin 接收：<local ref> <local sha> <remote ref> <remote sha>
+# 1. Prevent force push to main/master
+# pre-push hook receives via stdin: <local ref> <local sha> <remote ref> <remote sha>
 protected_branches="main master"
 zero="0000000000000000000000000000000000000000"
 
 while read -r local_ref local_sha remote_ref remote_sha; do
-  # 跳过分支删除（local_sha 全 0）
+  # Skip branch deletion (local_sha is all zeros)
   [ "$local_sha" = "$zero" ] && continue
-  # 跳过新建分支（remote_sha 全 0，无历史可比）
+  # Skip new branch (remote_sha is all zeros, no history to compare)
   [ "$remote_sha" = "$zero" ] && continue
 
   for branch in $protected_branches; do
     if [ "$remote_ref" = "refs/heads/$branch" ]; then
-      # 非快进 = force push：remote_sha 不是 local_sha 的祖先
+      # Non-fast-forward = force push: remote_sha is not an ancestor of local_sha
       if ! git merge-base --is-ancestor "$remote_sha" "$local_sha" 2>/dev/null; then
-        echo "BLOCK: 禁止 force push 到 $branch（非快进更新）"
+        echo "BLOCK: force push to $branch is forbidden (non-fast-forward update)"
         echo "  remote: $remote_sha"
         echo "  local:  $local_sha"
         exit 1
@@ -35,35 +35,35 @@ while read -r local_ref local_sha remote_ref remote_sha; do
   done
 done
 
-# 2. 运行测试（如果项目有测试命令）
+# 2. Run tests (if the project has a test command)
 if [ -f "package.json" ]; then
   if grep -q '"test"' package.json 2>/dev/null; then
-    echo "→ 运行测试..."
+    echo "→ Running tests..."
     npm test --silent 2>&1 | tail -20
     if [ ${PIPESTATUS[0]} -ne 0 ]; then
-      echo "BLOCK: 测试未通过，禁止推送"
+      echo "BLOCK: tests failed, push denied"
       exit 1
     fi
   fi
 elif [ -f "pyproject.toml" ] || [ -f "pytest.ini" ]; then
-  echo "→ 运行测试..."
+  echo "→ Running tests..."
   python -m pytest --tb=short 2>&1 | tail -20
   if [ ${PIPESTATUS[0]} -ne 0 ]; then
-    echo "BLOCK: 测试未通过，禁止推送"
+    echo "BLOCK: tests failed, push denied"
     exit 1
   fi
 fi
 
-# 3. 运行 verify-harness 健康检查（跨平台兜底）
-# Windows 无 bash 时跳过，由 verify skill 在 IDE 内兜底
+# 3. Run verify-harness health check (cross-platform fallback)
+# Skipped when bash is unavailable on Windows; the verify skill acts as a fallback inside the IDE
 if [ -f ".harness/scripts/verify-harness.sh" ] && command -v bash >/dev/null 2>&1; then
-  echo "→ verify-harness.sh 健康检查..."
+  echo "→ verify-harness.sh health check..."
   bash .harness/scripts/verify-harness.sh || {
-    echo "WARN: harness 健康检查未通过（允许推送，但建议修复）"
+    echo "WARN: harness health check failed (push allowed, but recommended to fix)"
   }
 else
-  echo "· 跳过 verify-harness.sh（无 bash 环境，由 verify skill 兜底）"
+  echo "· Skipping verify-harness.sh (no bash environment; verify skill acts as fallback)"
 fi
 
-echo "✓ pre-push 检查通过"
+echo "✓ pre-push checks passed"
 exit 0

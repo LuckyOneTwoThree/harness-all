@@ -1,10 +1,10 @@
-<!-- 从 SKILL.md 提取的参考材料，按需查阅 -->
+<!-- Reference material extracted from SKILL.md, consult as needed -->
 
-# 输入 Schema
+# Input Schema
 
-> 来源：SKILL.md「输入」章节中的指标体系与现有埋点清单 JSON schema
+> Source: Metric system and existing tracking inventory JSON schema in SKILL.md "Input" section
 
-## 指标体系（来自Pipeline 1）
+## Metric System (from Pipeline 1)
 
 ```json
 {
@@ -20,7 +20,7 @@
 
 ---
 
-## 现有埋点清单（可选）
+## Existing Tracking Inventory (Optional)
 
 ```json
 [

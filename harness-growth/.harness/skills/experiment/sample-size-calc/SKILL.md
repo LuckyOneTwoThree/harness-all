@@ -1,10 +1,10 @@
 ---
 name: sample-size-calc
-description: 基于统计功效计算A/B测试所需样本量和实验时长
+description: Calculate required A/B test sample size and experiment duration based on statistical power
 triggers:
-  - 实验设计阶段需要计算样本量时
-  - experiment-design skill 调用
-  - 用户询问"这个实验要跑多久"
+  - When sample size needs to be calculated during experiment design
+  - Called by the experiment-design skill
+  - User asks "how long does this experiment need to run"
 reads:
   - loops/specs/<experiment>/spec.md
 writes:
@@ -13,104 +13,104 @@ quality_gates: []
 max_iterations: 1
 ---
 
-# Sample Size Calculation — 样本量计算
+# Sample Size Calculation — Sample Size Calculation
 
-## 铁律
-- 样本量计算必须基于**预设的 MDE**，不能用实验后数据反推
-- 显著性水平默认 α=0.05，统计功效默认 1-β=0.8，如调整必须说明理由
-- 实验时长必须覆盖**完整自然周期**（至少 7 天），不能只看样本量够就停
+## Iron Rules
+- Sample size calculation must be based on a **preset MDE**, not back-solved from post-experiment data
+- Significance level defaults to α=0.05, statistical power defaults to 1-β=0.8; if adjusted, the reason must be stated
+- Experiment duration must cover a **full natural cycle** (at least 7 days); cannot stop just because the sample size is reached
 
-## 流程
+## Process
 
-1. **读取实验参数**
-   从 spec.md 读取：
-   - 主指标类型：比率型（转化率/点击率）或连续型（客单价/时长）
-   - 基线值（baseline）：当前主指标的值
-   - 最小可检测效应（MDE）：期望检测到的最小变化
-   - 显著性水平（α）：默认 0.05
-   - 统计功效（1-β）：默认 0.8
+1. **Read experiment parameters**
+   From spec.md, read:
+   - Primary metric type: ratio (conversion rate / CTR) or continuous (AOV / duration)
+   - Baseline value: the current value of the primary metric
+   - Minimum Detectable Effect (MDE): the minimum change to detect
+   - Significance level (α): default 0.05
+   - Statistical power (1-β): default 0.8
 
-2. **计算所需样本量**
+2. **Calculate required sample size**
 
-   ### 比率型指标（转化率/点击率）
-   双比例 z 检验公式：
+   ### Ratio metrics (conversion rate / CTR)
+   Two-proportion z-test formula:
    ```
    n = (Z_{α/2} + Z_{β})² × [p1(1-p1) + p2(1-p2)] / (p1-p2)²
 
-   其中:
-   - p1 = 基线转化率
-   - p2 = 基线 + MDE（绝对提升）
-   - Z_{α/2} = 1.96（α=0.05 双侧）
-   - Z_{β} = 0.84（功效=0.8）
-   - n = 每组所需样本量
+   Where:
+   - p1 = baseline conversion rate
+   - p2 = baseline + MDE (absolute lift)
+   - Z_{α/2} = 1.96 (α=0.05, two-sided)
+   - Z_{β} = 0.84 (power=0.8)
+   - n = required sample size per group
    ```
 
-   ### 连续型指标（客单价/时长）
-   t 检验公式：
+   ### Continuous metrics (AOV / duration)
+   t-test formula:
    ```
    n = 2 × (Z_{α/2} + Z_{β})² × σ² / Δ²
 
-   其中:
-   - σ = 指标标准差（需从历史数据获取）
-   - Δ = MDE（期望变化量）
+   Where:
+   - σ = metric standard deviation (must be obtained from historical data)
+   - Δ = MDE (expected change)
    ```
 
-3. **计算实验时长**
+3. **Calculate experiment duration**
    ```
-   每日流量 = 总流量 / 7（或从 analytics 获取日均 UV）
-   所需天数 = (n × 2) / 每日流量
-   最终实验时长 = max(所需天数, 7天)
+   Daily traffic = Total traffic / 7 (or get daily UV from analytics)
+   Required days = (n × 2) / daily traffic
+   Final experiment duration = max(required days, 7 days)
    ```
-   - 取所需天数与 7 天的较大值（保证完整周期）
-   - 如所需天数 > 30 天，建议拆分实验或调整 MDE
+   - Take the larger of required days and 7 days (to ensure a full cycle)
+   - If required days > 30 days, recommend splitting the experiment or adjusting the MDE
 
-4. **输出计算结果**
-   在 spec.md 追加"样本量计算"章节：
+4. **Output calculation results**
+   Append a "Sample Size Calculation" section to spec.md:
    ```
-   ## 样本量计算
+   ## Sample Size Calculation
 
-   | 参数 | 值 |
-   |------|-----|
-   | 主指标类型 | 比率型/连续型 |
-   | 基线值 | [如 35%] |
-   | MDE | [如 3%] |
-   | 显著性水平 α | 0.05 |
-   | 统计功效 1-β | 0.8 |
-   | 每组所需样本量 | [如 8,500] |
-   | 总样本量 | [如 17,000] |
-   | 日均流量 | [如 1,200 UV/天] |
-   | 所需实验天数 | [如 15 天] |
-   | 最终实验时长 | [如 15 天]（≥7天） |
+   | Parameter | Value |
+   |-----------|-------|
+   | Primary metric type | Ratio / Continuous |
+   | Baseline value | [e.g., 35%] |
+   | MDE | [e.g., 3%] |
+   | Significance level α | 0.05 |
+   | Statistical power 1-β | 0.8 |
+   | Required sample size per group | [e.g., 8,500] |
+   | Total sample size | [e.g., 17,000] |
+   | Daily average traffic | [e.g., 1,200 UV/day] |
+   | Required experiment days | [e.g., 15 days] |
+   | Final experiment duration | [e.g., 15 days] (≥7 days) |
    ```
 
-5. **可行性评估**
-   - 如实验时长 > 30 天：建议增大 MDE 或聚焦高流量页面
-   - 如总样本量 > 月流量 50%：建议降低 MDE 或延长周期
-   - 如 MDE < 1%：提示"检测微小效应需极大样本，考虑是否值得"
+5. **Feasibility assessment**
+   - If experiment duration > 30 days: recommend increasing MDE or focusing on high-traffic pages
+   - If total sample size > 50% of monthly traffic: recommend lowering MDE or extending the period
+   - If MDE < 1%: warn "detecting tiny effects requires huge samples; consider whether it's worth it"
 
-## 常用参考表
+## Common reference tables
 
-### 比率型指标样本量速查（α=0.05, 功效=0.8）
+### Ratio metric sample size quick reference (α=0.05, power=0.8)
 
-| 基线转化率 | MDE=1% | MDE=3% | MDE=5% | MDE=10% |
-|-----------|--------|--------|--------|---------|
+| Baseline conversion rate | MDE=1% | MDE=3% | MDE=5% | MDE=10% |
+|--------------------------|--------|--------|--------|---------|
 | 5% | 152,000 | 17,000 | 6,100 | 1,500 |
 | 10% | 290,000 | 32,000 | 11,600 | 2,900 |
 | 20% | 509,000 | 56,000 | 20,000 | 5,100 |
 | 35% | 695,000 | 77,000 | 27,800 | 6,950 |
 | 50% | 784,000 | 87,000 | 31,400 | 7,850 |
 
-> 每组样本量。总样本量 = 每组 × 2。
+> Per-group sample size. Total sample size = per-group × 2.
 
-## 禁止事项
-- 不用实验后数据反推 MDE（数据窥探偏差）
-- 不省略统计功效（只看 p<0.05 会导致假阳性）
-- 不设计低于 7 天的实验（周期性偏差）
-- 不在流量不足时强行开实验（达不到样本量=无效实验）
+## Prohibitions
+- Don't back-solve MDE from post-experiment data (data snooping bias)
+- Don't omit statistical power (only looking at p<0.05 leads to false positives)
+- Don't design experiments shorter than 7 days (cyclicality bias)
+- Don't force-launch experiments when traffic is insufficient (failing to reach sample size = invalid experiment)
 
-## 与 LOOP 的关系
-本 skill 在 LOOP 的 **PLAN 阶段**执行，被 experiment-design 调用。
+## Relationship to LOOP
+This skill runs in the **PLAN phase** of LOOP, called by experiment-design.
 PLAN → EXPERIMENT → MEASURE
 
-## 与 Workflow 的关系
-本 skill 是 **growth-experiment-workflow** 的第 4 步（被 experiment-design 调用）。
+## Relationship to Workflow
+This skill is step 4 of **growth-experiment-workflow** (called by experiment-design).

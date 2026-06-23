@@ -2,9 +2,9 @@
 name: verify
 description: Performs quick in-LOOP verification against acceptance criteria and constitution. Use in every LOOP iteration. Use before design-lint.
 triggers:
-  - LOOP 内每次迭代
-  - design-lint 之前
-  - 需要快速验证
+  - Every iteration in LOOP
+  - Before design-lint
+  - Quick verification needed
 reads:
   - loops/specs/<task>/spec.md
   - loops/specs/<task>/state.yaml
@@ -21,135 +21,135 @@ writes:
 
 ## Overview
 
-LOOP 内快速检查，每次迭代都跑。检查"设计对不对"，不检查"设计是否遵循设计系统"（后者由 design-lint 负责）。
+Quick in-LOOP check, run on every iteration. Checks "is the design correct", not "does the design follow the design system" (the latter is the responsibility of design-lint).
 
 ## When to Use
 
-- ✅ LOOP 内每次迭代
-- ✅ design-lint 之前
-- ✅ 需要快速验证（非深度审查）
-- ❌ NOT for 机械规则检查（用 design-lint skill）
-- ❌ NOT for 人工级综合审查（用 design-review skill）
+- ✅ Every iteration in LOOP
+- ✅ Before design-lint
+- ✅ Quick verification needed (not a deep review)
+- ❌ NOT for mechanical rule checks (use the design-lint skill)
+- ❌ NOT for human-level comprehensive review (use the design-review skill)
 
 ## Process
 
-### 1. 设计完整性检查
+### 1. Design Completeness Check
 
-- 设计稿是否覆盖所有验收标准？
-- 是否有遗漏的页面/组件/状态？
+- Does the design mockup cover all acceptance criteria?
+- Are there missing pages / components / states?
 
-### 2. 验收标准逐条检查
+### 2. Acceptance Criteria Item-by-Item Check
 
-读取 `loops/specs/<task>/spec.md` 的 AC-xxx，逐条标注 ✓/✗：
+Read AC-xxx from `loops/specs/<task>/spec.md`, annotate ✓/✗ for each:
 
 ```
-AC-001: 登录表单含邮箱+密码+提交按钮 → ✓
-AC-002: 提交按钮有 4 种状态 → ✓
-AC-003: 移动端 375px 无溢出 → ✗（密码输入框溢出）
+AC-001: Login form contains email + password + submit button → ✓
+AC-002: Submit button has 4 states → ✓
+AC-003: No overflow at mobile 375px → ✗ (password input overflows)
 ```
 
-### 3. 宪法合规检查
+### 3. Constitution Compliance Check
 
-检查是否违反 `constitution.md` 的原则：
-- 设计系统优先，不重复造组件
-- 可访问性 WCAG 2.1 AA 是硬约束
-- 移动优先，响应式必做
+Check for violations of `constitution.md` principles:
+- Design system first; do not reinvent components
+- Accessibility WCAG 2.1 AA is a hard constraint
+- Mobile first; responsive is mandatory
 
-### 4. 可访问性快速检查
+### 4. Quick Accessibility Check
 
-- 对比度（正文 ≥4.5:1）
-- 键盘导航（Tab 顺序 + 焦点可见）
+- Contrast (body text ≥4.5:1)
+- Keyboard navigation (Tab order + focus visible)
 
-**注意**：仅快速检查，深度审查由 accessibility-audit skill 负责。
+**Note**: Quick check only; deep review is the responsibility of the accessibility-audit skill.
 
-### 5. 可交付性快速检查
+### 5. Deliverability Quick Check
 
-- 标注齐全（尺寸/颜色/圆角）
-- 规格齐全（组件状态/变体）
+- Annotations complete (size / color / border radius)
+- Specifications complete (component states / variants)
 
-### 6. 写入 evidence.md
+### 6. Write evidence.md
 
 ```markdown
 # Verify Evidence (Iteration <N>)
 
-## 验收标准
+## Acceptance Criteria
 - AC-001: ✓
 - AC-002: ✓
-- AC-003: ✗（密码输入框溢出）
+- AC-003: ✗ (password input overflows)
 
-## 宪法合规
-- ✓ 设计系统优先
+## Constitution Compliance
+- ✓ Design system first
 - ✓ WCAG 2.1 AA
-- ✗ 移动优先（375px 溢出）
+- ✗ Mobile first (375px overflow)
 
-## 可访问性快速检查
-- 对比度：✓
-- 键盘导航：✓
+## Quick Accessibility Check
+- Contrast: ✓
+- Keyboard navigation: ✓
 
-## 可交付性快速检查
-- 标注：✓
-- 规格：✓
+## Deliverability Quick Check
+- Annotations: ✓
+- Specifications: ✓
 
-## 结论
-- [ ] 通过 → 进入 design-lint
-- [x] 不通过 → 回到 visual-design
-- 失败原因：AC-003 未满足，375px 密码输入框溢出
+## Conclusion
+- [ ] Pass → proceed to design-lint
+- [x] Fail → return to visual-design
+- Failure reason: AC-003 not satisfied, 375px password input overflows
 ```
 
-### 7. 更新 state.yaml
+### 7. Update state.yaml
 
 ```yaml
 iteration: <N+1>
 stage: verify
-status: retrying  # 或 running（通过时）
-last_error: "AC-003 未满足，375px 密码输入框溢出"  # 或 "" （通过时）
+status: retrying  # or running (on pass)
+last_error: "AC-003 not satisfied, 375px password input overflows"  # or "" (on pass)
 last_error_at: "<ISO 8601>"
 ```
 
-### 8. 追加 iterations.log
+### 8. Append iterations.log
 
 ```
-[<timestamp>] iter=<N> stage=design → review FAILED: AC-003 未满足，375px 密码输入框溢出
+[<timestamp>] iter=<N> stage=design → review FAILED: AC-003 not satisfied, 375px password input overflows
 ```
 
-## 失败处理
+## Failure Handling
 
-1. 将失败信息写入 `state.yaml` 的 `last_error`
-2. 追加一行到 `iterations.log`
-3. 分析失败原因：
-   - 可修复（对比度不足、缺少状态）→ 回到 DESIGN
-   - 需重新规划（需求理解错误、方向偏差）→ 回到 PLAN
-4. 迭代次数 +1，检查是否超过最大迭代
+1. Write failure info to `state.yaml` `last_error`
+2. Append a line to `iterations.log`
+3. Analyze the failure reason:
+   - Fixable (insufficient contrast, missing states) → return to DESIGN
+   - Needs replanning (misunderstood requirements, direction drift) → return to PLAN
+4. Iteration count +1; check whether max iterations exceeded
 
 ## Common Rationalizations
 
-| 借口 | 现实 |
-|------|------|
-| "看起来对就行" | "看起来对"永远不够，必须有证据 |
-| "快速检查跳过吧" | 快速检查是 LOOP 的质量门，跳过会导致问题累积 |
-| "AC 差不多满足" | AC 是逐条 ✓/✗，没有"差不多" |
+| Excuse | Reality |
+|--------|---------|
+| "Looks right is enough" | "Looks right" is never enough; there must be evidence |
+| "Skip the quick check" | The quick check is the LOOP's quality gate; skipping it causes issues to accumulate |
+| "AC is mostly satisfied" | AC is checked item by item ✓/✗; there is no "mostly" |
 
 ## Red Flags
 
-- 未逐条检查 AC
-- 未写入 evidence.md
-- 未更新 state.yaml
-- 未追加 iterations.log
-- 跳过可访问性快速检查
+- Not checking AC item by item
+- Not writing evidence.md
+- Not updating state.yaml
+- Not appending iterations.log
+- Skipping the quick accessibility check
 
 ## Verification
 
-- [ ] AC 逐条标注 ✓/✗（证据：evidence.md 含 AC 列表）
-- [ ] 宪法合规检查（证据：evidence.md 含宪法检查）
-- [ ] 可访问性快速检查（证据：evidence.md 含对比度/键盘）
-- [ ] evidence.md 已写入（证据：文件存在）
-- [ ] state.yaml 已更新（证据：iteration/stage/status 更新）
-- [ ] iterations.log 已追加（证据：文件含新行）
+- [ ] AC annotated ✓/✗ item by item (evidence: evidence.md contains AC list)
+- [ ] Constitution compliance check (evidence: evidence.md contains constitution check)
+- [ ] Quick accessibility check (evidence: evidence.md contains contrast/keyboard)
+- [ ] evidence.md written (evidence: file exists)
+- [ ] state.yaml updated (evidence: iteration/stage/status updated)
+- [ ] iterations.log appended (evidence: file contains new line)
 
-## 与 LOOP 的关系
+## Relationship with LOOP
 
-- 所属阶段：VERIFY（LOOP 内）
-- 在所有循环类型的 LOOP 内运行，verify 之后运行 design-lint
-- 流程：DESIGN → VERIFY → LINT
-- verify 失败回到 DESIGN，design-lint 失败也回到 DESIGN
-- 循环类型：所有循环类型（visual-design / interaction-design / wireframe / component）均适用
+- Stage: VERIFY (inside LOOP)
+- Runs inside the LOOP for all loop types; after verify, design-lint runs
+- Flow: DESIGN → VERIFY → LINT
+- verify failure returns to DESIGN; design-lint failure also returns to DESIGN
+- Loop type: applies to all loop types (visual-design / interaction-design / wireframe / component)

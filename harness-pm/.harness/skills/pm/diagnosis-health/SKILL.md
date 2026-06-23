@@ -1,21 +1,21 @@
 ---
 name: diagnosis-health
-description: 当需要诊断产品健康度时使用。产品健康度自动诊断，采集多维度数据并进行综合评分、趋势预测和瓶颈识别，输出健康度报告。关键词：健康度评分、产品诊断、多维度评分、健康检查、产品健康、健康评分、产品体检、状态好不好。
+description: Used when diagnosing product health. Automated product health diagnosis, collecting multi-dimensional data for comprehensive scoring, trend prediction, and bottleneck identification, outputting a health report. Keywords: health score, product diagnosis, multi-dimensional scoring, health check, product health, health rating, product physical exam, how is the status.
 metadata:
-  module: "产品监控与迭代"
-  sub-module: "问题诊断"
+  module: "Product Monitoring & Iteration"
+  sub-module: "Issue Diagnosis"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["互联网", "SaaS", "通用"]
+  domain_tags: ["Internet", "SaaS", "General"]
   trigger_examples:
-    - "产品现在健不健康"
-    - "帮我做个体检"
-    - "产品状态怎么样"
+    - "Is the product healthy right now"
+    - "Help me do a health check"
+    - "How is the product status"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出健康度评分和问题清单"
-  deep_description: "完整诊断 + 健康度趋势分析 + 根因深度推演 + 改进优先级路线图"
+  quick_description: "Directly output health score and issue list"
+  deep_description: "Full diagnosis + health trend analysis + root cause deep reasoning + improvement priority roadmap"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -26,50 +26,50 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 产品健康度自动诊断 🤖
+# Automated Product Health Diagnosis 🤖
 
-## 核心原则
+## Core Principles
 
-1. **健康度是先行指标不是滞后报告**：健康度评分的目的不是记录过去，而是预测未来——在用户感知到问题之前发现隐患
-2. **分层评分独立追踪**：性能/可用性/满意度/业务四层独立评分，确保每层可独立定位和追踪
-3. **瓶颈决定资源投向**：健康度诊断的终极目标是识别瓶颈，瓶颈在哪资源就投向哪
+1. **Health is a leading indicator not a lagging report**: The purpose of health scoring is not to record the past, but to predict the future—discovering hidden risks before users perceive problems
+2. **Tiered scoring independent tracking**: Performance/availability/satisfaction/business four tiers scored independently, ensuring each tier can be independently located and tracked
+3. **Bottlenecks determine resource allocation**: The ultimate goal of health diagnosis is to identify bottlenecks; resources go where the bottlenecks are
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Input
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 性能数据 | JSON | 是 | APM/监控系统 → 性能数据 | 响应时间、吞吐量、资源使用率 |
-| 可用性数据 | JSON | 是 | 监控系统 → 可用性数据 | SLA 达成率、MTTR、MTBF |
-| 用户满意度 | JSON | 是 | 反馈系统 → 满意度数据 | NPS、CSAT、反馈、投诉 |
-| 业务指标 | JSON | 是 | 数据分析平台 → 业务指标 | 转化率、GMV、DAU/MAU、留存 |
-| 竞品动态 | JSON | ○ | docs/monitoring/diagnosis-report.md（“竞品诊断”章节） | 竞品健康度对比数据 |
+| Performance data | JSON | Yes | APM/monitoring system → performance data | Response time, throughput, resource utilization |
+| Availability data | JSON | Yes | Monitoring system → availability data | SLA achievement rate, MTTR, MTBF |
+| User satisfaction | JSON | Yes | Feedback system → satisfaction data | NPS, CSAT, feedback, complaints |
+| Business metrics | JSON | Yes | Data analytics platform → business metrics | Conversion rate, GMV, DAU/MAU, retention |
+| Competitor dynamics | JSON | ○ | docs/monitoring/diagnosis-report.md ("Competitor Diagnosis" section) | Competitor health comparison data |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 数据采集标准化 [核心]
+### Step 1: Data Collection Standardization [Core]
 
-**目标**：采集并标准化各维度数据
+**Goal**: Collect and standardize data across dimensions
 
-**数据源映射**：
+**Data source mapping**:
 
-| 维度 | 数据源 | 采集方式 |
+| Dimension | Data Source | Collection Method |
 |------|--------|----------|
-| 性能 | APM/监控系统 | API/导出 |
-| 可用性 | 监控系统/事件管理 | API/导出 |
-| 满意度 | 反馈系统/调研工具 | API/导出 |
-| 业务 | 数据分析平台 | SQL/API |
+| Performance | APM/monitoring system | API/export |
+| Availability | Monitoring system/incident management | API/export |
+| Satisfaction | Feedback system/survey tools | API/export |
+| Business | Data analytics platform | SQL/API |
 
-**标准化处理**：
-- 时间对齐（统一到相同时间窗口）
-- 指标归一化（0-100 或 0-1 范围）
-- 异常值处理（剔除/平滑）
-- 缺失值填补（插值/均值）
+**Standardization processing**:
+- Time alignment (unified to the same time window)
+- Metric normalization (0-100 or 0-1 range)
+- Outlier handling (removal/smoothing)
+- Missing value imputation (interpolation/mean)
 
-**输出格式**：
+**Output format**:
 
 ```yaml
 raw_data:
@@ -92,27 +92,27 @@ raw_data:
     freshness: 5
 ```
 
-### Step 2: 维度评分 [核心]
+### Step 2: Dimension Scoring [Core]
 
-**目标**：计算各健康维度得分
+**Goal**: Calculate scores for each health dimension
 
-**评分方法**：
+**Scoring methods**:
 
-| 维度 | 指标权重 | 评分算法 |
+| Dimension | Metric Weights | Scoring Algorithm |
 |------|----------|----------|
-| 性能 | 响应时间 40%, 吞吐 30%, 资源 30% | 基准偏差评分 |
-| 可用性 | SLA 50%, MTTR 25%, 故障频率 25% | 目标达成评分 |
-| 满意度 | NPS 40%, CSAT 30%, 投诉率 30% | 行业对标评分 |
-| 业务 | 转化率 30%, 留存 30%, GMV 40% | 趋势环比评分 |
+| Performance | Response time 40%, Throughput 30%, Resources 30% | Baseline deviation scoring |
+| Availability | SLA 50%, MTTR 25%, Failure frequency 25% | Target achievement scoring |
+| Satisfaction | NPS 40%, CSAT 30%, Complaint rate 30% | Industry benchmark scoring |
+| Business | Conversion rate 30%, Retention 30%, GMV 40% | Trend period-over-period scoring |
 
-**评分公式**：
+**Scoring formula**:
 
 ```
 score = Σ(metric_weight × metric_score)
 metric_score = min(100, (actual / baseline) × 100)
 ```
 
-**输出格式**：
+**Output format**:
 
 ```yaml
 scores_by_dimension:
@@ -150,21 +150,21 @@ scores_by_dimension:
         score: 105
 ```
 
-### Step 3: 趋势预测 [核心]
+### Step 3: Trend Prediction [Core]
 
-**目标**：基于历史数据预测未来健康度趋势
+**Goal**: Predict future health trends based on historical data
 
-**分析方法**：
-- 移动平均（MA）
-- 指数平滑（Holt-Winters）
-- 趋势外推（线性/多项式回归）
+**Analysis methods**:
+- Moving Average (MA)
+- Exponential Smoothing (Holt-Winters)
+- Trend Extrapolation (linear/polynomial regression)
 
-**预测维度**：
-- 7 日趋势预测
-- 30 日趋势预测
-- 季节性分析（如适用）
+**Prediction dimensions**:
+- 7-day trend prediction
+- 30-day trend prediction
+- Seasonality analysis (if applicable)
 
-**输出格式**：
+**Output format**:
 
 ```yaml
 trend_analysis:
@@ -181,77 +181,77 @@ trend_analysis:
       risk_alert: true | false
 ```
 
-### Step 4: 瓶颈识别 [核心]
+### Step 4: Bottleneck Identification [Core]
 
-**目标**：识别影响整体健康度的关键瓶颈
+**Goal**: Identify key bottlenecks affecting overall health
 
-**分析方法**：
-- 维度加权贡献度分析
-- 环比/同比异常检测
-- 与竞品对标分析
+**Analysis methods**:
+- Dimension weighted contribution analysis
+- Period-over-period/year-over-year anomaly detection
+- Competitor benchmarking analysis
 
-**瓶颈分级**：
+**Bottleneck grading**:
 
-| 级别 | 定义 | 响应要求 |
+| Level | Definition | Response Requirement |
 |------|------|----------|
-| P0 | 严重威胁业务指标 | 立即处理 |
-| P1 | 显著影响用户体验 | 本周处理 |
-| P2 | 存在隐患 | 计划处理 |
-| P3 | 优化项 | 持续跟进 |
+| P0 | Severely threatens business metrics | Immediate handling |
+| P1 | Significantly impacts user experience | Handle this week |
+| P2 | Hidden risks exist | Plan to handle |
+| P3 | Optimization items | Continuous follow-up |
 
-**输出格式**：
+**Output format**:
 
 ```yaml
 bottlenecks:
   - id: BOT-001
     dimension: satisfaction
     severity: P1
-    description: "NPS 持续下降 3 周"
-    root_cause: "支付流程转化率下降"
+    description: "NPS declining for 3 consecutive weeks"
+    root_cause: "Payment flow conversion rate decline"
     impact_score: 8
     affected_metrics: [nps, conversion_rate]
-    recommendation: "优化支付流程"
+    recommendation: "Optimize payment flow"
 ```
 
-### Step 5: 综合报告 [核心]
+### Step 5: Comprehensive Report [Core]
 
-**目标**：生成综合健康度诊断报告
+**Goal**: Generate a comprehensive health diagnosis report
 
-**报告结构**：
-1. 执行摘要（Overall Score + 关键发现）
-2. 各维度详细评分
-3. 趋势分析
-4. 瓶颈清单
-5. 改进建议
+**Report structure**:
+1. Executive Summary (Overall Score + Key Findings)
+2. Detailed Scoring by Dimension
+3. Trend Analysis
+4. Bottleneck List
+5. Improvement Recommendations
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 健康度评分和问题清单 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整诊断 + 健康度趋势分析 + 根因深度推演 + 改进优先级路线图 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Health score and issue list | Core conclusions + minimum viable artifact |
+| standard | Full artifact (current default) | Full artifact, including all Step outputs |
+| deep | Full diagnosis + health trend analysis + root cause deep reasoning + improvement priority roadmap | Full artifact + extended analysis + deep reasoning |
 
-## 输出
+## Output
 
 
-**输出文件路径**：`docs/monitoring/diagnosis-report.md（“健康度诊断”章节）`
-**输出Schema**：
+**Output file path**: `docs/monitoring/diagnosis-report.md ("Health Diagnosis" section)`
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["report_id", "overall_score", "scores_by_dimension"],
   "properties": {
-    "report_id": {"type": "string", "description": "报告唯一标识"},
-    "generated_at": {"type": "string", "description": "生成时间"},
-    "period": {"type": "object", "description": "评估周期，包含起止时间"},
-    "overall_score": {"type": "number", "description": "整体健康度评分"},
-    "score_trend": {"type": "string", "description": "评分趋势：improving/stable/declining"},
-    "scores_by_dimension": {"type": "object", "description": "各维度评分，包含性能/可用性/满意度/业务"},
-    "trend_analysis": {"type": "object", "description": "趋势预测，包含7天和30天预测变化"},
-    "bottlenecks": {"type": "array", "description": "瓶颈列表，包含严重度和维度"},
-    "recommendations": {"type": "array", "description": "改进建议列表，包含优先级和预期影响"}
+    "report_id": {"type": "string", "description": "Report unique identifier"},
+    "generated_at": {"type": "string", "description": "Generation time"},
+    "period": {"type": "object", "description": "Assessment period, including start and end times"},
+    "overall_score": {"type": "number", "description": "Overall health score"},
+    "score_trend": {"type": "string", "description": "Score trend: improving/stable/declining"},
+    "scores_by_dimension": {"type": "object", "description": "Scores by dimension, including performance/availability/satisfaction/business"},
+    "trend_analysis": {"type": "object", "description": "Trend prediction, including 7-day and 30-day predicted changes"},
+    "bottlenecks": {"type": "array", "description": "Bottleneck list, including severity and dimension"},
+    "recommendations": {"type": "array", "description": "Improvement recommendations list, including priority and expected impact"}
   }
 }
 ```
@@ -267,7 +267,7 @@ bottlenecks:
     └── health_report.md
 ```
 
-### 健康度报告输出格式
+### Health Report Output Format
 
 ```yaml
 health_diagnosis:
@@ -292,86 +292,86 @@ health_diagnosis:
       dimension: satisfaction
   recommendations:
     - priority: high
-      action: "优化支付流程"
+      action: "Optimize payment flow"
       expected_impact: "+5 NPS"
 ```
 
-## 决策规则
+## Decision Rules
 
-| 场景 | 决策规则 |
+| Scenario | Decision Rule |
 |------|----------|
-| 维度得分 < 60 | 标记红色预警，生成专项诊断 |
-| 维度得分 60-75 | 标记黄色预警，列入改进计划 |
-| 维度得分 > 85 | 标记绿色，保持监控 |
-| 预测趋势下降 | 生成预防性建议 |
-| 数据缺失 > 30% | 标记数据质量问题，跳过该维度评分 |
+| Dimension score < 60 | Mark red alert, generate dedicated diagnosis |
+| Dimension score 60-75 | Mark yellow alert, include in improvement plan |
+| Dimension score > 85 | Mark green, maintain monitoring |
+| Predicted trend declining | Generate preventive recommendations |
+| Data missing > 30% | Mark data quality issue, skip dimension scoring |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 数据采集完整率 ≥ 90%
-- [ ] 评分计算准确性（抽样验证）
+- [ ] Data collection completeness ≥ 90%
+- [ ] Scoring calculation accuracy (sample validation)
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 趋势预测偏差 ±10%
-- [ ] 瓶颈识别覆盖率 ≥ 90%
-- [ ] 建议可执行率 ≥ 80%
-- [ ] 报告生成及时性（< 5 分钟）
+- [ ] Trend prediction deviation ±10%
+- [ ] Bottleneck identification coverage ≥ 90%
+- [ ] Recommendation executability ≥ 80%
+- [ ] Report generation timeliness (< 5 minutes)
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep reasoning and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失的上游输入 | 降级方案 | 输出影响 |
+| Missing Upstream Input | Degradation Plan | Output Impact |
 |---------------|---------|---------|
-| 性能数据 | 用户提供响应时间、吞吐量等关键性能指标数值，AI直接评分 | 性能维度直接评分结果，缺乏自动采集数据 |
-| 可用性数据 | 用户提供SLA达成率、故障次数等指标，AI直接评分 | 可用性维度直接评分结果，缺乏自动采集数据 |
-| 用户满意度 | 用户提供NPS/CSAT评分和投诉率数据，AI直接评分 | 满意度维度直接评分结果，缺乏自动采集数据 |
-| 业务指标 | 用户提供转化率、GMV、DAU/MAU、留存等指标，AI直接评分 | 业务维度直接评分结果，缺乏自动采集数据 |
-| 竞品动态 | 跳过竞品对标，瓶颈识别仅基于自身数据 | 无竞品对标的健康度报告 |
+| Performance data | User provides response time, throughput, and other key performance metric values, AI scores directly | Performance dimension direct scoring result, lacks automated collection data |
+| Availability data | User provides SLA achievement rate, failure count, and other metrics, AI scores directly | Availability dimension direct scoring result, lacks automated collection data |
+| User satisfaction | User provides NPS/CSAT scores and complaint rate data, AI scores directly | Satisfaction dimension direct scoring result, lacks automated collection data |
+| Business metrics | User provides conversion rate, GMV, DAU/MAU, retention, and other metrics, AI scores directly | Business dimension direct scoring result, lacks automated collection data |
+| Competitor dynamics | Skip competitor benchmarking, bottleneck identification based only on own data | Health report without competitor benchmarking |
 
-### 数据获取说明
+### Data Acquisition Notes
 
-当上游文件缺失时，通过以下方式获取必要数据：
+When upstream files are missing, obtain necessary data through the following methods:
 
-1. **多维度数据缺失**：请用户提供各维度的关键指标数值，AI将基于用户提供的数据直接进行维度评分，跳过自动采集和标准化步骤
-2. **部分维度缺失**：仅对有数据的维度进行评分，缺失维度标记为"数据不足"，综合评分仅基于可用维度计算并标注置信度
-3. **竞品动态缺失**：跳过竞品对标分析，瓶颈识别仅依赖自身数据趋势和阈值判断，建议后续补充竞品数据以完善分析
+1. **Multi-dimensional data missing**: Ask user to provide key metric values for each dimension, AI will score dimensions directly based on user-provided data, skipping automated collection and standardization steps
+2. **Partial dimension missing**: Only score dimensions with data, missing dimensions marked as "insufficient data", overall score calculated only based on available dimensions with confidence labeled
+3. **Competitor dynamics missing**: Skip competitor benchmarking analysis, bottleneck identification relies only on own data trends and threshold judgments, recommend supplementing competitor data later to improve analysis
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| report_id | string | 是 | 报告唯一标识 |
-| overall_score | number | 是 | 整体健康度评分，范围0-100 |
-| score_trend | string | 是 | 评分趋势，仅允许improving/stable/declining |
-| scores_by_dimension | object | 是 | 各维度评分，须含performance/availability/satisfaction/business |
-| trend_analysis | object | 否 | 趋势预测，须含predicted_change_7d/predicted_change_30d |
-| bottlenecks | array | 否 | 瓶颈列表，每项须含id/severity/dimension |
-| bottlenecks[].severity | string | 是 | 严重度，仅允许P0/P1/P2/P3 |
+| report_id | string | Yes | Report unique identifier |
+| overall_score | number | Yes | Overall health score, range 0-100 |
+| score_trend | string | Yes | Score trend, only improving/stable/declining allowed |
+| scores_by_dimension | object | Yes | Scores by dimension, must contain performance/availability/satisfaction/business |
+| trend_analysis | object | No | Trend prediction, must contain predicted_change_7d/predicted_change_30d |
+| bottlenecks | array | No | Bottleneck list, each item must contain id/severity/dimension |
+| bottlenecks[].severity | string | Yes | Severity, only P0/P1/P2/P3 allowed |
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游来源 | 变更类型 | 影响范围 | 响应动作 |
+| Upstream Source | Change Type | Impact Scope | Response Action |
 |----------|----------|----------|----------|
-| APM/监控系统 | 性能指标口径变更 | 性能维度评分和基准对比 | 按新口径重新计算评分 |
-| 监控系统 | 可用性数据格式变更 | 可用性维度评分 | 适配新格式，补充缺失字段 |
-| 反馈系统 | 满意度指标变更 | 满意度维度评分 | 更新评分算法和权重 |
-| 数据分析平台 | 业务指标定义变更 | 业务维度评分和趋势预测 | 按新定义重新计算评分和预测 |
+| APM/monitoring system | Performance metric definition change | Performance dimension scoring and baseline comparison | Recalculate scores per new definition |
+| Monitoring system | Availability data format change | Availability dimension scoring | Adapt to new format, supplement missing fields |
+| Feedback system | Satisfaction metric change | Satisfaction dimension scoring | Update scoring algorithm and weights |
+| Data analytics platform | Business metric definition change | Business dimension scoring and trend prediction | Recalculate scores and predictions per new definition |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 下游消费者 | 通知条件 | 通知方式 | 通知内容 |
+| Downstream Consumer | Notification Condition | Notification Method | Notification Content |
 |------------|----------|----------|----------|
-| diagnosis-orchestrator | 健康度诊断完成 | 输出文件更新 | 诊断完成状态和关键瓶颈 |
-| monitoring-attribution | 健康度评分异常 | 写入输出文件 | 异常维度和瓶颈详情 |
-| iteration-retrospective | P0/P1瓶颈识别 | 写入输出文件 | 瓶颈描述和改进建议 |
+| diagnosis-orchestrator | Health diagnosis completed | Output file updated | Diagnosis completion status and key bottlenecks |
+| monitoring-attribution | Health score anomaly | Write to output file | Anomalous dimensions and bottleneck details |
+| iteration-retrospective | P0/P1 bottleneck identified | Write to output file | Bottleneck description and improvement recommendations |

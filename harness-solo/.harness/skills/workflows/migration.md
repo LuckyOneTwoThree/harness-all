@@ -4,160 +4,178 @@ name: migration
 default_mode: standard
 ---
 
-# 工作流 E：代码迁移
+# Workflow E: Code Migration
 
-> 适用场景：框架/库大版本升级、API 迁移、数据迁移、移除弃用代码
-> 核心模式：migration（建替代品→增量迁移→验证零用量→移除）+ LOOP（refactor 循环守护不回归）
+> Applicable scenario: Framework/library major version upgrades, API migrations, data migrations, removing deprecated code
+> Core mode: migration (build replacement → incremental migration → verify zero usage → remove) + LOOP (refactor loop guards no regression)
 
-## 与其他工作流的差异
+## Differences from Other Workflows
 
-| 维度 | refactor | **migration** |
+| Dimension | refactor | **migration** |
 |------|----------|--------------|
-| 目标 | 改善结构，不改行为 | 替换系统/升级框架，行为等价 |
-| 前置 | brainstorming 确认边界 | **migration 决策硬门 + brainstorming** |
-| 测试 | 建立守护网 | **test-coverage 补守护 + 迁移指南** |
-| LOOP 后 | code-review | **验证零活跃用量 → 移除旧系统** |
-| LOOP 上限 | 3 次 | 3 次（refactor 类型） |
+| Goal | Improve structure, don't change behavior | Replace system / upgrade framework, behavior equivalent |
+| Prerequisite | brainstorming to confirm boundaries | **migration decision hard gate + brainstorming** |
+| Tests | Build safety net | **test-coverage adds safety net + migration guide** |
+| After LOOP | code-review | **Verify zero active usage → remove old system** |
+| LOOP cap | 3 | 3 (refactor type) |
 
-## 流程
+## Process
 
 ```
 ┌─────────────────┐
-│ session-start   │  加载上下文，确认迁移目标
+│ session-start   │  Load context, confirm migration goals
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ migration — 迁移决策硬门                │
+│ migration — migration decision hard gate│
 │                                         │
-│  - 旧系统还有独特价值吗？               │
-│  - 多少消费者依赖？（Grep 搜索调用点）  │
-│  - 替代品存在吗？不存在→先建（new-feat）│
-│  - 迁移成本 vs 2-3年维护成本？          │
-│  - 测试覆盖够吗？不够→test-coverage 补  │
+│  - Does the old system still have       │
+│    unique value?                        │
+│  - How many consumers depend on it?     │
+│    (Grep for call sites)                │
+│  - Does a replacement exist? If not →   │
+│    build one first (new-feature)        │
+│  - Migration cost vs 2-3 year           │
+│    maintenance cost?                    │
+│  - Is test coverage sufficient? If not →│
+│    use test-coverage to add             │
 │                                         │
-│  ★ 任何一条不满足 → 不迁移              │
+│  ★ If any is not met → don't migrate    │
 └────────┬────────────────────────────────┘
-         │ 决策通过
+         │ Decision passed
          ▼
 ┌─────────────────┐
-│ brainstorming   │  确认迁移边界
-│                 │  - 迁移什么？为什么？
-│                 │  - 不改变什么行为？
-│                 │  - 选策略：Strangler/Adapter/Flag
+│ brainstorming   │  Confirm migration boundaries
+│                 │  - Migrate what? Why?
+│                 │  - What behavior not to change?
+│                 │  - Pick a strategy: Strangler/Adapter/Flag
 └────────┬────────┘
-         │ 通过
+         │ Passed
          ▼
 ┌─────────────────┐
-│ writing-plans   │  任务拆解
-│                 │  - 一次只迁移一个消费者
-│                 │  - 每步后跑全量测试
-│                 │  - 输出 spec.md + 迁移指南
+│ writing-plans   │  Task breakdown
+│                 │  - Migrate one consumer at a time
+│                 │  - Run full test suite after each step
+│                 │  - Output spec.md + migration guide
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│              LOOP 循环迁移               │
+│              LOOP iterative migration   │
 │  ┌─────────────────────────────────┐    │
-│  │ executing-plans (调度器)        │    │
-│  │  按任务序列推进，每任务 checkpoint│    │
+│  │ executing-plans (scheduler)     │    │
+│  │  Advance per task sequence,     │    │
+│  │  checkpoint per task            │    │
 │  └──────────┬──────────────────────┘    │
 │             ▼                            │
 │  ┌─────────────────────────────────┐    │
-│  │ migration (ACT) — 增量迁移      │    │
-│  │  - 一次改一个消费者指向新系统   │    │
-│  │  - 跑全量测试，行为匹配         │    │
+│  │ migration (ACT) — incremental   │    │
+│  │  migration                      │    │
+│  │  - Point one consumer at a time │    │
+│  │    to the new system            │    │
+│  │  - Run full test suite, behavior│    │
+│  │    matches                      │    │
 │  └──────────┬──────────────────────┘    │
 │             ▼                            │
 │  ┌─────────────────────────────────┐    │
 │  │ verify (VERIFY)                 │    │
-│  │  - 全量测试不回归（强制）       │    │
-│  │  - 行为等价性确认               │    │
+│  │  - Full test suite no regression│    │
+│  │    (mandatory)                  │    │
+│  │  - Behavior equivalence confirm │    │
 │  └──────────┬──────────────────────┘    │
 │             │                            │
-│             ├── 通过 → 跳出 LOOP ────────┼──→
+│             ├── Pass → exit LOOP ────────┼──→
 │             │                            │
-│             └── 失败                     │
+│             └── Fail                     │
 │                   │                      │
 │                   ▼                      │
 │  ┌─────────────────────────────────┐    │
 │  │ systematic-debugging            │    │
-│  │  - 行为不等价，找根因           │    │
+│  │  - Behavior not equivalent,     │    │
+│  │    find root cause              │    │
 │  └──────────┬──────────────────────┘    │
 │             │                            │
-│             └── 回到 migration ─────────┘
+│             └── Back to migration ───────┘
 │                                          │
-│  迭代上限：3 次（refactor 类型）         │
-│  超限 → 请求人类介入                     │
+│  Iteration cap: 3 (refactor type)       │
+│  Exceeded → request human intervention  │
 └─────────────────────────────────────────┘
          │
          ▼
 ┌─────────────────────────────────────────┐
-│ migration — 验证零活跃用量              │
+│ migration — verify zero active usage    │
 │                                         │
-│  ★ 没有零活跃用量证据，不许删旧代码     │
+│  ★ Without zero-active-usage evidence,  │
+│    don't delete old code                │
 │                                         │
-│  - Grep 搜索旧 API 调用点 → 应为 0      │
-│  - 检查配置/环境变量是否引用旧系统      │
-│  - 如有 metrics，确认零活跃流量         │
+│  - Grep for old API call sites → should │
+│    be 0                                 │
+│  - Check whether configs/env vars       │
+│    reference the old system             │
+│  - If metrics exist, confirm zero       │
+│    active traffic                       │
 └────────┬────────────────────────────────┘
-         │ 零用量确认
+         │ Zero usage confirmed
          ▼
 ┌─────────────────────────────────────────┐
-│ migration — 移除旧系统                  │
+│ migration — remove the old system       │
 │                                         │
-│  - 删除旧代码 + 旧测试 + 旧文档 + 配置  │
-│  - 跑全量测试，确认无回归               │
-│  - 更新 docs/engineering/TECH_STACK.md  │
-│  - 写 ADR 记录迁移决策（supersede 旧）  │
+│  - Delete old code + old tests + old    │
+│    docs + config                        │
+│  - Run full test suite, confirm no      │
+│    regression                           │
+│  - Update docs/engineering/TECH_STACK.md│
+│  - Write an ADR recording the migration │
+│    decision (supersede the old one)     │
 └────────┬────────────────────────────────┘
          │
          ▼
 ┌─────────────────────┐
-│ requesting-code-    │  审查迁移质量
-│ review              │  - 行为是否保持
-│                     │  - 旧系统是否清干净
-│                     │  - 迁移指南是否完整
+│ requesting-code-    │  Review migration quality
+│ review              │  - Was behavior preserved
+│                     │  - Was the old system cleaned up
+│                     │  - Is the migration guide complete
 └──────────┬──────────┘
-           │ 通过
+           │ Passed
            ▼
 ┌─────────────────┐
-│ session-end     │  归档 + baseline
+│ session-end     │  Archive + baseline
 └─────────────────┘
 ```
 
-## 关键检查点
+## Key Checkpoints
 
-- [ ] 迁移决策硬门过了吗？（5 条全满足）
-- [ ] 替代品建好了吗？（没有不许 deprecate 旧系统）
-- [ ] 测试守护网够吗？（不够先走 test-coverage 补）
-- [ ] 一次只迁移一个消费者吗？（批量改无法归因）
-- [ ] 每次迁移后跑全量测试了吗？
-- [ ] 零活跃用量验证了吗？（**没有证据不许删旧代码**）
-- [ ] 旧代码/测试/文档/配置都清了吗？
-- [ ] 迁移决策写 ADR 了吗？
+- [ ] Did the migration decision hard gate pass? (All 5 conditions met)
+- [ ] Is the replacement built? (Don't deprecate the old system without one)
+- [ ] Is the test safety net sufficient? (If not, run test-coverage first to add)
+- [ ] Are you migrating one consumer at a time? (Batch changes can't be attributed)
+- [ ] Did you run the full test suite after each migration?
+- [ ] Was zero active usage verified? (**Don't delete old code without evidence**)
+- [ ] Were old code/tests/docs/config all cleaned up?
+- [ ] Was an ADR written for the migration decision?
 
-## 失败处理
+## Failure Handling
 
-| 失败点 | 处理方式 |
+| Failure Point | Handling |
 |--------|---------|
-| 决策硬门没过 | 不迁移，评估替代方案 |
-| 替代品不存在 | 先走 new-feature 工作流建替代品 |
-| 测试守护不够 | 先走 test-coverage skill 补测试 |
-| 行为不等价 | 回退，走 systematic-debugging 找根因 |
-| 零用量验证失败 | 还有消费者在用，继续迁移或保留旧系统 |
-| LOOP 迭代超 3 次 | 迁移策略可能错了，请求人类介入 |
+| Decision hard gate not passed | Don't migrate; evaluate alternative options |
+| Replacement doesn't exist | Run the new-feature workflow first to build the replacement |
+| Test safety net insufficient | Run the test-coverage skill first to add tests |
+| Behavior not equivalent | Roll back; run systematic-debugging to find root cause |
+| Zero-usage verification failed | Consumers still in use; continue migrating or keep the old system |
+| LOOP iterations exceed 3 | Migration strategy may be wrong; request human intervention |
 
-## 数据迁移专项
+## Data Migration Specifics
 
-数据迁移（DB schema / 数据格式）额外要求：
-- **必须生成迁移脚本**（constitution.md 要求）
-- 迁移脚本必须有回滚脚本
-- 先在备份数据上测试
-- 大数据量分批迁移，每批验证
+Data migrations (DB schema / data format) have additional requirements:
+- **Must generate a migration script** (required by constitution.md)
+- The migration script must have a rollback script
+- Test on backed-up data first
+- For large data volumes, migrate in batches and validate each batch
 
-## 安全原则
+## Safety Principles
 
-1. **先建后弃**：没有替代品不许 deprecate 旧系统
-2. **零用量才删**：没有零活跃用量证据不许删旧代码
-3. **增量迁移**：一次一个消费者，可随时回退
-4. **行为等价**：外部可观察行为不变（API 签名、输出、副作用）
-5. **数据可回滚**：数据迁移必须有回滚脚本
+1. **Build before deprecating**: Don't deprecate the old system without a replacement
+2. **Delete only at zero usage**: Don't delete old code without zero-active-usage evidence
+3. **Incremental migration**: One consumer at a time; can roll back at any time
+4. **Behavior equivalence**: External observable behavior unchanged (API signatures, outputs, side effects)
+5. **Data is rollback-able**: Data migrations must have a rollback script

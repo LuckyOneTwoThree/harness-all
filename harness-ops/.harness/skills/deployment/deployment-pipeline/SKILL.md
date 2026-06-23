@@ -1,11 +1,11 @@
 ---
 name: deployment-pipeline
-description: CI/CD 流水线编排与执行，消费 solo-to-ops 交接文档，编排构建-测试-部署全流程
+description: CI/CD pipeline orchestration and execution, consuming the solo-to-ops handoff document and orchestrating the build-test-deploy workflow
 triggers:
-  - 收到 solo-to-ops.md 交接文档时
-  - 用户要求"部署新版本"或"发布到 staging/production"
-  - CI/CD 流水线失败需要排查时
-  - 需要设计或修改部署流水线时
+  - When a solo-to-ops.md handoff document is received
+  - When the user requests "deploy a new version" or "release to staging/production"
+  - When the CI/CD pipeline fails and needs troubleshooting
+  - When designing or modifying a deployment pipeline
 reads:
   - docs/handoff/solo-to-ops.md
   - docs/infrastructure/OPS_STRATEGY.md
@@ -23,129 +23,129 @@ operation_tier: propose
 requires_approval: true
 ---
 
-# Deployment Pipeline — CI/CD 流水线编排与执行
+# Deployment Pipeline — CI/CD Pipeline Orchestration and Execution
 
-## 铁律
+## Ground Rules
 
-1. **不直接操作生产集群** —— 生产部署必须通过 GitOps PR + 人类 review，Agent 只生成 PR
-2. **不跳过 solo-to-ops 契约** —— 没有交接文档不开始部署，字段缺失必须先补全
-3. **不跳过回滚预案** —— 任何部署必须先定义回滚方案，否则 PLAN 阶段不通过
-4. **不跳过环境隔离** —— 测试环境不准直连生产 DB，凭据必须物理隔离
-5. **不在周五晚/节假日前发版** —— 除非用户显式确认"明知风险仍要发布"
+1. **Do not operate the production cluster directly** — production deployments must go through a GitOps PR + human review; the Agent only generates the PR
+2. **Do not bypass the solo-to-ops contract** — no deployment starts without a handoff document; missing fields must be filled in first
+3. **Do not skip the rollback plan** — every deployment must define a rollback plan first, otherwise the PLAN stage fails
+4. **Do not skip environment isolation** — test environments must not directly connect to production DBs; credentials must be physically isolated
+5. **Do not release on Friday nights or before holidays** — unless the user explicitly confirms "aware of the risk and still want to release"
 
-## 流程
+## Process
 
-### 1. 消费交接文档
+### 1. Consume the Handoff Document
 
-读取 `docs/handoff/solo-to-ops.md`，逐字段核对：
-- 交付物版本（镜像 Tag / Commit Hash）✓
-- 变更内容与影响面（高/中/低）✓
-- 环境变量增删改清单 ✓
-- 数据库迁移脚本及执行顺序 ✓
-- 冒烟测试检查点 ✓
-- 失败回滚方案 ✓
+Read `docs/handoff/solo-to-ops.md` and verify each field:
+- Artifact version (image Tag / Commit Hash) ✓
+- Change content and impact (high/medium/low) ✓
+- Environment variable add/delete/modify list ✓
+- Database migration scripts and execution order ✓
+- Smoke test checkpoints ✓
+- Failure rollback plan ✓
 
-**字段缺失处理**：通过 AskUserQuestion 要求 solo 补全，不自行假设。
+**Missing field handling**: Use AskUserQuestion to ask solo to fill in; do not assume.
 
-### 2. 部署前评估
+### 2. Pre-Deployment Assessment
 
 ```
-## 部署前评估
-- 目标环境: [staging/production]
-- 影响面等级: [高/中/低]
-- 包含 DB Migration: [是/否]
-- 包含 Breaking Change: [是/否]
-- 回滚方案: [镜像回退/SQL回滚/配置回滚]
-- 部署窗口: [是否符合 OPS_STRATEGY.md 定义的窗口期]
-- 前置依赖: [是否有未完成的依赖项]
+## Pre-Deployment Assessment
+- Target environment: [staging/production]
+- Impact level: [high/medium/low]
+- Includes DB Migration: [yes/no]
+- Includes Breaking Change: [yes/no]
+- Rollback plan: [image revert / SQL rollback / config rollback]
+- Deployment window: [whether it fits the window defined in OPS_STRATEGY.md]
+- Prerequisites: [any unfinished dependencies]
 ```
 
-### 3. 编排部署流水线
+### 3. Orchestrate the Deployment Pipeline
 
-根据影响面选择流水线模板：
+Select a pipeline template based on impact:
 
-**低影响面**（配置变更/小功能）：
+**Low impact** (config change / minor feature):
 ```
-构建镜像 → 扫描漏洞(Trivy) → 推送仓库 → staging 部署 → 冒烟测试 → [人类审批] → production 滚动更新
-```
-
-**中影响面**（新功能/接口变更）：
-```
-构建镜像 → 扫描漏洞 → 推送仓库 → staging 部署 → 冒烟测试 → 集成测试
-→ [人类审批] → production 灰度(5%→25%→100%) → 每阶段健康检查
+Build image → scan vulnerabilities (Trivy) → push to registry → staging deploy → smoke test → [human approval] → production rolling update
 ```
 
-**高影响面**（DB Migration/Breaking Change）：
+**Medium impact** (new feature / API change):
 ```
-备份 DB → 构建镜像 → 扫描漏洞 → 推送仓库 → staging 全量演练
-→ [人类审批 + DBA 确认] → production 维护窗口部署 → Migration → 验证 → 灰度推进
+Build image → scan vulnerabilities → push to registry → staging deploy → smoke test → integration test
+ → [human approval] → production canary (5%→25%→100%) → health check at each stage
 ```
 
-### 4. 生成部署配置
+**High impact** (DB Migration / Breaking Change):
+```
+Backup DB → build image → scan vulnerabilities → push to registry → staging full rehearsal
+ → [human approval + DBA confirmation] → production maintenance window deploy → Migration → verify → canary rollout
+```
 
-- 生成/修改 K8s Manifest（Deployment/Service/ConfigMap）
-- 生成 Helm values 或 Kustomize overlay
-- 生成 GitOps PR 内容（ArgoCD Application / Flux Kustomization）
-- 生成数据库 Migration 执行脚本
+### 4. Generate Deployment Configuration
 
-### 5. 执行部署（按环境分层）
+- Generate/modify K8s Manifests (Deployment/Service/ConfigMap)
+- Generate Helm values or Kustomize overlay
+- Generate GitOps PR content (ArgoCD Application / Flux Kustomization)
+- Generate database Migration execution scripts
 
-**Staging 环境**：
-- Agent 可直接执行白名单操作（apply/scale/restart）
-- 执行后自动触发冒烟测试
-- 失败自动回滚并通知
+### 5. Execute Deployment (by environment tier)
 
-**Production 环境**：
-- Agent 生成 GitOps PR，不直接 apply
-- 通过 AskUserQuestion 请求人类 review
-- 人类 merge 后由 ArgoCD/Flux 自动同步
-- Agent 监控同步状态并执行验证
+**Staging environment**:
+- Agent can directly execute whitelisted operations (apply/scale/restart)
+- Smoke test is automatically triggered after execution
+- Auto-rollback on failure and notification
 
-### 6. 部署后验证
+**Production environment**:
+- Agent generates a GitOps PR, does not apply directly
+- Use AskUserQuestion to request human review
+- After human merge, ArgoCD/Flux syncs automatically
+- Agent monitors sync status and runs verification
 
-调用 `deployment-verify` skill 执行：
-- 健康检查（HTTP 200, readiness probe）
-- 监控指标平稳（错误率/延迟/吞吐）
-- 冒烟测试通过
-- 日志无异常报错
+### 6. Post-Deployment Verification
 
-### 7. 记录与归档
+Invoke the `deployment-verify` skill to perform:
+- Health check (HTTP 200, readiness probe)
+- Monitoring metrics stable (error rate / latency / throughput)
+- Smoke test passes
+- Logs show no abnormal errors
 
-- 写入 `docs/deployment/<date>-<version>.md` 部署记录
-- 更新 `loops/specs/<task>/state.yaml`
-- 关键发现追加到 `memory/knowledge-base.md` 的部署记录库
+### 7. Record and Archive
 
-## 禁止事项
+- Write to `docs/deployment/<date>-<version>.md` as the deployment record
+- Update `loops/specs/<task>/state.yaml`
+- Append key findings to the deployment record library in `memory/knowledge-base.md`
 
-- 不在没有 solo-to-ops.md 的情况下开始部署
-- 不跳过 Trivy 漏洞扫描
-- 不在生产环境直接 kubectl apply（必须走 GitOps PR）
-- 不在部署过程中修改 RBAC / NetworkPolicy（需单独审批）
-- 不隐瞒部署失败（失败必须记录并通知）
-- 不删除旧版本镜像（保留至少 2 个历史版本用于回滚）
+## Prohibitions
 
-## 与 LOOP 的关系
+- Do not start deployment without solo-to-ops.md
+- Do not skip the Trivy vulnerability scan
+- Do not run kubectl apply directly in production (must go through a GitOps PR)
+- Do not modify RBAC / NetworkPolicy during deployment (requires separate approval)
+- Do not conceal deployment failures (failures must be recorded and notified)
+- Do not delete old version images (keep at least 2 historical versions for rollback)
 
-**所属 LOOP 类型**：provision（最大迭代 3 次）
+## Relationship to LOOP
+
+**LOOP type**: provision (max 3 iterations)
 
 ```
 LOOP(provision):
-  PLAN:        消费 solo-to-ops → 部署前评估 → 编排流水线 → 生成配置
-  PROVISION:   staging 部署 / 生成 production GitOps PR
-  VERIFY:      deployment-verify 执行健康检查+冒烟测试+监控验证
-  通过? DONE : 回滚 → 分析原因 → 可修复回 PROVISION / 需重新规划回 PLAN
+  PLAN:        Consume solo-to-ops → pre-deployment assessment → orchestrate pipeline → generate config
+  PROVISION:   staging deploy / generate production GitOps PR
+  VERIFY:      deployment-verify runs health check + smoke test + monitoring verification
+  Pass? DONE : Rollback → analyze cause → fixable back to PROVISION / re-plan back to PLAN
 ```
 
-**stage 字段写入**：plan → provision → verify → rollback（如需）
+**stage field values**: plan → provision → verify → rollback (if needed)
 
-## 操作分级
+## Operation Tiers
 
-| 操作 | staging | production |
+| Operation | staging | production |
 |------|---------|------------|
-| 生成 Manifest/Helm values | ✅ Agent | ✅ Agent |
-| 生成 GitOps PR | ✅ Agent | ✅ Agent |
-| kubectl apply | ✅ Agent | ❌ 人类 merge PR |
-| 数据库 Migration | ✅ Agent | ❌ 人类执行 |
-| 镜像扫描 | ✅ Agent | ✅ Agent |
-| 健康检查 | ✅ Agent | ✅ Agent |
-| 回滚 | ✅ Agent 自动 | ⚠️ Agent 建议，人类确认 |
+| Generate Manifest/Helm values | ✅ Agent | ✅ Agent |
+| Generate GitOps PR | ✅ Agent | ✅ Agent |
+| kubectl apply | ✅ Agent | ❌ Human merges PR |
+| Database Migration | ✅ Agent | ❌ Human executes |
+| Image scan | ✅ Agent | ✅ Agent |
+| Health check | ✅ Agent | ✅ Agent |
+| Rollback | ✅ Agent auto | ⚠️ Agent recommends, human confirms |

@@ -1,21 +1,21 @@
 ---
 name: market-pest
-description: 当需要扫描目标市场的政策法规、经济指标、社会趋势、技术动态时使用。PEST自动扫描，输出四维度趋势摘要与影响评估，信号分级告警，重大变化实时告警。关键词：PEST分析、政策法规、经济指标、社会趋势、技术动态、环境扫描、信号分级告警、外部环境、政策影响、市场趋势。
+description: Used when scanning the target market's policies and regulations, economic indicators, social trends, and technology dynamics. PEST auto-scan, outputs four-dimension trend summaries and impact assessments, tiered signal alerts, real-time alerts for major changes. Keywords: PEST analysis, policies and regulations, economic indicators, social trends, technology dynamics, environmental scanning, tiered signal alerts, external environment, policy impact, market trends.
 metadata:
-  module: "产品探索与发现"
-  sub-module: "市场竞品"
+  module: "Product Discovery"
+  sub-module: "Market & Competition"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["金融", "医疗", "通用"]
+  domain_tags: ["Finance", "Healthcare", "General"]
   trigger_examples:
-    - "市场环境有什么变化"
-    - "政策对我们有什么影响"
-    - "帮我扫描一下外部环境"
+    - "What's changed in the market environment"
+    - "How do policies affect us"
+    - "Help me scan the external environment"
   interaction_mode: "ai_auto"
 execution_depth:
   default: standard
-  quick_description: "直接输出PEST分析结论"
-  deep_description: "完整分析 + 政策影响推演 + 趋势预测 + 战略应对建议"
+  quick_description: "Directly output PEST analysis conclusions"
+  deep_description: "Full analysis + policy impact projection + trend forecasting + strategic response recommendations"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -24,216 +24,216 @@ writes:
   - memory/progress.md
 ---
 
-# PEST自动扫描
+# PEST Auto-Scan
 
-## 核心原则
+## Core Principles
 
-1. **四维度缺一不可**——PEST四个维度必须全部扫描，缺失任一维度的分析都是片面的，数据不足时用行业基准值填充并标注"推断值"
-2. **信号分级而非平铺**——不是所有趋势都同等重要，影响程度≥4的信号触发告警，<3的信号归入常规监控，资源聚焦在高影响信号
-3. **时效性标注**——每个信号标注"已发生/正在发生/预计发生"，不同时效的信号应对策略完全不同，已发生的需立即响应，预计的需提前准备
-4. **影响路径可追溯**——每个趋势必须关联品类影响路径（如"合规成本上升→中小企业准入门槛提高"），不关联影响路径的趋势是噪音
+1. **All four dimensions required** — All four PEST dimensions must be scanned; analysis missing any dimension is incomplete. When data is insufficient, fill with industry benchmark values and mark as "inferred value".
+2. **Tiered signals, not flat listing** — Not all trends are equally important. Signals with impact degree ≥ 4 trigger alerts; signals < 3 are routed to routine monitoring. Resources focus on high-impact signals.
+3. **Timeliness annotation** — Each signal is annotated as "occurred / occurring / expected to occur". Signals of different timeliness require completely different response strategies: occurred signals need immediate response, expected signals need advance preparation.
+4. **Impact path traceability** — Each trend must be linked to a category impact path (e.g., "rising compliance costs → higher entry barriers for SMBs"). Trends not linked to an impact path are noise.
 
-## 交互模式
+## Interaction Mode
 
-🤖 AI自动执行
+🤖 AI auto-execution
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| category_keywords | string | 是 | 用户提供 | 品类关键词，如"在线教育""SaaS CRM" |
-| target_market | string | 是 | 用户提供 | 目标市场，如"中国大陆""东南亚" |
+| category_keywords | string | Yes | User-provided | Category keywords, e.g., "online education", "SaaS CRM" |
+| target_market | string | Yes | User-provided | Target market, e.g., "Mainland China", "Southeast Asia" |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 定时扫描 [核心]
+### Step 1: Scheduled Scan [Core]
 
-按四个维度进行信息采集与监控：
+Collect information and monitor across four dimensions:
 
-| 维度 | 扫描范围 | 数据源 |
+| Dimension | Scan Scope | Data Sources |
 |------|---------|--------|
-| 政策法规（Political） | 行业监管政策、准入许可、合规要求、数据隐私法规、税收政策、补贴政策 | 政府官网、法规数据库、行业协会公告、政策解读媒体 |
-| 经济指标（Economic） | GDP增速、行业增长率、消费支出、融资环境、汇率波动、通胀率 | 统计局数据、央行报告、第三方经济数据库 |
-| 社会趋势（Social） | 人口结构变化、消费习惯迁移、文化趋势、用户偏好演变、生活方式变化 | 社交媒体趋势、用户调研报告、人口普查数据、生活方式研究 |
-| 技术动态（Technological） | 新技术成熟度、技术采用曲线、基础设施演进、技术标准变化、专利趋势 | 技术媒体、专利数据库、Gartner/IDC技术报告、开源社区动态 |
+| Political | Industry regulatory policies, entry licenses, compliance requirements, data privacy laws, tax policies, subsidy policies | Government websites, regulatory databases, industry association announcements, policy interpretation media |
+| Economic | GDP growth, industry growth rate, consumer spending, financing environment, exchange rate fluctuations, inflation rate | Statistics bureau data, central bank reports, third-party economic databases |
+| Social | Demographic changes, consumption habit shifts, cultural trends, user preference evolution, lifestyle changes | Social media trends, user research reports, census data, lifestyle research |
+| Technological | New technology maturity, technology adoption curves, infrastructure evolution, technology standard changes, patent trends | Tech media, patent databases, Gartner/IDC technology reports, open source community dynamics |
 
-### Step 2: 趋势摘要 [核心]
+### Step 2: Trend Summary [Core]
 
-对每个维度采集的信息进行结构化摘要：
+Produce a structured summary of information collected for each dimension:
 
-- 提取核心趋势（每维度3-5条）
-- 标注趋势方向（上升/下降/平稳/新兴）
-- 标注趋势强度（强/中/弱）
-- 关联品类影响路径
+- Extract core trends (3-5 per dimension)
+- Annotate trend direction (rising / declining / stable / emerging)
+- Annotate trend strength (strong / medium / weak)
+- Link to category impact path
 
-### Step 3: 关键变化信号 [核心]
+### Step 3: Key Change Signals [Core]
 
-从趋势摘要中识别关键变化信号：
+Identify key change signals from the trend summary:
 
-- 信号类型：新政策发布 / 指标突变 / 趋势转折 / 技术突破
-- 信号时效：已发生 / 正在发生 / 预计发生
-- 信号来源与可验证性
+- Signal type: new policy release / indicator mutation / trend inflection / technology breakthrough
+- Signal timeliness: occurred / occurring / expected to occur
+- Signal source and verifiability
 
-### Step 4: 影响评估 [核心]
+### Step 4: Impact Assessment [Core]
 
-对每个关键变化信号进行影响评估：
+Assess the impact of each key change signal:
 
-| 评估维度 | 说明 |
+| Assessment Dimension | Description |
 |---------|------|
-| 影响方向 | 正面（机会）/ 负面（威胁）/ 中性 |
-| 影响程度 | 1-5分（1=微小影响，5=颠覆性影响） |
-| 影响时间窗口 | 短期（<6月）/ 中期（6-18月）/ 长期（>18月） |
-| 影响范围 | 仅影响品类 / 影响整个行业 / 跨行业影响 |
-| 应对建议 | 利用策略 / 规避策略 / 监控策略 |
+| Impact direction | Positive (opportunity) / Negative (threat) / Neutral |
+| Impact degree | 1-5 scale (1 = minimal impact, 5 = disruptive impact) |
+| Impact time window | Short-term (<6 months) / Medium-term (6-18 months) / Long-term (>18 months) |
+| Impact scope | Category only / Whole industry / Cross-industry |
+| Response recommendation | Leverage strategy / Avoidance strategy / Monitoring strategy |
 
-### Step 5: 重大变化告警 [核心]
+### Step 5: Major Change Alerts [Core]
 
-对高影响信号触发告警：
+Trigger alerts for high-impact signals:
 
-- 筛选影响程度≥4的信号
-- 生成告警摘要：信号描述 + 影响评估 + 应对建议
-- 实时推送给人类PM
+- Filter signals with impact degree ≥ 4
+- Generate alert summary: signal description + impact assessment + response recommendation
+- Push to human PM in real time
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | PEST分析结论 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整分析 + 政策影响推演 + 趋势预测 + 战略应对建议 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | PEST analysis conclusions | Core conclusions + minimum viable artifact |
+| standard | Full artifact (current default) | Full artifact, including all Step outputs |
+| deep | Full analysis + policy impact projection + trend forecasting + strategic response recommendations | Full artifact + extended analysis + deep projection |
 
-## 输出
+## Output
 
-输出文件：`docs/discovery/market-analysis.md（“PEST分析”章节）`
+Output file: `docs/discovery/market-analysis.md ("PEST Analysis" section)`
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["category_keywords", "target_market", "scan_timestamp", "political", "economic", "social", "technological"],
   "properties": {
-    "category_keywords": {"type": "string", "description": "品类关键词"},
-    "target_market": {"type": "string", "description": "目标市场"},
-    "scan_timestamp": {"type": "string", "description": "扫描时间戳"},
-    "political": {"type": "object", "description": "政策法规维度趋势与信号"},
-    "economic": {"type": "object", "description": "经济指标维度趋势与信号"},
-    "social": {"type": "object", "description": "社会趋势维度趋势与信号"},
-    "technological": {"type": "object", "description": "技术动态维度趋势与信号"},
-    "alerts": {"type": "array", "description": "重大变化告警列表"}
+    "category_keywords": {"type": "string", "description": "Category keywords"},
+    "target_market": {"type": "string", "description": "Target market"},
+    "scan_timestamp": {"type": "string", "description": "Scan timestamp"},
+    "political": {"type": "object", "description": "Political dimension trends and signals"},
+    "economic": {"type": "object", "description": "Economic dimension trends and signals"},
+    "social": {"type": "object", "description": "Social dimension trends and signals"},
+    "technological": {"type": "object", "description": "Technological dimension trends and signals"},
+    "alerts": {"type": "array", "description": "Major change alert list"}
   }
 }
 ```
 
-**输出校验规则**：
+**Output Validation Rules**:
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |---------|------|------|------|
-| category_keywords | string | 是 | 品类关键词，不可为空字符串 |
-| target_market | string | 是 | 目标市场，不可为空字符串 |
-| scan_timestamp | string | 是 | ISO 8601格式的扫描时间戳 |
-| political | object | 是 | 政策法规维度，不可缺失 |
-| political.trends | array | 是 | 至少包含1条趋势，每条须含trend、direction、strength、impact_path |
-| political.trends[].trend | string | 是 | 趋势描述，不可为空 |
-| political.trends[].direction | string | 是 | 趋势方向，枚举：上升/下降/平稳/新兴 |
-| political.trends[].strength | string | 是 | 趋势强度，枚举：强/中/弱 |
-| political.trends[].impact_path | string | 是 | 品类影响路径，不可为空 |
-| political.key_signals | array | 是 | 信号列表，每条须含signal、type、timing、source、impact |
-| political.key_signals[].signal | string | 是 | 信号描述，不可为空 |
-| political.key_signals[].type | string | 是 | 信号类型，枚举：新政策发布/指标突变/趋势转折/技术突破 |
-| political.key_signals[].timing | string | 是 | 信号时效，枚举：已发生/正在发生/预计发生 |
-| political.key_signals[].source | string | 是 | 信号来源，不可为空 |
-| political.key_signals[].impact | object | 是 | 影响评估，须含direction、degree、time_window、scope、recommendation |
-| political.key_signals[].impact.direction | string | 是 | 影响方向，枚举：正面/负面/中性 |
-| political.key_signals[].impact.degree | integer | 是 | 影响程度，1-5 |
-| political.key_signals[].impact.time_window | string | 是 | 影响时间窗口，枚举：短期/中期/长期 |
-| political.key_signals[].impact.scope | string | 是 | 影响范围 |
-| political.key_signals[].impact.recommendation | string | 是 | 应对建议 |
-| economic | object | 是 | 经济指标维度，不可缺失，数据不足时用行业基准值填充并标注"推断值" |
-| economic.trends | array | 是 | 至少包含1条趋势，每条须含trend、direction、strength、impact_path |
-| economic.trends[].trend | string | 是 | 趋势描述，不可为空 |
-| economic.trends[].direction | string | 是 | 趋势方向，枚举：上升/下降/平稳/新兴 |
-| economic.trends[].strength | string | 是 | 趋势强度，枚举：强/中/弱 |
-| economic.trends[].impact_path | string | 是 | 品类影响路径，不可为空 |
-| economic.key_signals | array | 是 | 信号列表，每条须含signal、type、timing、source、impact |
-| economic.key_signals[].signal | string | 是 | 信号描述，不可为空 |
-| economic.key_signals[].type | string | 是 | 信号类型，枚举：新政策发布/指标突变/趋势转折/技术突破 |
-| economic.key_signals[].timing | string | 是 | 信号时效，枚举：已发生/正在发生/预计发生 |
-| economic.key_signals[].source | string | 是 | 信号来源，不可为空 |
-| economic.key_signals[].impact | object | 是 | 影响评估，须含direction、degree、time_window、scope、recommendation |
-| economic.key_signals[].impact.direction | string | 是 | 影响方向，枚举：正面/负面/中性 |
-| economic.key_signals[].impact.degree | integer | 是 | 影响程度，1-5 |
-| economic.key_signals[].impact.time_window | string | 是 | 影响时间窗口，枚举：短期/中期/长期 |
-| economic.key_signals[].impact.scope | string | 是 | 影响范围 |
-| economic.key_signals[].impact.recommendation | string | 是 | 应对建议 |
-| social | object | 是 | 社会趋势维度，不可缺失，数据不足时用行业基准值填充并标注"推断值" |
-| social.trends | array | 是 | 至少包含1条趋势，每条须含trend、direction、strength、impact_path |
-| social.trends[].trend | string | 是 | 趋势描述，不可为空 |
-| social.trends[].direction | string | 是 | 趋势方向，枚举：上升/下降/平稳/新兴 |
-| social.trends[].strength | string | 是 | 趋势强度，枚举：强/中/弱 |
-| social.trends[].impact_path | string | 是 | 品类影响路径，不可为空 |
-| social.key_signals | array | 是 | 信号列表，每条须含signal、type、timing、source、impact |
-| social.key_signals[].signal | string | 是 | 信号描述，不可为空 |
-| social.key_signals[].type | string | 是 | 信号类型，枚举：新政策发布/指标突变/趋势转折/技术突破 |
-| social.key_signals[].timing | string | 是 | 信号时效，枚举：已发生/正在发生/预计发生 |
-| social.key_signals[].source | string | 是 | 信号来源，不可为空 |
-| social.key_signals[].impact | object | 是 | 影响评估，须含direction、degree、time_window、scope、recommendation |
-| social.key_signals[].impact.direction | string | 是 | 影响方向，枚举：正面/负面/中性 |
-| social.key_signals[].impact.degree | integer | 是 | 影响程度，1-5 |
-| social.key_signals[].impact.time_window | string | 是 | 影响时间窗口，枚举：短期/中期/长期 |
-| social.key_signals[].impact.scope | string | 是 | 影响范围 |
-| social.key_signals[].impact.recommendation | string | 是 | 应对建议 |
-| technological | object | 是 | 技术动态维度，不可缺失，数据不足时用行业基准值填充并标注"推断值" |
-| technological.trends | array | 是 | 至少包含1条趋势，每条须含trend、direction、strength、impact_path |
-| technological.trends[].trend | string | 是 | 趋势描述，不可为空 |
-| technological.trends[].direction | string | 是 | 趋势方向，枚举：上升/下降/平稳/新兴 |
-| technological.trends[].strength | string | 是 | 趋势强度，枚举：强/中/弱 |
-| technological.trends[].impact_path | string | 是 | 品类影响路径，不可为空 |
-| technological.key_signals | array | 是 | 信号列表，每条须含signal、type、timing、source、impact |
-| technological.key_signals[].signal | string | 是 | 信号描述，不可为空 |
-| technological.key_signals[].type | string | 是 | 信号类型，枚举：新政策发布/指标突变/趋势转折/技术突破 |
-| technological.key_signals[].timing | string | 是 | 信号时效，枚举：已发生/正在发生/预计发生 |
-| technological.key_signals[].source | string | 是 | 信号来源，不可为空 |
-| technological.key_signals[].impact | object | 是 | 影响评估，须含direction、degree、time_window、scope、recommendation |
-| technological.key_signals[].impact.direction | string | 是 | 影响方向，枚举：正面/负面/中性 |
-| technological.key_signals[].impact.degree | integer | 是 | 影响程度，1-5 |
-| technological.key_signals[].impact.time_window | string | 是 | 影响时间窗口，枚举：短期/中期/长期 |
-| technological.key_signals[].impact.scope | string | 是 | 影响范围 |
-| technological.key_signals[].impact.recommendation | string | 是 | 应对建议 |
-| alerts | array | 是 | 影响程度≥4的告警列表，无高影响信号时为空数组 |
-| alerts[].signal | string | 是（alerts非空时） | 告警信号描述 |
-| alerts[].dimension | string | 是（alerts非空时） | 所属PEST维度 |
-| alerts[].impact_degree | integer | 是（alerts非空时） | 影响程度，≥4 |
-| alerts[].impact_direction | string | 是（alerts非空时） | 影响方向 |
-| alerts[].recommendation | string | 是（alerts非空时） | 应对建议 |
-| alerts[].timestamp | string | 是（alerts非空时） | 告警时间戳 |
+| category_keywords | string | Yes | Category keywords, cannot be an empty string |
+| target_market | string | Yes | Target market, cannot be an empty string |
+| scan_timestamp | string | Yes | ISO 8601 format scan timestamp |
+| political | object | Yes | Political dimension, cannot be missing |
+| political.trends | array | Yes | At least 1 trend, each must contain trend, direction, strength, impact_path |
+| political.trends[].trend | string | Yes | Trend description, cannot be empty |
+| political.trends[].direction | string | Yes | Trend direction, enum: rising/declining/stable/emerging |
+| political.trends[].strength | string | Yes | Trend strength, enum: strong/medium/weak |
+| political.trends[].impact_path | string | Yes | Category impact path, cannot be empty |
+| political.key_signals | array | Yes | Signal list, each must contain signal, type, timing, source, impact |
+| political.key_signals[].signal | string | Yes | Signal description, cannot be empty |
+| political.key_signals[].type | string | Yes | Signal type, enum: new policy release/indicator mutation/trend inflection/technology breakthrough |
+| political.key_signals[].timing | string | Yes | Signal timeliness, enum: occurred/occurring/expected to occur |
+| political.key_signals[].source | string | Yes | Signal source, cannot be empty |
+| political.key_signals[].impact | object | Yes | Impact assessment, must contain direction, degree, time_window, scope, recommendation |
+| political.key_signals[].impact.direction | string | Yes | Impact direction, enum: positive/negative/neutral |
+| political.key_signals[].impact.degree | integer | Yes | Impact degree, 1-5 |
+| political.key_signals[].impact.time_window | string | Yes | Impact time window, enum: short-term/medium-term/long-term |
+| political.key_signals[].impact.scope | string | Yes | Impact scope |
+| political.key_signals[].impact.recommendation | string | Yes | Response recommendation |
+| economic | object | Yes | Economic dimension, cannot be missing; when data is insufficient, fill with industry benchmark values and mark as "inferred value" |
+| economic.trends | array | Yes | At least 1 trend, each must contain trend, direction, strength, impact_path |
+| economic.trends[].trend | string | Yes | Trend description, cannot be empty |
+| economic.trends[].direction | string | Yes | Trend direction, enum: rising/declining/stable/emerging |
+| economic.trends[].strength | string | Yes | Trend strength, enum: strong/medium/weak |
+| economic.trends[].impact_path | string | Yes | Category impact path, cannot be empty |
+| economic.key_signals | array | Yes | Signal list, each must contain signal, type, timing, source, impact |
+| economic.key_signals[].signal | string | Yes | Signal description, cannot be empty |
+| economic.key_signals[].type | string | Yes | Signal type, enum: new policy release/indicator mutation/trend inflection/technology breakthrough |
+| economic.key_signals[].timing | string | Yes | Signal timeliness, enum: occurred/occurring/expected to occur |
+| economic.key_signals[].source | string | Yes | Signal source, cannot be empty |
+| economic.key_signals[].impact | object | Yes | Impact assessment, must contain direction, degree, time_window, scope, recommendation |
+| economic.key_signals[].impact.direction | string | Yes | Impact direction, enum: positive/negative/neutral |
+| economic.key_signals[].impact.degree | integer | Yes | Impact degree, 1-5 |
+| economic.key_signals[].impact.time_window | string | Yes | Impact time window, enum: short-term/medium-term/long-term |
+| economic.key_signals[].impact.scope | string | Yes | Impact scope |
+| economic.key_signals[].impact.recommendation | string | Yes | Response recommendation |
+| social | object | Yes | Social dimension, cannot be missing; when data is insufficient, fill with industry benchmark values and mark as "inferred value" |
+| social.trends | array | Yes | At least 1 trend, each must contain trend, direction, strength, impact_path |
+| social.trends[].trend | string | Yes | Trend description, cannot be empty |
+| social.trends[].direction | string | Yes | Trend direction, enum: rising/declining/stable/emerging |
+| social.trends[].strength | string | Yes | Trend strength, enum: strong/medium/weak |
+| social.trends[].impact_path | string | Yes | Category impact path, cannot be empty |
+| social.key_signals | array | Yes | Signal list, each must contain signal, type, timing, source, impact |
+| social.key_signals[].signal | string | Yes | Signal description, cannot be empty |
+| social.key_signals[].type | string | Yes | Signal type, enum: new policy release/indicator mutation/trend inflection/technology breakthrough |
+| social.key_signals[].timing | string | Yes | Signal timeliness, enum: occurred/occurring/expected to occur |
+| social.key_signals[].source | string | Yes | Signal source, cannot be empty |
+| social.key_signals[].impact | object | Yes | Impact assessment, must contain direction, degree, time_window, scope, recommendation |
+| social.key_signals[].impact.direction | string | Yes | Impact direction, enum: positive/negative/neutral |
+| social.key_signals[].impact.degree | integer | Yes | Impact degree, 1-5 |
+| social.key_signals[].impact.time_window | string | Yes | Impact time window, enum: short-term/medium-term/long-term |
+| social.key_signals[].impact.scope | string | Yes | Impact scope |
+| social.key_signals[].impact.recommendation | string | Yes | Response recommendation |
+| technological | object | Yes | Technological dimension, cannot be missing; when data is insufficient, fill with industry benchmark values and mark as "inferred value" |
+| technological.trends | array | Yes | At least 1 trend, each must contain trend, direction, strength, impact_path |
+| technological.trends[].trend | string | Yes | Trend description, cannot be empty |
+| technological.trends[].direction | string | Yes | Trend direction, enum: rising/declining/stable/emerging |
+| technological.trends[].strength | string | Yes | Trend strength, enum: strong/medium/weak |
+| technological.trends[].impact_path | string | Yes | Category impact path, cannot be empty |
+| technological.key_signals | array | Yes | Signal list, each must contain signal, type, timing, source, impact |
+| technological.key_signals[].signal | string | Yes | Signal description, cannot be empty |
+| technological.key_signals[].type | string | Yes | Signal type, enum: new policy release/indicator mutation/trend inflection/technology breakthrough |
+| technological.key_signals[].timing | string | Yes | Signal timeliness, enum: occurred/occurring/expected to occur |
+| technological.key_signals[].source | string | Yes | Signal source, cannot be empty |
+| technological.key_signals[].impact | object | Yes | Impact assessment, must contain direction, degree, time_window, scope, recommendation |
+| technological.key_signals[].impact.direction | string | Yes | Impact direction, enum: positive/negative/neutral |
+| technological.key_signals[].impact.degree | integer | Yes | Impact degree, 1-5 |
+| technological.key_signals[].impact.time_window | string | Yes | Impact time window, enum: short-term/medium-term/long-term |
+| technological.key_signals[].impact.scope | string | Yes | Impact scope |
+| technological.key_signals[].impact.recommendation | string | Yes | Response recommendation |
+| alerts | array | Yes | Alert list with impact degree ≥ 4; empty array when no high-impact signals |
+| alerts[].signal | string | Yes (when alerts non-empty) | Alert signal description |
+| alerts[].dimension | string | Yes (when alerts non-empty) | PEST dimension |
+| alerts[].impact_degree | integer | Yes (when alerts non-empty) | Impact degree, ≥ 4 |
+| alerts[].impact_direction | string | Yes (when alerts non-empty) | Impact direction |
+| alerts[].recommendation | string | Yes (when alerts non-empty) | Response recommendation |
+| alerts[].timestamp | string | Yes (when alerts non-empty) | Alert timestamp |
 
 ```json
 {
-  "category_keywords": "在线教育",
-  "target_market": "中国大陆",
+  "category_keywords": "Online Education",
+  "target_market": "Mainland China",
   "scan_timestamp": "2026-05-10T08:00:00Z",
   "political": {
     "trends": [
       {
-        "trend": "数据隐私法规趋严，个人数据保护力度加大",
-        "direction": "上升",
-        "strength": "强",
-        "impact_path": "合规成本上升→中小企业准入门槛提高"
+        "trend": "Data privacy laws tightening, personal data protection strengthening",
+        "direction": "rising",
+        "strength": "strong",
+        "impact_path": "Rising compliance costs → higher entry barriers for SMBs"
       }
     ],
     "key_signals": [
       {
-        "signal": "《个人信息保护法》实施细则发布",
-        "type": "新政策发布",
-        "timing": "已发生",
-        "source": "国务院官网",
+        "signal": "Implementation rules of the Personal Information Protection Law released",
+        "type": "new policy release",
+        "timing": "occurred",
+        "source": "State Council official website",
         "impact": {
-          "direction": "负面",
+          "direction": "negative",
           "degree": 5,
-          "time_window": "中期",
-          "scope": "行业",
-          "recommendation": "加速合规体系建设，建立数据隐私保护机制"
+          "time_window": "medium-term",
+          "scope": "industry",
+          "recommendation": "Accelerate compliance system building, establish data privacy protection mechanisms"
         },
         "alert": false
       }
@@ -242,24 +242,24 @@ writes:
   "economic": {
     "trends": [
       {
-        "trend": "GDP增速放缓，居民可支配收入增长承压",
-        "direction": "下降",
-        "strength": "中",
-        "impact_path": "居民教育支出意愿下降→在线教育付费转化率降低"
+        "trend": "GDP growth slowing, pressure on residents' disposable income growth",
+        "direction": "declining",
+        "strength": "medium",
+        "impact_path": "Declining willingness for education spending → lower conversion rates for paid online education"
       }
     ],
     "key_signals": [
       {
-        "signal": "2026年Q1 GDP增速降至4.5%",
-        "type": "指标突变",
-        "timing": "已发生",
-        "source": "国家统计局季度公报",
+        "signal": "Q1 2026 GDP growth dropped to 4.5%",
+        "type": "indicator mutation",
+        "timing": "occurred",
+        "source": "National Bureau of Statistics quarterly bulletin",
         "impact": {
-          "direction": "负面",
+          "direction": "negative",
           "degree": 3,
-          "time_window": "中期",
-          "scope": "行业",
-          "recommendation": "优化定价策略，推出轻量化平价产品应对消费降级"
+          "time_window": "medium-term",
+          "scope": "industry",
+          "recommendation": "Optimize pricing strategy, launch lightweight affordable products to cope with consumption downgrade"
         },
         "alert": false
       }
@@ -268,24 +268,24 @@ writes:
   "social": {
     "trends": [
       {
-        "trend": "Z世代消费习惯变化，碎片化学习偏好增强",
-        "direction": "上升",
-        "strength": "强",
-        "impact_path": "学习场景碎片化→课程产品设计需适配短时高频模式"
+        "trend": "Gen Z consumption habits changing, fragmented learning preference strengthening",
+        "direction": "rising",
+        "strength": "strong",
+        "impact_path": "Fragmented learning scenarios → course product design must adapt to short, high-frequency patterns"
       }
     ],
     "key_signals": [
       {
-        "signal": "短视频学习类应用月活同比增长45%",
-        "type": "趋势转折",
-        "timing": "正在发生",
-        "source": "QuestMobile年度报告",
+        "signal": "Short-video learning apps MAU grew 45% YoY",
+        "type": "trend inflection",
+        "timing": "occurring",
+        "source": "QuestMobile annual report",
         "impact": {
-          "direction": "正面",
+          "direction": "positive",
           "degree": 4,
-          "time_window": "短期",
-          "scope": "行业",
-          "recommendation": "开发短视频微课产品形态，抢占碎片化学习场景"
+          "time_window": "short-term",
+          "scope": "industry",
+          "recommendation": "Develop short-video micro-course product format, capture fragmented learning scenarios"
         },
         "alert": true
       }
@@ -294,24 +294,24 @@ writes:
   "technological": {
     "trends": [
       {
-        "trend": "AI技术普及，大模型教育应用成本快速下降",
-        "direction": "上升",
-        "strength": "强",
-        "impact_path": "AI辅导成本下降→个性化教学产品规模化落地成为可能"
+        "trend": "AI technology spreading, large model education application costs dropping rapidly",
+        "direction": "rising",
+        "strength": "strong",
+        "impact_path": "Declining AI tutoring costs → personalized teaching products can scale"
       }
     ],
     "key_signals": [
       {
-        "signal": "教育大模型API调用成本同比下降60%",
-        "type": "技术突破",
-        "timing": "正在发生",
-        "source": "Gartner技术成熟度报告",
+        "signal": "Education large model API call costs dropped 60% YoY",
+        "type": "technology breakthrough",
+        "timing": "occurring",
+        "source": "Gartner technology maturity report",
         "impact": {
-          "direction": "正面",
+          "direction": "positive",
           "degree": 4,
-          "time_window": "中期",
-          "scope": "跨行业",
-          "recommendation": "加大AI个性化辅导产品研发投入，构建数据飞轮"
+          "time_window": "medium-term",
+          "scope": "cross-industry",
+          "recommendation": "Increase R&D investment in AI personalized tutoring products, build data flywheel"
         },
         "alert": true
       }
@@ -319,93 +319,93 @@ writes:
   },
   "alerts": [
     {
-      "signal": "《个人信息保护法》实施细则发布",
-      "dimension": "政策法规",
+      "signal": "Implementation rules of the Personal Information Protection Law released",
+      "dimension": "Political",
       "impact_degree": 5,
-      "impact_direction": "负面",
-      "recommendation": "加速合规体系建设，建立数据隐私保护机制",
+      "impact_direction": "negative",
+      "recommendation": "Accelerate compliance system building, establish data privacy protection mechanisms",
       "timestamp": "2026-05-10T08:00:00Z"
     },
     {
-      "signal": "短视频学习类应用月活同比增长45%",
-      "dimension": "社会趋势",
+      "signal": "Short-video learning apps MAU grew 45% YoY",
+      "dimension": "Social",
       "impact_degree": 4,
-      "impact_direction": "正面",
-      "recommendation": "开发短视频微课产品形态，抢占碎片化学习场景",
+      "impact_direction": "positive",
+      "recommendation": "Develop short-video micro-course product format, capture fragmented learning scenarios",
       "timestamp": "2026-05-10T08:00:00Z"
     },
     {
-      "signal": "教育大模型API调用成本同比下降60%",
-      "dimension": "技术动态",
+      "signal": "Education large model API call costs dropped 60% YoY",
+      "dimension": "Technological",
       "impact_degree": 4,
-      "impact_direction": "正面",
-      "recommendation": "加大AI个性化辅导产品研发投入，构建数据飞轮",
+      "impact_direction": "positive",
+      "recommendation": "Increase R&D investment in AI personalized tutoring products, build data flywheel",
       "timestamp": "2026-05-10T08:00:00Z"
     }
   ]
 }
 ```
 
-## 决策规则
+## Decision Rules
 
-| 规则 | 触发条件 | 动作 |
+| Rule | Trigger Condition | Action |
 |------|---------|------|
-| 实时告警 | 影响程度 ≥ 4 | 实时告警给人类PM，推送信号描述+影响评估+应对建议 |
-| 常规监控 | 影响程度 < 3 | 归入常规监控列表，不触发告警 |
-| 信号升级 | 信号来源不可验证或矛盾 | 标注需人类确认，降低置信度 |
-| 数据来源可信度 < 0.5 | 标注"数据来源不可靠"，建议人类验证或更换数据源 |
-| PEST维度数据缺失 | 标注"维度数据不完整"，使用行业基准值填充并标注"推断值" |
+| Real-time alert | Impact degree ≥ 4 | Real-time alert to human PM, push signal description + impact assessment + response recommendation |
+| Routine monitoring | Impact degree < 3 | Route to routine monitoring list, no alert triggered |
+| Signal escalation | Signal source unverifiable or contradictory | Mark as needing human confirmation, lower confidence |
+| Data source reliability < 0.5 | Mark as "unreliable data source", suggest human verification or alternative data source |
+| PEST dimension data missing | Mark as "dimension data incomplete", fill with industry benchmark values and mark as "inferred value" |
 
-## 质量检查
+## Quality Checks
 
-- [ ] 政策法规维度已扫描
-- [ ] 经济指标维度已扫描
-- [ ] 社会趋势维度已扫描
-- [ ] 技术动态维度已扫描
-- [ ] 每个维度至少3条趋势摘要
-- [ ] 关键变化信号已识别
-- [ ] 影响评估已完成（方向+程度+时间窗口）
-- [ ] 重大变化（影响程度≥4）已告警
-- [ ] 数据来源标注 | 每个PEST维度标注数据来源和可信度 | 未标注来源的维度标记"来源不明"
+- [ ] Political dimension scanned
+- [ ] Economic dimension scanned
+- [ ] Social dimension scanned
+- [ ] Technological dimension scanned
+- [ ] At least 3 trend summaries per dimension
+- [ ] Key change signals identified
+- [ ] Impact assessment completed (direction + degree + time window)
+- [ ] Major changes (impact degree ≥ 4) alerted
+- [ ] Data source annotated | Each PEST dimension annotates data source and reliability | Dimensions without source annotation marked as "unknown source"
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-当上游文件不存在时，本Skill仍可独立执行：
+When upstream files do not exist, this Skill can still execute independently:
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Notes |
 |---------------|---------|---------|------------|
-| 无强依赖 | 本Skill可独立运行，用户提供品类和目标市场即可执行 | 输出完整，无影响 | 要求用户提供品类关键词和目标市场 |
-| 所有上游文件均缺失 | 用户提供品类关键词和目标市场 → 基于AI知识库扫描PEST四维度趋势 | 趋势数据基于AI知识库推断，置信度标注为"推断值"，时效性可能滞后 | 要求用户提供品类关键词（如"在线教育"）和目标市场（如"中国大陆"） |
-| 若用户未提供category_keywords | 提示用户提供品类关键词，否则无法确定扫描范围 | 无法生成输出，流程中断 | 要求用户提供品类关键词（如"在线教育""SaaS CRM"） |
-| 若用户未提供target_market | 提示用户提供目标市场，否则默认使用"中国大陆" | 目标市场默认为"中国大陆"，其他市场的趋势可能遗漏 | 要求用户提供目标市场名称（如"北美""东南亚"） |
+| No strong dependencies | This Skill can run independently; user provides category and target market to execute | Output complete, no impact | Require user to provide category keywords and target market |
+| All upstream files missing | User provides category keywords and target market → scan PEST four-dimension trends based on AI knowledge base | Trend data inferred from AI knowledge base, confidence marked as "inferred value", timeliness may lag | Require user to provide category keywords (e.g., "online education") and target market (e.g., "Mainland China") |
+| If user does not provide category_keywords | Prompt user to provide category keywords, otherwise scan scope cannot be determined | Cannot generate output, flow interrupted | Require user to provide category keywords (e.g., "online education", "SaaS CRM") |
+| If user does not provide target_market | Prompt user to provide target market, otherwise default to "Mainland China" | Target market defaults to "Mainland China", trends for other markets may be missed | Require user to provide target market name (e.g., "North America", "Southeast Asia") |
 
-## 数据获取说明
+## Data Acquisition Notes
 
-本Skill需要品类关键词和目标市场信息，请通过以下方式之一提供：
-  1. 直接输入品类关键词（如"在线教育""SaaS CRM"）和目标市场（如"中国大陆"）
-  2. 上传行业分析数据文件
-  3. 提供数据文件路径
-- AI不负责外部数据采集，仅负责分析
+This Skill requires category keywords and target market information. Please provide via one of the following:
+  1. Directly input category keywords (e.g., "online education", "SaaS CRM") and target market (e.g., "Mainland China")
+  2. Upload industry analysis data files
+  3. Provide data file paths
+- AI is not responsible for external data collection, only analysis
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游文件 | 变更类型 | 影响PEST维度 | 影响说明 |
+| Upstream File | Change Type | Affected PEST Dimension | Impact Description |
 |---------|---------|-------------|---------|
-| tam-som.json | 市场规模数据变化 | 经济指标（Economic） | TAM/SAM/SOM规模调整直接影响经济指标中的行业增长率、市场容量等趋势判断 |
-| competitor-analysis.json | 竞品技术动态变化 | 技术动态（Technological） | 竞品新技术采用、专利布局等动态影响技术维度中技术成熟度和采用曲线的判断 |
-| competitor-analysis.json | 竞品合规策略变化 | 政策法规（Political） | 竞品应对监管的策略变化可反推政策法规执行力度和趋势方向 |
-| tam-som.json | 区域市场数据变化 | 社会趋势（Social） | 区域市场用户规模和渗透率变化影响社会趋势中消费习惯和用户偏好的判断 |
+| tam-som.json | Market size data change | Economic | TAM/SAM/SOM size adjustments directly affect industry growth rate and market capacity trend judgments in economic indicators |
+| competitor-analysis.json | Competitor technology dynamics change | Technological | Competitor new technology adoption, patent portfolio and other dynamics affect technology maturity and adoption curve judgments in the technology dimension |
+| competitor-analysis.json | Competitor compliance strategy change | Political | Competitor regulatory response strategy changes can reverse-infer policy enforcement intensity and trend direction |
+| tam-som.json | Regional market data change | Social | Regional market user size and penetration rate changes affect consumption habits and user preference judgments in social trends |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| PEST变更类型 | 触发条件 | 通知下游 | 通知内容 |
+| PEST Change Type | Trigger Condition | Notify Downstream | Notification Content |
 |-------------|---------|---------|---------|
-| 政策法规重大变化 | 政策法规维度出现影响程度≥4的信号 | market-competitor-analysis | 政策变化摘要、影响评估、竞品应对建议 |
-| 政策法规重大变化 | 政策法规维度出现影响程度≥4的信号 | market-tam-som | 政策变化对市场准入和规模的影响评估，建议重新测算TAM/SAM/SOM |
-| 经济指标重大变化 | 经济指标维度出现影响程度≥4的信号 | market-tam-som | 经济指标变化摘要，建议重新评估市场规模和增长率 |
-| 技术动态重大变化 | 技术动态维度出现影响程度≥4的信号 | market-competitor-analysis | 技术突破摘要、影响评估，建议更新竞品Feature Matrix中的技术维度 |
-| 社会趋势重大变化 | 社会趋势维度出现影响程度≥4的信号 | market-tam-som | 社会趋势变化摘要，建议重新评估目标用户规模和渗透率 |
+| Major political change | Political dimension signal with impact degree ≥ 4 | market-competitor-analysis | Policy change summary, impact assessment, competitor response recommendations |
+| Major political change | Political dimension signal with impact degree ≥ 4 | market-tam-som | Policy change impact assessment on market access and size, recommend re-estimating TAM/SAM/SOM |
+| Major economic change | Economic dimension signal with impact degree ≥ 4 | market-tam-som | Economic indicator change summary, recommend re-evaluating market size and growth rate |
+| Major technological change | Technological dimension signal with impact degree ≥ 4 | market-competitor-analysis | Technology breakthrough summary, impact assessment, recommend updating technology dimension in competitor Feature Matrix |
+| Major social change | Social dimension signal with impact degree ≥ 4 | market-tam-som | Social trend change summary, recommend re-evaluating target user size and penetration rate |

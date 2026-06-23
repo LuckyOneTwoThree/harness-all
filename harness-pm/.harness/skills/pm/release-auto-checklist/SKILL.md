@@ -1,21 +1,21 @@
 ---
 name: release-auto-checklist
-description: 当需要生成发布检查清单时使用。上线Checklist自动生成与追踪，自动生成T-7/T-1/发布中/T+24h/T+72h的发布Checklist，逐项自动检查和人工确认，支持未完成项告警和状态追踪。🤖 AI自动执行。关键词：发布Checklist、上线检查、发布流程、发布追踪、上线准备、发布清单、上线清单、发版检查。
+description: Used when generating a release checklist. Launch Checklist auto-generation and tracking, automatically generates T-7/T-1/during release/T+24h/T+72h release Checklists, performs item-by-item auto-checks and manual confirmation, supports incomplete item alerts and status tracking. 🤖 AI auto-executes. Keywords: release Checklist, launch check, release process, release tracking, launch preparation, release list, launch list, release verification.
 metadata:
-  module: "产品监控与迭代"
-  sub-module: "发布上线"
+  module: "Product Monitoring & Iteration"
+  sub-module: "Release Launch"
   type: "pipeline"
   version: "2.0"
-  domain_tags: ["互联网", "通用"]
+  domain_tags: ["Internet", "General"]
   trigger_examples:
-    - "上线前帮我列个检查清单"
-    - "生成发版Checklist"
-    - "整理一下上线要检查什么"
+    - "Help me list a checklist before launch"
+    - "Generate a release Checklist"
+    - "Organize what to check for launch"
   interaction_mode: "ai_auto"
 execution_depth:
   default: standard
-  quick_description: "生成发布Checklist模板和各阶段检查项，输出待确认清单"
-  deep_description: "完整Checklist + 逐项自动检查 + 未完成项告警 + 状态追踪 + 发布后验证 + 回归检查"
+  quick_description: "Generate release Checklist template and check items for each phase, output pending confirmation list"
+  deep_description: "Full Checklist + item-by-item auto-check + incomplete item alerts + status tracking + post-release validation + regression check"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -25,44 +25,44 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 上线Checklist自动生成与追踪
+# Launch Checklist Auto-Generation & Tracking
 
-## 核心原则
+## Core Principles
 
-1. **触发器驱动**：由发布计划创建事件自动触发，定时检查自动执行
-2. **自动化验收**：检查项自动执行，未完成项自动告警，状态自动追踪
-3. **持续部署**：Checklist与发布流程联动，P0项未完成自动阻断发布
-4. **实时复盘**：Checklist完成状态实时汇总，风险项即时暴露
+1. **Trigger-driven**: Auto-triggered by release plan creation events, scheduled checks auto-execute
+2. **Automated acceptance**: Check items auto-execute, incomplete items auto-alert, status auto-tracked
+3. **Continuous deployment**: Checklist linked with release process, P0 items not completed auto-block release
+4. **Real-time retrospective**: Checklist completion status aggregated in real-time, risk items exposed immediately
 
-## 交互模式
+## Interaction Mode
 
-🤖 **AI自动执行**
+🤖 **AI auto-executes**
 
-触发条件：
-- 发布计划创建（T-7开始）
-- 定时检查（每小时）
-- 手动触发（发布负责人请求）
+Trigger conditions:
+- Release plan created (starts at T-7)
+- Scheduled check (hourly)
+- Manual trigger (release lead request)
 
-## 发布阶段定义
+## Release Phase Definitions
 
-| 阶段 | 时间点 | 目的 |
+| Phase | Time Point | Purpose |
 |------|--------|------|
-| T-7 | 发布前7天 | 准备检查清单，识别风险 |
-| T-1 | 发布前1天 | 最终确认，准备就绪 |
-| T-0 | 发布中 | 执行发布，实时监控 |
-| T+24h | 发布后24小时 | 稳定性确认 |
-| T+72h | 发布后72小时 | 效果评估 |
+| T-7 | 7 days before release | Prepare checklist, identify risks |
+| T-1 | 1 day before release | Final confirmation, ready to go |
+| T-0 | During release | Execute release, real-time monitoring |
+| T+24h | 24 hours after release | Stability confirmation |
+| T+72h | 72 hours after release | Effectiveness evaluation |
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 发布内容 | JSON | 是 | 发布管理系统 | 发布版本和变更内容 |
-| Checklist模板 | JSON | 是 | 发布策略库 | 各阶段的检查模板 |
-| 发布计划 | JSON | 是 | 项目管理 | 发布时间和负责人 |
-| 发布历史 | JSON | 是 | 发布历史库 | 用于生成个性化检查项 |
+| Release content | JSON | Yes | Release management system | Release version and change content |
+| Checklist template | JSON | Yes | Release strategy library | Check templates for each phase |
+| Release plan | JSON | Yes | Project management | Release time and owners |
+| Release history | JSON | Yes | Release history library | Used to generate personalized check items |
 
-### 发布内容结构示例
+### Release Content Structure Example
 
 ```json
 {
@@ -78,20 +78,20 @@ writes:
 }
 ```
 
-### Checklist模板结构
+### Checklist Template Structure
 
 ```json
 {
   "templates": {
     "T-7": {
       "template_id": "checklist_T-7",
-      "title": "发布前7天 - 准备检查",
+      "title": "7 days before release - Preparation check",
       "items": [
         {
           "item_id": "C001",
           "category": "documentation",
-          "title": "更新变更日志",
-          "description": "确保变更日志包含本次发布的所有变更",
+          "title": "Update change log",
+          "description": "Ensure change log includes all changes for this release",
           "type": "manual",
           "owner_role": "developer",
           "priority": "P0"
@@ -106,48 +106,48 @@ writes:
 }
 ```
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: Checklist模板生成 [核心]
+### Step 1: Checklist Template Generation [Core]
 
-#### 1.1 模板加载
+#### 1.1 Template Loading
 
-**模板来源**：
+**Template Sources**:
 
-| 来源 | 说明 |
+| Source | Description |
 |------|------|
-| 标准模板 | 发布策略库中的通用模板 |
-| 项目模板 | 针对特定项目定制的模板 |
-| 发布类型模板 | feature_release/hotfix/config_change |
-| 历史模板 | 基于历史发布自动生成 |
+| Standard template | Generic template from release strategy library |
+| Project template | Customized template for specific projects |
+| Release type template | feature_release/hotfix/config_change |
+| Historical template | Auto-generated based on historical releases |
 
-#### 1.2 个性化调整
+#### 1.2 Personalization Adjustment
 
-**调整规则**：
+**Adjustment Rules**:
 
-| 调整维度 | 调整依据 |
+| Adjustment Dimension | Adjustment Basis |
 |----------|----------|
-| 服务范围 | affected_services决定需要检查的服务 |
-| 变更类型 | change_type决定特殊的检查项 |
-| 发布历史 | 历史上问题决定需要额外关注项 |
-| 团队配置 | 负责人决定通知链 |
+| Service scope | affected_services determines which services need checking |
+| Change type | change_type determines special check items |
+| Release history | Historical issues determine items needing extra attention |
+| Team configuration | Owners determine notification chain |
 
-**个性化输出**：
+**Personalized Output**:
 
 ```json
 {
   "personalized_checklist": {
     "generated_from": "standard_template_v2",
     "customizations": [
-      {"item_id": "C015", "added": true, "reason": "涉及auth-service需要额外安全检查"},
-      {"item_id": "C020", "removed": true, "reason": "本次发布不涉及数据库变更"}
+      {"item_id": "C015", "added": true, "reason": "Involves auth-service requiring extra security check"},
+      {"item_id": "C020", "removed": true, "reason": "This release does not involve database changes"}
     ],
     "release_specific_items": [
       {
         "item_id": "C_RS_001",
-        "title": "微信登录功能专项检查",
+        "title": "WeChat login feature specific check",
         "category": "feature_specific",
-        "description": "检查微信登录的端到端流程",
+        "description": "Check the end-to-end flow of WeChat login",
         "priority": "P0"
       }
     ]
@@ -155,11 +155,11 @@ writes:
 }
 ```
 
-### Step 2: 各阶段Checklist生成 [核心]
+### Step 2: Phase-Specific Checklist Generation [Core]
 
 #### 2.1 T-7 Checklist
 
-**生成规则**：
+**Generation Rules**:
 
 ```json
 {
@@ -170,8 +170,8 @@ writes:
       {
         "item_id": "T7_C001",
         "category": "documentation",
-        "title": "发布变更日志已完成",
-        "description": "在CHANGELOG中记录所有功能变更、Bug修复和breaking changes",
+        "title": "Release change log completed",
+        "description": "Record all feature changes, Bug fixes, and breaking changes in CHANGELOG",
         "type": "manual",
         "owner": "dev_wang",
         "priority": "P0",
@@ -182,8 +182,8 @@ writes:
       {
         "item_id": "T7_C002",
         "category": "code_quality",
-        "title": "代码已通过静态分析",
-        "description": "运行SonarQube扫描，确保无Blocker/Critical问题",
+        "title": "Code passed static analysis",
+        "description": "Run SonarQube scan, ensure no Blocker/Critical issues",
         "type": "auto",
         "owner": "ci_system",
         "priority": "P0",
@@ -196,8 +196,8 @@ writes:
       {
         "item_id": "T7_C003",
         "category": "test",
-        "title": "所有自动化测试通过",
-        "description": "CI流水线所有测试用例已通过",
+        "title": "All automated tests passed",
+        "description": "All test cases in CI pipeline have passed",
         "type": "auto",
         "owner": "ci_system",
         "priority": "P0",
@@ -214,7 +214,7 @@ writes:
 
 #### 2.2 T-1 Checklist
 
-**生成规则**：
+**Generation Rules**:
 
 ```json
 {
@@ -224,8 +224,8 @@ writes:
       {
         "item_id": "T1_C001",
         "category": "release_ready",
-        "title": "回滚版本已部署并验证",
-        "description": "确认回滚版本(v2.0.9)在生产环境正常运行",
+        "title": "Rollback version deployed and verified",
+        "description": "Confirm rollback version (v2.0.9) running normally in production",
         "type": "manual",
         "owner": "ops_wu",
         "priority": "P0",
@@ -239,8 +239,8 @@ writes:
       {
         "item_id": "T1_C002",
         "category": "communication",
-        "title": "发布通知已发送",
-        "description": "向所有相关团队发送发布通知，包含发布时间和影响",
+        "title": "Release notification sent",
+        "description": "Send release notification to all relevant teams, including release time and impact",
         "type": "manual",
         "owner": "dev_zhang",
         "priority": "P1",
@@ -251,8 +251,8 @@ writes:
       {
         "item_id": "T1_C003",
         "category": "monitoring",
-        "title": "监控仪表盘已就绪",
-        "description": "确认发布相关服务的监控仪表盘正常显示",
+        "title": "Monitoring dashboard ready",
+        "description": "Confirm monitoring dashboards for release-related services display normally",
         "type": "manual",
         "owner": "ops_wu",
         "priority": "P1",
@@ -267,9 +267,9 @@ writes:
 }
 ```
 
-#### 2.3 T-0 Checklist（发布中）
+#### 2.3 T-0 Checklist (During Release)
 
-**生成规则**：
+**Generation Rules**:
 
 ```json
 {
@@ -279,8 +279,8 @@ writes:
       {
         "item_id": "T0_C001",
         "category": "pre_release",
-        "title": "发布窗口正常",
-        "description": "当前时间在工作日10:00-16:00发布窗口内",
+        "title": "Release window normal",
+        "description": "Current time is within weekday 10:00-16:00 release window",
         "type": "auto",
         "owner": "system",
         "priority": "P0",
@@ -293,8 +293,8 @@ writes:
       {
         "item_id": "T0_C002",
         "category": "release_execution",
-        "title": "构建产物验证通过",
-        "description": "验证构建产物的SHA256校验和",
+        "title": "Build artifact verification passed",
+        "description": "Verify SHA256 checksum of build artifacts",
         "type": "auto",
         "owner": "ci_system",
         "priority": "P0",
@@ -307,8 +307,8 @@ writes:
       {
         "item_id": "T0_C003",
         "category": "release_execution",
-        "title": "Feature Flag已配置",
-        "description": "灰度发布Flag已正确配置初始值(1%)",
+        "title": "Feature Flag configured",
+        "description": "Canary release Flag configured with initial value (1%)",
         "type": "auto",
         "owner": "release_system",
         "priority": "P0",
@@ -321,8 +321,8 @@ writes:
       {
         "item_id": "T0_C004",
         "category": "post_release",
-        "title": "服务健康检查通过",
-        "description": "所有受影响的服务健康检查通过",
+        "title": "Service health check passed",
+        "description": "All affected services passed health check",
         "type": "auto",
         "owner": "monitoring_system",
         "priority": "P0",
@@ -339,7 +339,7 @@ writes:
 
 #### 2.4 T+24h Checklist
 
-**生成规则**：
+**Generation Rules**:
 
 ```json
 {
@@ -349,8 +349,8 @@ writes:
       {
         "item_id": "T24_C001",
         "category": "stability",
-        "title": "核心指标无异常",
-        "description": "错误率、响应时间、可用性等P0指标无异常",
+        "title": "Core metrics normal",
+        "description": "Error rate, response time, availability and other P0 metrics normal",
         "type": "auto",
         "owner": "monitoring_system",
         "priority": "P0",
@@ -364,8 +364,8 @@ writes:
       {
         "item_id": "T24_C002",
         "category": "stability",
-        "title": "无P0/P1级别告警",
-        "description": "过去24小时内无P0/P1级别告警",
+        "title": "No P0/P1 level alerts",
+        "description": "No P0/P1 level alerts in the past 24 hours",
         "type": "auto",
         "owner": "monitoring_system",
         "priority": "P0",
@@ -378,8 +378,8 @@ writes:
       {
         "item_id": "T24_C003",
         "category": "user_feedback",
-        "title": "用户反馈正常",
-        "description": "客服工单和用户反馈无异常增多",
+        "title": "User feedback normal",
+        "description": "Customer support tickets and user feedback not abnormally increased",
         "type": "manual",
         "owner": "product_manager_zhang",
         "priority": "P1",
@@ -394,7 +394,7 @@ writes:
 
 #### 2.5 T+72h Checklist
 
-**生成规则**：
+**Generation Rules**:
 
 ```json
 {
@@ -404,8 +404,8 @@ writes:
       {
         "item_id": "T72_C001",
         "category": "effectiveness",
-        "title": "业务指标达成",
-        "description": "核心业务指标(转化率、DAU等)达到预期",
+        "title": "Business metrics achieved",
+        "description": "Core business metrics (conversion rate, DAU, etc.) meet expectations",
         "type": "manual",
         "owner": "product_manager_zhang",
         "priority": "P0",
@@ -416,8 +416,8 @@ writes:
       {
         "item_id": "T72_C002",
         "category": "technical",
-        "title": "无技术债务增加",
-        "description": "代码质量指标无恶化",
+        "title": "No technical debt increase",
+        "description": "Code quality metrics not degraded",
         "type": "auto",
         "owner": "ci_system",
         "priority": "P1",
@@ -432,11 +432,11 @@ writes:
 }
 ```
 
-### Step 3: 逐项自动检查 [条件]
+### Step 3: Item-by-Item Auto-Check [Conditional]
 
-#### 3.1 检查执行
+#### 3.1 Check Execution
 
-**执行配置**：
+**Execution Configuration**:
 
 ```json
 {
@@ -453,7 +453,7 @@ writes:
 }
 ```
 
-**检查结果输出**：
+**Check Result Output**:
 
 ```json
 {
@@ -485,29 +485,29 @@ writes:
 }
 ```
 
-### Step 4: 未完成项告警 [条件]
+### Step 4: Incomplete Item Alerts [Conditional]
 
-#### 4.1 告警规则
+#### 4.1 Alert Rules
 
-**告警级别**：
+**Alert Levels**:
 
-| 级别 | 条件 | 通知方式 |
+| Level | Condition | Notification Method |
 |------|------|----------|
-| 阻断 | P0项未完成且临近发布时间 | 立即通知+阻断发布 |
-| 高 | P0项未完成 | 通知负责人 |
-| 中 | P1项未完成 | 通知负责人 |
-| 低 | P2项未完成 | 汇总通知 |
+| Blocking | P0 item incomplete and approaching release time | Immediate notification + block release |
+| High | P0 item incomplete | Notify owner |
+| Medium | P1 item incomplete | Notify owner |
+| Low | P2 item incomplete | Summary notification |
 
-**告警触发时间**：
+**Alert Trigger Times**:
 
-| 检查项类型 | 告警触发时间 |
+| Check Item Type | Alert Trigger Time |
 |------------|--------------|
-| T-7检查项 | T-3未完成告警 |
-| T-1检查项 | T-1 12:00未完成告警 |
-| T-0检查项 | 发布前2小时未完成告警 |
-| T+24h检查项 | T+24h未完成继续跟踪 |
+| T-7 check items | Alert if incomplete at T-3 |
+| T-1 check items | Alert if incomplete at T-1 12:00 |
+| T-0 check items | Alert if incomplete 2 hours before release |
+| T+24h check items | Continue tracking if incomplete at T+24h |
 
-#### 4.2 告警输出
+#### 4.2 Alert Output
 
 ```json
 {
@@ -516,21 +516,21 @@ writes:
       "alert_id": "alert_001",
       "severity": "high",
       "item_id": "T-1_C002",
-      "title": "发布通知未发送",
+      "title": "Release notification not sent",
       "owner": "dev_zhang",
       "deadline": "2024-01-24T12:00:00Z",
-      "time_remaining": "3小时",
+      "time_remaining": "3 hours",
       "notification_channels": ["slack", "email"]
     }
   ]
 }
 ```
 
-### Step 5: 状态追踪 [深度]
+### Step 5: Status Tracking [Deep]
 
-#### 5.1 状态聚合
+#### 5.1 Status Aggregation
 
-**状态报告**：
+**Status Report**:
 
 ```json
 {
@@ -558,9 +558,9 @@ writes:
 }
 ```
 
-#### 5.2 进度可视化
+#### 5.2 Progress Visualization
 
-**可视化数据**：
+**Visualization Data**:
 
 ```json
 {
@@ -573,97 +573,97 @@ writes:
       {"phase": "T+72h", "completion_rate": 0.0, "status": "pending"}
     ],
     "risk_indicators": [
-      {"indicator": "P0阻塞项", "count": 1, "severity": "high"}
+      {"indicator": "P0 blocking items", "count": 1, "severity": "high"}
     ]
   }
 }
 ```
 
-## 输出
+## Output
 
-**存储路径**：`docs/monitoring/release-notes.md（“发布检查清单”章节）`
+**Storage path**: `docs/monitoring/release-notes.md ("Release Checklist" section)`
 
-**输出文件**：`release_checklist.json`
+**Output file**: `release_checklist.json`
 
-## 输出 Schema
+## Output Schema
 
-完整 Schema 和校验规则见 [Reference/schema.md](./Reference/schema.md)
+For complete Schema and validation rules, see [Reference/schema.md](./Reference/schema.md)
 
-## 上游变更响应
+## Upstream Change Response
 
-当上游输入发生变更时，本Skill的响应策略：
+When upstream inputs change, this Skill's response strategy:
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| 验收报告变更 | 检查项状态 | 更新验收相关检查项状态，重新评估门禁结果 |
-| 测试报告变更 | 测试类检查项 | 更新测试相关检查项状态，标记需人类确认 |
-| 安全评估变更 | 安全类检查项 | 更新安全相关检查项状态，重新评估阻断项 |
-| 灰度策略变更 | 基础设施类检查项 | 更新基础设施检查项，标记需人类确认 |
+| Acceptance report change | Check item status | Update acceptance-related check item status, re-evaluate gate result |
+| Test report change | Test check items | Update test-related check item status, mark for human confirmation |
+| Security assessment change | Security check items | Update security-related check item status, re-evaluate blocking items |
+| Canary strategy change | Infrastructure check items | Update infrastructure check items, mark for human confirmation |
 
-当检查清单自身变更时，对下游的通知机制：
+When the checklist itself changes, the notification mechanism for downstream:
 
-| 清单变更类型 | 通知范围 | 通知方式 |
+| Checklist Change Type | Notification Scope | Notification Method |
 |-------------|----------|----------|
-| 门禁结果变更 | release-gradual | 标记门禁变更，触发灰度发布决策 |
-| 阻断项新增 | change-impact-analysis | 标记阻断项，触发影响评估 |
-| 检查项状态变更 | release-notes | 标记状态变更，触发发布说明更新 |
+| Gate result change | release-gradual | Mark gate change, trigger canary release decision |
+| New blocking item | change-impact-analysis | Mark blocking item, trigger impact assessment |
+| Check item status change | release-notes | Mark status change, trigger release notes update |
 
 ---
 
-## 决策规则
+## Decision Rules
 
-### 发布阻断规则
+### Release Blocking Rules
 
-| 条件 | 决策 |
+| Condition | Decision |
 |------|------|
-| T-0时存在P0阻塞项 | **立即阻断发布** |
-| T-0时存在P0未完成项 | **延迟发布** |
-| T+24h时P0指标未达标 | **触发复盘** |
+| P0 blocking items exist at T-0 | **Immediately block release** |
+| P0 incomplete items exist at T-0 | **Delay release** |
+| P0 metrics not met at T+24h | **Trigger retrospective** |
 
-### 通过条件
+### Pass Conditions
 
-| 条件 | 要求 |
+| Condition | Requirement |
 |------|------|
-| P0项完成率 | 100% |
-| P1项完成率 | ≥ 80% |
-| 发布前告警已处理 | 100% |
+| P0 item completion rate | 100% |
+| P1 item completion rate | ≥ 80% |
+| Pre-release alerts handled | 100% |
 
-## 质量检查
+## Quality Checks
 
 ### Quality Gates
 
-| 检查项 | 标准 | 未达标处理 |
+| Check Item | Standard | Handling on Failure |
 |--------|------|------------|
-| P0项完成率（P0） | 100% | 阻断发布 |
-| 告警处理率（P0） | 100% | 延迟发布 |
-| 人工确认完整性（P1） | 所有manual项已确认 | 告警 |
+| P0 item completion rate (P0) | 100% | Block release |
+| Alert handling rate (P0) | 100% | Delay release |
+| Manual confirmation completeness (P1) | All manual items confirmed | Alert |
 
-### 质量检查清单
+### Quality Checklist
 
-- [ ] 所有P0检查项已完成（P0）
-- [ ] 所有告警已处理（P0）
-- [ ] 负责人已确认（P1）
-- [ ] 文档已更新（P2）
-- [ ] 沟通已通知（P2）
+- [ ] All P0 check items completed (P0)
+- [ ] All alerts handled (P0)
+- [ ] Owners confirmed (P1)
+- [ ] Documentation updated (P2)
+- [ ] Communication notified (P2)
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失范围 | 降级方案 | 输出影响 |
+| Missing Scope | Degradation Plan | Output Impact |
 |----------|----------|----------|
-| 发布内容缺失 | 用户提供发布范围 → 生成标准Checklist | Checklist无个性化调整，使用通用模板 |
-| 监控配置缺失 | 跳过监控相关自动检查项，标记为"需人工确认" | T+24h/T+72h监控检查项需人工执行 |
-| 发布内容 + 监控配置均缺失 | 用户提供发布范围 → 生成标准Checklist | 输出标准Checklist模板，自动检查项标注"待配置" |
+| Release content missing | User provides release scope → generate standard Checklist | Checklist without personalization, uses generic template |
+| Monitoring configuration missing | Skip monitoring-related auto-check items, mark as "manual confirmation required" | T+24h/T+72h monitoring check items require manual execution |
+| Release content + monitoring configuration both missing | User provides release scope → generate standard Checklist | Output standard Checklist template, auto-check items marked "to be configured" |
 
-### 数据获取说明
+### Data Acquisition Instructions
 
-当上游文件缺失时，需用户提供以下信息以支撑降级生成：
-- **发布范围**：本次发布涉及的服务、模块和变更类型
-- **发布时间**（可选）：计划发布的时间窗口
-- **负责人信息**（可选）：各角色的负责人名单
+When upstream files are missing, the user needs to provide the following information to support degraded generation:
+- **Release scope**: Services, modules, and change types involved in this release
+- **Release time** (optional): Planned release time window
+- **Owner information** (optional): List of owners for each role
 
-## 执行日志
+## Execution Log
 
 ```json
 {

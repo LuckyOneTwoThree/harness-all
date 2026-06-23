@@ -1,35 +1,35 @@
-# 基础设施与运维战略（Ops Strategy）
+# Infrastructure and Ops Strategy (Ops Strategy)
 
-> 在立项初期填写。定义基础设施架构拓扑、选型标准、CI/CD 规范与监控报警红线。
-> 所有 SRE 的部署行为（IaC, Pipeline）都必须对齐本文件的规划。
+> Fill in at project initiation. Defines the infrastructure architecture topology, selection criteria, CI/CD standards, and monitoring/alerting red lines.
+> All SRE deployment actions (IaC, Pipeline) must align with the plan in this file.
 
-## 1. 架构拓扑与选型（Architecture & Tech Stack）
+## 1. Architecture topology and tech stack (Architecture & Tech Stack)
 
-- **核心云厂商/环境**：`[例如：AWS / Aliyun / 自建 K8s 裸机集群]`
-- **计算资源编排**：`[例如：EKS / ECS / Docker Swarm / Serverless]`
-- **数据与缓存层**：`[例如：RDS MySQL 8.0, Redis Cluster, Elasticsearch]`
-- **IaC 工具栈**：`[例如：Terraform（核心基础设施）, Helm（应用部署）]`
+- **Core cloud provider / environment**: `[e.g., AWS / Aliyun / self-hosted bare-metal K8s cluster]`
+- **Compute orchestration**: `[e.g., EKS / ECS / Docker Swarm / Serverless]`
+- **Data and cache layer**: `[e.g., RDS MySQL 8.0, Redis Cluster, Elasticsearch]`
+- **IaC toolchain**: `[e.g., Terraform (core infrastructure), Helm (application deployment)]`
 
-## 2. 部署与交付规范（Deployment Strategy）
+## 2. Deployment and delivery standards (Deployment Strategy)
 
-- **环境划分**：`[例如：分为 dev, staging, production 三个环境]`
-- **发布策略**：`[例如：生产环境严格遵循 蓝绿发布 / 20% 灰度发布 / 滚动发布]`
-- **上线窗口期**：`[例如：禁止在周五晚和法定节假日前发版生产环境]`
-- **回滚标准**：`[例如：核心接口 5xx 错误率飙升超过 1% 持续 1 分钟，立刻回滚]`
+- **Environment separation**: `[e.g., split into dev, staging, production]`
+- **Release strategy**: `[e.g., production strictly follows blue-green / 20% canary / rolling deployment]`
+- **Change window**: `[e.g., no production releases on Friday nights or the day before public holidays]`
+- **Rollback criteria**: `[e.g., if the 5xx error rate of core APIs spikes above 1% for 1 minute, roll back immediately]`
 
-## 3. 监控与告警矩阵（Monitoring & Alerts）
+## 3. Monitoring and alerting matrix (Monitoring & Alerts)
 
-定义系统中必须无死角覆盖的核心指标。
+Define the core metrics that must be covered end-to-end across the system.
 
-| 监控维度 | 工具栈 | 报警阈值（P0/P1） | 响应人/群组 |
+| Monitoring dimension | Toolchain | Alert threshold (P0/P1) | Responder / group |
 |---------|--------|----------------|------------|
-| 业务网关 | APISIX / Nginx | 5xx 错误率 > 1% / 延迟 P99 > 500ms | 研发值班组 + SRE |
-| 数据库层 | RDS Dashboards | 慢 SQL 数量突增 / CPU > 80% / 磁盘 > 85% | DBA / SRE |
-| 主机/Pod | Prometheus + Grafana | 节点 CPU > 90% / 内存 OOM 报警 | SRE |
-| 业务日志 | ELK / Loki | 匹配关键字 `Exception`, `FATAL` 超过阈值 | 研发值班组 |
+| Business gateway | APISIX / Nginx | 5xx error rate > 1% / P99 latency > 500ms | Dev on-call + SRE |
+| Database layer | RDS Dashboards | Spike in slow SQL count / CPU > 80% / disk > 85% | DBA / SRE |
+| Host / Pod | Prometheus + Grafana | Node CPU > 90% / memory OOM alert | SRE |
+| Business logs | ELK / Loki | Keyword matches for `Exception`, `FATAL` exceed threshold | Dev on-call |
 
-## 4. 容灾与应急预案（Disaster Recovery）
+## 4. Disaster recovery and contingency plans (Disaster Recovery)
 
-- **数据备份策略**：`[例如：RDS 每日全量冷备，增量 Binlog 实时归档。S3 数据开启多可用区跨区复制。]`
-- **可用区容灾策略**：`[例如：核心服务必须在至少 2 个 AZ（Availability Zone）部署，当 AZ 宕机时能自动切流。]`
-- **降级预案**：`[例如：当全网大促流量洪峰到来时，支持一键降级非核心的"评论系统"和"推荐流"。]`
+- **Data backup strategy**: `[e.g., RDS daily full cold backup, incremental Binlog real-time archive. S3 data enables cross-AZ replication.]`
+- **AZ disaster recovery strategy**: `[e.g., core services must be deployed in at least 2 AZs (Availability Zones), with automatic traffic failover when an AZ goes down.]`
+- **Degradation plan**: `[e.g., during network-wide traffic peaks for big promotions, support one-click degradation of non-critical "comment system" and "recommendation feed".]`

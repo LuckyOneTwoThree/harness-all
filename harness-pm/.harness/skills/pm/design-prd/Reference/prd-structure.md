@@ -1,214 +1,214 @@
-# PRD-S 完整9节结构参考
+# PRD-S Complete 9-Section Structure Reference
 
-> 本文档从 design-prd SKILL.md 拆分而来，包含PRD-S（Standard）的标准结构定义。PRD-L和PRD-X在此基础上按比例调整。
+> This document is split from design-prd SKILL.md, containing the standard structure definition of PRD-S (Standard). PRD-L and PRD-X are adjusted proportionally on this basis.
 
-以下为PRD-S（Standard）的标准结构，PRD-L和PRD-X在此基础上按比例调整。
+The following is the standard structure for PRD-S (Standard); PRD-L and PRD-X are adjusted proportionally on this basis.
 
-### PRD-L（Light）调整规则
+### PRD-L (Light) Adjustment Rules
 
-- **保留**：Section 1（元信息）、Section 2.1-2.2（问题描述+目标定义）、Section 3.2.1-3.2.2（功能列表+用户故事，仅Must/Should）、Section 7.1（功能验收，仅Happy Path）
-- **合并**：Section 4+5 合并为"约束与要求"一段、Section 8+9 合并为"发布与附录"一段
-- **删除**：Section 3.2.5-3.2.6（数据模型/接口定义）、Section 6（数据埋点）、Section 7.2-7.3（性能/安全验收）
-- **目标规模**：200-500字，3-5个核心用户故事
+- **Keep**: Section 1 (Meta information), Section 2.1-2.2 (Problem description + Objective definition), Section 3.2.1-3.2.2 (Feature list + User stories, only Must/Should), Section 7.1 (Functional acceptance, only Happy Path)
+- **Merge**: Section 4+5 merged into one "Constraints & Requirements" section, Section 8+9 merged into one "Release & Appendix" section
+- **Delete**: Section 3.2.5-3.2.6 (Data model/Interface definition), Section 6 (Tracking plan), Section 7.2-7.3 (Performance/Security acceptance)
+- **Target size**: 200-500 words, 3-5 core user stories
 
-### PRD-X（eXtensive）调整规则
+### PRD-X (eXtensive) Adjustment Rules
 
-- **保留**：PRD-S全部9节
-- **增强**：Section 3.2.2 每个功能点增加异常流程用户故事、Section 3.2.5 数据模型增加ER图、Section 3.2.6 接口定义增加错误码表、Section 5 增加灾备方案、Section 8.1 增加AB测试方案
-- **新增**：Section 3.3 技术方案评估（多方案对比矩阵）、Section 5.5 合规要求（GDPR/CCPA等）、Section 8.4 国际化计划
-- **目标规模**：3000-8000字，10+用户故事含完整异常流程
+- **Keep**: All 9 sections of PRD-S
+- **Enhance**: Section 3.2.2 add exception flow user stories for each feature point, Section 3.2.5 data model add ER diagram, Section 3.2.6 interface definition add error code table, Section 5 add disaster recovery plan, Section 8.1 add AB test plan
+- **Add**: Section 3.3 Technical solution assessment (multi-solution comparison matrix), Section 5.5 Compliance requirements (GDPR/CCPA, etc.), Section 8.4 Internationalization plan
+- **Target size**: 3000-8000 words, 10+ user stories with complete exception flows
 
-### Section 1：元信息（Meta）
+### Section 1: Meta Information (Meta)
 
-自动生成以下字段：
+Auto-generate the following fields:
 
-| 字段 | 说明 | 生成方式 |
+| Field | Description | Generation Method |
 |------|------|----------|
-| 标题 | 需求名称 | 从上游提取或AI生成 |
-| 文档ID | 全局唯一标识 | PRDS-{年月}-{序号} |
-| 版本 | 当前版本号 | 自动遵循生命周期 |
-| 作者 | 文档创建者 | 从上下文提取 |
-| 状态 | 草稿/评审中/已定稿/已上线 | 状态机转换 |
-| 创建时间 | ISO 8601格式 | 系统时间 |
-| 关联文档 | 上游输出引用列表 | 自动关联 |
+| Title | Requirement name | Extract from upstream or AI-generated |
+| Document ID | Globally unique identifier | PRDS-{YYYYMM}-{sequence} |
+| Version | Current version number | Automatically follows lifecycle |
+| Author | Document creator | Extract from context |
+| Status | Draft/In Review/Finalized/Released | State machine transition |
+| Created At | ISO 8601 format | System time |
+| Related Documents | Upstream output reference list | Auto-associated |
 
-### Section 2：背景与目标（Why）
+### Section 2: Background & Objectives (Why)
 
-#### 2.1 为什么做（Problem Statement）
+#### 2.1 Why (Problem Statement)
 
-- **问题描述**：清晰定义待解决的业务问题或用户痛点
-- **数据支撑**：引用上游探索阶段的洞察数据
-- **问题来源**：用户反馈/数据分析/竞品分析/战略规划
-- **影响范围**：受影响的用户数量、业务金额、转化率损失
+- **Problem description**: Clearly define the business problem or user pain point to be solved
+- **Data support**: Reference insight data from upstream discovery phase
+- **Problem source**: User feedback/Data analysis/Competitor analysis/Strategic planning
+- **Impact scope**: Number of affected users, business amount, conversion rate loss
 
-数据引用格式：
+Data reference format:
 ```
-[数据来源：{上游输出ID}]
-- 指标名称：{具体数值}
-- 数据周期：{时间范围}
-- 置信度：{高/中/低}
+[Data source: {upstream output ID}]
+- Metric name: {specific value}
+- Data period: {time range}
+- Confidence: {high/medium/low}
 ```
 
-#### 2.2 目标与成功定义
+#### 2.2 Objectives and Success Definition
 
-**主指标（Primary Metric）**
-- 指标名称：
-- 当前基线：
-- 目标提升：
-- 统计周期：
+**Primary Metric**
+- Metric name:
+- Current baseline:
+- Target lift:
+- Statistical period:
 
-**护栏指标（Guardrail Metrics）**
-| 指标 | 基线 | 下限 | 监测频率 |
+**Guardrail Metrics**
+| Metric | Baseline | Lower Limit | Monitoring Frequency |
 |------|------|------|----------|
 | | | | |
 
-**辅助指标（Supporting Metrics）**
-| 指标 | 与主指标关联 | 数据来源 |
+**Supporting Metrics**
+| Metric | Relationship to Primary Metric | Data Source |
 |------|--------------|----------|
 | | | |
 
-**OKR对齐**（与prd.json goals[]结构对齐）
+**OKR Alignment** (aligned with prd.json goals[] structure)
 ```
 Goal #{goal_id}:
-  描述：{goal_description}
-  OKR对齐：{okr_alignment}
-  成功指标：
-    - {metric_name}：目标 {target_value}，当前 {current_value}，单位 {unit}
+  Description: {goal_description}
+  OKR alignment: {okr_alignment}
+  Success metrics:
+    - {metric_name}: target {target_value}, current {current_value}, unit {unit}
     - ...
 ```
 
-#### 2.3 目标用户与场景
+#### 2.3 Target Users and Scenarios
 
-**用户画像**
-- 用户类型：
-- 用户规模：
-- 核心需求：
-- 使用场景：
+**User Persona**
+- User type:
+- User scale:
+- Core needs:
+- Use scenarios:
 
-**使用场景矩阵**
-| 场景 | 用户 | 触点 | 频率 |
+**Use Scenario Matrix**
+| Scenario | User | Touchpoint | Frequency |
 |------|------|------|------|
 | | | | |
 
-### Section 3：方案设计（What & How）
+### Section 3: Solution Design (What & How)
 
-#### 3.1 方案概述
+#### 3.1 Solution Overview
 
-- **方案类型**：新功能/功能优化/架构重构/体验提升
-- **核心价值主张**：
-- **方案亮点**：
-- **与现有系统关系**：
+- **Solution type**: New feature/Feature optimization/Architecture refactoring/Experience improvement
+- **Core value proposition**:
+- **Solution highlights**:
+- **Relationship with existing system**:
 
-#### 3.2 功能规格
+#### 3.2 Feature Specifications
 
-##### 3.2.1 功能列表（MoSCoW标注）
+##### 3.2.1 Feature List (MoSCoW annotated)
 
-| 功能点 | 优先级 | 类型 | 依赖关系 |
+| Feature Point | Priority | Type | Dependencies |
 |--------|--------|------|----------|
 | Must | | | |
 | Should | | | |
 | Could | | | |
 | Won't | | | |
 
-**优先级定义**：
-- **Must（必须有）**：MVP核心，不实现则需求失败
-- **Should（应该有）**：重要但不影响MVP完成
-- **Could（可以有）**：增强型需求，资源允许时实现
-- **Won't（本次不做）**：明确排除，记录原因
+**Priority Definitions**:
+- **Must (Must have)**: MVP core, requirement fails if not implemented
+- **Should (Should have)**: Important but does not affect MVP completion
+- **Could (Could have)**: Enhancement requirements, implemented when resources permit
+- **Won't (Won't do this time)**: Explicitly excluded, record the reason
 
-##### 3.2.2 用户故事（Given-When-Then格式）
+##### 3.2.2 User Stories (Given-When-Then format)
 
-**标准格式**：
+**Standard Format**:
 ```
 User Story #{ID}
-标题：{简洁描述}
-角色：{Who}
-功能：{What}
-价值：{Why}
+Title: {concise description}
+Role: {Who}
+Feature: {What}
+Value: {Why}
 
-验收标准：
-  Given {前置条件}
-  When {触发动作}
-  Then {预期结果}
+Acceptance Criteria:
+  Given {precondition}
+  When {trigger action}
+  Then {expected result}
 ```
 
-**流程分类**：
-- **主流程（Happy Path）**：用户达成目标的最佳路径
-- **分支流程**：可选操作路径
-- **异常流程**：错误处理、边界条件
-- **后置条件**：操作完成后的系统状态变化
+**Flow Classification**:
+- **Main flow (Happy Path)**: The optimal path for users to achieve their goals
+- **Branch flow**: Optional operation paths
+- **Exception flow**: Error handling, boundary conditions
+- **Postconditions**: System state changes after operation completion
 
-**示例**：
+**Example**:
 ```
 User Story #PRDS-001
-标题：用户成功完成订单支付
-角色：已完成下单的用户
-功能：支付订单
-价值：完成交易闭环
+Title: User successfully completes order payment
+Role: User who has placed an order
+Feature: Pay for order
+Value: Complete the transaction loop
 
-验收标准：
-  Given 用户已选择商品并提交订单，订单金额为100元，账户余额为200元
-  When 用户选择微信支付并确认支付
-  Then 系统扣除100元，订单状态更新为"已支付"，用户收到支付成功通知
+Acceptance Criteria:
+  Given The user has selected products and submitted an order, the order amount is 100 yuan, and the account balance is 200 yuan
+  When The user selects WeChat Pay and confirms payment
+  Then The system deducts 100 yuan, the order status is updated to "Paid", and the user receives a payment success notification
 ```
 
-##### 3.2.3 交互逻辑
+##### 3.2.3 Interaction Logic
 
-**页面流转图**
+**Page Flow Diagram**
 ```
-[页面A] → [操作1] → [页面B]
+[Page A] → [Action 1] → [Page B]
             ↓
-      [操作2失败] → [错误提示]
+      [Action 2 failed] → [Error prompt]
 ```
 
-**反馈需求**
-| 操作 | 操作中反馈意图 | 操作结果反馈意图 | 超时处理意图 |
+**Feedback Requirements**
+| Action | In-action Feedback Intent | Action Result Feedback Intent | Timeout Handling Intent |
 |------|----------|----------|----------|
 | | | | |
 
-##### 3.2.4 状态设计（5种特殊状态）
+##### 3.2.4 State Design (5 special states)
 
-| 状态类型 | 触发条件 | 设计意图 | 交互处理 |
+| State Type | Trigger Condition | Design Intent | Interaction Handling |
 |----------|----------|----------|----------|
-| **空状态（Empty）** | 无数据时 | 需引导用户进行下一步操作 | 提供初始操作入口 |
-| **加载状态（Loading）** | 数据获取中 | 需让用户感知系统正在处理 | 显示进度，禁止重复操作 |
-| **错误状态（Error）** | 请求失败 | 需明确告知错误原因并提供恢复路径 | 提供重试/联系客服入口 |
-| **部分状态（Partial）** | 数据不完整 | 需区分于完整状态 | 标注缺失内容 |
-| **权限状态（Permission）** | 无权限访问 | 需说明权限限制并提供申请路径 | 提供申请权限入口 |
+| **Empty State** | When no data | Need to guide users to next action | Provide initial operation entry |
+| **Loading State** | While fetching data | Need to let users feel the system is processing | Show progress, disable duplicate operations |
+| **Error State** | Request failed | Need to clearly inform error reason and provide recovery path | Provide retry/contact support entry |
+| **Partial State** | Incomplete data | Need to distinguish from complete state | Annotate missing content |
+| **Permission State** | No access permission | Need to explain permission restrictions and provide application path | Provide permission application entry |
 
-##### 3.2.5 数据模型
+##### 3.2.5 Data Model
 
-**核心实体**
-| 实体名 | 字段 | 类型 | 约束 | 说明 |
+**Core Entities**
+| Entity Name | Field | Type | Constraint | Description |
 |--------|------|------|------|------|
 | | | | | |
 
-**关系图**
+**Relationship Diagram**
 ```
-实体A (1:N) → 实体B
+Entity A (1:N) → Entity B
      ↓
-实体C (N:1) → 实体D
+Entity C (N:1) → Entity D
 ```
 
-##### 3.2.6 接口定义
+##### 3.2.6 Interface Definition
 
-**API接口清单**
-| 接口名称 | 请求方式 | 路径 | 描述 |
+**API Interface List**
+| Interface Name | Request Method | Path | Description |
 |----------|----------|------|------|
 | | | | |
 
-**接口详情模板**
+**Interface Detail Template**
 ```
-接口：{接口名称}
-方法：GET/POST/PUT/DELETE
-路径：/api/v1/{resource}
-描述：
+Interface: {interface name}
+Method: GET/POST/PUT/DELETE
+Path: /api/v1/{resource}
+Description:
 
-请求参数：
-| 参数名 | 类型 | 必填 | 说明 |
+Request Parameters:
+| Parameter Name | Type | Required | Description |
 |--------|------|------|------|
 
-响应示例：
+Response Example:
 {
   "code": 0,
   "message": "success",
@@ -216,74 +216,74 @@ User Story #PRDS-001
 }
 ```
 
-### Section 4：边界与约束
+### Section 4: Boundaries & Constraints
 
-#### 4.1 明确不做（Not Doing）
+#### 4.1 Explicitly Not Doing
 
-| 排除项 | 原定范围 | 排除原因 | 后续计划 |
+| Excluded Item | Original Scope | Exclusion Reason | Follow-up Plan |
 |--------|----------|----------|----------|
 | | | | |
 
-#### 4.2 技术约束
+#### 4.2 Technical Constraints
 
-| 约束类型 | 具体要求 | 影响说明 |
+| Constraint Type | Specific Requirement | Impact Description |
 |----------|----------|----------|
-| **性能约束** | | |
-| **安全约束** | | |
-| **兼容性约束** | | |
-| **技术债务** | | |
+| **Performance constraint** | | |
+| **Security constraint** | | |
+| **Compatibility constraint** | | |
+| **Technical debt** | | |
 
-#### 4.3 已知限制
+#### 4.3 Known Limitations
 
-| 限制项 | 严重程度 | 临时解决方案 | 根治计划 |
+| Limitation Item | Severity | Temporary Workaround | Root Cause Fix Plan |
 |--------|----------|--------------|----------|
 | | | | |
 
-### Section 5：非功能需求（NFR）
+### Section 5: Non-Functional Requirements (NFR)
 
-#### 5.1 性能要求
+#### 5.1 Performance Requirements
 
-| 指标 | 目标值 | 测量方法 | 监控阈值 |
+| Metric | Target Value | Measurement Method | Monitoring Threshold |
 |------|--------|----------|----------|
-| 页面加载时间 | < 2s | | |
-| API响应时间 | < 500ms | | |
-| 并发用户数 | 支持N人同时在线 | | |
-| 错误率 | < 0.1% | | |
+| Page load time | < 2s | | |
+| API response time | < 500ms | | |
+| Concurrent users | Support N users online simultaneously | | |
+| Error rate | < 0.1% | | |
 
-#### 5.2 可用性要求
+#### 5.2 Availability Requirements
 
-| 要求项 | 具体指标 | 测试方法 |
+| Requirement Item | Specific Metric | Test Method |
 |--------|----------|----------|
-| 成功率 | ≥ 99.5% | |
-| 容错能力 | 支持自动重试N次 | |
-| 降级策略 | 核心功能在降级模式下可用 | |
+| Success rate | ≥ 99.5% | |
+| Fault tolerance | Support automatic retry N times | |
+| Degradation strategy | Core features available in degraded mode | |
 
-#### 5.3 安全要求
+#### 5.3 Security Requirements
 
-| 类别 | 要求 | 实现方式 |
+| Category | Requirement | Implementation Method |
 |------|------|----------|
-| 认证 | | |
-| 授权 | | |
-| 数据加密 | | |
-| 审计日志 | | |
+| Authentication | | |
+| Authorization | | |
+| Data encryption | | |
+| Audit log | | |
 
-#### 5.4 可观测性要求
+#### 5.4 Observability Requirements
 
-| 维度 | 指标 | 告警阈值 |
+| Dimension | Metric | Alert Threshold |
 |------|------|----------|
 | **Metrics** | | |
 | **Logs** | | |
 | **Traces** | | |
 
-### Section 6：数据埋点方案
+### Section 6: Tracking Plan
 
-#### 6.1 事件列表
+#### 6.1 Event List
 
-| 事件名 | 触发时机 | 属性 | 归属指标 |
+| Event Name | Trigger Timing | Properties | Associated Metric |
 |--------|----------|------|----------|
 | | | | |
 
-**事件属性标准**
+**Event Property Standard**
 ```json
 {
   "event_name": "xxx",
@@ -296,121 +296,121 @@ User Story #PRDS-001
 }
 ```
 
-#### 6.2 埋点验证方案
+#### 6.2 Tracking Validation Plan
 
-- **验证方法**：QA测试+数据回传验证
-- **验证时机**：功能验收阶段同步完成
-- **数据质量监控**：埋点覆盖率 > 95%，数据延迟 < 5min
+- **Validation method**: QA testing + data callback validation
+- **Validation timing**: Completed synchronously during the feature acceptance phase
+- **Data quality monitoring**: Tracking coverage > 95%, data delay < 5min
 
-### Section 7：验收标准
+### Section 7: Acceptance Criteria
 
-#### 7.1 功能验收（Given-When-Then）
+#### 7.1 Functional Acceptance (Given-When-Then)
 
-**Happy Path覆盖**
+**Happy Path Coverage**
 ```
-Given {正常前置条件}
-When {用户执行核心操作}
-Then {所有预期正常结果}
-```
-
-**边界条件覆盖**
-```
-Given {边界前置条件}
-When {边界值触发}
-Then {符合预期的边界行为}
+Given {normal preconditions}
+When {user performs core operation}
+Then {all expected normal results}
 ```
 
-**异常处理覆盖**
+**Boundary Condition Coverage**
 ```
-Given {异常前置条件}
-When {异常触发}
-Then {优雅的错误处理}
-```
-
-**兼容性覆盖**
-```
-Given {特定环境/版本前提}
-When {操作执行}
-Then {在约束范围内正常运行}
+Given {boundary preconditions}
+When {boundary value triggered}
+Then {expected boundary behavior}
 ```
 
-#### 7.2 性能验收
+**Exception Handling Coverage**
+```
+Given {exception preconditions}
+When {exception triggered}
+Then {graceful error handling}
+```
 
-| 测试场景 | 预期指标 | 通过标准 |
+**Compatibility Coverage**
+```
+Given {specific environment/version preconditions}
+When {operation executed}
+Then {runs normally within constraints}
+```
+
+#### 7.2 Performance Acceptance
+
+| Test Scenario | Expected Metric | Pass Standard |
 |----------|----------|----------|
-| 压力测试 | | |
-| 容量测试 | | |
-| 稳定性测试 | | |
+| Stress test | | |
+| Capacity test | | |
+| Stability test | | |
 
-#### 7.3 安全验收
+#### 7.3 Security Acceptance
 
-| 安全测试项 | 测试方法 | 通过标准 |
+| Security Test Item | Test Method | Pass Standard |
 |------------|----------|----------|
-| 身份认证测试 | | |
-| 权限控制测试 | | |
-| 数据加密测试 | | |
+| Identity authentication test | | |
+| Permission control test | | |
+| Data encryption test | | |
 
-### Section 8：发布与运营
+### Section 8: Release & Operations
 
-#### 8.1 发布策略
+#### 8.1 Release Strategy
 
-**灰度计划**
-| 阶段 | 范围 | 时间 | 观察指标 |
+**Gradual Rollout Plan**
+| Stage | Scope | Time | Observation Metrics |
 |------|------|------|----------|
-| 内测 | 内部用户 | | |
-| 小流量 | 5%用户 | | |
-| 全量 | 100%用户 | | |
+| Internal test | Internal users | | |
+| Small traffic | 5% users | | |
+| Full rollout | 100% users | | |
 
-**Feature Flag配置**
-- 功能开关键：
-- 默认状态：
-- 灰度比例：
+**Feature Flag Configuration**
+- Feature toggle key:
+- Default state:
+- Gradual rollout percentage:
 
-**回滚预案**
-- 回滚触发条件：
-- 回滚操作流程：
-- 回滚影响评估：
+**Rollback Plan**
+- Rollback trigger conditions:
+- Rollback operation process:
+- Rollback impact assessment:
 
-#### 8.2 运营准备
+#### 8.2 Operations Readiness
 
-| 准备项 | 负责人 | 完成时间 | 验收标准 |
+| Preparation Item | Owner | Completion Time | Acceptance Criteria |
 |--------|--------|----------|----------|
-| 帮助文档 | | | |
-| 客服话术 | | | |
-| 运营物料 | | | |
-| 培训材料 | | | |
+| Help documentation | | | |
+| Customer service scripts | | | |
+| Operations materials | | | |
+| Training materials | | | |
 
-#### 8.3 效果评估计划
+#### 8.3 Effectiveness Evaluation Plan
 
-| 指标 | 评估周期 | 评估方法 | 决策阈值 |
+| Metric | Evaluation Period | Evaluation Method | Decision Threshold |
 |------|----------|----------|----------|
 | | | | |
 
-### Section 9：附录
+### Section 9: Appendix
 
-#### 9.1 术语表
+#### 9.1 Glossary
 
-| 术语 | 定义 | 首次出现位置 |
+| Term | Definition | First Occurrence Location |
 |------|------|--------------|
 | | | |
 
-#### 9.2 变更记录
+#### 9.2 Change Log
 
-| 版本 | 日期 | 变更内容 | 变更人 |
+| Version | Date | Change Content | Changed By |
 |------|------|----------|--------|
 | | | | |
 
-#### 9.3 开放问题
+#### 9.3 Open Issues
 
-| 问题描述 | 影响评估 | 负责人 | 计划解决时间 |
+| Problem Description | Impact Assessment | Owner | Planned Resolution Time |
 |----------|----------|--------|--------------|
 | | | | |
 
-#### 9.4 关联文档索引
+#### 9.4 Related Document Index
 
-| 文档类型 | 文档名称 | 文档ID/路径 | 版本 |
+| Document Type | Document Name | Document ID/Path | Version |
 |----------|----------|-------------|------|
-| 战略文档 | | | |
-| 设计文档 | | | |
-| 技术文档 | | | |
-| 测试计划 | | | |
+| Strategy document | | | |
+| Design document | | | |
+| Technical document | | | |
+| Test plan | | | |

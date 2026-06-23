@@ -1,24 +1,24 @@
 ---
 name: ideation-workshop
-description: 当需要进行创意发散、方案构思或创意收敛工作坊时使用。整合多方法发散（HMW/SCAMPER/反转思维）和创意收敛。关键词：创意发散、创意收敛、HMW、SCAMPER、反转思维、创意工作坊。
+description: Use when you need creative divergence, solution ideation, or creative convergence workshops. Integrates multi-method divergence (HMW/SCAMPER/Reverse Thinking) and creative convergence. Keywords: creative divergence, creative convergence, HMW, SCAMPER, reverse thinking, creative workshop.
 metadata:
-  module: "产品构思与设计"
-  sub-module: "创意发散与方案构思"
+  module: "Product Ideation & Design"
+  sub-module: "Creative Divergence & Solution Ideation"
   type: "pipeline"
   version: "3.0"
-  domain_tags: ["互联网", "软件", "通用"]
+  domain_tags: ["Internet", "Software", "General"]
   trigger_examples:
-    - "帮我发散创意"
-    - "用SCAMPER方法创新"
-    - "逆向思考一下"
-    - "方案太多选哪个"
-    - "头脑风暴一下"
-    - "创意工作坊"
+    - "Help me brainstorm ideas"
+    - "Innovate using the SCAMPER method"
+    - "Think in reverse"
+    - "Too many options, which one to choose"
+    - "Let's brainstorm"
+    - "Creative workshop"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "生成HMW问题重构和SCAMPER基础方案列表，含初步评分和筛选"
-  deep_description: "额外包含反转思维失败路径分析、设计约束转化、方案深化（交互流程/MVP范围/成功指标）、6维度对比矩阵、人类决策包"
+  quick_description: "Generate HMW problem reframing and SCAMPER basic solution list, including initial scoring and filtering"
+  deep_description: "Additionally includes reverse thinking failure path analysis, design constraint transformation, solution deepening (interaction flow/MVP scope/success metrics), 6-dimension comparison matrix, human decision package"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -30,322 +30,322 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 创意工作坊
+# Creative Workshop
 
-## 核心原则
+## Core Principles
 
-1. **问题比答案更重要**——HMW的质量决定后续方案的质量，宽泛和预设方案的HMW是创意的毒药
-2. **七维度是发散的保险**——SCAMPER七个维度确保思维不陷入单一模式，每个维度至少2个方案
-3. **失败比成功更有启发性**——先想清楚"为什么会死"，再想"怎么活"；约束是创意的护栏不是枷锁
-4. **收敛不是淘汰而是深化**——筛选出的方案必须经过完整深化，而非简单排序
-5. **人类决策权不可让渡**——AI提供分析和推荐，方案最终选择必须由人类决策
-6. **数量先于质量**——发散阶段追求方案数量，收敛阶段再筛选，早期判断是创意的敌人
+1. **Questions matter more than answers** — The quality of HMW determines the quality of subsequent solutions; broad and solution-preset HMW is poison for creativity
+2. **Seven dimensions are the insurance for divergence** — SCAMPER's seven dimensions ensure thinking doesn't fall into a single pattern, with at least 2 solutions per dimension
+3. **Failure is more inspiring than success** — First figure out "why we would die", then figure out "how to live"; constraints are guardrails for creativity, not shackles
+4. **Convergence is deepening, not elimination** — Filtered solutions must undergo complete deepening, not simple ranking
+5. **Human decision rights cannot be transferred** — AI provides analysis and recommendations; final solution selection must be decided by humans
+6. **Quantity before quality** — The divergence phase pursues solution quantity; the convergence phase filters; early judgment is the enemy of creativity
 
-创意工作坊整合了HMW问题重构、SCAMPER结构化发散、反转思维和创意收敛四种方法，形成完整的"发散→收敛"创意流程。Step 1 通过HMW将问题陈述转化为开放性问题；Step 2 并行执行SCAMPER和反转思维，最大化发散产出；Step 3 通过筛选、深化和对比矩阵完成创意收敛，为人类决策提供结构化支撑。
+The creative workshop integrates four methods: HMW problem reframing, SCAMPER structured divergence, reverse thinking, and creative convergence, forming a complete "diverge → converge" creative process. Step 1 transforms problem statements into open-ended questions through HMW; Step 2 executes SCAMPER and reverse thinking in parallel to maximize divergence output; Step 3 completes creative convergence through filtering, deepening, and comparison matrix, providing structured support for human decision-making.
 
-### 执行角色
+### Execution Role
 
-🤖→👤 **AI建议，人类审批**
+🤖→👤 **AI suggests, human approves**
 
-- **AI负责**：HMW生成、SCAMPER方案生成、反转思维分析、方案筛选、深化分析、对比矩阵生成
-- **人类负责**：HMW审批、最终方案选择、优先级确认、行动项决策
+- **AI is responsible for**: HMW generation, SCAMPER solution generation, reverse thinking analysis, solution filtering, deepening analysis, comparison matrix generation
+- **Human is responsible for**: HMW approval, final solution selection, priority confirmation, action item decisions
 
 ---
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Input
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| Problem Statement | string | 是 | 用户提供 / 上游产出 | 清晰、具体地描述需要解决的问题，避免过于抽象或宽泛 |
-| User Research Data | JSON/object | 是 | 用户提供 / 上游产出 | 包含至少一种类型的用户研究数据（访谈、问卷或行为数据），确保HMW生成有据可依 |
-| Current Solution | JSON/object | ○ | 用户提供 | 当前产品的现有方案描述，包括功能点和局限性 |
-| Competitor Solutions | JSON/array | ○ | 用户提供 | 至少2-3个竞品的方案分析，包括功能、优劣势 |
-| Product Context | JSON/object | ○ | 用户提供 | 产品战略和资源约束信息 |
+| Problem Statement | string | Yes | User-provided / Upstream output | Clearly and specifically describe the problem to be solved, avoiding being too abstract or broad |
+| User Research Data | JSON/object | Yes | User-provided / Upstream output | Include at least one type of user research data (interview, survey, or behavior data) to ensure HMW generation is evidence-based |
+| Current Solution | JSON/object | ○ | User-provided | Description of the current product's existing solution, including features and limitations |
+| Competitor Solutions | JSON/array | ○ | User-provided | Analysis of at least 2-3 competitor solutions, including features, advantages, and disadvantages |
+| Product Context | JSON/object | ○ | User-provided | Product strategy and resource constraint information |
 
-### 输入格式
+### Input Format
 
-> 📋 详见 [Reference/input-format.md](./Reference/input-format.md)
-
----
-
-## 执行步骤
-
-### Step 1：HMW问题重构 [核心]
-
-基于问题陈述和用户研究数据，从6个维度批量生成HMW陈述，并进行质量检查与评分。
-
-#### 1.1 从6个维度生成HMW [核心]
-
-AI需要从以下6个维度为每个核心问题生成HMW陈述：
-
-##### 维度说明
-
-1. **消除障碍（Remove）**
-   - 目标：移除导致问题产生的障碍因素
-   - 问题导向：如何消除阻碍用户达成目标的障碍？
-
-2. **降低门槛（Reduce）**
-   - 目标：减少解决问题所需的努力、时间或复杂度
-   - 问题导向：如何降低用户完成任务的门槛？
-
-3. **加速达成（Accelerate）**
-   - 目标：加快用户达成目标的效率
-   - 问题导向：如何帮助用户更快地实现目标？
-
-4. **增强感知（Amplify）**
-   - 目标：增强用户对产品价值或功能的感知与理解
-   - 问题导向：如何让用户更好地感知和理解产品价值？
-
-5. **扩展场景（Expand）**
-   - 目标：扩展产品的使用场景或用户群体
-   - 问题导向：如何将产品应用到更多的使用场景中？
-
-6. **重新定义（Rethink）**
-   - 目标：从全新角度重新定义问题或解决方案
-   - 问题导向：如何从根本上重新思考这个问题？
-
-##### 生成要求
-
-- 每个维度至少生成2-3个HMW陈述
-- HMW陈述应该：
-  - 以"How might we"开头
-  - 足够具体以指导方案生成
-  - 足够开放以保留发散空间
-  - 直接关联用户研究数据中的洞察
-
-#### 1.2 HMW质量检查 [条件]
-
-对每个生成的HMW陈述进行质量检查：
-
-1. **是否过于宽泛**：HMW是否涵盖过多问题，导致无法指导具体方案
-2. **是否预设方案**：HMW是否已经暗示了特定解决方案
-3. **是否具体**：HMW是否足够具体，能够指导方案方向
-4. **是否有发散空间**：HMW是否保留了多种可能的解决路径
-
-每个HMW必须同时满足：不宽泛、不预设方案、足够具体、有发散空间。
-
-#### 1.3 HMW评分 [深度]
-
-对通过质量检查的HMW陈述进行发散潜力评分（1-5分）：
-
-- **1分**：只能想到1-2种解决方案
-- **2分**：能想到2-3种相关解决方案
-- **3分**：能想到3-5种解决方案
-- **4分**：能想到5-8种多样化的解决方案
-- **5分**：能想到8种以上高度多样化的解决方案
-
-#### HMW输出结构
-
-> 📋 详见 [Reference/output-structures.md](./Reference/output-structures.md)（HMW输出结构章节）
+> 📋 See [Reference/input-format.md](./Reference/input-format.md) for details
 
 ---
 
-### Step 2：并行发散 [条件]（SCAMPER + 反转思维）
+## Execution Steps
 
-基于Step 1的HMW产出，并行执行SCAMPER结构化发散和反转思维分析，最大化创意产出。
+### Step 1: HMW Problem Reframing [Core]
 
-#### 2A：SCAMPER结构化方案生成 [核心]
+Based on problem statements and user research data, batch generate HMW statements from 6 dimensions, and perform quality checks and scoring.
 
-对每个选定的HMW（建议选择发散潜力≥3的），从7个维度各生成2-3个方案。
+#### 1.1 Generate HMW from 6 Dimensions [Core]
 
-##### SCAMPER维度详解
+AI needs to generate HMW statements for each core problem from the following 6 dimensions:
 
-1. **Substitute（替代 S）**——可以用什么替代现有的元素？
-2. **Combine（合并 C）**——可以与什么合并？
-3. **Adapt（借鉴 A）**——可以借鉴什么？
-4. **Modify（修改 M）**——可以怎样修改？
-5. **Put to other use（转用 P）**——可以有什么其他用途？
-6. **Eliminate（删除 E）**——可以删除什么？
-7. **Reverse（反转 R）**——可以怎么反转？
+##### Dimension Descriptions
 
-##### SCAMPER生成要求
+1. **Remove**
+   - Goal: Remove the obstacle factors that cause the problem
+   - Problem-oriented: How might we eliminate the obstacles preventing users from achieving their goals?
 
-- 每个HMW在每个维度至少生成3个方案
-- 方案应直接回应HMW陈述中的问题
-- 体现对应SCAMPER维度的核心思想
-- 具有一定的新颖性和差异化
+2. **Reduce**
+   - Goal: Reduce the effort, time, or complexity required to solve the problem
+   - Problem-oriented: How might we lower the threshold for users to complete tasks?
 
-##### 方案去重与聚类
+3. **Accelerate**
+   - Goal: Speed up the efficiency of users achieving their goals
+   - Problem-oriented: How might we help users achieve their goals faster?
 
-1. **语义去重**：识别语义相同或高度相似的方案，合并或删除重复项
-2. **维度校验**：确保同一方案不会被重复归类到不同维度
-3. **聚类算法**：基于目标相似性、方法相似性、用户价值相似性、实现复杂度相似性进行聚类
+4. **Amplify**
+   - Goal: Enhance users' perception and understanding of product value or features
+   - Problem-oriented: How might we enable users to better perceive and understand product value?
 
-##### SCAMPER初步评分
+5. **Expand**
+   - Goal: Expand the product's use cases or user groups
+   - Problem-oriented: How might we apply the product to more use cases?
 
-对每个方案从4个维度进行评分：
+6. **Rethink**
+   - Goal: Redefine the problem or solution from a completely new angle
+   - Problem-oriented: How might we rethink this problem fundamentally?
 
-1. **创新度（Innovation）** 1-5分
-2. **可行性（Feasibility）** 1-5分
-3. **影响力（Impact）** 1-5分
-4. **风险度（Risk）** 1-5分（反向评分，5分=几乎无风险）
+##### Generation Requirements
 
-#### 2B：反转思维分析 [条件]
+- Generate at least 2-3 HMW statements per dimension
+- HMW statements should:
+  - Start with "How might we"
+  - Be specific enough to guide solution generation
+  - Be open enough to preserve divergence space
+  - Directly relate to insights from user research data
 
-基于产品/功能目标，生成失败路径并逆向转化为成功条件和设计约束。
+#### 1.2 HMW Quality Check [Conditional]
 
-##### 生成失败路径
+Perform quality checks on each generated HMW statement:
 
-基于产品/功能目标，生成10-15条潜在的失败路径，覆盖5个层面：
+1. **Too broad**: Does the HMW cover too many problems, making it unable to guide specific solutions
+2. **Preset solution**: Does the HMW already imply a specific solution
+3. **Specific enough**: Is the HMW specific enough to guide the solution direction
+4. **Divergence space**: Does the HMW preserve multiple possible solution paths
 
-1. **用户行为层面**：用户不使用、误解价值、学习曲线困难
-2. **技术实现层面**：功能不稳定、性能问题、安全漏洞
-3. **业务运营层面**：成本超预算、合规性问题、市场时机不佳
-4. **价值感知层面**：用户不感知价值、竞品替代
-5. **生态系统层面**：合作伙伴不配合、第三方依赖风险
+Each HMW must simultaneously satisfy: not too broad, no preset solution, specific enough, and has divergence space.
 
-每个失败路径包含：
-- **失败模式（Failure Mode）**：清晰描述失败的具体表现
-- **严重程度（Severity）** 1-5分
-- **发生可能性（Likelihood）** 1-5分
-- **优先级** = 严重程度 × 发生可能性（Critical ≥ 15, High 10-14, Medium 6-9, Low < 6）
+#### 1.3 HMW Scoring [Deep]
 
-##### 逆向转化为成功条件
+Score the divergence potential (1-5 points) of HMW statements that pass the quality check:
 
-将每个失败路径逆向思考，转化为对应的成功条件：
-- 不是"如何避免失败"，而是"什么条件下这个失败不会发生"
-- 成功条件必须具体明确、可观测和可验证、与失败路径直接相关、不预设特定实现方式
+- **1 point**: Can only think of 1-2 solutions
+- **2 points**: Can think of 2-3 related solutions
+- **3 points**: Can think of 3-5 solutions
+- **4 points**: Can think of 5-8 diverse solutions
+- **5 points**: Can think of more than 8 highly diverse solutions
 
-##### 转化为设计约束
+#### HMW Output Structure
 
-将高优先级的成功条件转化为具体可执行的设计约束，分类为：
-
-1. **功能约束**：必须提供或禁止的功能
-2. **交互约束**：必须遵循或避免的交互模式
-3. **视觉约束**：必须遵守或避免的视觉设计
-4. **性能约束**：必须满足的性能指标
-5. **内容约束**：必须包含或避免的内容元素
-6. **技术约束**：必须采用或避免的技术方案
-
-每个设计约束必须有明确的验证方法。
-
-#### 并行发散输出结构
-
-> 📋 详见 [Reference/output-structures.md](./Reference/output-structures.md)（并行发散输出结构章节）
+> 📋 See [Reference/output-structures.md](./Reference/output-structures.md) (HMW Output Structure section)
 
 ---
 
-### Step 3：创意收敛 [条件]
+### Step 2: Parallel Divergence [Conditional] (SCAMPER + Reverse Thinking)
 
-从SCAMPER方案列表和反转思维约束中筛选高质量候选，通过深化和对比矩阵为人类决策提供支持。
+Based on the HMW output from Step 1, execute SCAMPER structured divergence and reverse thinking analysis in parallel to maximize creative output.
 
-#### 3.1 方案筛选
+#### 2A: SCAMPER Structured Solution Generation [Core]
 
-AI自动筛选出高质量的候选方案：
+For each selected HMW (recommend selecting those with divergence potential ≥ 3), generate 2-3 solutions from each of the 7 dimensions.
 
-1. **可行性过滤**：排除可行性评分 < 2的方案
-2. **设计约束冲突检测**：排除与Critical/High级别设计约束冲突的方案
-3. **基础质量门槛**：综合评分 = (创新度 + 可行性 + 影响力 + (6-风险度)) / 4 ≥ 3.5，或在某个维度特别突出（评分 ≥ 4.5）
-4. **多维度考量**：平衡性、差异化、覆盖度
+##### SCAMPER Dimension Details
 
-#### 3.2 方案深化
+1. **Substitute (S)** — What can replace the existing elements?
+2. **Combine (C)** — What can be combined with?
+3. **Adapt (A)** — What can be borrowed/adapted?
+4. **Modify (M)** — How can it be modified?
+5. **Put to other use (P)** — What other uses can it have?
+6. **Eliminate (E)** — What can be eliminated?
+7. **Reverse (R)** — How can it be reversed?
 
-对筛选出的Top 5-10个方案进行深度分析和完善：
+##### SCAMPER Generation Requirements
 
-1. **详细方案描述**：完整的方案叙述、核心功能点、用户体验流程、差异化
-2. **交互流程设计**：主要用户场景的交互步骤、关键页面和组件、异常处理
-3. **关键假设**：技术假设、用户假设、业务假设、数据假设
-4. **风险识别**：技术风险、用户风险、业务风险、市场风险
-5. **MVP范围定义**：Core MVP / Extended MVP / Excluded
-6. **成功指标**：Primary Metrics / Secondary Metrics / Guardrail Metrics
+- Generate at least 3 solutions per HMW per dimension
+- Solutions should directly respond to the problem in the HMW statement
+- Reflect the core idea of the corresponding SCAMPER dimension
+- Have a certain degree of novelty and differentiation
 
-#### 3.3 方案对比矩阵 [深度]
+##### Solution Deduplication and Clustering
 
-构建6维度的方案对比矩阵：
+1. **Semantic deduplication**: Identify semantically identical or highly similar solutions, merge or delete duplicates
+2. **Dimension validation**: Ensure the same solution is not repeatedly categorized into different dimensions
+3. **Clustering algorithm**: Cluster based on goal similarity, method similarity, user value similarity, implementation complexity similarity
 
-1. **用户价值（User Value）** 1-5分，权重0.25
-2. **实现复杂度（Implementation Complexity）** 1-5分（反向），权重0.15
-3. **创新程度（Innovation）** 1-5分，权重0.15
-4. **风险程度（Risk）** 1-5分（反向），权重0.15
-5. **战略对齐（Strategic Alignment）** 1-5分，权重0.15
-6. **可扩展性（Scalability）** 1-5分，权重0.15
+##### SCAMPER Initial Scoring
 
-AI基于加权总分法、维度最优法、综合权衡法、场景适配法给出推荐建议，明确标注置信度和推荐理由。
+Score each solution from 4 dimensions:
 
-#### 创意收敛输出结构
+1. **Innovation** 1-5 points
+2. **Feasibility** 1-5 points
+3. **Impact** 1-5 points
+4. **Risk** 1-5 points (reverse scoring, 5 points = almost no risk)
 
-> 📋 详见 [Reference/output-structures.md](./Reference/output-structures.md)（创意收敛输出结构章节）
+#### 2B: Reverse Thinking Analysis [Conditional]
+
+Based on product/feature goals, generate failure paths and reversely transform them into success conditions and design constraints.
+
+##### Generate Failure Paths
+
+Based on product/feature goals, generate 10-15 potential failure paths, covering 5 levels:
+
+1. **User behavior level**: Users don't use it, misunderstand the value, difficult learning curve
+2. **Technical implementation level**: Unstable features, performance issues, security vulnerabilities
+3. **Business operations level**: Cost over budget, compliance issues, poor market timing
+4. **Value perception level**: Users don't perceive value, competitor substitution
+5. **Ecosystem level**: Partners don't cooperate, third-party dependency risks
+
+Each failure path includes:
+- **Failure Mode**: Clear description of the specific failure manifestation
+- **Severity** 1-5 points
+- **Likelihood** 1-5 points
+- **Priority** = Severity × Likelihood (Critical ≥ 15, High 10-14, Medium 6-9, Low < 6)
+
+##### Reverse Transform to Success Conditions
+
+Reverse-think each failure path and transform it into corresponding success conditions:
+- Not "how to avoid failure", but "under what conditions this failure will not occur"
+- Success conditions must be specific and clear, observable and verifiable, directly related to the failure path, and not preset specific implementation methods
+
+##### Transform to Design Constraints
+
+Transform high-priority success conditions into specific actionable design constraints, categorized as:
+
+1. **Functional constraints**: Features that must be provided or prohibited
+2. **Interaction constraints**: Interaction patterns that must be followed or avoided
+3. **Visual constraints**: Visual designs that must be observed or avoided
+4. **Performance constraints**: Performance metrics that must be met
+5. **Content constraints**: Content elements that must be included or avoided
+6. **Technical constraints**: Technical solutions that must be adopted or avoided
+
+Each design constraint must have a clear validation method.
+
+#### Parallel Divergence Output Structure
+
+> 📋 See [Reference/output-structures.md](./Reference/output-structures.md) (Parallel Divergence Output Structure section)
 
 ---
 
-## 输出
+### Step 3: Creative Convergence [Conditional]
 
-**存储路径**：`docs/product/PRD.md（"创意方案"章节）`
-**输出文件**：ideation-workshop.json + ideation-workshop.md
+Filter high-quality candidates from the SCAMPER solution list and reverse thinking constraints, and provide support for human decision-making through deepening and comparison matrix.
+
+#### 3.1 Solution Filtering
+
+AI automatically filters high-quality candidate solutions:
+
+1. **Feasibility filter**: Exclude solutions with feasibility score < 2
+2. **Design constraint conflict detection**: Exclude solutions that conflict with Critical/High level design constraints
+3. **Basic quality threshold**: Composite score = (Innovation + Feasibility + Impact + (6-Risk)) / 4 ≥ 3.5, or particularly outstanding in a certain dimension (score ≥ 4.5)
+4. **Multi-dimensional consideration**: Balance, differentiation, coverage
+
+#### 3.2 Solution Deepening
+
+Perform in-depth analysis and refinement on the filtered Top 5-10 solutions:
+
+1. **Detailed solution description**: Complete solution narrative, core features, user experience flow, differentiation
+2. **Interaction flow design**: Interaction steps for main user scenarios, key pages and components, exception handling
+3. **Key assumptions**: Technical assumptions, user assumptions, business assumptions, data assumptions
+4. **Risk identification**: Technical risks, user risks, business risks, market risks
+5. **MVP scope definition**: Core MVP / Extended MVP / Excluded
+6. **Success metrics**: Primary Metrics / Secondary Metrics / Guardrail Metrics
+
+#### 3.3 Solution Comparison Matrix [Deep]
+
+Build a 6-dimension solution comparison matrix:
+
+1. **User Value** 1-5 points, weight 0.25
+2. **Implementation Complexity** 1-5 points (reverse), weight 0.15
+3. **Innovation** 1-5 points, weight 0.15
+4. **Risk** 1-5 points (reverse), weight 0.15
+5. **Strategic Alignment** 1-5 points, weight 0.15
+6. **Scalability** 1-5 points, weight 0.15
+
+AI provides recommendations based on weighted total score method, dimension-optimal method, comprehensive trade-off method, and scenario-fit method, clearly annotating confidence and recommendation rationale.
+
+#### Creative Convergence Output Structure
+
+> 📋 See [Reference/output-structures.md](./Reference/output-structures.md) (Creative Convergence Output Structure section)
+
+---
+
+## Output
+
+**Storage path**: `docs/product/PRD.md ("Creative Solutions" section)`
+**Output files**: ideation-workshop.json + ideation-workshop.md
 
 ### Output Schema
 
-`ideation-workshop.json` 必须符合完整数据结构，字段级约束以"输出校验规则"为准。
+`ideation-workshop.json` must conform to the complete data structure; field-level constraints are subject to the "Output Validation Rules".
 
-> 📋 详见 [Reference/output-structures.md](./Reference/output-structures.md)（ideation-workshop.json 完整数据结构章节）
+> 📋 See [Reference/output-structures.md](./Reference/output-structures.md) (ideation-workshop.json Complete Data Structure section)
 
 ### ideation-workshop.md
 
-Markdown格式的创意工作坊报告，包含：
-1. HMW问题重构摘要
-2. SCAMPER方案列表与聚类
-3. 反转思维分析摘要
-4. 收敛方案对比矩阵
-5. 人类决策建议
+Markdown format creative workshop report, including:
+1. HMW problem reframing summary
+2. SCAMPER solution list and clustering
+3. Reverse thinking analysis summary
+4. Converged solution comparison matrix
+5. Human decision recommendations
 
 ---
 
-## 输出校验规则
+## Output Validation Rules
 
-> 📋 详见 [Reference/validation-rules.md](./Reference/validation-rules.md)
+> 📋 See [Reference/validation-rules.md](./Reference/validation-rules.md) for details
 
-## 决策规则
+## Decision Rules
 
-### Step 1 HMW通过条件
+### Step 1 HMW Pass Conditions
 
-1. **质量检查**：所有HMW必须通过质量检查
-2. **维度覆盖**：6个维度都必须有HMW覆盖
-3. **数据支撑**：每条HMW必须有对应的用户研究数据支撑
-4. **评分完成**：所有HMW都必须完成发散潜力评分
+1. **Quality check**: All HMW must pass the quality check
+2. **Dimension coverage**: All 6 dimensions must have HMW coverage
+3. **Data support**: Each HMW must have corresponding user research data support
+4. **Scoring complete**: All HMW must complete divergence potential scoring
 
-### Step 2 并行发散通过条件
+### Step 2 Parallel Divergence Pass Conditions
 
-1. **SCAMPER方案数量**：至少生成10个候选方案
-2. **SCAMPER维度覆盖**：7个SCAMPER维度都必须有方案覆盖
-3. **SCAMPER评分完整性**：每个方案都必须有4个维度的评分
-4. **SCAMPER聚类完整性**：所有方案都必须归属于某个聚类
-5. **反转思维失败路径**：生成了10-15条失败路径，覆盖5个维度
-6. **反转思维约束转化**：每个成功条件转化为具体的设计约束
+1. **SCAMPER solution count**: At least 10 candidate solutions generated
+2. **SCAMPER dimension coverage**: All 7 SCAMPER dimensions must have solution coverage
+3. **SCAMPER scoring completeness**: Each solution must have scores for all 4 dimensions
+4. **SCAMPER clustering completeness**: All solutions must belong to a cluster
+5. **Reverse thinking failure paths**: 10-15 failure paths generated, covering 5 dimensions
+6. **Reverse thinking constraint transformation**: Each success condition transformed into specific design constraints
 
-### Step 3 收敛通过条件
+### Step 3 Convergence Pass Conditions
 
-1. **方案筛选**：排除可行性 < 2的方案，排除与Critical/High约束冲突的方案
-2. **方案深化**：Top5方案已深化，每个方案包含所有6个维度
-3. **对比矩阵**：6个维度完整，评分标准统一
-4. **人类决策**：方案最终选择必须由人类决策
+1. **Solution filtering**: Exclude solutions with feasibility < 2, exclude solutions conflicting with Critical/High constraints
+2. **Solution deepening**: Top 5 solutions deepened, each solution includes all 6 dimensions
+3. **Comparison matrix**: 6 dimensions complete, scoring criteria unified
+4. **Human decision**: Final solution selection must be decided by humans
 
-### 失败处理
+### Failure Handling
 
-> 📋 详见 [Reference/failure-handling.md](./Reference/failure-handling.md)
-
----
-
-## 质量检查
-
-> 📋 详见 [Reference/quality-checklist.md](./Reference/quality-checklist.md)
+> 📋 See [Reference/failure-handling.md](./Reference/failure-handling.md) for details
 
 ---
 
-## 降级策略
+## Quality Check
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+> 📋 See [Reference/quality-checklist.md](./Reference/quality-checklist.md) for details
+
+---
+
+## Degradation Strategy
+
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Instructions |
 |---------------|---------|---------|------------|
-| Problem Statement缺失 | 用户描述问题，直接生成HMW | 缺乏结构化Problem Statement，HMW可能不够聚焦 | 要求用户提供问题描述和核心痛点或上传opportunity-definition.json文件 |
-| 用户研究数据缺失 | 用户描述问题，直接生成HMW | 缺乏用户研究数据支撑，HMW与用户需求可能偏差 | 要求用户提供用户研究结论或上传persona.json/voice-analysis.json文件 |
-| Problem Statement+用户研究数据均缺失 | 用户描述问题，直接生成HMW | 整体置信度降低，HMW可能过于宽泛 | 要求用户提供问题描述和用户核心痛点 |
-| 当前方案描述缺失 | 基于HMW直接生成方案，无改进基线 | 缺乏当前方案参考，替代/修改维度方案可能不够精准 | 要求用户提供当前产品方案描述和已知不足 |
-| 竞品方案数据缺失 | 跳过竞品借鉴，基于HMW和当前方案生成 | 缺乏竞品方案参考，借鉴维度方案可能不够丰富 | 要求用户提供竞品方案描述或上传competitor-analysis.json文件 |
-| 所有上游文件均缺失 | 提示用户先执行前序阶段，或基于用户口头描述直接生成 | 输出仅为基本HMW列表和方案框架 | 要求用户提供问题描述、用户痛点和期望方案方向 |
+| Problem Statement missing | User describes the problem, directly generate HMW | Lacks structured Problem Statement, HMW may not be focused enough | Ask user to provide problem description and core pain points or upload opportunity-definition.json file |
+| User research data missing | User describes the problem, directly generate HMW | Lacks user research data support, HMW may deviate from user needs | Ask user to provide user research conclusions or upload persona.json/voice-analysis.json files |
+| Both Problem Statement and user research data missing | User describes the problem, directly generate HMW | Overall confidence reduced, HMW may be too broad | Ask user to provide problem description and core user pain points |
+| Current solution description missing | Generate solutions directly based on HMW, no improvement baseline | Lacks current solution reference, substitute/modify dimension solutions may not be precise enough | Ask user to provide current product solution description and known shortcomings |
+| Competitor solution data missing | Skip competitor borrowing, generate based on HMW and current solution | Lacks competitor solution reference, adapt dimension solutions may not be rich enough | Ask user to provide competitor solution description or upload competitor-analysis.json file |
+| All upstream files missing | Prompt user to execute preceding phases first, or generate directly based on user verbal description | Output is only a basic HMW list and solution framework | Ask user to provide problem description, user pain points, and expected solution direction |
 
-## 上游变更响应
+## Upstream Change Response
 
-> 📋 详见 [Reference/upstream-change-response.md](./Reference/upstream-change-response.md)
+> 📋 See [Reference/upstream-change-response.md](./Reference/upstream-change-response.md) for details

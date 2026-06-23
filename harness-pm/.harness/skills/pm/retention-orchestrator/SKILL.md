@@ -1,17 +1,17 @@
 ---
 name: retention-orchestrator
-description: 当需要降低流失率或提升用户参与度时使用。用户留存指挥官，调度 retention-management（留存管理一体化），实现从流失预防到用户促活的闭环。关键词：用户留存、流失预警、分层运营、参与度、留存策略、retention-management、防流失、促活。
+description: Use when reducing churn rate or improving user engagement. User Retention Orchestrator dispatches retention-management (retention management integrated), achieving a closed loop from churn prevention to user reactivation. Keywords: user retention, churn prediction, tiered operations, engagement, retention strategy, retention-management, churn prevention, reactivation.
 metadata:
-  module: "产品增长与运营"
-  sub-module: "留存"
+  module: "Product Growth & Operations"
+  sub-module: "Retention"
   type: "orchestrator"
   version: "7.0"
-  domain_tags: ["电商", "社交", "游戏", "通用"]
+  domain_tags: ["E-commerce", "Social", "Gaming", "General"]
   trigger_examples:
-    - "用户流失严重"
-    - "提升用户留存率"
-    - "做一下流失预警"
-    - "设计分层运营策略"
+    - "User churn is severe"
+    - "Improve user retention rate"
+    - "Run a churn prediction"
+    - "Design tiered operation strategy"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -23,33 +23,33 @@ writes:
   - output/approvals/retention-orchestrator/{stage-id}.approval.json
 ---
 
-# 用户留存指挥官
+# User Retention Orchestrator
 
-## 核心原则
+## Core Principles
 
-**留存是衡量产品价值的核心指标**
+**Retention is the core metric that measures product value**
 
-获客决定起点，留存决定终点。如果用户不愿留下，说明产品尚未交付足够的价值。留存问题的根因永远是价值问题，而非运营问题。
+Acquisition determines the starting point; retention determines the endpoint. If users are unwilling to stay, it means the product has not yet delivered enough value. The root cause of retention issues is always a value issue, not an operations issue.
 
-## 编排理念
+## Orchestration Philosophy
 
-1. **预警与运营一体执行**：retention-management 内部先构建流失预警识别高风险用户，再基于风险分层设计差异化运营策略
-2. **预警数据驱动运营优先级**：流失风险等级直接决定运营资源的分配和干预强度
+1. **Prediction and operations executed together**: retention-management internally first builds churn prediction to identify high-risk users, then designs differentiated operation strategies based on risk tiering
+2. **Prediction data drives operation priority**: Churn risk level directly determines operation resource allocation and intervention intensity
 
-## 编排器定位声明
+## Orchestrator Positioning Statement
 
-本编排器当前 Pipeline 仅包含 1 个子 Skill（retention-management），属于合并简化后的退化编排器。保留本编排器的理由：
+This orchestrator's current Pipeline contains only 1 sub-skill (retention-management), making it a degenerated orchestrator after merge simplification. Reasons for retaining this orchestrator:
 
-1. **统一入口**：为用户留存子模块提供标准化的调用入口，上层编排器（如 release-orchestrator）无需关心内部子 Skill 的合并历史
-2. **阶段总结**：强制生成阶段总结文档（post_pipeline），确保子模块产出可审计、可追溯
-3. **异常处理**：提供统一的异常处理策略和降级方案，子 Skill 自身的降级策略不覆盖编排器层面的异常拦截
-4. **人类决策点**：在子 Skill 执行前后提供人类决策卡口，确保关键结论经人类确认后才传递下游
+1. **Unified entry point**: Provides a standardized call entry for the user retention sub-module; upstream orchestrators (e.g., release-orchestrator) do not need to know the internal sub-skill merge history
+2. **Stage summary**: Forces generation of a stage summary document (post_pipeline), ensuring sub-module outputs are auditable and traceable
+3. **Exception handling**: Provides unified exception handling strategies and degradation plans; sub-skill degradation strategies do not override orchestrator-level exception interception
+4. **Human decision points**: Provides human decision gates before and after sub-skill execution, ensuring key conclusions are confirmed by humans before being passed downstream
 
-若未来该子模块需要扩展为多阶段 Pipeline，本编排器可直接增加阶段，无需修改上层编排器的调用方式。
+If this sub-module needs to be expanded into a multi-stage Pipeline in the future, this orchestrator can directly add stages without modifying upstream orchestrator call methods.
 
-## 编排协议
+## Orchestration Protocol
 
-遵循 [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) 编排协议。
+Follows the [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) orchestration protocol.
 
 ## Pipeline
 
@@ -63,77 +63,77 @@ post_pipeline:
 
 stages:
   - id: phase-1
-    name: "流失预警与用户分层"
+    name: "Churn Prediction and User Segmentation"
     depends_on: []
     skills: [retention-management]
     gate:
-      condition: "流失预警模型已构建且用户分层已完成"
-      fail_action: "优化模型或补充训练数据"
+      condition: "Churn prediction model built and user segmentation complete"
+      fail_action: "Optimize model or supplement training data"
 ```
 
-## 阶段执行计划
+## Stage Execution Plan
 
-#### 调用 retention-management
+#### Call retention-management
 
 ```
 Skill: retention-management
-输入:
-  user_behavior_data: 用户提供（从数据分析平台导出的活跃日志，字段：user_id, last_active_date, active_days_30d）
-  churn_history: 用户提供（从数据分析平台导出的流失记录，字段：user_id, churn_date, churn_reason）
-  user_account_data: 用户提供（从用户系统导出的账户信息，字段：user_id, register_date, plan_type）
-  user_lifecycle_stage: 用户提供（可选，注册时间、关键里程碑）
-输出: docs/growth/growth-strategy.md（“留存管理”章节）
-验证: 流失定义区分免费/付费/企业用户；预警模型准确率>75%；干预策略与风险等级匹配；干预效果追踪包含ROI计算；用户分层覆盖完整生命周期（新/成长/成熟/沉睡/流失）；健康度评分包含活跃度、功能深度、付费意愿、社交参与；运营策略与用户层级匹配；触达内容经过个性化处理
-模式: 🤖→👤
+Inputs:
+  user_behavior_data: User-provided (active logs exported from data analytics platform, fields: user_id, last_active_date, active_days_30d)
+  churn_history: User-provided (churn records exported from data analytics platform, fields: user_id, churn_date, churn_reason)
+  user_account_data: User-provided (account info exported from user system, fields: user_id, register_date, plan_type)
+  user_lifecycle_stage: User-provided (optional, registration time, key milestones)
+Output: docs/growth/growth-strategy.md ("Retention Management" section)
+Validation: Churn definition distinguishes free/paid/enterprise users; prediction model accuracy >75%; intervention strategy matches risk level; intervention effectiveness tracking includes ROI calculation; user segmentation covers full lifecycle (new/growing/mature/dormant/churned); health score includes activity, feature depth, payment willingness, social engagement; operation strategy matches user tier; outreach content is personalized
+Mode: 🤖→👤
 ```
 
-### 阶段总结（post_pipeline）
+### Stage Summary (post_pipeline)
 
-所有子Skill执行完成后，必须生成阶段总结文档，写入 `output/phase-reports/retention-orchestrator.json`，包含以下6项结构（均不可为空）：
+After all sub-skills finish executing, a stage summary document must be generated and written to `output/phase-reports/retention-orchestrator.json`, containing the following 6 structures (none may be empty):
 
-1. **执行概览**：编排器名称与版本、执行时间、子Skill执行状态（成功/失败/降级）
-2. **关键发现**：每个子Skill的核心输出摘要（1-3条）、跨子Skill的交叉洞察
-3. **决策记录**：人类决策点及决策结果、AI自动决策及依据
-4. **产出清单**：所有输出文件路径及内容摘要、产出质量评估（是否通过验证）
-5. **风险与待办**：未通过验证的项、降级执行的项、建议后续跟进的事项
-6. **下游衔接**：本编排器产出可被哪些下游编排器消费、推荐的下一步编排器
+1. **Execution Overview**: Orchestrator name and version, execution time, sub-skill execution status (success/failure/degraded)
+2. **Key Findings**: Core output summary of each sub-skill (1-3 items), cross-sub-skill insights
+3. **Decision Records**: Human decision points and decision results, AI automated decisions and rationale
+4. **Artifact Inventory**: All output file paths and content summaries, artifact quality assessment (whether validation passed)
+5. **Risks & TODOs**: Items that failed validation, items executed in degraded mode, recommended follow-up items
+6. **Downstream Handoff**: Which downstream orchestrators can consume this orchestrator's outputs, recommended next orchestrator
 
-| 参数 | 值 |
+| Parameter | Value |
 |------|-----|
-| 子Skill输出路径 | docs/growth/ |
-| 总结输出路径 | output/phase-reports/retention-orchestrator.json |
-| 审批记录路径 | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
+| Sub-skill output path | docs/growth/ |
+| Summary output path | output/phase-reports/retention-orchestrator.json |
+| Approval record path | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
 
-下游衔接:
-  primary: revenue-orchestrator（留存优化完成，优化付费转化）
+Downstream handoff:
+  primary: revenue-orchestrator (retention optimization complete, optimize paid conversion)
   alternatives:
     - target: growth-orchestrator
-      reason: 留存不是当前瓶颈，回退到增长诊断重新评估
-      condition: 留存率优化效果不达预期或留存非当前最大瓶颈时
+      reason: Retention is not the current bottleneck, fall back to growth diagnosis for re-evaluation
+      condition: When retention rate optimization results fall short of expectations or retention is not the current biggest bottleneck
     - target: experiment-orchestrator
-      reason: 留存策略需A/B测试验证
-      condition: 流失干预方案变更需量化验证时
+      reason: Retention strategy needs A/B test validation
+      condition: When churn intervention scheme changes require quantitative validation
   special_cases: []
 
-## 阶段卡口
+## Stage Gates
 
-| 卡口 | 条件 | 未通过处理 |
+| Gate | Condition | Action if Not Met |
 |------|------|------------|
-| 留存管理完成 | retention-management输出文件已生成且非空 | 优化模型或补充训练数据 |
-| 阶段总结已生成 | output/phase-reports/retention-orchestrator.json 已生成且6项结构均非空 | 补充缺失结构项后重新生成 |
+| Retention management complete | retention-management output file generated and non-empty | Optimize model or supplement training data |
+| Stage summary generated | output/phase-reports/retention-orchestrator.json generated and all 6 structures non-empty | Regenerate after supplementing missing structure items |
 
-## 人类决策点
+## Human Decision Points
 
-| 决策点 | 触发条件 | 决策内容 |
+| Decision Point | Trigger Condition | Decision Content |
 |--------|----------|----------|
-| 干预策略确认 | 流失预警和分层运营策略生成完成 | 确认干预策略的优先级、触达方式和资源分配 |
+| Intervention strategy confirmation | Churn prediction and tiered operation strategy generation complete | Confirm intervention strategy priority, outreach methods, and resource allocation |
 
-## 异常处理
+## Exception Handling
 
-| 异常类型 | 处理策略 |
+| Exception Type | Handling Strategy |
 |----------|----------|
-| 流失预警模型准确率<75% | 降低应用场景，仅用于高置信度用户预警；标注"模型待优化"，建议补充训练数据 |
-| 用户行为数据不足以支撑分层 | 采用简化分层模型（仅活跃/沉默/流失3层），标注"分层待细化" |
-| 子Skill输出校验未通过 | 回退至当前阶段重新执行，最多重试1次；仍失败则标记异常并上报人类 |
-| 上下游数据格式不兼容 | 按下游子Skill输入Schema做字段映射和默认值填充，记录映射关系 |
-| 阶段总结生成失败 | 基于已完成的子Skill输出生成部分总结，缺失项标注"数据缺失"，不阻塞编排完成 |
+| Churn prediction model accuracy <75% | Reduce application scope, only use for high-confidence user prediction; mark "model pending optimization", recommend supplementing training data |
+| User behavior data insufficient to support segmentation | Use simplified segmentation model (only active/silent/churned 3 tiers), mark "segmentation pending refinement" |
+| Sub-skill output validation failed | Fall back to current stage and re-execute, max 1 retry; if still fails, mark exception and escalate to human |
+| Upstream/downstream data format incompatible | Perform field mapping and default value filling per downstream sub-skill input Schema, record mapping relationship |
+| Stage summary generation failed | Generate partial summary based on completed sub-skill outputs, missing items marked "data missing", does not block orchestration completion |

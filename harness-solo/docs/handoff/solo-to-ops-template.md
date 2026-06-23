@@ -1,121 +1,121 @@
-# 交接：harness-solo → harness-ops
+# Handoff: harness-solo → harness-ops
 
-> 生成时间：YYYY-MM-DD HH:MM
-> 源框架：harness-solo
-> 目标框架：harness-ops
+> Generated at: YYYY-MM-DD HH:MM
+> Source framework: harness-solo
+> Target framework: harness-ops
 
-## 阶段总结
+## Phase Summary
 
-<本阶段做了什么，一句话概括。如：完成 V1 核心功能开发并合并主干，准备发布上线>
+<One-sentence summary of what was done in this phase. e.g., Completed V1 core feature development and merged to main branch, ready for release>
 
-## 交付物版本
+## Deliverable Version
 
-| 字段 | 值 | 说明 |
+| Field | Value | Notes |
 |------|-----|------|
-| 镜像 Tag | <registry/image:tag> | 如使用 Docker 镜像部署 |
-| Commit Hash | <git-sha> | 主干合并点的 Commit Hash |
-| 分支 | <main / master> | 合并到的主干分支名 |
-| 代码仓库 | <仓库地址> | |
-| 当前版本 | <v1.0.0> | 符合 SemVer 的版本号 |
+| Image tag | <registry/image:tag> | If deploying with Docker image |
+| Commit hash | <git-sha> | Commit hash of the main branch merge point |
+| Branch | <main / master> | Name of the main branch merged into |
+| Code repository | <repo URL> | |
+| Current version | <v1.0.0> | SemVer-compliant version number |
 
-> 必填：镜像 Tag 或 Commit Hash 至少提供一项，建议两者都提供以便运维核对。
+> Required: provide at least one of image tag or commit hash; providing both is recommended for ops verification.
 
-## 环境变量清单
+## Environment Variables List
 
-> 本次部署需增/删/改的配置项。仅列出本次变更项，已有未变项不重复列出。
+> Configuration items to add/remove/modify for this deployment. List only the items changed this time; do not repeat unchanged existing items.
 
-| 变量名 | 操作 | 值 / 示例 | 是否敏感 | 说明 |
+| Variable name | Operation | Value / Example | Sensitive? | Notes |
 |--------|------|----------|---------|------|
-| <NEW_KEY_1> | 新增 | <value 或占位> | 是/否 | <用途说明> |
-| <CHANGED_KEY_1> | 修改 | <value 或占位> | 是/否 | <变更原因> |
-| <REMOVED_KEY_1> | 删除 | — | — | <删除原因> |
+| <NEW_KEY_1> | Add | <value or placeholder> | Yes/No | <purpose description> |
+| <CHANGED_KEY_1> | Modify | <value or placeholder> | Yes/No | <change reason> |
+| <REMOVED_KEY_1> | Remove | — | — | <removal reason> |
 
-> 敏感变量（如密钥、Token）不要在此填写明文，只标注"敏感：是"，并在备注中说明应从哪个 Secret Manager 获取。
+> For sensitive variables (e.g., keys, tokens), do not fill in plaintext here. Only mark "Sensitive: Yes" and note in the remarks which Secret Manager to fetch them from.
 
-## 数据库脚本
+## Database Scripts
 
-> 是否包含 Migration 及其执行顺序。
+> Whether migrations are included and their execution order.
 
-- 是否包含 Migration：是 / 否
-- Migration 工具：<Flyway / Prisma Migrate / knex / 手写 SQL / ...>
+- Includes migrations: Yes / No
+- Migration tool: <Flyway / Prisma Migrate / knex / hand-written SQL / ...>
 
-| 执行顺序 | 脚本路径 | 类型 | 说明 |
+| Execution order | Script path | Type | Notes |
 |---------|---------|------|------|
-| 1 | <db/migrations/V001__add_xxx.sql> | 前置 | <表结构变更说明> |
-| 2 | <db/migrations/V002__seed_xxx.sql> | 数据 | <种子数据说明> |
-| 3 | <db/migrations/V003__cleanup_xxx.sql> | 后置 | <部署后清理> |
+| 1 | <db/migrations/V001__add_xxx.sql> | Pre | <schema change description> |
+| 2 | <db/migrations/V002__seed_xxx.sql> | Data | <seed data description> |
+| 3 | <db/migrations/V003__cleanup_xxx.sql> | Post | <post-deployment cleanup> |
 
-**执行时机**：
-- 前置脚本：在应用部署前执行
-- 后置脚本：在应用部署后执行
+**Execution timing**:
+- Pre-scripts: execute before application deployment
+- Post-scripts: execute after application deployment
 
-**回滚脚本**：
-- <db/rollback/V001__revert.sql>（如无对应回滚脚本，须说明替代方案）
+**Rollback scripts**:
+- <db/rollback/V001__revert.sql> (if no corresponding rollback script exists, explain the alternative)
 
-## 冒烟测试
+## Smoke Tests
 
-> 验证部署成功的检查点。部署完成后必须全部通过才能宣告发布成功。
+> Checkpoints to verify deployment success. After deployment completes, all must pass before declaring the release successful.
 
-| 序号 | 检查项 | 验证方式 | 期望结果 | 关联功能 |
+| # | Check item | Verification method | Expected result | Related feature |
 |------|--------|---------|---------|---------|
-| 1 | 健康检查 | `GET /health` | 200 OK，返回 `{"status":"ok"}` | 基础可用性 |
-| 2 | 关键 API 可达 | `GET /api/xxx` | 200 OK，响应体符合 schema | <功能1> |
-| 3 | 数据库连接 | 执行一条只读查询 | 返回预期数据 | 数据层 |
-| 4 | 关键页面加载 | 访问 `/` | 200 OK，无 5xx | 前端 |
-| 5 | 埋点事件上报 | 触发一次关键事件 | 网络请求 200，事件入库 | 增长链路 |
+| 1 | Health check | `GET /health` | 200 OK, returns `{"status":"ok"}` | Basic availability |
+| 2 | Key API reachable | `GET /api/xxx` | 200 OK, response body matches schema | <feature 1> |
+| 3 | Database connection | Execute a read-only query | Returns expected data | Data layer |
+| 4 | Key page load | Visit `/` | 200 OK, no 5xx | Frontend |
+| 5 | Tracking event reporting | Trigger a key event | Network request 200, event recorded | Growth pipeline |
 
-> 冒烟测试不替代完整回归测试，仅验证"部署本身没把服务搞挂"。
+> Smoke tests do not replace full regression testing; they only verify "the deployment itself didn't break the service".
 
-## 回滚方案
+## Rollback Plan
 
-> 出错时的降级或代码回滚措施。
+> Degradation or code rollback measures in case of errors.
 
-### 回滚触发条件
+### Rollback Triggers
 
-- 冒烟测试任一项失败且 5 分钟内无法修复
-- 错误率 > 5% 持续 10 分钟
-- 出现 P0 级线上事故
+- Any smoke test failure that cannot be fixed within 5 minutes
+- Error rate > 5% sustained for 10 minutes
+- A P0-level production incident occurs
 
-### 回滚步骤
+### Rollback Steps
 
-| 步骤 | 操作 | 命令 / 路径 | 预期耗时 |
+| Step | Operation | Command / Path | Estimated time |
 |------|------|------------|---------|
-| 1 | 切回上一版本镜像 | `kubectl set image deployment/xxx container=registry/image:<prev-tag>` | <2min> |
-| 2 | 回滚数据库 | 执行 `<db/rollback/V003__revert.sql>` | <5min> |
-| 3 | 回滚环境变量 | 恢复配置中心到上一版本快照 | <2min> |
-| 4 | 验证回滚 | 重新执行冒烟测试 | <5min> |
+| 1 | Revert to previous image version | `kubectl set image deployment/xxx container=registry/image:<prev-tag>` | <2min> |
+| 2 | Roll back database | Execute `<db/rollback/V003__revert.sql>` | <5min> |
+| 3 | Roll back environment variables | Restore config center to previous version snapshot | <2min> |
+| 4 | Verify rollback | Re-run smoke tests | <5min> |
 
-### 降级方案（如无法完全回滚）
+### Degradation Plan (if full rollback is not possible)
 
-- <功能开关关闭 / 限流降级 / 静态兜底页 等措施>
+- <Feature flag off / rate-limit degradation / static fallback page, etc.>
 
-## 已知风险
+## Known Risks
 
-| 风险 | 等级 | 影响范围 | 缓解措施 |
+| Risk | Level | Impact scope | Mitigation |
 |------|------|---------|---------|
-| <Migration 不可逆> | 高/中/低 | <范围> | <措施> |
-| <依赖外部服务变更> | 高/中/低 | <范围> | <措施> |
+| <Migration is irreversible> | High/Medium/Low | <scope> | <action> |
+| <Depends on external service changes> | High/Medium/Low | <scope> | <action> |
 
-## 未决事项
+## Open Items
 
-需 harness-ops 处理或与 harness-solo 确认的问题：
+Issues for harness-ops to handle or confirm with harness-solo:
 
-- 待定 1: <问题描述>
-- 待定 2: <问题描述>
+- TBD 1: <issue description>
+- TBD 2: <issue description>
 
-## 建议下一步
+## Suggested Next Steps
 
-harness-ops 应优先处理：
+harness-ops should prioritize:
 
-1. 按本文件拉取镜像 / 检出 Commit 部署
-2. 按顺序执行数据库 Migration
-3. 配置环境变量（敏感项从 Secret Manager 获取）
-4. 部署完成后执行冒烟测试，全部通过后宣告发布成功
-5. 监控发布后 1 小时的核心指标（错误率 / 延迟 / 资源占用）
+1. Pull the image / check out the commit per this file and deploy
+2. Execute database migrations in order
+3. Configure environment variables (fetch sensitive items from Secret Manager)
+4. Run smoke tests after deployment; declare release success only after all pass
+5. Monitor core metrics (error rate / latency / resource usage) for 1 hour post-release
 
 ---
 
-## 下游框架使用说明
+## Downstream Framework Usage Notes
 
-harness-ops 的部署/发布 skill 会自动检测本文件并读取交付物版本 + 数据库脚本 + 回滚方案。
-如未自动识别，可手动指向本文件路径让 Agent 读取。
+harness-ops's deployment/release skill will auto-detect this file and read the deliverable version + database scripts + rollback plan.
+If not auto-detected, you can manually point the Agent to this file path to read it.

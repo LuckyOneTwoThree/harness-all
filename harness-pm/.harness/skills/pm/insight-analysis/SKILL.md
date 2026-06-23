@@ -1,26 +1,26 @@
 ---
 name: insight-analysis
-description: 当需要进行需求洞察分析、需求分层、根因分析或需求优先级评估时使用。整合JTBD、需求分层、5Whys根因、KANO分类和优先级评分。关键词：需求洞察、JTBD、5Whys、KANO、优先级评分、需求分析。
+description: Used when requirement insight analysis, requirement layering, root cause analysis, or requirement priority assessment is needed. Integrates JTBD, requirement layering, 5 Whys root cause, KANO classification, and priority scoring. Keywords: requirement insight, JTBD, 5 Whys, KANO, priority scoring, requirement analysis.
 metadata:
-  module: "产品探索与发现"
-  sub-module: "需求洞察"
+  module: "Product Discovery"
+  sub-module: "Requirement Insight"
   type: "pipeline"
   version: "3.0"
-  domain_tags: ["通用"]
+  domain_tags: ["General"]
   trigger_examples:
-    - "帮我分析一下用户需求"
-    - "需求太多了，帮我排个优先级"
-    - "用KANO模型分析一下需求"
-    - "挖掘一下用户的深层需求"
-    - "用户到底想完成什么任务"
-    - "为什么用户总是抱怨这个功能"
-    - "哪些功能是必须有的"
-    - "需求太多先做哪个"
+    - "Help me analyze user requirements"
+    - "Too many requirements, help me prioritize"
+    - "Analyze requirements using the KANO model"
+    - "Uncover users' deeper needs"
+    - "What task are users really trying to accomplish"
+    - "Why do users always complain about this feature"
+    - "Which features are must-haves"
+    - "Too many requirements, which one to do first"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "执行JTBD功能性任务提取和需求三层拆解，输出需求列表与基础优先级排序"
-  deep_description: "额外包含情感性/社会性Job推断、5Whys根因深挖、KANO分类、完整优先级评分（含KANO加成）"
+  quick_description: "Execute JTBD functional job extraction and requirement three-layer decomposition, output requirement list with basic priority ranking"
+  deep_description: "Additionally includes emotional/social job inference, 5 Whys root cause deep dive, KANO classification, full priority scoring (including KANO bonus)"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -31,234 +31,234 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# Insight Analysis — 需求洞察分析
+# Insight Analysis — Requirement Insight Analysis
 
-## 核心原则
+## Core Principles
 
-1. **需求≠问题**——用户描述的是解决方案不是问题本身，先拆解（requirement-layers）再分析（jtbd/5whys），避免停留在表面需求
-2. **任务而非方案**——用户表达的"想要XX功能"是方案而非任务，JTBD要挖掘的是"用户用这个功能想完成什么"
-3. **现象驱动而非假设驱动**——5Whys从可观测的问题现象出发，每层追问必须锚定上一层回答，禁止跳跃式推断
-4. **分类基于用户反应而非产品属性**——KANO分类的依据是"用户对功能有无的反应"，而非"功能本身的技术复杂度"
-5. **多维度独立贡献**——痛点强度、频率、可解决性各自独立贡献分数，采用加权求和而非乘法避免极端值
-6. **KANO是加成而非乘数**——KANO分类作为加成系数调整基础分，不会让其他维度的贡献完全消失
-7. **未确认维度显式标注**——可解决性默认值3（中等），未获技术确认的需求整体评分置信度强制为low
+1. **Requirements ≠ problems** — Users describe solutions, not the problem itself; decompose first (requirement-layers), then analyze (jtbd/5whys) to avoid staying at surface-level requirements
+2. **Jobs, not solutions** — What users express as "want feature XX" is a solution, not a job; JTBD digs into "what the user wants to accomplish with this feature"
+3. **Phenomenon-driven, not assumption-driven** — 5 Whys starts from observable problem phenomena; each follow-up question must anchor to the previous answer; no jumping inferences
+4. **Classification based on user reactions, not product attributes** — KANO classification is based on "user reactions to the presence/absence of a feature", not "the technical complexity of the feature itself"
+5. **Multi-dimensional independent contributions** — Pain intensity, frequency, and solvability each independently contribute to the score; use weighted sum rather than multiplication to avoid extreme values
+6. **KANO is a bonus, not a multiplier** — KANO classification adjusts the base score as a bonus coefficient; it does not make other dimensions' contributions completely disappear
+7. **Unconfirmed dimensions explicitly annotated** — Solvability default value is 3 (medium); requirements without technical confirmation have their overall score confidence forced to low
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI 建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 用户反馈数据 | JSON | 是 | docs/discovery/user-research.md（追加“用户声音分析”章节） | 用户声音与情感分析数据 |
-| 行为分析数据 | JSON | 是 | docs/discovery/user-research.md（追加“用户行为分析”章节） | 行为模式与痛点数据 |
-| 原始需求列表 | JSON | ○ | 用户提供 | 用户声音、业务方需求、数据异常等原始需求 |
+| User feedback data | JSON | Yes | docs/discovery/user-research.md (append "User Voice Analysis" section) | User voice and sentiment analysis data |
+| Behavior analysis data | JSON | Yes | docs/discovery/user-research.md (append "User Behavior Analysis" section) | Behavior patterns and pain point data |
+| Raw requirement list | JSON | ○ | User-provided | Raw requirements from user voice, business stakeholders, data anomalies, etc. |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 并行洞察（JTBD + 需求分层） [核心]
+### Step 1: Parallel Insights (JTBD + Requirement Layers) [Core]
 
-并行执行 JTBD 分析和需求三层模型拆解。
+Execute JTBD analysis and requirement three-layer model decomposition in parallel.
 
-#### 1a: JTBD 分析
+#### 1a: JTBD Analysis
 
-从用户反馈和行为数据中提取功能性、情感性、社会性三层Job。
+Extract functional, emotional, and social three-layer Jobs from user feedback and behavior data.
 
-**Step 1a-1: Functional Job 提取**
+**Step 1a-1: Functional Job Extraction**
 
-- 扫描用户原话，匹配任务意图模式
-- 从行为数据中提取高频行为目标，推断用户试图完成的任务
-- 意图模式库：
+- Scan user verbatims, match task intent patterns
+- Extract high-frequency behavior goals from behavior data, infer tasks users are trying to accomplish
+- Intent pattern library:
 
-| 模式类别 | 匹配模式 | 推断方向 |
+| Pattern category | Matching patterns | Inference direction |
 |----------|----------|----------|
-| 直接表达 | "我想..."、"能不能..."、"需要..."、"帮我..."、"希望..." | 直接提取为Functional Job |
-| 痛点反推 | "太慢了"、"太麻烦了"、"不方便"、"不好用" | 反推用户想高效/便捷地完成某事 |
-| 行为目标 | 高频操作路径、重复行为模式 | 推断用户试图达成的行为目标 |
-| 竞品对比 | "XX产品可以..."、"为什么你们不能..." | 提取用户期望的功能能力 |
-| 场景描述 | "每次做XX的时候..."、"在XX场景下..." | 提取场景化的功能需求 |
+| Direct expression | "I want...", "Can you...", "Need...", "Help me...", "Hope..." | Directly extract as Functional Job |
+| Pain point reverse inference | "Too slow", "Too cumbersome", "Inconvenient", "Hard to use" | Reverse infer user wants to accomplish something efficiently/conveniently |
+| Behavior goal | High-frequency operation paths, repeated behavior patterns | Infer behavior goals the user is trying to achieve |
+| Competitor comparison | "Product XX can...", "Why can't you..." | Extract functional capabilities users expect |
+| Scenario description | "Every time I do XX...", "In XX scenario..." | Extract scenario-based functional requirements |
 
-- 对每个Functional Job标注频率和情感强度
+- Annotate frequency and sentiment intensity for each Functional Job
 
-**Step 1a-2: Emotional Job 推断**
+**Step 1a-2: Emotional Job Inference**
 
-- 从负向反馈中推断情感诉求
-- 情感映射规则库：
+- Infer emotional needs from negative feedback
+- Emotional mapping rule library:
 
-| 负向表达模式 | 情感诉求方向 | 置信度基准 |
+| Negative expression pattern | Emotional need direction | Confidence baseline |
 |-------------|-------------|-----------|
-| "太麻烦了"/"太复杂了"/"操作太多" | 渴望轻松/省力 | 0.8 |
-| "不放心"/"担心"/"怕出错" | 渴望安全感/确定性 | 0.75 |
-| "很焦虑"/"着急"/"来不及" | 渴望掌控感/效率 | 0.75 |
-| "被忽略了"/"没人理我"/"反馈没回应" | 渴望被重视/被关注 | 0.7 |
-| "太慢了"/"等太久"/"响应慢" | 渴望即时反馈/流畅感 | 0.8 |
-| "看不懂"/"不知道怎么用" | 渴望清晰/简单/易懂 | 0.75 |
+| "Too cumbersome" / "Too complex" / "Too many steps" | Desire for ease/effortlessness | 0.8 |
+| "Worried" / "Concerned" / "Afraid of errors" | Desire for security/certainty | 0.75 |
+| "Anxious" / "Rushed" / "No time" | Desire for control/efficiency | 0.75 |
+| "Ignored" / "No one responds to me" / "No response to feedback" | Desire for recognition/attention | 0.7 |
+| "Too slow" / "Waited too long" / "Slow response" | Desire for instant feedback/fluency | 0.8 |
+| "Can't understand" / "Don't know how to use" | Desire for clarity/simplicity/understandability | 0.75 |
 
-- 置信度调整：单条证据×0.7，2-3条×0.85，4条以上×1.0
+- Confidence adjustment: single evidence ×0.7, 2-3 pieces ×0.85, 4+ pieces ×1.0
 
-**Step 1a-3: Social Job 推断**
+**Step 1a-3: Social Job Inference**
 
-- 提取涉及他人评价、社会关系、群体归属的表述
-- 社会映射规则库：
+- Extract expressions involving others' evaluation, social relationships, group belonging
+- Social mapping rule library:
 
-| 社会表达模式 | 社会诉求方向 | 置信度基准 |
+| Social expression pattern | Social need direction | Confidence baseline |
 |-------------|-------------|-----------|
-| "同事都在用"/"别人也在用" | 社会认同/归属感 | 0.7 |
-| "领导要求"/"公司规定" | 合规/服从权威 | 0.8 |
-| "行业标配"/"竞品都有" | 行业认同/竞争力 | 0.7 |
-| "推荐给朋友"/"分享给同事" | 社交货币/分享欲 | 0.7 |
+| "Colleagues are all using it" / "Others are using it too" | Social approval/belonging | 0.7 |
+| "Boss requires it" / "Company policy" | Compliance/obedience to authority | 0.8 |
+| "Industry standard" / "Competitors all have it" | Industry recognition/competitiveness | 0.7 |
+| "Recommend to friends" / "Share with colleagues" | Social currency/desire to share | 0.7 |
 
-- 置信度调整规则同Emotional Job
+- Confidence adjustment rules same as Emotional Job
 
-#### 1b: 需求三层模型拆解
+#### 1b: Requirement Three-Layer Model Decomposition
 
-将原始需求拆解为表层需求、行为需求、本质需求三层。
+Decompose raw requirements into surface, behavioral, and essential three layers.
 
-**Step 1b-1: 表层需求提取**
+**Step 1b-1: Surface Requirement Extraction**
 
-- 逐条读取原始需求，保留原始表述
-- 置信度 = 1.0（直接引用）
+- Read raw requirements one by one, preserve original wording
+- Confidence = 1.0 (direct quote)
 
-**Step 1b-2: 行为需求推断**
+**Step 1b-2: Behavioral Requirement Inference**
 
-- 推断模式：
-  - `"希望增加XX功能"` → 场景：XX场景下需要完成YY → 行为：当前通过ZZ方式替代
-  - `"需要支持XX"` → 场景：XX条件下无法完成YY → 行为：转向竞品或手动处理
-  - `"XX太慢/太卡"` → 场景：高频操作XX时体验受阻 → 行为：减少使用频率或寻找替代方案
-  - `"找不到XX"` → 场景：信息架构不清晰导致迷失 → 行为：反复搜索或求助他人
-  - `"XX操作太复杂"` → 场景：任务流程步骤过多 → 行为：跳过非必要步骤或放弃使用
-  - `"希望XX能自动"` → 场景：重复性操作消耗精力 → 行为：手动执行但产生挫败感
-  - `"XX数据不准"` → 场景：决策依赖数据但数据不可靠 → 行为：交叉验证或延迟决策
-- 置信度范围：0.7-0.9
+- Inference patterns:
+  - `"Hope to add XX feature"` → Scenario: Need to accomplish YY in XX scenario → Behavior: Currently substituting via ZZ method
+  - `"Need to support XX"` → Scenario: Cannot accomplish YY under XX condition → Behavior: Switch to competitor or handle manually
+  - `"XX is too slow/laggy"` → Scenario: Experience hindered during high-frequency operation XX → Behavior: Reduce usage frequency or seek alternatives
+  - `"Can't find XX"` → Scenario: Lost due to unclear information architecture → Behavior: Repeated searching or asking others for help
+  - `"XX operation is too complex"` → Scenario: Too many steps in task flow → Behavior: Skip non-essential steps or abandon use
+  - `"Hope XX can be automatic"` → Scenario: Repetitive operations consume energy → Behavior: Manual execution but generates frustration
+  - `"XX data is inaccurate"` → Scenario: Decision relies on data but data is unreliable → Behavior: Cross-verify or delay decision
+- Confidence range: 0.7-0.9
 
-**Step 1b-3: 本质需求推断**
+**Step 1b-3: Essential Requirement Inference**
 
-- 推断模式：
-  - `"批量导出"` → 减少重复劳动 → 追求效率和成就感
-  - `"多语言支持"` → 服务海外客户 → 追求业务拓展和竞争力
-  - `"实时通知"` → 不想错过信息 → 追求掌控感和安全感
-  - `"操作简化"` → 降低认知负荷 → 追求轻松体验和自主感
-  - `"数据准确性"` → 避免决策失误 → 追求确定性和信任感
-  - `"个性化定制"` → 适配自身工作流 → 追求自主性和归属感
-  - `"协作功能"` → 减少沟通成本 → 追求社交连接和团队认同
-- 置信度范围：0.4-0.7
-- 验证标记：本质需求置信度<0.5 → `validation_needed: true`，行为需求置信度<0.7 → `validation_needed: true`
+- Inference patterns:
+  - `"Batch export"` → Reduce repetitive labor → Pursue efficiency and sense of achievement
+  - `"Multi-language support"` → Serve overseas customers → Pursue business expansion and competitiveness
+  - `"Real-time notifications"` → Don't want to miss information → Pursue control and security
+  - `"Simplify operations"` → Reduce cognitive load → Pursue effortless experience and autonomy
+  - `"Data accuracy"` → Avoid decision errors → Pursue certainty and trust
+  - `"Personalized customization"` → Adapt to own workflow → Pursue autonomy and belonging
+  - `"Collaboration features"` → Reduce communication costs → Pursue social connection and team identity
+- Confidence range: 0.4-0.7
+- Validation flag: Essential requirement confidence <0.5 → `validation_needed: true`, behavioral requirement confidence <0.7 → `validation_needed: true`
 
-### Step 2: 根因深挖（5Whys） [条件]
+### Step 2: Root Cause Deep Dive (5 Whys) [Conditional]
 
-对关键痛点或问题现象进行根因深挖。
+Deep dive into root causes for key pain points or problem phenomena.
 
-**Round 1**: 基于问题现象，生成原因假设列表Top3，按可能性排序，每个原因标注数据支撑度和置信度
+**Round 1**: Based on the problem phenomenon, generate a Top 3 list of cause hypotheses, sorted by likelihood, each cause annotated with data support and confidence
 
-**Round 2-N**: 对上一轮Top1原因追问为什么，生成子原因列表Top3
+**Round 2-N**: Ask why about the Top 1 cause from the previous round, generate a Top 3 list of sub-causes
 
-**多路径分叉**：当上一轮Top1与Top2置信度差距 < 0.15时，同时追踪两条因果链
+**Multi-path branching**: When the confidence gap between Top 1 and Top 2 from the previous round is < 0.15, track both causal chains simultaneously
 
-**终止条件**（满足任一即停止）：
+**Termination conditions** (stop when any is met):
 
-| 条件 | 说明 |
+| Condition | Description |
 |---|---|
-| 达到第5层 | 已进行5轮追问，更深层次推断可信度不足 |
-| 原因已触及不可再分根因 | 如"系统架构限制"、"组织流程问题"等不可再细化的原因 |
-| 连续2层置信度 < 0.3 | 推断链可信度不足，需人类介入 |
-| 已找到可行动改进点 | 根因已明确且可转化为具体行动 |
+| Reached 5th level | 5 rounds of questioning completed; deeper inferences lack sufficient credibility |
+| Cause reached indivisible root cause | Such as "system architecture limitation", "organizational process issue" and other causes that cannot be further refined |
+| 2 consecutive levels with confidence < 0.3 | Inference chain lacks credibility; human intervention needed |
+| Actionable improvement point found | Root cause is clear and can be converted into concrete action |
 
-### Step 3: 需求分类（KANO） [条件]
+### Step 3: Requirement Classification (KANO) [Conditional]
 
-对功能需求进行KANO模型分类。
+Classify functional requirements using the KANO model.
 
-**Step 3-1: 功能-反馈关联**
+**Step 3-1: Feature-Feedback Association**
 
-- 匹配规则：功能名称精确匹配、功能描述关键词匹配（匹配度 > 0.7）、用户反馈中提及的功能别名匹配
-- 计算指标：正向提及率、负向提及率、提及频率、平均情感强度、使用深度相关性
+- Matching rules: Exact feature name match, feature description keyword match (match degree > 0.7), feature alias match in user feedback
+- Calculate metrics: Positive mention rate, negative mention rate, mention frequency, average sentiment intensity, usage depth correlation
 
-**Step 3-2: 分类规则**
+**Step 3-2: Classification Rules**
 
-| 分类 | 条件 | 含义 |
+| Category | Condition | Meaning |
 |---|---|---|
-| 必备型（Must-be） | 负向提及率 > 60% 且 提及频率 > 5% | 缺失时强烈不满，存在时视为理所当然 |
-| 期望型（One-dimensional） | 负向提及率 30%-60% 且 与使用深度正相关（correlation > 0.3） | 做得越好用户越满意 |
-| 兴奋型（Attractive） | 正向提及率 > 60% 且 提及频率 < 5% | 超出预期带来惊喜，缺失不会不满 |
-| 无差异型（Indifferent） | 提及频率 < 1% 且 平均情感强度 < 2 | 用户不在乎有无 |
+| Must-be | Negative mention rate > 60% and mention frequency > 5% | Strong dissatisfaction when absent; taken for granted when present |
+| One-dimensional | Negative mention rate 30%-60% and positively correlated with usage depth (correlation > 0.3) | The better it is, the more satisfied users are |
+| Attractive | Positive mention rate > 60% and mention frequency < 5% | Exceeds expectations and brings delight; absence causes no dissatisfaction |
+| Indifferent | Mention frequency < 1% and average sentiment intensity < 2 | Users don't care about presence/absence |
 
-**行业阈值适配规则**：
+**Industry threshold adaptation rules**:
 
-| 行业/阶段 | 适配规则 | 调整说明 |
+| Industry/Stage | Adaptation rule | Adjustment description |
 |---|---|---|
-| B端SaaS | 必备型阈值下调：负向提及率 > 50% 即为必备型 | B端用户对基础功能缺失容忍度更低 |
-| C端消费 | 兴奋型阈值上调：正向提及率 > 70% 才为兴奋型 | C端用户更容易给出正向反馈 |
-| 早期产品 | 整体阈值放宽：数据量不足时降低判定门槛（置信度0.5即可分类） | 早期数据有限 |
-| 成熟产品 | 严格阈值：数据充足时使用标准阈值，置信度<0.7必须升级 | 成熟产品数据充分 |
+| B2B SaaS | Must-be threshold lowered: negative mention rate > 50% qualifies as Must-be | B2B users have lower tolerance for missing basic features |
+| B2C Consumer | Attractive threshold raised: positive mention rate > 70% qualifies as Attractive | B2C users are more likely to give positive feedback |
+| Early-stage product | Overall threshold relaxed: lower judgment threshold when data volume is insufficient (confidence 0.5 is sufficient for classification) | Early data is limited |
+| Mature product | Strict threshold: use standard thresholds when data is sufficient, confidence <0.7 must escalate | Mature products have sufficient data |
 
-**Step 3-3: 边界情况处理**
+**Step 3-3: Boundary Case Handling**
 
-- 分类置信度 < 0.7：标记"待人类判定"
-- 不同群体分类不同：按用户群体分别标注分类结果
-- 反向型：正向提及率 < 10% 且负向提及率 > 70%，标记为"反向型"
-- 无反馈数据：标记为"数据不足"
+- Classification confidence < 0.7: Mark "pending human judgment"
+- Different classifications across groups: Annotate classification results by user group
+- Reverse: Positive mention rate < 10% and negative mention rate > 70%, mark as "Reverse"
+- No feedback data: Mark "insufficient data"
 
-### Step 4: 优先级评分 [条件]
+### Step 4: Priority Scoring [Conditional]
 
-对需求列表进行加权优先级评分排序。
+Perform weighted priority scoring and ranking on the requirement list.
 
-**评分函数**：
+**Scoring function**:
 
-- 基础分 = 0.35 × 痛点强度(1-5) + 0.30 × 频率权重(1-5) + 0.35 × 可解决性(1-5)
-- KANO加成 = 基础分 × (KANO系数 - 1)
-- 优先级分数 = 基础分 + KANO加成
+- Base score = 0.35 × pain intensity (1-5) + 0.30 × frequency weight (1-5) + 0.35 × solvability (1-5)
+- KANO bonus = base score × (KANO coefficient - 1)
+- Priority score = base score + KANO bonus
 
-**KANO系数映射**：
+**KANO coefficient mapping**:
 
-| KANO分类 | 系数 | 加成效果 |
+| KANO category | Coefficient | Bonus effect |
 |---|---|---|
-| 必备型（Must-be） | 1.5 | 基础分+50% |
-| 期望型（One-dimensional） | 1.0 | 无加成 |
-| 兴奋型（Attractive） | 0.8 | 基础分-20% |
-| 无差异型（Indifferent） | 0.2 | 基础分-80% |
-| 反向型（Reverse） | 0.0 | 基础分归零 |
+| Must-be | 1.5 | Base score +50% |
+| One-dimensional | 1.0 | No bonus |
+| Attractive | 0.8 | Base score -20% |
+| Indifferent | 0.2 | Base score -80% |
+| Reverse | 0.0 | Base score zeroed |
 
-**各维度评分规则**：
+**Per-dimension scoring rules**:
 
-痛点强度（1-5分）：
+Pain intensity (1-5 points):
 
-| 分数 | 条件 |
+| Score | Condition |
 |---|---|
-| 5 | 情感强度≥4 且 5Whys根因已确认 |
-| 4 | 情感强度≥3 或 5Whys根因已确认 |
-| 3 | 情感强度=2-3 且有负向反馈 |
-| 2 | 情感强度=1-2 且反馈较少 |
-| 1 | 无负向反馈或情感强度<1 |
+| 5 | Sentiment intensity ≥4 and 5 Whys root cause confirmed |
+| 4 | Sentiment intensity ≥3 or 5 Whys root cause confirmed |
+| 3 | Sentiment intensity = 2-3 with negative feedback |
+| 2 | Sentiment intensity = 1-2 with little feedback |
+| 1 | No negative feedback or sentiment intensity <1 |
 
-频率权重（1-5分）：
+Frequency weight (1-5 points):
 
-| 分数 | 条件 |
+| Score | Condition |
 |---|---|
-| 5 | 影响用户占比 > 30% 或 提及频率 > 10% |
-| 4 | 影响用户占比 20-30% 或 提及频率 5-10% |
-| 3 | 影响用户占比 10-20% 或 提及频率 2-5% |
-| 2 | 影响用户占比 5-10% 或 提及频率 1-2% |
-| 1 | 影响用户占比 < 5% 或 提及频率 < 1% |
+| 5 | Affected user ratio > 30% or mention frequency > 10% |
+| 4 | Affected user ratio 20-30% or mention frequency 5-10% |
+| 3 | Affected user ratio 10-20% or mention frequency 2-5% |
+| 2 | Affected user ratio 5-10% or mention frequency 1-2% |
+| 1 | Affected user ratio < 5% or mention frequency < 1% |
 
-可解决性（1-5分）：
+Solvability (1-5 points):
 
-| 分数 | 条件 |
+| Score | Condition |
 |---|---|
-| 5 | 技术方案成熟，1个迭代可交付 |
-| 4 | 技术方案可行，2-3个迭代可交付 |
-| 3 | 技术方案需调研，3-5个迭代 |
-| 2 | 技术方案有挑战，需跨团队协作 |
-| 1 | 技术方案不确定或依赖外部条件 |
+| 5 | Technical solution mature, deliverable in 1 iteration |
+| 4 | Technical solution feasible, deliverable in 2-3 iterations |
+| 3 | Technical solution needs research, 3-5 iterations |
+| 2 | Technical solution challenging, requires cross-team collaboration |
+| 1 | Technical solution uncertain or depends on external conditions |
 
-> **注意**：可解决性需技术团队输入，默认值为3（中等），标记为"待技术确认"，该需求整体评分置信度降级为low
+> **Note**: Solvability requires technical team input; default value is 3 (medium), marked as "pending tech confirmation"; this requirement's overall score confidence is downgraded to low
 
-## 输出
+## Output
 
-输出路径：`docs/discovery/insight.md`
+Output path: `docs/discovery/insight.md`
 
-输出文件：insight-analysis.json + insight-analysis.md
+Output files: insight-analysis.json + insight-analysis.md
 
-### 输出Schema
+### Output Schema
 
 ```json
 {
@@ -269,31 +269,31 @@ writes:
       "type": "object",
       "required": ["jobs", "summary"],
       "properties": {
-        "jobs": {"type": "array", "description": "任务列表，详见输出校验规则→jtbd校验"},
-        "summary": {"type": "object", "description": "统计摘要，含total_jobs和by_type"}
+        "jobs": {"type": "array", "description": "Job list, see output validation rules → jtbd validation"},
+        "summary": {"type": "object", "description": "Statistical summary, including total_jobs and by_type"}
       }
     },
     "requirement_layers": {
       "type": "object",
       "required": ["requirement_layers"],
       "properties": {
-        "requirement_layers": {"type": "array", "description": "需求三层拆解列表，详见输出校验规则→requirement_layers校验"}
+        "requirement_layers": {"type": "array", "description": "Requirement three-layer decomposition list, see output validation rules → requirement_layers validation"}
       }
     },
     "5whys": {
       "type": "object",
       "required": ["chains", "root_cause", "actionable_fix"],
       "properties": {
-        "chains": {"type": "array", "description": "因果链列表，详见输出校验规则→5whys校验"},
+        "chains": {"type": "array", "description": "Causal chain list, see output validation rules → 5whys validation"},
         "root_cause": {"type": "string"},
-        "actionable_fix": {"type": "object", "description": "可行动改进建议，含description/effort/impact/suggested_metrics"}
+        "actionable_fix": {"type": "object", "description": "Actionable improvement recommendation, including description/effort/impact/suggested_metrics"}
       }
     },
     "kano": {
       "type": "object",
       "required": ["kano_classification", "boundary_cases", "summary"],
       "properties": {
-        "kano_classification": {"type": "array", "description": "KANO分类列表，详见输出校验规则→kano校验"},
+        "kano_classification": {"type": "array", "description": "KANO classification list, see output validation rules → kano validation"},
         "boundary_cases": {"type": "array"},
         "summary": {"type": "object"}
       }
@@ -302,105 +302,105 @@ writes:
       "type": "object",
       "required": ["priority_list", "scoring_summary", "priority_thresholds"],
       "properties": {
-        "priority_list": {"type": "array", "description": "优先级列表，详见输出校验规则→priority_scoring校验"},
+        "priority_list": {"type": "array", "description": "Priority list, see output validation rules → priority_scoring validation"},
         "scoring_summary": {"type": "object"},
         "priority_thresholds": {"type": "object"}
       }
     },
-    "metadata": {"type": "object", "description": "元数据，含版本、时间戳和来源文件"}
+    "metadata": {"type": "object", "description": "Metadata, including version, timestamp, and source files"}
   }
 }
 ```
 
-### 输出校验规则
+### Output Validation Rules
 
-> 类型信息见上方输出Schema，下表仅列出必填标记与约束条件（"—"表示无额外约束）。
+> Type information is in the Output Schema above; the table below lists only required flags and constraints ("—" means no additional constraint).
 
-#### jtbd 校验
+#### jtbd validation
 
-| 字段路径 | 必填 | 约束条件 |
+| Field path | Required | Constraint |
 |----------|------|----------|
-| `jtbd.jobs` | 是 | 不可为空 |
-| `jtbd.jobs[].type` | 是 | enum: functional, emotional, social |
-| `jtbd.jobs[].job` | 是 | 不可为空 |
-| `jtbd.jobs[].frequency` | 是 | — |
-| `jtbd.jobs[].evidence` | 是 | 不可为空 |
-| `jtbd.jobs[].confidence` | 是 | 范围 0-1.0 |
-| `jtbd.jobs[].pain_with_current` | 否 | — |
-| `jtbd.jobs[].pain_level` | 否 | enum: high, medium, low |
-| `jtbd.summary.total_jobs` | 是 | — |
-| `jtbd.summary.by_type` | 是 | — |
+| `jtbd.jobs` | Yes | Cannot be empty |
+| `jtbd.jobs[].type` | Yes | enum: functional, emotional, social |
+| `jtbd.jobs[].job` | Yes | Cannot be empty |
+| `jtbd.jobs[].frequency` | Yes | — |
+| `jtbd.jobs[].evidence` | Yes | Cannot be empty |
+| `jtbd.jobs[].confidence` | Yes | Range 0-1.0 |
+| `jtbd.jobs[].pain_with_current` | No | — |
+| `jtbd.jobs[].pain_level` | No | enum: high, medium, low |
+| `jtbd.summary.total_jobs` | Yes | — |
+| `jtbd.summary.by_type` | Yes | — |
 
-#### requirement_layers 校验
+#### requirement_layers validation
 
-| 字段路径 | 必填 | 约束条件 |
+| Field path | Required | Constraint |
 |----------|------|----------|
-| `requirement_layers.requirement_layers` | 是 | 不可为空 |
-| `requirement_layers.requirement_layers[].id` | 是 | 唯一 |
-| `requirement_layers.requirement_layers[].surface.content` | 是 | 保留原始表述 |
-| `requirement_layers.requirement_layers[].surface.confidence` | 是 | 必须等于1.0 |
-| `requirement_layers.requirement_layers[].behavioral.content` | 是 | 含场景+行为描述 |
-| `requirement_layers.requirement_layers[].behavioral.confidence` | 是 | 范围 0.7-0.9 |
-| `requirement_layers.requirement_layers[].behavioral.inference_basis` | 是 | 不可为空 |
-| `requirement_layers.requirement_layers[].essential.content` | 是 | 描述底层动机 |
-| `requirement_layers.requirement_layers[].essential.confidence` | 是 | 范围 0.4-0.7 |
-| `requirement_layers.requirement_layers[].essential.inference_basis` | 是 | 不可为空 |
-| `requirement_layers.requirement_layers[].validation_needed` | 是 | 本质需求置信度<0.5或行为需求置信度<0.7时必须为true |
-| `requirement_layers.summary.total` | 是 | — |
+| `requirement_layers.requirement_layers` | Yes | Cannot be empty |
+| `requirement_layers.requirement_layers[].id` | Yes | Unique |
+| `requirement_layers.requirement_layers[].surface.content` | Yes | Preserve original wording |
+| `requirement_layers.requirement_layers[].surface.confidence` | Yes | Must equal 1.0 |
+| `requirement_layers.requirement_layers[].behavioral.content` | Yes | Contains scenario + behavior description |
+| `requirement_layers.requirement_layers[].behavioral.confidence` | Yes | Range 0.7-0.9 |
+| `requirement_layers.requirement_layers[].behavioral.inference_basis` | Yes | Cannot be empty |
+| `requirement_layers.requirement_layers[].essential.content` | Yes | Describes underlying motivation |
+| `requirement_layers.requirement_layers[].essential.confidence` | Yes | Range 0.4-0.7 |
+| `requirement_layers.requirement_layers[].essential.inference_basis` | Yes | Cannot be empty |
+| `requirement_layers.requirement_layers[].validation_needed` | Yes | Must be true when essential confidence <0.5 or behavioral confidence <0.7 |
+| `requirement_layers.summary.total` | Yes | — |
 
-#### 5whys 校验
+#### 5whys validation
 
-| 字段路径 | 必填 | 约束条件 |
+| Field path | Required | Constraint |
 |----------|------|----------|
-| `5whys.chains` | 是 | 长度≥1 |
-| `5whys.chains[].path_id` | 是 | — |
-| `5whys.chains[].round` | 是 | — |
-| `5whys.chains[].question` | 是 | — |
-| `5whys.chains[].answer` | 是 | — |
-| `5whys.chains[].evidence` | 是 | — |
-| `5whys.chains[].confidence` | 是 | 范围 0-1.0 |
-| `5whys.chains[].data_support` | 是 | enum: high, medium, low |
-| `5whys.root_cause` | 是 | 非空 |
-| `5whys.actionable_fix.description` | 是 | — |
-| `5whys.actionable_fix.effort` | 是 | enum: low, medium, high |
-| `5whys.actionable_fix.impact` | 是 | enum: low, medium, high |
-| `5whys.actionable_fix.suggested_metrics` | 是 | — |
+| `5whys.chains` | Yes | Length ≥1 |
+| `5whys.chains[].path_id` | Yes | — |
+| `5whys.chains[].round` | Yes | — |
+| `5whys.chains[].question` | Yes | — |
+| `5whys.chains[].answer` | Yes | — |
+| `5whys.chains[].evidence` | Yes | — |
+| `5whys.chains[].confidence` | Yes | Range 0-1.0 |
+| `5whys.chains[].data_support` | Yes | enum: high, medium, low |
+| `5whys.root_cause` | Yes | Non-empty |
+| `5whys.actionable_fix.description` | Yes | — |
+| `5whys.actionable_fix.effort` | Yes | enum: low, medium, high |
+| `5whys.actionable_fix.impact` | Yes | enum: low, medium, high |
+| `5whys.actionable_fix.suggested_metrics` | Yes | — |
 
-#### kano 校验
+#### kano validation
 
-| 字段路径 | 必填 | 约束条件 |
+| Field path | Required | Constraint |
 |----------|------|----------|
-| `kano.kano_classification` | 是 | 不可为空 |
-| `kano.kano_classification[].feature_id` | 是 | — |
-| `kano.kano_classification[].category` | 是 | 必须为must-be/one-dimensional/attractive/indifferent/reverse/insufficient_data之一 |
-| `kano.kano_classification[].confidence` | 是 | 范围 0-1 |
-| `kano.kano_classification[].evidence` | 是 | 含5项指标 |
-| `kano.kano_classification[].review_period` | 是 | — |
-| `kano.boundary_cases` | 是 | confidence<0.7的必须在其中 |
-| `kano.summary` | 是 | — |
+| `kano.kano_classification` | Yes | Cannot be empty |
+| `kano.kano_classification[].feature_id` | Yes | — |
+| `kano.kano_classification[].category` | Yes | Must be one of must-be/one-dimensional/attractive/indifferent/reverse/insufficient_data |
+| `kano.kano_classification[].confidence` | Yes | Range 0-1 |
+| `kano.kano_classification[].evidence` | Yes | Contains 5 metrics |
+| `kano.kano_classification[].review_period` | Yes | — |
+| `kano.boundary_cases` | Yes | Those with confidence <0.7 must be included |
+| `kano.summary` | Yes | — |
 
-#### priority_scoring 校验
+#### priority_scoring validation
 
-| 字段路径 | 必填 | 约束条件 |
+| Field path | Required | Constraint |
 |----------|------|----------|
-| `priority_scoring.priority_list` | 是 | 不可为空 |
-| `priority_scoring.priority_list[].rank` | 是 | — |
-| `priority_scoring.priority_list[].requirement_id` | 是 | — |
-| `priority_scoring.priority_list[].requirement_name` | 是 | — |
-| `priority_scoring.priority_list[].scores.pain_intensity.score` | 是 | 范围 1-5 |
-| `priority_scoring.priority_list[].scores.frequency_weight.score` | 是 | 范围 1-5 |
-| `priority_scoring.priority_list[].scores.solvability.score` | 是 | 范围 1-5 |
-| `priority_scoring.priority_list[].scores.solvability.confirmed` | 是 | — |
-| `priority_scoring.priority_list[].scores.kano_coefficient.coefficient` | 是 | — |
-| `priority_scoring.priority_list[].scores.kano_coefficient.category` | 是 | — |
-| `priority_scoring.priority_list[].base_score` | 是 | — |
-| `priority_scoring.priority_list[].kano_bonus` | 是 | — |
-| `priority_scoring.priority_list[].total_score` | 是 | — |
-| `priority_scoring.priority_list[].score_confidence` | 是 | enum: high, medium, low |
-| `priority_scoring.scoring_summary` | 是 | — |
-| `priority_scoring.priority_thresholds` | 是 | — |
+| `priority_scoring.priority_list` | Yes | Cannot be empty |
+| `priority_scoring.priority_list[].rank` | Yes | — |
+| `priority_scoring.priority_list[].requirement_id` | Yes | — |
+| `priority_scoring.priority_list[].requirement_name` | Yes | — |
+| `priority_scoring.priority_list[].scores.pain_intensity.score` | Yes | Range 1-5 |
+| `priority_scoring.priority_list[].scores.frequency_weight.score` | Yes | Range 1-5 |
+| `priority_scoring.priority_list[].scores.solvability.score` | Yes | Range 1-5 |
+| `priority_scoring.priority_list[].scores.solvability.confirmed` | Yes | — |
+| `priority_scoring.priority_list[].scores.kano_coefficient.coefficient` | Yes | — |
+| `priority_scoring.priority_list[].scores.kano_coefficient.category` | Yes | — |
+| `priority_scoring.priority_list[].base_score` | Yes | — |
+| `priority_scoring.priority_list[].kano_bonus` | Yes | — |
+| `priority_scoring.priority_list[].total_score` | Yes | — |
+| `priority_scoring.priority_list[].score_confidence` | Yes | enum: high, medium, low |
+| `priority_scoring.scoring_summary` | Yes | — |
+| `priority_scoring.priority_thresholds` | Yes | — |
 
-### Output JSON 示例
+### Output JSON Example
 
 ```json
 {
@@ -414,15 +414,15 @@ writes:
     "jobs": [
       {
         "type": "functional",
-        "job": "快速完成表单填写",
+        "job": "Quickly complete form filling",
         "frequency": 12,
-        "current_solution": "手动逐项填写",
-        "pain_with_current": "重复劳动，耗时且易出错",
+        "current_solution": "Manual field-by-field filling",
+        "pain_with_current": "Repetitive labor, time-consuming and error-prone",
         "confidence": 1.0,
-        "evidence": ["用户访谈#23", "行为数据-表单放弃率35%"],
+        "evidence": ["User interview #23", "Behavior data - form abandonment rate 35%"],
         "sentiment_intensity": 4
       }
-      // ... 同结构可扩展
+      // ... same structure can be extended
     ],
     "summary": {
       "total_jobs": 3,
@@ -431,19 +431,19 @@ writes:
   },
   "requirement_layers": {
     "analysis_metadata": {
-      "source": "原始需求列表",
+      "source": "Raw requirement list",
       "total_requirements": 2,
       "analysis_timestamp": "ISO8601"
     },
     "requirement_layers": [
       {
         "id": "REQ-001",
-        "source": "用户反馈",
-        "surface": { "content": "希望增加批量导出功能", "confidence": 1.0 },
-        "behavioral": { "content": "运营人员在月度报表场景下，需要一次性导出多份报表，当前只能逐个导出", "confidence": 0.85, "inference_basis": "用户反馈频率8次+行为数据：报表导出页面平均停留时长异常" },
-        "essential": { "content": "追求工作效率，减少重复性劳动，获得工作成就感", "confidence": 0.6, "inference_basis": "从行为需求推断+JTBD情感Job交叉验证" },
+        "source": "User feedback",
+        "surface": { "content": "Hope to add batch export feature", "confidence": 1.0 },
+        "behavioral": { "content": "Operations staff in monthly report scenario need to export multiple reports at once; currently can only export one by one", "confidence": 0.85, "inference_basis": "User feedback frequency 8 times + behavior data: abnormal average dwell time on report export page" },
+        "essential": { "content": "Pursue work efficiency, reduce repetitive labor, gain sense of work achievement", "confidence": 0.6, "inference_basis": "Inferred from behavioral requirement + JTBD emotional Job cross-validation" },
         "validation_needed": true,
-        "validation_reason": "本质需求置信度0.6<0.7，建议通过用户访谈验证"
+        "validation_reason": "Essential requirement confidence 0.6 < 0.7, recommend validation through user interviews"
       }
     ],
     "summary": { "total": 2, "needs_validation": 2, "high_confidence": 0 }
@@ -455,20 +455,20 @@ writes:
       "analysis_timestamp": "ISO8601"
     },
     "phenomenon": {
-      "description": "用户在注册流程第3步大量放弃",
+      "description": "Users abandon in large numbers at step 3 of the registration flow",
       "source": "jtbd.json",
       "metrics": { "drop_off_rate": 0.35, "affected_users": 1200 }
     },
     "chains": [
-      { "path_id": "main", "round": 1, "question": "为什么用户在注册流程第3步大量放弃？", "answer": "第3步需要填写过多非必要信息", "evidence": "表单字段数12个，行业平均5个", "confidence": 0.85, "data_support": "high" }
-      // ... 同结构可扩展
+      { "path_id": "main", "round": 1, "question": "Why do users abandon in large numbers at step 3 of the registration flow?", "answer": "Step 3 requires filling in too much non-essential information", "evidence": "Form has 12 fields, industry average is 5", "confidence": 0.85, "data_support": "high" }
+      // ... same structure can be extended
     ],
-    "root_cause": "缺乏分阶段收集数据的策略，将注册流程当作唯一的数据收集窗口",
+    "root_cause": "Lack of a phased data collection strategy; treating the registration flow as the only data collection window",
     "actionable_fix": {
-      "description": "实施渐进式数据收集策略，注册流程仅保留核心必填字段（3-5个）",
+      "description": "Implement progressive data collection strategy; keep only core required fields (3-5) in the registration flow",
       "effort": "medium",
       "impact": "high",
-      "suggested_metrics": ["注册完成率提升", "第3步放弃率下降"]
+      "suggested_metrics": ["Registration completion rate increase", "Step 3 abandonment rate decrease"]
     }
   },
   "kano": {
@@ -478,18 +478,18 @@ writes:
       "analysis_timestamp": "ISO8601"
     },
     "kano_classification": [
-      { "feature_id": "FEAT-001", "feature_name": "批量导出", "category": "must-be", "confidence": 0.85, "evidence": { "negative_rate": 0.75, "frequency": 0.08, "positive_rate": 0.25, "usage_depth_correlation": 0.6, "avg_sentiment_intensity": 3.5 }, "review_period": "6个月" }
-      // ... 同结构可扩展
+      { "feature_id": "FEAT-001", "feature_name": "Batch export", "category": "must-be", "confidence": 0.85, "evidence": { "negative_rate": 0.75, "frequency": 0.08, "positive_rate": 0.25, "usage_depth_correlation": 0.6, "avg_sentiment_intensity": 3.5 }, "review_period": "6 months" }
+      // ... same structure can be extended
     ],
     "boundary_cases": [
-      { "feature_id": "FEAT-002", "reason": "频率接近兴奋型/期望型边界", "suggested_action": "补充更多用户反馈数据或进行专项问卷验证" }
+      { "feature_id": "FEAT-002", "reason": "Frequency near attractive/one-dimensional boundary", "suggested_action": "Supplement more user feedback data or conduct dedicated survey validation" }
     ],
     "summary": { "must_be": 1, "one_dimensional": 0, "attractive": 1, "indifferent": 1, "needs_judgment": 1 }
   },
   "priority_scoring": {
     "analysis_metadata": {
       "source_files": ["requirement-layers.json", "kano.json", "jtbd.json", "5whys.json"],
-      "scoring_formula": "基础分(0.35×痛点+0.30×频率+0.35×可解决性) + KANO加成(基础分×(系数-1))",
+      "scoring_formula": "Base score (0.35×pain + 0.30×frequency + 0.35×solvability) + KANO bonus (base score × (coefficient - 1))",
       "weights_confirmed_by_human": false,
       "analysis_timestamp": "ISO8601"
     },
@@ -497,11 +497,11 @@ writes:
       {
         "rank": 1,
         "requirement_id": "REQ-001",
-        "requirement_name": "批量导出功能",
+        "requirement_name": "Batch export feature",
         "scores": {
-          "pain_intensity": { "score": 4, "basis": "情感强度4+5Whys根因已确认" },
-          "frequency_weight": { "score": 4, "basis": "提及频率8%，影响用户占比约25%" },
-          "solvability": { "score": 3, "basis": "默认值，待技术团队确认", "confirmed": false },
+          "pain_intensity": { "score": 4, "basis": "Sentiment intensity 4 + 5 Whys root cause confirmed" },
+          "frequency_weight": { "score": 4, "basis": "Mention frequency 8%, affected user ratio about 25%" },
+          "solvability": { "score": 3, "basis": "Default value, pending tech team confirmation", "confirmed": false },
           "kano_coefficient": { "coefficient": 1.5, "category": "must-be", "confidence": 0.85 }
         },
         "base_score": 3.65,
@@ -511,89 +511,89 @@ writes:
       }
     ],
     "scoring_summary": { "total_requirements": 2, "high_priority": 0, "medium_priority": 1, "low_priority": 1, "needs_tech_confirmation": 1 },
-    "priority_thresholds": { "high": "总分 >= 4.5", "medium": "总分 2.0-4.4", "low": "总分 < 2.0" }
+    "priority_thresholds": { "high": "total score >= 4.5", "medium": "total score 2.0-4.4", "low": "total score < 2.0" }
   },
   "metadata": {
     "version": "3.0",
     "generated_at": "2026-05-14T21:00:00Z",
     "source_files": [
-      "docs/discovery/user-research.md（追加“用户声音分析”章节）
-      // ... 同结构可扩展
+      "docs/discovery/user-research.md (append \"User Voice Analysis\" section)
+      // ... same structure can be extended
     ]
   }
 }
 ```
 
-## 决策规则
+## Decision Rules
 
-1. **Emotional/Social Job低置信度升级**：置信度 < 0.5 标记需人类验证，列入needs_human_validation
-2. **Functional Job缺失**：未提取到任何Functional Job时终止分析，返回错误提示补充数据
-3. **5Whys连续低置信度终止**：连续2层置信度 < 0.3 终止追问，标记needs_human_validation=true
-4. **5Whys多路径分叉**：Top1和Top2原因置信度差距 < 0.15 时分叉为两条因果链并行分析
-5. **KANO低置信度升级**：分类置信度 < 0.7 标记needs_human_judgment=true，升级人类判定
-6. **KANO反向型标记**：正向提及率 < 10% 且负向提及率 > 70% 标记为"reverse"类型
-7. **优先级评分权重需人类确认**：首次执行或权重调整后，暂停评分输出等待人类确认
-8. **可解决性需技术输入**：未获技术团队确认时使用默认值3，标记confirmed=false，score_confidence强制为low
-9. **反向型功能**：KANO分类为Reverse时总分归零，标注"不建议实施"
-10. **本质需求低置信度强制验证**：置信度 < 0.5 必须标记validation_needed=true，升级人类验证
+1. **Emotional/Social Job low-confidence escalation**: Confidence < 0.5 marks need for human validation, listed in needs_human_validation
+2. **Functional Job missing**: When no Functional Job is extracted, terminate analysis and return error prompt to supplement data
+3. **5 Whys consecutive low-confidence termination**: 2 consecutive levels with confidence < 0.3 terminates questioning, mark needs_human_validation=true
+4. **5 Whys multi-path branching**: When the confidence gap between Top 1 and Top 2 causes is < 0.15, branch into two causal chains for parallel analysis
+5. **KANO low-confidence escalation**: Classification confidence < 0.7 marks needs_human_judgment=true, escalate to human judgment
+6. **KANO Reverse marking**: Positive mention rate < 10% and negative mention rate > 70% marks as "reverse" type
+7. **Priority scoring weights require human confirmation**: On first execution or after weight adjustment, pause scoring output and wait for human confirmation
+8. **Solvability requires tech input**: When not confirmed by tech team, use default value 3, mark confirmed=false, score_confidence forced to low
+9. **Reverse feature**: When KANO classification is Reverse, total score is zeroed, annotated "not recommended for implementation"
+10. **Essential requirement low-confidence forced validation**: Confidence < 0.5 must mark validation_needed=true, escalate to human validation
 
-## 质量检查
+## Quality Checks
 
-| 检查项 | 通过条件 |
+| Check item | Pass condition |
 |--------|----------|
-| JTBD三层Job均已提取（P0） | functional/emotional/social Job均存在 |
-| 每个Job有数据支撑（P0） | evidence字段非空 |
-| 低置信度Job已标记验证（P1） | confidence<0.5的Job在needs_human_validation中 |
-| 需求三层均已拆解（P0） | surface/behavioral/essential均有内容 |
-| 推断依据非空（P0） | inference_basis字段非空 |
-| 本质需求已标记验证状态（P1） | validation_needed字段完整 |
-| 因果链完整（P1） | 从现象到根因逻辑连贯 |
-| 根因有数据支撑（P1） | 至少1条evidence |
-| 可行动建议已给出（P1） | actionable_fix非空，含effort/impact/suggested_metrics |
-| 所有功能需求已分类（P1） | kano_classification完整 |
-| 边界情况已标记（P2） | confidence<0.7的在boundary_cases中 |
-| 分类统计summary完整（P2） | summary中各类型数量之和等于kano_classification数组长度 |
-| 所有需求已评分（P1） | priority_list完整 |
-| 评分结果按优先级降序排列（P1） | rank字段正确 |
-| 评分可信度等级已标注（P2） | score_confidence字段完整 |
-| base_score和kano_bonus分别计算（P2） | 可审计 |
+| JTBD three-layer Jobs all extracted (P0) | functional/emotional/social Jobs all present |
+| Each Job has data support (P0) | evidence field non-empty |
+| Low-confidence Jobs marked for validation (P1) | Jobs with confidence <0.5 are in needs_human_validation |
+| Requirement three layers all decomposed (P0) | surface/behavioral/essential all have content |
+| Inference basis non-empty (P0) | inference_basis field non-empty |
+| Essential requirement marked with validation status (P1) | validation_needed field complete |
+| Causal chain complete (P1) | Logically coherent from phenomenon to root cause |
+| Root cause has data support (P1) | At least 1 evidence |
+| Actionable recommendation provided (P1) | actionable_fix non-empty, contains effort/impact/suggested_metrics |
+| All functional requirements classified (P1) | kano_classification complete |
+| Boundary cases marked (P2) | Those with confidence <0.7 are in boundary_cases |
+| Classification summary complete (P2) | Sum of each type count in summary equals kano_classification array length |
+| All requirements scored (P1) | priority_list complete |
+| Scoring results sorted by priority descending (P1) | rank field correct |
+| Scoring confidence level annotated (P2) | score_confidence field complete |
+| base_score and kano_bonus calculated separately (P2) | Auditable |
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-当上游文件不存在时，本Skill仍可独立执行：
+When upstream files do not exist, this Skill can still execute independently:
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing upstream input | Degradation plan | Output impact | Data acquisition instructions |
 |---------------|---------|----------|------------|
-| voice-analysis.json | 基于用户直接粘贴的反馈文本提取JTBD和KANO分类 | Emotional/Social Job推断依据减少，KANO分类置信度降低 | 要求用户提供用户反馈文本或上传voice-analysis.json文件 |
-| behavior-analysis.json | 基于用户反馈文本推断行为意图 | Functional Job缺乏行为数据佐证，频率统计不精确 | 要求用户提供行为事件日志或上传behavior-analysis.json文件 |
-| voice-analysis.json + behavior-analysis.json | 用户提供反馈文本 → 直接提取JTBD | 整体置信度降低，frequency为估算值 | 要求用户提供用户反馈文本和行为事件日志 |
-| 原始需求列表 | 用户口述需求 → 直接拆解三层 | inference_basis缺失数据佐证，行为需求置信度上限降至0.7 | 要求用户提供需求列表文本或产品需求文档 |
-| 所有上游文件均缺失 | 提示用户先执行前序阶段，或基于用户口头描述执行轻量版分析 | 输出为轻量版，JTBD仅含Functional Job，KANO全部分类为推断结果，priority_scoring多个维度使用默认值 | 要求用户提供用户反馈文本、行为数据和需求列表 |
+| voice-analysis.json | Extract JTBD and KANO classification based on feedback text directly pasted by user | Emotional/Social Job inference basis reduced, KANO classification confidence lowered | Ask user to provide user feedback text or upload voice-analysis.json file |
+| behavior-analysis.json | Infer behavioral intent based on user feedback text | Functional Job lacks behavior data corroboration, frequency statistics imprecise | Ask user to provide behavior event logs or upload behavior-analysis.json file |
+| voice-analysis.json + behavior-analysis.json | User provides feedback text → directly extract JTBD | Overall confidence reduced, frequency is an estimated value | Ask user to provide user feedback text and behavior event logs |
+| Raw requirement list | User dictates requirements → directly decompose three layers | inference_basis lacks data corroboration, behavioral requirement confidence capped at 0.7 | Ask user to provide requirement list text or product requirements document |
+| All upstream files missing | Prompt user to execute preceding stages first, or execute lightweight analysis based on user's verbal description | Output is lightweight version; JTBD contains only Functional Job; KANO all classifications are inferred; priority_scoring uses default values for multiple dimensions | Ask user to provide user feedback text, behavior data, and requirement list |
 
-## 数据获取说明
+## Data Acquisition Instructions
 
-本Skill需要用户反馈和行为分析数据，请通过以下方式之一提供：
-  1. 直接粘贴用户反馈文本和需求列表
-  2. 上传voice-analysis.json / behavior-analysis.json文件
-  3. 提供数据文件路径
-- AI不负责外部数据采集，仅负责分析
+This Skill requires user feedback and behavior analysis data. Please provide via one of the following methods:
+  1. Directly paste user feedback text and requirement list
+  2. Upload voice-analysis.json / behavior-analysis.json files
+  3. Provide data file paths
+- AI is not responsible for external data collection, only for analysis
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游数据源 | 变更类型 | 影响维度 | 影响描述 | 响应策略 |
+| Upstream data source | Change type | Impact dimension | Impact description | Response strategy |
 |-----------|----------|----------|----------|----------|
-| voice-analysis.json | 新增反馈条目 | jtbd.jobs / kano.kano_classification | Job频率和证据变化，KANO分类指标变化 | 标注受影响的Job和KANO分类，建议人类确认是否需要重新提取 |
-| voice-analysis.json | 情感分类修正 | jtbd.emotional_jobs | Emotional Job推断依据变化 | 标注受影响的Emotional Job，建议重新评估置信度 |
-| behavior-analysis.json | 行为模式更新 | jtbd.functional_jobs / requirement_layers.behavioral | Functional Job频率和行为目标变化 | 标注受影响的Functional Job，更新frequency |
-| 原始需求列表 | 需求增删 | requirement_layers / kano / priority_scoring | 需求拆解、分类和评分均受影响 | 标注新增/删除的需求，重新计算排名 |
+| voice-analysis.json | New feedback entries added | jtbd.jobs / kano.kano_classification | Job frequency and evidence change, KANO classification metrics change | Annotate affected Jobs and KANO classifications, recommend human confirmation on whether re-extraction is needed |
+| voice-analysis.json | Sentiment classification correction | jtbd.emotional_jobs | Emotional Job inference basis changes | Annotate affected Emotional Jobs, recommend re-evaluating confidence |
+| behavior-analysis.json | Behavior pattern update | jtbd.functional_jobs / requirement_layers.behavioral | Functional Job frequency and behavior goals change | Annotate affected Functional Jobs, update frequency |
+| Raw requirement list | Requirement additions/deletions | requirement_layers / kano / priority_scoring | Requirement decomposition, classification, and scoring all affected | Annotate added/deleted requirements, recalculate ranking |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 下游消费者 | 通知字段 | 通知时机 | 通知内容 |
+| Downstream consumer | Notification field | Notification timing | Notification content |
 |-----------|----------|----------|----------|
-| opportunity-definition | `jtbd.jobs` / `requirement_layers` | JTBD或需求分层变更后 | 通知Job增删和需求拆解变化 |
-| prd-orchestrator | `priority_scoring.priority_list` | 优先级排序变更后 | 通知排名变化的需求，建议重新评估开发排期 |
+| opportunity-definition | `jtbd.jobs` / `requirement_layers` | After JTBD or requirement layer changes | Notify Job additions/deletions and requirement decomposition changes |
+| prd-orchestrator | `priority_scoring.priority_list` | After priority ranking changes | Notify requirements with ranking changes, recommend re-evaluating development scheduling |

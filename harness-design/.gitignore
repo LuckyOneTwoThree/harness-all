@@ -1,6 +1,6 @@
-# 项目根 .gitignore — 敏感文件 + 常见忽略
+# Project root .gitignore — sensitive files + common ignores
 
-# 敏感文件（禁止提交）
+# Sensitive files (do not commit)
 .env
 .env.local
 .env.production
@@ -12,21 +12,21 @@ id_ed25519
 credentials.json
 service-account*.json
 
-# 依赖
+# Dependencies
 node_modules/
 __pycache__/
 *.pyc
 .venv/
 venv/
 
-# 构建产物
+# Build artifacts
 dist/
 build/
 .next/
 .nuxt/
 out/
 
-# 日志
+# Logs
 *.log
 npm-debug.log*
 
@@ -36,10 +36,10 @@ npm-debug.log*
 *.swp
 *.swo
 
-# harness-design 安装/运行残留
+# harness-design install/runtime residue
 .workbuddy/
 .harness-design-tmp-*/
 
-# 系统
+# System
 .DS_Store
 Thumbs.db

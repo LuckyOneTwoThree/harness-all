@@ -1,10 +1,10 @@
 ---
 name: webapp-testing
-description: 前端/Web 应用验证，纯 Agent 工具方式（不依赖 Playwright）
+description: Frontend/Web App Verification — pure Agent tooling approach (no Playwright dependency)
 triggers:
-  - 涉及前端代码变更时
-  - verify skill 的前端验证子项
-  - 用户要求验证 UI/页面行为时
+  - When frontend code is changed
+  - As a frontend verification sub-item of the verify skill
+  - When the user asks to verify UI/page behavior
 reads:
   - loops/specs/<feature>/spec.md
   - docs/engineering/TECH_STACK.md
@@ -13,144 +13,144 @@ writes:
   - loops/specs/<feature>/evidence.md
 ---
 
-# Webapp Testing — 前端验证
+# Webapp Testing — Frontend Verification
 
-## 铁律
-**前端代码变更必须验证，不许只看代码就说"应该能跑"。** 纯 Agent 工具方式，不引入 Playwright 等外部依赖（遵守 constitution.md 零新依赖原则）。
+## Iron Rule
+**Frontend code changes must be verified; do not just read the code and say "should work".** Use a pure Agent tooling approach; do not introduce external dependencies like Playwright (abide by the constitution.md zero-new-dependency principle).
 
-## 定位
+## Positioning
 
-本 skill 是 **verify skill 的前端专项补充**，不替代单元测试：
-- 单元测试（组件逻辑）→ tdd skill 管
-- 集成测试（API 对接）→ tdd skill 管
-- **前端结构/可访问性/构建验证** → 本 skill 管
+This skill is a **frontend-specific supplement to the verify skill** and does not replace unit tests:
+- Unit tests (component logic) → handled by the tdd skill
+- Integration tests (API integration) → handled by the tdd skill
+- **Frontend structure/accessibility/build verification** → handled by this skill
 
-## 流程
+## Process
 
-1. **确认前端技术栈**
-   - 读 `docs/engineering/TECH_STACK.md`，确认框架（React/Vue/Svelte/原生）
-   - 确认构建命令（`npm run build` / `vite build` 等）
-   - 确认是否有 lint 命令（`npm run lint` / `eslint`）
+1. **Confirm the frontend tech stack**
+   - Read `docs/engineering/TECH_STACK.md` to confirm the framework (React/Vue/Svelte/native)
+   - Confirm the build command (`npm run build` / `vite build`, etc.)
+   - Confirm whether there is a lint command (`npm run lint` / `eslint`)
 
-2. **构建验证**（强制）
-   - 运行构建命令，确认无编译错误：
+2. **Build verification** (mandatory)
+   - Run the build command and confirm there are no compile errors:
      ```bash
-     <构建命令，如 npm run build>
+     <build command, e.g. npm run build>
      ```
-   - 展示完整输出，不能只说"构建通过"
-   - 构建失败 → 回 tdd 修复
+   - Show the full output; do not just say "build passed"
+   - Build failure → return to tdd to fix
 
-3. **类型检查**（如有 TypeScript）
-   - 运行类型检查命令：
+3. **Type check** (if TypeScript)
+   - Run the type check command:
      ```bash
-     <类型检查命令，如 npm run typecheck 或 tsc --noEmit>
+     <type check command, e.g. npm run typecheck or tsc --noEmit>
      ```
-   - 展示输出，确认无类型错误
+   - Show the output and confirm there are no type errors
 
-4. **Lint 检查**（如有）
-   - 运行 lint 命令：
+4. **Lint check** (if any)
+   - Run the lint command:
      ```bash
-     <lint 命令，如 npm run lint>
+     <lint command, e.g. npm run lint>
      ```
-   - 展示输出，确认无 error（warning 可接受但应记录）
+   - Show the output and confirm there are no errors (warnings are acceptable but should be recorded)
 
-5. **结构验证**（用 Agent 工具，跨平台）
+5. **Structural verification** (using Agent tools, cross-platform)
 
-   **5.1 组件结构检查**
-   - 用 Glob 找到本次变更的组件文件（`*.tsx` / `*.vue` / `*.svelte`）
-   - 用 Read 读取每个组件，检查：
-     - [ ] 组件有明确的 props 类型定义（不是 any）
-     - [ ] 组件有对应的测试文件（`*.test.tsx` / `*.spec.tsx`）
-     - [ ] 没有 inline 样式硬编码（应用 CSS 类/Tailwind 类）
-     - [ ] 没有未清理的 console.log / debugger
+   **5.1 Component structure check**
+   - Use Glob to find the component files changed in this change (`*.tsx` / `*.vue` / `*.svelte`)
+   - Use Read to read each component and check:
+     - [ ] The component has clear prop type definitions (not any)
+     - [ ] The component has a corresponding test file (`*.test.tsx` / `*.spec.tsx`)
+     - [ ] No hardcoded inline styles (should use CSS classes/Tailwind classes)
+     - [ ] No uncleaned console.log / debugger
 
-   **5.2 可访问性基础检查**（用 Grep）
-   - 搜索 `<img` 确认都有 `alt` 属性：
+   **5.2 Accessibility baseline check** (using Grep)
+   - Search `<img` to confirm all have `alt` attributes:
      ```
      <img[^>]*(?!alt=)[^>]*>
      ```
-     命中 → 标记为可访问性问题
-   - 搜索 `<button` 确认都有可读文本或 `aria-label`：
+     Hit → mark as an accessibility issue
+   - Search `<button` to confirm all have readable text or `aria-label`:
      ```
      <button[^>]*>\s*</button>
      ```
-     命中（空 button）→ 标记为可访问性问题
-   - 搜索 `onClick` 确认非 div/span 上绑定（应用 button）：
+     Hit (empty button) → mark as an accessibility issue
+   - Search `onClick` to confirm it is not bound on div/span (should use button):
      ```
      <div[^>]*onClick
      ```
-     命中 → 标记为可访问性建议
+     Hit → mark as an accessibility suggestion
 
-   **5.3 路由/页面检查**（如有路由）
-   - 用 Glob 找到路由配置文件
-   - 用 Read 确认新增页面已注册到路由
-   - 确认路由路径与 spec.md 的 AC 一致
+   **5.3 Routing/page check** (if routing exists)
+   - Use Glob to find the routing config file
+   - Use Read to confirm new pages are registered in the routing
+   - Confirm the routing paths match the ACs in spec.md
 
-6. **安全检查**（前端专项）
-   - 用 Grep 搜索 `dangerouslySetInnerHTML`（React）/ `v-html`（Vue）：
-     命中 → 标记为 XSS 风险，需确认输入来源可信
-   - 用 Grep 搜索硬编码 API 地址：
+6. **Security check** (frontend-specific)
+   - Use Grep to search for `dangerouslySetInnerHTML` (React) / `v-html` (Vue):
+     Hit → mark as an XSS risk; the input source must be confirmed trusted
+   - Use Grep to search for hardcoded API addresses:
      ```
      (http|https)://[a-zA-Z0-9.-]+\.[a-z]{2,}
      ```
-     命中 → 确认是否应走环境变量配置
+     Hit → confirm whether it should be configured via environment variables
 
-7. **写入证据**
-   将以上检查结果汇总到 evidence.md 的"前端验证"章节：
+7. **Write evidence**
+   Summarize the above check results into the "Frontend Verification" section of evidence.md:
    ```markdown
-   ## 前端验证
+   ## Frontend Verification
 
-   ### 构建
-   $ <命令>
-   <实际输出>
+   ### Build
+   $ <command>
+   <actual output>
 
-   ### 类型检查
-   $ <命令>
-   <实际输出>
+   ### Type Check
+   $ <command>
+   <actual output>
 
    ### Lint
-   $ <命令>
-   <实际输出>
+   $ <command>
+   <actual output>
 
-   ### 结构验证
-   - 组件文件：X 个，全部有 props 类型 ✓/✗
-   - 测试文件：X 个组件有测试，Y 个缺失
-   - 可访问性：[问题列表或"无问题"]
+   ### Structural Verification
+   - Component files: X, all with prop types ✓/✗
+   - Test files: X components have tests, Y missing
+   - Accessibility: [issue list or "no issues"]
 
-   ### 安全
-   - dangerouslySetInnerHTML：[命中情况或"无"]
-   - 硬编码 API 地址：[命中情况或"无"]
+   ### Security
+   - dangerouslySetInnerHTML: [hits or "none"]
+   - Hardcoded API addresses: [hits or "none"]
    ```
 
-## 与 verify 的分工
+## Division of Labor with verify
 
-| 维度 | verify | webapp-testing |
+| Dimension | verify | webapp-testing |
 |------|--------|----------------|
-| 范围 | 全栈综合验证 | 前端专项 |
-| 触发 | 每次 LOOP 的 VERIFY | 涉及前端代码时 |
-| 产出 | evidence.md 主章节 | evidence.md "前端验证"章节 |
-| 关系 | verify 调用 webapp-testing | webapp-testing 是 verify 的子项 |
+| Scope | Full-stack comprehensive verification | Frontend-specific |
+| Trigger | Every VERIFY of LOOP | When frontend code is involved |
+| Output | Main sections of evidence.md | "Frontend Verification" section of evidence.md |
+| Relationship | verify invokes webapp-testing | webapp-testing is a sub-item of verify |
 
-**调用方式**：verify skill 在检查到前端代码变更时，调用本 skill 做前端专项验证，结果合并到 evidence.md。
+**Invocation**: when the verify skill detects frontend code changes, it invokes this skill for frontend-specific verification, and the results are merged into evidence.md.
 
-## 禁止事项
-- 跳过构建验证（构建失败的前端代码不能交付）
-- 只看代码不跑构建（"我觉得能编译"不算证据）
-- 忽略可访问性问题（不是可选的，是基础质量）
-- 引入 Playwright/Cypress 等外部依赖做 E2E（违反零新依赖原则，如需 E2E 由用户单独配置）
+## Prohibitions
+- Skipping build verification (frontend code that fails to build cannot be delivered)
+- Reading code without running the build ("I think it compiles" is not evidence)
+- Ignoring accessibility issues (not optional; it is a baseline quality)
+- Introducing external dependencies like Playwright/Cypress for E2E (violates the zero-new-dependency principle; if E2E is needed, the user configures it separately)
 
-## 关于 E2E 测试
+## Regarding E2E Tests
 
-本 skill **不包含** E2E 测试（Playwright/Cypress），原因：
-- E2E 框架是重依赖，违反 constitution.md 零新依赖原则
-- E2E 需要浏览器环境，跨平台兼容性复杂
-- 个人中型项目通常单元测试 + 结构验证足够
+This skill **does not include** E2E tests (Playwright/Cypress), for the following reasons:
+- E2E frameworks are heavy dependencies, violating the constitution.md zero-new-dependency principle
+- E2E requires a browser environment, with complex cross-platform compatibility
+- For personal mid-sized projects, unit tests + structural verification are usually sufficient
 
-如用户明确需要 E2E：
-1. 用户审批引入 Playwright（修改 constitution.md 的依赖白名单）
-2. 单独创建 `e2e-testing` skill
-3. 不在本 skill 范围内
+If the user explicitly needs E2E:
+1. The user approves introducing Playwright (modify the dependency whitelist in constitution.md)
+2. Create a separate `e2e-testing` skill
+3. Out of scope for this skill
 
-## 与 LOOP 的关系
-本 skill 在 LOOP 的 VERIFY 阶段被 verify skill 调用：
-- tdd（ACT）→ verify（VERIFY）→ 检测到前端代码 → 调用 webapp-testing → 合并证据
+## Relationship with LOOP
+This skill is invoked by the verify skill during the VERIFY phase of LOOP:
+- tdd (ACT) → verify (VERIFY) → detects frontend code → invoke webapp-testing → merge evidence

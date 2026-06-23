@@ -1,10 +1,10 @@
 ---
 name: content-ideation
-description: 基于关键词×搜索意图×业务价值三维评估产出选题清单，支持一鱼多吃
+description: Produce a topic backlog based on the three-dimensional evaluation of keyword × search intent × business value, supporting content repurposing
 triggers:
-  - 需要产出内容但没选题时
-  - 内容营销Loop的PLAN阶段
-  - 用户要求"帮我想几个选题"
+  - When content needs to be produced but there's no topic
+  - PLAN phase of the content marketing Loop
+  - User asks to "help me brainstorm topics"
 reads:
   - memory/knowledge-base.md
   - docs/handoff/pm-to-growth.md
@@ -16,60 +16,60 @@ quality_gates: []
 max_iterations: 2
 ---
 
-# Content Ideation — 选题机会识别
+# Content Ideation — Topic Opportunity Identification
 
-## 铁律
-- 选题必须基于**搜索意图 × 业务价值 × 创作难度**三维评估，不拍脑袋
-- 必须查知识库的"内容效果库"，复用高表现选题，避免重复低效选题
-- 每个选题必须标注目标关键词和目标受众
+## Iron Rules
+- Topics must be based on the three-dimensional evaluation of **search intent × business value × creation difficulty**, not gut feeling
+- Must check the "content performance library" in the knowledge base; reuse high-performing topics and avoid repeating low-efficiency ones
+- Each topic must be tagged with the target keyword and target audience
 
-## 流程
+## Process
 
-1. **收集输入**
-   - 读取 `memory/knowledge-base.md` 的"内容效果库"，了解历史内容表现
-   - 读取 `docs/handoff/pm-to-growth.md`（如有），获取 Persona 和业务目标
-   - 读取 `docs/handoff/solo-to-growth.md`（如有），获取已实现功能（可做内容）
-   - 如有 SEO 资产库，读取已有关键词排名数据
+1. **Collect inputs**
+   - Read the "content performance library" in `memory/knowledge-base.md` to understand historical content performance
+   - Read `docs/handoff/pm-to-growth.md` (if available) to get Persona and business goals
+   - Read `docs/handoff/solo-to-growth.md` (if available) to get implemented features (potential content)
+   - If there's an SEO asset library, read existing keyword ranking data
 
-2. **关键词机会识别**
-   - 从业务词根扩展长尾关键词
-   - 按搜索意图分类：信息型（how/what/why）/ 导航型（品牌词）/ 交易型（best/compare/buy）
-   - 评估每个关键词的搜索量、难度、业务相关性
+2. **Keyword opportunity identification**
+   - Expand long-tail keywords from business word roots
+   - Classify by search intent: informational (how/what/why) / navigational (brand terms) / transactional (best/compare/buy)
+   - Evaluate each keyword's search volume, difficulty, and business relevance
 
-3. **选题三维评估**
-   对每个候选选题打分（1-5 分）：
+3. **Three-dimensional topic evaluation**
+   Score each candidate topic (1-5):
 
-   | 维度 | 评分依据 |
-   |------|---------|
-   | 搜索意图匹配 | 5=精准匹配用户搜索意图，1=意图模糊 |
-   | 业务价值 | 5=直接关联产品转化路径，1=无关 |
-   | 创作难度 | 5=已有素材可快速产出，1=需大量调研 |
+   | Dimension | Scoring basis |
+   |-----------|---------------|
+   | Search intent match | 5 = precisely matches user search intent, 1 = vague intent |
+   | Business value | 5 = directly tied to product conversion path, 1 = unrelated |
+   | Creation difficulty | 5 = existing materials allow quick production, 1 = requires extensive research |
 
-   选题优先级 = 搜索意图匹配 × 业务价值 × 创作难度
+   Topic priority = search intent match × business value × creation difficulty
 
-4. **生成选题清单**
+4. **Generate topic backlog**
    ```
-   | 选题ID | 标题 | 目标关键词 | 搜索意图 | 搜索量 | 难度 | 业务价值 | 优先级 | 目标受众 | 内容形态 |
-   |--------|------|-----------|---------|--------|------|---------|--------|---------|---------|
-   | T-001 | 如何用X提升Y | how to improve y | 信息型 | 1200 | 中 | 高 | 60 | 增长PM | 博客 |
+   | Topic ID | Title | Target keyword | Search intent | Search volume | Difficulty | Business value | Priority | Target audience | Content form |
+   |----------|-------|-----------------|---------------|---------------|------------|----------------|----------|-----------------|---------------|
+   | T-001 | How to improve Y with X | how to improve y | Informational | 1200 | Medium | High | 60 | Growth PM | Blog |
    ```
 
-5. **一鱼多吃规划**
-   每个高优选题规划多渠道复用：
-   - 博客长文 → 公众号文章 → 社媒摘要 → 邮件 Newsletter → 视频/图文脚本
+5. **Repurposing plan**
+   For each high-priority topic, plan multi-channel reuse:
+   - Blog long-form → WeChat Official Account article → social summary → email Newsletter → video/image script
 
-6. **写入选题库**
-   将选题清单写入 `docs/content/ideation-backlog.md`
-   高优选题同步到 `memory/knowledge-base.md` 的"内容效果库"（状态标为"待创作"）
+6. **Write to topic backlog**
+   Write the topic list to `docs/content/ideation-backlog.md`
+   Sync high-priority topics to the "content performance library" in `memory/knowledge-base.md` (status marked "to be created")
 
-## 禁止事项
-- 不生成无搜索意图的选题（没人搜=没流量）
-- 不生成与业务无关的选题（有流量但无转化）
-- 不重复已创作过的选题（查内容效果库）
+## Prohibitions
+- Don't generate topics without search intent (no searches = no traffic)
+- Don't generate topics unrelated to the business (traffic without conversion)
+- Don't repeat already-created topics (check the content performance library)
 
-## 与 LOOP 的关系
-本 skill 在 LOOP(content) 的 **PLAN 阶段**执行。
+## Relationship to LOOP
+This skill runs in the **PLAN phase** of LOOP(content).
 PLAN(content-ideation → content-creation) → EXPERIMENT → MEASURE
 
-## 与 Workflow 的关系
-本 skill 是 **content-marketing-workflow** 的第 1 步。
+## Relationship to Workflow
+This skill is step 1 of **content-marketing-workflow**.

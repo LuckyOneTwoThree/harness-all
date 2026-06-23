@@ -1,10 +1,10 @@
 ---
 name: content-performance
-description: 分析内容效果（流量/停留/转化/ROI），产出复用建议，反馈到选题阶段
+description: Analyze content performance (traffic/dwell/conversion/ROI), produce reuse recommendations, and feed back to the ideation stage
 triggers:
-  - 内容发布后有数据时
-  - 内容营销Loop的MEASURE阶段
-  - 用户要求"分析内容效果"
+  - When data is available after content is published
+  - MEASURE phase of the content marketing Loop
+  - User asks to "analyze content performance"
 reads:
   - docs/content/published/
   - memory/knowledge-base.md
@@ -18,99 +18,99 @@ quality_gates: []
 max_iterations: 1
 ---
 
-# Content Performance — 内容效果分析
+# Content Performance — Content Performance Analysis
 
-## 铁律
-- 必须基于**实际数据**分析，不是"感觉效果不错"
-- 必须同时报告成功和失败的内容——失败内容的洞察同样有价值
-- 必须产出**复用建议**——哪些内容值得改编为其他形态
-- 结论必须写入知识库，反馈到下一轮选题
+## Iron Rules
+- Must analyze based on **actual data**, not "feels like it did well"
+- Must report both successful and failed content — failed content insights are equally valuable
+- Must produce **reuse recommendations** — which content is worth adapting into other forms
+- Conclusions must be written to the knowledge base and fed back to the next round of ideation
 
-## 流程
+## Process
 
-1. **收集数据**
-   - 读取 `docs/content/published/` 的发布记录
-   - 获取各渠道的效果数据（需用户提供或从分析工具读取）：
-     - 流量：UV/PV
-     - 停留：平均停留时长、滚动深度
-     - 转化：转化率、转化数
-     - 排名：目标关键词排名变化
-     - 社交：点赞/评论/分享/转发
+1. **Collect data**
+   - Read publish records from `docs/content/published/`
+   - Get performance data per channel (provided by user or read from analytics tools):
+     - Traffic: UV/PV
+     - Dwell: average dwell time, scroll depth
+     - Conversion: conversion rate, conversion count
+     - Ranking: target keyword ranking changes
+     - Social: likes / comments / shares / reposts
 
-2. **效果评估**
-   对每篇内容评估：
+2. **Performance evaluation**
+   For each piece of content, evaluate:
 
-   | 指标 | 优秀 | 合格 | 不达标 |
-   |------|------|------|--------|
-   | UV（月） | > 目标值 | 50-100% 目标 | < 50% 目标 |
-   | 平均停留 | > 3 分钟 | 1-3 分钟 | < 1 分钟 |
-   | 转化率 | > 目标 | 50-100% 目标 | < 50% 目标 |
-   | 关键词排名 | Top 3 | Top 10 | 无排名 |
-   | 社交互动 | > 目标 | 50-100% 目标 | < 50% 目标 |
+   | Metric | Excellent | Acceptable | Below threshold |
+   |--------|-----------|------------|-----------------|
+   | UV (monthly) | > target | 50-100% of target | < 50% of target |
+   | Average dwell | > 3 min | 1-3 min | < 1 min |
+   | Conversion rate | > target | 50-100% of target | < 50% of target |
+   | Keyword ranking | Top 3 | Top 10 | No ranking |
+   | Social engagement | > target | 50-100% of target | < 50% of target |
 
-3. **归因分析**
-   - 高表现内容：为什么好？（选题准/标题好/内容深/渠道对）
-   - 低表现内容：为什么差？（选题偏/标题弱/内容浅/渠道错/竞争大）
-   - 提炼可复用的成功模式和失败教训
+3. **Attribution analysis**
+   - High-performing content: why is it good? (accurate topic / good title / deep content / right channel)
+   - Low-performing content: why is it poor? (off-topic / weak title / shallow content / wrong channel / high competition)
+   - Distill reusable success patterns and failure lessons
 
-4. **复用建议**
-   对高表现内容，建议复用方向：
+4. **Reuse recommendations**
+   For high-performing content, recommend reuse directions:
    ```
-   | 内容ID | 当前形态 | 表现 | 复用建议 | 目标渠道 |
-   |--------|---------|------|---------|---------|
-   | C-001 | 博客 | UV 5000 | 改编为视频脚本 | 抖音/视频号 |
-   | C-001 | 博客 | UV 5000 | 摘要为 Thread | Twitter |
-   | C-003 | 博客 | UV 800 | 改写标题重发 | 博客（A/B测试标题） |
+   | Content ID | Current form | Performance | Reuse recommendation | Target channel |
+   |------------|--------------|-------------|----------------------|----------------|
+   | C-001 | Blog | UV 5000 | Adapt into video script | TikTok/Video accounts |
+   | C-001 | Blog | UV 5000 | Summarize as Thread | Twitter |
+   | C-003 | Blog | UV 800 | Rewrite title and republish | Blog (A/B test title) |
    ```
 
-5. **写入效果报告**
-   产出 `docs/content/performance-report.md`：
+5. **Write performance report**
+   Produce `docs/content/performance-report.md`:
    ```markdown
-   # 内容效果报告: <周期>
+   # Content Performance Report: <period>
 
-   ## 概览
-   - 发布内容数: N
-   - 总 UV: N
-   - 平均转化率: X%
-   - Top 3 内容: ...
+   ## Overview
+   - Published content count: N
+   - Total UV: N
+   - Average conversion rate: X%
+   - Top 3 content: ...
 
-   ## 各内容详情
-   | 内容ID | 标题 | 渠道 | UV | 停留 | 转化 | 排名 | 评级 |
-   |--------|------|------|-----|------|------|------|------|
+   ## Per-content details
+   | Content ID | Title | Channel | UV | Dwell | Conversion | Ranking | Rating |
+   |------------|-------|---------|-----|-------|------------|---------|--------|
 
-   ## 成功模式
-   - [可复用的成功模式]
+   ## Success patterns
+   - [Reusable success patterns]
 
-   ## 失败教训
-   - [可避免的失败原因]
+   ## Failure lessons
+   - [Avoidable failure causes]
 
-   ## 复用建议
-   - [高表现内容的复用方向]
+   ## Reuse recommendations
+   - [Reuse directions for high-performing content]
    ```
 
-6. **更新知识库**
-   在 `memory/knowledge-base.md` 的"内容效果库"表追加每篇内容的效果数据
-   在"增长模式沉淀"表追加成功/失败模式
+6. **Update knowledge base**
+   Append each content's performance data to the "content performance library" table in `memory/knowledge-base.md`
+   Append success/failure patterns to the "growth pattern repository" table
 
-7. **更新 state.yaml**
+7. **Update state.yaml**
    - stage: measure
    - status: done
-   - 追加 iterations.log
+   - Append to iterations.log
 
-8. **反馈到选题**
-   高表现内容的主题方向 → 下一轮 content-ideation 的选题参考
-   低表现内容的主题方向 → 标注"已验证低效，暂缓"
+8. **Feed back to ideation**
+   Topic directions of high-performing content → reference for the next round of content-ideation
+   Topic directions of low-performing content → mark "validated as low-efficiency, hold off"
 
-## 禁止事项
-- 不在无数据时下结论
-- 不只报告成功不报告失败
-- 不省略复用建议（内容复用是增长复利的关键）
-- 不忘记写入知识库（下一轮选题需要参考）
+## Prohibitions
+- Don't draw conclusions without data
+- Don't report only successes and skip failures
+- Don't omit reuse recommendations (content reuse is the key to growth compounding)
+- Don't forget to write to the knowledge base (the next round of ideation needs to reference it)
 
-## 与 LOOP 的关系
-本 skill 在 LOOP(content) 的 **MEASURE 阶段**执行，是 MEASURE 的最后一步。
+## Relationship to LOOP
+This skill runs in the **MEASURE phase** of LOOP(content); it is the last step of MEASURE.
 PLAN(ideation) → EXPERIMENT(creation → review → distribution) → MEASURE(performance) → DONE
 
-## 与 Workflow 的关系
-本 skill 是 **content-marketing-workflow** 的第 5 步（最后一步）。
-产出的效果数据反馈到 content-ideation，形成内容复利 Loop。
+## Relationship to Workflow
+This skill is step 5 (the last step) of **content-marketing-workflow**.
+The performance data produced feeds back to content-ideation, forming a content compounding Loop.

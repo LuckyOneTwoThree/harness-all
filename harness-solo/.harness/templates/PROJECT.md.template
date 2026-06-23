@@ -1,110 +1,110 @@
-# [项目名称] — 产品需求文档
+# [project name] — Product requirements document
 
-> 来源：由 harness-pm 产出（放入 docs/handoff/pm-to-solo.md 后由 brainstorming 提取），或个人开发者直接填写，或本框架 brainstorming 写入。
-> 加载时机：brainstorming / writing-plans / performance-optimization / release 读取。
-> 定位：立项时建立基线，需求变更时追加修订记录，不删除已确认需求。
-> 与 FEATURES.md 的分工：本文件是**需求定义**（立项时写，变更时追加修订记录），FEATURES.md 是**动态状态看板**（开发中更新，状态全归此处）。
-> 功能编号规则：F-xxx 在本文件立项时分配，FEATURES.md 同步引用，编号一旦分配不复用。
+> Source: produced by harness-pm (dropped into docs/handoff/pm-to-solo.md and extracted by brainstorming), or filled in directly by the individual developer, or written by this framework's brainstorming.
+> Load timing: read by brainstorming / writing-plans / performance-optimization / release.
+> Positioning: establish the baseline at project initiation; append revision records when requirements change; do not delete confirmed requirements.
+> Division of labor with FEATURES.md: this file is the **requirements definition** (written at initiation, with revision records appended on change), FEATURES.md is the **dynamic status board** (updated during development; all status lives here).
+> Feature numbering rule: F-xxx is assigned in this file at initiation and referenced in FEATURES.md; once assigned, numbers are not reused.
 
-## 项目概述
+## Project overview
 
-[一句话描述：解决什么问题、给谁用]
+[One sentence: what problem to solve, for whom]
 
-## 背景与动机
+## Background and motivation
 
-[为什么要做这个项目？当前痛点是什么？]
+[Why build this project? What are the current pain points?]
 
-## 目标用户
+## Target users
 
-| 用户角色 | 典型场景 | 核心痛点 |
+| User role | Typical scenario | Core pain point |
 |---------|---------|---------|
-| [角色1] | [场景描述] | [痛点描述] |
-| [角色2] | [场景描述] | [痛点描述] |
+| [role 1] | [scenario description] | [pain point description] |
+| [role 2] | [scenario description] | [pain point description] |
 
-## 功能需求
+## Functional requirements
 
-| 编号 | 功能 | 优先级 | 验收标准 |
+| Number | Feature | Priority | Acceptance criteria |
 |------|------|--------|---------|
-| F-001 | [功能名] | P0 | AC-001: [可测试的描述，如"输入X返回Y"] |
-| F-002 | [功能名] | P1 | AC-002: [可测试的描述] |
+| F-001 | [feature name] | P0 | AC-001: [testable description, e.g., "input X returns Y"] |
+| F-002 | [feature name] | P1 | AC-002: [testable description] |
 
-### 验收标准说明
+### Acceptance criteria notes
 
-验收标准必须**可测试**——不是"系统应该好用"，而是"输入X返回Y"。
+Acceptance criteria must be **testable** — not "the system should be easy to use", but "input X returns Y".
 
-**AC 层级关系**：PROJECT.md 的 AC 是**项目级验收条件**（立项时定义），spec.md 的 AC 是**单功能细化验收条件**（writing-plans 产出），后者必须覆盖前者。
+**AC layering**: the ACs in PROJECT.md are **project-level acceptance conditions** (defined at initiation), while the ACs in spec.md are **single-feature refined acceptance conditions** (produced by writing-plans); the latter must cover the former.
 
-好的 AC 示例：
-- AC-001: 输入 Todo 数组，返回按 deadline 升序排列的新数组（不修改原数组）
-- AC-002: 空截止日期的 Todo 排在列表末尾
-- AC-003: 全部现有测试不回归
+Good AC examples:
+- AC-001: given a Todo array, return a new array sorted by deadline ascending (without mutating the original)
+- AC-002: Todos with no due date sort to the end of the list
+- AC-003: all existing tests do not regress
 
-坏的 AC 示例（禁止）：
-- "系统应该快速响应"（不可测试）
-- "用户体验好"（不可测试）
+Bad AC examples (forbidden):
+- "The system should respond quickly" (not testable)
+- "Good user experience" (not testable)
 
-## 不做的事（边界）
+## Out of scope (boundaries)
 
-[明确排除的范围，避免蔓延]
+[Explicitly excluded scope to avoid creep]
 
-- 不做 [功能X]，因为 [原因]
-- 不支持 [场景Y]，因为 [原因]
+- No [feature X], because [reason]
+- No support for [scenario Y], because [reason]
 
-## 项目特定约束（非宪法）
+## Project-specific constraints (non-constitution)
 
-[constitution.md 未覆盖的外部约束，如客户强制要求、合规要求]
+[External constraints not covered by constitution.md, e.g., customer mandates, compliance requirements]
 
-- [约束1，如：客户要求支持 IE11]
-- [约束2，如：需通过 GDPR 合规审计]
+- [Constraint 1, e.g., customer requires IE11 support]
+- [Constraint 2, e.g., must pass GDPR compliance audit]
 
-> 注：宪法级约束（零新依赖、API 有测试等）写在 constitution.md，不在此重复。
+> Note: constitution-level constraints (zero new dependencies, APIs have tests, etc.) are written in constitution.md and not repeated here.
 
-## 非功能需求（运行时约束）
+## Non-functional requirements (runtime constraints)
 
-[必须满足的运行时质量约束，不满足视为缺陷]
+[Runtime quality constraints that must be met; not meeting them is a defect]
 
-- 性能：[如 P95 延迟 < 200ms]
-- 安全：[如不允许硬编码密钥]
-- 可访问性：[如 WCAG 2.1 AA]
+- Performance: [e.g., P95 latency < 200ms]
+- Security: [e.g., no hardcoded secrets]
+- Accessibility: [e.g., WCAG 2.1 AA]
 
-## 成功指标（项目完成度衡量）
+## Success metrics (project completeness measure)
 
-[项目做完后，用什么指标衡量项目成功？达标即成功]
+[After the project is done, what metrics measure project success? Meeting the bar means success]
 
-- 指标1：[如：CLI 启动时间 < 500ms]
-- 指标2：[如：核心命令测试覆盖率 > 80%]
-- 指标3：[如：用户能完成 X 流程且无报错]
+- Metric 1: [e.g., CLI startup time < 500ms]
+- Metric 2: [e.g., core command test coverage > 80%]
+- Metric 3: [e.g., users can complete flow X without errors]
 
-> 与"非功能需求"的区别：非功能需求是运行时必须满足的约束（不满足=缺陷），成功指标是项目完成度的衡量标准（达标=成功）。
+> Difference from "non-functional requirements": non-functional requirements are runtime constraints that must be met (not meeting = defect), while success metrics are the measure of project completeness (meeting = success).
 
-## 里程碑
+## Milestones
 
-[分阶段交付，每阶段有可验证的产出。状态追踪见 FEATURES.md，此处只定义阶段]
+[Phased delivery, each phase has verifiable output. Status tracking is in FEATURES.md; only phases are defined here]
 
-| 阶段 | 目标 | 产出 |
+| Phase | Goal | Output |
 |------|------|------|
-| M1 | MVP 核心功能可用 | F-001, F-002 完成 |
-| M2 | 完整功能 + 测试 | F-003, F-004 完成 |
-| M3 | 优化 + 文档 | 性能达标，文档完整 |
+| M1 | MVP core features usable | F-001, F-002 complete |
+| M2 | Full features + tests | F-003, F-004 complete |
+| M3 | Optimization + docs | Performance met, docs complete |
 
-## 依赖与风险
+## Dependencies and risks
 
-[外部依赖、技术风险、应对措施]
+[External dependencies, technical risks, mitigation measures]
 
-| 类型 | 描述 | 影响 | 应对 |
+| Type | Description | Impact | Response |
 |------|------|------|------|
-| 依赖 | [如：依赖 XX API] | [高/中/低] | [措施] |
-| 风险 | [如：技术选型不确定] | [高/中/低] | [措施] |
+| Dependency | [e.g., depends on XX API] | [high/medium/low] | [action] |
+| Risk | [e.g., tech selection uncertain] | [high/medium/low] | [action] |
 
-## 未决事项
+## Open items
 
-[需要讨论或确认的问题]
+[Questions that need discussion or confirmation]
 
-- 待定 1: [问题描述]
-- 待定 2: [问题描述]
+- Open 1: [question description]
+- Open 2: [question description]
 
-## 修订记录
+## Revision history
 
-| 日期 | 修订内容 | 原因 |
+| Date | Revision | Reason |
 |------|---------|------|
-| YYYY-MM-DD | 初始版本 | 项目立项 |
+| YYYY-MM-DD | Initial version | Project initiation |

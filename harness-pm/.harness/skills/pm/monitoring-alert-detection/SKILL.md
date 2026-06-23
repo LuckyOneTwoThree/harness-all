@@ -1,22 +1,22 @@
 ---
 name: monitoring-alert-detection
-description: 当需要监控产品指标和检测异常时使用。监控告警检测工具，负责数据采集、阈值监控、异常检测和告警生成。关键词：监控、告警、异常检测、阈值、数据采集。
+description: Used when monitoring product metrics and detecting anomalies. Monitoring alert detection tool responsible for data collection, threshold monitoring, anomaly detection, and alert generation. Keywords: monitoring, alert, anomaly detection, threshold, data collection.
 metadata:
-  module: "产品监控与迭代"
-  sub-module: "监控预警"
+  module: "Product Monitoring & Iteration"
+  sub-module: "Monitoring & Alerting"
   type: "pipeline"
   version: "2.0"
-  domain_tags: ["互联网", "软件", "通用"]
+  domain_tags: ["Internet", "Software", "General"]
   interaction_mode: "ai_auto"
   trigger_examples:
-    - "搭建监控系统"
-    - "配置告警规则"
-    - "指标异常检测"
-    - "核心路径监控怎么做"
+    - "Set up monitoring system"
+    - "Configure alert rules"
+    - "Metric anomaly detection"
+    - "How to monitor core paths"
 execution_depth:
   default: standard
-  quick_description: "仅输出核心路径监控 + 基础告警规则"
-  deep_description: "完整体系 + 容量规划 + 混沌工程方案 + SRE成熟度评估"
+  quick_description: "Only output core path monitoring + basic alert rules"
+  deep_description: "Full system + capacity planning + chaos engineering plan + SRE maturity assessment"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -29,78 +29,78 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 监控告警检测 🤖
+# Monitoring Alert Detection 🤖
 
-## 核心原则
+## Core Principles
 
-1. **监控体系的起点是核心路径而非指标堆砌**：先识别核心业务路径，再为路径配置指标和告警，避免监控一切却看不到关键
-2. **告警规则是信号与噪音的平衡**：告警太多等于没有告警，每条告警都必须值得人工关注
-3. **On-Call手册是监控体系的最后一公里**：没有On-Call手册的监控系统是不完整的，告警响了没人知道怎么处理等于没有监控
-4. **Dashboard是为角色服务的，不是为数据服务的**：不同角色关注不同指标，Dashboard必须按角色定制
-5. **升级是保护不是推诿**：升级的目的是让对的人在对的时间介入，而非推卸责任
+1. **The starting point of a monitoring system is core paths, not metric piling**: First identify core business paths, then configure metrics and alerts for those paths; avoid monitoring everything yet missing the critical
+2. **Alert rules are a balance between signal and noise**: Too many alerts equals no alerts; every alert must be worth human attention
+3. **The On-Call handbook is the last mile of the monitoring system**: A monitoring system without an On-Call handbook is incomplete; an alert that rings with no one knowing how to handle it equals no monitoring
+4. **Dashboards serve roles, not data**: Different roles focus on different metrics; dashboards must be customized by role
+5. **Escalation is protection, not buck-passing**: The purpose of escalation is to get the right people involved at the right time, not to shirk responsibility
 
-## 基本信息
+## Basic Information
 
-- **Skill 类型**：pipeline
-- **所属模块**：产品监控与迭代 / 监控预警
-- **版本**：2.0
-- **交互模式**：🤖 AI自动执行（系统配置类）
-- **上游 Skill**：metrics-system（指标体系）、release-gradual（版本发布信息）
-- **下游 Skill**：monitoring-attribution（异常归因分析消费本Skill的异常检测输出）
+- **Skill type**: pipeline
+- **Module**: Product Monitoring & Iteration / Monitoring & Alerting
+- **Version**: 2.0
+- **Interaction mode**: 🤖 AI auto-execution (system configuration type)
+- **Upstream Skills**: metrics-system (metrics system), release-gradual (release info)
+- **Downstream Skill**: monitoring-attribution (anomaly attribution analysis consumes this Skill's anomaly detection output)
 
-## 交互模式
+## Interaction Mode
 
-🤖 AI自动执行（系统配置类）
+🤖 AI auto-execution (system configuration type)
 
-## 输入
+## Input
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 产品架构 | JSON/文件 | 是 | 用户提供 | 系统架构图、组件关系、依赖链路 |
-| 指标体系 | JSON | 是 | docs/metrics/metrics-system.md | 需监控的业务指标和技术指标定义 |
-| SLA 要求 | JSON | 是 | 用户提供 | 可用性、响应时间、吞吐量要求 |
-| 现有监控 | JSON | ○ | docs/monitoring/monitoring-config.md（“预警规则”章节） | 已有的监控配置和告警规则 |
-| 版本发布信息 | object | ○ | docs/monitoring/release-notes.md（“灰度计划”章节） | 近期发布记录 |
-| 配置变更记录 | object | ○ | 用户提供 | 配置修改历史 |
-| 流量变化数据 | object | ○ | 用户提供 | 流量趋势和异常波动 |
-| 用户角色 | string[] | 是 | 用户提供 | 需要访问 Dashboard 的角色 |
-| 现有 Dashboard | JSON | ○ | docs/monitoring/monitoring-config.md（“预警规则”章节） | 已有Dashboard配置（如有） |
-| On-Call 排班 | JSON | 是 | 值班管理系统 → 排班表 | 值班表和联系方式 |
-| 知识库 | JSON | ○ | docs/monitoring/monitoring-config.md（“预警规则”章节） | 问题处理指南和历史案例 |
+| Product architecture | JSON/file | Yes | User-provided | System architecture diagram, component relationships, dependency chains |
+| Metrics system | JSON | Yes | docs/metrics/metrics-system.md | Business and technical metric definitions to monitor |
+| SLA requirements | JSON | Yes | User-provided | Availability, response time, throughput requirements |
+| Existing monitoring | JSON | ○ | docs/monitoring/monitoring-config.md ("Alert Rules" section) | Existing monitoring config and alert rules |
+| Release info | object | ○ | docs/monitoring/release-notes.md ("Canary Plan" section) | Recent release records |
+| Config change records | object | ○ | User-provided | Configuration modification history |
+| Traffic change data | object | ○ | User-provided | Traffic trends and anomaly fluctuations |
+| User roles | string[] | Yes | User-provided | Roles needing Dashboard access |
+| Existing Dashboard | JSON | ○ | docs/monitoring/monitoring-config.md ("Alert Rules" section) | Existing Dashboard config (if any) |
+| On-Call schedule | JSON | Yes | On-call management system → schedule | On-call schedule and contact info |
+| Knowledge base | JSON | ○ | docs/monitoring/monitoring-config.md ("Alert Rules" section) | Issue handling guides and historical cases |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 监控体系建立 [核心]
+### Step 1: Monitoring System Establishment [Core]
 
-**目标**：建立核心路径监控体系，配置指标采集与告警规则
+**Goal**: Establish a core path monitoring system, configure metric collection and alert rules
 
-#### 1.1 核心路径识别 [核心]
+#### 1.1 Core Path Identification [Core]
 
-**方法**：
-- 分析架构文档提取服务组件
-- 识别用户请求主链路
-- 映射服务间依赖关系
-- 标记单点故障风险点
+**Method**:
+- Analyze architecture docs to extract service components
+- Identify the main user request path
+- Map inter-service dependencies
+- Flag single points of failure risk
 
-**输出**：核心路径清单，包含入口服务 → 核心服务 → 数据层 → 外部依赖
+**Output**: Core path list, including entry service → core service → data layer → external dependencies
 
-#### 1.2 指标-告警规则生成 [核心]
+#### 1.2 Metric-Alert Rule Generation [Core]
 
-**指标类型**：
-- 黄金指标：延迟、流量、错误、饱和度
-- 业务指标：转化率、订单量、DAU/MAU
-- 自定义指标：特定业务事件
+**Metric Types**:
+- Golden signals: latency, traffic, errors, saturation
+- Business metrics: conversion rate, order volume, DAU/MAU
+- Custom metrics: specific business events
 
-**告警规则配置**：
+**Alert Rule Configuration**:
 
-| 规则类型 | 生成方式 | 参数来源 |
+| Rule Type | Generation Method | Parameter Source |
 |----------|----------|----------|
-| 静态阈值 | 固定值 + SLA 要求 | SLA/SLO 定义 |
-| 历史基线 | 统计历史数据 | 7d/30d 均值/标准差 |
-| 动态阈值 | 趋势分析 + 异常检测 | 预测区间 |
-| 复合告警 | 多指标组合逻辑 | 业务规则 |
+| Static threshold | Fixed value + SLA requirements | SLA/SLO definitions |
+| Historical baseline | Statistical historical data | 7d/30d mean/standard deviation |
+| Dynamic threshold | Trend analysis + anomaly detection | Prediction interval |
+| Composite alert | Multi-metric combination logic | Business rules |
 
-**告警参数**：
+**Alert Parameters**:
 
 ```yaml
 alert_rule:
@@ -118,47 +118,47 @@ alert_rule:
   for: 5m
 ```
 
-#### 1.3 告警收敛规则 [条件]
+#### 1.3 Alert Convergence Rules [Conditional]
 
-**收敛策略**：
-- 告警分组：按服务/组件/时间窗口聚合
-- 告警抑制：父子告警关系，高优先级抑制低优先级
-- 静默规则：维护窗口内自动静默
-- 去重规则：相同告警合并通知
+**Convergence Strategies**:
+- Alert grouping: Aggregate by service/component/time window
+- Alert suppression: Parent-child alert relationships, high priority suppresses low priority
+- Silence rules: Auto-silence during maintenance windows
+- Dedup rules: Merge identical alert notifications
 
-#### 1.4 On-Call 手册生成 [深度]
+#### 1.4 On-Call Handbook Generation [Deep]
 
-**手册内容**：
-- 问题描述
-- 自检清单
-- 常见原因
-- 快速修复步骤
-- 升级条件
-- 关联文档链接
+**Handbook Content**:
+- Problem description
+- Self-check checklist
+- Common causes
+- Quick fix steps
+- Escalation conditions
+- Related document links
 
-### Step 2: 异常检测 [条件]
+### Step 2: Anomaly Detection [Conditional]
 
-**目标**：实时检测指标异常，识别趋势偏移与突发波动，生成告警事件
+**Goal**: Detect metric anomalies in real time, identify trend shifts and sudden fluctuations, generate alert events
 
-> **职责边界说明**：本步骤仅负责异常识别、告警分类和关联分析，识别出的异常将输出给 monitoring-attribution 进行归因分析（根因定位、影响评估、修复建议）。
+> **Scope Boundary Note**: This step is only responsible for anomaly identification, alert classification, and correlation analysis. Identified anomalies are output to monitoring-attribution for attribution analysis (root cause localization, impact assessment, remediation suggestions).
 
-#### 2.1 告警分类 [条件]
+#### 2.1 Alert Classification [Conditional]
 
-**分类维度**：
+**Classification Dimensions**:
 
-| 类别 | 子类 | 特征 |
+| Category | Subcategory | Characteristics |
 |------|------|------|
-| 系统层 | 基础设施 | CPU/内存/磁盘/网络 |
-| 系统层 | 容器 | Pod/容器重启/资源限制 |
-| 系统层 | 中间件 | 数据库/缓存/消息队列 |
-| 应用层 | 服务响应 | 超时/连接失败/资源耗尽 |
-| 应用层 | 错误异常 | 异常堆栈/业务异常 |
-| 业务层 | 业务指标 | 转化率/订单量/支付失败 |
-| 业务层 | 用户行为 | DAU 异常/功能使用异常 |
-| 外部层 | 第三方服务 | API 超时/返回错误 |
-| 外部层 | CDN/DNS | 访问异常/证书问题 |
+| System layer | Infrastructure | CPU/Memory/Disk/Network |
+| System layer | Container | Pod/Container restart/Resource limits |
+| System layer | Middleware | Database/Cache/Message queue |
+| Application layer | Service response | Timeout/Connection failure/Resource exhaustion |
+| Application layer | Error exceptions | Exception stack/Business exceptions |
+| Business layer | Business metrics | Conversion rate/Order volume/Payment failure |
+| Business layer | User behavior | DAU anomaly/Feature usage anomaly |
+| External layer | Third-party services | API timeout/Return error |
+| External layer | CDN/DNS | Access anomaly/Certificate issues |
 
-**输出**：
+**Output**:
 
 ```yaml
 classification:
@@ -168,15 +168,15 @@ classification:
   related_alerts: [ALT-001, ALT-002]
 ```
 
-#### 2.2 关联分析 [条件]
+#### 2.2 Correlation Analysis [Conditional]
 
-**分析方法**：
-- 时间窗口关联（告警时间接近）
-- 服务拓扑关联（同一服务链路）
-- 指标波动关联（同时发生异常）
-- 变更事件关联（发布/配置变更后触发）
+**Analysis Methods**:
+- Time window correlation (alert times are close)
+- Service topology correlation (same service chain)
+- Metric fluctuation correlation (anomalies occur simultaneously)
+- Change event correlation (triggered after release/config change)
 
-**输出**：
+**Output**:
 
 ```yaml
 correlation:
@@ -187,82 +187,82 @@ correlation:
   root_alert: ALT-001 | null
 ```
 
-### Step 3: 看板配置 [条件]
+### Step 3: Dashboard Configuration [Conditional]
 
-**目标**：构建可视化监控看板，聚合关键指标与告警状态
+**Goal**: Build visualization dashboards aggregating key metrics and alert status
 
-#### 3.1 角色视角确定 [条件]
+#### 3.1 Role Perspective Determination [Conditional]
 
-**角色分类**：
+**Role Categories**:
 
-| 角色 | 关注点 | 刷新频率 | 详细程度 |
+| Role | Focus | Refresh Rate | Detail Level |
 |------|--------|----------|----------|
-| Executive | 业务健康、整体状态 | 低 | 摘要 |
-| Product Owner | 功能状态、用户指标 | 中 | 概览 |
-| Engineering Lead | 系统状态、告警 | 高 | 详细 |
-| On-Call Engineer | 当前告警、问题诊断 | 实时 | 详细 |
-| Business Analyst | 业务指标、转化漏斗 | 中 | 业务 |
+| Executive | Business health, overall status | Low | Summary |
+| Product Owner | Feature status, user metrics | Medium | Overview |
+| Engineering Lead | System status, alerts | High | Detailed |
+| On-Call Engineer | Current alerts, issue diagnosis | Real-time | Detailed |
+| Business Analyst | Business metrics, conversion funnel | Medium | Business |
 
-**角色需求映射**：
+**Role Requirement Mapping**:
 
 ```yaml
 role_requirements:
   - role: executive
     focus_areas:
       - business_health
-      # ... 同结构可扩展
+      # ... same structure extensible
     alert_preference: critical_only
     refresh_rate: 15m
-  # ... 同结构可扩展
+  # ... same structure extensible
 ```
 
-#### 3.2 核心指标分组 [条件]
+#### 3.2 Core Metric Grouping [Conditional]
 
-**分组策略**：
+**Grouping Strategy**:
 
-| 分组类型 | 说明 | 示例 |
+| Group Type | Description | Example |
 |----------|------|------|
-| 业务视图 | 核心业务指标 | 订单量、转化率、DAU |
-| 技术视图 | 系统技术指标 | CPU、内存、延迟 |
-| 告警视图 | 当前告警和事件 | 活跃告警、历史事件 |
-| 服务视图 | 按服务/组件分组 | 用户服务、订单服务 |
+| Business view | Core business metrics | Order volume, conversion rate, DAU |
+| Technical view | System technical metrics | CPU, memory, latency |
+| Alert view | Current alerts and events | Active alerts, historical events |
+| Service view | Grouped by service/component | User service, order service |
 
-**指标分组输出**：
+**Metric Grouping Output**:
 
 ```yaml
 metric_groups:
   - group_id: GRP-001
-    group_name: 业务核心指标
+    group_name: Core Business Metrics
     role: executive
     metrics:
       - metric_name: api_response_time_p95
         data_source: apm
         visualization: time_series
-      # ... 同结构可扩展
+      # ... same structure extensible
     priority: high | medium | low
     refresh_interval: 15
 ```
 
-#### 3.3 可视化组件选择 [深度]
+#### 3.3 Visualization Component Selection [Deep]
 
-**组件类型**：
+**Component Types**:
 
-| 组件类型 | 适用指标 | 特点 |
+| Component Type | Applicable Metrics | Characteristics |
 |----------|----------|------|
-| Time Series | 趋势指标 | 展示随时间变化 |
-| Gauge | 状态指标 | 展示当前值/目标 |
-| Stat | 单一数值 | 快速概览 |
-| Table | 列表数据 | 详细数据展示 |
-| Alert List | 告警数据 | 实时告警状态 |
-| Heatmap | 分布指标 | 展示分布模式 |
+| Time Series | Trend metrics | Shows changes over time |
+| Gauge | Status metrics | Shows current value/target |
+| Stat | Single value | Quick overview |
+| Table | List data | Detailed data display |
+| Alert List | Alert data | Real-time alert status |
+| Heatmap | Distribution metrics | Shows distribution patterns |
 
-**组件配置**：
+**Component Config**:
 
 ```yaml
 widget_config:
   - widget_id: WDG-001
     widget_type: time_series | gauge | stat | table | alert_list | heatmap
-    title: API响应时间趋势
+    title: API Response Time Trend
     metrics:
       - name: api_response_time_p95
         aggregation: avg | sum | max | min
@@ -278,41 +278,41 @@ widget_config:
       position: 1_2
 ```
 
-#### 3.4 Dashboard 模板生成 [深度]
+#### 3.4 Dashboard Template Generation [Deep]
 
-**模板结构**：
+**Template Structure**:
 
 ```yaml
 dashboard_template:
   - dashboard_id: DASH-001
     role: executive
-    title: 业务概览
-    description: 高层管理者业务健康视图
+    title: Business Overview
+    description: Business health view for senior management
     widgets:
       - widget_id: WDG-001
         widget_type: stat
-        title: 今日订单量
+        title: Today's Order Volume
         metrics:
           - name: daily_orders
             data_source: business_db
         layout:
           width: 3
           height: 1
-      # ... 同结构可扩展
+      # ... same structure extensible
     filters:
       - filter_type: time_range
         default: 7d
-      # ... 同结构可扩展
+      # ... same structure extensible
     refresh_interval: 15m
 ```
 
-### Step 4: 告警升级 [条件]
+### Step 4: Alert Escalation [Conditional]
 
-**目标**：告警分级与升级处理，确保关键告警及时触达责任人
+**Goal**: Alert severity grading and escalation handling, ensuring critical alerts reach responsible parties in time
 
-#### 4.1 自动分级 [条件]
+#### 4.1 Auto Severity Grading [Conditional]
 
-**分级模型**：
+**Grading Model**:
 
 ```yaml
 alert_severity:
@@ -343,7 +343,7 @@ alert_severity:
     response_time_sla: next_business_day
 ```
 
-**分级输出**：
+**Grading Output**:
 
 ```yaml
 alert_classification:
@@ -354,14 +354,14 @@ alert_classification:
   factors:
     - factor: service_impact
       contribution: 0.8
-    # ... 同结构可扩展
+    # ... same structure extensible
   adjusted: true | false
-  adjustment_reason: 受影响用户超1万，升级为critical
+  adjustment_reason: Affected users exceed 10,000, escalated to critical
 ```
 
-#### 4.2 升级链触发 [条件]
+#### 4.2 Escalation Chain Trigger [Conditional]
 
-**升级规则**：
+**Escalation Rules**:
 
 ```yaml
 escalation_rules:
@@ -374,11 +374,11 @@ escalation_rules:
       - level: 1
         recipients: [oncall_primary]
         notification_channels: [sms, call, slack]
-      # ... 同结构可扩展
-  # ... 同结构可扩展
+      # ... same structure extensible
+  # ... same structure extensible
 ```
 
-**升级执行输出**：
+**Escalation Execution Output**:
 
 ```yaml
 escalation_chain:
@@ -388,40 +388,40 @@ escalation_chain:
     - timestamp: 2026-06-15T10:05:00Z
       level: 1
       action: initial_notification
-      recipients: [张三]
+      recipients: [Zhang San]
       status: sent | delivered | acknowledged
   next_escalation:
     timestamp: 2026-06-15T10:10:00Z
     level: 2
-    trigger_reason: 5分钟未确认，升级至L2
+    trigger_reason: Not acknowledged within 5 minutes, escalating to L2
 ```
 
-#### 4.3 通知发送 [条件]
+#### 4.3 Notification Sending [Conditional]
 
-**通知渠道**：
+**Notification Channels**:
 
-| 渠道 | 适用级别 | 内容格式 |
+| Channel | Applicable Severity | Content Format |
 |------|----------|----------|
-| SMS | Critical, High | 简短摘要 + 链接 |
-| Phone Call | Critical | 语音播报 + 确认 |
-| Slack | All | 详细卡片 + 操作 |
-| Email | Medium, Low | 完整报告 |
-| PagerDuty | All | 标准格式 |
+| SMS | Critical, High | Brief summary + link |
+| Phone Call | Critical | Voice broadcast + confirmation |
+| Slack | All | Detailed card + actions |
+| Email | Medium, Low | Full report |
+| PagerDuty | All | Standard format |
 
-**通知模板**：
+**Notification Template**:
 
 ```yaml
 notification:
   channels:
     - channel: sms
       content: |
-        [CRITICAL] 订单服务
-        响应时间P99超5秒，影响5000用户
-        详情: https://monitor.example.com/alerts/ALT-001
-    # ... 同结构可扩展
+        [CRITICAL] Order Service
+        Response time P99 exceeds 5 seconds, affecting 5,000 users
+        Details: https://monitor.example.com/alerts/ALT-001
+    # ... same structure extensible
 ```
 
-**发送状态**：
+**Send Status**:
 
 ```yaml
 notification_status:
@@ -431,16 +431,16 @@ notification_status:
       recipient: 13800138000
       status: sent | delivered | failed
       sent_at: 2026-06-15T10:05:00Z
-    # ... 同结构可扩展
+    # ... same structure extensible
   acknowledgment:
     required: true | false
-    acknowledged_by: 张三
+    acknowledged_by: Zhang San
     acknowledged_at: 2026-06-15T10:08:00Z
 ```
 
-#### 4.4 值班报告 [深度]
+#### 4.4 On-Call Report [Deep]
 
-**报告内容**：
+**Report Content**:
 
 ```yaml
 oncall_report:
@@ -448,7 +448,7 @@ oncall_report:
     start: 2026-06-08T00:00:00Z
     end: 2026-06-15T00:00:00Z
   oncall_engineer:
-    name: 李四
+    name: Li Si
     primary: true
   summary:
     total_alerts: 24
@@ -463,51 +463,51 @@ oncall_report:
   top_alerts:
     - alert_id: ALT-001
       severity: critical
-      title: 订单服务响应超时
+      title: Order service response timeout
       acknowledged_at: 2026-06-15T10:08:00Z
       resolved_at: 2026-06-15T10:45:00Z
   unresolved_alerts:
     - alert_id: ALT-018
       severity: medium
-      reason: 待根因确认，已转交后端团队
+      reason: Pending root cause confirmation, transferred to backend team
   action_items:
-    - description: 优化数据库连接池配置
-      owner: 王五
+    - description: Optimize database connection pool config
+      owner: Wang Wu
       deadline: 2026-06-20
 ```
 
-## 输出
+## Output
 
-**输出文件路径**：`docs/monitoring/monitoring-config.md（“预警规则”章节）`
+**Output File Path**: `docs/monitoring/monitoring-config.md ("Alert Rules" section)`
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 核心路径监控 + 基础告警规则 | 核心结论 + 最小可行产物，仅输出Step 1.1-1.2核心路径和告警规则 |
-| standard | 完整监控体系（当前默认） | 完整产物，包含Step 1-4全部输出 |
-| deep | 完整体系 + 扩展分析 | 完整产物 + 容量规划 + 混沌工程方案 + SRE成熟度评估 + 决策记录 + 风险评估 |
+| quick | Core path monitoring + basic alert rules | Core conclusions + minimum viable artifact, only outputs Step 1.1-1.2 core paths and alert rules |
+| standard | Full monitoring system (current default) | Full artifact, including all Step 1-4 outputs |
+| deep | Full system + extended analysis | Full artifact + capacity planning + chaos engineering plan + SRE maturity assessment + decision records + risk assessment |
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["metrics", "alert_id", "classification", "dashboards", "report_id", "alerts", "oncall_schedule"],
   "properties": {
-    "metrics": {"type": "array", "description": "监控指标配置列表，包含名称、类别、阈值和基线"},
-    "alert_policies": {"type": "object", "description": "告警策略配置"},
-    "suppression_rules": {"type": "object", "description": "收敛规则配置"},
-    "alert_id": {"type": "string", "description": "告警ID"},
-    "timestamp": {"type": "string", "description": "告警时间"},
-    "classification": {"type": "object", "description": "告警分类，包含层级、类别和置信度"},
-    "correlation": {"type": "object", "description": "关联分析，包含关联类型、相关告警和关联分数"},
-    "dashboards": {"type": "array", "description": "Dashboard配置列表，包含角色、标题和组件"},
-    "report_id": {"type": "string", "description": "报告唯一标识"},
-    "generated_at": {"type": "string", "description": "生成时间"},
-    "alerts": {"type": "array", "description": "告警列表，包含严重度、升级级别和已执行动作"},
-    "oncall_schedule": {"type": "object", "description": "值班安排，包含当前和下一轮值班信息"},
-    "oncall_reports": {"type": "array", "description": "值班报告，包含告警数、SLA合规率和平均解决时间"}
+    "metrics": {"type": "array", "description": "Monitoring metric config list, including name, category, threshold, and baseline"},
+    "alert_policies": {"type": "object", "description": "Alert policy config"},
+    "suppression_rules": {"type": "object", "description": "Convergence rule config"},
+    "alert_id": {"type": "string", "description": "Alert ID"},
+    "timestamp": {"type": "string", "description": "Alert time"},
+    "classification": {"type": "object", "description": "Alert classification, including layer, category, and confidence"},
+    "correlation": {"type": "object", "description": "Correlation analysis, including correlation type, related alerts, and correlation score"},
+    "dashboards": {"type": "array", "description": "Dashboard config list, including role, title, and widgets"},
+    "report_id": {"type": "string", "description": "Report unique identifier"},
+    "generated_at": {"type": "string", "description": "Generation time"},
+    "alerts": {"type": "array", "description": "Alert list, including severity, escalation level, and actions taken"},
+    "oncall_schedule": {"type": "object", "description": "On-call arrangement, including current and next on-call info"},
+    "oncall_reports": {"type": "array", "description": "On-call reports, including alert count, SLA compliance rate, and average resolution time"}
   }
 }
 ```
@@ -555,138 +555,138 @@ oncall_report:
 │       └── 2026-06-15.yaml
 ```
 
-## 决策规则
+## Decision Rules
 
-| 场景 | 决策规则 |
+| Scenario | Decision Rule |
 |------|----------|
-| 指标覆盖率<80% | 标记警告，提示补充指标，列出缺失的核心指标 |
-| 指标覆盖率80%-95% | 标记提示，建议补充非核心指标 |
-| 阈值冲突（同一指标≥2条告警规则） | 保留severity最高的规则，其余标记为重复并禁用 |
-| 基线数据不足（<7天历史数据） | 使用静态阈值作为fallback，标记"需补充数据，7天后自动切换动态基线" |
-| 新增服务 | 自动继承基础告警模板（CPU≥80%、内存≥85%、错误率≥1%），提示需专项配置 |
-| P0服务告警缺失 | 强制补充黄金指标告警，不可跳过 |
-| 告警噪音率≥15% | 自动收紧阈值10%，标记需人工审核 |
-| 告警风暴（≥5条告警/5分钟） | 合并为单一告警，标记主因，抑制关联告警 |
-| 影响范围扩大（受影响用户增长≥20%/10分钟） | 自动升级severity 1级（最高P0） |
-| 影响范围扩大（受影响用户增长5%-20%/10分钟） | 自动升级severity 1级 |
-| 指标数量过多 | 自动分组，折叠低优先级 |
-| 告警数量过多 | 仅显示未解决告警 |
-| 页面加载慢 | 延迟加载低优先级组件 |
-| 角色变更 | 自动调整指标配置 |
-| 指标无数据 | 显示"No Data"状态 |
-| Critical 无 ACK | 5 分钟后升级 L2 |
-| 连续触发相同告警 | 合并通知，避免轰炸 |
-| On-Call 无人响应 | 升级至 Manager |
-| 告警误报率高 | 反馈调整阈值 |
-| 升级超时 | 自动通知应急联系人 |
+| Metric coverage < 80% | Mark warning, prompt to supplement metrics, list missing core metrics |
+| Metric coverage 80%-95% | Mark notice, recommend supplementing non-core metrics |
+| Threshold conflict (same metric ≥ 2 alert rules) | Keep the rule with highest severity, mark others as duplicate and disable |
+| Insufficient baseline data (< 7 days historical data) | Use static threshold as fallback, mark "needs data supplementation, auto-switch to dynamic baseline after 7 days" |
+| New service added | Auto-inherit basic alert template (CPU ≥ 80%, memory ≥ 85%, error rate ≥ 1%), prompt for dedicated config |
+| P0 service alert missing | Force supplement golden signal alerts, cannot skip |
+| Alert noise rate ≥ 15% | Auto-tighten thresholds by 10%, mark for human review |
+| Alert storm (≥ 5 alerts/5 minutes) | Merge into single alert, mark primary cause, suppress related alerts |
+| Impact scope expanding (affected user growth ≥ 20%/10 minutes) | Auto-escalate severity by 1 level (up to P0) |
+| Impact scope expanding (affected user growth 5%-20%/10 minutes) | Auto-escalate severity by 1 level |
+| Too many metrics | Auto-group, collapse low priority |
+| Too many alerts | Show only unresolved alerts |
+| Slow page load | Lazy-load low-priority components |
+| Role change | Auto-adjust metric config |
+| Metric has no data | Show "No Data" status |
+| Critical without ACK | Escalate to L2 after 5 minutes |
+| Repeated identical alerts | Merge notifications, avoid spamming |
+| On-Call no response | Escalate to Manager |
+| High false positive rate | Feedback to adjust thresholds |
+| Escalation timeout | Auto-notify emergency contact |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 核心路径覆盖率 ≥ 95%
-- [ ] 每个核心路径至少有 4 个黄金指标
-- [ ] 告警规则无冲突无遗漏
-- [ ] SLA 要求有对应指标支撑
+- [ ] Core path coverage ≥ 95%
+- [ ] Each core path has at least 4 golden signals
+- [ ] Alert rules have no conflicts or omissions
+- [ ] SLA requirements have corresponding metric support
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 告警噪音率 < 15%
-- [ ] 所有 P0 服务有 On-Call 手册
-- [ ] 告警分类准确率 ≥ 85%
-- [ ] 升级标记无遗漏
-- [ ] 所有角色都有对应 Dashboard
-- [ ] 核心指标覆盖率 ≥ 90%
-- [ ] 告警配置正确
-- [ ] 告警分级准确率 ≥ 90%
-- [ ] 升级触发及时性 100%
-- [ ] 通知送达率 ≥ 99%
-- [ ] SLA 响应时间达标
-- [ ] 升级链配置正确
+- [ ] Alert noise rate < 15%
+- [ ] All P0 services have On-Call handbooks
+- [ ] Alert classification accuracy ≥ 85%
+- [ ] Escalation marks have no omissions
+- [ ] All roles have corresponding Dashboards
+- [ ] Core metric coverage ≥ 90%
+- [ ] Alert config correct
+- [ ] Alert severity accuracy ≥ 90%
+- [ ] Escalation trigger timeliness 100%
+- [ ] Notification delivery rate ≥ 99%
+- [ ] SLA response time met
+- [ ] Escalation chain config correct
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 可视化组件选择合理
-- [ ] 布局美观、层次清晰
-- [ ] 刷新频率符合角色需求
-- [ ] 值班报告完整率 100%
-- [ ] 容量规划已输出（资源使用率预测、扩容阈值、容量冗余评估）
-- [ ] 混沌工程方案已生成（故障注入场景、爆炸半径评估、恢复验证计划）
-- [ ] SRE成熟度评估已完成（监控/告警/响应/复盘/自动化五维评分）
+- [ ] Visualization component selection reasonable
+- [ ] Layout aesthetic, clear hierarchy
+- [ ] Refresh rate matches role needs
+- [ ] On-call report completeness 100%
+- [ ] Capacity planning output (resource utilization forecast, scaling thresholds, capacity redundancy assessment)
+- [ ] Chaos engineering plan generated (fault injection scenarios, blast radius assessment, recovery verification plan)
+- [ ] SRE maturity assessment completed (five-dimensional scoring: monitoring/alerting/response/postmortem/automation)
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失的上游输入 | 降级方案 | 输出影响 |
+| Missing Upstream Input | Degradation Plan | Output Impact |
 |---------------|---------|---------|
-| 指标体系 | 用户提供核心业务指标列表，基于通用指标模板补充黄金指标 | 基础监控指标配置，缺乏指标体系支撑 |
-| 产品架构 | 用户提供服务组件清单，按通用微服务架构推断依赖关系 | 基础核心路径清单，依赖关系为推断 |
-| SLA 要求 | 用户提供关键服务的可用性目标，采用行业默认阈值（99.9%/99.5%/99%） | 基于默认阈值的告警规则 |
-| 现有监控 | 跳过兼容性检查，从零生成监控配置 | 全新监控配置 |
-| 版本发布信息 | 跳过变更关联分析，在异常检测中标注"无法排除变更因素" | 排除变更关联的检测结果 |
-| 配置变更记录 | 跳过配置变更关联，在异常检测中标注"无法排除配置变更因素" | 排除配置关联的检测结果 |
-| 流量变化数据 | 跳过流量分析维度，在异常检测中标注流量数据缺失 | 缺少流量维度的检测结果 |
-| 用户角色 | 使用默认角色模板（Executive/Engineering/On-Call），用户后续调整 | 通用角色Dashboard模板 |
-| 现有 Dashboard | 从零生成Dashboard配置，标注可能与现有配置冲突 | 全新Dashboard配置 |
-| On-Call 排班 | 用户提供当前值班人员联系方式，AI据此配置升级链 | 基于用户输入的升级链 |
-| 告警规则 | 使用默认升级规则（Critical 5min/High 15min/Medium 1h），标注需人工确认 | 基于默认规则的升级配置 |
-| 知识库 | On-Call手册中不包含历史案例参考，标注"无历史案例" | 无历史参考的On-Call手册 |
+| Metrics system | User provides core business metric list, supplement golden signals based on generic metric template | Basic monitoring metric config, lacks metrics system support |
+| Product architecture | User provides service component list, infer dependencies based on generic microservice architecture | Basic core path list, dependencies are inferred |
+| SLA requirements | User provides availability targets for key services, use industry default thresholds (99.9%/99.5%/99%) | Alert rules based on default thresholds |
+| Existing monitoring | Skip compatibility check, generate monitoring config from scratch | Brand-new monitoring config |
+| Release info | Skip change correlation analysis, mark "cannot exclude change factors" in anomaly detection | Detection results excluding change correlation |
+| Config change records | Skip config change correlation, mark "cannot exclude config change factors" in anomaly detection | Detection results excluding config correlation |
+| Traffic change data | Skip traffic analysis dimension, mark traffic data missing in anomaly detection | Detection results missing traffic dimension |
+| User roles | Use default role template (Executive/Engineering/On-Call), user adjusts later | Generic role Dashboard template |
+| Existing Dashboard | Generate Dashboard config from scratch, mark potential conflicts with existing config | Brand-new Dashboard config |
+| On-Call schedule | User provides current on-call contact info, AI configures escalation chain based on this | Escalation chain based on user input |
+| Alert rules | Use default escalation rules (Critical 5min/High 15min/Medium 1h), mark for human confirmation | Escalation config based on default rules |
+| Knowledge base | On-Call handbook does not include historical case references, mark "no historical cases" | On-Call handbook without historical references |
 
-### 数据获取说明
+### Data Acquisition Notes
 
-当上游文件缺失时，通过以下方式获取必要数据：
+When upstream files are missing, obtain necessary data through the following methods:
 
-1. **指标体系缺失**：请用户提供核心业务指标列表（如订单量、转化率、DAU等），AI将基于产品类型自动补充通用黄金指标（延迟、流量、错误率、饱和度）
-2. **产品架构缺失**：请用户提供服务组件清单或系统名称列表，AI将按通用架构模式推断服务依赖关系，并在输出中标注推断项需人工确认
-3. **SLA 要求缺失**：请用户提供关键服务的可用性目标（如"支付服务需99.9%可用"），未指定的服务采用行业默认标准，输出中标注默认值供人工审核
-4. **告警数据缺失**：请用户描述异常现象，包括：症状表现、发生时间、受影响的服务/功能、影响范围（用户数/功能点），AI将基于描述进行异常分类
-5. **上下文数据缺失**（版本发布/配置变更/流量变化）：AI将在异常检测中明确标注无法排除的因素，建议人工排查这些维度
-6. **用户角色缺失**：使用默认角色模板生成Dashboard，包含Executive概览、Engineering详情、On-Call实时三个标准视图，用户可根据实际角色需求调整
-7. **On-Call排班缺失**：请用户提供当前值班人员姓名和联系方式（手机/Slack/邮箱），AI将据此配置升级通知链
-8. **告警规则缺失**：采用默认升级规则模板（Critical→5min→L1/L2/L3，High→15min→L1/L2），输出中标注默认规则需人工审核确认
+1. **Metrics system missing**: Ask user to provide core business metric list (e.g., order volume, conversion rate, DAU, etc.); AI will auto-supplement generic golden signals (latency, traffic, error rate, saturation) based on product type
+2. **Product architecture missing**: Ask user to provide service component list or system name list; AI will infer service dependencies based on generic architecture patterns, and mark inferred items for human confirmation in output
+3. **SLA requirements missing**: Ask user to provide availability targets for key services (e.g., "Payment service needs 99.9% availability"); services not specified use industry default standards, with default values marked in output for human review
+4. **Alert data missing**: Ask user to describe anomaly phenomena, including: symptom manifestations, occurrence time, affected services/features, impact scope (user count/feature points); AI will classify anomalies based on the description
+5. **Context data missing** (release/config change/traffic change): AI will explicitly mark factors that cannot be excluded in anomaly detection, recommending manual investigation of these dimensions
+6. **User roles missing**: Use default role template to generate Dashboards, including three standard views: Executive overview, Engineering details, On-Call real-time; user can adjust based on actual role needs
+7. **On-Call schedule missing**: Ask user to provide current on-call personnel names and contact info (phone/Slack/email); AI will configure escalation notification chain based on this
+8. **Alert rules missing**: Use default escalation rule template (Critical→5min→L1/L2/L3, High→15min→L1/L2); mark default rules in output for human review and confirmation
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| core_paths | array | 是 | 核心路径列表，至少1条路径 |
-| core_paths[].path_name | string | 是 | 路径名称 |
-| metrics | object | 是 | 监控指标配置，按路径分组 |
-| alert_policies | array | 是 | 告警策略列表，至少1条规则 |
-| suppression_rules | array | 否 | 抑制规则列表 |
-| oncall_handbook | object | 否 | On-Call手册，须含escalation_paths/emergency_procedures |
-| classification | object | 是 | 告警分类，须含alert_type/severity/service |
-| classification.severity | string | 是 | 严重度，仅允许P0/P1/P2/P3 |
-| correlation | object | 否 | 关联分析，须含is_correlated/related_alerts |
-| dashboard_config | object | 是 | Dashboard配置，须含role/panels |
-| dashboard_config.role | string | 是 | 角色名称 |
-| dashboard_config.panels | array | 是 | 面板列表，至少1个面板 |
-| shared_views | object | 否 | 共享视图配置 |
-| templates | array | 否 | 模板列表 |
-| alert_classification | object | 是 | 告警分级，须含alert_id/severity/category |
-| alert_classification.severity | string | 是 | 严重度，仅允许Critical/High/Medium/Low |
-| escalation_chain | array | 是 | 升级链，至少1级 |
-| notification_records | array | 否 | 通知记录，每项须含channel/recipient/status |
-| oncall_report | object | 否 | 值班报告，须含total_alerts/resolved_count |
+| core_paths | array | Yes | Core path list, at least 1 path |
+| core_paths[].path_name | string | Yes | Path name |
+| metrics | object | Yes | Monitoring metric config, grouped by path |
+| alert_policies | array | Yes | Alert policy list, at least 1 rule |
+| suppression_rules | array | No | Suppression rule list |
+| oncall_handbook | object | No | On-Call handbook, must contain escalation_paths/emergency_procedures |
+| classification | object | Yes | Alert classification, must contain alert_type/severity/service |
+| classification.severity | string | Yes | Severity, only P0/P1/P2/P3 allowed |
+| correlation | object | No | Correlation analysis, must contain is_correlated/related_alerts |
+| dashboard_config | object | Yes | Dashboard config, must contain role/panels |
+| dashboard_config.role | string | Yes | Role name |
+| dashboard_config.panels | array | Yes | Panel list, at least 1 panel |
+| shared_views | object | No | Shared view config |
+| templates | array | No | Template list |
+| alert_classification | object | Yes | Alert severity grading, must contain alert_id/severity/category |
+| alert_classification.severity | string | Yes | Severity, only Critical/High/Medium/Low allowed |
+| escalation_chain | array | Yes | Escalation chain, at least 1 level |
+| notification_records | array | No | Notification records, each item must contain channel/recipient/status |
+| oncall_report | object | No | On-call report, must contain total_alerts/resolved_count |
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游来源 | 变更类型 | 影响范围 | 响应动作 |
+| Upstream Source | Change Type | Impact Scope | Response Action |
 |----------|----------|----------|----------|
-| metrics-system | 指标定义变更 | 监控指标配置和告警规则 | 更新指标映射和告警阈值 |
-| 用户提供-产品架构 | 架构变更 | 核心路径和服务依赖 | 重新识别核心路径和依赖链 |
-| 用户提供-SLA | SLA目标变更 | 告警阈值和分级标准 | 调整告警规则和升级条件 |
-| release-gradual | 版本发布记录更新 | 变更关联分析 | 更新关联事件和异常检测 |
-| 用户提供-角色 | 角色需求变更 | Dashboard分层和面板布局 | 重新设计角色视图 |
-| 值班管理系统 | 排班变更 | 通知接收人和升级链 | 更新On-Call排班和通知配置 |
+| metrics-system | Metric definition change | Monitoring metric config and alert rules | Update metric mapping and alert thresholds |
+| User-provided - Product architecture | Architecture change | Core paths and service dependencies | Re-identify core paths and dependency chains |
+| User-provided - SLA | SLA target change | Alert thresholds and grading criteria | Adjust alert rules and escalation conditions |
+| release-gradual | Release record update | Change correlation analysis | Update correlation events and anomaly detection |
+| User-provided - Roles | Role requirement change | Dashboard layering and panel layout | Redesign role views |
+| On-call management system | Schedule change | Notification recipients and escalation chain | Update On-Call schedule and notification config |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 下游消费者 | 通知条件 | 通知方式 | 通知内容 |
+| Downstream Consumer | Notification Condition | Notification Method | Notification Content |
 |------------|----------|----------|----------|
-| monitoring-orchestrator | 监控告警检测完成 | 输出文件更新 | 构建完成状态和关键配置 |
-| monitoring-attribution | 异常告警触发 | 输出文件更新 | 异常事件清单、告警分类和关联分析结果 |
-| iteration-backlog-grooming | P0告警触发 | 写入输出文件 | 紧急告警和升级详情 |
+| monitoring-orchestrator | Monitoring alert detection complete | Output file update | Build completion status and key config |
+| monitoring-attribution | Anomaly alert triggered | Output file update | Anomaly event list, alert classification, and correlation analysis results |
+| iteration-backlog-grooming | P0 alert triggered | Write to output file | Emergency alert and escalation details |

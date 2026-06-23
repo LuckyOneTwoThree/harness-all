@@ -1,37 +1,37 @@
-# Skills 索引
+# Skills Index
 
-> 纯索引，80 行内。需要选 Skill 时读。工作流编排见 `workflows/`。
-> 添加新 Skill：在分类目录下创建 SKILL.md，然后本文件追加一行。
-> 定位：harness-design 是**UI 设计框架**，只含设计相关 skill。
-> 产品/工程/增长见 harness 家族其他成员（通过 docs/handoff/ 交接）。
+> Pure index, under 80 lines. Read when selecting a Skill. For workflow orchestration, see `workflows/`.
+> To add a new Skill: create a SKILL.md in the category directory, then append a line to this file.
+> Positioning: harness-design is a **UI design framework**, containing only design-related skills.
+> Product / engineering / growth are handled by other members of the harness family (via docs/handoff/).
 
-## 元
-- **session-start** — 会话启动，加载上下文恢复工作状态
-- **session-end** — 会话收尾，归档进度 + 写 baseline + 更新看板 + 产出交接
-- **skill-maintenance** — skill 健康检查
-- **memory-maintenance** — memory retention 清理
+## Meta
+- **session-start** — Session startup, load context and restore working state
+- **session-end** — Session wrap-up, archive progress + write baseline + update board + produce handoff
+- **skill-maintenance** — Skill health check
+- **memory-maintenance** — Memory retention cleanup
 
-## 设计
-- **design-brief** — 需求探索硬门（+Vibe Translation +Anti AI-Slop）
-- **design-recommendation** — 数据驱动设计推荐（产品类型→风格/配色/字体）
-- **design-system** — 设计系统创建（DESIGN.md 10 段 + token 导出）
-- **design-system-import** — 从现有代码导入设计系统
-- **visual-design** — 视觉设计（反 AI-slop + 多方案变体）
-- **interaction-design** — 交互设计（状态机 + 动效参数）
-- **wireframe** — 低保真线框图（结构验证）
-- **component-design** — 原子组件设计（Props/States/Variants/Composition Rules）
-- **design-lint** — AI 设计 Linter（机械规则检查，脚本执行）
-- **design-review** — 最终审查（Five-Axis + Doubt-Driven）
-- **design-handoff-spec** — 工程交付（+component-map.json 显式映射）
-- **accessibility-audit** — WCAG 2.1 AA 专项审查
-- **verify** — LOOP 内快速检查
-- **design-system-refactor** — 设计系统重构（合并/抽象/token 化）
+## Design
+- **design-brief** — Requirements exploration hard gate (+Vibe Translation +Anti AI-Slop)
+- **design-recommendation** — Data-driven design recommendation (product type → style/color/typography)
+- **design-system** — Design system creation (DESIGN.md 10 sections + token export)
+- **design-system-import** — Import design system from existing code
+- **visual-design** — Visual design (anti AI-slop + multi-option variants)
+- **interaction-design** — Interaction design (state machine + motion parameters)
+- **wireframe** — Low-fidelity wireframe (structure validation)
+- **component-design** — Atomic component design (Props/States/Variants/Composition Rules)
+- **design-lint** — AI design Linter (mechanical rule check, script execution)
+- **design-review** — Final review (Five-Axis + Doubt-Driven)
+- **design-handoff-spec** — Engineering handoff (+component-map.json explicit mapping)
+- **accessibility-audit** — WCAG 2.1 AA dedicated review
+- **verify** — Inside-LOOP quick check
+- **design-system-refactor** — Design system refactor (merge/abstract/tokenize)
 
-## 工作流
-> `default_mode`：deep=强制探索 / standard=模块边界暂停 / skip=直接执行（用户可随时切换）
-- **setup** [skip] — 项目初始化（design-brief → design-recommendation → design-system）
-- **new-design** [deep] — 新设计任务（3 个独立 LOOP + design-review）
-- **design-iteration** [standard] — 设计迭代（Chesterton's Fence + LOOP）
-- **redesign** [deep] — 重设计（design-system-import + 差异分析 + LOOP）
-- **design-system-setup** [standard] — 设计系统建设（recommendation → system → LOOP）
-- **design-handoff** [skip] — 设计交付（handoff-spec + accessibility + lint + verify）
+## Workflows
+> `default_mode`: deep=forced exploration / standard=pause at module boundaries / skip=direct execution (user can switch at any time)
+- **setup** [skip] — Project initialization (design-brief → design-recommendation → design-system)
+- **new-design** [deep] — New design task (3 independent LOOPs + design-review)
+- **design-iteration** [standard] — Design iteration (Chesterton's Fence + LOOP)
+- **redesign** [deep] — Redesign (design-system-import + diff analysis + LOOP)
+- **design-system-setup** [standard] — Design system build (recommendation → system → LOOP)
+- **design-handoff** [skip] — Design handoff (handoff-spec + accessibility + lint + verify)

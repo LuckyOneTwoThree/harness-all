@@ -1,56 +1,56 @@
-# constitution.md — 项目宪法（模板）
+# constitution.md — Project constitution (template)
 
-> **角色说明**：本文件是**你自己的项目**的宪法，约束本项目的开发行为。
-> 与 harness-solo 框架仓库自身的宪法（`.harness/templates/constitution.md.template` 的源文件）是不同的文件——那个约束"开发框架本身"，这个约束"用框架开发你的项目"。
+> **Role note**: This file is the constitution for **your own project**, constraining the development behavior of this project.
+> It is a different file from the harness-solo framework repository's own constitution (the source file of `.harness/templates/constitution.md.template`) — that one constrains "developing the framework itself", while this one constrains "using the framework to develop your project".
 >
-> 每个项目独有的不可协商原则。
-> 与 AGENTS.md 的分工：AGENTS.md 是通用工作规则（所有项目相同），constitution.md 是项目特定约束（每个项目不同）。
-> 加载时机：AGENTS.md 之后，首次交互时读。
-> 来源：spec-kit 的 constitution.md 概念——从代码库分析推导，不是抄通用规则。
+> Non-negotiable principles unique to each project.
+> Division of labor with AGENTS.md: AGENTS.md contains general work rules (the same for all projects), while constitution.md contains project-specific constraints (different for each project).
+> Load timing: after AGENTS.md, read on first interaction.
+> Source: the constitution.md concept from spec-kit — derived from codebase analysis, not copied from generic rules.
 
-## 如何使用本文件
+## How to use this file
 
-1. 项目立项时，根据项目特性填写下方条款
-2. 每条款必须是**可验证的**（能通过测试或检查确认）
-3. Agent 在 PLAN 阶段必须检查任务是否符合宪法
-4. 宪法冲突时，宪法优先于用户当前指令（除非用户明确说"修改宪法"）
+1. At project initiation, fill in the clauses below based on project characteristics
+2. Each clause must be **verifiable** (confirmable through tests or inspection)
+3. The Agent must check whether tasks comply with the constitution during the PLAN phase
+4. On constitution conflicts, the constitution takes priority over the user's current instruction (unless the user explicitly says "modify the constitution")
 
-## 项目特定原则
+## Project-specific principles
 
-<!-- 根据项目实际情况填写，以下是示例 -->
+<!-- Fill in based on actual project conditions; below are examples -->
 
-### 原则 1：零新运行时依赖
-本项目不接受新的运行时依赖，除非：
-- 经过用户明确审批
-- 没有现有 primitive 可复用
-- 新依赖的维护活跃度 > 80%
+### Principle 1: Zero New Runtime Dependencies
+This project does not accept new runtime dependencies unless:
+- Explicitly approved by the user
+- No existing primitive can be reused
+- The new dependency's maintenance activity > 80%
 
-**验证方式**：`package.json` 的 dependencies diff 审查
+**Verification method**: `package.json` dependencies diff review
 
-### 原则 2：公开 API 必须有集成测试
-所有对外暴露的 API 端点必须有对应的集成测试，覆盖：
-- 正常路径（200）
-- 边界情况（400 参数错误）
-- 权限拒绝（401/403）
+### Principle 2: Public APIs Must Have Integration Tests
+All externally exposed API endpoints must have corresponding integration tests covering:
+- Happy path (200)
+- Edge cases (400 parameter errors)
+- Permission denial (401/403)
 
-**验证方式**：verify skill 检查测试覆盖率
+**Verification method**: verify skill checks test coverage
 
-### 原则 3：数据库变更必须生成迁移脚本
-任何 schema 变更必须有可回滚的迁移脚本，禁止手动改库。
+### Principle 3: Database Changes Must Generate Migration Scripts
+Any schema change must have a rollback-capable migration script; manual database modifications are forbidden.
 
-**验证方式**：`migrations/` 目录有对应文件 + 迁移工具（如 drizzle-kit / prisma migrate / knex migrate）无 diff
+**Verification method**: `migrations/` directory has corresponding files + migration tool (e.g., drizzle-kit / prisma migrate / knex migrate) has no diff
 
-### 原则 4：[按需添加]
+### Principle 4: [Add as needed]
 
-## 宪法检查点（PLAN 阶段必查）
+## Constitution checkpoints (must check during PLAN phase)
 
-- [ ] 当前任务是否违反"零新依赖"？
-- [ ] 新增 API 是否有测试计划？
-- [ ] 是否涉及 schema 变更？有迁移脚本吗？
-- [ ] [其他项目特定检查]
+- [ ] Does the current task violate "zero new dependencies"?
+- [ ] Do new APIs have a test plan?
+- [ ] Does it involve schema changes? Are there migration scripts?
+- [ ] [Other project-specific checks]
 
-## 修订记录
+## Revision history
 
-| 日期 | 修订内容 | 原因 |
+| Date | Revision | Reason |
 |------|---------|------|
-| YYYY-MM-DD | 初始版本 | 项目立项 |
+| YYYY-MM-DD | Initial version | Project initiation |

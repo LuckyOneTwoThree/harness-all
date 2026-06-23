@@ -1,20 +1,20 @@
 ---
 name: planning-okr
-description: 当需要制定季度/年度OKR、目标分解、绩效考核标准时使用。OKR自动生成。从战略方向生成目标与关键结果，包括Objective生成、Key Results设计、可行性评估和OKR对齐检查。关键词：OKR、目标管理、关键结果、目标分解、OKR对齐、定目标、目标拆解。
+description: Use when you need to set quarterly/annual OKRs, decompose objectives, or define performance assessment criteria. OKR auto-generation. Generate Objectives and Key Results from strategic direction, including Objective generation, Key Results design, feasibility assessment, and OKR alignment check. Keywords: OKR, objective management, Key Results, objective decomposition, OKR alignment, setting objectives, breaking down objectives.
 metadata:
-  module: "产品商业与战略"
-  sub-module: "战略规划与路线图"
+  module: "Product Business & Strategy"
+  sub-module: "Strategic Planning & Roadmap"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["通用"]
+  domain_tags: ["General"]
   trigger_examples:
-    - "帮我制定季度OKR"
-    - "目标怎么拆解"
+    - "Help me set quarterly OKRs"
+    - "How to break down objectives"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出OKR和关键结果"
-  deep_description: "完整OKR + 对齐验证 + 进度追踪机制 + 季度复盘模板"
+  quick_description: "Directly output OKRs and Key Results"
+  deep_description: "Full OKR + alignment validation + progress tracking mechanism + quarterly retrospective template"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -27,315 +27,315 @@ writes:
   - okr.json
 ---
 
-# OKR自动生成
+# OKR Auto-Generation
 
-## 核心原则
+## Core Principles
 
-1. **O从战略来**——Objective必须源于SWOT战略方向，不可脱离战略凭空设定
-2. **KR必须可量化**——每个KR有明确数字目标和验证方法，拒绝模糊表述
-3. **可行性硬检查**——达成概率<0.3升级调整目标，>0.9升级增加挑战
-4. **对齐闭环**——O与KR逻辑一致、KR之间相互支撑、与北极星指标关联
+1. **Objectives come from strategy** — Objectives must originate from SWOT strategic directions, not be set in a vacuum detached from strategy
+2. **KRs must be quantifiable** — Each KR has a clear numerical target and verification method; vague statements are rejected
+3. **Feasibility hard check** — If probability of achievement < 0.3, escalate to adjust the target; if > 0.9, escalate to increase the challenge
+4. **Alignment closed loop** — O and KR are logically consistent, KRs support each other, and are linked to the North Star Metric
 
-## 交互模式
-🤖→👤 AI建议人类审批
+## Interaction Mode
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| SWOT战略方向 | JSON | 是 | docs/strategy/PRODUCT_STRATEGY.md（“战略分析”章节） | SO/ST/WO/WT战略方向 |
-| 北极星指标 | JSON | 是 | docs/strategy/PRODUCT_STRATEGY.md（“North Star”章节） | 北极星指标及下钻指标 |
-| BMC商业模式画布 | JSON | ○ | docs/strategy/business-strategy.md（“商业模式画布”章节） | 价值主张、收入来源 |
-| 业务现状数据 | JSON | ○ | 用户提供 | 当前业务指标基线 |
+| SWOT strategic direction | JSON | Yes | docs/strategy/PRODUCT_STRATEGY.md ("Strategic Analysis" section) | SO/ST/WO/WT strategic directions |
+| North Star Metric | JSON | Yes | docs/strategy/PRODUCT_STRATEGY.md ("North Star" section) | North Star Metric and breakdown metrics |
+| BMC business model canvas | JSON | ○ | docs/strategy/business-strategy.md ("Business Model Canvas" section) | Value proposition, revenue streams |
+| Business status data | JSON | ○ | Provided by user | Current business metric baseline |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: Objective生成 [核心]
+### Step 1: Objective Generation [Core]
 
-生成2-3个Objective候选
+Generate 2-3 Objective candidates
 
-质量检查标准：
-- **方向感**：表达清晰的方向和意图
-- **战略一致性**：与SWOT战略方向一致
-- **激励性**：能够激励团队
-- **时间-bound**：有明确的周期
+Quality check criteria:
+- **Directional sense**: Expresses clear direction and intent
+- **Strategic alignment**: Consistent with SWOT strategic direction
+- **Inspirational**: Can motivate the team
+- **Time-bound**: Has a clear time period
 
-Objective模板：
+Objective template:
 ```
-O: [动词] + [什么] + [达成什么]
-```
-
-### Step 2: Key Results生成 [核心]
-
-每个Objective生成3-5个Key Results
-
-质量检查标准：
-- **可量化**：用数字衡量
-- **可验证**：有明确的验证方法
-- **多维度**：覆盖不同维度（数量/质量/时间/成本）
-- **有挑战性**：需要努力才能达成
-
-KR模板：
-```
-KR: [时间] [数量/百分比] [做什么] 达到 [目标值]
+O: [Verb] + [What] + [Achieve what]
 ```
 
-**KR达成概率估算规则**：
+### Step 2: Key Results Generation [Core]
 
-| 场景 | 估算方法 | 置信度 |
+Generate 3-5 Key Results for each Objective
+
+Quality check criteria:
+- **Quantifiable**: Measured with numbers
+- **Verifiable**: Has a clear verification method
+- **Multi-dimensional**: Covers different dimensions (quantity/quality/time/cost)
+- **Challenging**: Requires effort to achieve
+
+KR template:
+```
+KR: [Time] [Quantity/Percentage] [Do what] reach [Target value]
+```
+
+**KR Achievement Probability Estimation Rules**:
+
+| Scenario | Estimation Method | Confidence |
 |------|----------|--------|
-| 有历史数据 | 基于历史趋势外推，target/baseline比值与历史增速对比 | 高(≥0.7) |
-| 有行业基准 | 参考同行业同阶段公司的KR达成率 | 中(0.4-0.7) |
-| 无参考数据 | 基于德尔菲法——AI提供3档概率(乐观0.8/中性0.5/保守0.2)，人类选择 | 低(<0.4) |
+| With historical data | Extrapolate based on historical trends; compare target/baseline ratio with historical growth rate | High (≥0.7) |
+| With industry benchmarks | Reference KR achievement rates of companies at the same stage in the same industry | Medium (0.4-0.7) |
+| No reference data | Based on Delphi method — AI provides 3 probability tiers (optimistic 0.8/neutral 0.5/conservative 0.2), human selects | Low (<0.4) |
 
-达成概率 < 0.3 的 KR 标注 needs_human_validation: true，建议调整 target 或拆分为多个渐进式KR。
+KRs with achievement probability < 0.3 are tagged needs_human_validation: true; recommend adjusting the target or splitting into multiple progressive KRs.
 
-**北极星指标消费**：从输入的北极星指标中提取核心指标和下钻指标，确保至少1个KR的metric与北极星指标直接关联，标注 north_star_alignment: true。
+**North Star Metric consumption**: Extract the core metric and breakdown metrics from the input North Star Metric, ensure at least 1 KR's metric is directly linked to the North Star Metric, and tag north_star_alignment: true.
 
-### Step 3: KR可行性评估 [核心]
+### Step 3: KR Feasibility Assessment [Core]
 
-对每个KR进行可行性评估：
+Conduct a feasibility assessment for each KR:
 
 ```yaml
 kr_assessment:
-  baseline: 当前值
-  target: 目标值
-  growth_needed: 需要的增长率
-  achievability: 达成概率 (0-1)
-  dimension: 维度分类
-  confidence_level: 置信度
+  baseline: Current value
+  target: Target value
+  growth_needed: Required growth rate
+  achievability: Probability of achievement (0-1)
+  dimension: Dimension classification
+  confidence_level: Confidence
 ```
 
-**achievability 计算方法**：
+**achievability calculation method**:
 
 ```
 achievability_score = w1 × resource_fit + w2 × historical_trend + w3 × dependency_risk
 
-- resource_fit: 团队当前资源/预估所需资源（0-1），基于团队规模动态校准：
-  - 1-3人: 0.3（资源紧张）
-  - 4-6人: 0.5（资源适中）
-  - 7-10人: 0.7（资源充裕）
-  - >10人: 0.8（资源丰富）
-  - 若团队规模未知，默认0.4（偏保守）
-- historical_trend: 基于历史数据时为达成概率，无历史数据时为0.5
-- dependency_risk: 1 - (外部依赖数量 × 0.15)，最低0.1
+- resource_fit: Team's current resources / estimated required resources (0-1), dynamically calibrated based on team size:
+  - 1-3 people: 0.3 (resource constrained)
+  - 4-6 people: 0.5 (moderate resources)
+  - 7-10 people: 0.7 (ample resources)
+  - >10 people: 0.8 (abundant resources)
+  - If team size is unknown, default 0.4 (conservative)
+- historical_trend: Achievement probability when based on historical data, 0.5 when no historical data
+- dependency_risk: 1 - (number of external dependencies × 0.15), minimum 0.1
 - w1=0.4, w2=0.35, w3=0.25
 
-achievability_score < 0.4 标注为高风险KR，needs_human_validation: true
+achievability_score < 0.4 is tagged as high-risk KR, needs_human_validation: true
 ```
 
-### Step 4: 驱动功能映射 [核心]
+### Step 4: Driving Feature Mapping [Core]
 
-为每个KR定义1-3个可直接贡献该KR达成的功能候选：
+Define 1-3 feature candidates that can directly contribute to achieving each KR:
 
-- 每个功能需标注优先级和预期提升
-- 功能需基于北极星指标的 drives_features 进一步细化
-- 功能描述为占位符，等待 design-prd 生成具体 feature_id
+- Each feature must be tagged with priority and expected lift
+- Features must be further refined based on the drives_features of the North Star Metric
+- Feature descriptions are placeholders, awaiting design-prd to generate specific feature_id
 
-### Step 5: OKR对齐检查 [核心]
+### Step 5: OKR Alignment Check [Core]
 
-检查OKR之间的对齐关系：
-- 与公司战略对齐
-- O与KR逻辑一致
-- KR之间相互支撑
-- 时间线合理
+Check the alignment between OKRs:
+- Aligned with company strategy
+- O and KR are logically consistent
+- KRs support each other
+- Timeline is reasonable
 
-**对齐检查执行规则**：
+**Alignment check execution rules**:
 
-| 检查维度 | 检查方法 | 通过条件 | 不通过处理 |
+| Check Dimension | Check Method | Pass Condition | Fail Handling |
 |----------|----------|----------|-----------|
-| O-KR一致性 | 每个KR必须直接贡献对应O的达成 | 所有KR与O有直接因果关系 | 标注不一致KR，建议重新定义 |
-| KR间独立性 | KR之间不应有包含或因果关系 | KR两两之间无逻辑依赖 | 合并依赖KR或拆分为独立KR |
-| 北极星对齐 | 至少1个KR的指标与北极星指标直接关联 | north_star_alignment=true的KR≥1 | 标注北极星对齐缺失，建议增加关联KR |
-| 量化可验证 | 每个KR包含数字目标值和截止时间 | 所有KR包含metric+target+deadline | 标注不可验证KR，建议补充量化指标 |
-| 资源可行性 | achievability_score ≥ 0.4 | 所有KR的achievability ≥ 0.4 | 标注高风险KR，建议调整target或增加资源 |
+| O-KR consistency | Each KR must directly contribute to the corresponding O's achievement | All KRs have a direct causal relationship with O | Tag inconsistent KRs, recommend redefinition |
+| KR independence | KRs should not have inclusion or causal relationships between them | No logical dependency between any two KRs | Merge dependent KRs or split into independent KRs |
+| North Star alignment | At least 1 KR's metric is directly linked to the North Star Metric | At least 1 KR with north_star_alignment=true | Tag missing North Star alignment, recommend adding a linked KR |
+| Quantifiable & verifiable | Each KR contains a numerical target value and deadline | All KRs contain metric+target+deadline | Tag non-verifiable KRs, recommend adding quantitative metrics |
+| Resource feasibility | achievability_score ≥ 0.4 | All KRs have achievability ≥ 0.4 | Tag high-risk KRs, recommend adjusting target or adding resources |
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | OKR和关键结果 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整OKR + 对齐验证 + 进度追踪机制 + 季度复盘模板 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | OKR and Key Results | Core conclusions + minimum viable artifact |
+| standard | Full artifact (current default) | Complete artifact, including all Step outputs |
+| deep | Full OKR + alignment validation + progress tracking mechanism + quarterly retrospective template | Full artifact + extended analysis + deep reasoning |
 
-## 输出
+## Output
 
-**存储路径**：`docs/strategy/OKR.md`
+**Storage path**: `docs/strategy/OKR.md`
 
-**输出文件**：okr.json
+**Output file**: okr.json
 
-### 输出校验规则
+### Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| okr_candidates | array | 是 | 至少2个Objective候选 |
-| okr_candidates[].objective | string | 是 | Objective描述 |
-| okr_candidates[].key_results | array | 是 | 每个O至少3个KR |
-| okr_candidates[].key_results[].kr | string | 是 | KR描述 |
-| okr_candidates[].key_results[].baseline | string | 是 | 当前基线值 |
-| okr_candidates[].key_results[].target | string | 是 | 目标值 |
-| okr_candidates[].key_results[].growth_needed | string | 是 | 需增长率 |
-| okr_candidates[].key_results[].achievability | number | 是 | 达成概率0-1 |
-| okr_candidates[].key_results[].confidence_level | number | 是 | 置信度0-1 |
-| okr_candidates[].key_results[].deadline | string | 是 | KR截止日期（ISO8601格式） |
-| okr_candidates[].key_results[].drives_features | array | 是 | 该KR驱动的功能列表 |
-| okr_candidates[].key_results[].drives_features[].feature_priority | string | 是 | 功能优先级(P0/P1/P2) |
-| okr_candidates[].key_results[].drives_features[].feature_description | string | 是 | 功能描述(占位) |
-| okr_candidates[].alignment_check.strategic_alignment | boolean | 是 | 战略对齐检查 |
-| okr_candidates[].alignment_check.kr_coherence | boolean | 是 | KR一致性检查 |
-| okr_candidates[].alignment_check.timeline_feasibility | boolean | 是 | 时间线可行性 |
+| okr_candidates | array | Yes | At least 2 Objective candidates |
+| okr_candidates[].objective | string | Yes | Objective description |
+| okr_candidates[].key_results | array | Yes | At least 3 KRs per O |
+| okr_candidates[].key_results[].kr | string | Yes | KR description |
+| okr_candidates[].key_results[].baseline | string | Yes | Current baseline value |
+| okr_candidates[].key_results[].target | string | Yes | Target value |
+| okr_candidates[].key_results[].growth_needed | string | Yes | Required growth rate |
+| okr_candidates[].key_results[].achievability | number | Yes | Probability of achievement 0-1 |
+| okr_candidates[].key_results[].confidence_level | number | Yes | Confidence 0-1 |
+| okr_candidates[].key_results[].deadline | string | Yes | KR deadline (ISO8601 format) |
+| okr_candidates[].key_results[].drives_features | array | Yes | List of features driven by this KR |
+| okr_candidates[].key_results[].drives_features[].feature_priority | string | Yes | Feature priority (P0/P1/P2) |
+| okr_candidates[].key_results[].drives_features[].feature_description | string | Yes | Feature description (placeholder) |
+| okr_candidates[].alignment_check.strategic_alignment | boolean | Yes | Strategic alignment check |
+| okr_candidates[].alignment_check.kr_coherence | boolean | Yes | KR consistency check |
+| okr_candidates[].alignment_check.timeline_feasibility | boolean | Yes | Timeline feasibility |
 
 ```yaml
 okr_candidates:
-  - objective: "O1: 提升用户活跃度"
+  - objective: "O1: Increase user engagement"
     key_results:
-      - kr: "KR1: DAU达到100万"
-        baseline: 60万
-        target: 100万
+      - kr: "KR1: DAU reaches 1 million"
+        baseline: 600k
+        target: 1 million
         growth_needed: 67%
         achievability: 0.65
-        dimension: "数量"
+        dimension: "Quantity"
         confidence_level: 0.85
         deadline: "2026-06-30"
         north_star_alignment: true
         drives_features:
           - feature_priority: "P0"
-            feature_description: "个性化推荐首页"
-            expected_lift: "15% DAU提升"
+            feature_description: "Personalized recommendation homepage"
+            expected_lift: "15% DAU lift"
           - feature_priority: "P0"
-            feature_description: "每日签到体系"
-            expected_lift: "8% DAU提升"
-      - kr: "KR2: 用户次留率达到45%"
+            feature_description: "Daily check-in system"
+            expected_lift: "8% DAU lift"
+      - kr: "KR2: D1 retention rate reaches 45%"
         baseline: 35%
         target: 45%
         growth_needed: 29%
         achievability: 0.70
-        dimension: "质量"
+        dimension: "Quality"
         confidence_level: 0.80
         deadline: "2026-06-30"
         drives_features:
           - feature_priority: "P0"
-            feature_description: "新手引导优化"
-            expected_lift: "10%次留提升"
+            feature_description: "Onboarding optimization"
+            expected_lift: "10% D1 retention lift"
           - feature_priority: "P1"
-            feature_description: "首次体验优化"
-            expected_lift: "5%次留提升"
-      - kr: "KR3: 核心功能使用率达到60%"
+            feature_description: "First-time experience optimization"
+            expected_lift: "5% D1 retention lift"
+      - kr: "KR3: Core feature usage rate reaches 60%"
         baseline: 40%
         target: 60%
         growth_needed: 50%
         achievability: 0.55
-        dimension: "质量"
+        dimension: "Quality"
         confidence_level: 0.75
         deadline: "2026-06-30"
         drives_features:
           - feature_priority: "P1"
-            feature_description: "功能发现引导"
-            expected_lift: "8%使用率提升"
+            feature_description: "Feature discovery guidance"
+            expected_lift: "8% usage rate lift"
     alignment_check:
       strategic_alignment: true
       kr_coherence: true
       timeline_feasibility: true
-      notes: "对齐检查说明"
-  - objective: "O2: 优化单位经济模型"
+      notes: "Alignment check notes"
+  - objective: "O2: Optimize unit economics"
     key_results:
-      - kr: "KR1: CAC降低20%"
-        baseline: 150元
-        target: 120元
+      - kr: "KR1: Reduce CAC by 20%"
+        baseline: 150 yuan
+        target: 120 yuan
         growth_needed: -20%
         achievability: 0.60
-        dimension: "成本"
+        dimension: "Cost"
         confidence_level: 0.75
         deadline: "2026-06-30"
         drives_features:
           - feature_priority: "P1"
-            feature_description: "精准投放优化"
-            expected_lift: "12% CAC降低"
+            feature_description: "Precise ad targeting optimization"
+            expected_lift: "12% CAC reduction"
     alignment_check:
       strategic_alignment: true
       kr_coherence: true
       timeline_feasibility: true
-      notes: "对齐检查说明"
+      notes: "Alignment check notes"
 ```
 
-## 决策规则
+## Decision Rules
 
-1. **达成概率升级**：
-   - 达成概率 < 0.3：升级调整目标
-   - 达成概率 > 0.9：升级增加挑战
-2. **OKR最终确认**：必须人类决策
-3. **资源匹配**：检查KR资源需求是否可满足
+1. **Achievement probability escalation**:
+   - Achievement probability < 0.3: Escalate to adjust target
+   - Achievement probability > 0.9: Escalate to increase challenge
+2. **OKR final confirmation**: Must be a human decision
+3. **Resource matching**: Check whether KR resource requirements can be met
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 每个O包含1句话描述且≤30字
-- [ ] 每个KR包含≥1个数字目标值(metric+target)
+- [ ] Each O contains a 1-sentence description and ≤30 characters
+- [ ] Each KR contains ≥1 numerical target value (metric+target)
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 每个KR包含deadline字段(ISO8601格式)
-- [ ] north_star_alignment=true的KR≥1，O-KR一致性检查100%通过
-- [ ] 所有KR的achievability_score已计算且≥0.4的KR占比≥60%
-- [ ] 战略一致性已验证
-- [ ] 每个KR的drives_features[]非空且至少1个P0功能
-- [ ] drives_features与北极星指标的功能有逻辑关联
+- [ ] Each KR contains a deadline field (ISO8601 format)
+- [ ] At least 1 KR with north_star_alignment=true, O-KR consistency check 100% passed
+- [ ] All KRs have achievability_score calculated and KRs with ≥0.4 account for ≥60%
+- [ ] Strategic alignment verified
+- [ ] Each KR's drives_features[] is non-empty and contains at least 1 P0 feature
+- [ ] drives_features have logical correlation with the North Star Metric's features
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only required for deep)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep reasoning and roadmap generated)
+- [ ] Decision record complete (key decisions have rationale and alternatives)
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-当上游文件不存在时，本Skill仍可独立执行：
+When upstream files are missing, this Skill can still execute independently:
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Instructions |
 |---------------|---------|---------|------------|
-| strategic-analysis.json | 用户提供业务目标 → 直接生成OKR候选 | 缺乏战略分析数据支撑，O与战略方向对齐度可能不足 | 要求用户提供战略方向和关键挑战描述或上传strategic-analysis.json文件 |
-| north-star.json | 用户提供业务目标 → 直接生成OKR候选 | 缺乏北极星指标对齐，KR可能与核心指标脱节 | 要求用户提供北极星指标和当前指标值或上传north-star.json文件 |
-| bmc.json | 用户提供业务目标 → 直接生成OKR候选 | 缺乏BMC数据，OKR与商业模型关联度可能偏弱 | 要求用户提供商业模式关键要素或上传bmc.json文件 |
-| strategic-analysis.json + north-star.json + bmc.json | 用户提供业务目标 → 直接生成OKR候选 | 整体置信度降低，OKR缺乏战略和指标锚定 | 要求用户提供战略方向、北极星指标和商业模式描述 |
-| 所有上游文件均缺失 | 提示用户先执行前序阶段，或基于用户提供的业务目标直接生成OKR候选 | 整体置信度显著降低，OKR仅为通用目标参考 | 要求用户提供业务目标、关键挑战和核心指标 |
-| 业务现状数据（用户提供） | 若用户未提供业务现状数据，提示用户提供或跳过该输入相关步骤 | 缺乏基线数据，KR目标值缺乏参照 | 要求用户提供当前核心指标数值（如DAU、收入、转化率等） |
+| strategic-analysis.json | User provides business objectives → directly generate OKR candidates | Lacking strategic analysis data support, O's alignment with strategic direction may be insufficient | Ask user to provide strategic direction and key challenge descriptions or upload strategic-analysis.json file |
+| north-star.json | User provides business objectives → directly generate OKR candidates | Lacking North Star Metric alignment, KRs may be disconnected from core metrics | Ask user to provide North Star Metric and current metric values or upload north-star.json file |
+| bmc.json | User provides business objectives → directly generate OKR candidates | Lacking BMC data, OKR's correlation with business model may be weak | Ask user to provide key business model elements or upload bmc.json file |
+| strategic-analysis.json + north-star.json + bmc.json | User provides business objectives → directly generate OKR candidates | Overall confidence reduced, OKR lacks strategic and metric anchoring | Ask user to provide strategic direction, North Star Metric, and business model description |
+| All upstream files missing | Prompt user to execute prior phases first, or directly generate OKR candidates based on user-provided business objectives | Overall confidence significantly reduced, OKR is only a general objective reference | Ask user to provide business objectives, key challenges, and core metrics |
+| Business status data (user-provided) | If user does not provide business status data, prompt user to provide or skip steps related to this input | Lacking baseline data, KR target values lack reference | Ask user to provide current core metric values (e.g., DAU, revenue, conversion rate, etc.) |
 
-## 数据获取说明
+## Data Acquisition Instructions
 
-本Skill需要战略分析、北极星指标和BMC数据，请通过以下方式之一提供：
-  1. 直接描述业务目标和关键结果预期
-  2. 上传strategic-analysis.json / north-star.json / bmc.json文件
-  3. 提供数据文件路径
-- AI不负责外部数据采集，仅负责分析
+This Skill requires strategic analysis, North Star Metric, and BMC data. Please provide via one of the following methods:
+  1. Directly describe business objectives and expected Key Results
+  2. Upload strategic-analysis.json / north-star.json / bmc.json files
+  3. Provide the data file path
+- AI is not responsible for external data collection, only for analysis
 
 ---
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| strategic-analysis.json战略方向调整 | Objective生成需重新对齐 | 重新执行Step 1，更新O候选 |
-| north-star.json北极星变更 | KR需与北极星重新对齐 | 重新执行Step 2，更新KR和关联关系 |
-| bmc.json商业模式变更 | OKR与商业模型关联 | 重新评估OKR与收入/成本结构对齐 |
+| strategic-analysis.json strategic direction adjustment | Objective generation needs re-alignment | Re-execute Step 1, update O candidates |
+| north-star.json North Star change | KRs need re-alignment with North Star | Re-execute Step 2, update KRs and linkages |
+| bmc.json business model change | OKR's correlation with business model | Re-evaluate OKR's alignment with revenue/cost structure |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 变更类型 | 影响范围 | 通知方式 |
+| Change Type | Impact Scope | Notification Method |
 |----------|----------|----------|
-| Objective调整 | planning-roadmap、business-strategy-report、design-prd | 输出文件版本号+变更摘要 |
-| KR目标值变更 | planning-roadmap、design-prd | 输出文件版本号+变更摘要 |
-| drives_features变更 | design-prd | 输出文件版本号+变更摘要 |
-| 对齐检查结果变更 | planning-roadmap | 输出文件版本号+变更摘要 |
+| Objective adjustment | planning-roadmap, business-strategy-report, design-prd | Output file version number + change summary |
+| KR target value change | planning-roadmap, design-prd | Output file version number + change summary |
+| drives_features change | design-prd | Output file version number + change summary |
+| Alignment check result change | planning-roadmap | Output file version number + change summary |
 
-## 与prd.json数据契约对齐
+## Alignment with prd.json Data Contract
 
-| 本Skill输出字段 | prd.json对应字段 | 对齐规则 |
+| This Skill's Output Field | Corresponding prd.json Field | Alignment Rule |
 |----------------|-----------------|---------|
-| okr_candidates[].objective | prd.json.goals[].description | O描述与PRD目标描述一致 |
-| okr_candidates[].key_results[].kr | prd.json.goals[].success_metrics[].metric_name | KR描述包含PRD成功指标名称 |
-| okr_candidates[].key_results[].target | prd.json.goals[].success_metrics[].target_value | KR目标值与PRD指标目标值一致 |
-| okr_candidates[].key_results[].baseline | prd.json.goals[].success_metrics[].current_value | KR基线与PRD指标当前值一致 |
+| okr_candidates[].objective | prd.json.goals[].description | O description is consistent with PRD goal description |
+| okr_candidates[].key_results[].kr | prd.json.goals[].success_metrics[].metric_name | KR description contains PRD success metric name |
+| okr_candidates[].key_results[].target | prd.json.goals[].success_metrics[].target_value | KR target value is consistent with PRD metric target value |
+| okr_candidates[].key_results[].baseline | prd.json.goals[].success_metrics[].current_value | KR baseline is consistent with PRD metric current value |

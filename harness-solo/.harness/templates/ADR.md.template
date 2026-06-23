@@ -1,8 +1,8 @@
-# ADR-NNN: <决策标题>
+# ADR-NNN: <decision title>
 
-> 来源：由 writing-documentation skill 产出。
-> 存放路径：docs/decisions/ADR-NNN-<short-title>.md
-> 编号规则：用 Glob 扫描 docs/decisions/ADR-*，取最大编号 +1
+> Source: produced by the writing-documentation skill.
+> Storage path: docs/decisions/ADR-NNN-<short-title>.md
+> Numbering rule: use Glob to scan docs/decisions/ADR-*, take the max number +1
 
 ## Status
 PROPOSED | ACCEPTED | SUPERSEDED by ADR-XXX | DEPRECATED
@@ -11,16 +11,16 @@ PROPOSED | ACCEPTED | SUPERSEDED by ADR-XXX | DEPRECATED
 YYYY-MM-DD
 
 ## Context
-[为什么需要做这个决策？当前面临什么问题？]
+[Why is this decision needed? What problem are we facing?]
 
 ## Decision
-[决定是什么？]
+[What is the decision?]
 
 ## Alternatives Considered
-- 方案A：[描述] — 为什么没选
-- 方案B：[描述] — 为什么没选
+- Option A: [description] — why it was not chosen
+- Option B: [description] — why it was not chosen
 
 ## Consequences
-- 正面：[好处]
-- 负面：[代价]
-- 风险：[需关注的点]
+- Positive: [benefits]
+- Negative: [costs]
+- Risks: [points to watch]

@@ -4,117 +4,125 @@ name: optimize
 default_mode: standard
 ---
 
-# 工作流 D：性能优化
+# Workflow D: Performance Optimization
 
-> 适用场景：用户报告性能问题、基准测试未达标、Web Vitals 恶化
-> 核心模式：performance-optimization（measure→fix→verify→guard）+ LOOP（optimize 循环）
+> Applicable scenario: Users report performance issues, benchmarks not met, Web Vitals degraded
+> Core mode: performance-optimization (measure→fix→verify→guard) + LOOP (optimize loop)
 
-## 与其他工作流的差异
+## Differences from Other Workflows
 
-| 维度 | new-feature | bugfix | refactor | **optimize** |
+| Dimension | new-feature | bugfix | refactor | **optimize** |
 |------|-------------|--------|----------|------------|
-| 前置 | brainstorming | systematic-debugging | brainstorming | **performance-optimization（MEASURE+IDENTIFY）** |
-| TDD 起点 | 从 AC 写测试 | 从复现写测试 | 建立守护网 | **基准测试守护行为不回归** |
-| verify 重点 | AC 满足 | 复现通过 + 不回归 | 测试不回归 + 复杂度下降 | **指标改善 + 测试不回归** |
-| LOOP 上限 | 5 次 | 3 次 | 3 次 | 3 次（optimize 类型） |
+| Prerequisite | brainstorming | systematic-debugging | brainstorming | **performance-optimization (MEASURE+IDENTIFY)** |
+| TDD starting point | Write tests from AC | Write tests from reproduction | Build safety net | **Benchmarks guard against behavior regression** |
+| verify focus | AC satisfied | Reproduction passes + no regression | Tests no regression + complexity drop | **Metrics improved + tests no regression** |
+| LOOP cap | 5 | 3 | 3 | 3 (optimize type) |
 
-## 流程
+## Process
 
 ```
 ┌─────────────────┐
-│ session-start   │  加载上下文，确认性能问题
+│ session-start   │  Load context, confirm performance issues
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
 │ performance-optimization                │
 │                                         │
-│  1. MEASURE — 建立 baseline             │
-│     - 后端：QPS / P95 / P99 / 内存      │
-│     - 前端：Lighthouse / web-vitals     │
-│     - 记录到 evidence.md                │
+│  1. MEASURE — establish baseline        │
+│     - Backend: QPS / P95 / P99 / memory │
+│     - Frontend: Lighthouse / web-vitals │
+│     - Record to evidence.md             │
 │                                         │
-│  2. IDENTIFY — 定位真实瓶颈             │
-│     - profiler 找热点                   │
-│     - 只修测量证实的瓶颈                │
-│     - 不修"我觉得慢"的地方              │
+│  2. IDENTIFY — locate the real bottleneck│
+│     - Use profiler to find hotspots     │
+│     - Only fix bottlenecks proven by    │
+│       measurement                       │
+│     - Don't fix "I think it's slow"     │
 └────────┬────────────────────────────────┘
-         │ 找到瓶颈
+         │ Bottleneck found
          ▼
 ┌─────────────────────────────────────────┐
-│              LOOP 循环优化               │
+│              LOOP iterative optimization│
 │  ┌─────────────────────────────────┐    │
 │  │ performance-optimization (ACT)  │    │
-│  │  FIX — 只改这一个瓶颈           │    │
-│  │  一次只改一个（无法归因）       │    │
+│  │  FIX — fix only this one        │    │
+│  │  bottleneck                     │    │
+│  │  One change at a time (cannot   │    │
+│  │  attribute effects otherwise)   │    │
 │  └──────────┬──────────────────────┘    │
 │             ▼                            │
 │  ┌─────────────────────────────────┐    │
 │  │ verify (VERIFY)                 │    │
-│  │  - 同方式再测，对比 before/after│    │
-│  │  - 全量测试不回归（强制）       │    │
-│  │  - 数字没改善 → 回 IDENTIFY     │    │
+│  │  - Re-test the same way,        │    │
+│  │    compare before/after         │    │
+│  │  - Full test suite no regression│    │
+│  │    (mandatory)                  │    │
+│  │  - No improvement → back to     │    │
+│  │    IDENTIFY                     │    │
 │  └──────────┬──────────────────────┘    │
 │             │                            │
-│             ├── 通过 → 跳出 LOOP ────────┼──→
+│             ├── Pass → exit LOOP ────────┼──→
 │             │                            │
-│             └── 失败                     │
+│             └── Fail                     │
 │                   │                      │
 │                   ▼                      │
 │  ┌─────────────────────────────────┐    │
 │  │ systematic-debugging            │    │
-│  │  - 瓶颈定位错了，重新分析       │    │
+│  │  - Bottleneck misidentified,    │    │
+│  │    re-analyze                   │    │
 │  └──────────┬──────────────────────┘    │
 │             │                            │
-│             └── 回到 MEASURE/IDENTIFY ──┘
+│             └── Back to MEASURE/IDENTIFY ──┘
 │                                          │
-│  迭代上限：3 次（optimize 类型）         │
-│  超限 → 请求人类介入                     │
+│  Iteration cap: 3 (optimize type)       │
+│  Exceeded → request human intervention  │
 └─────────────────────────────────────────┘
          │
          ▼
 ┌─────────────────────┐
-│ performance-optim.  │  GUARD 防回退
-│  - 加回归测试/监控   │  - 基准测试纳入 CI
-│  - bundle size 检查  │  - Lighthouse CI
+│ performance-optim.  │  GUARD against regression
+│  - Add regression   │  - Benchmarks into CI
+│    tests/monitoring │  - Lighthouse CI
+│  - bundle size check│
 └──────────┬──────────┘
            │
            ▼
 ┌─────────────────────┐
-│ requesting-code-    │  审查优化质量
-│ review              │  - 优化是否有效
-│                     │  - 是否过度优化
-│                     │  - 可读性是否下降
+│ requesting-code-    │  Review optimization quality
+│ review              │  - Is the optimization effective
+│                     │  - Is it over-optimized
+│                     │  - Did readability drop
 └──────────┬──────────┘
-           │ 通过
+           │ Passed
            ▼
 ┌─────────────────┐
-│ session-end     │  归档 + baseline
+│ session-end     │  Archive + baseline
 └─────────────────┘
 ```
 
-## 关键检查点
+## Key Checkpoints
 
-- [ ] 有 baseline 数字吗？（没有 = 没测，不许改）
-- [ ] 瓶颈是 profile 证实的还是猜测的？
-- [ ] 一次只改了一个瓶颈吗？
-- [ ] 优化后用**同方式**重测了吗？
-- [ ] 全量测试跑了吗？（行为不回归）
-- [ ] 数字改善写入 evidence.md 了吗？（before/after 对比）
-- [ ] 加了防回退守护吗？
-- [ ] 宪法合规吗？（优化是否引入新依赖？是否违反项目特定条款？）
+- [ ] Are there baseline numbers? (None = not measured; don't change)
+- [ ] Is the bottleneck profiler-confirmed or a guess?
+- [ ] Did you change only one bottleneck at a time?
+- [ ] Did you re-test the **same way** after optimization?
+- [ ] Did you run the full test suite? (Behavior doesn't regress)
+- [ ] Were the improvement numbers written to evidence.md? (before/after comparison)
+- [ ] Did you add regression guards?
+- [ ] Is it constitution-compliant? (Did the optimization introduce new dependencies? Did it violate project-specific clauses?)
 
-## 失败处理
+## Failure Handling
 
-| 失败点 | 处理方式 |
+| Failure Point | Handling |
 |--------|---------|
-| 没有 baseline 就改 | 停下来，先 MEASURE |
-| 改了但数字没改善 | 回 IDENTIFY 重新定位（改错瓶颈了） |
-| 优化后测试回归 | 立即回退，行为正确 > 性能 |
-| LOOP 迭代超 3 次 | 瓶颈可能不在代码层，请求人类介入 |
+| Changed without a baseline | Stop; do MEASURE first |
+| Changed but no improvement | Back to IDENTIFY to re-locate (wrong bottleneck fixed) |
+| Test regression after optimization | Immediately roll back; correct behavior > performance |
+| LOOP iterations exceed 3 | Bottleneck may not be at the code level; request human intervention |
 
-## 安全原则
+## Safety Principles
 
-1. **行为不变是底线**：性能优化是 refactor 的子集，外部可观察行为不能变
-2. **不过度优化**：profile 证明需要才优化，不为"可能慢"提前优化
-3. **不牺牲可读性换性能**：除非数字证明这是关键瓶颈，否则不用奇技淫巧
-4. **一次一瓶颈**：改多个无法归因哪个有效
+1. **Behavior unchanged is the bottom line**: Performance optimization is a subset of refactoring; external observable behavior must not change
+2. **No over-optimization**: Only optimize when a profile proves it's needed; don't pre-optimize for "might be slow"
+3. **Don't trade readability for performance**: Unless numbers prove it's a critical bottleneck, avoid clever tricks
+4. **One bottleneck at a time**: Changing multiple makes it impossible to attribute which one was effective

@@ -1,23 +1,23 @@
-# 运维工作台进度日志（Progress Log）
+# Ops workbench progress log (Progress Log)
 
-> 这是短期工作台记忆，记录当前的部署流水线执行到哪一步了，有没有没处理的报警。
-> 每次会话开始时必读此文件，了解上一次你干到了哪里。
+> This is short-term workbench memory, recording where the current deployment pipeline stands and whether there are unhandled alerts.
+> Read this file at the start of every session to understand where you left off last time.
 
-## 当前正在处理的高危/核心变更（Active Ops Tasks）
+## Active high-risk / core changes (Active Ops Tasks)
 
-- `[例如：正在进行 v2.3 的蓝绿发布，目前流量灰度了 20%]`
-- `[例如：正在排查某某慢查询导致的 DB CPU 报警]`
+- `[e.g., currently rolling out v2.3 via blue-green, traffic is at 20% canary]`
+- `[e.g., investigating a DB CPU alert caused by a slow query]`
 
-## 已被拦截或回滚的变更（Blocked/Rollbacked）
+## Blocked or rolled-back changes (Blocked/Rollbacked)
 
-- `[例如：之前尝试应用的一个 Terraform 脚本因为缺乏 IAM 权限失败了，待处理]`
-- `[例如：昨天的发版由于 OOM 被回滚，等待开发修复]`
+- `[e.g., a Terraform script attempted earlier failed due to missing IAM permissions, pending follow-up]`
+- `[e.g., yesterday's release was rolled back due to OOM, waiting for dev to fix]`
 
-## 今日待办（To-Do）
+## Today's to-do (To-Do)
 
-- `[ ]` 查阅 `docs/handoff/solo-to-ops.md` 开始新的交付部署。
-- `[ ]` 更新一版 `ops-to-pm.md` 本周 SLA 报告给产品经理。
+- `[ ]` Check `docs/handoff/solo-to-ops.md` to start a new delivery deployment.
+- `[ ]` Update `ops-to-pm.md` with this week's SLA report for the PM.
 
 ---
 
-> 提示：保持精简，每次会话结束（session-end）请更新此文件。
+> Tip: keep it concise; update this file at every session-end.

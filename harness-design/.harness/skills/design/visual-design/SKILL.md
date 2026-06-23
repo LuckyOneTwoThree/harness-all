@@ -2,8 +2,8 @@
 name: visual-design
 description: Produces visual design with anti-AI-slop checks and multiple variants. Use when DESIGN_BRIEF.md and DESIGN.md exist. Use for visual design tasks in LOOP.
 triggers:
-  - 视觉设计任务
-  - LOOP 内 visual-design 阶段
+  - Visual design tasks
+  - In-LOOP visual-design stage
 reads:
   - .harness/craft/anti-ai-slop.md
   - .harness/craft/common-rules.md
@@ -17,119 +17,119 @@ writes:
 
 ## Overview
 
-视觉设计产出，含响应式 + 反 AI-slop + 多方案变体。每个间距值都在 spacing scale 上，每个颜色都来自 token。
+Visual design output, including responsive + anti-AI-slop + multiple variants. Every spacing value is on the spacing scale; every color comes from a token.
 
 ## When to Use
 
-- ✅ 视觉设计任务
-- ✅ LOOP 内 visual-design 阶段
-- ✅ DESIGN_BRIEF.md 和 DESIGN.md 已存在
-- ❌ NOT for 低保真线框图（用 wireframe skill）
+- ✅ Visual design tasks
+- ✅ In-LOOP visual-design stage
+- ✅ DESIGN_BRIEF.md and DESIGN.md already exist
+- ❌ NOT for low-fidelity wireframes (use the wireframe skill)
 
 ## Process
 
-### 1. 读取上下文
+### 1. Read Context
 
-- `docs/visual/DESIGN_BRIEF.md`：需求 + 审美方向 + Vibe Translation
-- `docs/design-system/DESIGN.md`：设计系统（10 段）
-- `docs/design-system/pages/<page>.md`：页面级覆盖（若存在）
+- `docs/visual/DESIGN_BRIEF.md`: Requirements + Aesthetic Direction + Vibe Translation
+- `docs/design-system/DESIGN.md`: Design system (10 sections)
+- `docs/design-system/pages/<page>.md`: Page-level overrides (if present)
 
-### 2. 确认审美方向
+### 2. Confirm Aesthetic Direction
 
-从 DESIGN_BRIEF.md 的 Aesthetic Direction 读取用户选择的方向。
+Read the user-selected direction from DESIGN_BRIEF.md's Aesthetic Direction.
 
-### 3. 配色方案
+### 3. Color Scheme
 
-- 从设计系统选取颜色（禁止硬编码 hex）
-- 检查对比度（正文 ≥4.5:1）
-- accent 每屏最多 2 次
+- Select colors from the design system (no hardcoded hex)
+- Check contrast (body text ≥4.5:1)
+- accent used at most 2 times per screen
 
-### 4. 字体选择
+### 4. Font Selection
 
-- 从设计系统选取字体（禁止 Inter/Roboto/Arial 作为主字体）
-- 检查字号在 type scale 上
+- Select fonts from the design system (no Inter/Roboto/Arial as primary font)
+- Check that font sizes are on the type scale
 
-### 5. 布局设计
+### 5. Layout Design
 
-- 移动优先（375px 起步）
-- 12 栅格
-- 4/8dp 间距节奏
+- Mobile first (starting at 375px)
+- 12-column grid
+- 4/8dp spacing rhythm
 
-### 6. 视觉层次
+### 6. Visual Hierarchy
 
-- 每屏 1 个焦点
-- 用字重/字号/颜色建立层级（不用标题下强调线）
+- One focal point per screen
+- Build hierarchy with font weight / size / color (not under-title emphasis lines)
 
-### 7. 反 AI-slop 检查
+### 7. Anti AI-slop Check
 
-逐条对照 `.harness/craft/anti-ai-slop.md`：
-- [ ] 未使用 Inter/Roboto/Arial 作为主字体
-- [ ] 未使用 #6366f1 紫色
-- [ ] 未使用紫蓝渐变
-- [ ] 未使用统一圆角（rounded-2xl 全场）
-- [ ] 未使用 Lorem ipsum 占位文本
-- [ ] 未使用过度居中
-- [ ] 未使用标准卡片网格（忽略信息优先级）
-- [ ] 未使用过度 padding
-- [ ] 未使用重阴影
-- [ ] 未使用标题下强调线
+Check item by item against `.harness/craft/anti-ai-slop.md`:
+- [ ] No Inter/Roboto/Arial as primary font
+- [ ] No #6366f1 purple
+- [ ] No purple-blue gradient
+- [ ] No uniform border radius (rounded-2xl everywhere)
+- [ ] No Lorem ipsum placeholder text
+- [ ] No excessive centering
+- [ ] No standard card grid (ignoring information priority)
+- [ ] No excessive padding
+- [ ] No heavy shadows
+- [ ] No under-title emphasis lines
 
-### 8. 多方案变体
+### 8. Multiple Variants
 
-产出 2-3 个视觉方案，同文件分隔：
+Produce 2-3 visual variants, separated within the same file:
 
 ```markdown
-## 方案 A：<方向名>
-<设计描述 + 标注>
+## Variant A: <Direction name>
+<Design description + annotations>
 
-## 方案 B：<方向名>
-<设计描述 + 标注>
+## Variant B: <Direction name>
+<Design description + annotations>
 
-## 方案 C：<方向名>
-<设计描述 + 标注>
+## Variant C: <Direction name>
+<Design description + annotations>
 ```
 
-### 9. 用户选择
+### 9. User Selection
 
-呈现 2-3 个方案，让用户选择。用户选择后写入 `docs/visual/<page>.md`。
+Present 2-3 variants for the user to choose. After the user selects, write to `docs/visual/<page>.md`.
 
-### 10. 响应式标注
+### 10. Responsive Annotation
 
-每个方案标注：
-- 移动端（375px）布局
-- 平板（768px）布局
-- 桌面（1280px）布局
+Each variant annotates:
+- Mobile (375px) layout
+- Tablet (768px) layout
+- Desktop (1280px) layout
 
 ## Common Rationalizations
 
-| 借口 | 现实 |
-|------|------|
-| "Inter 是最安全的字体" | Inter 是 AI slop 的标志，用项目设计系统的字体 |
-| "紫色渐变很好看" | #6366f1 是 AI 默认味，所有 app 长一样 |
-| "统一圆角更简洁" | 最大圆角忽略真实设计的圆角层级 |
-| "用户不会注意到 1px 偏差" | 累积偏差摧毁视觉层级 |
-| "只出 1 个方案就行" | 多方案变体是设计探索的核心，至少 2 个 |
+| Excuse | Reality |
+|--------|---------|
+| "Inter is the safest font" | Inter is a hallmark of AI slop; use the project design system's font |
+| "Purple gradients look nice" | #6366f1 is the AI default; all apps look the same |
+| "Uniform border radius is cleaner" | Maximum radius ignores the real radius hierarchy of design |
+| "Users won't notice a 1px deviation" | Accumulated deviations destroy visual hierarchy |
+| "Just one variant is enough" | Multiple variants are core to design exploration; at least 2 |
 
 ## Red Flags
 
-- 硬编码 hex 颜色（非 token）
-- 使用 Inter/Roboto/Arial 作为主字体
-- 使用 #6366f1 或紫蓝渐变
-- 只出 1 个方案
-- 未标注响应式
+- Hardcoded hex colors (not from tokens)
+- Using Inter/Roboto/Arial as primary font
+- Using #6366f1 or purple-blue gradient
+- Only one variant produced
+- No responsive annotations
 
 ## Verification
 
-- [ ] 每个间距值都在 spacing scale 上（证据：对比 DESIGN.md）
-- [ ] 每个颜色都来自设计系统 token（证据：Grep 设计稿无硬编码 hex）
-- [ ] 对比度 ≥4.5:1（证据：手动计算或工具检查）
-- [ ] 反 AI-slop 检查全通过（证据：逐条对照清单 ✓）
-- [ ] 产出 2-3 个方案（证据：文件含 ## 方案 A/B/C）
-- [ ] 响应式标注齐全（证据：375px/768px/1280px 都有）
+- [ ] Every spacing value is on the spacing scale (evidence: compare with DESIGN.md)
+- [ ] Every color comes from a design system token (evidence: Grep of design mockups finds no hardcoded hex)
+- [ ] Contrast ≥4.5:1 (evidence: manual calculation or tool check)
+- [ ] Anti AI-slop check fully passed (evidence: item-by-item checklist ✓)
+- [ ] 2-3 variants produced (evidence: file contains ## Variant A/B/C)
+- [ ] Responsive annotations complete (evidence: 375px/768px/1280px all present)
 
-## 与 LOOP 的关系
+## Relationship with LOOP
 
-- 所属阶段：DESIGN
-- 循环类型：visual-design
-- 最大迭代：5
-- 每次迭代后由 verify 检查，verify 通过后由 design-lint 检查
+- Stage: DESIGN
+- Loop type: visual-design
+- Max iterations: 5
+- After each iteration, verify runs; after verify passes, design-lint runs

@@ -6,157 +6,157 @@ default_mode: deep
 
 # Workflow: redesign
 
-> 重设计工作流 · 已有项目的重设计
+> Redesign workflow · Redesign of an existing project
 
-## 适用场景
+## Applicable Scenarios
 
-- 已有项目需要重设计
-- 现有设计系统需要升级
-- 技术栈迁移后的设计重构
+- Existing project needs a redesign
+- Current design system needs an upgrade
+- Design refactoring after a tech stack migration
 
-## 编排
+## Orchestration
 
 ```
 session-start
-  → design-brief（硬门）
-  → design-system-import（从现有代码导入）
-  → 差异分析
-  → PLAN（内联，初始化 LOOP state）
-  → LOOP(visual-design → verify → design-lint)        [visual-design, max 5]（必跑）
-  → LOOP(interaction-design → verify → design-lint)   [interaction-design, max 5]（条件性）
-  → design-review（LOOP 外门禁）
-  → accessibility-audit（LOOP 外门禁）
+  → design-brief (hard gate)
+  → design-system-import (import from existing code)
+  → diff analysis
+  → PLAN (inline, initialize LOOP state)
+  → LOOP(visual-design → verify → design-lint)        [visual-design, max 5] (always runs)
+  → LOOP(interaction-design → verify → design-lint)   [interaction-design, max 5] (conditional)
+  → design-review (gate outside LOOP)
+  → accessibility-audit (gate outside LOOP)
   → session-end
 ```
 
-**interaction-design LOOP 触发条件**（满足任一即跑）：
-- AC-xxx 中含交互相关验收标准（状态/动效/键盘导航/触控目标）
-- 重设计涉及交互组件（Button/Input/Modal/Dropdown/Toast 等）
-- 重设计涉及动效参数（时长/缓动/状态转换）
+**interaction-design LOOP trigger conditions** (run if any is met):
+- AC-xxx contains interaction-related acceptance criteria (states/motion/keyboard navigation/touch targets)
+- The redesign involves interactive components (Button/Input/Modal/Dropdown/Toast, etc.)
+- The redesign involves motion parameters (duration/easing/state transitions)
 
-若重设计仅涉及视觉（配色/间距/字体/布局），跳过 interaction-design LOOP。
+If the redesign only involves visuals (color/spacing/typography/layout), skip the interaction-design LOOP.
 
-## 详细步骤
+## Detailed Steps
 
 ### 1. session-start
 
-读取 `memory/progress.md`，恢复上下文。
+Read `memory/progress.md` to restore context.
 
-### 2. design-brief（硬门）
+### 2. design-brief (hard gate)
 
-- 重设计目标
-- 现有设计的问题
-- 期望的改进方向
-- 产出 `docs/visual/DESIGN_BRIEF.md`（含 AC-xxx）
+- Redesign goals
+- Problems with the current design
+- Desired improvement directions
+- Produce `docs/visual/DESIGN_BRIEF.md` (with AC-xxx)
 
 ### 3. design-system-import
 
-- 检测项目技术栈
-- 读取配置文件（tailwind.config.js / theme.ts / globals.css）
-- 抽取 token
-- 生成 DESIGN.md 10 段
-- 生成 tokens.json + tokens.css
-- 输出 IMPORT_REPORT.md
+- Detect the project's tech stack
+- Read config files (tailwind.config.js / theme.ts / globals.css)
+- Extract tokens
+- Generate DESIGN.md 10 sections
+- Generate tokens.json + tokens.css
+- Output IMPORT_REPORT.md
 
-### 4. 差异分析
+### 4. Diff Analysis
 
-对比现有设计系统与重设计目标：
+Compare the current design system with the redesign goals:
 
 ```markdown
 # Redesign Diff Analysis
 
-## 现有设计系统
-- 色板：<...>
-- 字体：<...>
-- 组件：<...>
+## Current Design System
+- Color palette: <...>
+- Typography: <...>
+- Components: <...>
 
-## 重设计目标
-- 色板：<...>
-- 字体：<...>
-- 组件：<...>
+## Redesign Goals
+- Color palette: <...>
+- Typography: <...>
+- Components: <...>
 
-## 差异
-| 维度 | 现有 | 目标 | 变更范围 |
+## Differences
+| Dimension | Current | Target | Change Scope |
 |------|------|------|---------|
-| 色板 | <...> | <...> | 全局替换 |
-| 字体 | <...> | <...> | 全局替换 |
-| 组件 | <...> | <...> | 部分重构 |
+| Color palette | <...> | <...> | Global replacement |
+| Typography | <...> | <...> | Global replacement |
+| Components | <...> | <...> | Partial refactoring |
 
-## 影响范围
-- 涉及页面：<...>
-- 涉及组件：<...>
+## Impact Scope
+- Affected pages: <...>
+- Affected components: <...>
 ```
 
-### 5. PLAN（内联，无独立 skill）
+### 5. PLAN (inline, no standalone skill)
 
-- 基于差异分析定义重设计 AC-xxx
-- 宪法检查
-- 初始化 `loops/specs/<task>/state.yaml`（stage=plan, iteration=0, status=running）
-- 写入 `loops/specs/<task>/spec.md`（含 AC 列表）
+- Define redesign AC-xxx based on the diff analysis
+- Constitution check
+- Initialize `loops/specs/<task>/state.yaml` (stage=plan, iteration=0, status=running)
+- Write `loops/specs/<task>/spec.md` (with AC list)
 
-### 6. LOOP: visual-design（max 5，类型 visual-design）
+### 6. LOOP: visual-design (max 5, type visual-design)
 
 ```
 visual-design → verify → design-lint
   ↑                          |
-  └──── 失败回到 visual-design ┘
+  └──── on failure, back to visual-design ┘
 ```
 
-- 基于差异分析，产出新视觉设计
-- verify/design-lint 失败 → 回到 visual-design，iteration +1
-- 超过 5 次迭代 → 请求人类介入
+- Based on the diff analysis, produce the new visual design
+- verify/design-lint failure → back to visual-design, iteration +1
+- More than 5 iterations → request human intervention
 
-### 7. LOOP: interaction-design（max 5，条件性）
+### 7. LOOP: interaction-design (max 5, conditional)
 
-**触发条件**：见编排章节的"interaction-design LOOP 触发条件"。若不触发则跳过本步。
+**Trigger conditions**: See "interaction-design LOOP trigger conditions" in the Orchestration section. If not triggered, skip this step.
 
 ```
 interaction-design → verify → design-lint
   ↑                          |
-  └──── 失败回到 interaction-design ┘
+  └──── on failure, back to interaction-design ┘
 ```
 
-- 基于新视觉设计，更新组件状态/动效参数
-- verify/design-lint 失败 → 回到 interaction-design，iteration +1
+- Based on the new visual design, update component states/motion parameters
+- verify/design-lint failure → back to interaction-design, iteration +1
 
-### 8. design-review（LOOP 外门禁）
+### 8. design-review (gate outside LOOP)
 
 - Five-Axis Review
-- Doubt-Driven（仅 Critical 触发对抗辩论）
-- 重点审查：重设计是否破坏现有用户体验
-- 输出 `loops/specs/<task>/evidence.md`
-- 不通过 → 回到 LOOP（可修复）或 PLAN（需重新规划）
+- Doubt-Driven (only Critical triggers adversarial debate)
+- Focus of review: whether the redesign breaks the existing user experience
+- Output `loops/specs/<task>/evidence.md`
+- Not passed → back to LOOP (fixable) or PLAN (needs re-planning)
 
-### 9. accessibility-audit（LOOP 外门禁）
+### 9. accessibility-audit (gate outside LOOP)
 
-- WCAG 2.1 AA 全项检查
-- 不通过 → 回到 LOOP
+- WCAG 2.1 AA full check
+- Not passed → back to LOOP
 
 ### 10. session-end
 
-更新 `memory/progress.md`，归档会话。
+Update `memory/progress.md` and archive the session.
 
-## 产出物
+## Deliverables
 
-| 文件 | 说明 |
+| File | Description |
 |------|------|
-| docs/visual/DESIGN_BRIEF.md | 重设计需求（含 AC-xxx） |
-| docs/design-system/IMPORT_REPORT.md | 导入报告 |
-| docs/design-system/DESIGN.md | 更新后的设计系统 |
-| docs/design-system/tokens.json | 更新后的 token |
-| loops/specs/<task>/spec.md | 重设计规格（含 AC 列表） |
-| loops/specs/<task>/state.yaml | 循环状态 |
-| loops/specs/<task>/evidence.md | 验证证据 |
-| loops/specs/<task>/iterations.log | 迭代历史 |
-| loops/specs/<task>/lint-report.md | Lint 报告 |
-| docs/visual/<page>.md | 重设计后的视觉稿 |
-| docs/interaction/<page>.md | 更新后的交互设计（若触发 interaction LOOP） |
+| docs/visual/DESIGN_BRIEF.md | Redesign requirements (with AC-xxx) |
+| docs/design-system/IMPORT_REPORT.md | Import report |
+| docs/design-system/DESIGN.md | Updated design system |
+| docs/design-system/tokens.json | Updated tokens |
+| loops/specs/<task>/spec.md | Redesign spec (with AC list) |
+| loops/specs/<task>/state.yaml | Loop state |
+| loops/specs/<task>/evidence.md | Validation evidence |
+| loops/specs/<task>/iterations.log | Iteration history |
+| loops/specs/<task>/lint-report.md | Lint report |
+| docs/visual/<page>.md | Redesigned visual mockup |
+| docs/interaction/<page>.md | Updated interaction design (if interaction LOOP triggered) |
 
-## 退出条件
+## Exit Criteria
 
-- design-system-import 完成
-- 差异分析完成
-- LOOP 通过（verify + lint）
-- design-review 通过
-- accessibility-audit 通过
+- design-system-import complete
+- Diff analysis complete
+- LOOP passed (verify + lint)
+- design-review passed
+- accessibility-audit passed
 - state.yaml status=done

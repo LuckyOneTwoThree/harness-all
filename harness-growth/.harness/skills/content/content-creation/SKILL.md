@@ -1,9 +1,9 @@
 ---
 name: content-creation
-description: 根据选题产出SEO优化的长文内容，内部分大纲/初稿/优化三step
+description: Produce SEO-optimized long-form content based on selected topics, with internal outline/draft/optimization steps
 triggers:
-  - 选题已确定，需要创作内容时
-  - 内容营销Loop的EXPERIMENT阶段
+  - When topics are decided and content needs to be created
+  - EXPERIMENT phase of the content marketing Loop
 reads:
   - docs/content/ideation-backlog.md
   - memory/knowledge-base.md
@@ -16,73 +16,73 @@ quality_gates:
 max_iterations: 3
 ---
 
-# Content Creation — 内容创作
+# Content Creation — Content Creation
 
-## 铁律
-- 内容必须对用户有**真实价值**，不是为 SEO 堆砌关键词
-- 必须满足"10x 内容"标准——比竞品 Top10 结果好 10 倍（更深/更全/更实用）
-- 创作完成后必须经过 content-review 质量门，不可直接发布
-- 不做黑帽 SEO（关键词堆砌、隐藏文本、抄袭）
+## Iron Rules
+- Content must deliver **real value** to users, not keyword stuffing for SEO
+- Must meet the "10x content" standard — 10x better than the top 10 competitor results (deeper / more comprehensive / more practical)
+- After creation, must pass the content-review quality gate; cannot be published directly
+- No black-hat SEO (keyword stuffing, hidden text, plagiarism)
 
-## 流程
+## Process
 
-### Step 1：大纲生成
-1. 读取选题清单，确认目标关键词、搜索意图、目标受众
-2. 分析 SERP Top10 竞品内容结构（如有 serp-analysis 数据则读取）
-3. 生成内容大纲：
+### Step 1: Outline generation
+1. Read the topic backlog, confirm target keywords, search intent, and target audience
+2. Analyze the content structure of SERP Top 10 competitors (read serp-analysis data if available)
+3. Generate content outline:
    ```
-   # [选题标题]
+   # [Topic title]
 
-   ## 引言（hook + 价值承诺）
-   ## 1. [核心概念/问题定义]
-   ## 2. [方法/步骤/方案]
-   ## 3. [案例/数据/工具]
-   ## 4. [常见问题/对比]
-   ## 总结 + CTA
+   ## Introduction (hook + value promise)
+   ## 1. [Core concept / problem definition]
+   ## 2. [Method / steps / solution]
+   ## 3. [Case studies / data / tools]
+   ## 4. [FAQ / comparison]
+   ## Summary + CTA
    ```
-4. 确认大纲覆盖搜索意图（信息型要全/导航型要准/交易型要对比）
+4. Confirm the outline covers search intent (informational = comprehensive / navigational = precise / transactional = comparison)
 
-### Step 2：初稿创作
-1. 按大纲逐章节创作
-2. 遵循品牌 voice（如 SOUL.md / constitution.md 定义）
-3. 嵌入目标关键词（自然出现，不堆砌，密度 1-2%）
-4. 加入内部链接（指向已有内容）和外部权威链接
-5. 每个章节加入数据/案例/图表（提升可信度）
+### Step 2: Draft creation
+1. Write each section following the outline
+2. Follow brand voice (as defined in SOUL.md / constitution.md)
+3. Embed target keywords (natural occurrence, no stuffing, density 1-2%)
+4. Add internal links (to existing content) and external authoritative links
+5. Add data / case studies / charts to each section (boost credibility)
 
-### Step 3：SEO 优化
-1. **标题优化**：包含目标关键词，<60 字符，吸引点击
-2. **Meta Description**：包含关键词，<160 字符，含 CTA
-3. **URL 结构**：短、含关键词、用连字符
-4. **Heading 层级**：H1 唯一，H2/H3 层次清晰，含相关关键词
-5. **图片 Alt 文本**：描述性 + 关键词
-6. **Schema 标记**：Article/HowTo/FAQ（按内容类型）
-7. **内链**：3-5 个相关内链
-8. **可读性**：段落<5 行，Flesch 分数 > 60
+### Step 3: SEO optimization
+1. **Title optimization**: include target keyword, <60 chars, click-worthy
+2. **Meta Description**: include keyword, <160 chars, with CTA
+3. **URL structure**: short, includes keyword, uses hyphens
+4. **Heading hierarchy**: H1 unique, H2/H3 clear hierarchy, includes related keywords
+5. **Image Alt text**: descriptive + keyword
+6. **Schema markup**: Article/HowTo/FAQ (by content type)
+7. **Internal links**: 3-5 relevant internal links
+8. **Readability**: paragraphs <5 lines, Flesch score > 60
 
-### Step 4：写入草稿
-将完整内容写入 `docs/content/drafts/<content-id>.md`
-更新 state.yaml：stage=experiment, substage=content-draft
+### Step 4: Write draft
+Write the full content to `docs/content/drafts/<content-id>.md`
+Update state.yaml: stage=experiment, substage=content-draft
 
-## 内容质量自检清单
+## Content quality self-check list
 
-- [ ] 是否比 SERP Top10 更深/更全/更实用？
-- [ ] 目标关键词是否自然出现（非堆砌）？
-- [ ] 是否有数据/案例支撑（非空谈）？
-- [ ] 是否有明确的 CTA（引导下一步）？
-- [ ] 可读性是否达标（段落短、层次清）？
-- [ ] 是否有 3+ 内链？
-- [ ] Meta Description 是否含关键词 + CTA？
+- [ ] Is it deeper / more comprehensive / more practical than SERP Top 10?
+- [ ] Does the target keyword appear naturally (not stuffed)?
+- [ ] Is there data / case study support (not empty talk)?
+- [ ] Is there a clear CTA (guides the next step)?
+- [ ] Does readability meet the bar (short paragraphs, clear hierarchy)?
+- [ ] Are there 3+ internal links?
+- [ ] Does the Meta Description include keyword + CTA?
 
-## 禁止事项
-- 不堆砌关键词（密度 > 3% 算堆砌）
-- 不抄袭竞品内容（可参考结构，不可复制文字）
-- 不生产同质化内容（查知识库，确保有独特角度）
-- 不在创作阶段直接发布（必须过 content-review）
+## Prohibitions
+- Don't stuff keywords (density > 3% counts as stuffing)
+- Don't plagiarize competitor content (reference structure, don't copy text)
+- Don't produce homogeneous content (check the knowledge base to ensure a unique angle)
+- Don't publish directly during creation (must pass content-review)
 
-## 与 LOOP 的关系
-本 skill 在 LOOP(content) 的 **EXPERIMENT 阶段**执行。
+## Relationship to LOOP
+This skill runs in the **EXPERIMENT phase** of LOOP(content).
 PLAN(content-ideation) → EXPERIMENT(content-creation) → MEASURE(content-review → content-performance)
 
-## 与 Workflow 的关系
-本 skill 是 **content-marketing-workflow** 的第 2 步。
-产出必须经过 content-review 质量门才能进入 content-distribution。
+## Relationship to Workflow
+This skill is step 2 of **content-marketing-workflow**.
+Output must pass the content-review quality gate before entering content-distribution.

@@ -1,21 +1,21 @@
 ---
 name: revenue-upsell
-description: 当需要优化升级转化策略时使用。升级转化自动化Pipeline，识别升级信号用户，自动生成个性化升级内容，优化触达时机，设计A/B测试。关键词：升级转化、增购、Upsell、升级策略、交叉销售、推高配、让客户多买、升级套餐。
+description: Use when optimizing upgrade conversion strategy. Upsell Automation Pipeline identifies upgrade signal users, automatically generates personalized upgrade content, optimizes outreach timing, and designs A/B tests. Keywords: upgrade conversion, add-on, Upsell, upgrade strategy, cross-sell, push higher tier, get customers to buy more, upgrade plan.
 metadata:
-  module: "产品增长与运营"
-  sub-module: "变现"
+  module: "Product Growth & Operations"
+  sub-module: "Monetization"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["SaaS", "互联网", "通用"]
+  domain_tags: ["SaaS", "Internet", "General"]
   trigger_examples:
-    - "怎么让用户升级套餐"
-    - "哪些用户适合推增购"
-    - "交叉销售怎么做"
+    - "How to get users to upgrade their plan"
+    - "Which users are suitable for add-on recommendations"
+    - "How to do cross-selling"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出增购策略和机会清单"
-  deep_description: "完整策略 + 增购触发器设计 + 客户分层增购模型 + 增购实验方案"
+  quick_description: "Directly output upsell strategy and opportunity list"
+  deep_description: "Full strategy + upsell trigger design + customer-tiered upsell model + upsell experiment plan"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -27,65 +27,65 @@ writes:
   - upsell_strategy.json
 ---
 
-# 升级转化自动化
+# Upsell Automation
 
-## 核心原则
+## Core Principles
 
-1. **升级是价值延伸不是销售**：升级推荐必须基于用户真实的使用需求和场景，而非销售指标
-2. **信号强度决定时机**：多重强信号即时引导，弱信号持续培育，避免过早或过晚触达
-3. **个性化即转化率**：升级内容越贴合用户当前使用场景，转化率越高
+1. **Upgrade is value extension, not sales**: Upgrade recommendations must be based on users' real usage needs and scenarios, not sales quotas
+2. **Signal strength determines timing**: Multiple strong signals trigger immediate guidance; weak signals require continuous nurturing; avoid premature or late outreach
+3. **Personalization is conversion rate**: The more the upgrade content fits the user's current usage scenario, the higher the conversion rate
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 用户行为数据 | object | 是 | 用户提供 | 使用量、功能使用、协作行为 |
-| 付费历史数据 | object | 是 | docs/growth/growth-strategy.md（“NRR分析”章节） | 历史套餐、付费金额、付费周期 |
-| 产品使用数据 | object | ○ | 用户提供 | 功能使用详情、用量统计 |
+| User behavior data | object | Yes | User-provided | Usage volume, feature usage, collaboration behavior |
+| Payment history data | object | Yes | docs/growth/growth-strategy.md ("NRR Analysis" section) | Historical plans, payment amount, payment cycle |
+| Product usage data | object | ○ | User-provided | Feature usage details, usage statistics |
 
-## 升级信号类型
+## Upgrade Signal Types
 
-### 类型1: 用量触顶信号
-| 信号 | 描述 | 升级潜力 |
+### Type 1: Usage Limit Signals
+| Signal | Description | Upgrade Potential |
 |------|------|---------|
-| 存储达到上限 | 文件存储接近免费版限制 | 高 |
-| API调用超限 | API调用接近配额 | 高 |
-| 席位使用满额 | 团队人数达到免费版上限 | 高 |
-| 功能使用超限 | 某些功能有使用次数限制 | 中 |
+| Storage reaches limit | File storage approaching free version limit | High |
+| API calls exceed limit | API calls approaching quota | High |
+| Seats fully used | Team size reaches free version limit | High |
+| Feature usage exceeds limit | Some features have usage count limits | Medium |
 
-### 类型2: 功能需求信号
-| 信号 | 描述 | 升级潜力 |
+### Type 2: Feature Demand Signals
+| Signal | Description | Upgrade Potential |
 |------|------|---------|
-| 高级功能访问 | 频繁访问付费专属功能 | 高 |
-| 协作功能使用 | 使用团队协作功能 | 高 |
-| API深度使用 | 使用高级API功能 | 高 |
-| 定制化需求 | 出现定制化需求 | 中 |
+| Premium feature access | Frequently accesses paid exclusive features | High |
+| Collaboration feature usage | Uses team collaboration features | High |
+| Advanced API usage | Uses advanced API features | High |
+| Customization needs | Shows customization needs | Medium |
 
-### 类型3: 行为信号
-| 信号 | 描述 | 升级潜力 |
+### Type 3: Behavioral Signals
+| Signal | Description | Upgrade Potential |
 |------|------|---------|
-| 高频使用 | 远超普通用户的使用频率 | 高 |
-| 长时间使用 | 远超普通用户的使用时长 | 中 |
-| 多项目操作 | 同时操作多个项目/工作区 | 高 |
-| 关键功能使用 | 使用核心商业功能 | 高 |
+| High-frequency usage | Usage frequency far exceeds average users | High |
+| Long-duration usage | Usage duration far exceeds average users | Medium |
+| Multi-project operation | Simultaneously operates multiple projects/workspaces | High |
+| Key feature usage | Uses core business features | High |
 
-### 类型4: 意向信号
-| 信号 | 描述 | 升级潜力 |
+### Type 4: Intent Signals
+| Signal | Description | Upgrade Potential |
 |------|------|---------|
-| 定价页访问 | 频繁查看付费定价 | 高 |
-| 对比页访问 | 查看不同套餐对比 | 高 |
-| 试用申请 | 申请付费功能试用 | 高 |
-| 客服咨询 | 咨询升级相关问题 | 高 |
+| Pricing page visit | Frequently views paid pricing | High |
+| Comparison page visit | Views plan comparison | High |
+| Trial application | Applies for paid feature trial | High |
+| Customer service inquiry | Inquires about upgrade-related questions | High |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 升级信号识别 [核心]
+### Step 1: Upgrade Signal Identification [Core]
 
-#### 信号检测规则
+#### Signal Detection Rules
 ```yaml
 signal_rules:
   usage_limit:
@@ -93,17 +93,17 @@ signal_rules:
       weight: 0.9
     - condition: "storage_usage >= 0.6 * free_limit"
       weight: 0.6
-      
+
   feature_access:
     - condition: "premium_feature_access_count >= 5"
       weight: 0.8
-      
+
   behavioral:
     - condition: "daily_active_days >= 5 AND avg_session > 30min"
       weight: 0.7
 ```
 
-#### 信号强度计算
+#### Signal Strength Calculation
 ```python
 signal_strength = (
     signal_type_weight * 0.4 +
@@ -112,7 +112,7 @@ signal_strength = (
 )
 ```
 
-#### 升级机会评分
+#### Upgrade Opportunity Scoring
 ```python
 upgrade_score = (
     usage_signals * 0.35 +
@@ -122,125 +122,125 @@ upgrade_score = (
 )
 ```
 
-#### 优先级分层
-| 优先级 | 评分范围 | 特征 | 响应策略 |
+#### Priority Tiering
+| Priority | Score Range | Characteristics | Response Strategy |
 |--------|---------|------|---------|
-| P0 | ≥0.8 | 多重强信号 | 即时升级引导 |
-| P1 | 0.6-0.8 | 明显升级需求 | 主动升级推荐 |
-| P2 | 0.4-0.6 | 部分升级信号 | 场景化升级引导 |
-| P3 | <0.4 | 潜在升级需求 | 持续培育 |
+| P0 | ≥0.8 | Multiple strong signals | Immediate upgrade guidance |
+| P1 | 0.6-0.8 | Obvious upgrade need | Proactive upgrade recommendation |
+| P2 | 0.4-0.6 | Some upgrade signals | Scenario-based upgrade guidance |
+| P3 | <0.4 | Potential upgrade need | Continuous nurturing |
 
-### Step 2: 升级内容个性化 [核心]
+### Step 2: Upgrade Content Personalization [Core]
 
-#### 个性化要素
-| 要素 | 内容来源 | 说明 |
+#### Personalization Elements
+| Element | Content Source | Description |
 |------|---------|------|
-| 用户名 | 用户profile | 个性化称呼 |
-| 当前用量 | 产品数据 | "您已使用80%" |
-| 使用限制 | 产品数据 | 具体限制场景 |
-| 升级收益 | 产品信息 | 升级后获得什么 |
-| 推荐套餐 | 产品定价 | 最适合的套餐 |
+| User name | User profile | Personalized greeting |
+| Current usage | Product data | "You have used 80%" |
+| Usage limit | Product data | Specific limit scenario |
+| Upgrade benefits | Product info | What you get after upgrading |
+| Recommended plan | Product pricing | Most suitable plan |
 
-#### 个性化内容模板
+#### Personalized Content Template
 ```
-标题: {用户名}，您已达到{产品名称}{限制类型}上限
+Title: {user_name}, you have reached the {product_name} {limit_type} limit
 
-正文: 
-您在本月已使用了{当前用量}/{免费限制}，
-当使用量达到100%时，部分功能将受到限制。
+Body:
+You have used {current_usage}/{free_limit} this month.
+When usage reaches 100%, some features will be restricted.
 
-升级到{推荐套餐}，您可以:
-✓ {收益1}
-✓ {收益2}
-✓ {收益3}
+Upgrade to {recommended_plan}, you can:
+✓ {benefit_1}
+✓ {benefit_2}
+✓ {benefit_3}
 
-{激励信息}
+{incentive_info}
 
-[立即升级] [了解更多]
+[Upgrade Now] [Learn More]
 ```
 
-### Step 3: 触达时机优化 [核心]
+### Step 3: Outreach Timing Optimization [Core]
 
-#### 最佳触达时机
-| 时机 | 触发条件 | 效果 |
+#### Optimal Outreach Timing
+| Timing | Trigger Condition | Effect |
 |------|---------|------|
-| 实时触发 | 达到用量限制时 | 最相关 |
-| 行为高峰 | 用户活跃高峰时段 | 触达率高 |
-| 功能使用后 | 访问/尝试付费功能后 | 需求明确 |
-| 周期性提醒 | 月初/周末 | 决策时间充足 |
+| Real-time trigger | When usage limit is reached | Most relevant |
+| Behavior peak | During user activity peak hours | High outreach rate |
+| After feature usage | After accessing/trying paid features | Clear need |
+| Periodic reminder | Beginning of month / weekend | Sufficient decision time |
 
-#### 触达渠道选择
-| 用户类型 | 推荐渠道 | 优先级 |
+#### Outreach Channel Selection
+| User Type | Recommended Channel | Priority |
 |---------|---------|--------|
-| 高活跃用户 | App弹窗+Push | 实时 |
-| 中活跃用户 | 邮件+站内信 | 定期 |
-| 低活跃用户 | 邮件+短信 | 强化 |
-| 高价值用户 | 邮件+电话 | 全渠道 |
+| High-activity users | App popup + Push | Real-time |
+| Medium-activity users | Email + in-app message | Periodic |
+| Low-activity users | Email + SMS | Reinforced |
+| High-value users | Email + Phone | Full-channel |
 
-### Step 4: A/B测试设计 [核心]
+### Step 4: A/B Test Design [Core]
 
-#### 测试类型
-| 测试类型 | 测试内容 | 目标 |
+#### Test Types
+| Test Type | Test Content | Goal |
 |---------|---------|------|
-| 时机测试 | 不同触发时机的效果 | 找到最佳触发点 |
-| 内容测试 | 不同文案的转化效果 | 优化文案 |
-| 激励测试 | 不同优惠力度的转化 | 平衡转化率和利润 |
-| 渠道测试 | 不同触达渠道的效果 | 优化触达效率 |
+| Timing test | Effect of different trigger timings | Find the best trigger point |
+| Content test | Conversion effect of different copy | Optimize copy |
+| Incentive test | Conversion of different discount levels | Balance conversion rate and profit |
+| Channel test | Effect of different outreach channels | Optimize outreach efficiency |
 
-#### A/B测试模板
+#### A/B Test Template
 ```yaml
-test_id: "UPSELL_TEST_{序号}"
-test_name: "测试名称"
-hypothesis: "如果...那么...的假设"
+test_id: "UPSELL_TEST_{sequence}"
+test_name: "Test name"
+hypothesis: "If...then... hypothesis"
 
 variants:
   control:
-    name: "对照组"
-    description: "当前方案"
+    name: "Control group"
+    description: "Current scheme"
   treatment:
-    name: "实验组"
-    description: "测试方案"
+    name: "Treatment group"
+    description: "Test scheme"
 
 metrics:
-  primary: "升级转化率"
-  secondary: ["升级GMV", "升级用户数"]
-  guardrail: ["留存率", "NPS"]
+  primary: "Upgrade conversion rate"
+  secondary: ["Upgrade GMV", "Upgrade user count"]
+  guardrail: ["Retention rate", "NPS"]
 
 design:
   min_sample_per_variant: 500
   runtime_days: 14
   mde: 0.1
-  
+
 success_criteria:
   - primary_metric_lift: ">=10%"
-  - guardrail_metrics: "无显著下降"
+  - guardrail_metrics: "No significant decline"
 ```
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 增购策略和机会清单 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整策略 + 增购触发器设计 + 客户分层增购模型 + 增购实验方案 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Upsell strategy and opportunity list | Core conclusions + minimum viable artifact |
+| standard | Full artifact (current default) | Full artifact, including all Step outputs |
+| deep | Full strategy + upsell trigger design + customer-tiered upsell model + upsell experiment plan | Full artifact + extended analysis + deep reasoning |
 
-## 输出
+## Output
 
-**存储路径**：`docs/growth/growth-strategy.md（“Upsell”章节）`
+**Storage path**: `docs/growth/growth-strategy.md ("Upsell" section)`
 
-**输出文件**：upsell_strategy.json
+**Output file**: upsell_strategy.json
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["upgrade_signals", "personalized_offers"],
   "properties": {
-    "upgrade_signals": {"type": "array", "description": "升级信号用户列表，包含信号类型、评分和推荐套餐"},
-    "personalized_offers": {"type": "array", "description": "个性化升级方案列表，包含价值主张和激励"},
-    "ab_tests": {"type": "array", "description": "A/B测试设计方案列表"},
-    "tracking": {"type": "object", "description": "升级效果追踪，包含转化率、收入影响和ROI"}
+    "upgrade_signals": {"type": "array", "description": "Upgrade signal user list, including signal type, score, and recommended plan"},
+    "personalized_offers": {"type": "array", "description": "Personalized upgrade offer list, including value proposition and incentive"},
+    "ab_tests": {"type": "array", "description": "A/B test design plan list"},
+    "tracking": {"type": "object", "description": "Upgrade effectiveness tracking, including conversion rate, revenue impact, and ROI"}
   }
 }
 ```
@@ -255,12 +255,12 @@ success_criteria:
       "upgrade_signals": [
         {
           "signal_type": "usage_limit",
-          "description": "使用量达到免费版上限80%",
+          "description": "Usage reaches 80% of free version limit",
           "strength": "strong"
         },
         {
           "signal_type": "feature_access",
-          "description": "频繁访问高级功能",
+          "description": "Frequently accesses premium features",
           "strength": "medium"
         }
       ],
@@ -274,25 +274,25 @@ success_criteria:
       "offer_id": "OFFER_001",
       "target_segment": "free_user_usage_limit",
       "offer_type": "upgrade_cta",
-      "headline": "您已使用免费版80%容量",
-      "value_proposition": "升级Pro版，解锁无限使用",
-      "incentive": "首年8折",
-      "cta_text": "立即升级",
-      "personalization_elements": ["用户使用量", "限制场景", "升级收益"]
+      "headline": "You have used 80% of free version capacity",
+      "value_proposition": "Upgrade to Pro, unlock unlimited usage",
+      "incentive": "20% off first year",
+      "cta_text": "Upgrade Now",
+      "personalization_elements": ["User usage", "Limit scenario", "Upgrade benefits"]
     }
   ],
   "ab_tests": [
     {
       "test_id": "UPSELL_TEST_001",
-      "test_name": "升级弹窗时机优化",
-      "hypothesis": "使用量达到70%时展示升级弹窗比达到90%时效果更好",
-      "target_segment": "免费版用户",
+      "test_name": "Upgrade popup timing optimization",
+      "hypothesis": "Showing the upgrade popup at 70% usage is more effective than at 90%",
+      "target_segment": "Free version users",
       "variants": {
-        "control": "达到90%时触发",
-        "treatment_a": "达到70%时触发",
-        "treatment_b": "达到80%时触发"
+        "control": "Trigger at 90%",
+        "treatment_a": "Trigger at 70%",
+        "treatment_b": "Trigger at 80%"
       },
-      "primary_metric": "升级转化率",
+      "primary_metric": "Upgrade conversion rate",
       "expected_lift": "15%"
     }
   ],
@@ -306,101 +306,101 @@ success_criteria:
 }
 ```
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| upgrade_signals | array | 是 | 升级信号用户列表，至少1个用户 |
-| upgrade_signals[].user_id | string | 否 | 用户ID |
-| upgrade_signals[].current_plan | string | 否 | 当前套餐 |
-| upgrade_signals[].overall_score | number | 是 | 升级评分，范围0-1 |
-| upgrade_signals[].signal_type | string | 否 | 信号类型，枚举：usage/feature/behavior/intent |
-| upgrade_signals[].strength | string | 否 | 信号强度，枚举：strong/medium/weak |
-| upgrade_signals[].description | string | 否 | 信号描述 |
-| upgrade_signals[].recommended_plan | string | 是 | 推荐套餐，不可为空 |
-| personalized_offers | array | 是 | 个性化方案列表，至少1个 |
-| personalized_offers[].offer_type | string | 否 | 方案类型，枚举：upgrade/addon/trial_discount |
-| personalized_offers[].headline | string | 否 | 方案标题 |
-| personalized_offers[].value_proposition | string | 是 | 价值主张，不可为空 |
-| personalized_offers[].incentive | string | 否 | 激励内容 |
-| personalized_offers[].cta_text | string | 否 | 行动号召文案 |
-| ab_tests | array | 否 | A/B测试列表，每项须含test_id/hypothesis |
-| ab_tests[].test_id | string | 是 | 测试ID |
-| ab_tests[].test_name | string | 否 | 测试名称 |
-| ab_tests[].hypothesis | string | 是 | 测试假设 |
-| ab_tests[].variants | array | 否 | 变体列表 |
-| ab_tests[].primary_metric | string | 否 | 主要指标 |
-| tracking | object | 否 | 效果追踪，须含upgrade_conversion_rate/roi |
-| tracking.upgrade_conversion_rate | number | 否 | 升级转化率 |
-| tracking.roi | number | 否 | 升级ROI |
+| upgrade_signals | array | Yes | Upgrade signal user list, at least 1 user |
+| upgrade_signals[].user_id | string | No | User ID |
+| upgrade_signals[].current_plan | string | No | Current plan |
+| upgrade_signals[].overall_score | number | Yes | Upgrade score, range 0-1 |
+| upgrade_signals[].signal_type | string | No | Signal type, enum: usage/feature/behavior/intent |
+| upgrade_signals[].strength | string | No | Signal strength, enum: strong/medium/weak |
+| upgrade_signals[].description | string | No | Signal description |
+| upgrade_signals[].recommended_plan | string | Yes | Recommended plan, cannot be empty |
+| personalized_offers | array | Yes | Personalized offer list, at least 1 |
+| personalized_offers[].offer_type | string | No | Offer type, enum: upgrade/addon/trial_discount |
+| personalized_offers[].headline | string | No | Offer headline |
+| personalized_offers[].value_proposition | string | Yes | Value proposition, cannot be empty |
+| personalized_offers[].incentive | string | No | Incentive content |
+| personalized_offers[].cta_text | string | No | Call-to-action copy |
+| ab_tests | array | No | A/B test list, each item must include test_id/hypothesis |
+| ab_tests[].test_id | string | Yes | Test ID |
+| ab_tests[].test_name | string | No | Test name |
+| ab_tests[].hypothesis | string | Yes | Test hypothesis |
+| ab_tests[].variants | array | No | Variant list |
+| ab_tests[].primary_metric | string | No | Primary metric |
+| tracking | object | No | Effectiveness tracking, must include upgrade_conversion_rate/roi |
+| tracking.upgrade_conversion_rate | number | No | Upgrade conversion rate |
+| tracking.roi | number | No | Upgrade ROI |
 
-## 决策规则
+## Decision Rules
 
-| 情况 | 处理方式 |
+| Situation | Action |
 |------|----------|
-| 升级评分≥0.8（P0） | 即时触发升级引导 |
-| 用量触顶+功能需求双重信号 | 优先推荐匹配套餐 |
-| 升级转化率低于5% | 触达内容或时机需A/B测试优化 |
-| 护栏指标（留存/NPS）下降 | 暂停升级推送，排查原因 |
+| Upgrade score ≥0.8 (P0) | Trigger upgrade guidance immediately |
+| Usage limit + feature demand dual signals | Prioritize recommending matching plan |
+| Upgrade conversion rate below 5% | Outreach content or timing needs A/B test optimization |
+| Guardrail metrics (retention/NPS) decline | Pause upgrade push, investigate cause |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 升级信号识别覆盖4类信号（用量/功能/行为/意向）
-- [ ] 个性化内容包含用户名、用量、收益3个要素
+- [ ] Upgrade signal identification covers 4 signal types (usage/feature/behavior/intent)
+- [ ] Personalized content includes 3 elements: user name, usage, and benefits
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] A/B测试设计包含护栏指标
-- [ ] 升级ROI计算包含触达成本
+- [ ] A/B test design includes guardrail metrics
+- [ ] Upgrade ROI calculation includes outreach cost
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only required for deep)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep reasoning and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Instructions |
 |----------|----------|----------|------------|
-| 用户行为数据缺失 | 用户描述付费用户特征 → 生成升级策略 | 升级信号基于用户描述，缺乏行为数据验证 | 要求用户提供付费用户的使用行为和功能使用频率 |
-| 付费历史缺失 | 跳过付费模式分析，使用通用升级触发规则 | 升级时机判断基于通用规则 | 要求用户提供历史套餐分布和付费周期数据 |
-| 产品使用数据缺失 | 跳过功能使用详情分析，升级信号仅基于行为和付费数据 | 升级信号缺少功能维度，升级推荐精准度降低 | 要求用户提供功能使用详情和用量统计数据 |
-| 用户行为 + 付费历史均缺失 | 用户描述付费用户特征 → 生成升级策略 | 输出基于描述的升级策略，标注"待数据验证" | 要求用户提供付费用户特征描述、产品层级和升级障碍 |
+| User behavior data missing | User describes paying user characteristics → generate upgrade strategy | Upgrade signals based on user description, lacking behavior data validation | Require user to provide paying user usage behavior and feature usage frequency |
+| Payment history missing | Skip payment pattern analysis, use generic upgrade trigger rules | Upgrade timing judgment based on generic rules | Require user to provide historical plan distribution and payment cycle data |
+| Product usage data missing | Skip feature usage detail analysis, upgrade signals based only on behavior and payment data | Upgrade signals lack feature dimension, upgrade recommendation precision reduced | Require user to provide feature usage details and usage statistics data |
+| User behavior + payment history both missing | User describes paying user characteristics → generate upgrade strategy | Output upgrade strategy based on description, marked "pending data validation" | Require user to provide paying user characteristic description, product tiers, and upgrade barriers |
 
-### 数据获取说明
+### Data Acquisition Instructions
 
-当上游文件缺失时，需用户提供以下信息以支撑降级生成：
-- **付费用户特征**：当前付费用户的使用行为和付费模式
-- **产品层级**（可选）：各付费层级的定价和功能差异
-- **升级障碍**（可选）：用户不升级的已知原因
+When upstream files are missing, the following information is needed from the user to support degraded generation:
+- **Paying user characteristics**: Current paying users' usage behavior and payment patterns
+- **Product tiers** (optional): Pricing and feature differences across paid tiers
+- **Upgrade barriers** (optional): Known reasons why users don't upgrade
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游来源 | 变更类型 | 影响范围 | 响应动作 |
+| Upstream Source | Change Type | Impact Scope | Response Action |
 |----------|----------|----------|----------|
-| revenue-nrr | 扩张机会变更 | 升级信号识别和推荐套餐 | 更新扩张信号和升级推荐 |
-| 用户提供-行为数据 | 使用指标变更 | 信号检测规则和评分 | 更新信号权重和评分公式 |
-| 用户提供-付费历史 | 付费模式变更 | 个性化内容和触达时机 | 调整内容模板和触发条件 |
+| revenue-nrr | Expansion opportunity change | Upgrade signal identification and recommended plan | Update expansion signals and upgrade recommendations |
+| User-provided - behavior data | Usage metric change | Signal detection rules and scoring | Update signal weights and scoring formula |
+| User-provided - payment history | Payment pattern change | Personalized content and outreach timing | Adjust content templates and trigger conditions |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 下游消费者 | 通知条件 | 通知方式 | 通知内容 |
+| Downstream Consumer | Notification Condition | Notification Method | Notification Content |
 |------------|----------|----------|----------|
-| revenue-orchestrator | 升级策略输出完成 | 输出文件更新 | 升级转化完成状态和关键结论 |
-| retention-management | 高价值用户升级信号 | 写入输出文件 | 升级信号用户列表 |
+| revenue-orchestrator | Upgrade strategy output complete | Output file updated | Upgrade conversion completion status and key conclusions |
+| retention-management | High-value user upgrade signal | Write to output file | Upgrade signal user list |
 
-## 关键成功指标
+## Key Success Metrics
 
-| 指标 | 定义 | 目标值 |
+| Metric | Definition | Target Value |
 |------|------|--------|
-| 升级转化率 | 升级用户/升级机会用户 | ≥8% |
-| 升级GMV | 升级带来的月收入增加 | 持续增长 |
-| 升级响应率 | 触达后有响应的用户比例 | ≥15% |
-| 升级ROI | 升级GMV/触达成本 | ≥3 |
-| 升级后留存率 | 升级用户的12个月留存率 | ≥85% |
+| Upgrade conversion rate | Upgrading users / Upgrade opportunity users | ≥8% |
+| Upgrade GMV | Monthly revenue increase from upgrades | Continuous growth |
+| Upgrade response rate | Proportion of users responding after outreach | ≥15% |
+| Upgrade ROI | Upgrade GMV / Outreach cost | ≥3 |
+| Post-upgrade retention rate | 12-month retention rate of upgrading users | ≥85% |

@@ -1,24 +1,24 @@
 ---
 name: experiment-execution
-description: 当需要执行A/B测试、分析结果并生成完整报告时使用。A/B测试自动执行、分析与报告生成，AI自动执行实验运行中的监控和实验结束后的分析，包括统计检验、业务意义评估、多维下钻、新奇效应检测，并生成包含实验概述、统计结论、效果分析和行动建议的完整A/B测试报告。关键词：A/B测试执行、统计检验、实验分析、新奇效应、实验监控、实验结果分析、AB测试跑完了帮我看看结果、实验数据怎么看、结果显著吗、A/B测试报告、实验报告、统计结论、效果分析、实验总结、出个实验报告、AB测试总结、实验结果汇报。
+description: Used when executing A/B tests, analyzing results, and generating complete reports. A/B test auto-execution, analysis, and report generation; AI automatically performs monitoring during experiment runtime and analysis after experiment completion, including statistical testing, business significance assessment, multi-dimensional drill-down, novelty effect detection, and generates a complete A/B test report containing experiment overview, statistical conclusions, effect analysis, and action recommendations. Keywords: A/B test execution, statistical testing, experiment analysis, novelty effect, experiment monitoring, experiment result analysis, AB test finished help me analyze results, how to read experiment data, is it significant, A/B test report, experiment report, statistical conclusion, effect analysis, experiment summary, produce an experiment report, AB test summary, experiment result presentation.
 metadata:
-  module: "产品度量运营"
-  sub-module: "实验验证"
+  module: "Product Metrics & Operations"
+  sub-module: "Experiment Validation"
   type: "pipeline"
   version: "2.0"
-  domain_tags: ["互联网", "通用"]
+  domain_tags: ["Internet", "General"]
   trigger_examples:
-    - "AB测试跑完了，帮我分析结果"
-    - "实验数据看起来有差异，显著吗"
-    - "帮我监控正在跑的实验"
-    - "帮我出一份AB测试的完整报告"
-    - "实验做完了，写个总结报告"
-    - "把实验结果整理成可汇报的文档"
+    - "AB test finished, help me analyze the results"
+    - "Experiment data looks different, is it significant"
+    - "Help me monitor a running experiment"
+    - "Help me produce a complete AB test report"
+    - "Experiment done, write a summary report"
+    - "Organize experiment results into a presentable document"
   interaction_mode: "ai_auto"
 execution_depth:
   default: standard
-  quick_description: "执行统计显著性检验和护栏指标检查，输出实验结论与基础决策建议"
-  deep_description: "额外包含多维下钻异质性分析、新奇效应检测、交互效应检查、完整A/B测试报告生成、后续实验建议"
+  quick_description: "Execute statistical significance testing and guardrail metric checks, output experiment conclusions and basic decision recommendations"
+  deep_description: "Additionally includes multi-dimensional drill-down heterogeneity analysis, novelty effect detection, interaction effect checking, complete A/B test report generation, follow-up experiment recommendations"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -29,68 +29,68 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# A/B测试自动执行、分析与报告
+# A/B Test Auto-Execution, Analysis & Reporting
 
-## 核心原则
+## Core Principles
 
-1. **统计显著≠业务有效**：p值只告诉你"差异存在"，效应量才告诉你"差异有多大、值不值得做"
-2. **异质性是隐藏的真相**：整体正向可能掩盖某群体负向，不下钻就不知道真实效果
-3. **新奇效应是实验的陷阱**：初期效应可能随时间衰减，稳定才是可信
-4. **实验报告是决策的依据，不是数据的堆砌**：报告的核心价值在于将统计结论转化为可执行的行动建议，回答"我们应该做什么"以及"为什么"
+1. **Statistically significant ≠ practically effective**: The p-value only tells you "a difference exists"; the effect size tells you "how big the difference is and whether it's worth doing"
+2. **Heterogeneity is the hidden truth**: An overall positive may mask a negative for some segment; without drill-down you don't know the true effect
+3. **Novelty effect is the experiment trap**: Initial effects may decay over time; stability is what makes it credible
+4. **The experiment report is the basis for decisions, not a pile of data**: The core value of the report is converting statistical conclusions into actionable recommendations, answering "what should we do" and "why"
 
-## 交互模式
+## Interaction Mode
 
-### 运行中监控模式
-
-```
-定时执行（每日/每4小时）
-├── 数据同步检查
-├── 样本量进度
-├── 主指标趋势
-├── 护栏指标检查
-├── 统计显著性检查
-└── 异常检测
-```
-
-### 结束后分析+报告模式
+### In-Run Monitoring Mode
 
 ```
-触发条件：达到终止条件
-├── 锁定数据
-├── 统计分析
-├── 下钻分析
-├── 生成结论
-├── 生成报告
-└── 输出建议
+Scheduled execution (daily/every 4 hours)
+├── Data sync check
+├── Sample size progress
+├── Primary metric trend
+├── Guardrail metric check
+├── Statistical significance check
+└── Anomaly detection
 ```
 
-## 输入
+### Post-Completion Analysis + Report Mode
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+```
+Trigger condition: Termination condition reached
+├── Lock data
+├── Statistical analysis
+├── Drill-down analysis
+├── Generate conclusions
+├── Generate report
+└── Output recommendations
+```
+
+## Inputs
+
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 实验设计文档 | object | 是 | docs/metrics/experiment-report.md（“实验设计”章节） | experiment-design 输出的实验方案 |
-| 实验数据 | object | 是 | 用户提供 | 分组数据、指标数据、护栏指标数据 |
-| 终止条件 | object | 是 | docs/metrics/experiment-report.md（“实验设计”章节） | 样本量目标、运行时长、最小可检测效应 |
-| 产品背景 | text | 否 | 用户输入 | 产品阶段、业务目标、历史实验 |
+| Experiment design document | object | Yes | docs/metrics/experiment-report.md ("Experiment Design" section) | Experiment plan output by experiment-design |
+| Experiment data | object | Yes | User-provided | Grouped data, metric data, guardrail metric data |
+| Termination conditions | object | Yes | docs/metrics/experiment-report.md ("Experiment Design" section) | Sample size target, run duration, minimum detectable effect |
+| Product background | text | No | User input | Product stage, business goals, historical experiments |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1：实验监控与结果分析（original experiment-execution） [核心]
+### Step 1: Experiment Monitoring & Result Analysis (original experiment-execution) [Core]
 
-统计检验、业务意义评估、多维下钻、新奇效应检测
+Statistical testing, business significance assessment, multi-dimensional drill-down, novelty effect detection
 
-#### 1.1 统计显著性检验
+#### 1.1 Statistical Significance Testing
 
-##### 检验方法选择
+##### Test Method Selection
 
-| 指标类型 | 检验方法 | 说明 |
+| Metric Type | Test Method | Description |
 |---------|---------|------|
-| 比例（转化率） | Z-test / 卡方检验 | 二项分布 |
-| 均值（收入） | T-test / Mann-Whitney | 正态/非正态 |
-| 分布（时长） | KS检验 | 分布差异 |
-| 多指标 | FDR校正 | 多重检验 |
+| Proportion (conversion rate) | Z-test / Chi-square test | Binomial distribution |
+| Mean (revenue) | T-test / Mann-Whitney | Normal/non-normal |
+| Distribution (duration) | KS test | Distribution difference |
+| Multi-metric | FDR correction | Multiple testing |
 
-##### 输出格式
+##### Output Format
 
 ```yaml
 statistical_test:
@@ -117,12 +117,12 @@ statistical_test:
   interpretation:
     is_significant: true
     significance_level: 0.05
-    conclusion: "实验组显著优于对照组"
+    conclusion: "Experiment group significantly outperforms control group"
 ```
 
-#### 1.2 实际业务意义评估
+#### 1.2 Practical Business Significance Assessment
 
-统计显著 ≠ 业务有效
+Statistically significant ≠ practically effective
 
 ```yaml
 practical_significance:
@@ -134,17 +134,17 @@ practical_significance:
 
   assessment:
     is_practically_significant: true
-    business_verdict: "值得全量发布"
-    reasoning: "提升8.2%超过业务阈值5%，预计年收入增加120万"
+    business_verdict: "Worth full release"
+    reasoning: "8.2% lift exceeds 5% business threshold, estimated annual revenue increase of 1.2M"
 ```
 
-#### 1.3 多维下钻分析 [条件]
+#### 1.3 Multi-Dimensional Drill-Down Analysis [Conditional]
 
-##### 异质性效应检测
+##### Heterogeneous Effect Detection
 
 ```yaml
 heterogeneous_effects:
-  summary: "发现显著的平台差异"
+  summary: "Significant platform difference found"
 
   dimension_analysis:
     platform:
@@ -158,7 +158,7 @@ heterogeneous_effects:
         p_value: 0.089
         significant: false
 
-      conclusion: "iOS用户效果显著，Android不显著"
+      conclusion: "iOS user effect significant, Android not significant"
 
     user_segment:
       new_users:
@@ -169,7 +169,7 @@ heterogeneous_effects:
         lift: 0.015
         significant: false
 
-      conclusion: "主要对新用户有效"
+      conclusion: "Mainly effective for new users"
 
     traffic_source:
       organic:
@@ -180,17 +180,17 @@ heterogeneous_effects:
         lift: 0.022
         significant: false
 
-      conclusion: "对自然流量更有效"
+      conclusion: "More effective for organic traffic"
 
   recommendations:
-    - "考虑仅在iOS全量"
-    - "优化Android版本的实现"
-    - "针对新用户定向推广"
+    - "Consider full release on iOS only"
+    - "Optimize the Android version implementation"
+    - "Targeted promotion for new users"
 ```
 
-#### 1.4 新奇效应检测 [深度]
+#### 1.4 Novelty Effect Detection [Deep]
 
-检测用户初期行为异常：
+Detect abnormal initial user behavior:
 
 ```yaml
 novelty_check:
@@ -206,14 +206,14 @@ novelty_check:
     assessment:
       is_novelty_effect: false
       trend_stable: true
-      conclusion: "效应稳定，无新奇效应"
+      conclusion: "Effect stable, no novelty effect"
 
     actions:
-      if_novelty: "延长实验周期2周"
-      if_stable: "可进入决策流程"
+      if_novelty: "Extend experiment duration by 2 weeks"
+      if_stable: "Can proceed to decision flow"
 ```
 
-#### 1.5 决策建议生成
+#### 1.5 Decision Recommendation Generation
 
 ```yaml
 decision_recommendation:
@@ -255,135 +255,135 @@ decision_recommendation:
       treatment: 0.418
       change: -0.47%
       safe: true
-      verdict: "无显著影响"
+      verdict: "No significant impact"
 
     - name: "daily_active_users"
       control: 1000000
       treatment: 1001500
       change: +0.15%
       safe: true
-      verdict: "无显著影响"
+      verdict: "No significant impact"
 
     - name: "app_crash_rate"
       control: 0.002
       treatment: 0.0021
       change: +5%
       safe: true
-      verdict: "无显著影响"
+      verdict: "No significant impact"
 
   heterogeneous_effects:
-    summary: "iOS效果显著(+5.2%)，Android不显著(+1.8%)"
+    summary: "iOS effect significant (+5.2%), Android not significant (+1.8%)"
     recommendations:
-      - "考虑分平台发布策略"
-      - "Android版本需要进一步优化"
+      - "Consider platform-specific release strategy"
+      - "Android version needs further optimization"
 
   novelty_check:
     detected: false
     trend: "stable"
 
   recommendation:
-    action: "全量发布"
+    action: "Full release"
     confidence: "high"
 
     reasoning:
-      - "主指标提升8.2%，统计显著"
-      - "实际业务意义显著"
-      - "护栏指标安全"
-      - "效应稳定，无新奇效应"
+      - "Primary metric lifted 8.2%, statistically significant"
+      - "Practical business significance achieved"
+      - "Guardrail metrics safe"
+      - "Effect stable, no novelty effect"
 
     risks:
-      - "Android效果不确定，需后续监控"
+      - "Android effect uncertain, needs post-release monitoring"
 
     next_steps:
-      - "全量发布到iOS和Android"
-      - "发布后2周监控关键指标"
-      - "如果Android表现持续不佳，考虑回滚"
+      - "Full release to iOS and Android"
+      - "Monitor key metrics for 2 weeks post-release"
+      - "If Android performance remains poor, consider rollback"
 ```
 
-### Step 2：A/B测试报告生成（from experiment-report） [条件]
+### Step 2: A/B Test Report Generation (from experiment-report) [Conditional]
 
-实验概述、统计结论、效果分析、行动建议
+Experiment overview, statistical conclusions, effect analysis, action recommendations
 
-#### 2.1 实验概述组装
+#### 2.1 Experiment Overview Assembly
 
-从实验设计方案提取核心要素：
+Extract core elements from the experiment design plan:
 
-1. **实验身份**：实验名称、ID、运行周期、样本量
-2. **假设陈述**：原假设 H₀ 和备择假设 H₁
-3. **指标体系**：核心指标（OEC）、护栏指标、辅助指标
-4. **分流方案**：实验组/对照组配比、流量占比、分层策略
+1. **Experiment identity**: Experiment name, ID, run period, sample size
+2. **Hypothesis statement**: Null hypothesis H₀ and alternative hypothesis H₁
+3. **Metric system**: Core metric (OEC), guardrail metrics, secondary metrics
+4. **Traffic split plan**: Experiment/control group ratio, traffic share, layering strategy
 
-#### 2.2 统计结论提炼
+#### 2.2 Statistical Conclusion Extraction
 
-从实验执行结果提炼统计结论：
+Extract statistical conclusions from experiment execution results:
 
-1. **核心指标结论**：效应量、置信区间、p值、统计功效
-2. **护栏指标检查**：各护栏指标是否触发告警阈值
-3. **样本量验证**：实际样本量是否达到预设MDE要求
-4. **统计显著性判定**：显著/不显著/边际显著，附判定依据
+1. **Core metric conclusion**: Effect size, confidence interval, p-value, statistical power
+2. **Guardrail metric check**: Whether each guardrail metric triggered alert threshold
+3. **Sample size validation**: Whether actual sample size meets preset MDE requirement
+4. **Statistical significance determination**: Significant/not significant/marginal, with judgment basis
 
-#### 2.3 效果深度分析
+#### 2.3 Effect Deep Analysis
 
-对核心效果进行多维度分析：
+Multi-dimensional analysis of core effects:
 
-1. **效应量解读**：绝对提升、相对提升、业务影响换算
-2. **异质性效应**：按用户分群（新/老、平台、地域等）的下钻分析
-3. **新奇效应评估**：短期效应 vs 长期效应预判
-4. **交互效应**：与其他正在运行实验的潜在交互
+1. **Effect size interpretation**: Absolute lift, relative lift, business impact conversion
+2. **Heterogeneous effects**: Drill-down analysis by user segments (new/returning, platform, region, etc.)
+3. **Novelty effect assessment**: Short-term effect vs long-term effect prediction
+4. **Interaction effects**: Potential interactions with other running experiments
 
-#### 2.4 行动建议生成
+#### 2.4 Action Recommendation Generation
 
-基于统计结论和效果分析，生成分层行动建议：
+Based on statistical conclusions and effect analysis, generate tiered action recommendations:
 
-| 结论类型 | 建议等级 | 行动 |
+| Conclusion Type | Recommendation Level | Action |
 |----------|----------|------|
-| 核心指标显著正向 + 护栏安全 | 🟢 强烈推荐全量 | 全量发布 + 监控计划 |
-| 核心指标显著正向 + 护栏有风险 | 🟡 条件推荐 | 分阶段全量 + 护栏专项优化 |
-| 核心指标不显著 | 🔵 需要更多信息 | 延长周期/扩大样本/调整指标 |
-| 核心指标显著负向 | 🔴 建议终止 | 终止实验 + 根因分析 |
-| 异质性效应显著 | 🟠 分群策略 | 分群差异化发布 |
+| Core metric significantly positive + guardrail safe | 🟢 Strongly recommend full release | Full release + monitoring plan |
+| Core metric significantly positive + guardrail at risk | 🟡 Conditional recommendation | Phased full release + guardrail-specific optimization |
+| Core metric not significant | 🔵 Need more information | Extend duration/increase sample/adjust metrics |
+| Core metric significantly negative | 🔴 Recommend termination | Terminate experiment + root cause analysis |
+| Heterogeneous effect significant | 🟠 Segment strategy | Differentiated release by segment |
 
-#### 2.5 报告组装
+#### 2.5 Report Assembly
 
-将以上内容组装为完整报告。
+Assemble the above content into a complete report.
 
-## 输出
+## Output
 
-**存储路径**：`docs/metrics/experiment-report.md（“实验结果”章节）`
+**Storage path**: `docs/metrics/experiment-report.md ("Experiment Results" section)`
 
-**输出文件**：
+**Output files**:
 
-| 文件 | 路径 | 说明 |
+| File | Path | Description |
 |------|------|------|
-| 实验结果数据 | `docs/metrics/experiment-report.md（“实验结果”章节）` | 机器可消费的实验结果数据 |
-| A/B测试报告 | `docs/metrics/experiment-report.md（“实验结果”章节）` | 人类可读的完整报告 |
-| 结构化报告数据 | `docs/metrics/experiment-report.md（“实验结果”章节）` | 机器可消费的结构化报告数据 |
+| Experiment result data | `docs/metrics/experiment-report.md ("Experiment Results" section)` | Machine-consumable experiment result data |
+| A/B test report | `docs/metrics/experiment-report.md ("Experiment Results" section)` | Human-readable complete report |
+| Structured report data | `docs/metrics/experiment-report.md ("Experiment Results" section)` | Machine-consumable structured report data |
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["experiment_id", "conclusion", "primary_metric", "summary", "action_recommendation"],
   "properties": {
-    "experiment_id": {"type": "string", "description": "实验ID"},
-    "analyzed_at": {"type": "string", "description": "分析时间"},
-    "experiment_info": {"type": "object", "description": "实验信息，包含名称、周期和样本量"},
-    "conclusion": {"type": "string", "description": "实验结论：positive/negative/neutral/inconclusive"},
-    "primary_metric": {"type": "object", "description": "主指标结果，包含对照组/实验组数据和统计检验"},
-    "guardrail_metrics": {"type": "object", "description": "护栏指标结果，包含各指标变化和安全性判断"},
-    "heterogeneous_effects": {"type": "object", "description": "异质性效应，按平台/用户类型分群分析"},
-    "novelty_check": {"type": "object", "description": "新奇效应检测"},
-    "experiment_name": {"type": "string", "description": "实验名称"},
-    "report_date": {"type": "string", "description": "报告日期"},
-    "summary": {"type": "object", "description": "统计结论摘要，包含结论、推荐和主指标结果"},
-    "novelty_effect": {"type": "object", "description": "新奇效应评估"},
-    "action_recommendation": {"type": "object", "description": "行动建议，包含决策、理由、风险和后续实验"}
+    "experiment_id": {"type": "string", "description": "Experiment ID"},
+    "analyzed_at": {"type": "string", "description": "Analysis time"},
+    "experiment_info": {"type": "object", "description": "Experiment info, including name, duration, and sample size"},
+    "conclusion": {"type": "string", "description": "Experiment conclusion: positive/negative/neutral/inconclusive"},
+    "primary_metric": {"type": "object", "description": "Primary metric results, including control/treatment data and statistical testing"},
+    "guardrail_metrics": {"type": "object", "description": "Guardrail metric results, including each metric change and safety judgment"},
+    "heterogeneous_effects": {"type": "object", "description": "Heterogeneous effects, segmented analysis by platform/user type"},
+    "novelty_check": {"type": "object", "description": "Novelty effect detection"},
+    "experiment_name": {"type": "string", "description": "Experiment name"},
+    "report_date": {"type": "string", "description": "Report date"},
+    "summary": {"type": "object", "description": "Statistical conclusion summary, including conclusion, recommendation, and primary metric results"},
+    "novelty_effect": {"type": "object", "description": "Novelty effect assessment"},
+    "action_recommendation": {"type": "object", "description": "Action recommendations, including decision, rationale, risks, and follow-up experiments"}
   }
 }
 ```
 
-### 实验结果数据示例
+### Experiment Result Data Example
 
 ```yaml
 ab_test_result:
@@ -391,7 +391,7 @@ ab_test_result:
   analyzed_at: "2024-01-22T10:00:00Z"
 
   experiment_info:
-    name: "简化注册流程实验"
+    name: "Simplified Registration Flow Experiment"
     start_date: "2024-01-15"
     end_date: "2024-01-21"
     duration_days: 7
@@ -458,46 +458,46 @@ ab_test_result:
     action: "full_release"
     confidence: "high"
     reasoning:
-      - "主指标提升8.2%"
-      - "护栏指标安全"
-      - "无新奇效应"
+      - "Primary metric lifted 8.2%"
+      - "Guardrail metrics safe"
+      - "No novelty effect"
 ```
 
-### Markdown 报告结构
+### Markdown Report Structure
 
 ```markdown
-# A/B测试报告：{实验名称}
+# A/B Test Report: {Experiment Name}
 
-## 1. 实验概述
-- 实验ID / 运行周期 / 样本量
-- 假设陈述（H₀ / H₁）
-- 指标体系（核心 / 护栏 / 辅助）
-- 分流方案
+## 1. Experiment Overview
+- Experiment ID / Run period / Sample size
+- Hypothesis statement (H₀ / H₁)
+- Metric system (Core / Guardrail / Secondary)
+- Traffic split plan
 
-## 2. 统计结论
-- 核心指标：效应量 [CI] (p=xxx)
-- 护栏指标：✅/⚠️/❌ 逐项检查
-- 样本量验证：达标/未达标
-- 综合判定：显著正向 / 不显著 / 显著负向
+## 2. Statistical Conclusions
+- Core metric: effect size [CI] (p=xxx)
+- Guardrail metrics: ✅/⚠️/❌ item-by-item check
+- Sample size validation: met/not met
+- Overall judgment: significantly positive / not significant / significantly negative
 
-## 3. 效果分析
-- 效应量解读（绝对/相对/业务换算）
-- 异质性效应（分群下钻表格）
-- 新奇效应评估
-- 交互效应检查
+## 3. Effect Analysis
+- Effect size interpretation (absolute/relative/business conversion)
+- Heterogeneous effects (segment drill-down table)
+- Novelty effect assessment
+- Interaction effect check
 
-## 4. 行动建议
-- 推荐行动 + 理由
-- 风险提示
-- 后续实验建议
+## 4. Action Recommendations
+- Recommended action + rationale
+- Risk warnings
+- Follow-up experiment recommendations
 
-## 5. 附录
-- 统计方法说明
-- 数据质量检查
-- 完整指标明细表
+## 5. Appendix
+- Statistical method description
+- Data quality check
+- Complete metric detail table
 ```
 
-### 结构化报告数据示例
+### Structured Report Data Example
 
 ```json
 {
@@ -530,113 +530,113 @@ ab_test_result:
 }
 ```
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| ab_test_result | object | 是 | 实验结果根对象 |
-| ab_test_result.experiment_id | string | 是 | 实验ID |
-| ab_test_result.analyzed_at | string | 是 | 分析时间 |
-| ab_test_result.conclusion | string | 是 | 实验结论，枚举值：positive/negative/neutral/inconclusive |
-| ab_test_result.primary_metric | object | 是 | 主指标结果 |
-| ab_test_result.primary_metric.name | string | 是 | 主指标名称 |
-| ab_test_result.primary_metric.control.value | number | 是 | 对照组值 |
-| ab_test_result.primary_metric.treatment.value | number | 是 | 实验组值 |
-| ab_test_result.primary_metric.lift.relative | number | 是 | 相对提升 |
-| ab_test_result.primary_metric.statistics.p_value | number | 是 | p值 |
-| ab_test_result.primary_metric.statistics.statistically_significant | boolean | 是 | 是否统计显著 |
-| ab_test_result.guardrail_metrics | object | 是 | 护栏指标结果 |
-| ab_test_result.heterogeneous_effects | object | 否 | 异质性效应 |
-| ab_test_result.novelty_check | object | 是 | 新奇效应检测 |
-| ab_test_result.novelty_check.detected | boolean | 是 | 是否检测到新奇效应 |
-| ab_test_result.decision_recommendation | object | 是 | 决策建议 |
-| ab_test_result.decision_recommendation.action | string | 是 | 建议行动，枚举值：full_release/partial_release/no_release/continue_experiment |
-| ab_test_result.decision_recommendation.confidence | string | 是 | 置信度 |
-| experiment_id | string | 是 | 实验ID（报告） |
-| experiment_name | string | 是 | 实验名称（报告） |
-| report_date | string | 是 | 报告日期 |
-| summary | object | 是 | 统计结论摘要 |
-| summary.conclusion | string | 是 | 结论，枚举值：significant_positive/not_significant/significant_negative/marginal |
-| summary.recommendation | string | 是 | 建议，枚举值：ship_full/ship_conditional/extend/terminate/segmented |
-| summary.primary_metric | object | 是 | 主指标结果 |
-| summary.primary_metric.name | string | 是 | 主指标名称 |
-| summary.primary_metric.relative_lift | number | 是 | 相对提升 |
-| summary.primary_metric.p_value | number | 是 | p值 |
-| summary.guardrail_status | array | 是 | 护栏指标状态列表 |
-| heterogeneous_effects | array | 否 | 异质性效应分析 |
-| novelty_effect | object | 否 | 新奇效应评估 |
-| action_recommendation | object | 是 | 行动建议 |
-| action_recommendation.decision | string | 是 | 决策 |
-| action_recommendation.rationale | string | 是 | 理由 |
-| action_recommendation.risks | array | 是 | 风险列表 |
-| action_recommendation.next_experiments | array | 否 | 后续实验建议 |
+| ab_test_result | object | Yes | Experiment result root object |
+| ab_test_result.experiment_id | string | Yes | Experiment ID |
+| ab_test_result.analyzed_at | string | Yes | Analysis time |
+| ab_test_result.conclusion | string | Yes | Experiment conclusion, enum: positive/negative/neutral/inconclusive |
+| ab_test_result.primary_metric | object | Yes | Primary metric result |
+| ab_test_result.primary_metric.name | string | Yes | Primary metric name |
+| ab_test_result.primary_metric.control.value | number | Yes | Control group value |
+| ab_test_result.primary_metric.treatment.value | number | Yes | Treatment group value |
+| ab_test_result.primary_metric.lift.relative | number | Yes | Relative lift |
+| ab_test_result.primary_metric.statistics.p_value | number | Yes | p-value |
+| ab_test_result.primary_metric.statistics.statistically_significant | boolean | Yes | Whether statistically significant |
+| ab_test_result.guardrail_metrics | object | Yes | Guardrail metric result |
+| ab_test_result.heterogeneous_effects | object | No | Heterogeneous effects |
+| ab_test_result.novelty_check | object | Yes | Novelty effect detection |
+| ab_test_result.novelty_check.detected | boolean | Yes | Whether novelty effect detected |
+| ab_test_result.decision_recommendation | object | Yes | Decision recommendation |
+| ab_test_result.decision_recommendation.action | string | Yes | Recommended action, enum: full_release/partial_release/no_release/continue_experiment |
+| ab_test_result.decision_recommendation.confidence | string | Yes | Confidence level |
+| experiment_id | string | Yes | Experiment ID (report) |
+| experiment_name | string | Yes | Experiment name (report) |
+| report_date | string | Yes | Report date |
+| summary | object | Yes | Statistical conclusion summary |
+| summary.conclusion | string | Yes | Conclusion, enum: significant_positive/not_significant/significant_negative/marginal |
+| summary.recommendation | string | Yes | Recommendation, enum: ship_full/ship_conditional/extend/terminate/segmented |
+| summary.primary_metric | object | Yes | Primary metric result |
+| summary.primary_metric.name | string | Yes | Primary metric name |
+| summary.primary_metric.relative_lift | number | Yes | Relative lift |
+| summary.primary_metric.p_value | number | Yes | p-value |
+| summary.guardrail_status | array | Yes | Guardrail metric status list |
+| heterogeneous_effects | array | No | Heterogeneous effect analysis |
+| novelty_effect | object | No | Novelty effect assessment |
+| action_recommendation | object | Yes | Action recommendation |
+| action_recommendation.decision | string | Yes | Decision |
+| action_recommendation.rationale | string | Yes | Rationale |
+| action_recommendation.risks | array | Yes | Risk list |
+| action_recommendation.next_experiments | array | No | Follow-up experiment recommendations |
 
-## 上游变更响应
+## Upstream Change Response
 
-当上游输入发生变更时，本Skill的响应策略：
+When upstream inputs change, this Skill's response strategy:
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| 实验设计变更 | 统计检验参数和终止条件 | 更新统计检验配置，重新评估终止条件 |
-| 实验数据更新 | 统计检验和下钻分析 | 重新执行统计检验，更新异质性效应 |
-| 终止条件变更 | 实验运行监控 | 更新终止条件，重新评估是否达到终止标准 |
-| 产品背景变更 | 行动建议的业务针对性 | 重新评估行动建议，更新风险和后续实验建议 |
+| Experiment design change | Statistical test parameters and termination conditions | Update statistical test configuration, re-evaluate termination conditions |
+| Experiment data update | Statistical testing and drill-down analysis | Re-run statistical testing, update heterogeneous effects |
+| Termination condition change | Experiment run monitoring | Update termination conditions, re-evaluate whether termination criteria met |
+| Product background change | Business relevance of action recommendations | Re-evaluate action recommendations, update risks and follow-up experiment recommendations |
 
-当实验结果/报告自身变更时，对下游的通知机制：
+When experiment results/report themselves change, the downstream notification mechanism:
 
-| 结果/报告变更类型 | 通知范围 | 通知方式 |
+| Result/Report Change Type | Notification Scope | Notification Method |
 |-------------------|----------|----------|
-| 结论变更 | decision-dace | 标记结论变更，触发DACE Analyze |
-| 护栏指标触发告警 | decision-dace | 标记护栏告警，触发洞察转化 |
-| 决策建议变更 | decision-dace | 标记建议变更，触发DACE Conclude |
-| 行动建议变更 | decision-culture | 标记建议变更，触发报告推送 |
+| Conclusion change | decision-dace | Mark conclusion change, trigger DACE Analyze |
+| Guardrail metric triggers alert | decision-dace | Mark guardrail alert, trigger insight conversion |
+| Decision recommendation change | decision-dace | Mark recommendation change, trigger DACE Conclude |
+| Action recommendation change | decision-culture | Mark recommendation change, trigger report push |
 
 ---
 
-## 决策规则
+## Decision Rules
 
-| 条件组合 | 决策 |
+| Condition Combination | Decision |
 |---------|------|
-| 主指标显著+有意义，护栏安全 | 全量发布 |
-| 主指标显著，护栏有问题 | 分析护栏原因，再决策 |
-| 主指标不显著 | 继续实验或终止 |
-| 有新奇效应 | 延长实验 |
-| 异质性显著 | 分群体发布 |
+| Primary metric significant + meaningful, guardrail safe | Full release |
+| Primary metric significant, guardrail has issues | Analyze guardrail cause, then decide |
+| Primary metric not significant | Continue experiment or terminate |
+| Novelty effect present | Extend experiment |
+| Heterogeneity significant | Release by segment |
 
-## 质量检查
+## Quality Checks
 
-- [ ] 实验分组流量分配正确（P0）
-- [ ] 护栏指标未触发告警（P0）
-- [ ] 实验数据采集完整（P0）
-- [ ] 统计显著性计算正确（P0）
-- [ ] 统计结论与数据一致（P1）
-- [ ] 行动建议与结论一致（P1）
-- [ ] 护栏指标全覆盖（P1）
-- [ ] 异质性效应已分析（至少3个分群维度）（P2）
+- [ ] Experiment group traffic allocation correct (P0)
+- [ ] Guardrail metrics did not trigger alerts (P0)
+- [ ] Experiment data collection complete (P0)
+- [ ] Statistical significance calculation correct (P0)
+- [ ] Statistical conclusions consistent with data (P1)
+- [ ] Action recommendations consistent with conclusions (P1)
+- [ ] Guardrail metrics fully covered (P1)
+- [ ] Heterogeneous effects analyzed (at least 3 segment dimensions) (P2)
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失范围 | 降级方案 | 输出影响 |
+| Missing Scope | Degradation Plan | Output Impact |
 |----------|----------|----------|
-| 实验配置缺失 | 无法自动监控，需用户提供实验结果数据 | 无法执行运行中监控 |
-| 实验数据缺失 | 用户提供实验结果数据 → 直接分析 | 无法进行趋势分析和新奇效应检测 |
-| 实验配置 + 实验数据均缺失 | 用户提供实验结果数据 → 直接分析 | 输出基于用户数据的分析结果，趋势和新奇效应标注"待补充" |
-| 无实验设计方案 | 基于执行结果反推实验设计要素，标注"设计信息缺失" | 实验概述章节不完整 |
-| 无产品背景 | 聚焦统计结论本身，行动建议标注"需结合业务上下文" | 行动建议可能缺乏业务针对性 |
+| Experiment configuration missing | Cannot auto-monitor, user needs to provide experiment result data | Cannot execute in-run monitoring |
+| Experiment data missing | User provides experiment result data → direct analysis | Cannot perform trend analysis and novelty effect detection |
+| Experiment configuration + experiment data both missing | User provides experiment result data → direct analysis | Output based on user data analysis results, trend and novelty effect marked "to be supplemented" |
+| No experiment design plan | Reverse-engineer experiment design elements from execution results, mark "design info missing" | Experiment overview section incomplete |
+| No product background | Focus on statistical conclusions themselves, action recommendations marked "need business context" | Action recommendations may lack business relevance |
 
-### 数据获取说明
+### Data Acquisition Instructions
 
-当上游文件缺失时，需用户提供以下信息以支撑降级生成：
-- **实验结果数据**：实验组和对照组的样本量、指标均值、标准差等
-- **实验配置**（可选）：实验的分流比例、运行时间、指标定义
-- **统计显著性要求**（可选）：期望的置信水平和统计功效
-- **产品背景**（可选）：产品阶段、业务目标和历史实验
+When upstream files are missing, the following information is needed from the user to support degradation generation:
+- **Experiment result data**: Sample size, metric mean, standard deviation, etc. for experiment and control groups
+- **Experiment configuration** (optional): Traffic split ratio, run duration, metric definitions
+- **Statistical significance requirements** (optional): Desired confidence level and statistical power
+- **Product background** (optional): Product stage, business goals, and historical experiments
 
-### 执行频率
+### Execution Frequency
 
-- **运行中监控**：每4小时或每日
-- **结果分析**：达到终止条件时触发
-- **报告生成**：结果分析完成后自动触发
-- **自动告警**：P0问题立即触发
+- **In-run monitoring**: Every 4 hours or daily
+- **Result analysis**: Triggered when termination conditions are met
+- **Report generation**: Auto-triggered after result analysis completes
+- **Auto-alert**: P0 issues trigger immediately

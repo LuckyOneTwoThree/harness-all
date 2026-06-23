@@ -1,29 +1,29 @@
-# <设计任务名>
+# <design task name>
 
-> 来源：由 LOOP.md PLAN 阶段产出（内联在 LOOP 中，无独立 writing-plans skill）。
-> 加载时机：design skill / verify 读取。
-> 文件语义：覆盖写入（只保留最终通过的规格）。
+> Source: produced by the LOOP.md PLAN phase (inlined in LOOP; no standalone writing-plans skill).
+> Load timing: read by design skill / verify.
+> File semantics: overwrite write (only the final passed spec is kept).
 
-## 目标
+## Goal
 
-[一句话目标，来自 design-brief]
+[One-sentence goal, from design-brief]
 
-## 验收标准
+## Acceptance criteria
 
-- AC-001: [可验证的描述]
-- AC-002: [可验证的描述]
-- AC-003: [可验证的描述]
+- AC-001: [verifiable description]
+- AC-002: [verifiable description]
+- AC-003: [verifiable description]
 
-## 任务拆解
+## Task breakdown
 
-- [ ] T1: [任务1，2-5 分钟能完成]
-- [ ] T2: [任务2]
-- [ ] T3: [任务3]
+- [ ] T1: [task 1, completable in 2-5 minutes]
+- [ ] T2: [task 2]
+- [ ] T3: [task 3]
 
-## 设计方案
+## Design plan
 
-[简要：设计哪些页面/组件、关键设计决策]
+[Briefly: which pages / components to design, key design decisions]
 
-## 不做的事
+## Out of scope
 
-[明确边界，避免范围蔓延]
+[Explicit boundaries to avoid scope creep]

@@ -1,21 +1,21 @@
 ---
 name: experiment-design
-description: 当需要设计新的A/B测试实验时使用。A/B测试自动设计，AI自动执行假设结构化、指标选择、样本量计算、分流方案设计和实验配置生成。关键词：A/B测试设计、实验设计、样本量计算、分流方案、假设检验、做个AB测试、想验证一下这个改动、怎么设计实验。
+description: Used when designing a new A/B test experiment. A/B test auto-design, AI automatically performs hypothesis structuring, metric selection, sample size calculation, traffic split design, and experiment configuration generation. Keywords: A/B test design, experiment design, sample size calculation, traffic split plan, hypothesis testing, do an AB test, want to validate this change, how to design an experiment.
 metadata:
-  module: "产品度量运营"
-  sub-module: "实验验证"
+  module: "Product Metrics & Operations"
+  sub-module: "Experiment Validation"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["互联网", "通用"]
+  domain_tags: ["Internet", "General"]
   trigger_examples:
-    - "我想验证新首页是否提升转化，帮我设计AB测试"
-    - "这个功能改动需要多少样本量"
-    - "帮我设计一个分流实验方案"
+    - "I want to validate if the new homepage improves conversion, help me design an AB test"
+    - "How many samples does this feature change need"
+    - "Help me design a traffic split experiment plan"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出实验设计和假设"
-  deep_description: "完整设计 + 统计功效计算 + 多变量实验方案 + 结果解读框架"
+  quick_description: "Directly output experiment design and hypothesis"
+  deep_description: "Full design + statistical power calculation + multivariate experiment plan + result interpretation framework"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -26,38 +26,38 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# A/B测试自动设计
+# A/B Test Auto-Design
 
-## 核心原则
+## Core Principles
 
-1. **假设先于实验**：没有结构化假设的实验是盲目的探索，If-Then-Because-For缺一不可
-2. **护栏与主指标同等重要**：主指标衡量"是否有效"，护栏指标衡量"是否安全"，两者缺一不可
-3. **样本量决定可信度**：统计功效不足的实验不如不做，MDE和样本量必须在设计阶段确定
+1. **Hypothesis before experiment**: Experiments without structured hypotheses are blind exploration; If-Then-Because-For are all indispensable
+2. **Guardrail metrics are as important as primary metrics**: Primary metrics measure "whether it works", guardrail metrics measure "whether it's safe"; both are indispensable
+3. **Sample size determines credibility**: Experiments with insufficient statistical power are worse than no experiment; MDE and sample size must be determined in the design phase
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 假设陈述 | string | 是 | 用户提供 | 业务问题或改进想法 |
-| 可用流量 | number | 是 | 用户提供 | 可参与实验的用户量 |
-| 指标体系 | JSON | ○ | docs/metrics/metrics-system.md | 产品关键指标定义 |
-| 历史数据 | JSON | ○ | analysis-funnel / analysis-retention | 用于样本量计算的基线数据 |
+| Hypothesis statement | string | Yes | User-provided | Business problem or improvement idea |
+| Available traffic | number | Yes | User-provided | Number of users eligible for the experiment |
+| Metric system | JSON | ○ | docs/metrics/metrics-system.md | Product key metric definitions |
+| Historical data | JSON | ○ | analysis-funnel / analysis-retention | Baseline data for sample size calculation |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1：假设结构化 [核心]
+### Step 1: Hypothesis Structuring [Core]
 
-将原始假设转化为结构化的Hypothesis：
+Transform the raw hypothesis into a structured Hypothesis:
 
 ```
-原始假设 → 结构化Hypothesis
+Raw hypothesis → Structured Hypothesis
 ```
 
-**结构化模板**：
+**Structured template**:
 
 ```
 If [we do this change]
@@ -66,390 +66,390 @@ Because [our hypothesis about why]
 For [these users]
 ```
 
-**示例**：
+**Example**:
 
 ```
-原始：简化注册流程能提升转化率
+Raw: Simplifying the registration flow can improve conversion rate
 
-结构化后：
+After structuring:
 If we simplify the registration flow from 5 steps to 3 steps
 Then the registration completion rate will increase by 10%
 Because users face less friction
 For all new users on iOS and Android
 ```
 
-### Step 2：指标自动选择 [核心]
+### Step 2: Metric Auto-Selection [Core]
 
-#### 主指标（Primary Metric）
+#### Primary Metric
 
-| 选择标准 | 说明 |
+| Selection Criteria | Description |
 |---------|------|
-| 直接衡量假设 | 与假设中的"then"部分对应 |
-| 敏感度高 | 能检测到预期变化 |
-| 业务相关 | 与核心业务目标相关 |
+| Directly measures hypothesis | Corresponds to the "then" part of the hypothesis |
+| High sensitivity | Can detect expected changes |
+| Business relevant | Related to core business goals |
 
-#### 护栏指标（Guardrail Metrics）
+#### Guardrail Metrics
 
-防止实验对产品造成负面影响：
+Prevent experiments from having negative impact on the product:
 
-| 类型 | 示例 | 阈值 |
+| Type | Example | Threshold |
 |-----|------|------|
-| 核心留存 | D7留存 | 不得下降 > 2% |
-| 收入指标 | ARPU | 不得下降 > 5% |
-| 技术指标 | 页面加载时间 | 不得增加 > 20% |
-| 体验指标 | 崩溃率 | 不得增加 > 50% |
+| Core retention | D7 retention | Must not decline > 2% |
+| Revenue metric | ARPU | Must not decline > 5% |
+| Technical metric | Page load time | Must not increase > 20% |
+| Experience metric | Crash rate | Must not increase > 50% |
 
-#### 辅助指标（Secondary Metrics）
+#### Secondary Metrics
 
-提供额外洞察：
+Provide additional insights:
 
-- 细分维度指标（下钻用）
-- 相关联指标（归因用）
-- 探索性指标（发现用）
+- Segmentation dimension metrics (for drill-down)
+- Correlation metrics (for attribution)
+- Exploratory metrics (for discovery)
 
-### Step 3：样本量自动计算 [核心]
+### Step 3: Sample Size Auto-Calculation [Core]
 
 ```
-样本量计算公式：
+Sample size calculation formula:
 n = 2 * (Zα + Zβ)² * p̄(1-p̄) / MDE²
 
-其中：
-- Zα: 显著性水平（通常1.96 for α=0.05）
-- Zβ: 统计功效（通常0.84 for power=80%）
-- p̄: 基线转化率
-- MDE: 最小可检测效应
+Where:
+- Zα: Significance level (usually 1.96 for α=0.05)
+- Zβ: Statistical power (usually 0.84 for power=80%)
+- p̄: Baseline conversion rate
+- MDE: Minimum detectable effect
 ```
 
-**计算器配置**：
+**Calculator configuration**:
 
 ```yaml
 sample_size_calculation:
   significance_level: 0.05
   statistical_power: 0.80
-  
-  # 主指标参数
+
+  # Primary metric parameters
   primary_metric:
-    baseline_rate: 0.15  # 基线转化率 15%
-    minimum_detectable_effect: 0.10  # 最小可检测提升 10%
-    relative_mde: 0.015  # 绝对提升 1.5% (15% * 10%)
-    
+    baseline_rate: 0.15  # Baseline conversion rate 15%
+    minimum_detectable_effect: 0.10  # Minimum detectable lift 10%
+    relative_mde: 0.015  # Absolute lift 1.5% (15% * 10%)
+
   result:
     sample_size_per_group: 12400
     total_sample_size: 24800
     expected_duration_days: 7
 ```
 
-### Step 4：分流方案设计 [核心]
+### Step 4: Traffic Split Design [Core]
 
-#### 分流原则
+#### Split Principles
 
-| 原则 | 说明 |
+| Principle | Description |
 |-----|------|
-| 随机性 | 用户随机分配 |
-| 均匀性 | 各组特征分布一致 |
-| 独立性 | 用户只在一个实验组 |
-| 一致性 | 用户体验稳定 |
+| Randomness | Users randomly assigned |
+| Uniformity | Each group's feature distribution consistent |
+| Independence | Users only in one experiment group |
+| Consistency | User experience stable |
 
-#### 分流层级
+#### Split Layers
 
 ```
 Traffic
-├── Layer 1: 体验一致性实验
-├── Layer 2: 核心功能实验
-├── Layer 3: 个性化实验
-└── Layer 4: 营销实验
+├── Layer 1: Experience consistency experiments
+├── Layer 2: Core functionality experiments
+├── Layer 3: Personalization experiments
+└── Layer 4: Marketing experiments
 ```
 
-#### 分流比例
+#### Split Ratios
 
-| 场景 | 推荐比例 | 说明 |
+| Scenario | Recommended Ratio | Description |
 |-----|---------|------|
-| 标准测试 | 50/50 | 最高统计功效 |
-| 高风险 | 90/10 | 减少影响面 |
-| 高不确定性 | 50/25/25 | 多方案对比 |
-| 灰度发布 | 95/5 | 最小流量验证 |
+| Standard test | 50/50 | Highest statistical power |
+| High risk | 90/10 | Reduce impact surface |
+| High uncertainty | 50/25/25 | Multi-option comparison |
+| Canary release | 95/5 | Minimum traffic validation |
 
-### Step 5：实验配置生成 [核心]
+### Step 5: Experiment Configuration Generation [Core]
 
-生成完整的实验配置：
+Generate complete experiment configuration:
 
 ```yaml
 ab_test_design:
   created_at: "2024-01-15T10:00:00Z"
-  
-  # 实验基本信息
+
+  # Experiment basic info
   experiment:
     id: "exp_20240115_simplified_register"
-    name: "简化注册流程实验"
+    name: "Simplified Registration Flow Experiment"
     owner: "product_team"
     priority: "high"
-  
-  # 结构化假设
+
+  # Structured hypothesis
   hypothesis:
-    original: "简化注册流程能提升转化率"
+    original: "Simplifying the registration flow can improve conversion rate"
     structured: |
       If we simplify the registration flow from 5 steps to 3 steps,
       then the registration completion rate will increase by 10%,
       because users face less friction,
       for all new users on iOS and Android.
-    
+
     components:
       change: "Simplify registration from 5 steps to 3 steps"
       expected_outcome: "Registration rate +10%"
       mechanism: "Reduced user friction"
       target_users: "New users on iOS and Android"
-  
-  # 指标选择
+
+  # Metric selection
   metrics:
     primary_metric:
       name: "registration_completion_rate"
-      definition: "完成注册的用户数 / 开始注册的用户数"
+      definition: "Number of users who completed registration / Number of users who started registration"
       baseline_value: 0.35
-      minimum_detectable_effect: 0.10  # 10%相对提升
-      
+      minimum_detectable_effect: 0.10  # 10% relative lift
+
     guardrail_metrics:
       - name: "d7_retention_rate"
-        definition: "注册后7日留存率"
+        definition: "7-day retention rate after registration"
         baseline_value: 0.42
-        acceptable_change: -0.02  # 允许下降2%
-      # ... 同结构可扩展
-    
+        acceptable_change: -0.02  # Allow 2% decline
+      # ... same structure can be extended
+
     secondary_metrics:
       - name: "registration_abandon_rate"
-        definition: "注册中断率"
-      # ... 同结构可扩展
-  
-  # 样本量计算
+        definition: "Registration abandonment rate"
+      # ... same structure can be extended
+
+  # Sample size calculation
   sample_size:
     per_group: 12400
     total: 24800
     daily_eligible_users: 4000
     expected_duration_days: 7
     minimum_duration_days: 5
-    
+
     assumptions:
       baseline_rate: 0.35
       mde: 0.10
       significance_level: 0.05
       statistical_power: 0.80
-  
-  # 分流方案
+
+  # Traffic split plan
   traffic_split:
     strategy: "random"
     allocation:
       control: 50
       treatment: 50
-    
+
     targeting:
-      platform: ["ios"]  # ... 同结构可扩展
+      platform: ["ios"]  # ... same structure can be extended
       user_type: "new_user"
       exclusion:
         - registered_users
-        # ... 同结构可扩展
-        
+        # ... same structure can be extended
+
     hash_salt: "exp_reg_2024_v1"
-    
-  # 终止条件
+
+  # Termination conditions
   termination_conditions:
     automatic:
-      - condition: "达到目标样本量"
-        action: "触发结果分析"
-      # ... 同结构可扩展
-        
+      - condition: "Reached target sample size"
+        action: "Trigger result analysis"
+      # ... same structure can be extended
+
     manual:
-      - condition: "护栏指标显著下降"
-        action: "告警+人工决策"
-      # ... 同结构可扩展
-        
+      - condition: "Guardrail metric significantly declined"
+        action: "Alert + human decision"
+      # ... same structure can be extended
+
     minimum_runtime_days: 5
     maximum_runtime_days: 30
-  
-  # 实验变体
+
+  # Experiment variants
   variants:
     control:
-      name: "当前注册流程"
-      description: "5步注册流程，包含邮箱、手机号验证"
+      name: "Current registration flow"
+      description: "5-step registration flow, including email and phone verification"
       config: {}
-      
+
     treatment:
-      name: "简化注册流程"
-      description: "3步注册流程，仅手机号验证"
+      name: "Simplified registration flow"
+      description: "3-step registration flow, phone verification only"
       config:
         steps: 3
         required_fields: ["phone"]
         optional_fields: ["email", "nickname"]
         skip_verification: false
-  
-  # 技术配置
+
+  # Technical configuration
   technical:
     platform: "internal_ab_platform"
     layer: 2
     mutex_group: "registration_flow"
-    traffic_allocation: 100  # 100%可用流量
-  
-  # 风险评估
+    traffic_allocation: 100  # 100% of available traffic
+
+  # Risk assessment
   risk_assessment:
     overall_risk: "low"
     reasons:
-      - "仅影响新用户注册流程"
-      # ... 同结构可扩展
+      - "Only affects new user registration flow"
+      # ... same structure can be extended
     mitigation:
-      - "配置实时监控"
-      # ... 同结构可扩展
+      - "Configure real-time monitoring"
+      # ... same structure can be extended
 ```
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 实验设计和假设 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整设计 + 统计功效计算 + 多变量实验方案 + 结果解读框架 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Experiment design and hypothesis | Core conclusion + minimum viable artifact |
+| standard | Full artifact (current default) | Full artifact, includes all Step outputs |
+| deep | Full design + statistical power calculation + multivariate experiment plan + result interpretation framework | Full artifact + extended analysis + deep inference |
 
-## 输出
+## Output
 
-**存储路径**：`docs/metrics/experiment-report.md（“实验设计”章节）`
+**Storage path**: `docs/metrics/experiment-report.md ("Experiment Design" section)`
 
-**输出文件**：experiment_design.json
+**Output file**: experiment_design.json
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["hypothesis", "primary_metric", "sample_size", "traffic_allocation"],
   "properties": {
-    "hypothesis": {"type": "object", "description": "结构化假设，包含If-Then-Because-For"},
-    "primary_metric": {"type": "object", "description": "主指标定义，包含名称和计算方式"},
-    "guardrail_metrics": {"type": "array", "description": "护栏指标列表，覆盖留存/收入/技术维度"},
-    "sample_size": {"type": "object", "description": "样本量估算，包含计算参数和结果"},
-    "traffic_allocation": {"type": "object", "description": "分流方案，包含比例和分层策略"},
-    "termination_conditions": {"type": "object", "description": "终止条件，包含提前终止和最大周期"},
-    "risk_assessment": {"type": "object", "description": "风险评估和缓解措施"}
+    "hypothesis": {"type": "object", "description": "Structured hypothesis, containing If-Then-Because-For"},
+    "primary_metric": {"type": "object", "description": "Primary metric definition, including name and calculation method"},
+    "guardrail_metrics": {"type": "array", "description": "Guardrail metric list, covering retention/revenue/technical dimensions"},
+    "sample_size": {"type": "object", "description": "Sample size estimation, including calculation parameters and results"},
+    "traffic_allocation": {"type": "object", "description": "Traffic split plan, including ratios and layering strategy"},
+    "termination_conditions": {"type": "object", "description": "Termination conditions, including early termination and maximum duration"},
+    "risk_assessment": {"type": "object", "description": "Risk assessment and mitigation measures"}
   }
 }
 ```
 
-### 必填输出
+### Required Outputs
 
-1. **实验设计方案**：完整的实验配置
-2. **样本量估算**：基于统计计算的样本需求
-3. **风险评估**：实验风险和缓解措施
+1. **Experiment design plan**: Complete experiment configuration
+2. **Sample size estimation**: Sample requirements based on statistical calculation
+3. **Risk assessment**: Experiment risks and mitigation measures
 
-### 辅助输出
+### Auxiliary Outputs
 
-1. **历史参考**：类似实验的结果参考
-2. **建议清单**：上线前检查项
-3. **监控配置**：实验监控面板配置
+1. **Historical reference**: Results reference from similar experiments
+2. **Recommendation list**: Pre-launch checklist items
+3. **Monitoring configuration**: Experiment monitoring dashboard configuration
 
-## 执行检查清单
+## Execution Checklist
 
 ```
-□ 假设结构化完成
-□ 主指标明确定义
-□ 护栏指标设置
-□ 样本量计算完成
-□ 分流方案设计完成
-□ 终止条件设置
-□ 技术配置完成
-□ 风险评估完成
-□ 实验配置审核通过
+□ Hypothesis structuring complete
+□ Primary metric clearly defined
+□ Guardrail metrics set
+□ Sample size calculation complete
+□ Traffic split plan design complete
+□ Termination conditions set
+□ Technical configuration complete
+□ Risk assessment complete
+□ Experiment configuration reviewed and approved
 ```
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| ab_test_design | object | 是 | 实验设计根对象 |
-| ab_test_design.experiment | object | 是 | 实验基本信息 |
-| ab_test_design.experiment.id | string | 是 | 实验ID |
-| ab_test_design.experiment.name | string | 是 | 实验名称 |
-| ab_test_design.hypothesis | object | 是 | 结构化假设 |
-| ab_test_design.hypothesis.structured | string | 是 | If-Then-Because-For格式假设 |
-| ab_test_design.metrics | object | 是 | 指标体系 |
-| ab_test_design.metrics.primary_metric | object | 是 | 主指标 |
-| ab_test_design.metrics.primary_metric.name | string | 是 | 主指标名称 |
-| ab_test_design.metrics.primary_metric.baseline_value | number | 是 | 基线值 |
-| ab_test_design.metrics.guardrail_metrics | array | 是 | 护栏指标列表，至少2个 |
-| ab_test_design.sample_size | object | 是 | 样本量计算 |
-| ab_test_design.sample_size.per_group | number | 是 | 每组样本量 |
-| ab_test_design.sample_size.total | number | 是 | 总样本量 |
-| ab_test_design.sample_size.expected_duration_days | number | 是 | 预期天数 |
-| ab_test_design.traffic_split | object | 是 | 分流方案 |
-| ab_test_design.termination_conditions | object | 是 | 终止条件 |
-| ab_test_design.risk_assessment | object | 是 | 风险评估 |
+| ab_test_design | object | Yes | Experiment design root object |
+| ab_test_design.experiment | object | Yes | Experiment basic info |
+| ab_test_design.experiment.id | string | Yes | Experiment ID |
+| ab_test_design.experiment.name | string | Yes | Experiment name |
+| ab_test_design.hypothesis | object | Yes | Structured hypothesis |
+| ab_test_design.hypothesis.structured | string | Yes | If-Then-Because-For format hypothesis |
+| ab_test_design.metrics | object | Yes | Metric system |
+| ab_test_design.metrics.primary_metric | object | Yes | Primary metric |
+| ab_test_design.metrics.primary_metric.name | string | Yes | Primary metric name |
+| ab_test_design.metrics.primary_metric.baseline_value | number | Yes | Baseline value |
+| ab_test_design.metrics.guardrail_metrics | array | Yes | Guardrail metric list, at least 2 |
+| ab_test_design.sample_size | object | Yes | Sample size calculation |
+| ab_test_design.sample_size.per_group | number | Yes | Sample size per group |
+| ab_test_design.sample_size.total | number | Yes | Total sample size |
+| ab_test_design.sample_size.expected_duration_days | number | Yes | Expected days |
+| ab_test_design.traffic_split | object | Yes | Traffic split plan |
+| ab_test_design.termination_conditions | object | Yes | Termination conditions |
+| ab_test_design.risk_assessment | object | Yes | Risk assessment |
 
-## 上游变更响应
+## Upstream Change Response
 
-当上游输入发生变更时，本Skill的响应策略：
+When upstream inputs change, this Skill's response strategy:
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| 假设陈述变更 | 结构化假设和指标选择 | 重新结构化假设，更新指标选择 |
-| 可用流量变更 | 样本量计算和实验周期 | 重新计算样本量，更新预期实验周期 |
-| 指标体系变更 | 主指标和护栏指标 | 更新指标选择，重新评估护栏指标覆盖度 |
-| 历史数据变更 | 基线值和MDE | 更新基线值，重新计算样本量 |
+| Hypothesis statement change | Structured hypothesis and metric selection | Re-structure hypothesis, update metric selection |
+| Available traffic change | Sample size calculation and experiment duration | Recalculate sample size, update expected experiment duration |
+| Metric system change | Primary metric and guardrail metrics | Update metric selection, re-evaluate guardrail metric coverage |
+| Historical data change | Baseline value and MDE | Update baseline value, recalculate sample size |
 
-当实验设计自身变更时，对下游的通知机制：
+When experiment design itself changes, the downstream notification mechanism:
 
-| 设计变更类型 | 通知范围 | 通知方式 |
+| Design Change Type | Notification Scope | Notification Method |
 |-------------|----------|----------|
-| 主指标变更 | experiment-execution | 标记主指标变更，触发执行配置更新 |
-| 护栏指标变更 | experiment-execution | 标记护栏变更，触发监控配置更新 |
-| 分流方案变更 | experiment-execution | 标记分流变更，触发分流配置更新 |
+| Primary metric change | experiment-execution | Mark primary metric change, trigger execution configuration update |
+| Guardrail metric change | experiment-execution | Mark guardrail change, trigger monitoring configuration update |
+| Traffic split plan change | experiment-execution | Mark traffic split change, trigger split configuration update |
 
 ---
 
-## 决策规则
+## Decision Rules
 
-| 情况 | 处理方式 |
+| Situation | Handling |
 |------|----------|
-| 可用流量<样本量需求 | 延长实验周期或扩大分流比例 |
-| 护栏指标阈值被突破 | 暂停实验，人工决策 |
-| MDE过小导致样本量过大 | 调整MDE或接受更长实验周期 |
-| 多实验争抢同一流量层 | 按优先级排队或使用正交分层 |
+| Available traffic < sample size requirement | Extend experiment duration or increase traffic split ratio |
+| Guardrail metric threshold breached | Pause experiment, human decision |
+| MDE too small leading to excessive sample size | Adjust MDE or accept longer experiment duration |
+| Multiple experiments competing for same traffic layer | Queue by priority or use orthogonal layering |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 假设已结构化（If-Then-Because-For）
-- [ ] 主指标与假设直接对应
+- [ ] Hypothesis structured (If-Then-Because-For)
+- [ ] Primary metric directly corresponds to hypothesis
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 护栏指标覆盖留存、收入、技术三个维度
-- [ ] 样本量计算参数有据可依
+- [ ] Guardrail metrics cover retention, revenue, and technical dimensions
+- [ ] Sample size calculation parameters are justified
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep inference and roadmap generated)
+- [ ] Decision record complete (key decisions have rationale and alternatives)
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失范围 | 降级方案 | 输出影响 |
+| Missing Scope | Degradation Plan | Output Impact |
 |----------|----------|----------|
-| 假设陈述缺失 | 无法执行，需用户描述假设 | - |
-| 可用流量缺失 | 使用保守默认值（总流量5%），标注"待确认" | 样本量计算基于保守假设，实验周期可能偏长 |
-| 指标体系缺失 | 基于假设描述推断主指标和护栏指标，标注"待确认" | 指标选择基于推断，可能不全面 |
-| 假设陈述 + 可用流量 + 指标体系均缺失 | 用户描述假设 → 基于描述设计实验 | 输出实验设计方案，关键参数标注"待确认" |
+| Hypothesis statement missing | Cannot execute, user needs to describe hypothesis | - |
+| Available traffic missing | Use conservative default value (5% of total traffic), mark "to be confirmed" | Sample size calculation based on conservative assumption, experiment duration may be longer |
+| Metric system missing | Infer primary and guardrail metrics based on hypothesis description, mark "to be confirmed" | Metric selection based on inference, may not be comprehensive |
+| Hypothesis statement + available traffic + metric system all missing | User describes hypothesis → design experiment based on description | Output experiment design plan, key parameters marked "to be confirmed" |
 
-### 数据获取说明
+### Data Acquisition Instructions
 
-当上游文件缺失时，需用户提供以下信息以支撑降级生成：
-- **假设描述**：想要验证的改进想法和预期效果
-- **可用流量**（可选）：可参与实验的用户量或流量比例
-- **关键指标**（可选）：实验关注的主要指标和护栏指标
+When upstream files are missing, the following information is needed from the user to support degradation generation:
+- **Hypothesis description**: The improvement idea and expected effect to be validated
+- **Available traffic** (optional): Number of users or traffic ratio eligible for the experiment
+- **Key metrics** (optional): Primary metrics and guardrail metrics the experiment focuses on
 
-## 设计原则
+## Design Principles
 
-| 原则 | 说明 |
+| Principle | Description |
 |-----|------|
-| 单一变量 | 每次实验只改变一个因素 |
-| 足够样本 | 确保统计功效 |
-| 合理周期 | 覆盖完整用户周期 |
-| 护栏保护 | 防止负向影响 |
-| 可重复 | 支持重复验证 |
+| Single variable | Only change one factor per experiment |
+| Sufficient sample | Ensure statistical power |
+| Reasonable duration | Cover complete user cycle |
+| Guardrail protection | Prevent negative impact |
+| Repeatable | Support repeated validation |

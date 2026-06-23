@@ -1,11 +1,11 @@
 ---
 name: incident-mitigation
-description: 故障止血与缓解，执行白名单操作快速恢复服务（回滚/扩容/重启/降级）
+description: Incident mitigation and stop-the-bleeding, executing whitelisted operations to quickly recover services (rollback / scale-out / restart / degrade)
 triggers:
-  - P0/P1 故障需要紧急止血时
-  - incident-detection 完成分级后
-  - 用户要求"紧急恢复服务"时
-  - 监控告警显示服务不可用时
+  - When a P0/P1 incident requires emergency stop-the-bleeding
+  - After incident-detection completes severity classification
+  - When the user requests "emergency service recovery"
+  - When monitoring alerts indicate service unavailable
 reads:
   - loops/specs/<incident-id>/spec.md
   - loops/specs/<incident-id>/state.yaml
@@ -24,161 +24,161 @@ operation_tier: mutate-staging
 requires_approval: true
 ---
 
-# Incident Mitigation — 故障止血与缓解
+# Incident Mitigation — Incident Stop-the-Bleeding and Mitigation
 
-## 铁律
+## Ground Rules
 
-1. **止血优先于根因** —— 先恢复服务，再分析原因
-2. **白名单操作** —— 只执行安全操作（回滚/扩容/重启/降级），不执行破坏性操作
-3. **生产环境需人类确认** —— P0 止血措施必须人类口头确认后执行
-4. **止血后必须验证** —— 确认服务恢复，不是"执行了就行"
-5. **记录所有操作** —— 止血过程全程记录，便于复盘
+1. **Stop the bleeding before root cause** — recover the service first, then analyze the cause
+2. **Whitelisted operations only** — only execute safe operations (rollback / scale-out / restart / degrade), no destructive operations
+3. **Production requires human confirmation** — P0 stop-the-bleeding measures must be verbally confirmed by humans before execution
+4. **Must verify after stop-the-bleeding** — confirm service recovery, not just "executed"
+5. **Record all operations** — the entire stop-the-bleeding process is recorded for post-mortem
 
-## 流程
+## Process
 
-### 1. 评估止血方案
+### 1. Assess Stop-the-Bleeding Options
 
-读取 `spec.md` 了解故障现象，结合 `knowledge-base.md` 历史经验，评估可选止血方案：
+Read `spec.md` to understand the incident phenomenon, combine with `knowledge-base.md` historical experience, and assess available stop-the-bleeding options:
 
-| 止血方式 | 适用场景 | 时效 | 风险 |
+| Method | Applicable Scenario | Time | Risk |
 |---------|---------|------|------|
-| **回滚** | 新版本导致的故障 | 1-5 分钟 | 低（回到已知良好版本） |
-| **扩容** | 流量激增/资源不足 | 2-10 分钟 | 低（成本增加） |
-| **重启** | 内存泄漏/死锁 | 1-3 分钟 | 中（短暂中断） |
-| **降级** | 依赖服务故障 | 即时 | 中（功能受限） |
-| **熔断** | 防止级联失败 | 即时 | 中（影响下游） |
-| **限流** | 保护后端 | 即时 | 中（拒绝部分请求） |
+| **Rollback** | Incident caused by new version | 1-5 minutes | Low (back to known-good version) |
+| **Scale out** | Traffic spike / insufficient resources | 2-10 minutes | Low (cost increase) |
+| **Restart** | Memory leak / deadlock | 1-3 minutes | Medium (brief interruption) |
+| **Degrade** | Dependency service failure | Instant | Medium (limited functionality) |
+| **Circuit break** | Prevent cascading failure | Instant | Medium (affects downstream) |
+| **Rate limit** | Protect backend | Instant | Medium (rejects some requests) |
 
-### 2. 选择止血策略
+### 2. Select Stop-the-Bleeding Strategy
 
-**优先级**：回滚 > 扩容 > 重启 > 降级 > 熔断 > 限流
+**Priority**: Rollback > Scale out > Restart > Degrade > Circuit break > Rate limit
 
-**决策树**：
+**Decision tree**:
 ```
-故障是否由近期部署引起?
-  → 是: 回滚到上一版本
-  → 否: 继续判断
+Is the incident caused by a recent deployment?
+  → Yes: Roll back to the previous version
+  → No: Continue
 
-是否资源不足（CPU/内存/连接）?
-  → 是: 扩容
-  → 否: 继续判断
+Are resources insufficient (CPU / memory / connections)?
+  → Yes: Scale out
+  → No: Continue
 
-是否单实例异常（其他正常）?
-  → 是: 重启异常实例
-  → 否: 继续判断
+Is it a single-instance anomaly (others normal)?
+  → Yes: Restart the abnormal instance
+  → No: Continue
 
-是否依赖服务故障?
-  → 是: 降级（返回缓存/默认值）
-  → 否: 限流保护 + 等待根因分析
+Is a dependency service failing?
+  → Yes: Degrade (return cache / default values)
+  → No: Rate limit protection + wait for root cause analysis
 ```
 
-### 3. 执行止血（按环境分层）
+### 3. Execute Stop-the-Bleeding (by environment tier)
 
-#### 回滚（调用 rollback skill）
-- staging：Agent 直接执行
-- production：Agent 生成 GitOps revert PR + 人类确认
-- 紧急情况：Agent 建议，人类口头确认后执行 `kubectl rollout undo`
+#### Rollback (invoke the rollback skill)
+- staging: Agent executes directly
+- production: Agent generates a GitOps revert PR + human confirmation
+- Emergency: Agent recommends, after human verbal confirmation execute `kubectl rollout undo`
 
-#### 扩容
+#### Scale out
 ```bash
-# HPA 手动扩容
+# HPA manual scale-out
 kubectl autoscale deployment <app> --min=5 --max=20 --cpu-percent=70
 
-# 或直接修改副本数
+# Or directly modify replica count
 kubectl scale deployment <app> --replicas=10
 ```
-- staging：Agent 直接执行
-- production：Agent 建议，人类确认后执行
+- staging: Agent executes directly
+- production: Agent recommends, after human confirmation execute
 
-#### 重启
+#### Restart
 ```bash
-# 重启异常 Pod
+# Restart abnormal Pod
 kubectl delete pod <pod-name> -n <namespace>
 
-# 或滚动重启整个 Deployment
+# Or rolling restart the entire Deployment
 kubectl rollout restart deployment <app> -n <namespace>
 ```
-- staging：Agent 直接执行
-- production：Agent 建议，人类确认后执行
+- staging: Agent executes directly
+- production: Agent recommends, after human confirmation execute
 
-#### 降级
-修改配置启用降级模式：
+#### Degrade
+Modify config to enable degradation mode:
 ```yaml
-# ConfigMap 修改
+# ConfigMap modification
 degradation:
   enabled: true
-  fallback: cache  # 返回缓存数据
-  features_disabled: [recommendation, search]  # 关闭非核心功能
+  fallback: cache  # return cached data
+  features_disabled: [recommendation, search]  # disable non-core features
 ```
-- 通过 GitOps PR 修改
-- 紧急情况：Agent 直接 patch ConfigMap + 重启
+- Modify via GitOps PR
+- Emergency: Agent directly patches ConfigMap + restart
 
-### 4. 验证止血效果
+### 4. Verify Stop-the-Bleeding Effect
 
-调用 `deployment-verify` skill：
-- 错误率下降到正常水平 ✓
-- 延迟恢复正常 ✓
-- 业务指标恢复 ✓
-- 告警消除 ✓
+Invoke the `deployment-verify` skill:
+- Error rate dropped to normal levels ✓
+- Latency returned to normal ✓
+- Business metrics recovered ✓
+- Alerts cleared ✓
 
-### 5. 记录止血过程
+### 5. Record the Stop-the-Bleeding Process
 
 ```
-## 止血记录
-- 故障 ID: [INC-xxx]
-- 止血方案: [回滚/扩容/重启/降级]
-- 执行时间: [ISO 8601]
-- 执行环境: [staging/production]
-- 审批方式: [Agent 自动/人类确认]
-- 验证结果: [恢复/部分恢复/未恢复]
-- 恢复耗时: [从止血决策到服务恢复]
-- 后续动作: [根因分析/观察/修复]
+## Stop-the-Bleeding Record
+- Incident ID: [INC-xxx]
+- Method: [rollback / scale out / restart / degrade]
+- Execution time: [ISO 8601]
+- Environment: [staging/production]
+- Approval method: [Agent auto / human confirmation]
+- Verification result: [recovered / partially recovered / not recovered]
+- Recovery duration: [from stop-the-bleeding decision to service recovery]
+- Next action: [root cause analysis / observe / fix]
 ```
 
-追加到 `iterations.log`。
+Append to `iterations.log`.
 
-### 6. 决定下一步
+### 6. Decide Next Step
 
-- **止血成功**：进入 `root-cause-analysis` 深挖根因
-- **部分恢复**：继续止血（尝试其他方案）或升级处理
-- **止血失败**：升级到 P0，请求人类紧急介入
+- **Stop-the-bleeding succeeded**: enter `root-cause-analysis` to dig into the root cause
+- **Partially recovered**: continue stop-the-bleeding (try other options) or escalate
+- **Stop-the-bleeding failed**: escalate to P0, request emergency human intervention
 
-## 禁止事项
+## Prohibitions
 
-- 不执行破坏性操作（delete namespace / drop table / rm -rf）
-- 不在 production 直接 kubectl delete（除非紧急且人类确认）
-- 不跳过验证就声称"已恢复"
-- 不在止血过程中同时修复 bug（先恢复，再修复）
-- 不隐瞒止血失败（必须升级并通知）
+- Do not execute destructive operations (delete namespace / drop table / rm -rf)
+- Do not run kubectl delete directly in production (unless emergency and human confirmed)
+- Do not claim "recovered" without verification
+- Do not fix bugs while stop-the-bleeding (recover first, fix later)
+- Do not conceal stop-the-bleeding failure (must escalate and notify)
 
-## 与 LOOP 的关系
+## Relationship to LOOP
 
-**所属 LOOP 类型**：incident（PROVISION 阶段）
+**LOOP type**: incident (PROVISION stage)
 
 ```
 LOOP(incident):
   PLAN(detect) → PROVISION(mitigate) → VERIFY
-    ↓ 未恢复
-  DEBUG(root-cause) → 回到 PROVISION（新止血方案）
+    ↓ not recovered
+  DEBUG(root-cause) → back to PROVISION (new stop-the-bleeding plan)
 ```
 
-**stage 字段写入**：provision
+**stage field value**: provision
 
-## 操作白名单
+## Operation Whitelist
 
-Agent 可执行的安全操作（staging 自动，production 需确认）：
+Safe operations the Agent can execute (auto on staging, requires confirmation on production):
 
-| 操作 | 命令 | 风险 |
+| Operation | Command | Risk |
 |------|------|------|
-| 回滚 | `kubectl rollout undo` | 低 |
-| 扩容 | `kubectl scale` / `kubectl autoscale` | 低 |
-| 重启 Pod | `kubectl delete pod` / `kubectl rollout restart` | 中 |
-| 降级 | 修改 ConfigMap（GitOps PR） | 中 |
-| 限流 | 修改 Envoy/Istio 规则 | 中 |
+| Rollback | `kubectl rollout undo` | Low |
+| Scale out | `kubectl scale` / `kubectl autoscale` | Low |
+| Restart Pod | `kubectl delete pod` / `kubectl rollout restart` | Medium |
+| Degrade | Modify ConfigMap (GitOps PR) | Medium |
+| Rate limit | Modify Envoy/Istio rules | Medium |
 
-**禁止操作**（任何环境都需人类审批）：
+**Prohibited operations** (require human approval in any environment):
 - `kubectl delete namespace`
-- `kubectl delete deployment`（非滚动更新）
+- `kubectl delete deployment` (non-rolling update)
 - `terraform destroy`
-- `DROP TABLE` / `DELETE FROM`（无 WHERE）
-- 修改 RBAC / NetworkPolicy
+- `DROP TABLE` / `DELETE FROM` (without WHERE)
+- Modify RBAC / NetworkPolicy

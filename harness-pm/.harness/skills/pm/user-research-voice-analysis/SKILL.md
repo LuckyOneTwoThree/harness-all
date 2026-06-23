@@ -1,21 +1,21 @@
 ---
 name: user-research-voice-analysis
-description: 当需要从用户评论、客服工单、社媒提及、社区帖子中提取情感、主题和痛点时使用。大规模用户声音分析Pipeline。关键词：用户声音分析、VOC、情感分析、痛点提取、用户反馈分析、用户吐槽、用户评价、用户反馈。
+description: Used when extracting sentiment, themes, and pain points from user reviews, support tickets, social media mentions, and community posts. Large-scale user voice analysis pipeline. Keywords: user voice analysis, VOC, sentiment analysis, pain point extraction, user feedback analysis, user complaints, user reviews, user feedback.
 metadata:
-  module: "产品探索与发现"
-  sub-module: "用户研究"
+  module: "Product Discovery"
+  sub-module: "User Research"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["互联网", "消费", "通用"]
+  domain_tags: ["Internet", "Consumer", "General"]
   trigger_examples:
-    - "用户都在吐槽什么"
-    - "帮我分析用户反馈"
-    - "用户评价怎么样"
+    - "What are users complaining about"
+    - "Help me analyze user feedback"
+    - "How are the user reviews"
   interaction_mode: "ai_auto"
 execution_depth:
   default: standard
-  quick_description: "直接输出用户声音主题和情感分布"
-  deep_description: "完整分析 + 情感趋势追踪 + 主题聚类深度分析 + 行动建议路线图"
+  quick_description: "Directly output user voice themes and sentiment distribution"
+  deep_description: "Full analysis + sentiment trend tracking + theme clustering deep analysis + action recommendation roadmap"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -24,32 +24,32 @@ writes:
   - memory/progress.md
 ---
 
-# 大规模用户声音分析
+# Large-Scale User Voice Analysis
 
-## 核心原则
+## Core Principles
 
-1. **原声优先于总结**——用户原话比AI概括更有说服力，每个痛点必须有代表原声支撑
-2. **痛点分级而非平铺**——按影响面×痛苦度×频率评分分级，不输出无优先级的痛点清单
-3. **情感是信号不是噪音**——负面情绪指向真实痛点，混合情感指向未满足期望，都需深入分析
-4. **数据量决定可信度**——反馈量<500条时结论降级为"探索性"，置信度上限0.5
+1. **Verbatims over summaries** — User's original words are more persuasive than AI summaries; every pain point must be supported by a representative verbatim
+2. **Pain points are tiered, not flat-listed** — Score and tier by impact × pain degree × frequency; do not output an unprioritized pain point list
+3. **Sentiment is signal, not noise** — Negative emotions point to real pain points; mixed emotions point to unmet expectations; both require in-depth analysis
+4. **Data volume determines credibility** — When feedback volume < 500 entries, conclusions are downgraded to "exploratory" with a confidence cap of 0.5
 
-## 交互模式
+## Interaction Mode
 
-🤖 **AI自动执行** — 无需人类介入，全程自动化完成
+🤖 **AI auto-executes** — No human intervention required; fully automated end-to-end
 
 ---
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| app_reviews | JSON | 是 | 用户提供 | 应用商店评论数据（App Store / Google Play） |
-| support_tickets | JSON | 是 | 用户提供 | 客服工单系统数据 |
-| social_mentions | JSON | ○ | 用户提供 | 社交媒体提及数据（微博/小红书/Twitter等） |
-| community_posts | JSON | ○ | 用户提供 | 社区/论坛帖子数据 |
-| analysis_config | object | ○ | 用户提供 | 分析配置（语言、情感模型、聚类方法、最小聚类大小） |
+| app_reviews | JSON | Yes | User-provided | App store review data (App Store / Google Play) |
+| support_tickets | JSON | Yes | User-provided | Customer support ticket system data |
+| social_mentions | JSON | ○ | User-provided | Social media mention data (Weibo / Xiaohongshu / Twitter, etc.) |
+| community_posts | JSON | ○ | User-provided | Community / forum post data |
+| analysis_config | object | ○ | User-provided | Analysis configuration (language, sentiment model, clustering method, min cluster size) |
 
-### 输入格式
+### Input Format
 
 ```json
 {
@@ -88,116 +88,116 @@ writes:
 }
 ```
 
-**数据源说明**：
-- `app_reviews`：应用商店评论（App Store / Google Play / 其他）
-- `support_tickets`：客服工单系统数据
-- `social_mentions`：社交媒体提及（微博/小红书/Twitter等）
-- `community_posts`：社区/论坛帖子
+**Data source descriptions**:
+- `app_reviews`: App store reviews (App Store / Google Play / others)
+- `support_tickets`: Customer support ticket system data
+- `social_mentions`: Social media mentions (Weibo / Xiaohongshu / Twitter, etc.)
+- `community_posts`: Community / forum posts
 
 ---
 
-## 执行步骤
+## Execution Steps
 
-### Step 1：数据采集与清洗 [核心]
+### Step 1: Data Collection & Cleaning [Core]
 
-- 从各数据源拉取原始数据
-- 去重（同一用户同一内容跨平台去重）
-- 去噪（广告、水军、无关内容过滤）
-- 语言检测与过滤
-- 时间范围校验
-- 输出：清洗后的反馈数据集，记录原始条数与清洗后条数
+- Pull raw data from each data source
+- Deduplicate (same user, same content across platforms)
+- Denoise (filter ads, astroturfing, irrelevant content)
+- Language detection and filtering
+- Time range validation
+- Output: Cleaned feedback dataset, recording original count and cleaned count
 
-### Step 2：情感分类 [核心]
+### Step 2: Sentiment Classification [Core]
 
-- 对每条反馈进行情感分类：正面 / 负面 / 中性 / 混合
-- 提取情感强度（0-1）
-- 对负面反馈提取情感维度：愤怒/失望/困惑/焦虑/其他
-- 输出：每条反馈附带情感标签和强度
+- Classify sentiment for each feedback entry: Positive / Negative / Neutral / Mixed
+- Extract sentiment intensity (0-1)
+- Extract sentiment dimensions for negative feedback: Anger / Disappointment / Confusion / Anxiety / Other
+- Output: Each feedback entry annotated with sentiment label and intensity
 
-### Step 3：主题聚类 [核心]
+### Step 3: Theme Clustering [Core]
 
-- 对所有反馈进行语义聚类
-- 生成主题标签（自动生成 + 人工可调整）
-- 统计每个主题的反馈量、情感分布、趋势变化
-- 识别跨主题的关联关系
-- 输出：主题列表，每个主题包含反馈量、情感分布、代表原声
+- Perform semantic clustering on all feedback
+- Generate theme labels (auto-generated + manually adjustable)
+- Calculate feedback volume, sentiment distribution, and trend changes for each theme
+- Identify cross-theme relationships
+- Output: Theme list, each theme including feedback volume, sentiment distribution, and representative verbatims
 
-### Step 4：痛点提取与分级 [核心]
+### Step 4: Pain Point Extraction & Grading [Core]
 
-- 从负面反馈和混合反馈中提取痛点
-- 痛点分级标准：
-  - **P0（致命）**：影响核心功能使用，大量用户受影响
-  - **P1（严重）**：影响重要体验，较多用户受影响
-  - **P2（一般）**：影响次要体验，部分用户受影响
-  - **P3（轻微）**：体验瑕疵，少量用户提及
-- 痛点评分 = 影响面（受影响用户占比） × 痛苦度（情感强度均值） × 频率（提及次数/总反馈数）
-- 输出：痛点列表，按评分降序排列
+- Extract pain points from negative and mixed feedback
+- Pain point grading criteria:
+  - **P0 (Critical)**: Affects core feature usage, large number of users impacted
+  - **P1 (Severe)**: Affects important experience, moderate number of users impacted
+  - **P2 (General)**: Affects secondary experience, some users impacted
+  - **P3 (Minor)**: Experience imperfections, few users mention it
+- Pain point score = Impact scope (affected user ratio) × Pain degree (avg sentiment intensity) × Frequency (mention count / total feedback count)
+- Output: Pain point list, sorted by score in descending order
 
-### Step 5：用户分群洞察 [核心]
+### Step 5: User Segment Insights [Core]
 
-- 基于反馈内容和情感模式进行用户分群
-- 每个分群描述：核心特征、主要诉求、情感倾向、规模占比
-- 识别分群间的差异和共性
-- 输出：用户分群列表
+- Segment users based on feedback content and sentiment patterns
+- Each segment description: Core characteristics, primary needs, sentiment tendency, size ratio
+- Identify differences and commonalities between segments
+- Output: User segment list
 
 ---
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth level | Output scope | Description |
 |----------|----------|------|
-| quick | 用户声音主题和情感分布 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整分析 + 情感趋势追踪 + 主题聚类深度分析 + 行动建议路线图 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | User voice themes and sentiment distribution | Core conclusions + minimum viable deliverable |
+| standard | Full deliverable (current default) | Complete deliverable, including all Step outputs |
+| deep | Full analysis + sentiment trend tracking + theme clustering deep analysis + action recommendation roadmap | Full deliverable + extended analysis + deep inference |
 
-## 输出
+## Output
 
-输出文件：`docs/discovery/user-research.md（追加“用户声音分析”章节）`
+Output file: `docs/discovery/user-research.md (append "User Voice Analysis" section)`
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["summary", "metadata"],
   "properties": {
-    "summary": {"type": "object", "description": "分析摘要，含反馈总量、情感分布、主题、痛点和用户分群"},
-    "metadata": {"type": "object", "description": "元数据，含时间戳、数据质量标记和整体置信度"}
+    "summary": {"type": "object", "description": "Analysis summary, including total feedback, sentiment distribution, themes, pain points, and user segments"},
+    "metadata": {"type": "object", "description": "Metadata, including timestamp, data quality flags, and overall confidence"}
   }
 }
 ```
 
-**输出校验规则**：
+**Output validation rules**:
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field path | Type | Required | Description |
 |----------|------|------|------|
-| summary.total_feedback_analyzed | number | 是 | 分析的反馈总量，须>0 |
-| summary.data_sources_used | string[] | 是 | 实际使用的数据源列表，不可为空 |
-| summary.time_range | string | 是 | 数据时间范围 |
-| summary.sentiment_distribution.positive | number | 是 | 正面情感占比，0-1 |
-| summary.sentiment_distribution.negative | number | 是 | 负面情感占比，0-1 |
-| summary.sentiment_distribution.neutral | number | 是 | 中性情感占比，0-1 |
-| summary.sentiment_distribution.mixed | number | 是 | 混合情感占比，0-1 |
-| summary.top_themes | array | 是 | 主题列表，每项须含theme、feedback_count、representative_quotes、confidence |
-| summary.top_themes[].theme | string | 是 | 主题名称，不可为空 |
-| summary.top_themes[].feedback_count | number | 是 | 该主题反馈数量 |
-| summary.top_themes[].representative_quotes | string[] | 是 | 每个主题≥2条代表原声 |
-| summary.top_themes[].confidence | number | 是 | 主题置信度，0-1 |
-| summary.top_pain_points | array | 是 | 痛点列表，每项须含pain_point、severity、impact_score、representative_quotes、confidence |
-| summary.top_pain_points[].pain_point | string | 是 | 痛点描述，不可为空 |
-| summary.top_pain_points[].severity | string | 是 | 痛点等级，枚举：P0/P1/P2/P3 |
-| summary.top_pain_points[].impact_score | number | 是 | 痛点影响评分 |
-| summary.top_pain_points[].representative_quotes | string[] | 是 | 每个痛点≥2条代表原声 |
-| summary.top_pain_points[].confidence | number | 是 | 痛点置信度，0-1 |
-| summary.emerging_themes | array | 否 | 新兴主题列表 |
-| summary.emerging_themes[].confidence | number | 是 | 新兴主题置信度，0-1 |
-| summary.user_segments | array | 是 | 用户分群列表，每项须含segment_name、size_ratio、confidence |
-| summary.user_segments[].segment_name | string | 是 | 分群名称，不可为空 |
-| summary.user_segments[].size_ratio | number | 是 | 规模占比，0-1 |
-| summary.user_segments[].confidence | number | 是 | 分群置信度，0-1 |
-| metadata.analysis_timestamp | string | 是 | 分析时间戳 |
-| metadata.data_quality_flags | string[] | 是 | 数据质量标记 |
-| metadata.confidence_overall | number | 是 | 整体置信度，0-1 |
+| summary.total_feedback_analyzed | number | Yes | Total feedback analyzed, must be >0 |
+| summary.data_sources_used | string[] | Yes | List of data sources actually used, cannot be empty |
+| summary.time_range | string | Yes | Data time range |
+| summary.sentiment_distribution.positive | number | Yes | Positive sentiment ratio, 0-1 |
+| summary.sentiment_distribution.negative | number | Yes | Negative sentiment ratio, 0-1 |
+| summary.sentiment_distribution.neutral | number | Yes | Neutral sentiment ratio, 0-1 |
+| summary.sentiment_distribution.mixed | number | Yes | Mixed sentiment ratio, 0-1 |
+| summary.top_themes | array | Yes | Theme list, each item must contain theme, feedback_count, representative_quotes, confidence |
+| summary.top_themes[].theme | string | Yes | Theme name, cannot be empty |
+| summary.top_themes[].feedback_count | number | Yes | Feedback count for this theme |
+| summary.top_themes[].representative_quotes | string[] | Yes | Each theme ≥2 representative verbatims |
+| summary.top_themes[].confidence | number | Yes | Theme confidence, 0-1 |
+| summary.top_pain_points | array | Yes | Pain point list, each item must contain pain_point, severity, impact_score, representative_quotes, confidence |
+| summary.top_pain_points[].pain_point | string | Yes | Pain point description, cannot be empty |
+| summary.top_pain_points[].severity | string | Yes | Pain point severity enum: P0/P1/P2/P3 |
+| summary.top_pain_points[].impact_score | number | Yes | Pain point impact score |
+| summary.top_pain_points[].representative_quotes | string[] | Yes | Each pain point ≥2 representative verbatims |
+| summary.top_pain_points[].confidence | number | Yes | Pain point confidence, 0-1 |
+| summary.emerging_themes | array | No | Emerging theme list |
+| summary.emerging_themes[].confidence | number | Yes | Emerging theme confidence, 0-1 |
+| summary.user_segments | array | Yes | User segment list, each item must contain segment_name, size_ratio, confidence |
+| summary.user_segments[].segment_name | string | Yes | Segment name, cannot be empty |
+| summary.user_segments[].size_ratio | number | Yes | Size ratio, 0-1 |
+| summary.user_segments[].confidence | number | Yes | Segment confidence, 0-1 |
+| metadata.analysis_timestamp | string | Yes | Analysis timestamp |
+| metadata.data_quality_flags | string[] | Yes | Data quality flags |
+| metadata.confidence_overall | number | Yes | Overall confidence, 0-1 |
 
 ```json
 {
@@ -263,71 +263,71 @@ writes:
 
 ---
 
-## 决策规则
+## Decision Rules
 
-| 条件 | 动作 |
+| Condition | Action |
 |------|------|
-| 数据量 < 500条 | 标记"数据不足"，输出降级为"探索性结论"，置信度上限0.5 |
-| 新兴主题频率上升 > 100%（环比） | 触发升级，标记为"需人类关注"，建议进入深度分析 |
-| P0级痛点发现 | 立即通知人类，不等待完整流程结束 |
-| 情感分类置信度 < 0.7 | 标记为"低置信度分类"，纳入统计但标注警告 |
-| 数据源缺失率 > 30% | 标记"数据源不完整"，建议补充数据 |
+| Data volume < 500 entries | Mark "insufficient data", downgrade output to "exploratory conclusions", confidence cap 0.5 |
+| Emerging theme frequency increase > 100% (MoM) | Trigger escalation, mark as "needs human attention", recommend entering deep analysis |
+| P0-level pain point discovered | Immediately notify human, do not wait for the full process to complete |
+| Sentiment classification confidence < 0.7 | Mark as "low-confidence classification", include in statistics but annotate warning |
+| Data source missing rate > 30% | Mark "incomplete data sources", recommend supplementing data |
 
 ---
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 反馈覆盖量（≥ 500条）
-- [ ] 情感分类覆盖率（≥ 95%）
+- [ ] Feedback coverage (≥ 500 entries)
+- [ ] Sentiment classification coverage (≥ 95%)
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 主题聚类一致性（Silhouette Score ≥ 0.5）
-- [ ] 所有输出标注置信度（100%）
-- [ ] 痛点有代表原声（每个痛点≥2条原声）
-- [ ] 数据去重率（记录去重比例）
+- [ ] Theme clustering consistency (Silhouette Score ≥ 0.5)
+- [ ] All outputs annotated with confidence (100%)
+- [ ] Pain points have representative verbatims (each pain point ≥2 verbatims)
+- [ ] Data deduplication rate (record deduplication ratio)
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep inference and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-当上游文件不存在时，本Skill仍可独立执行：
+When upstream files do not exist, this Skill can still execute independently:
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing upstream input | Degradation plan | Output impact | Data acquisition instructions |
 |---------------|---------|---------|------------|
-| 所有数据源均缺失 | 提示用户先提供反馈数据，或基于用户直接粘贴的反馈文本执行轻量版分析 | summary字段为空，置信度降为0 | 要求用户提供用户反馈文本（评论、工单、社媒提及等） |
-| 若用户未提供app_reviews | 提示用户提供应用商店评论数据，否则缺乏核心反馈来源 | data_sources_used缺少app_reviews，情感分布和主题可能偏斜 | 要求用户提供应用商店评论数据或导出评论CSV文件 |
-| 若用户未提供support_tickets | 提示用户提供客服工单数据，否则缺乏核心反馈来源 | data_sources_used缺少support_tickets，痛点可能遗漏工单类问题 | 要求用户提供客服工单数据或导出工单列表 |
-| 若用户未提供social_mentions | 跳过该输入相关步骤，社交媒体数据不参与分析 | data_sources_used缺少social_mentions，新兴主题检测能力降低 | 要求用户提供社交媒体提及数据（如微博、Twitter提及） |
-| 若用户未提供community_posts | 跳过该输入相关步骤，社区帖子数据不参与分析 | data_sources_used缺少community_posts，深度用户洞察可能缺失 | 要求用户提供社区/论坛帖子数据 |
-| 若用户未提供analysis_config | 跳过该输入相关步骤，使用默认分析配置 | 使用默认配置，分析参数可能非最优 | 要求用户提供情感分析粒度、主题数量等分析参数配置 |
+| All data sources missing | Prompt user to provide feedback data first, or execute lightweight analysis based on feedback text directly pasted by user | summary fields are empty, confidence drops to 0 | Ask user to provide user feedback text (reviews, tickets, social mentions, etc.) |
+| If user does not provide app_reviews | Prompt user to provide app store review data, otherwise core feedback source is missing | data_sources_used missing app_reviews, sentiment distribution and themes may be skewed | Ask user to provide app store review data or export review CSV file |
+| If user does not provide support_tickets | Prompt user to provide support ticket data, otherwise core feedback source is missing | data_sources_used missing support_tickets, pain points may miss ticket-type issues | Ask user to provide support ticket data or export ticket list |
+| If user does not provide social_mentions | Skip steps related to this input, social media data not included in analysis | data_sources_used missing social_mentions, emerging theme detection capability reduced | Ask user to provide social media mention data (e.g., Weibo, Twitter mentions) |
+| If user does not provide community_posts | Skip steps related to this input, community post data not included in analysis | data_sources_used missing community_posts, deep user insights may be missing | Ask user to provide community / forum post data |
+| If user does not provide analysis_config | Skip steps related to this input, use default analysis configuration | Using default configuration, analysis parameters may be suboptimal | Ask user to provide analysis parameter configuration such as sentiment analysis granularity and theme count |
 
-## 数据获取说明
+## Data Acquisition Instructions
 
-本Skill需要用户声音数据（评论、工单、社媒提及等），请通过以下方式之一提供：
-  1. 直接粘贴反馈文本内容
-  2. 上传CSV/Excel/JSON文件
-  3. 提供数据文件路径
-- AI不负责外部数据采集，仅负责分析
+This Skill requires user voice data (reviews, tickets, social mentions, etc.). Please provide via one of the following methods:
+  1. Directly paste feedback text content
+  2. Upload CSV/Excel/JSON files
+  3. Provide data file paths
+- AI is not responsible for external data collection, only for analysis
 
 ---
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响
+### Upstream Change Impact
 
-本Skill为起始Skill，无上游文件依赖，不涉及上游变更影响。
+This Skill is a starting Skill with no upstream file dependencies and does not involve upstream change impact.
 
-### 下游通知机制
+### Downstream Notification Mechanism
 
-| 下游Skill | 通知触发条件 | 通知方式 | 通知内容 |
+| Downstream Skill | Notification trigger condition | Notification method | Notification content |
 |-----------|------------|---------|---------|
-| user-research-user-modeling | voice-analysis.json更新完成 | 写入output文件 | 通知用户分群、痛点、主题数据已就绪 |
-| user-research-report | voice-analysis.json更新完成 | 写入output文件 | 通知情感分布、痛点、主题数据已就绪 |
+| user-research-user-modeling | voice-analysis.json update complete | Write to output file | Notify that user segments, pain points, and theme data are ready |
+| user-research-report | voice-analysis.json update complete | Write to output file | Notify that sentiment distribution, pain points, and theme data are ready |

@@ -1,10 +1,10 @@
 ---
 name: experiment-conclusion
-description: 生成实验结论与决策建议（全量/迭代/放弃），沉淀知识库条目
+description: Generate experiment conclusions and decision recommendations (full rollout / iterate / kill), and distill knowledge base entries
 triggers:
-  - 实验数据分析完成后
-  - 增长实验Loop的MEASURE阶段，experiment-analysis之后
-  - 需要产出实验复盘报告时
+  - After experiment data analysis is complete
+  - MEASURE phase of the growth experiment Loop, after experiment-analysis
+  - When an experiment retrospective report is needed
 reads:
   - loops/specs/<experiment>/spec.md
   - loops/specs/<experiment>/evidence.md
@@ -18,119 +18,119 @@ quality_gates: []
 max_iterations: 1
 ---
 
-# Experiment Conclusion — 实验结论与沉淀
+# Experiment Conclusion — Experiment Conclusion and Distillation
 
-## 铁律
-- 结论必须基于**证据**，不是"我觉得有效"
-- 决策必须明确：全量 / 迭代 / 放弃——不允许"再观察观察"
-- **实验失败也是结论**——必须记录"为什么失败"，避免重复踩坑
-- 必须沉淀到知识库——不沉淀等于白做
+## Iron Rules
+- Conclusions must be based on **evidence**, not "I think it works"
+- Decisions must be explicit: full rollout / iterate / kill — "let's observe more" is not allowed
+- **Experiment failure is also a conclusion** — must record "why it failed" to avoid repeating the same trap
+- Must distill to the knowledge base — not distilling means the experiment was wasted
 
-## 流程
+## Process
 
-1. **读取实验证据**
-   从 evidence.md 读取 experiment-analysis 的产出：
-   - 主指标显著性结果
-   - 护栏指标检查结果
-   - 分群异质性分析
-   - SRM 检测结果
+1. **Read experiment evidence**
+   From evidence.md, read the output of experiment-analysis:
+   - Primary metric significance results
+   - Guardrail metric check results
+   - Segment heterogeneity analysis
+   - SRM detection results
 
-2. **生成结论**
-   基于证据，生成结构化结论：
+2. **Generate conclusion**
+   Based on evidence, generate a structured conclusion:
 
    ```
-   ## 实验结论
+   ## Experiment Conclusion
 
-   ### 假设验证
-   - 假设: 如果[改动X]，那么[指标Y]会[变化Z]，因为[理由]
-   - 验证结果: [有效/无效/部分有效]
-   - 证据: [p值/效应量/置信区间]
+   ### Hypothesis validation
+   - Hypothesis: If [change X], then [metric Y] will [change Z], because [reason]
+   - Validation result: [effective / ineffective / partially effective]
+   - Evidence: [p-value / effect size / confidence interval]
 
-   ### 决策
-   - 决策: [全量/迭代/放弃]
-   - 理由: [基于证据的决策依据]
+   ### Decision
+   - Decision: [full rollout / iterate / kill]
+   - Reason: [evidence-based decision rationale]
 
-   ### 可复用洞察
-   - 洞察1: [如"减少表单字段对激活率有显著正向影响"]
-   - 洞察2: [如"该效应在新用户中更强，老用户无显著差异"]
+   ### Reusable insights
+   - Insight 1: [e.g., "reducing form fields has a significant positive effect on activation rate"]
+   - Insight 2: [e.g., "the effect is stronger for new users, with no significant difference for existing users"]
    ```
 
-3. **决策标准**
+3. **Decision criteria**
 
-   | 情况 | 决策 | 理由 |
-   |------|------|------|
-   | 主指标显著 + 护栏通过 | **全量** | 假设验证，可放大 |
-   | 主指标显著 + 护栏触发 | **迭代** | 有效果但有副作用，需优化方案 |
-   | 主指标不显著 + 分群异质 | **迭代** | 整体无效但某分群有效，聚焦该分群 |
-   | 主指标不显著 + 无分群异质 | **放弃** | 假设证伪，记录失败原因 |
-   | 样本不足 | **延长** | 继续收集数据至样本量达标 |
-   | SRM 触发 | **重做** | 分流bug，实验无效 |
+   | Situation | Decision | Reason |
+   |-----------|----------|--------|
+   | Primary metric significant + guardrail passed | **Full rollout** | Hypothesis validated, can scale |
+   | Primary metric significant + guardrail triggered | **Iterate** | Effective but with side effects, need to optimize the solution |
+   | Primary metric not significant + segment heterogeneity | **Iterate** | Overall ineffective but a segment is effective, focus on that segment |
+   | Primary metric not significant + no segment heterogeneity | **Kill** | Hypothesis falsified, record failure reason |
+   | Insufficient sample | **Extend** | Continue collecting data until sample size is reached |
+   | SRM triggered | **Redo** | Traffic split bug, experiment invalid |
 
-4. **生成行动建议**
-   - 如全量：制定 rollout 计划（渐进发布 5%→20%→50%→100%）
-   - 如迭代：列出下一轮实验的调整方向
-   - 如放弃：记录"为什么这个假设不成立"，更新假设库状态为"已证伪"
+4. **Generate action recommendations**
+   - If full rollout: create a rollout plan (gradual release 5%→20%→50%→100%)
+   - If iterate: list adjustment directions for the next round of experiments
+   - If kill: record "why this hypothesis doesn't hold", update the hypothesis library status to "falsified"
 
-5. **沉淀到知识库**
-   在 `memory/knowledge-base.md` 的"增长实验库"表追加一行：
+5. **Distill to knowledge base**
+   Append a row to the "growth experiment library" table in `memory/knowledge-base.md`:
    ```
-   | G-<NNN> | [假设] | [主指标] | [有效/无效/不确定(p值)] | [全量/迭代/放弃] | [可复用洞察] | [标签] | [日期] |
+   | G-<NNN> | [hypothesis] | [primary metric] | [effective / ineffective / uncertain (p-value)] | [full rollout / iterate / kill] | [reusable insight] | [tags] | [date] |
    ```
 
-   同时更新"增长假设库"表：
-   - 如假设验证：状态改为"已验证"
-   - 如假设证伪：状态改为"已证伪"，记录证伪原因
+   Also update the "growth hypothesis library" table:
+   - If hypothesis validated: change status to "validated"
+   - If hypothesis falsified: change status to "falsified", record the falsification reason
 
-6. **更新 state.yaml**
+6. **Update state.yaml**
    ```yaml
    stage: measure
    status: done
    last_error: ""
    ```
 
-7. **产出交接文档**（可选）
-   如实验结论值得反馈给 PM（有效/无效的重大发现）：
-   - 追加到 `docs/handoff/growth-to-pm.md` 的"实验结果"章节
-   - 或由 session-end 在会话结束时统一产出
+7. **Produce handoff document (optional)**
+   If the experiment conclusion is worth feeding back to PM (major effective / ineffective findings):
+   - Append to the "experiment results" section of `docs/handoff/growth-to-pm.md`
+   - Or have session-end produce it at the end of the session
 
-## 结论报告模板
+## Conclusion report template
 
 ```markdown
-# 实验复盘: <experiment-name>
+# Experiment Retrospective: <experiment-name>
 
-## 一句话结论
-[如：简化注册表单从6字段减至3字段，激活率提升10.2%(p=0.012)，建议全量]
+## One-line conclusion
+[e.g., Simplifying the sign-up form from 6 fields to 3 fields lifted activation rate by 10.2% (p=0.012); recommend full rollout]
 
-## 实验设计回顾
-- 假设: ...
-- 主指标: ...
-- 护栏指标: ...
-- 样本量: ...
-- 实验周期: ...
+## Experiment design recap
+- Hypothesis: ...
+- Primary metric: ...
+- Guardrail metrics: ...
+- Sample size: ...
+- Experiment period: ...
 
-## 结果
-[从 evidence.md 摘录关键数据]
+## Results
+[Key data excerpted from evidence.md]
 
-## 决策与行动
-- 决策: 全量
-- Rollout 计划: ...
-- 下一步: ...
+## Decision and action
+- Decision: full rollout
+- Rollout plan: ...
+- Next step: ...
 
-## 学习沉淀
-- 可复用洞察: ...
-- 失败教训（如有）: ...
+## Learning distillation
+- Reusable insights: ...
+- Failure lessons (if any): ...
 ```
 
-## 禁止事项
-- 不在无证据时下结论
-- 不做模糊决策（"再观察观察"不是决策）
-- 不跳过知识库沉淀（不沉淀=白做实验）
-- 不只记录成功不记录失败（失败实验的洞察同样有价值）
+## Prohibitions
+- Don't draw conclusions without evidence
+- Don't make vague decisions ("let's observe more" is not a decision)
+- Don't skip knowledge base distillation (not distilling = wasted experiment)
+- Don't record only successes and skip failures (failure experiment insights are equally valuable)
 
-## 与 LOOP 的关系
-本 skill 在 LOOP 的 **MEASURE 阶段**执行，是 MEASURE 的最后一步。
+## Relationship to LOOP
+This skill runs in the **MEASURE phase** of LOOP; it is the last step of MEASURE.
 PLAN → EXPERIMENT → MEASURE(experiment-analysis → experiment-conclusion) → DONE
 
-## 与 Workflow 的关系
-本 skill 是 **growth-experiment-workflow** 的第 6 步（最后一步）。
-产出的知识库条目会被 hypothesis-generation 在下一轮 Loop 中读取，形成复利。
+## Relationship to Workflow
+This skill is step 6 (the last step) of **growth-experiment-workflow**.
+The knowledge base entries produced are read by hypothesis-generation in the next round of the Loop, forming compounding.

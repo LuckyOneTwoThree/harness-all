@@ -1,11 +1,11 @@
 ---
 name: dependency-management
-description: 依赖管理，添加/升级/审计，对接宪法依赖审批门
+description: Dependency Management — add/upgrade/audit, integrated with the constitution's dependency approval gate
 triggers:
-  - 新增依赖前（强制）
-  - 依赖升级时
-  - 安全审计时
-  - verify 阶段检查依赖合规
+  - Before adding a new dependency (mandatory)
+  - When upgrading dependencies
+  - During security audits
+  - When the verify stage checks dependency compliance
 reads:
   - rules/security.md
   - constitution.md
@@ -15,112 +15,112 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# Dependency Management — 依赖管理
+# Dependency Management — Dependency Management
 
-## 铁律
-**Code is a liability.** 每加一个依赖就是新增攻击面 + 维护成本。能用 50 行内代码解决的，不引入依赖。
+## Iron Rule
+**Code is a liability.** Every dependency added expands the attack surface and maintenance cost. If it can be solved with under 50 lines of code, do not introduce a dependency.
 
-## 添加依赖流程
+## Adding a Dependency
 
-### 1. 必要性评估（硬门）
-回答以下问题，任何一条不满足 → 不引入：
+### 1. Necessity Assessment (hard gate)
+Answer the following questions. If any item is not satisfied → do not introduce:
 
-- [ ] **真的需要吗？** 能否用 50 行内代码或现有 primitive 替代？
-- [ ] **维护活跃度？** 最近 commit < 6 个月，有持续维护
-- [ ] **下载量？** 有足够用户验证（避免 typosquat / 弃坑风险）
-- [ ] **已知 CVE？** `npm audit` / `pip-audit` 无 critical/high 漏洞
-- [ ] **宪法合规？** 检查 `constitution.md` 的依赖原则（如零运行时依赖项目则直接拒绝）
+- [ ] **Is it really needed?** Can it be replaced with under 50 lines of code or existing primitives?
+- [ ] **Is it actively maintained?** Most recent commit < 6 months, with ongoing maintenance
+- [ ] **Download volume?** Enough users to validate it (avoid tyquat / abandoned-package risk)
+- [ ] **Known CVEs?** `npm audit` / `pip-audit` shows no critical/high vulnerabilities
+- [ ] **Constitution compliance?** Check the dependency principles in `constitution.md` (e.g. for zero-runtime-dependency projects, reject outright)
 
-### 2. 安全审查
-- **postinstall 脚本**：检查包是否有 `postinstall` / `preinstall`（任意代码执行风险）
-- **typosquat 检查**：包名是否与知名包高度相似（`cross-env` vs `crossenv`）
-- **依赖树深度**：间接依赖是否过多（攻击面膨胀）
-- **license 兼容**：检查 license 是否与项目兼容（GPL / AGPL 需特别注意）
+### 2. Security Review
+- **postinstall scripts**: Check whether the package has `postinstall` / `preinstall` (arbitrary code execution risk)
+- **typosquat check**: Is the package name highly similar to a well-known package (`cross-env` vs `crossenv`)
+- **Dependency tree depth**: Are there too many transitive dependencies (attack surface bloat)
+- **License compatibility**: Check whether the license is compatible with the project (GPL / AGPL need special attention)
 
-### 3. 用户确认（强制）
-- 向用户说明：包名、用途、替代方案考虑、安全审查结果
-- **等待用户明确授权**，不许自行安装
-- 用户拒绝 → 回到步骤 1 寻找替代方案
+### 3. User Confirmation (mandatory)
+- Explain to the user: package name, purpose, alternative considerations, security review results
+- **Wait for explicit user authorization**; do not install on your own
+- If the user rejects → return to step 1 to find alternatives
 
-### 4. 接入验证
-- 安装依赖
-- **写一个使用该依赖的测试用例**，确认能跑通
-- 跑全量测试，确认无回归
-- 记录到 `docs/engineering/TECH_STACK.md` 的依赖清单
+### 4. Integration Verification
+- Install the dependency
+- **Write a test case that uses the dependency** and confirm it passes
+- Run the full test suite to confirm no regressions
+- Record it in the dependency list of `docs/engineering/TECH_STACK.md`
 
-## 升级依赖流程
+## Upgrading Dependencies
 
-### 1. 升级前
-- 跑全量测试，确认当前状态全绿（建立 baseline）
-- 读 CHANGELOG / Migration Guide，确认 breaking changes
-- 大版本升级（如 v3→v4）单独走 migration skill
+### 1. Before Upgrade
+- Run the full test suite and confirm everything is green (establish a baseline)
+- Read the CHANGELOG / Migration Guide and identify breaking changes
+- Major version upgrades (e.g. v3→v4) go through the migration skill separately
 
-### 2. 升级
-- 一次只升一个依赖（多个混升无法归因问题）
-- 锁文件必须提交（`package-lock.json` / `yarn.lock` / `pnpm-lock.yaml`）
-- CI 用 `npm ci` 而非 `npm install`（可复现构建，杜绝版本漂移）
+### 2. Upgrade
+- Upgrade only one dependency at a time (multiple upgrades make issue attribution impossible)
+- Lock files must be committed (`package-lock.json` / `yarn.lock` / `pnpm-lock.yaml`)
+- CI uses `npm ci` instead of `npm install` (reproducible builds, prevents version drift)
 
-### 3. 升级后
-- 跑全量测试，对比 baseline
-- 有失败 → 回退或修复（走 systematic-debugging）
-- 全绿 → 记录到 iterations.log
+### 3. After Upgrade
+- Run the full test suite and compare against the baseline
+- On failure → roll back or fix (go through systematic-debugging)
+- All green → record in iterations.log
 
-## 安全审计流程
+## Security Audit
 
-### 1. 运行审计
+### 1. Run the Audit
 ```bash
 # Node
 npm audit
 # Python
 pip-audit
 ```
-展示完整输出，不能只写"审计通过"。
+Show the full output; do not just write "audit passed".
 
-### 2. 分流处理（不是见红就修，也不是见红就忽略）
-按"可达性 + 严重度"分流：
+### 2. Triage (do not fix every red, do not ignore every red)
+Triage by "reachability + severity":
 
-| 严重度 | 生产可达 | dev-only |
+| Severity | Production-reachable | dev-only |
 |--------|---------|----------|
-| critical/high | 立即修 | 尽快修，不阻塞 |
-| moderate | 下个 release 修 | 常规更新一起修 |
-| low | 常规更新一起修 | 可忽略 |
+| critical/high | Fix immediately | Fix ASAP, non-blocking |
+| moderate | Fix in next release | Fix with regular updates |
+| low | Fix with regular updates | Can be ignored |
 
-### 3. 延期修复记录
-无法立即修的漏洞，记录到 `memory/knowledge-base.md`：
+### 3. Deferred Fix Record
+For vulnerabilities that cannot be fixed immediately, record them in `memory/knowledge-base.md`:
 ```
-## 技术决策
-| 日期 | 决策/根因 | 理由 | 替代方案 |
+## Technical Decisions
+| Date | Decision/Root Cause | Reason | Alternative |
 |------|------|------|---------|
-| YYYY-MM-DD | 延期修复 CVE-XXXX（<包名>） | dev-only 且不可达，review date: YYYY-MM-DD | 升级到 vX.Y |
+| YYYY-MM-DD | Deferred fix for CVE-XXXX (<package name>) | dev-only and unreachable, review date: YYYY-MM-DD | Upgrade to vX.Y |
 ```
 
-## 反合理化表
+## Anti-Rationalization Table
 
-| 借口 | 反驳 |
+| Excuse | Rebuttal |
 |------|------|
-| "反正能用就行" | 能用 ≠ 安全，依赖是攻击面 |
-| "就一个小包" | 小包也可能有恶意 postinstall |
-| "lockfile 提交太麻烦" | 不提交 = 不可复现构建 = 隐患 |
-| "见 audit 红就 --force" | 忽略 ≠ 解决，按分流策略处理 |
-| "升级以后再说" | 延期越久 breaking changes 越多 |
+| "As long as it works" | Working ≠ secure; dependencies are an attack surface |
+| "It's just a small package" | Small packages can also have malicious postinstall |
+| "Committing the lockfile is too much hassle" | Not committing = non-reproducible builds = hidden risk |
+| "Just `--force` past the audit red" | Ignoring ≠ resolving; follow the triage strategy |
+| "Upgrade later" | The longer you wait, the more breaking changes accumulate |
 
-## 禁止事项
-- 不审查就添加依赖（违反 security.md 依赖审查）
-- 不提交 lockfile（不可复现构建）
-- CI 用 `npm install` 而非 `npm ci`（版本漂移）
-- 见 audit 红就 `--force` 忽略（掩盖问题）
-- 一次升级多个依赖（无法归因）
-- 用 `curl | sh` 安装依赖（违反安全红线）
+## Prohibitions
+- Adding a dependency without review (violates security.md dependency review)
+- Not committing the lockfile (non-reproducible builds)
+- Using `npm install` instead of `npm ci` in CI (version drift)
+- Using `--force` to ignore audit red (masks the problem)
+- Upgrading multiple dependencies at once (cannot attribute issues)
+- Installing dependencies via `curl | sh` (violates the security red line)
 
-## 与 LOOP 的关系
-本 skill 通常在 LOOP 之外触发（添加/升级/审计是独立操作）：
-- 新功能开发需要新依赖 → brainstorming 阶段触发本 skill → 通过后继续 LOOP
-- verify 阶段检查依赖合规 → 作为 verify 的子项
+## Relationship with LOOP
+This skill is usually triggered outside LOOP (adding/upgrading/auditing are independent operations):
+- New feature development needs a new dependency → brainstorming triggers this skill → continue LOOP after approval
+- The verify stage checks dependency compliance → as a sub-item of verify
 
-## 与其他 skill 的分工
-| Skill | 职责 |
+## Division of Labor with Other Skills
+| Skill | Responsibility |
 |-------|------|
-| dependency-management | 依赖添加/升级/审计的流程把关 |
-| brainstorming | 评估是否真的需要新依赖（必要性第一关） |
-| verify | 依赖合规检查作为验证子项 |
-| migration | 大版本升级（v3→v4）走迁移流程 |
+| dependency-management | Gatekeeping the add/upgrade/audit process for dependencies |
+| brainstorming | Evaluating whether a new dependency is really needed (first gate of necessity) |
+| verify | Dependency compliance check as a verification sub-item |
+| migration | Major version upgrades (v3→v4) go through the migration flow |

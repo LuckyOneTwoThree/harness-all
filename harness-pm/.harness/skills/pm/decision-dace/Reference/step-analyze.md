@@ -1,10 +1,10 @@
-<!-- 从 SKILL.md 提取的参考材料，按需查阅 -->
+<!-- Reference material extracted from SKILL.md, consult as needed -->
 
-# Step 2: Analyze（洞察生成）示例
+# Step 2: Analyze (Insight Generation) Examples
 
-## 2.1 数据收集与分析示例
+## 2.1 Data Collection and Analysis Example
 
-自动收集和分析数据：
+Automatically collect and analyze data:
 
 ```yaml
 analyze:
@@ -30,131 +30,131 @@ analyze:
         - metric: "dau_conversion"
           status: "warning"
           change: -3.2%
-          reason: "注册流程改动影响"
+          reason: "Registration flow change impact"
 
     - type: "experiment_summary"
       findings:
-        - experiment: "简化注册实验"
+        - experiment: "Simplified Registration Experiment"
           result: "positive"
           lift: +8.2%
 
     - type: "funnel_analysis"
       findings:
-        - funnel: "购买转化"
+        - funnel: "Purchase conversion"
           conversion: 7.2%
           critical_drop: "step_1_to_2"
 ```
 
-## 2.2 从数字到故事
+## 2.2 From Numbers to Stories
 
 ```
-数据分析 → 业务叙事
+Data analysis → Business narrative
 ```
 
-**转化原则**：
+**Transformation principles**:
 
-| 数据语言 | 业务语言 |
+| Data Language | Business Language |
 |---------|---------|
-| 转化率下降3.2% | "每100个访客中，减少3个完成注册" |
-| p值=0.001 | "这个结论有99.9%的可信度" |
-| 置信区间[2%,5%] | "我们确信提升在2%到5%之间" |
-| D7留存28.5% | "一周后，约3成用户仍在使用" |
+| Conversion rate dropped 3.2% | "Out of every 100 visitors, 3 fewer complete registration" |
+| p-value=0.001 | "This conclusion has 99.9% confidence" |
+| Confidence interval [2%,5%] | "We are confident the improvement is between 2% and 5%" |
+| D7 retention 28.5% | "After one week, about 30% of users are still using it" |
 
-**叙事模板**：
+**Narrative template**:
 
 ```yaml
 narrative_template: |
-  ## 洞察标题
+  ## Insight Title
 
-  ### 背景
-  [产品/功能]在[时间范围]的表现如何？
+  ### Background
+  How did [product/feature] perform in [time range]?
 
-  ### 发现
-  我们发现[核心数据变化]，这意味着[业务影响]。
+  ### Findings
+  We found [core data change], which means [business impact].
 
-  ### 影响
-  如果不干预，预计[时间后][影响程度]。
-  如果干预成功，预计[收益]。
+  ### Impact
+  Without intervention, [impact level] is expected after [time].
+  With successful intervention, [benefit] is expected.
 
-  ### 建议
-  基于数据，我们建议[具体行动]。
+  ### Recommendation
+  Based on the data, we recommend [specific action].
 ```
 
-## 2.3 决策建议生成示例
+## 2.3 Decision Recommendation Generation Example
 
-生成多个可执行的决策选项：
+Generate multiple actionable decision options:
 
 ```yaml
 action_options:
   - option_id: "opt_001"
-    option_name: "全量发布新功能"
-    description: "将实验组的新注册流程全量发布"
+    option_name: "Full release of new feature"
+    description: "Release the experimental group's new registration flow to all users"
 
     expected_effect:
-      primary_metric: "+8.2% 注册转化率"
+      primary_metric: "+8.2% registration conversion rate"
       secondary_metrics:
-        - "注册用户数 +12%"
-        - "整体DAU +2%"
+        - "Registered users +12%"
+        - "Overall DAU +2%"
 
     risk:
       level: "low"
       factors:
-        - "护栏指标全部安全"
-        - "效应稳定无新奇效应"
-        - "可快速回滚"
+        - "All guardrail metrics safe"
+        - "Stable effect with no novelty effect"
+        - "Can be quickly rolled back"
 
     confidence:
       level: "high"
       basis:
-        - "统计显著（p=0.001）"
-        - "实验周期完整（14天）"
-        - "样本量充足（24830）"
+        - "Statistically significant (p=0.001)"
+        - "Complete experiment period (14 days)"
+        - "Sufficient sample size (24830)"
 
     resource_requirements:
-      engineering: "2人日（发布部署）"
-      qa: "1人日（回归测试）"
+      engineering: "2 person-days (release deployment)"
+      qa: "1 person-day (regression testing)"
 
     timeline:
-      ready_for_release: "2天后"
+      ready_for_release: "In 2 days"
 
     prerequisites:
-      - "技术评审通过"
-      - "监控告警配置完成"
+      - "Technical review passed"
+      - "Monitoring alerts configured"
 
   - option_id: "opt_002"
-    option_name: "分批发布"
-    description: "先发布iOS，稳定后再发布Android"
+    option_name: "Phased release"
+    description: "Release iOS first, then Android after stabilization"
 
     expected_effect:
-      primary_metric: "+5.2% iOS注册转化率"
+      primary_metric: "+5.2% iOS registration conversion rate"
       secondary_metrics:
-        - "Android效果待验证"
+        - "Android effect to be verified"
 
     risk:
       level: "medium"
       factors:
-        - "Android效果不确定"
-        - "维护两套逻辑"
+        - "Android effect uncertain"
+        - "Maintaining two sets of logic"
 
     confidence:
       level: "medium"
       basis:
-        - "iOS统计显著"
-        - "Android效果不显著"
+        - "iOS statistically significant"
+        - "Android effect not significant"
 ```
 
-## 2.4 决策边界标注示例
+## 2.4 Decision Boundary Annotation Example
 
-区分不同类型的决策：
+Distinguish different types of decisions:
 
 ```yaml
 decision_boundary:
   type: "data_decision"
   criteria:
-    - "统计显著（p < 0.01）"
-    - "实际意义显著（超过阈值）"
-    - "护栏指标安全"
-    - "无重大风险"
+    - "Statistically significant (p < 0.01)"
+    - "Practically significant (exceeds threshold)"
+    - "Guardrail metrics safe"
+    - "No major risks"
   auto_execute_eligible: true
 
   automation_level: "full"
@@ -166,9 +166,9 @@ decision_boundary:
 decision_boundary:
   type: "data_reference"
   criteria:
-    - "数据支持某一选项"
-    - "但存在不确定性"
-    - "或涉及战略考量"
+    - "Data supports a certain option"
+    - "But there is uncertainty"
+    - "Or involves strategic considerations"
   auto_execute_eligible: false
 
   human_oversight:
@@ -177,19 +177,19 @@ decision_boundary:
     deadline: "3 business days"
 ```
 
-## 2.5 洞察汇总示例
+## 2.5 Insight Summary Example
 
 ```yaml
 insights_gathered:
-  - insight: "简化注册流程可提升新用户转化"
+  - insight: "Simplified registration flow can improve new user conversion"
     confidence: "high"
     source: "ab_test"
 
-  - insight: "加购环节流失率偏高"
+  - insight: "High drop-off rate at add-to-cart step"
     confidence: "medium"
     source: "funnel_analysis"
 
-  - insight: "iOS留存表现优于Android"
+  - insight: "iOS retention outperforms Android"
     confidence: "high"
     source: "retention_analysis"
 ```

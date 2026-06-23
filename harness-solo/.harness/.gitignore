@@ -1,6 +1,6 @@
-# .harness/.gitignore — 框架内部 gitignore
+# .harness/.gitignore — framework internal gitignore
 
-# === 不提交（运行时状态）===
+# === Do not commit (runtime state) ===
 memory/progress.md
 memory/baseline.json
 memory/archives/

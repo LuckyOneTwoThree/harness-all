@@ -1,62 +1,62 @@
-# 项目知识库
+# Project knowledge base
 
-> 永久记忆，跨会话沉淀。重要发现写入本文件。
-> 与 progress.md 的分工：progress.md 是会话级临时日志，本文件是项目级长期知识。
-> 运维框架特有：故障结论必须写入本文件，避免重复故障。
-> 知识库是 Loop 复利学习的基础——每轮部署/故障/优化的结论沉淀于此，下一轮调用。
+> Permanent memory, accumulated across sessions. Important findings are written to this file.
+> Division of labor with progress.md: progress.md is a session-level temporary log; this file is project-level long-term knowledge.
+> Ops framework specific: incident conclusions must be written to this file to avoid repeat incidents.
+> The knowledge base is the foundation of Loop compound learning — the conclusions of each round of deployment / incident / optimization settle here and are reused in the next round.
 
-## 1. 运维故障库（Incident Repository）
+## 1. Incident repository
 
-> 每次故障恢复后追加一行。由 post-mortem skill 写入。
+> Append one row after each incident recovery. Written by the post-mortem skill.
 
-| 故障ID | 等级 | 现象 | 根因 | 持续时间 | 影响 | 改进项 | 日期 |
+| Incident ID | Severity | Symptom | Root cause | Duration | Impact | Improvements | Date |
 |--------|------|------|------|---------|------|--------|------|
-| INC-001 | [P0/P1/P2] | [故障描述] | [根本原因] | [Xmin] | [业务影响] | [改进项数] | YYYY-MM-DD |
+| INC-001 | [P0/P1/P2] | [incident description] | [root cause] | [Xmin] | [business impact] | [improvement count] | YYYY-MM-DD |
 
-## 2. 根因库（Root Cause Library）
+## 2. Root cause library
 
-> 从多次故障中提炼的根因模式。由 root-cause-analysis / post-mortem 写入。
+> Root cause patterns distilled from multiple incidents. Written by root-cause-analysis / post-mortem.
 
-| 根因模式 | 适用场景 | 识别特征 | 处置方式 | 来源 |
+| Root cause pattern | Applicable scenario | Identification features | Handling | Source |
 |---------|---------|---------|---------|------|
-| [模式名] | [什么时候出现] | [日志/指标特征] | [止血+修复] | [故障ID] |
+| [pattern name] | [when it appears] | [log/metric features] | [stop-bleed + fix] | [incident ID] |
 
-## 3. 部署记录库（Deployment Records）
+## 3. Deployment records
 
-> 每次部署追加一行。由 deployment-pipeline 写入。
+> Append one row per deployment. Written by deployment-pipeline.
 
-| 部署ID | 服务 | 版本 | 环境 | 策略 | 结果 | 耗时 | 回滚 | 日期 |
+| Deployment ID | Service | Version | Environment | Strategy | Result | Duration | Rollback | Date |
 |--------|------|------|------|------|------|------|------|------|
-| DEP-001 | [服务名] | [v1.2.3] | [staging/prod] | [滚动/灰度/蓝绿] | [成功/失败] | [Xmin] | [是/否] | YYYY-MM-DD |
+| DEP-001 | [service name] | [v1.2.3] | [staging/prod] | [rolling/canary/blue-green] | [success/failure] | [Xmin] | [yes/no] | YYYY-MM-DD |
 
-## 4. 监控配置库（Monitoring Assets）
+## 4. Monitoring assets
 
-> 监控告警/Dashboard 索引。由 monitoring-setup / alerting-rules / dashboard-design 写入。
+> Monitoring alerting / dashboard index. Written by monitoring-setup / alerting-rules / dashboard-design.
 
-| 服务 | Metrics端点 | 日志标签 | Dashboard URL | 告警规则 | 最后更新 |
+| Service | Metrics endpoint | Log label | Dashboard URL | Alert rule | Last updated |
 |------|------------|---------|--------------|---------|---------|
-| [服务名] | [:8080/metrics] | [app=xxx] | [grafana/d/xxx] | [alert-name] | YYYY-MM-DD |
+| [service name] | [:8080/metrics] | [app=xxx] | [grafana/d/xxx] | [alert-name] | YYYY-MM-DD |
 
-## 5. IaC 资产库（IaC Assets）
+## 5. IaC assets
 
-> 基础设施资源索引。由 infrastructure-as-code / helm-management / gitops-sync 写入。
+> Infrastructure resource index. Written by infrastructure-as-code / helm-management / gitops-sync.
 
-| 资源ID/名 | 类型 | 环境 | 模块路径/Chart | 创建日期 | 最后修改 |
+| Resource ID/name | Type | Environment | Module path/Chart | Created | Last modified |
 |-----------|------|------|---------------|---------|---------|
-| [资源名] | [VPC/EKS/RDS/Helm] | [env] | [path] | YYYY-MM-DD | YYYY-MM-DD |
+| [resource name] | [VPC/EKS/RDS/Helm] | [env] | [path] | YYYY-MM-DD | YYYY-MM-DD |
 
-## 6. 运维模式沉淀（Ops Patterns）
+## 6. Ops patterns
 
-> 从多次运维操作中提炼的可复用模式。
+> Reusable patterns distilled from multiple ops operations.
 
-| 模式 | 适用场景 | 示例 | 来源 |
+| Pattern | Applicable scenario | Example | Source |
 |------|---------|------|------|
-| [模式名] | [什么时候用] | [数据/案例] | [故障ID/部署ID] |
+| [pattern name] | [when to use] | [data/case] | [incident ID/deployment ID] |
 
-## 7. 踩坑记录（Pitfalls）
+## 7. Pitfalls
 
-> 失败教训，避免重复踩坑。
+> Failure lessons to avoid repeating pitfalls.
 
-| 日期 | 问题 | 解决方案 | 相关文件 |
+| Date | Problem | Solution | Related files |
 |------|------|---------|---------|
-| YYYY-MM-DD | [问题描述] | [怎么解决的] | [涉及文件路径] |
+| YYYY-MM-DD | [problem description] | [how it was solved] | [related file paths] |

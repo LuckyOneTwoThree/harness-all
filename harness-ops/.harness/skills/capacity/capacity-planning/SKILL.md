@@ -1,12 +1,12 @@
 ---
 name: capacity-planning
-description: 容量规划建议，基于增长趋势预测资源需求，提前规划扩容
+description: Capacity planning recommendations, forecasting resource needs based on growth trends and planning scale-out in advance
 triggers:
-  - 季度容量规划时
-  - 业务增长需要扩容时
-  - 资源使用率持续走高时
-  - 大促/活动前容量评估时
-  - 用户要求"规划容量"时
+  - During quarterly capacity planning
+  - When business growth requires scale-out
+  - When resource utilization trends consistently high
+  - During capacity assessment before major campaigns or events
+  - When the user requests "capacity planning"
 reads:
   - docs/infrastructure/OPS_STRATEGY.md
   - rules/security.md
@@ -22,154 +22,154 @@ operation_tier: inspect
 requires_approval: false
 ---
 
-# Capacity Planning — 容量规划建议
+# Capacity Planning — Capacity Planning Recommendations
 
-## 铁律
+## Ground Rules
 
-1. **基于历史趋势预测** —— 至少 3 个月数据，识别增长趋势
-2. **预留 30% 余量** —— 不规划到 100% 使用率
-3. **区分稳态与峰值** —— 日常容量 vs 大促容量
-4. **规划有成本意识** —— 不盲目扩容，考虑成本
+1. **Forecast based on historical trends** — at least 3 months of data, identify growth trends
+2. **Reserve 30% headroom** — never plan to 100% utilization
+3. **Distinguish steady-state from peak** — routine capacity vs. campaign capacity
+4. **Plan with cost awareness** — do not scale out blindly, consider cost
 
-## 流程
+## Process
 
-### 1. 收集容量数据
+### 1. Collect Capacity Data
 
 ```promql
-# 过去 3 个月 CPU 使用率趋势
+# CPU utilization trend over the past 3 months
 avg(rate(container_cpu_usage_seconds_total[3m])) by (service)
 
-# 过去 3 个月内存使用率趋势
+# Memory utilization trend over the past 3 months
 avg(container_memory_working_set_bytes / container_spec_memory_limit_bytes) by (service)
 
-# 过去 3 个月流量趋势
+# Traffic trend over the past 3 months
 sum(rate(http_requests_total[5m])) by (service)
 
-# 过去 3 个月存储增长
+# Storage growth over the past 3 months
 sum(kubelet_volume_stats_used_bytes) by (persistentvolumeclaim)
 ```
 
-### 2. 分析增长趋势
+### 2. Analyze Growth Trends
 
 ```
-## 容量趋势分析
+## Capacity Trend Analysis
 
 ### payment-service
 
-#### 流量增长
-| 月份 | 日均请求 | 月增长 | 累计增长 |
+#### Traffic Growth
+| Month | Daily Avg Requests | MoM Growth | Cumulative Growth |
 |------|---------|--------|---------|
 | 2026-03 | 1.2M | - | - |
 | 2026-04 | 1.5M | +25% | +25% |
 | 2026-05 | 1.8M | +20% | +50% |
-| 2026-06（预测） | 2.2M | +22% | +83% |
+| 2026-06 (forecast) | 2.2M | +22% | +83% |
 
-#### 资源使用率
-| 月份 | CPU使用率 | 内存使用率 | 副本数 |
+#### Resource Utilization
+| Month | CPU Utilization | Memory Utilization | Replicas |
 |------|----------|-----------|--------|
 | 2026-03 | 35% | 50% | 3 |
 | 2026-04 | 42% | 55% | 3 |
 | 2026-05 | 50% | 62% | 4 |
-| 2026-06（当前） | 58% | 68% | 4 |
+| 2026-06 (current) | 58% | 68% | 4 |
 
-#### 趋势预测
-- 按当前增长率，3 个月后 CPU 使用率将达 85%
-- 按当前增长率，3 个月后内存使用率将达 80%
-- 建议: 3 个月内扩容到 6 副本
+#### Trend Forecast
+- At the current growth rate, CPU utilization will reach 85% in 3 months
+- At the current growth rate, memory utilization will reach 80% in 3 months
+- Recommendation: scale to 6 replicas within 3 months
 ```
 
-### 3. 识别容量瓶颈
+### 3. Identify Capacity Bottlenecks
 
 ```
-## 容量瓶颈识别
+## Capacity Bottleneck Identification
 
-### 1. CPU 瓶颈（3 个月内）
-- 当前: 4 副本 * 500m = 2000m
-- 3个月后需求: 预估 3000m
-- 瓶颈: 集群总 CPU 不足
-- 建议: 扩展节点池或优化代码
+### 1. CPU Bottleneck (within 3 months)
+- Current: 4 replicas * 500m = 2000m
+- Demand in 3 months: estimated 3000m
+- Bottleneck: insufficient total cluster CPU
+- Recommendation: expand node pool or optimize code
 
-### 2. 内存瓶颈（6 个月内）
-- 当前: 4 副本 * 512Mi = 2048Mi
-- 6个月后需求: 预估 2800Mi
-- 瓶颈: 单 Pod 内存限制
-- 建议: 提升 limits 或扩副本
+### 2. Memory Bottleneck (within 6 months)
+- Current: 4 replicas * 512Mi = 2048Mi
+- Demand in 6 months: estimated 2800Mi
+- Bottleneck: per-Pod memory limit
+- Recommendation: raise limits or scale out replicas
 
-### 3. 数据库连接瓶颈（已接近）
-- 当前连接池: 100
-- 峰值使用: 85
-- 瓶颈: 连接池即将耗尽
-- 建议: 立即扩容连接池到 200
+### 3. Database Connection Bottleneck (imminent)
+- Current connection pool: 100
+- Peak usage: 85
+- Bottleneck: connection pool near exhaustion
+- Recommendation: immediately scale connection pool to 200
 
-### 4. 存储瓶颈（12 个月内）
-- 当前: 500GB
-- 月增长: 30GB
-- 12个月后: 860GB
-- 瓶颈: 磁盘容量
-- 建议: 规划数据归档策略
+### 4. Storage Bottleneck (within 12 months)
+- Current: 500GB
+- Monthly growth: 30GB
+- In 12 months: 860GB
+- Bottleneck: disk capacity
+- Recommendation: plan a data archival strategy
 ```
 
-### 4. 生成容量规划
+### 4. Produce Capacity Plan
 
 ```
-## 容量规划报告
+## Capacity Planning Report
 
-### 短期（1-3 个月）
-1. [立即] 数据库连接池扩容 100 → 200
-2. [1个月] payment-service 扩容 4 → 6 副本
-3. [2个月] 集群节点池扩展 +2 节点
+### Short-term (1-3 months)
+1. [Immediate] Scale database connection pool 100 → 200
+2. [1 month] Scale payment-service 4 → 6 replicas
+3. [2 months] Expand cluster node pool by +2 nodes
 
-### 中期（3-6 个月）
-4. [3个月] RDS 实例升级（db.r5.large → db.r5.xlarge）
-5. [4个月] Redis 集群扩容
-6. [5个月] 存储扩容 500GB → 1TB
+### Mid-term (3-6 months)
+4. [3 months] Upgrade RDS instance (db.r5.large → db.r5.xlarge)
+5. [4 months] Scale Redis cluster
+6. [5 months] Expand storage 500GB → 1TB
 
-### 长期（6-12 个月）
-7. [6个月] 评估多集群架构
-8. [9个月] 数据归档系统建设
-9. [12个月] 容灾异地双活
+### Long-term (6-12 months)
+7. [6 months] Evaluate multi-cluster architecture
+8. [9 months] Build data archival system
+9. [12 months] Disaster recovery with active-active across regions
 
-### 大促/活动专项
-- 双11 预估流量: 日常 3 倍
-- 需要临时扩容: payment-service 6→12 副本
-- 数据库: 升级到 db.r5.2xlarge
-- 预算: 额外 ¥10,000/天
+### Campaign / Event Specific
+- Double 11 forecast traffic: 3x daily traffic
+- Required temporary scale-out: payment-service 6 → 12 replicas
+- Database: upgrade to db.r5.2xlarge
+- Budget: additional ¥10,000/day
 ```
 
-### 5. 成本预估
+### 5. Cost Estimate
 
 ```
-## 容量规划成本预估
+## Capacity Planning Cost Estimate
 
-| 项目 | 当前月成本 | 规划后月成本 | 增量 | 时间 |
+| Item | Current Monthly Cost | Planned Monthly Cost | Increment | Timeline |
 |------|-----------|-------------|------|------|
-| payment-service 扩容 | ¥1,200 | ¥1,800 | +¥600 | 1个月 |
-| 集群节点扩展 | ¥8,000 | ¥10,000 | +¥2,000 | 2个月 |
-| RDS 升级 | ¥3,000 | ¥5,000 | +¥2,000 | 3个月 |
-| Redis 扩容 | ¥800 | ¥1,500 | +¥700 | 4个月 |
-| 存储扩容 | ¥500 | ¥1,000 | +¥500 | 5个月 |
-| **合计** | **¥13,500** | **¥19,300** | **+¥5,800** | 5个月 |
+| payment-service scale-out | ¥1,200 | ¥1,800 | +¥600 | 1 month |
+| Cluster node expansion | ¥8,000 | ¥10,000 | +¥2,000 | 2 months |
+| RDS upgrade | ¥3,000 | ¥5,000 | +¥2,000 | 3 months |
+| Redis scale-out | ¥800 | ¥1,500 | +¥700 | 4 months |
+| Storage expansion | ¥500 | ¥1,000 | +¥500 | 5 months |
+| **Total** | **¥13,500** | **¥19,300** | **+¥5,800** | 5 months |
 ```
 
-### 6. 更新知识库
+### 6. Update Knowledge Base
 
-`memory/knowledge-base.md` 追加：
+Append to `memory/knowledge-base.md`:
 ```
-| 规划日期 | 时间范围 | 当前容量 | 规划容量 | 成本增量 | 主要瓶颈 |
+| Plan Date | Time Range | Current Capacity | Planned Capacity | Cost Increment | Primary Bottleneck |
 |---------|---------|---------|---------|---------|---------|
-| 2026-06-22 | 3-12月 | 4副本/500GB | 6副本/1TB | +¥5,800/月 | CPU+DB连接 |
+| 2026-06-22 | 3-12 months | 4 replicas/500GB | 6 replicas/1TB | +¥5,800/month | CPU + DB connections |
 ```
 
-## 禁止事项
+## Prohibitions
 
-- 不基于不足 3 个月的数据做长期规划
-- 不规划到 100% 使用率（必须留 30% 余量）
-- 不只考虑当前不考虑增长
-- 不盲目扩容不考虑成本
+- Do not make long-term plans based on less than 3 months of data
+- Do not plan to 100% utilization (must keep 30% headroom)
+- Do not consider only the present without factoring in growth
+- Do not scale out blindly without considering cost
 
-## 与 LOOP 的关系
+## Relationship to LOOP
 
-**所属 LOOP 类型**：无（规划类 skill，非循环）
+**LOOP type**: none (planning skill, not a loop)
 
-本 skill 产出规划报告，供人类决策。
-执行扩容时由 deployment-pipeline / infrastructure-as-code 实施。
+This skill produces a planning report for human decision-making.
+Scale-out execution is handled by deployment-pipeline / infrastructure-as-code.

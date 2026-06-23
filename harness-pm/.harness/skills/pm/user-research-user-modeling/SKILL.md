@@ -1,21 +1,21 @@
 ---
 name: user-research-user-modeling
-description: 当需要基于用户声音分析和行为分析结果生成Persona、Empathy Map、Journey Map时使用。用户建模自动生成Pipeline。关键词：用户建模、Persona生成、同理心地图、用户旅程地图、用户画像、典型用户、用户角色、用户长什么样。
+description: Used when generating Persona, Empathy Map, and Journey Map from user voice analysis and behavior analysis results. User modeling auto-generation pipeline. Keywords: user modeling, Persona generation, empathy map, user journey map, user persona, typical user, user role, what users look like.
 metadata:
-  module: "产品探索与发现"
-  sub-module: "用户研究"
+  module: "Product Discovery"
+  sub-module: "User Research"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["通用"]
+  domain_tags: ["General"]
   trigger_examples:
-    - "帮我画用户画像"
-    - "用户旅程怎么梳理"
-    - "用户是什么样的人"
+    - "Help me create user personas"
+    - "How to map the user journey"
+    - "What kind of users are they"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出用户模型和行为特征"
-  deep_description: "完整建模 + 行为序列分析 + 模型验证方案 + 用户演进追踪"
+  quick_description: "Directly output user models and behavioral traits"
+  deep_description: "Full modeling + behavior sequence analysis + model validation plan + user evolution tracking"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -25,36 +25,36 @@ writes:
   - memory/progress.md
 ---
 
-# 用户建模自动生成
+# User Modeling Auto-Generation
 
-## 核心原则
+## Core Principles
 
-1. **Persona是假设不是事实**——Persona是基于数据的推断模型，需持续验证而非固化，低置信度字段必须标注
-2. **声音+行为交叉验证**——用户说的（VOC）和做的（行为）必须交叉印证，矛盾处标记为待验证假设
-3. **推断必须标注来源**——每个特征字段标注data_source（voice/behavior/survey/inferred），推断性内容不可伪装为事实
-4. **低置信度即待验证假设**——置信度<0.5的字段升级人类验证，不自动进入后续流程
+1. **Persona is hypothesis, not fact** — Persona is an inferred model based on data; it requires continuous validation rather than being fixed. Low-confidence fields must be annotated
+2. **Voice + behavior cross-validation** — What users say (VOC) and what they do (behavior) must cross-validate; contradictions are marked as hypotheses pending validation
+3. **Inferences must be sourced** — Each trait field is annotated with data_source (voice/behavior/survey/inferred); inferred content must not be disguised as fact
+4. **Low confidence means hypothesis pending validation** — Fields with confidence < 0.5 are escalated for human validation and do not automatically proceed to subsequent flows
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 **AI建议人类审批** — AI生成模型草案，人类审批确认后方可用于后续流程
+🤖→👤 **AI suggests, human approves** — AI generates model drafts; human approval is required before they can be used in subsequent flows
 
 ---
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| voice-analysis.json | JSON | 是 | docs/discovery/user-research.md（追加“用户声音分析”章节） | 用户声音洞察、痛点、主题、分群 |
-| behavior-analysis.json | JSON | 是 | docs/discovery/user-research.md（追加“用户行为分析”章节） | 行为洞察、漏斗、路径、Aha Moment |
-| survey_data | JSON | ○ | 用户提供 | 问卷数据，补充人口统计学信息和态度数据 |
-| modeling_config | object | ○ | 用户提供 | 建模配置（最大Persona数、置信度阈值、旅程阶段等） |
+| voice-analysis.json | JSON | Yes | docs/discovery/user-research.md (append "User Voice Analysis" section) | User voice insights, pain points, themes, segments |
+| behavior-analysis.json | JSON | Yes | docs/discovery/user-research.md (append "User Behavior Analysis" section) | Behavior insights, funnel, paths, Aha Moment |
+| survey_data | JSON | ○ | User-provided | Survey data, supplementing demographic and attitudinal data |
+| modeling_config | object | ○ | User-provided | Modeling configuration (max Persona count, confidence threshold, journey stages, etc.) |
 
-### 输入格式
+### Input Format
 
 ```json
 {
-  "voice_analysis_path": "docs/discovery/user-research.md（追加“用户声音分析”章节）
-  "behavior_analysis_path": "docs/discovery/user-research.md（追加“用户行为分析”章节）
+  "voice_analysis_path": "docs/discovery/user-research.md (append \"User Voice Analysis\" section)
+  "behavior_analysis_path": "docs/discovery/user-research.md (append \"User Behavior Analysis\" section)
   "survey_data": {
     "available": "boolean",
     "location": "string",
@@ -69,133 +69,133 @@ writes:
 }
 ```
 
-**输入依赖**：
-- `voice-analysis.json`：提供用户声音洞察、痛点、主题、分群
-- `behavior-analysis.json`：提供行为洞察、漏斗、路径、Aha Moment
-- 问卷数据（可选）：补充人口统计学信息和态度数据
+**Input dependencies**:
+- `voice-analysis.json`: Provides user voice insights, pain points, themes, segments
+- `behavior-analysis.json`: Provides behavior insights, funnel, paths, Aha Moment
+- Survey data (optional): Supplements demographic and attitudinal data
 
 ---
 
-## 执行步骤
+## Execution Steps
 
-### Step 1：用户聚类 [核心]
+### Step 1: User Clustering [Core]
 
-- 整合voice-analysis的用户分群与behavior-analysis的行为分群
-- 使用交叉验证确定最优聚类数（2-6个Persona）
-- 聚类维度：行为特征 × 声音特征 × 人口统计（如有）
-- 评估每个聚类的内聚度和区分度
-- 输出：聚类结果，每个聚类的核心特征描述
+- Integrate user segments from voice-analysis with behavior segments from behavior-analysis
+- Use cross-validation to determine the optimal number of clusters (2-6 Personas)
+- Clustering dimensions: behavioral traits × voice traits × demographics (if available)
+- Evaluate cohesion and distinctiveness of each cluster
+- Output: Clustering results, with core trait descriptions for each cluster
 
-### Step 2：特征画像提取 [核心]
+### Step 2: Feature Persona Extraction [Core]
 
-- 对每个聚类提取关键特征：
-  - **行为特征**：核心使用场景、使用频率、功能偏好、Aha Moment
-  - **声音特征**：主要诉求、核心痛点、情感倾向、代表原声
-  - **人口统计**：年龄区间、职业倾向、技术熟练度（如有数据）
-  - **Jobs to be Done**：Functional Job / Emotional Job / Social Job
-- 标注每个特征的置信度
-- 标注数据来源（voice / behavior / survey / 推断）
-- 输出：每个聚类的特征画像
+- Extract key traits for each cluster:
+  - **Behavioral traits**: Core usage scenarios, usage frequency, feature preferences, Aha Moment
+  - **Voice traits**: Main needs, core pain points, sentiment tendency, representative quotes
+  - **Demographics**: Age range, occupational tendency, tech proficiency (if data available)
+  - **Jobs to be Done**: Functional Job / Emotional Job / Social Job
+- Annotate confidence for each trait
+- Annotate data source (voice / behavior / survey / inferred)
+- Output: Feature persona for each cluster
 
-### Step 3：Persona文档生成 [核心]
+### Step 3: Persona Document Generation [Core]
 
-- 为每个聚类生成Persona文档，包含：
-  - **名称**：易记的代称（如"效率先锋""体验探索者"）
-  - **核心目标**：该Persona最想达成什么（2-3个）
-  - **关键行为**：典型使用行为模式（3-5个）
-  - **核心痛点**：最困扰的问题（2-4个，引用voice-analysis数据）
-  - **代表性原声**：来自真实用户反馈的引用（3-5条）
-  - **规模占比**：该Persona在用户群中的占比
-  - **置信度**：整体置信度评分（0-1）
-- 标注推断性内容（无直接数据支撑的特征）
-- 输出：persona.json
+- Generate a Persona document for each cluster, including:
+  - **Name**: A memorable alias (e.g., "Efficiency Pioneer", "Experience Explorer")
+  - **Core goals**: What this Persona most wants to achieve (2-3)
+  - **Key behaviors**: Typical usage behavior patterns (3-5)
+  - **Core pain points**: Most troubling issues (2-4, referencing voice-analysis data)
+  - **Representative quotes**: Quotes from real user feedback (3-5)
+  - **Size ratio**: This Persona's proportion of the user base
+  - **Confidence**: Overall confidence score (0-1)
+- Annotate inferred content (traits without direct data support)
+- Output: persona.json
 
-### Step 4：Empathy Map生成 [核心]
+### Step 4: Empathy Map Generation [Core]
 
-- 为每个Persona生成Empathy Map，包含四个象限：
-  - **Says**：用户说了什么（来自voice-analysis的原声）
-  - **Thinks**：用户可能在想什么（推断，标注置信度）
-  - **Does**：用户做了什么（来自behavior-analysis的行为数据）
-  - **Feels**：用户的情绪状态（来自情感分析 + 推断，标注置信度）
-- 标注每个象限条目的数据来源和置信度
-- 输出：empathy-map.json
+- Generate an Empathy Map for each Persona, including four quadrants:
+  - **Says**: What the user says (quotes from voice-analysis)
+  - **Thinks**: What the user might be thinking (inferred, with confidence annotated)
+  - **Does**: What the user does (behavior data from behavior-analysis)
+  - **Feels**: The user's emotional state (from sentiment analysis + inference, with confidence annotated)
+- Annotate data source and confidence for each quadrant entry
+- Output: empathy-map.json
 
-### Step 5：Journey Map生成 [核心]
+### Step 5: Journey Map Generation [Core]
 
-- 为每个Persona生成Journey Map，包含：
-  - **阶段**：认知 → 考虑 → 使用 → 深度使用 → 流失/留存
-  - **每个阶段**：
-    - 用户行为（来自behavior-analysis）
-    - 触点（产品内外）
-    - 情绪曲线（高/低点标注）
-    - 痛点（来自voice-analysis）
-    - 机会点（痛点 × 未满足需求）
-- 标注情绪曲线的置信度（行为数据支撑 vs 推断）
-- 输出：journey-map.json
+- Generate a Journey Map for each Persona, including:
+  - **Stages**: Awareness → Consideration → Usage → Deep Use → Churn/Retention
+  - **Each stage**:
+    - User behaviors (from behavior-analysis)
+    - Touchpoints (internal and external to the product)
+    - Emotion curve (high/low points annotated)
+    - Pain points (from voice-analysis)
+    - Opportunities (pain points × unmet needs)
+- Annotate confidence of the emotion curve (behavior data support vs. inference)
+- Output: journey-map.json
 
-### Step 6：置信度评估 [核心]
+### Step 6: Confidence Assessment [Core]
 
-- 评估每个Persona的整体置信度
-- 评估每个输出字段的置信度
-- 识别低置信度字段（< 0.5）并标记需人类验证
-- 生成置信度报告：哪些结论有强数据支撑，哪些需要补充验证
-- 输出：置信度评估报告
+- Assess overall confidence for each Persona
+- Assess confidence for each output field
+- Identify low-confidence fields (< 0.5) and mark them for human validation
+- Generate a confidence report: which conclusions have strong data support and which need supplementary validation
+- Output: Confidence assessment report
 
 ---
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth level | Output scope | Description |
 |----------|----------|------|
-| quick | 用户模型和行为特征 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整建模 + 行为序列分析 + 模型验证方案 + 用户演进追踪 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | User models and behavioral traits | Core conclusions + minimum viable deliverable |
+| standard | Full deliverable (current default) | Complete deliverable, including all Step outputs |
+| deep | Full modeling + behavior sequence analysis + model validation plan + user evolution tracking | Full deliverable + extended analysis + deep inference |
 
-## 输出
+## Output
 
 ### persona.json
 
-输出文件：`docs/discovery/user-research.md（追加“用户画像”章节）`
+Output file: `docs/discovery/user-research.md (append "User Persona" section)`
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["personas", "metadata"],
   "properties": {
-    "personas": {"type": "array", "description": "Persona列表，含目标、行为、痛点和JTBD"},
-    "metadata": {"type": "object", "description": "元数据，含时间戳、来源和聚类质量评分"}
+    "personas": {"type": "array", "description": "Persona list, including goals, behaviors, pain points, and JTBD"},
+    "metadata": {"type": "object", "description": "Metadata, including timestamp, sources, and clustering quality score"}
   }
 }
 ```
 
-**输出校验规则**：
+**Output validation rules**:
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field path | Type | Required | Description |
 |----------|------|------|------|
-| personas | array | 是 | Persona列表，不可为空 |
-| personas[].id | string | 是 | Persona唯一标识 |
-| personas[].name | string | 是 | Persona名称 |
-| personas[].core_goals | array | 是 | 核心目标列表，每项须含goal、confidence、data_source |
-| personas[].core_goals[].data_source | string | 是 | 数据来源枚举：voice/behavior/survey/inferred |
-| personas[].core_goals[].confidence | number | 是 | 目标置信度，0-1 |
-| personas[].key_behaviors | array | 是 | 关键行为列表，每项须含behavior、confidence、data_source |
-| personas[].key_behaviors[].data_source | string | 是 | 数据来源枚举：voice/behavior/survey/inferred |
-| personas[].core_pain_points | array | 是 | 核心痛点列表，每项须含pain_point、severity、confidence、data_source |
-| personas[].core_pain_points[].severity | string | 是 | 痛点等级枚举：P0/P1/P2/P3 |
-| personas[].core_pain_points[].evidence_ref | string | 是 | 证据引用来源 |
-| personas[].representative_quotes | array | 是 | 代表原声列表，每个Persona≥3条 |
-| personas[].size_ratio | number | 是 | 规模占比，0-1 |
-| personas[].confidence | number | 是 | Persona整体置信度，0-1 |
-| personas[].jobs_to_be_done.functional_job | object | 是 | 功能性Job，须含description、confidence |
-| personas[].jobs_to_be_done.emotional_job | object | 是 | 情感性Job，须含description、confidence |
-| personas[].jobs_to_be_done.social_job | object | 是 | 社会性Job，须含description、confidence |
-| personas[].low_confidence_fields | string[] | 是 | 低置信度字段列表 |
-| metadata.analysis_timestamp | string | 是 | 分析时间戳 |
-| metadata.input_sources | string[] | 是 | 输入来源列表 |
-| metadata.clustering_quality_score | number | 是 | 聚类质量评分，0-1 |
-| metadata.confidence_overall | number | 是 | 整体置信度，0-1 |
+| personas | array | Yes | Persona list, cannot be empty |
+| personas[].id | string | Yes | Persona unique identifier |
+| personas[].name | string | Yes | Persona name |
+| personas[].core_goals | array | Yes | Core goals list, each item must contain goal, confidence, data_source |
+| personas[].core_goals[].data_source | string | Yes | Data source enum: voice/behavior/survey/inferred |
+| personas[].core_goals[].confidence | number | Yes | Goal confidence, 0-1 |
+| personas[].key_behaviors | array | Yes | Key behaviors list, each item must contain behavior, confidence, data_source |
+| personas[].key_behaviors[].data_source | string | Yes | Data source enum: voice/behavior/survey/inferred |
+| personas[].core_pain_points | array | Yes | Core pain points list, each item must contain pain_point, severity, confidence, data_source |
+| personas[].core_pain_points[].severity | string | Yes | Pain point severity enum: P0/P1/P2/P3 |
+| personas[].core_pain_points[].evidence_ref | string | Yes | Evidence reference source |
+| personas[].representative_quotes | array | Yes | Representative quotes list, each Persona ≥3 |
+| personas[].size_ratio | number | Yes | Size ratio, 0-1 |
+| personas[].confidence | number | Yes | Persona overall confidence, 0-1 |
+| personas[].jobs_to_be_done.functional_job | object | Yes | Functional Job, must contain description, confidence |
+| personas[].jobs_to_be_done.emotional_job | object | Yes | Emotional Job, must contain description, confidence |
+| personas[].jobs_to_be_done.social_job | object | Yes | Social Job, must contain description, confidence |
+| personas[].low_confidence_fields | string[] | Yes | Low-confidence field list |
+| metadata.analysis_timestamp | string | Yes | Analysis timestamp |
+| metadata.input_sources | string[] | Yes | Input source list |
+| metadata.clustering_quality_score | number | Yes | Clustering quality score, 0-1 |
+| metadata.confidence_overall | number | Yes | Overall confidence, 0-1 |
 
 ```json
 {
@@ -263,31 +263,31 @@ writes:
 
 ### empathy-map.json
 
-输出文件：`docs/discovery/user-research.md（追加“用户画像”章节）`
+Output file: `docs/discovery/user-research.md (append "User Persona" section)`
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["empathy_maps"],
   "properties": {
-    "empathy_maps": {"type": "array", "description": "同理心地图列表，含Says/Thinks/Does/Feels四象限"}
+    "empathy_maps": {"type": "array", "description": "Empathy map list, including Says/Thinks/Does/Feels four quadrants"}
   }
 }
 ```
 
-**输出校验规则**：
+**Output validation rules**:
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field path | Type | Required | Description |
 |----------|------|------|------|
-| empathy_maps | array | 是 | 同理心地图列表，不可为空 |
-| empathy_maps[].persona_id | string | 是 | 关联Persona ID |
-| empathy_maps[].persona_name | string | 是 | 关联Persona名称 |
-| empathy_maps[].says | array | 是 | Says象限，每项须含content、source、confidence，≥2条 |
-| empathy_maps[].thinks | array | 是 | Thinks象限，每项须含content、inference_basis、confidence，≥2条 |
-| empathy_maps[].does | array | 是 | Does象限，每项须含content、source、confidence，≥2条 |
-| empathy_maps[].feels | array | 是 | Feels象限，每项须含emotion、intensity、inference_basis、confidence，≥2条 |
+| empathy_maps | array | Yes | Empathy map list, cannot be empty |
+| empathy_maps[].persona_id | string | Yes | Linked Persona ID |
+| empathy_maps[].persona_name | string | Yes | Linked Persona name |
+| empathy_maps[].says | array | Yes | Says quadrant, each item must contain content, source, confidence, ≥2 items |
+| empathy_maps[].thinks | array | Yes | Thinks quadrant, each item must contain content, inference_basis, confidence, ≥2 items |
+| empathy_maps[].does | array | Yes | Does quadrant, each item must contain content, source, confidence, ≥2 items |
+| empathy_maps[].feels | array | Yes | Feels quadrant, each item must contain emotion, intensity, inference_basis, confidence, ≥2 items |
 
 ```json
 {
@@ -331,36 +331,36 @@ writes:
 
 ### journey-map.json
 
-输出文件：`docs/discovery/user-research.md（追加“用户画像”章节）`
+Output file: `docs/discovery/user-research.md (append "User Persona" section)`
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["journey_maps"],
   "properties": {
-    "journey_maps": {"type": "array", "description": "用户旅程地图列表，含阶段、情绪曲线和机会点"}
+    "journey_maps": {"type": "array", "description": "User journey map list, including stages, emotion curve, and opportunities"}
   }
 }
 ```
 
-**输出校验规则**：
+**Output validation rules**:
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field path | Type | Required | Description |
 |----------|------|------|------|
-| journey_maps | array | 是 | 旅程地图列表，不可为空 |
-| journey_maps[].persona_id | string | 是 | 关联Persona ID |
-| journey_maps[].persona_name | string | 是 | 关联Persona名称 |
-| journey_maps[].stages | array | 是 | 旅程阶段列表，须覆盖核心阶段 |
-| journey_maps[].stages[].stage_name | string | 是 | 阶段名称 |
-| journey_maps[].stages[].user_behaviors | string[] | 是 | 用户行为列表 |
-| journey_maps[].stages[].touchpoints | string[] | 是 | 触点列表 |
-| journey_maps[].stages[].emotion_score | number | 是 | 情绪评分 |
-| journey_maps[].stages[].emotion_confidence | number | 是 | 情绪置信度，0-1 |
-| journey_maps[].stages[].pain_points | string[] | 是 | 痛点列表 |
-| journey_maps[].stages[].opportunities | string[] | 是 | 机会点列表 |
-| journey_maps[].emotional_arc | object | 是 | 情绪弧线，须含high_points、low_points、overall_trend |
+| journey_maps | array | Yes | Journey map list, cannot be empty |
+| journey_maps[].persona_id | string | Yes | Linked Persona ID |
+| journey_maps[].persona_name | string | Yes | Linked Persona name |
+| journey_maps[].stages | array | Yes | Journey stage list, must cover core stages |
+| journey_maps[].stages[].stage_name | string | Yes | Stage name |
+| journey_maps[].stages[].user_behaviors | string[] | Yes | User behavior list |
+| journey_maps[].stages[].touchpoints | string[] | Yes | Touchpoint list |
+| journey_maps[].stages[].emotion_score | number | Yes | Emotion score |
+| journey_maps[].stages[].emotion_confidence | number | Yes | Emotion confidence, 0-1 |
+| journey_maps[].stages[].pain_points | string[] | Yes | Pain point list |
+| journey_maps[].stages[].opportunities | string[] | Yes | Opportunity list |
+| journey_maps[].emotional_arc | object | Yes | Emotional arc, must contain high_points, low_points, overall_trend |
 
 ```json
 {
@@ -391,77 +391,77 @@ writes:
 
 ---
 
-## 决策规则
+## Decision Rules
 
-| 条件 | 动作 |
+| Condition | Action |
 |------|------|
-| Persona整体置信度 < 0.5 | 升级至人类验证，标记"需人工确认"，不自动进入后续流程 |
-| Emotional Job推断置信度 < 0.5 | 升级至人类验证，标记"情感需求推断待确认" |
-| Social Job推断置信度 < 0.5 | 升级至人类验证，标记"社交需求推断待确认" |
-| 两个Persona区分度不足（特征重叠 > 70%） | 合并为1个Persona或标记"需人工判断是否拆分" |
-| 聚类质量评分 < 0.4 | 标记"聚类质量不佳"，建议调整聚类参数或补充数据 |
+| Persona overall confidence < 0.5 | Escalate to human validation, mark "needs manual confirmation", do not automatically proceed to subsequent flows |
+| Emotional Job inference confidence < 0.5 | Escalate to human validation, mark "emotional need inference pending confirmation" |
+| Social Job inference confidence < 0.5 | Escalate to human validation, mark "social need inference pending confirmation" |
+| Two Personas have insufficient distinctiveness (trait overlap > 70%) | Merge into 1 Persona or mark "needs manual judgment on whether to split" |
+| Clustering quality score < 0.4 | Mark "poor clustering quality", recommend adjusting clustering parameters or supplementing data |
 
 ---
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 至少1个Persona置信度 ≥ 0.7（满足）
-- [ ] 每个Persona有数据支撑（每个字段标注数据来源）
+- [ ] At least 1 Persona with confidence ≥ 0.7 (satisfied)
+- [ ] Each Persona has data support (each field annotated with data source)
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] Persona间区分度（特征重叠 < 70%）
-- [ ] 代表性原声（每个Persona ≥ 3条原声）
-- [ ] Empathy Map四象限完整（每个象限 ≥ 2条内容）
-- [ ] Journey Map阶段完整（覆盖核心阶段）
-- [ ] 所有输出标注置信度（100%）
+- [ ] Distinctiveness between Personas (trait overlap < 70%)
+- [ ] Representative quotes (each Persona ≥ 3 quotes)
+- [ ] Empathy Map four quadrants complete (each quadrant ≥ 2 items)
+- [ ] Journey Map stages complete (covers core stages)
+- [ ] All outputs annotated with confidence (100%)
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep inference and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-当上游文件不存在时，本Skill仍可独立执行：
+When upstream files do not exist, this Skill can still execute independently:
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing upstream input | Degradation plan | Output impact | Data acquisition instructions |
 |---------------|---------|---------|------------|
-| voice-analysis.json | 基于用户口头描述的目标用户特征推断Persona，标注"缺乏声音数据支撑" | Persona声音特征和痛点基于推断，representative_quotes缺失，core_pain_points置信度降低 | 要求用户提供用户反馈文本或上传voice-analysis.json文件 |
-| behavior-analysis.json | 基于用户口头描述的用户行为推断Persona，标注"缺乏行为数据支撑" | Persona行为特征和Aha Moment基于推断，key_behaviors置信度降低，Journey Map行为数据缺失 | 要求用户提供行为事件日志或上传behavior-analysis.json文件 |
-| voice-analysis.json + behavior-analysis.json | 用户提供目标用户描述 → 基于描述推断Persona，整体置信度降低 | personas整体confidence降低，data_source多为inferred，low_confidence_fields增多 | 要求用户提供用户反馈文本和行为事件日志 |
-| 所有上游文件均缺失 | 提示用户先执行前序阶段，或基于用户口头描述执行轻量版Persona推断 | 输出为纯推断Persona，confidence_overall上限0.3，所有字段标注inferred | 要求用户提供目标用户特征描述、行为模式和核心痛点 |
-| 若用户未提供survey_data | 跳过该输入相关步骤，Persona中人口统计学信息基于推断，标注"缺乏问卷数据" | 人口统计字段data_source为inferred，置信度降低 | 要求用户提供用户问卷数据（含人口统计、使用习惯等） |
-| 若用户未提供modeling_config | 跳过该输入相关步骤，使用默认建模配置（最大Persona数：4，置信度阈值：0.5） | 使用默认配置，Persona数量和阈值可能非最优 | 要求用户提供最大Persona数量、置信度阈值等建模参数 |
+| voice-analysis.json | Infer Persona based on user-described target user traits, annotate "lacks voice data support" | Persona voice traits and pain points based on inference, representative_quotes missing, core_pain_points confidence reduced | Ask user to provide user feedback text or upload voice-analysis.json file |
+| behavior-analysis.json | Infer Persona based on user-described user behavior, annotate "lacks behavior data support" | Persona behavior traits and Aha Moment based on inference, key_behaviors confidence reduced, Journey Map behavior data missing | Ask user to provide behavior event logs or upload behavior-analysis.json file |
+| voice-analysis.json + behavior-analysis.json | User provides target user description → infer Persona based on description, overall confidence reduced | personas overall confidence reduced, data_source mostly inferred, low_confidence_fields increased | Ask user to provide user feedback text and behavior event logs |
+| All upstream files missing | Prompt user to execute preceding stages first, or execute lightweight Persona inference based on user's verbal description | Output is purely inferred Persona, confidence_overall capped at 0.3, all fields annotated as inferred | Ask user to provide target user trait description, behavior patterns, and core pain points |
+| If user does not provide survey_data | Skip steps related to this input, Persona demographic information based on inference, annotate "lacks survey data" | Demographic field data_source is inferred, confidence reduced | Ask user to provide user survey data (including demographics, usage habits, etc.) |
+| If user does not provide modeling_config | Skip steps related to this input, use default modeling configuration (max Persona count: 4, confidence threshold: 0.5) | Using default configuration, Persona count and threshold may be suboptimal | Ask user to provide modeling parameters such as max Persona count and confidence threshold |
 
-## 数据获取说明
+## Data Acquisition Instructions
 
-本Skill需要用户声音分析和行为分析数据，请通过以下方式之一提供：
-  1. 直接粘贴用户描述文本（目标用户特征、行为模式等）
-  2. 上传voice-analysis.json / behavior-analysis.json文件
-  3. 提供数据文件路径
-- AI不负责外部数据采集，仅负责分析
+This Skill requires user voice analysis and behavior analysis data. Please provide via one of the following methods:
+  1. Directly paste user description text (target user traits, behavior patterns, etc.)
+  2. Upload voice-analysis.json / behavior-analysis.json files
+  3. Provide data file paths
+- AI is not responsible for external data collection, only for analysis
 
 ---
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响
+### Upstream Change Impact
 
-| 上游Skill | 变更类型 | 影响范围 | 响应动作 |
+| Upstream Skill | Change type | Impact scope | Response action |
 |-----------|---------|---------|---------|
-| user-research-voice-analysis | voice-analysis.json结构变更 | 用户分群、痛点、主题数据格式变化 | 检查输入字段映射，适配新结构，不兼容时标记"上游数据格式异常" |
-| user-research-voice-analysis | voice-analysis.json内容更新 | 痛点等级、情感分布、分群结果变化 | 重新执行聚类和Persona生成，标注"基于更新数据重建" |
-| user-research-behavior-analysis | behavior-analysis.json结构变更 | 行为分群、Aha Moment、功能使用数据格式变化 | 检查输入字段映射，适配新结构，不兼容时标记"上游数据格式异常" |
-| user-research-behavior-analysis | behavior-analysis.json内容更新 | 漏斗、路径、异常检测结果变化 | 重新执行聚类和Persona生成，标注"基于更新数据重建" |
+| user-research-voice-analysis | voice-analysis.json structure change | User segments, pain points, theme data format changes | Check input field mapping, adapt to new structure, mark "upstream data format anomaly" if incompatible |
+| user-research-voice-analysis | voice-analysis.json content update | Pain point severity, sentiment distribution, segment results change | Re-execute clustering and Persona generation, annotate "rebuilt based on updated data" |
+| user-research-behavior-analysis | behavior-analysis.json structure change | Behavior segments, Aha Moment, feature usage data format changes | Check input field mapping, adapt to new structure, mark "upstream data format anomaly" if incompatible |
+| user-research-behavior-analysis | behavior-analysis.json content update | Funnel, paths, anomaly detection results change | Re-execute clustering and Persona generation, annotate "rebuilt based on updated data" |
 
-### 下游通知机制
+### Downstream Notification Mechanism
 
-| 下游Skill | 通知触发条件 | 通知方式 | 通知内容 |
+| Downstream Skill | Notification trigger condition | Notification method | Notification content |
 |-----------|------------|---------|---------|
-| user-research-interview-assist | persona.json更新完成 | 写入output文件 | 通知Persona数据已就绪，可用于访谈脚本设计 |
-| user-research-report | persona.json / empathy-map.json / journey-map.json更新完成 | 写入output文件 | 通知用户建模数据已就绪，可用于报告生成 |
+| user-research-interview-assist | persona.json update complete | Write to output file | Notify that Persona data is ready and can be used for interview script design |
+| user-research-report | persona.json / empathy-map.json / journey-map.json update complete | Write to output file | Notify that user modeling data is ready and can be used for report generation |

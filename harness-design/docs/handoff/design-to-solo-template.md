@@ -1,89 +1,89 @@
-# 交接：harness-design → harness-solo
+# Handoff: harness-design → harness-solo
 
-> 生成时间：YYYY-MM-DD HH:MM
-> 源框架：harness-design
-> 目标框架：harness-solo
+> Generated at: YYYY-MM-DD HH:MM
+> Source framework: harness-design
+> Target framework: harness-solo
 
-## 阶段总结
+## Phase Summary
 
-<本阶段做了什么，一句话概括。如：完成 V1 视觉设计 + 交互设计 + 组件映射，含 3 个核心页面>
+<One-sentence summary of what was done in this phase. e.g., Completed V1 visual design + interaction design + component mapping, including 3 core pages>
 
-## 设计系统资产
+## Design System Assets
 
-| 资产 | 路径 | 说明 |
+| Asset | Path | Notes |
 |------|------|------|
-| 设计系统 | docs/design-system/DESIGN.md | 色彩/字体/间距/阴影/圆角/断点（10 段标准格式） |
-| 设计令牌（JSON） | docs/design-system/tokens.json | 机器可读的 token 定义 |
-| 设计令牌（CSS） | docs/design-system/tokens.css | 工程直接消费的 CSS 变量 |
-| 组件规格 | docs/interaction/component-spec.md | 组件 Props/States 表 |
-| 组件映射 | docs/handoff/component-map.json | 设计组件 → 工程组件的显式映射 |
+| Design system | docs/design-system/DESIGN.md | Color / typography / spacing / shadow / radius / breakpoints (10-segment standard format) |
+| Design tokens (JSON) | docs/design-system/tokens.json | Machine-readable token definitions |
+| Design tokens (CSS) | docs/design-system/tokens.css | CSS variables for direct engineering consumption |
+| Component spec | docs/interaction/component-spec.md | Component Props/States table |
+| Component map | docs/handoff/component-map.json | Explicit mapping from design components to engineering components |
 
-## 页面清单
+## Page List
 
-| 页面 | 视觉稿 | 交互稿 | 线框图 |
+| Page | Visual draft | Interaction draft | Wireframe |
 |------|--------|--------|--------|
 | <Home> | docs/visual/home.md | docs/interaction/home.md | - |
 | <Login> | docs/visual/login.md | docs/interaction/login.md | - |
 
-## 组件清单
+## Component List
 
-<组件列表 + 状态 + 变体，详见 component-spec.md 和 component-map.json>
+<Component list + states + variants, see component-spec.md and component-map.json for details>
 
-## 验收标准（AC-xxx）
+## Acceptance Criteria (AC-xxx)
 
-> 以下 AC 直接沿用 harness-pm PRD 的 acceptance_criteria 编号，不重新编号。
-> harness-solo 的 writing-plans skill 应将此处 AC-xxx 标记为"设计相关 AC"，在 spec.md 中保留原编号。
-> 若设计阶段新增了设计专属验收点，使用 DAC-xxx 前缀（D = Design-derived），与工程 AC 区分。
+> The following ACs directly reuse the acceptance_criteria numbering from the harness-pm PRD, do not renumber.
+> harness-solo's writing-plans skill should mark these AC-xxx as "design-related AC" in spec.md, preserving the original IDs.
+> If the design phase added design-specific acceptance points, use the DAC-xxx prefix (D = Design-derived) to distinguish from engineering ACs.
 
-- [ ] AC-001: <沿用 PRD 的可测试描述>
-- [ ] AC-002: <沿用 PRD 的可测试描述>
-- [ ] AC-003: <沿用 PRD 的可测试描述>
-- [ ] DAC-001: <设计阶段新增的可测试描述，如"按钮 hover 态有 200ms 过渡动画">
-- [ ] DAC-002: <设计阶段新增的可测试描述，如"首屏 LCP ≥ 2.5s">
+- [ ] AC-001: <testable description reused from PRD>
+- [ ] AC-002: <testable description reused from PRD>
+- [ ] AC-003: <testable description reused from PRD>
+- [ ] DAC-001: <testable description added in design phase, e.g., "button hover state has a 200ms transition animation">
+- [ ] DAC-002: <testable description added in design phase, e.g., "first screen LCP >= 2.5s">
 
-## 交互流程
+## Interaction Flows
 
-<关键流程描述，详见 docs/prototype/flow.md>
+<Key flow descriptions, see docs/prototype/flow.md for details>
 
-## 关键决策
+## Key Decisions
 
-| 决策 | 理由 | 影响范围 |
+| Decision | Rationale | Impact scope |
 |------|------|---------|
-| 选用组件库 X | 技术栈匹配 + 设计系统对齐 | 全项目 |
-| 不做响应式 Y | 不在 MVP 范围 | 范围边界 |
+| Choose component library X | Tech stack match + design system alignment | Whole project |
+| Skip responsive Y | Not in MVP scope | Scope boundary |
 
-## 注意事项
+## Notes
 
-<工程实现需注意的点，如：>
-- component-map.json 的 props Type 已按 TECH_STACK 匹配，工程直接消费即可
-- 暗色模式 token 已在 tokens.json 定义，需在工程中实现切换逻辑
-- 所有触控目标 ≥ 44px（可访问性硬约束）
+<Points engineering should note during implementation, e.g.,:>
+- The props Type in component-map.json has been matched to TECH_STACK; engineering can consume it directly
+- Dark mode tokens are defined in tokens.json; switching logic must be implemented in the engineering codebase
+- All touch targets >= 44px (hard accessibility constraint)
 
-## 未决事项
+## Open Items
 
-需 harness-solo 处理或与 harness-design 确认的问题：
+Issues for harness-solo to handle or confirm with harness-design:
 
-- 待定 1: <问题描述>
-- 待定 2: <问题描述>
+- TBD 1: <issue description>
+- TBD 2: <issue description>
 
-## 建议下一步
+## Suggested Next Steps
 
-harness-solo 应优先处理：
+harness-solo should prioritize:
 
-1. 运行 brainstorming skill，消费本文件 + component-map.json
-2. 运行 writing-plans skill，将 AC-xxx + DAC-xxx 写入 spec.md
-3. 运行 frontend-implementation skill，按 component-map.json 实现组件
+1. Run the brainstorming skill, consume this file + component-map.json
+2. Run the writing-plans skill, write AC-xxx + DAC-xxx into spec.md
+3. Run the frontend-implementation skill, implement components per component-map.json
 
-## 风险提示
+## Risk Notes
 
-| 风险 | 等级 | 缓解措施 |
+| Risk | Level | Mitigation |
 |------|------|---------|
-| 技术栈与 component-map.json 不匹配 | 高/中/低 | <措施> |
-| 设计稿与 PRD 验收标准偏差 | 高/中/低 | <措施> |
+| Tech stack does not match component-map.json | High/Medium/Low | <action> |
+| Design drafts deviate from PRD acceptance criteria | High/Medium/Low | <action> |
 
 ---
 
-## 下游框架使用说明
+## Downstream Framework Usage Notes
 
-harness-solo 的 brainstorming / writing-plans / frontend-implementation / verify skill 会自动检测本文件并读取 AC-xxx + DAC-xxx 清单和 component-map.json。
-如未自动识别，可手动指向本文件路径让 Agent 读取。
+harness-solo's brainstorming / writing-plans / frontend-implementation / verify skills will auto-detect this file and read the AC-xxx + DAC-xxx list and component-map.json.
+If not auto-detected, you can manually point the Agent to this file path to read it.

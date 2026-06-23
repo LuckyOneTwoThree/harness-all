@@ -1,29 +1,29 @@
-# <任务名>
+# <task name>
 
-> 来源：由任务初始化产出。
-> 加载时机：PM skill 执行 / verify 读取。
-> 文件语义：覆盖写入（只保留最终通过的规格）。
+> Source: produced by task initialization.
+> Load timing: read by PM skill execution / verify.
+> File semantics: overwrite write (only the final passed spec is kept).
 
-## 目标
+## Goal
 
-[一句话目标，来自探索阶段]
+[One-sentence goal, from the discovery phase]
 
-## 验收标准
+## Acceptance criteria
 
-- AC-001: [可验证的描述]
-- AC-002: [可验证的描述]
-- AC-003: [可验证的描述]
+- AC-001: [verifiable description]
+- AC-002: [verifiable description]
+- AC-003: [verifiable description]
 
-## 任务拆解
+## Task breakdown
 
-- [ ] T1: [任务1，调用哪个 PM skill]
-- [ ] T2: [任务2]
-- [ ] T3: [任务3]
+- [ ] T1: [task 1, which PM skill to call]
+- [ ] T2: [task 2]
+- [ ] T3: [task 3]
 
-## 产出方案
+## Output plan
 
-[简要：调用哪些 PM skill、产出什么文档、关键决策点]
+[Briefly: which PM skills to call, what documents to produce, key decision points]
 
-## 不做的事
+## Out of scope
 
-[明确边界，避免范围蔓延]
+[Explicit boundaries to avoid scope creep]

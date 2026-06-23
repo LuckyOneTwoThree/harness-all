@@ -1,18 +1,18 @@
 ---
 name: market-orchestrator
-description: 当需要执行完整的市场与竞品分析流程时使用。市场竞品指挥官，调度market-tam-som/pest/competitor-analysis。关键词：市场分析、竞品分析、TAM/SAM/SOM、PEST、竞品情报、四象限、市场规模、行业分析、竞争对手、竞品调研。
+description: Used when a complete market and competitive analysis workflow is required. Market & Competition Orchestrator, dispatches market-tam-som/pest/competitor-analysis. Keywords: market analysis, competitive analysis, TAM/SAM/SOM, PEST, competitive intelligence, four-quadrant, market size, industry analysis, competitors, competitive research.
 metadata:
-  module: "产品探索与发现"
-  sub-module: "市场竞品"
+  module: "Product Discovery"
+  sub-module: "Market & Competition"
   type: "orchestrator"
   version: "9.0"
-  domain_tags: ["通用"]
+  domain_tags: ["General"]
   trigger_examples:
-    - "帮我分析一下市场"
-    - "看看竞品都在做什么"
-    - "评估一下市场规模"
-    - "做一下竞品调研"
-    - "分析一下行业趋势"
+    - "Help me analyze the market"
+    - "See what competitors are doing"
+    - "Evaluate the market size"
+    - "Conduct competitive research"
+    - "Analyze industry trends"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -23,20 +23,20 @@ writes:
   - memory/progress.md
 ---
 
-# 市场竞品指挥官
+# Market & Competition Orchestrator
 
-## 核心原则
+## Core Principles
 
-1. **市场是动态生态系统**——市场不是静态的赛场，竞品在流动、用户在迁移、技术在演进，编排器确保分析结果标注时效性，建议复评周期
-2. **宏观微观交叉验证**——TAM/PEST是宏观视角，competitor-analysis是微观视角，必须整合宏观微观才输出结论，单一视角结论不可信
-3. **并行采集串行整合**——TAM与PEST可并行采集，competitor-analysis依赖宏观输入，有依赖的步骤必须串行
-4. **人类验证关键节点**——TAM双路径差异>20%时人类判断、竞品战略推断低置信度时人类验证、差异化策略优先级人类确认
+1. **Market is a dynamic ecosystem** — The market is not a static arena; competitors flow, users migrate, and technology evolves. The orchestrator ensures analysis results are timestamped and a re-evaluation cycle is recommended.
+2. **Macro-micro cross-validation** — TAM/PEST provide the macro view, competitor-analysis provides the micro view. Conclusions must integrate both macro and micro perspectives; single-perspective conclusions are unreliable.
+3. **Parallel collection, serial integration** — TAM and PEST can be collected in parallel; competitor-analysis depends on macro inputs, so dependent steps must run serially.
+4. **Human validation at key checkpoints** — Human judgment is required when TAM dual-path divergence > 20%; human validation is required when competitor strategy inference confidence is low; human confirmation is required for differentiation strategy prioritization.
 
-## 编排协议
+## Orchestration Protocol
 
-遵循 [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) 编排协议。
+Follows the [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) orchestration protocol.
 
-## Pipeline 定义
+## Pipeline Definition
 
 ```yaml
 pipeline: market-orchestrator
@@ -48,130 +48,130 @@ post_pipeline:
 
 stages:
   - id: phase-1
-    name: "并行采集"
+    name: "Parallel Collection"
     skills:
       - market-tam-som
       - market-pest
     gate:
-      condition: "tam-som.json + pest.json 均已生成且验证通过"
-      fail_action: "补充品类关键词和目标市场信息或检查子Skill执行结果"
+      condition: "tam-som.json + pest.json are both generated and pass validation"
+      fail_action: "Provide additional category keywords and target market information, or check sub-skill execution results"
 
   - id: phase-2
-    name: "竞品分析"
+    name: "Competitive Analysis"
     depends_on: [phase-1]
     skills: [market-competitor-analysis]
     gate:
-      condition: "执行摘要包含3条核心发现+Top1策略，四象限已填充，Feature Matrix已更新"
-      fail_action: "检查竞品列表是否充分或上游数据是否完整"
+      condition: "Executive summary contains 3 core findings + Top 1 strategy, four quadrants are populated, Feature Matrix is updated"
+      fail_action: "Check whether the competitor list is sufficient or whether upstream data is complete"
 ```
 
-## 阶段执行计划
+## Stage Execution Plan
 
-### 阶段1：并行采集
+### Stage 1: Parallel Collection
 
-#### 调用 market-tam-som
+#### Invoke market-tam-som
 
 ```
 Skill: market-tam-som
-输入:
-  category_keywords: 用户提供（品类关键词）
-  target_market: 用户提供（目标市场地理范围）
-  time_range: 用户提供（测算时间范围）
-输出: docs/discovery/market-analysis.md（“市场规模”章节）
-验证: tam/sam/som三层测算完整，每层含区间估计（乐观/中性/保守），关键假设已标注
-模式: 🤖→👤
+Inputs:
+  category_keywords: User-provided (category keywords)
+  target_market: User-provided (target market geographic scope)
+  time_range: User-provided (estimation time range)
+Output: docs/discovery/market-analysis.md ("Market Size" section)
+Validation: TAM/SAM/SOM three-tier estimation complete, each tier includes range estimates (optimistic/neutral/conservative), key assumptions annotated
+Mode: 🤖→👤
 ```
 
-#### 调用 market-pest
+#### Invoke market-pest
 
 ```
 Skill: market-pest
-输入:
-  category_keywords: 用户提供（品类关键词）
-  target_market: 用户提供（目标市场）
-输出: docs/discovery/market-analysis.md（“PEST分析”章节）
-验证: political/economic/social/technological四维度均已扫描，每维度至少3条趋势摘要
-模式: 🤖
+Inputs:
+  category_keywords: User-provided (category keywords)
+  target_market: User-provided (target market)
+Output: docs/discovery/market-analysis.md ("PEST Analysis" section)
+Validation: All four dimensions (political/economic/social/technological) scanned, at least 3 trend summaries per dimension
+Mode: 🤖
 ```
 
-⏸ **阶段卡口**：tam-som.json + pest.json 均已生成且验证通过 → 未通过：补充品类关键词和目标市场信息或检查子Skill执行结果
+⏸ **Stage Gate**: tam-som.json + pest.json are both generated and pass validation → Not passed: Provide additional category keywords and target market information, or check sub-skill execution results
 
-### 阶段2：竞品分析
+### Stage 2: Competitive Analysis
 
-#### 调用 market-competitor-analysis
+#### Invoke market-competitor-analysis
 
 ```
 Skill: market-competitor-analysis
-输入:
-  competitor_list: 用户提供（竞品列表）
-  category_keywords: 用户提供（品类关键词）
-  monitor_config: 用户提供（监控配置，可选）
-  tam_som_ref: docs/discovery/market-analysis.md（“市场规模”章节）
-  pest_ref: docs/discovery/market-analysis.md（“PEST分析”章节）
-  product_info: 用户提供（自身产品信息，可选）
-输出: docs/discovery/market-analysis.md（“竞品分析”章节）
-验证: 执行摘要包含3条核心发现+Top1策略，四象限已填充，Feature Matrix已更新，差异化策略至少3条
-模式: 🤖→👤
+Inputs:
+  competitor_list: User-provided (competitor list)
+  category_keywords: User-provided (category keywords)
+  monitor_config: User-provided (monitoring config, optional)
+  tam_som_ref: docs/discovery/market-analysis.md ("Market Size" section)
+  pest_ref: docs/discovery/market-analysis.md ("PEST Analysis" section)
+  product_info: User-provided (own product info, optional)
+Output: docs/discovery/market-analysis.md ("Competitive Analysis" section)
+Validation: Executive summary contains 3 core findings + Top 1 strategy, four quadrants populated, Feature Matrix updated, at least 3 differentiation strategies
+Mode: 🤖→👤
 ```
 
-⏸ **阶段卡口**：执行摘要包含3条核心发现+Top1策略，四象限已填充，Feature Matrix已更新 → 未通过：检查竞品列表是否充分或上游数据是否完整
+⏸ **Stage Gate**: Executive summary contains 3 core findings + Top 1 strategy, four quadrants populated, Feature Matrix updated → Not passed: Check whether the competitor list is sufficient or whether upstream data is complete
 
-### 阶段总结（post_pipeline）
+### Stage Summary (post_pipeline)
 
-所有子Skill执行完成后，必须生成阶段总结文档，写入 `output/phase-reports/market-orchestrator.json`，包含以下6项结构（均不可为空）：
+After all sub-skills complete execution, a stage summary document must be generated and written to `output/phase-reports/market-orchestrator.json`, containing the following 6 structural sections (none may be empty):
 
-1. **执行概览**：编排器名称与版本、执行时间、子Skill执行状态（成功/失败/降级）
-2. **关键发现**：每个子Skill的核心输出摘要（1-3条）、跨子Skill的交叉洞察
-3. **决策记录**：人类决策点及决策结果、AI自动决策及依据
-4. **产出清单**：所有输出文件路径及内容摘要、产出质量评估（是否通过验证）
-5. **风险与待办**：未通过验证的项、降级执行的项、建议后续跟进的事项
-6. **下游衔接**：本编排器产出可被哪些下游编排器消费、推荐的下一步编排器
+1. **Execution Overview**: Orchestrator name and version, execution time, sub-skill execution status (success/failure/degraded)
+2. **Key Findings**: Core output summary for each sub-skill (1-3 items), cross-sub-skill insights
+3. **Decision Record**: Human decision points and decision results, AI automated decisions and rationale
+4. **Output Inventory**: All output file paths and content summaries, output quality assessment (whether validation passed)
+5. **Risks & Follow-ups**: Items that failed validation, items executed in degraded mode, recommended follow-up items
+6. **Downstream Handoff**: Which downstream orchestrators can consume this orchestrator's outputs, recommended next orchestrator
 
-| 参数 | 值 |
+| Parameter | Value |
 |------|-----|
-| 子Skill输出路径 | docs/discovery/ |
-| 总结输出路径 | output/phase-reports/market-orchestrator.json |
-| 审批记录路径 | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
+| Sub-skill output path | docs/discovery/ |
+| Summary output path | output/phase-reports/market-orchestrator.json |
+| Approval record path | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
 
-下游衔接:
-  primary: opportunity-definition（市场分析完成，基于市场规模和竞品格局定义产品机会）
+Downstream handoff:
+  primary: opportunity-definition (Market analysis complete; define product opportunities based on market size and competitive landscape)
   alternatives:
     - target: insight-analysis
-      reason: 市场数据缺乏用户视角，需用户洞察补充
-      condition: 市场分析结论缺乏用户需求验证时
+      reason: Market data lacks user perspective; user insight supplementation needed
+      condition: When market analysis conclusions lack user demand validation
     - target: positioning-strategy
-      reason: 市场格局已清晰，直接进入定位策略
-      condition: 竞品分析已充分，需确定差异化定位时
+      reason: Market landscape is clear; proceed directly to positioning strategy
+      condition: When competitive analysis is sufficient and differentiated positioning needs to be determined
   special_cases:
     - target: market-competitor-analysis
-      reason: 仅需竞品情报更新，无需完整市场分析
-      condition: 市场规模已评估，仅需竞品动态追踪时
+      reason: Only competitor intelligence update needed; no full market analysis required
+      condition: When market size is already assessed and only competitor dynamics tracking is needed
 
-## 阶段卡口
+## Stage Gates
 
-| 卡口 | 条件 | 未通过处理 |
+| Gate | Condition | Not-Passed Handling |
 |------|------|------------|
-| 阶段1完成 | tam-som.json + pest.json 均已生成且非空 | 补充品类关键词和目标市场信息或检查子Skill执行结果 |
-| 阶段2完成 | competitor-analysis.json + competitor-analysis.md 均已生成且非空 | 检查竞品列表是否充分或上游数据是否完整 |
-| 阶段总结已生成 | output/phase-reports/market-orchestrator.json 已生成且6项结构均非空 | 补充缺失结构项后重新生成 |
+| Stage 1 complete | tam-som.json + pest.json are both generated and non-empty | Provide additional category keywords and target market information, or check sub-skill execution results |
+| Stage 2 complete | competitor-analysis.json + competitor-analysis.md are both generated and non-empty | Check whether the competitor list is sufficient or whether upstream data is complete |
+| Stage summary generated | output/phase-reports/market-orchestrator.json is generated and all 6 structural sections are non-empty | Regenerate after supplementing missing structural sections |
 
-## 人类决策点
+## Human Decision Points
 
-| 决策点 | 触发条件 | 决策内容 |
+| Decision Point | Trigger Condition | Decision Content |
 |--------|----------|----------|
-| TAM/SAM/SOM关键假设验证 | market-tam-som完成 | 确认关键假设是否合理，双路径差异>20%时需人类判断 |
-| 竞品战略推断验证 | market-competitor-analysis完成，战略推断置信度<0.5 | 确认竞品战略方向推断是否合理 |
-| 差异化策略优先级确认 | market-competitor-analysis完成 | 确认差异化策略的优先级排序和资源分配 |
-| 报告结论与行动建议审批 | market-competitor-analysis完成 | 审批竞品分析报告的最终结论和行动建议 |
+| TAM/SAM/SOM key assumption validation | market-tam-som complete | Confirm whether key assumptions are reasonable; human judgment required when dual-path divergence > 20% |
+| Competitor strategy inference validation | market-competitor-analysis complete, strategy inference confidence < 0.5 | Confirm whether competitor strategic direction inference is reasonable |
+| Differentiation strategy prioritization confirmation | market-competitor-analysis complete | Confirm the prioritization and resource allocation of differentiation strategies |
+| Report conclusions and action recommendations approval | market-competitor-analysis complete | Approve final conclusions and action recommendations of the competitive analysis report |
 
-## 异常处理
+## Exception Handling
 
-| 异常类型 | 处理策略 |
+| Exception Type | Handling Strategy |
 |----------|----------|
-| 阶段1某子Skill失败 | 不阻塞另一子Skill，失败子Skill使用降级方案继续，标注"降级执行" |
-| tam-som.json双路径差异>30% | 标注"双路径严重分歧"，升级人类判断，report中使用中性值 |
-| pest.json某维度数据完全缺失 | 使用行业基准值填充，标注"推断值"，report中标注该维度数据不完整 |
-| competitor-analysis竞品列表为空 | 提示用户提供竞品列表或品类关键词，基于AI知识推断竞品，标注"竞品列表为AI推断" |
-| competitor-analysis某象限为空 | 标注"该象限未识别到竞品"，建议人类提供线索，report中标注象限覆盖不完整 |
-| 上游数据全部缺失 | 降级为轻量版流程：用户提供品类关键词 → 基于AI知识库生成简要竞品分析报告 |
-| 阶段总结生成失败 | 基于已完成的子Skill输出生成部分总结，缺失项标注"数据缺失"，不阻塞编排完成 |
+| A sub-skill in Stage 1 fails | Do not block the other sub-skill; the failed sub-skill continues with a degraded solution, marked as "degraded execution" |
+| tam-som.json dual-path divergence > 30% | Mark as "severe dual-path divergence", escalate to human judgment, use neutral values in the report |
+| A dimension in pest.json has completely missing data | Fill with industry benchmark values, mark as "inferred value", annotate the dimension as incomplete in the report |
+| competitor-analysis competitor list is empty | Prompt user to provide competitor list or category keywords; infer competitors based on AI knowledge, mark as "competitor list is AI-inferred" |
+| A quadrant in competitor-analysis is empty | Mark as "no competitors identified in this quadrant", suggest user provide leads, annotate quadrant coverage as incomplete in the report |
+| All upstream data missing | Degrade to lightweight workflow: user provides category keywords → generate brief competitive analysis report based on AI knowledge base |
+| Stage summary generation fails | Generate partial summary based on completed sub-skill outputs, mark missing items as "data missing", do not block orchestrator completion |

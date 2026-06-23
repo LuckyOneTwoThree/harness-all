@@ -1,20 +1,20 @@
 ---
 name: business-value-fit
-description: 当需要评估价值主张与用户需求的匹配度时使用。价值主张匹配度自动评估，AI自动执行，评估商业画布中的价值主张与用户痛点/收益的匹配程度。关键词：价值主张匹配、痛点覆盖、收益验证、匹配度评分、用户需要吗、价值对不对。
+description: Used when assessing the fit between value propositions and user needs. Auto-assesses value proposition fit, executed by AI, evaluating how well the value propositions in the Business Model Canvas match user pains and gains. Keywords: value proposition fit, pain coverage, gain validation, fit score, do users need this, is the value right.
 metadata:
-  module: "产品商业与战略"
-  sub-module: "商业模式设计"
+  module: "Product Business & Strategy"
+  sub-module: "Business Model Design"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["SaaS", "通用"]
+  domain_tags: ["SaaS", "General"]
   trigger_examples:
-    - "我们的价值主张对不对"
-    - "用户真的需要这个功能吗"
+    - "Is our value proposition right"
+    - "Do users really need this feature"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出价值-市场匹配度评估"
-  deep_description: "完整评估 + 价值-市场匹配矩阵 + 差距分析 + 优化路线图"
+  quick_description: "Directly output value-market fit assessment"
+  deep_description: "Complete assessment + value-market fit matrix + gap analysis + optimization roadmap"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -25,125 +25,125 @@ writes:
   - memory/progress.md
 ---
 
-# 价值主张匹配度自动评估
+# Value Proposition Fit Auto-Assessment
 
-## 核心原则
+## Core Principles
 
-1. **痛点覆盖优先**——高频高严重度痛点必须被价值主张覆盖，遗漏即警告
-2. **531评分标尺**——匹配度评估使用5/3/1/0四级评分，标准统一不可模糊
-3. **加权计算透明**——痛点权重=频率×严重度，收益权重=重要性×满意度缺口
-4. **缺口即行动**——未覆盖的痛点和收益必须附带改进建议，不可只标注不行动
+1. **Pain coverage first** — High-frequency, high-severity pains must be covered by value propositions; omissions trigger warnings
+2. **531 scoring scale** — Fit assessment uses a 5/3/1/0 four-level scoring, with uniform standards and no ambiguity
+3. **Transparent weighted calculation** — Pain weight = frequency × severity, gain weight = importance × satisfaction gap
+4. **Gaps mean action** — Uncovered pains and gains must come with improvement recommendations; flagging without action is not allowed
 
-**执行周期**：在Pipeline 1（商业模式画布）完成后自动触发
+**Execution Cycle**: Auto-triggered after Pipeline 1 (Business Model Canvas) is complete
 
-**核心目标**：系统性地评估价值主张与用户真实痛点和期望收益的匹配程度，识别覆盖盲区和改进机会。
+**Core Objective**: Systematically assess the fit between value propositions and users' real pains and expected gains, identifying coverage blind spots and improvement opportunities.
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| BMC价值主张 | JSON | 是 | docs/strategy/business-strategy.md（“商业模式画布”章节） | 价值主张列表，含Pain Relievers和Gain Creators |
-| 用户研究数据 | JSON | 是 | user-research-user-modeling / user-research-voice-analysis | 用户画像、痛点、期望收益、机会简报 |
+| BMC Value Propositions | JSON | Yes | docs/strategy/business-strategy.md ("Business Model Canvas" section) | Value proposition list, including Pain Relievers and Gain Creators |
+| User Research Data | JSON | Yes | user-research-user-modeling / user-research-voice-analysis | User personas, pains, expected gains, opportunity brief |
 
-### 必需输入
+### Required Inputs
 
-**BMC中的价值主张（来自Pipeline 1）：**
+**Value Propositions in BMC (from Pipeline 1):**
 ```json
 {
   "value_propositions": [
     {
       "proposition_id": "vp-1",
-      "headline": "价值主张标题",
-      "description": "价值主张详细描述",
+      "headline": "Value Proposition Headline",
+      "description": "Value Proposition Detailed Description",
       "target_segment": "segment-1",
-      "pain_relievers": ["解决的痛点1", "解决的痛点2"],
-      "gain_creators": ["创造的收益1", "创造的收益2"]
+      "pain_relievers": ["Pain relieved 1", "Pain relieved 2"],
+      "gain_creators": ["Gain created 1", "Gain created 2"]
     }
   ]
 }
 ```
 
-**探索阶段用户研究数据：**
+**Discovery-phase User Research Data:**
 ```json
 {
   "persona_summary": {
-    "demographics": "人口统计特征",
-    "behaviors": "用户行为特征",
-    "goals": "用户目标"
+    "demographics": "Demographic characteristics",
+    "behaviors": "User behavioral characteristics",
+    "goals": "User goals"
   },
   "problem_statement": {
     "pains": [
       {
         "pain_id": "pain-1",
-        "description": "痛点描述",
-        "frequency": "出现频率",
-        "severity": "严重程度",
-        "urgency": "紧迫程度"
+        "description": "Pain description",
+        "frequency": "Occurrence frequency",
+        "severity": "Severity level",
+        "urgency": "Urgency level"
       }
     ],
     "gains": [
       {
         "gain_id": "gain-1",
-        "description": "期望收益描述",
-        "importance": "重要性",
-        "current_satisfaction": "当前满意度"
+        "description": "Expected gain description",
+        "importance": "Importance",
+        "current_satisfaction": "Current satisfaction"
       }
     ]
   },
   "opportunity_definition": {
-    "opportunity_description": "企业培训数字化渗透率仅28%，AI个性化学习需求年增长45%",
-    "evidence": ["艾瑞咨询2024企业培训市场报告", "国务院职业教育改革实施方案"]
+    "opportunity_description": "Enterprise training digitalization penetration rate is only 28%, AI personalized learning demand growing 45% annually",
+    "evidence": ["iResearch 2024 Enterprise Training Market Report", "State Council Vocational Education Reform Implementation Plan"]
   }
 }
 ```
 
-## 执行步骤
+## Execution Steps
 
-### Step 1：痛点对齐度评估 [核心]
+### Step 1: Pain Alignment Assessment [Core]
 
-**任务**：系统性评估每个Pain Reliever与用户痛点的覆盖情况。
+**Task**: Systematically assess how each Pain Reliever covers user pains.
 
-**评分标准（5/3/1评分）：**
+**Scoring Criteria (5/3/1 scoring):**
 
-| 评分 | 含义 | 判定条件 |
+| Score | Meaning | Judgment Criteria |
 |------|------|----------|
-| 5 | 完美覆盖 | 价值主张完全解决痛点核心，用户可显著感知 |
-| 3 | 部分覆盖 | 价值主张解决痛点但非核心维度，或解决程度有限 |
-| 1 | 边缘覆盖 | 价值主张与痛点关联弱，仅间接影响 |
-| 0 | 未覆盖 | 价值主张未涉及该痛点 |
+| 5 | Full coverage | Value proposition fully resolves the core of the pain, user can noticeably perceive it |
+| 3 | Partial coverage | Value proposition addresses the pain but not the core dimension, or only to a limited extent |
+| 1 | Edge coverage | Value proposition has a weak connection to the pain, only indirectly affects it |
+| 0 | Not covered | Value proposition does not address this pain |
 
-**执行逻辑**：
-1. 遍历每个Pain Reliever
-2. 与问题陈述中的每个痛点进行匹配
-3. 依据评分标准确定匹配分数
-4. 计算加权平均分（权重：频率×严重程度）
+**Execution Logic**:
+1. Iterate through each Pain Reliever
+2. Match against each pain in the problem statement
+3. Determine the match score based on scoring criteria
+4. Calculate weighted average score (weight: frequency × severity)
 
-**输出格式：**
+**Output Format:**
 ```json
 {
   "pain_alignment": {
     "covered_pains": [
       {
         "pain_id": "pain-1",
-        "pain_description": "培训效果难以量化和追踪",
+        "pain_description": "Training effectiveness is hard to quantify and track",
         "matched_by": ["vp-1"],
         "coverage_score": 5,
         "coverage_quality": "full/partial/edge/none",
-        "notes": "AI学习报告功能完全覆盖该痛点"
+        "notes": "AI learning report feature fully covers this pain"
       }
     ],
     "uncovered_pains": [
       {
         "pain_id": "pain-5",
-        "pain_description": "学员学习路径缺乏个性化",
+        "pain_description": "Learner learning paths lack personalization",
         "frequency": "high",
         "severity": "high",
-        "impact": "高频高严重度痛点'课程内容与岗位需求脱节'未被覆盖",
-        "recommendation": "建议增加岗位技能图谱匹配功能"
+        "impact": "High-frequency, high-severity pain 'course content disconnected from job requirements' not covered",
+        "recommendation": "Recommend adding job skill graph matching feature"
       }
     ],
     "pain_coverage_summary": {
@@ -158,42 +158,42 @@ writes:
 }
 ```
 
-**验收标准**：
-- 所有Pain Relievers已与痛点匹配
-- 每个痛点有明确覆盖状态
-- 遗漏痛点包含改进建议
+**Acceptance Criteria**:
+- All Pain Relievers matched with pains
+- Each pain has a clear coverage status
+- Omitted pains include improvement recommendations
 
-### Step 2：收益创造验证 [核心]
+### Step 2: Gain Creation Validation [Core]
 
-**任务**：评估Gain Creators与用户期望收益的匹配情况。
+**Task**: Assess how Gain Creators match users' expected gains.
 
-**执行逻辑**：
-1. 遍历每个Gain Creator
-2. 与问题陈述中的期望收益进行匹配
-3. 评估收益创造的真实性和可实现性
-4. 识别用户期望但未被承诺的收益
+**Execution Logic**:
+1. Iterate through each Gain Creator
+2. Match against expected gains in the problem statement
+3. Assess the authenticity and feasibility of gain creation
+4. Identify gains expected by users but not promised
 
-**输出格式：**
+**Output Format:**
 ```json
 {
   "gain_validation": {
     "covered_gains": [
       {
         "gain_id": "gain-1",
-        "gain_description": "培训投入产出可量化",
+        "gain_description": "Training ROI can be quantified",
         "created_by": ["vp-1"],
         "coverage_status": "covered/partial/not_covered",
-        "realizability": "高/中/低",
-        "notes": "AI学习报告+ROI看板可实现，技术成熟度高"
+        "realizability": "high/medium/low",
+        "notes": "AI learning report + ROI dashboard can achieve this, technology maturity is high"
       }
     ],
     "uncovered_gains": [
       {
         "gain_id": "gain-3",
-        "gain_description": "学员自主学习意愿提升",
+        "gain_description": "Learner autonomous learning willingness improved",
         "importance": "high",
-        "gap_analysis": "用户期望社交化学习体验但当前价值主张未涉及",
-        "recommendation": "建议在V2.0规划中纳入学习社区功能"
+        "gap_analysis": "Users expect a socialized learning experience but current value proposition does not address it",
+        "recommendation": "Recommend including learning community features in V2.0 planning"
       }
     ],
     "gain_summary": {
@@ -207,34 +207,34 @@ writes:
 }
 ```
 
-**验收标准**：
-- 所有Gain Creators已验证
-- 未覆盖收益已识别并评估重要性
-- 可实现性评估合理
+**Acceptance Criteria**:
+- All Gain Creators validated
+- Uncovered gains identified and importance assessed
+- Feasibility assessment is reasonable
 
-### Step 3：匹配度总评 [核心]
+### Step 3: Overall Fit Assessment [Core]
 
-**任务**：综合痛点覆盖和收益创造，计算整体匹配度评分。
+**Task**: Synthesize pain coverage and gain creation to calculate the overall fit score.
 
-**加权平均计算**：
+**Weighted Average Calculation**:
 ```
 Overall Fit Score = (Pain Alignment Score × 0.6) + (Gain Validation Score × 0.4)
 ```
 
-**评分解释：**
-| 分数范围 | 含义 | 行动建议 |
+**Score Interpretation:**
+| Score Range | Meaning | Action Recommendation |
 |----------|------|----------|
-| 4.0-5.0 | 优秀匹配 | 价值主张设计合理，可进入下一阶段 |
-| 3.0-3.9 | 良好匹配 | 有改进空间，建议优化后进入下一阶段 |
-| 2.0-2.9 | 一般匹配 | 存在明显缺口，需要调整价值主张 |
-| 1.0-1.9 | 较差匹配 | 价值主张与用户需求存在重大错位 |
-| 0-0.9 | 严重错位 | 需要重新设计价值主张 |
+| 4.0-5.0 | Excellent fit | Value proposition design is sound, can proceed to next stage |
+| 3.0-3.9 | Good fit | Room for improvement, recommend optimizing before proceeding |
+| 2.0-2.9 | Fair fit | Notable gaps exist, value proposition needs adjustment |
+| 1.0-1.9 | Poor fit | Significant misalignment between value proposition and user needs |
+| 0-0.9 | Severe misalignment | Value proposition needs to be redesigned |
 
-**输出格式：**
+**Output Format:**
 ```json
 {
   "overall_fit_score": 3.4,
-  "score_interpretation": "良好匹配",
+  "score_interpretation": "Good fit",
   "score_breakdown": {
     "pain_alignment_score": 3.5,
     "pain_weight": 0.6,
@@ -251,62 +251,62 @@ Overall Fit Score = (Pain Alignment Score × 0.6) + (Gain Validation Score × 0.
 }
 ```
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 价值-市场匹配度评估 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整评估 + 价值-市场匹配矩阵 + 差距分析 + 优化路线图 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Value-market fit assessment | Core conclusions + minimum viable deliverable |
+| standard | Complete deliverable (current default) | Complete deliverable, including all Step outputs |
+| deep | Complete assessment + value-market fit matrix + gap analysis + optimization roadmap | Complete deliverable + extended analysis + in-depth reasoning |
 
-## 输出
+## Output
 
-**存储路径**：`docs/strategy/business-strategy.md（“价值匹配”章节）`
+**Storage Path**: `docs/strategy/business-strategy.md ("Value Fit" section)`
 
-**输出文件**：evaluation_report.json
+**Output File**: evaluation_report.json
 
-### 输出校验规则
+### Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| evaluation_report.evaluation_metadata.evaluated_at | string | 是 | 评估时间戳 |
-| evaluation_report.evaluation_metadata.value_propositions_evaluated | number | 是 | 已评估价值主张数量 |
-| evaluation_report.evaluation_metadata.pains_analyzed | number | 是 | 已分析痛点数量 |
-| evaluation_report.evaluation_metadata.gains_analyzed | number | 是 | 已分析收益数量 |
-| evaluation_report.evaluation_metadata.confidence | string | 是 | high/medium/low |
-| evaluation_report.pain_alignment.covered_pains | array | 是 | 已覆盖痛点列表 |
-| evaluation_report.pain_alignment.covered_pains[].pain_id | string | 是 | 痛点ID，不可为空 |
-| evaluation_report.pain_alignment.covered_pains[].coverage_score | number | 是 | 覆盖评分，0-5 |
-| evaluation_report.pain_alignment.covered_pains[].coverage_quality | string | 是 | 覆盖质量，枚举：full/partial/edge/none |
-| evaluation_report.pain_alignment.uncovered_pains | array | 是 | 未覆盖痛点列表，每项含recommendation |
-| evaluation_report.pain_alignment.uncovered_pains[].pain_id | string | 是 | 痛点ID，不可为空 |
-| evaluation_report.pain_alignment.uncovered_pains[].frequency | string | 是 | 出现频率，枚举：high/medium/low |
-| evaluation_report.pain_alignment.uncovered_pains[].severity | string | 是 | 严重程度，枚举：high/medium/low |
-| evaluation_report.pain_alignment.uncovered_pains[].recommendation | string | 是 | 改进建议，不可为空 |
-| evaluation_report.pain_alignment.pain_coverage_summary | object | 是 | 覆盖率统计 |
-| evaluation_report.pain_alignment.pain_coverage_summary.total_pains | number | 是 | 痛点总数 |
-| evaluation_report.pain_alignment.pain_coverage_summary.fully_covered | number | 是 | 完全覆盖数 |
-| evaluation_report.pain_alignment.pain_coverage_summary.uncovered | number | 是 | 未覆盖数 |
-| evaluation_report.gain_validation.covered_gains | array | 是 | 已覆盖收益列表 |
-| evaluation_report.gain_validation.covered_gains[].gain_id | string | 是 | 收益ID，不可为空 |
-| evaluation_report.gain_validation.covered_gains[].coverage_status | string | 是 | 覆盖状态，枚举：covered/partial/not_covered |
-| evaluation_report.gain_validation.covered_gains[].realizability | string | 是 | 可实现性，枚举：高/中/低 |
-| evaluation_report.gain_validation.uncovered_gains | array | 是 | 未覆盖收益列表，每项含recommendation |
-| evaluation_report.gain_validation.uncovered_gains[].gain_id | string | 是 | 收益ID，不可为空 |
-| evaluation_report.gain_validation.uncovered_gains[].importance | string | 是 | 重要性，枚举：high/medium/low |
-| evaluation_report.gain_validation.uncovered_gains[].recommendation | string | 是 | 改进建议，不可为空 |
-| evaluation_report.overall_fit_score | number | 是 | 综合匹配度评分0-5 |
-| evaluation_report.coverage_rate | object | 是 | 覆盖率指标 |
-| evaluation_report.improvement_suggestions | array | 是 | 改进建议列表 |
-| evaluation_report.improvement_suggestions[].priority | string | 是 | 优先级，枚举：high/medium/low |
-| evaluation_report.improvement_suggestions[].category | string | 是 | 建议类别，枚举：add_pain_coverage/enhance_gain/clarify_message/reposition |
-| evaluation_report.improvement_suggestions[].description | string | 是 | 建议描述，不可为空 |
-| evaluation_report.warnings | array | 是 | 警告列表 |
-| evaluation_report.warnings[].warning_type | string | 是 | 警告类型，如high_frequency_uncovered |
-| evaluation_report.warnings[].description | string | 是 | 警告描述，不可为空 |
-| evaluation_report.warnings[].severity | string | 是 | 严重程度，枚举：high/medium/low |
+| evaluation_report.evaluation_metadata.evaluated_at | string | Yes | Assessment timestamp |
+| evaluation_report.evaluation_metadata.value_propositions_evaluated | number | Yes | Number of value propositions evaluated |
+| evaluation_report.evaluation_metadata.pains_analyzed | number | Yes | Number of pains analyzed |
+| evaluation_report.evaluation_metadata.gains_analyzed | number | Yes | Number of gains analyzed |
+| evaluation_report.evaluation_metadata.confidence | string | Yes | high/medium/low |
+| evaluation_report.pain_alignment.covered_pains | array | Yes | Covered pains list |
+| evaluation_report.pain_alignment.covered_pains[].pain_id | string | Yes | Pain ID, cannot be empty |
+| evaluation_report.pain_alignment.covered_pains[].coverage_score | number | Yes | Coverage score, 0-5 |
+| evaluation_report.pain_alignment.covered_pains[].coverage_quality | string | Yes | Coverage quality, enum: full/partial/edge/none |
+| evaluation_report.pain_alignment.uncovered_pains | array | Yes | Uncovered pains list, each item includes recommendation |
+| evaluation_report.pain_alignment.uncovered_pains[].pain_id | string | Yes | Pain ID, cannot be empty |
+| evaluation_report.pain_alignment.uncovered_pains[].frequency | string | Yes | Occurrence frequency, enum: high/medium/low |
+| evaluation_report.pain_alignment.uncovered_pains[].severity | string | Yes | Severity, enum: high/medium/low |
+| evaluation_report.pain_alignment.uncovered_pains[].recommendation | string | Yes | Improvement recommendation, cannot be empty |
+| evaluation_report.pain_alignment.pain_coverage_summary | object | Yes | Coverage rate statistics |
+| evaluation_report.pain_alignment.pain_coverage_summary.total_pains | number | Yes | Total pains |
+| evaluation_report.pain_alignment.pain_coverage_summary.fully_covered | number | Yes | Fully covered count |
+| evaluation_report.pain_alignment.pain_coverage_summary.uncovered | number | Yes | Uncovered count |
+| evaluation_report.gain_validation.covered_gains | array | Yes | Covered gains list |
+| evaluation_report.gain_validation.covered_gains[].gain_id | string | Yes | Gain ID, cannot be empty |
+| evaluation_report.gain_validation.covered_gains[].coverage_status | string | Yes | Coverage status, enum: covered/partial/not_covered |
+| evaluation_report.gain_validation.covered_gains[].realizability | string | Yes | Feasibility, enum: high/medium/low |
+| evaluation_report.gain_validation.uncovered_gains | array | Yes | Uncovered gains list, each item includes recommendation |
+| evaluation_report.gain_validation.uncovered_gains[].gain_id | string | Yes | Gain ID, cannot be empty |
+| evaluation_report.gain_validation.uncovered_gains[].importance | string | Yes | Importance, enum: high/medium/low |
+| evaluation_report.gain_validation.uncovered_gains[].recommendation | string | Yes | Improvement recommendation, cannot be empty |
+| evaluation_report.overall_fit_score | number | Yes | Overall fit score 0-5 |
+| evaluation_report.coverage_rate | object | Yes | Coverage rate metrics |
+| evaluation_report.improvement_suggestions | array | Yes | Improvement suggestions list |
+| evaluation_report.improvement_suggestions[].priority | string | Yes | Priority, enum: high/medium/low |
+| evaluation_report.improvement_suggestions[].category | string | Yes | Suggestion category, enum: add_pain_coverage/enhance_gain/clarify_message/reposition |
+| evaluation_report.improvement_suggestions[].description | string | Yes | Suggestion description, cannot be empty |
+| evaluation_report.warnings | array | Yes | Warnings list |
+| evaluation_report.warnings[].warning_type | string | Yes | Warning type, e.g. high_frequency_uncovered |
+| evaluation_report.warnings[].description | string | Yes | Warning description, cannot be empty |
+| evaluation_report.warnings[].severity | string | Yes | Severity, enum: high/medium/low |
 
-### 完整评估报告
+### Complete Assessment Report
 
 ```json
 {
@@ -327,15 +327,15 @@ Overall Fit Score = (Pain Alignment Score × 0.6) + (Gain Validation Score × 0.
         "suggestion_id": "sug-1",
         "priority": "high/medium/low",
         "category": "add_pain_coverage/enhance_gain/clarify_message/reposition",
-        "description": "增加AI学习路径效果可视化功能，覆盖学员进度追踪痛点",
-        "expected_impact": "痛点覆盖率提升15%，匹配度评分提升0.5分",
-        "implementation_effort": "中等，需2个Sprint开发周期"
+        "description": "Add AI learning path effectiveness visualization feature to cover learner progress tracking pain",
+        "expected_impact": "Pain coverage rate increased by 15%, fit score increased by 0.5 points",
+        "implementation_effort": "Medium, requires 2 Sprint development cycles"
       }
     ],
     "warnings": [
       {
         "warning_type": "high_frequency_uncovered",
-        "description": "高频痛点'培训效果难以量化'未被价值主张覆盖",
+        "description": "High-frequency pain 'training effectiveness hard to quantify' not covered by value proposition",
         "affected_pains": ["pain-3", "pain-7"],
         "severity": "high"
       }
@@ -344,114 +344,114 @@ Overall Fit Score = (Pain Alignment Score × 0.6) + (Gain Validation Score × 0.
 }
 ```
 
-## 决策规则
+## Decision Rules
 
-### 警告触发规则
+### Warning Trigger Rules
 
-1. **高频痛点遗漏警告**：
-   - 触发条件：频率≥20%的痛点未被覆盖
-   - 行动：生成警告，明确标注受影响痛点
-   - 严重程度：高
+1. **High-frequency pain omission warning**:
+   - Trigger condition: Pains with frequency ≥20% not covered
+   - Action: Generate warning, explicitly flag affected pains
+   - Severity: High
 
-2. **高严重度痛点遗漏警告**：
-   - 触发条件：严重程度=high的痛点覆盖率<70%
-   - 行动：生成警告，建议优先改进
+2. **High-severity pain omission warning**:
+   - Trigger condition: Coverage rate of pains with severity=high < 70%
+   - Action: Generate warning, recommend priority improvement
 
-3. **收益期望缺口警告**：
-   - 触发条件：重要性=high的收益未被承诺
-   - 行动：生成警告，评估是否需要调整
+3. **Gain expectation gap warning**:
+   - Trigger condition: Gains with importance=high not promised
+   - Action: Generate warning, assess whether adjustment is needed
 
-### 升级规则
+### Escalation Rules
 
-1. **匹配度<3.0升级**：
-   - 触发条件：Overall Fit Score < 3.0
-   - 行动：标记为需要人类关注，不阻止但建议调整
-   - 输出升级标记供人类决策者参考
+1. **Fit score < 3.0 escalation**:
+   - Trigger condition: Overall Fit Score < 3.0
+   - Action: Flag as requiring human attention, does not block but recommends adjustment
+   - Output escalation flag for human decision-maker reference
 
-2. **覆盖率<60%升级**：
-   - 触发条件：高频痛点覆盖率 < 60%
-   - 行动：强制升级人类审批
+2. **Coverage rate < 60% escalation**:
+   - Trigger condition: High-frequency pain coverage rate < 60%
+   - Action: Force escalation to human approval
 
-3. **高风险假设识别**：
-   - 触发条件：匹配度依赖高风险假设
-   - 行动：标注假设风险，建议验证计划
+3. **High-risk assumption identification**:
+   - Trigger condition: Fit depends on high-risk assumptions
+   - Action: Flag assumption risk, recommend validation plan
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 所有Pain Relievers已评估
-- [ ] 所有Gain Creators已验证
+- [ ] All Pain Relievers assessed
+- [ ] All Gain Creators validated
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 遗漏清单完整无遗漏
-- [ ] 评分逻辑一致
-- [ ] 权重设置合理
-- [ ] 警告规则正确触发
+- [ ] Omission list complete with no omissions
+- [ ] Scoring logic consistent
+- [ ] Weights set reasonably
+- [ ] Warning rules triggered correctly
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (must pass for deep only)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (in-depth reasoning and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-当上游文件不存在时，本Skill仍可独立执行：
+When upstream files do not exist, this Skill can still execute independently:
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Instructions |
 |---------------|---------|---------|------------|
-| bmc.json | 用户提供价值主张和用户痛点 → 直接评估匹配度 | 缺乏BMC结构化数据，价值主张可能不完整 | 要求用户提供产品价值主张描述或上传bmc.json文件 |
-| 用户研究数据（voice-analysis / persona） | 用户提供价值主张和用户痛点 → 直接评估匹配度 | 缺乏用户研究数据，痛点频率和严重度缺乏实证 | 要求用户提供用户痛点描述或上传persona.json/voice-analysis.json文件 |
-| bmc.json + 用户研究数据 | 用户提供价值主张和用户痛点描述 → 直接评估匹配度 | 整体置信度降低，评分缺乏数据锚定 | 要求用户提供价值主张描述和用户痛点信息 |
-| 所有上游文件均缺失 | 提示用户先执行前序阶段，或基于用户提供价值主张和用户痛点直接评估匹配度 | 整体置信度显著降低，评估仅为假设推断 | 要求用户提供产品价值主张、目标用户痛点和核心功能描述 |
+| bmc.json | User provides value propositions and user pains → directly assess fit | Lacks BMC structured data, value propositions may be incomplete | Require user to provide product value proposition description or upload bmc.json file |
+| User research data (voice-analysis / persona) | User provides value propositions and user pains → directly assess fit | Lacks user research data, pain frequency and severity lack empirical evidence | Require user to provide user pain descriptions or upload persona.json/voice-analysis.json files |
+| bmc.json + User research data | User provides value proposition and user pain descriptions → directly assess fit | Overall confidence reduced, scoring lacks data anchoring | Require user to provide value proposition description and user pain info |
+| All upstream files missing | Prompt user to execute prior stages first, or directly assess fit based on user-provided value propositions and user pains | Overall confidence significantly reduced, assessment is only hypothetical inference | Require user to provide product value proposition, target user pains, and core feature descriptions |
 
-## 数据获取说明
+## Data Acquisition Instructions
 
-本Skill需要BMC和用户研究数据，请通过以下方式之一提供：
-  1. 直接描述价值主张和用户痛点
-  2. 上传bmc.json / persona.json / voice-analysis.json文件
-  3. 提供数据文件路径
-- AI不负责外部数据采集，仅负责分析
+This Skill requires BMC and user research data. Please provide via one of the following methods:
+  1. Directly describe value propositions and user pains
+  2. Upload bmc.json / persona.json / voice-analysis.json files
+  3. Provide data file paths
+- AI is not responsible for external data collection, only analysis
 
 ---
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| bmc.json价值主张变更 | 痛点对齐度和收益创造验证需重新评估 | 重新执行Step 1-3，更新匹配度评分 |
-| bmc.json客户细分调整 | 价值主张与细分群体对应关系 | 重新匹配价值主张与目标用户 |
-| persona/voice-analysis用户痛点更新 | 痛点覆盖率和遗漏分析 | 重新执行Step 1，更新未覆盖痛点清单 |
-| problem-statement问题陈述变更 | 痛点和收益的优先级权重 | 重新计算加权评分，更新匹配度总评 |
+| bmc.json value proposition change | Pain alignment and gain creation validation need reassessment | Re-execute Step 1-3, update fit score |
+| bmc.json customer segment adjustment | Correspondence between value propositions and segment groups | Re-match value propositions with target users |
+| persona/voice-analysis user pain update | Pain coverage rate and omission analysis | Re-execute Step 1, update uncovered pains list |
+| problem-statement problem statement change | Priority weights of pains and gains | Recalculate weighted scores, update overall fit assessment |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 变更类型 | 影响范围 | 通知方式 |
+| Change Type | Impact Scope | Notification Method |
 |----------|----------|----------|
-| 匹配度评分变更 | business-pricing、positioning-strategy | 输出文件版本号+变更摘要 |
-| 痛点覆盖率变更 | business-model-canvas | 输出文件版本号+变更摘要 |
-| 改进建议新增 | business-model-canvas | 输出文件版本号+变更摘要 |
-| 警告触发/解除 | business-pricing | 输出文件版本号+变更摘要 |
+| Fit score change | business-pricing, positioning-strategy | Output file version number + change summary |
+| Pain coverage rate change | business-model-canvas | Output file version number + change summary |
+| Improvement suggestions added | business-model-canvas | Output file version number + change summary |
+| Warning triggered/resolved | business-pricing | Output file version number + change summary |
 
 ---
 
 ## Integration
 
-### 与Pipeline 1集成
+### Integration with Pipeline 1
 
-Pipeline 2的输出将传递给Pipeline 3（定价策略），关键传递内容包括：
-- 价值主张Fit评分
-- 覆盖率和遗漏分析
-- 改进建议（可能影响定价方案）
+Pipeline 2 output will be passed to Pipeline 3 (Pricing Strategy). Key handoff content includes:
+- Value Proposition Fit Score
+- Coverage rate and omission analysis
+- Improvement suggestions (may affect pricing options)
 
-### 与人类决策集成
+### Integration with Human Decision-Making
 
-评估结果和警告将呈现给人类决策者，供以下决策参考：
-- 是否需要调整价值主张
-- 是否接受当前匹配度进入下一阶段
-- 优先级改进方向
+Assessment results and warnings will be presented to human decision-makers for the following decisions:
+- Whether the value proposition needs adjustment
+- Whether to accept the current fit and proceed to the next stage
+- Priority improvement directions

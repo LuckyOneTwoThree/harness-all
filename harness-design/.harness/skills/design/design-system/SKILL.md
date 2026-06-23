@@ -2,9 +2,9 @@
 name: design-system
 description: Creates a design system with DESIGN.md 10-section standard and token exports. Use when no design system exists. Use after design-recommendation.
 triggers:
-  - 创建设计系统
-  - 无 DESIGN.md
-  - design-recommendation 完成后
+  - Create a design system
+  - No DESIGN.md
+  - After design-recommendation completes
 reads:
   - .harness/craft/anti-ai-slop.md
   - .harness/craft/typography.md
@@ -20,35 +20,35 @@ writes:
 
 ## Overview
 
-创建 DESIGN.md 10 段标准 + token 导出（md + json + css）。设计系统是单一事实源，所有设计稿必须遵循。
+Creates the DESIGN.md 10-section standard + token exports (md + json + css). The design system is the single source of truth; all design mockups must follow it.
 
 ## When to Use
 
-- ✅ 创建设计系统
-- ✅ 无 DESIGN.md
-- ✅ design-recommendation 完成后
-- ❌ NOT for 已有 DESIGN.md 且无需变更
+- ✅ Create a design system
+- ✅ No DESIGN.md
+- ✅ After design-recommendation completes
+- ❌ NOT for cases where DESIGN.md already exists and no changes are needed
 
 ## Process
 
-### 1. 检查 RECOMMENDATION.md
+### 1. Check RECOMMENDATION.md
 
-若 `docs/design-system/RECOMMENDATION.md` 存在，作为基础。
+If `docs/design-system/RECOMMENDATION.md` exists, use it as the baseline.
 
-### 2. 确认设计系统范围
+### 2. Confirm Design System Scope
 
-- 色彩系统（primary/secondary/accent/background/foreground/muted/border/destructive）
-- 字体系统（heading/body/mono，含 Google Fonts 链接）
-- 间距系统（4px base，常用阶梯）
-- 阴影系统
-- 圆角系统
-- 断点系统
+- Color system (primary/secondary/accent/background/foreground/muted/border/destructive)
+- Typography system (heading/body/mono, including Google Fonts links)
+- Spacing system (4px base, common scale)
+- Shadow system
+- Border radius system
+- Breakpoint system
 
-### 3. 填充 DESIGN.md 10 段
+### 3. Fill in DESIGN.md 10 Sections
 
-参考 craft/typography.md 和 craft/color.md。
+Reference craft/typography.md and craft/color.md.
 
-#### 第 1-9 段（标准）
+#### Sections 1-9 (Standard)
 
 1. Visual Theme & Atmosphere
 2. Color Palette & Roles
@@ -60,54 +60,54 @@ writes:
 8. Responsive Behavior
 9. Agent Prompt Guide
 
-#### 第 10 段：Semantic Vocabulary（固定模板）
+#### Section 10: Semantic Vocabulary (Fixed Template)
 
-必须包含以下常见块（若项目无对应场景，标注"不适用"）：
+Must contain the following common blocks (if the project has no corresponding scenario, annotate "Not applicable"):
 
 ```markdown
 ## 10. Semantic Vocabulary
 
 ### Header
-- 组件组合：Logo + Navigation + UserMenu
-- 用途：全局导航
+- Component composition: Logo + Navigation + UserMenu
+- Purpose: Global navigation
 
 ### Footer
-- 组件组合：FooterLink + FooterSection + Copyright
-- 用途：页脚信息
+- Component composition: FooterLink + FooterSection + Copyright
+- Purpose: Footer information
 
 ### Hero
-- 组件组合：HeroTitle + HeroSubtitle + HeroCTA + HeroImage
-- 用途：首屏主视觉
+- Component composition: HeroTitle + HeroSubtitle + HeroCTA + HeroImage
+- Purpose: Above-the-fold hero visual
 
 ### Form
-- 组件组合：FormField + Label + Input + ErrorMessage + SubmitButton
-- 用途：表单输入
+- Component composition: FormField + Label + Input + ErrorMessage + SubmitButton
+- Purpose: Form input
 
 ### Empty State
-- 组件组合：EmptyIllustration + EmptyTitle + EmptyDescription + PrimaryAction
-- 用途：无数据时展示
+- Component composition: EmptyIllustration + EmptyTitle + EmptyDescription + PrimaryAction
+- Purpose: Displayed when there is no data
 
 ### Dialog
-- 组件组合：Modal + DialogTitle + DialogBody + ButtonGroup(primary+secondary)
-- 用途：确认/弹窗
+- Component composition: Modal + DialogTitle + DialogBody + ButtonGroup(primary+secondary)
+- Purpose: Confirmation / pop-up
 
 ### Error State
-- 组件组合：ErrorIcon + ErrorTitle + ErrorDescription + RetryAction
-- 用途：错误提示
+- Component composition: ErrorIcon + ErrorTitle + ErrorDescription + RetryAction
+- Purpose: Error messaging
 
 ### Loading State
-- 组件组合：Skeleton | Spinner + LoadingText
-- 用途：加载中
+- Component composition: Skeleton | Spinner + LoadingText
+- Purpose: Loading in progress
 ```
 
-### 4. Token 导出
+### 4. Token Export
 
-#### tokens.json（W3C 标准格式）
+#### tokens.json (W3C standard format)
 
 ```json
 {
   "color": {
-    "primary": { "$value": "#3b82f6", "$description": "主色" },
+    "primary": { "$value": "#3b82f6", "$description": "Primary color" },
     "on-primary": { "$value": "#ffffff" }
   },
   "spacing": {
@@ -117,7 +117,7 @@ writes:
 }
 ```
 
-#### tokens.css（CSS custom properties）
+#### tokens.css (CSS custom properties)
 
 ```css
 :root {
@@ -128,43 +128,43 @@ writes:
 }
 ```
 
-### 5. Master + Overrides 初始化
+### 5. Master + Overrides Initialization
 
-创建 `docs/design-system/pages/` 目录，用于页面级覆盖。
+Create the `docs/design-system/pages/` directory for page-level overrides.
 
-检索规则（供后续 skill 使用）：
-1. 先检查 `docs/design-system/pages/<page>.md` 是否存在
-2. 若存在 → 其规则覆盖 MASTER.md（DESIGN.md）
-3. 若不存在 → 仅使用 MASTER.md
+Retrieval rules (for use by downstream skills):
+1. First check whether `docs/design-system/pages/<page>.md` exists
+2. If it exists → its rules override MASTER.md (DESIGN.md)
+3. If it does not exist → use MASTER.md only
 
 ## Common Rationalizations
 
-| 借口 | 现实 |
-|------|------|
-| "设计系统太重，先画页面吧" | 没有设计系统的页面是一盘散沙 |
-| "token 表格够了" | 工程需要 json/css，不只是 markdown |
-| "Semantic Vocabulary 太细" | 固定模板有 7 个常见块，颗粒度刚好 |
-| "Semantic Vocabulary 让我自由发挥" | 固定模板保证下游可消费，自由发挥会导致映射断裂 |
+| Excuse | Reality |
+|--------|---------|
+| "The design system is too heavy; let's just draw pages first" | Pages without a design system are scattered and inconsistent |
+| "A token table is enough" | Engineering needs json/css, not just markdown |
+| "Semantic Vocabulary is too granular" | The fixed template has 7 common blocks; the granularity is just right |
+| "Semantic Vocabulary lets me improvise" | The fixed template ensures downstream consumability; improvisation breaks the mapping |
 
 ## Red Flags
 
-- 跳过第 10 段 Semantic Vocabulary
-- Semantic Vocabulary 未用固定模板
-- token 只输出 markdown，无 json/css
-- 未创建 pages/ 目录
+- Skipping Section 10 Semantic Vocabulary
+- Semantic Vocabulary not using the fixed template
+- Tokens only output as markdown, no json/css
+- pages/ directory not created
 
 ## Verification
 
-- [ ] DESIGN.md 包含 10 段（证据：文件内容）
-- [ ] 第 10 段 Semantic Vocabulary 包含 7 个常见块（证据：文件内容）
-- [ ] tokens.json 符合 W3C 格式（证据：JSON 结构含 $value 字段）
-- [ ] tokens.css 包含 CSS custom properties（证据：文件含 --color-* 变量）
-- [ ] pages/ 目录已创建（证据：Glob 确认目录存在）
+- [ ] DESIGN.md contains 10 sections (evidence: file content)
+- [ ] Section 10 Semantic Vocabulary contains 7 common blocks (evidence: file content)
+- [ ] tokens.json conforms to W3C format (evidence: JSON structure contains $value fields)
+- [ ] tokens.css contains CSS custom properties (evidence: file contains --color-* variables)
+- [ ] pages/ directory created (evidence: Glob confirms directory exists)
 
-## 与 LOOP 的关系
+## Relationship with LOOP
 
-- 不在 LOOP 内运行（在 LOOP 前的设计系统建设阶段运行）
-- 产出的 DESIGN.md + tokens.json + tokens.css 供所有 LOOP 内 skill 读取（visual-design / interaction-design / wireframe / component-design / verify / design-lint）
-- 产出的第 10 段 Semantic Vocabulary 供 component-design skill 识别组件清单
-- 产出的 token 供 design-lint 的 L001-L005 规则检查一致性
-- 产出的 pages/ 目录供 visual-design skill 检索页面级覆盖
+- Not run inside LOOP (runs in the pre-LOOP design system setup stage)
+- The DESIGN.md + tokens.json + tokens.css produced are read by all in-LOOP skills (visual-design / interaction-design / wireframe / component-design / verify / design-lint)
+- The Section 10 Semantic Vocabulary produced is used by the component-design skill to identify the component list
+- The tokens produced are checked for consistency by design-lint rules L001-L005
+- The pages/ directory produced is used by the visual-design skill to retrieve page-level overrides

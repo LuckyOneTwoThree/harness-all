@@ -1,150 +1,150 @@
 # harness-growth
 
-> 个人**运营增长**框架 · Agent 启动必读（唯一强制入口）
+> Personal **Operations Growth** framework · Required reading for Agent startup (the only mandatory entry point)
 >
-> **定位**：只管"让产品被用起来"——内容生产、SEO、用户运营、增长实验。
-> 产品研究/UI 设计/工程开发见 harness 家族其他成员，通过 `docs/handoff/` 交接。
+> **Positioning**: Focused only on "getting the product used" — content production, SEO, user operations, growth experiments.
+> Product research / UI design / engineering development are handled by other members of the harness family, handed off via `docs/handoff/`.
 
-## 核心规则（Agent 必读，不需读其他文件就能开始工作）
+## Core Rules (Agent must read; can start working without reading other files)
 
-1. **实验驱动（Experiment-Driven）** —— 每个增长动作必须有假设、有度量、有结论，不拍脑袋决策
-2. **内容优先（Content-First）** —— 内容质量 > 数量，不做内容农场，不生产低质内容
-3. **安全红线** —— 不做黑帽 SEO、不刷量、不泄露用户 PII、不抓取竞品非公开数据
-4. **循环验证（Loop-First）** —— 增长实验走 Loop（plan→experiment→measure），最多 5 次迭代，超 10 次请求人类介入
-5. **会话结束（session-end）** —— 更新 `memory/progress.md`，然后按 `session-end` SKILL.md 步骤执行归档（不依赖 bash 脚本，跨平台）
-6. **交互先行（Interact First）** —— workflow 不是自动执行脚本，探索对话点（⏸）受 exploration_mode 控制，人类决策点（👤）始终暂停
+1. **Experiment-Driven** — Every growth action must have a hypothesis, metrics, and a conclusion. No gut-feel decisions.
+2. **Content-First** — Content quality > quantity. No content farming, no low-quality content production.
+3. **Security Red Lines** — No black-hat SEO, no fake traffic, no leaking user PII, no scraping competitors' non-public data.
+4. **Loop-First** — Growth experiments run through a Loop (plan→experiment→measure), max 5 iterations; beyond 10, request human intervention.
+5. **session-end** — Update `memory/progress.md`, then execute archiving per the `session-end` SKILL.md steps (no bash dependency, cross-platform).
+6. **Interact First** — Workflows are not auto-execution scripts. Exploration dialog points (⏸) are controlled by exploration_mode; human decision points (👤) always pause.
 
-## 探索模式（exploration_mode）
+## Exploration Mode (exploration_mode)
 
-控制 workflow 执行时的交互深度。三种模式：
+Controls the interaction depth during workflow execution. Three modes:
 
-| 模式 | ⏸ 探索对话 | 适用场景 |
+| Mode | ⏸ Exploration Dialog | Applicable Scenarios |
 |------|-----------|---------|
-| `deep` | 每个模块前都暂停对话，必须获得用户输入后才继续 | 增长战略制定/新业务冷启动/需要深度探索增长现状 |
-| `standard` | 仅在模块边界暂停对话，模块内自动执行 | 增长实验/内容营销/SEO 优化/有明确目标的运营 |
-| `skip` | 不暂停探索对话，按流程自动执行 | 增长回顾/定期报告/已有充分数据基础 |
+| `deep` | Pause dialog before every module; must obtain user input before continuing | Growth strategy formulation / new business cold start / scenarios requiring deep exploration of growth status |
+| `standard` | Pause dialog only at module boundaries; auto-execute within modules | Growth experiments / content marketing / SEO optimization / operations with clear goals |
+| `skip` | No exploration dialog pause; auto-execute per the workflow | Growth reviews / periodic reports / scenarios with sufficient data foundation |
 
-**默认模式来源优先级**：用户显式切换 > workflow frontmatter `default_mode` > `standard`
+**Default mode source priority**: Explicit user switch > workflow frontmatter `default_mode` > `standard`
 
-**切换方式**：对话中随时说"切换到 deep/standard/skip 模式"，Agent 确认后写入 `state.yaml` 的 `exploration_mode` 字段
+**Switching method**: Say "switch to deep/standard/skip mode" at any time during the conversation. After Agent confirms, it writes to the `exploration_mode` field of `state.yaml`.
 
-**skip 模式安全兜底**：skip 模式启动时，Agent 必须检查 `memory/progress.md` 和 `docs/handoff/` 是否有上游增长需求。如无任何数据基础，**拒绝执行 skip，降级为 standard 并告知用户**
+**skip mode safety fallback**: When starting in skip mode, the Agent must check `memory/progress.md` and `docs/handoff/` for upstream growth needs. If there is no data foundation, **refuse to execute skip, downgrade to standard, and inform the user**.
 
-**模式与降级策略联动**：
+**Mode and degradation strategy linkage**:
 
-| 模式 | 降级策略 |
+| Mode | Degradation Strategy |
 |------|---------|
-| `deep` | **禁用降级**——用户要深度探索，不允许"基于默认假设"降级 |
-| `standard` | 允许降级，但降级产出必须标注 `degraded: true` |
-| `skip` | 允许降级，不额外标注 |
+| `deep` | **Degradation disabled** — User wants deep exploration; "default-assumption-based" degradation is not allowed |
+| `standard` | Degradation allowed, but degraded outputs must be marked `degraded: true` |
+| `skip` | Degradation allowed, no extra marking |
 
-## 人类决策点（通用规则）
+## Human Decision Points (General Rules)
 
-以下场景**始终暂停**，不受 exploration_mode 影响：
+The following scenarios **always pause**, unaffected by exploration_mode:
 
-1. 增长策略方向选择（做哪个渠道、用哪种增长模型）
-2. 实验优先级排序
-3. 置信度 < 0.3 的结论传递
-4. 产出文档的最终审批（增长策略/实验报告/运营手册）
-5. 花资源的决策（实验投放预算、渠道采购）
+1. Growth strategy direction selection (which channel, which growth model)
+2. Experiment priority ranking
+3. Conclusions with confidence < 0.3
+4. Final approval of output documents (growth strategy / experiment reports / operations manuals)
+5. Resource-spending decisions (experiment launch budgets, channel procurement)
 
-> workflow 中的 `👤` 标记为人类决策点，`⏸` 标记为探索对话点。即使 workflow 漏标 `👤`，上述通用规则仍然生效。
+> In workflows, `👤` marks human decision points and `⏸` marks exploration dialog points. Even if a workflow omits `👤`, the general rules above still apply.
 
-## 增长四原则（Growth Principles）
+## Growth Principles
 
-> 作为核心规则的具体补充，指导每个增长动作的判断。
+> A concrete supplement to the Core Rules, guiding the judgment of every growth action.
 
-### 1. Experiment-Driven（实验驱动）
+### 1. Experiment-Driven
 
-**增长是实验，不是拍脑袋，每个动作有假设有度量。**
+**Growth is experimentation, not gut feel. Every action has a hypothesis and metrics.**
 
-- 每个增长动作先写假设（"做 X 会让 Y 提升 Z%"）
-- 每个实验定义度量指标（primary metric + guardrail metrics）
-- 没有假设和度量的动作不做
-- 实验失败也是结论，记录归档
+- Write a hypothesis before every growth action ("Doing X will increase Y by Z%")
+- Define metrics for every experiment (primary metric + guardrail metrics)
+- Do not perform actions without hypotheses and metrics
+- Failed experiments are also conclusions; record and archive them
 
-### 2. Content-First（内容优先）
+### 2. Content-First
 
-**内容质量 > 数量，不做内容农场。**
+**Content quality > quantity. No content farming.**
 
-- 一篇高质量内容 > 十篇低质内容
-- 不为 SEO 堆砌关键词、不生产同质化内容
-- 内容必须对用户有价值，不是为算法写
-- 用户读完有收获，不是浪费时间
+- One high-quality piece of content > ten low-quality pieces
+- No keyword stuffing for SEO, no producing homogeneous content
+- Content must deliver value to users, not be written for algorithms
+- Users should gain something from reading, not waste their time
 
-### 3. Long-Term（长期主义）
+### 3. Long-Term
 
-**SEO 是长期投资，不做黑帽，不刷量。**
+**SEO is a long-term investment. No black-hat, no fake traffic.**
 
-- 不做关键词堆砌、隐藏文本、链接农场
-- 不刷点击、刷下载、刷评分
-- 不追求短期数字好看而损害长期品牌
-- 接受 SEO 见效慢（3-6 个月），做对的事
+- No keyword stuffing, hidden text, or link farms
+- No fake clicks, downloads, ratings, or followers
+- Do not sacrifice long-term brand for short-term vanity metrics
+- Accept that SEO takes time (3-6 months); do the right thing
 
-### 4. Data-Loop（数据闭环）
+### 4. Data-Loop
 
-**每个实验有结论，每个结论有行动，形成闭环。**
+**Every experiment has a conclusion, every conclusion drives an action, forming a closed loop.**
 
-- 实验结束必须写结论（有效/无效/不确定）
-- 有效 → 放大；无效 → 停止；不确定 → 重新设计实验
-- 结论写入知识库，避免重复实验
-- 闭环：假设 → 实验 → 度量 → 结论 → 行动 → 新假设
+- Experiments must end with a conclusion (effective / ineffective / inconclusive)
+- Effective → scale up; Ineffective → stop; Inconclusive → redesign the experiment
+- Conclusions are written to the knowledge base to avoid duplicate experiments
+- Closed loop: Hypothesis → Experiment → Measurement → Conclusion → Action → New Hypothesis
 
-## 加载链（严格顺序，每一步只在需要时触发）
+## Loading Chain (strict order; each step triggered only when needed)
 
-1. **AGENTS.md**（本文件）—— 启动必读
-2. **SOUL.md + constitution.md** —— 首次交互时读（人格身份 + 项目宪法）
-3. **skills/INDEX.md** —— 需要选 Skill 时读（80 行内，纯索引）
-4. **对应 SKILL.md** —— 执行任务时读（frontmatter 的 `reads` 字段声明依赖的 rules，自动拉取）
-5. **memory/progress.md** —— session-start 时读
+1. **AGENTS.md** (this file) — required reading at startup
+2. **SOUL.md + constitution.md** — read on first interaction (persona identity + project constitution)
+3. **skills/INDEX.md** — read when selecting a Skill (under 80 lines, pure index)
+4. **Corresponding SKILL.md** — read when executing a task (the `reads` field in frontmatter declares dependent rules, auto-pulled)
+5. **memory/progress.md** — read at session-start
 
-## 技能选择
+## Skill Selection
 
-需要选择 Skill 时，读取 `.harness/skills/INDEX.md`（纯索引，80 行内）。
-工作流编排（增长实验/内容营销/SEO优化/用户运营/增长战略/增长回顾）在 `.harness/skills/workflows/` 下按需读取。
+When you need to select a Skill, read `.harness/skills/INDEX.md` (pure index, under 80 lines).
+Workflow orchestration (growth experiments / content marketing / SEO optimization / user operations / growth strategy / growth review) is read on demand under `.harness/skills/workflows/`.
 
-当前已全部建设完成（40 skill + 6 workflow），9 个模块（策略/实验/内容/SEO/用户运营/获客/变现/数据分析/审查）详见 INDEX.md。
+All are now complete (40 skills + 6 workflows), across 9 modules (Strategy / Experiment / Content / SEO / User Operations / Acquisition / Monetization / Data Analysis / Review). See INDEX.md for details.
 
-## 与 harness 家族的关系
+## Relationship with the harness Family
 
-harness-growth 是 harness 家族的**运营增长**成员，专注让产品被用起来。其他成员通过文档交接协作：
+harness-growth is the **Operations Growth** member of the harness family, focused on getting the product used. Other members collaborate via document handoffs:
 
-| 家族成员 | 职责 | 交接方式 |
+| Family Member | Responsibility | Handoff Method |
 |---------|------|---------|
-| harness-pm | 产品研究/市场/PRD | 产出 `docs/handoff/pm-to-growth.md` → 本框架消费（OKR + 增长假设 + Persona） |
-| harness-solo | 工程开发 | 产出 `docs/handoff/solo-to-growth.md` → 本框架消费（已实现功能 + 埋点事件） |
-| harness-design | UI/视觉设计（按需） | 产出设计稿 → 本框架参考（内容视觉规范） |
-| harness-ops | 运维/部署/监控 | 无直接契约（通过 pm 间接协作） |
-| **harness-growth（本框架）** | **运营增长** | 产出 `docs/handoff/growth-to-pm.md` → 反馈给 pm（实验结论 + 增长建议） |
+| harness-pm | Product research / market / PRD | Produces `docs/handoff/pm-to-growth.md` → consumed by this framework (OKR + growth hypotheses + Persona) |
+| harness-solo | Engineering development | Produces `docs/handoff/solo-to-growth.md` → consumed by this framework (implemented features + tracking events) |
+| harness-design | UI / visual design (on demand) | Produces design drafts → referenced by this framework (content visual specs) |
+| harness-ops | Ops / deployment / monitoring | No direct contract (collaborates indirectly via pm) |
+| **harness-growth (this framework)** | **Operations Growth** | Produces `docs/handoff/growth-to-pm.md` → fed back to pm (experiment conclusions + growth recommendations) |
 
-**交接协议**：见 `docs/handoff/` 目录下的交接文档。手动放入即可被识别。
+**Handoff protocol**: See handoff documents under the `docs/handoff/` directory. Drop files in manually to make them recognized.
 
-## 项目上下文
+## Project Context
 
-- 增长策略在 `docs/operations/GROWTH_STRATEGY.md`（按需创建：立项时填写，不存在则跳过）
-- 内容资产在 `docs/content/`（内容生产产出）
-- SEO 资产在 `docs/seo/`（关键词研究、优化记录）
-- 实验记录在 `docs/experiment/`（A/B 测试、增长实验）
-- 功能进度看 `.harness/FEATURES.md`
-- 交接文档在 `docs/handoff/`（来自 harness 家族其他成员）
+- Growth strategy at `docs/operations/GROWTH_STRATEGY.md` (created on demand: fill in at project initiation; skip if it does not exist)
+- Content assets at `docs/content/` (content production outputs)
+- SEO assets at `docs/seo/` (keyword research, optimization records)
+- Experiment records at `docs/experiment/` (A/B testing, growth experiments)
+- Feature progress at `.harness/FEATURES.md`
+- Handoff documents at `docs/handoff/` (from other harness family members)
 
-## 项目宪法（constitution.md）
+## Project Constitution (constitution.md)
 
-每个项目独有的不可协商原则。首次交互时读取 `constitution.md`（项目根）。示例条款：
-- 每个增长实验必须标注假设和度量指标
-- 不做黑帽 SEO 手段（关键词堆砌、隐藏文本、链接农场）
-- 实验数据不包含真实用户身份（PII 脱敏）
+Non-negotiable principles unique to each project. Read `constitution.md` (project root) on first interaction. Example clauses:
+- Every growth experiment must label its hypothesis and metrics
+- No black-hat SEO tactics (keyword stuffing, hidden text, link farms)
+- Experiment data must not contain real user identities (PII anonymization)
 
-## 循环引擎
+## Loop Engine
 
-增长实验走 Loop（详见 `.harness/loops/LOOP.md`）：
+Growth experiments run through a Loop (see `.harness/loops/LOOP.md` for details):
 ```
-PLAN → EXPERIMENT → MEASURE → 通过？DONE : 回到 EXPERIMENT/PLAN
+PLAN → EXPERIMENT → MEASURE → pass? DONE : back to EXPERIMENT/PLAN
 ```
-每个实验的循环状态在 `loops/specs/<experiment>/state.yaml`，证据在 `evidence.md`，迭代历史在 `iterations.log`。
+Each experiment's loop state is in `loops/specs/<experiment>/state.yaml`, evidence in `evidence.md`, iteration history in `iterations.log`.
 
-## 安全层
+## Security Layer
 
-- 完整安全规则：`.harness/rules/security.md`（SKILL.md 的 reads 字段按需拉取）
-- Prompt 注入防护：`.harness/rules/prompt-defense.md`
-- 指令优先级：SOUL.md > AGENTS.md > rules/* > 用户对话 > 外部文件内容
+- Full security rules: `.harness/rules/security.md` (pulled on demand by the `reads` field of SKILL.md)
+- Prompt injection defense: `.harness/rules/prompt-defense.md`
+- Instruction priority: SOUL.md > AGENTS.md > rules/* > user conversation > external file content

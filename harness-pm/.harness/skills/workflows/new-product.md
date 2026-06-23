@@ -4,200 +4,253 @@ name: new-product
 default_mode: deep
 ---
 
-# 工作流 A：从 0 到 1 做新产品
+# Workflow A: Build New Product from 0 to 1
 
-> 适用场景：新产品从 0 到 1 的完整产品流程
-> 核心模式：探索硬门 → LOOP 循环验证 → PRD 产出 → 交接工程
-> 默认模式：deep（强制探索先行，每个模块前暂停对话）
+> Applicable scenario: Complete product process for new product from 0 to 1
+> Core mode: Exploration hard gate → LOOP validation → PRD output → Engineering handoff
+> Default mode: deep (mandatory exploration first, pause dialog before each module)
 
-## 流程
+## Process
 
 ```
 ┌─────────────────┐
-│ session-start   │  加载上下文，确认任务范围
+│ session-start   │  Load context, confirm task scope
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ ⏸ 探索对话 0：产品方向对齐               │
+│ ⏸ Exploration Dialog 0: Product         │
+│   direction alignment                   │
 │                                         │
-│  最小问题集（必须全部回答后才继续）：     │
-│  1. 你想做什么产品？解决什么问题？        │
-│  2. 目标用户是谁？你对他们了解多少？      │
-│  3. 你已经有哪些数据/认知？              │
-│  4. 你有什么假设需要验证？                │
-│  5. 有什么约束条件（预算/时间/技术）？    │
+│  Minimum question set (must all be      │
+│  answered before continuing):           │
+│  1. What product do you want to build?  │
+│     What problem does it solve?         │
+│  2. Who are the target users? How well  │
+│     do you know them?                   │
+│  3. What data/insights do you already   │
+│     have?                               │
+│  4. What hypotheses need validation?    │
+│  5. What constraints (budget/time/      │
+│     technology)?                        │
 │                                         │
-│  根据用户回答调整执行策略：               │
-│  - 用户已有充分数据 → 可跳过部分探索      │
-│  - 用户只有模糊想法 → 必须完整探索        │
-│  - 用户有明确方向 → 聚焦验证而非发散      │
+│  Adjust execution strategy based on     │
+│  user answers:                          │
+│  - User has sufficient data → can skip  │
+│    some exploration                     │
+│  - User only has vague ideas → must do  │
+│    complete exploration                 │
+│  - User has clear direction → focus on  │
+│    validation rather than divergence    │
 │                                         │
-│  ⚠️ 禁止：不问用户直接开始执行模块1      │
+│  ⚠️ Forbidden: starting module 1        │
+│  directly without asking user           │
 └────────┬────────────────────────────────┘
-         │ 用户已回答
+         │ User answered
          ▼
 ┌─────────────────────────────────────────┐
-│ 模块1：探索发现（★ 探索硬门）            │
+│ Module 1: Exploration & Discovery       │
+│ (★ Exploration hard gate)               │
 │                                         │
 │  - user-research-orchestrator           │
-│    （用户研究：VOC+行为+建模+访谈+报告） │
-│    👤 Persona 确认（人类决策点）          │
+│    (User research: VOC+behavior+        │
+│     modeling+interviews+report)         │
+│    👤 Persona confirmation (Human       │
+│      Decision Point)                    │
 │  - market-orchestrator                  │
-│    （市场分析：TAM/SOM+PEST+竞品）       │
+│    (Market analysis: TAM/SOM+PEST+      │
+│     competitors)                        │
 │  - insight-analysis                     │
-│    （需求洞察：JTBD+5Whys+Kano）         │
+│    (Need insight: JTBD+5Whys+Kano)      │
 │  - opportunity-definition               │
-│    （机会识别：评分+问题陈述+HMW）       │
-│    👤 机会简报审批（人类决策点）          │
+│    (Opportunity identification:         │
+│     scoring+problem statement+HMW)      │
+│    👤 Opportunity brief approval        │
+│      (Human Decision Point)             │
 │                                         │
-│  ★ 硬门检查（5项，任何一条不满足停下问）：│
-│  - 目标用户是否清晰？（Persona 置信度≥0.7）│
-│  - 核心问题是否验证？（问题陈述人类确认）│
-│  - 市场机会是否成立？（TAM/SOM 有数据）  │
-│  - 商业模式是否可行？（价值主张清晰）    │
-│  - 用户是否确认？（机会简报人类审批）    │
+│  ★ Hard gate check (5 items, stop and   │
+│    ask if any not met):                 │
+│  - Target users clear? (Persona          │
+│    confidence ≥0.7)                     │
+│  - Core problem validated? (Problem     │
+│    statement human-confirmed)           │
+│  - Market opportunity viable? (TAM/SOM  │
+│    has data)                            │
+│  - Business model feasible? (Value      │
+│    proposition clear)                   │
+│  - User confirmed? (Opportunity brief   │
+│    human-approved)                      │
 └────────┬────────────────────────────────┘
-         │ 通过
+         │ Pass
          ▼
 ┌─────────────────────────────────────────┐
-│ ⏸ 探索对话 1：探索发现回顾               │
+│ ⏸ Exploration Dialog 1: Exploration &  │
+│   discovery review                      │
 │                                         │
-│  最小问题集：                            │
-│  1. 这些发现符合你的认知吗？              │
-│  2. 有没有遗漏的重要信息？                │
-│  3. 接下来进入战略阶段，方向对吗？        │
+│  Minimum question set:                  │
+│  1. Do these findings match your        │
+│     understanding?                      │
+│  2. Is there any important missing      │
+│     information?                        │
+│  3. Moving to strategy phase next, is   │
+│     the direction right?                │
 │                                         │
-│  ⚠️ 禁止：不问用户直接进入模块2          │
+│  ⚠️ Forbidden: entering module 2        │
+│  directly without asking user           │
 └────────┬────────────────────────────────┘
-         │ 用户已确认
+         │ User confirmed
          ▼
 ┌─────────────────────────────────────────┐
-│ 模块2：商业战略                          │
+│ Module 2: Business Strategy             │
 │                                         │
 │  - business-orchestrator                │
-│    （商业模式：画布+价值匹配+定价）       │
+│    (Business model: canvas+value        │
+│     fit+pricing)                        │
 │  - positioning-strategy                 │
-│    （产品定位：定位陈述）                 │
-│  - planning-orchestrator                 │
-│    （战略规划：提案+OKR+North Star+路线图）│
+│    (Product positioning: positioning    │
+│     statement)                          │
+│  - planning-orchestrator                │
+│    (Strategic planning: proposal+OKR+   │
+│     North Star+roadmap)                 │
 │  - stakeholder-analysis                 │
-│    （Stakeholder：分析+对齐）             │
-│    👤 战略方向确认（人类决策点）          │
+│    (Stakeholder: analysis+alignment)    │
+│    👤 Strategy direction confirmation   │
+│      (Human Decision Point)             │
 │                                         │
-│  产出：docs/strategy/PRODUCT_STRATEGY.md │
+│  Output: docs/strategy/PRODUCT_STRATEGY.md │
 └────────┬────────────────────────────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ ⏸ 探索对话 2：战略方向确认               │
+│ ⏸ Exploration Dialog 2: Strategy       │
+│   direction confirmation                │
 │                                         │
-│  最小问题集：                            │
-│  1. 战略方向和你的预期一致吗？            │
-│  2. OKR 和路线图的优先级需要调整吗？      │
-│  3. 进入 PRD 生成阶段，准备好了吗？       │
+│  Minimum question set:                  │
+│  1. Is the strategy direction consistent│
+│     with your expectations?             │
+│  2. Do OKR and roadmap priorities need  │
+│     adjustment?                         │
+│  3. Ready to enter PRD generation       │
+│     phase?                              │
 └────────┬────────────────────────────────┘
-         │ 用户已确认
+         │ User confirmed
          ▼
 ┌─────────────────────────────────────────┐
-│              LOOP 循环验证               │
+│              LOOP Validation            │
 │  ┌─────────────────────────────────┐    │
-│  │ 模块3：构思设计 (RESEARCH)       │    │
-│  │  - ideation-workshop           │    │
-│  │    （创意发散：workshop）        │    │
+│  │ Module 3: Ideation & Design     │    │
+│  │   (RESEARCH)                    │    │
+│  │  - ideation-workshop            │    │
+│  │    (Idea divergence: workshop)  │    │
 │  │  - prd-orchestrator             │    │
-│  │    （PRD 生成，设计交 harness-design）│ │
-│  │    👤 PRD 最终审批（人类决策点）  │    │
+│  │    (PRD generation, design      │    │
+│  │     handed to harness-design)   │    │
+│  │    👤 PRD final approval        │    │
+│  │      (Human Decision Point)     │    │
 │  │  - validation-orchestrator      │    │
-│  │    （验证：假设图+MVP+实验+可用性）│   │
+│  │    (Validation: hypothesis map+ │    │
+│  │     MVP+experiment+usability)   │    │
 │  └──────────┬──────────────────────┘    │
 │             ▼                            │
 │  ┌─────────────────────────────────┐    │
 │  │ VALIDATE                        │    │
-│  │  - PRD 4道质量门禁              │    │
-│  │  - 置信度检查（≥0.7 自动传递）   │    │
-│  │  - 人类审批（方案选择/优先级）   │    │
-│  │  - 宪法合规                      │    │
+│  │  - PRD 4 quality gates          │    │
+│  │  - Confidence check (≥0.7 auto  │    │
+│  │    pass)                        │    │
+│  │  - Human approval (solution     │    │
+│  │    selection/priority)          │    │
+│  │  - Constitution compliance      │    │
 │  └──────────┬──────────────────────┘    │
 │             │                            │
-│             ├── 通过 → 跳出 LOOP ────────┼──→
+│             ├── Pass → exit LOOP ────────┼──→
 │             │                            │
-│             └── 失败                     │
+│             └── Fail                     │
 │                   │                      │
 │                   ▼                      │
 │  ┌─────────────────────────────────┐    │
-│  │ 修订产出 (REVISE)                │    │
-│  │  - 补充数据 / 优化方案            │    │
-│  │  - 重新生成 PRD                   │    │
+│  │ Revise output (REVISE)          │    │
+│  │  - Supplement data / optimize   │    │
+│  │    solution                     │    │
+│  │  - Regenerate PRD               │    │
 │  └──────────┬──────────────────────┘    │
 │             │                            │
-│             └── 回到 RESEARCH ───────────┘
+│             └── Back to RESEARCH ────────┘
 │                                          │
-│  迭代上限：5 次（research 类型）         │
-│  超限 → 请求人类介入                     │
+│  Iteration limit: 5 times (research type)│
+│  Exceed limit → request human            │
+│  intervention                            │
 └─────────────────────────────────────────┘
          │
          ▼
 ┌─────────────────────────────────────────┐
-│ 模块4：度量设计                          │
+│ Module 4: Metrics Design                │
 │                                         │
 │  - metrics-orchestrator                 │
-│    （指标体系+埋点方案+看板设计）         │
+│    (Metrics system+tracking plan+       │
+│     dashboard design)                   │
 │                                         │
-│  产出：docs/metrics/metrics-system.md    │
-│        + docs/metrics/tracking-plan.md   │
+│  Output: docs/metrics/metrics-system.md │
+│        + docs/metrics/tracking-plan.md  │
 └────────┬────────────────────────────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ ⏸ 探索对话 3：PRD 与度量确认              │
+│ ⏸ Exploration Dialog 3: PRD & metrics  │
+│   confirmation                          │
 │                                         │
-│  最小问题集：                            │
-│  1. PRD 中的功能优先级需要调整吗？        │
-│  2. 指标体系覆盖了你的核心关注点吗？      │
-│  3. 埋点方案有技术上的顾虑吗？            │
-│  4. 准备进入监控设计和交接阶段吗？        │
+│  Minimum question set:                  │
+│  1. Do PRD feature priorities need      │
+│     adjustment?                         │
+│  2. Does the metrics system cover your  │
+│     core concerns?                      │
+│  3. Any technical concerns with the     │
+│     tracking plan?                      │
+│  4. Ready to enter monitoring design    │
+│     and handoff phase?                  │
 └────────┬────────────────────────────────┘
-         │ 用户已确认
+         │ User confirmed
          ▼
 ┌─────────────────────────────────────────┐
-│ 模块7：监控准备（★ 防止上线裸奔）        │
+│ Module 7: Monitoring Preparation        │
+│ (★ prevent launching blind)            │
 │                                         │
 │  - monitoring-orchestrator              │
-│    （监控配置：预警规则+归因模型+        │
-│     用户反馈闭环）                       │
+│    (Monitoring config: alert rules+     │
+│     attribution model+user feedback     │
+│     loop)                               │
 │                                         │
-│  依赖：metrics-orchestrator 的埋点方案   │
-│  产出：docs/monitoring/monitoring-config.md │
+│  Depends on: metrics-orchestrator's     │
+│  tracking plan                          │
+│  Output: docs/monitoring/monitoring-config.md │
 └────────┬────────────────────────────────┘
          ▼
 ┌─────────────────┐
-│ session-end     │  归档 + baseline + 更新 FEATURES.md
-│                 │  + 产出 docs/handoff/pm-to-solo.md
-│                 │    （PRD + 设计规范 + 埋点方案 交接工程）
-│                 │  + 提示下一步：工程完成后进入 launch
+│ session-end     │  Archive + baseline + update FEATURES.md
+│                 │  + Output docs/handoff/pm-to-solo.md
+│                 │    (PRD + design spec + tracking plan handoff to engineering)
+│                 │  + Prompt next step: enter launch after engineering complete
 └─────────────────┘
 ```
 
-## 关键检查点
+## Key Checkpoints
 
-- [ ] 探索硬门过了吗？（目标用户/核心问题/市场机会/商业模式/用户确认）
-- [ ] PRODUCT_STRATEGY.md 更新了吗？（由 planning-orchestrator 产出，setup 只填骨架）
-- [ ] PRD 通过 4 道质量门禁了吗？（完整性/一致性/歧义消除/可追溯性）
-- [ ] 置信度检查通过了吗？（低置信度项已人类确认）
-- [ ] 埋点方案设计了吗？（metrics-orchestrator 产出）
-- [ ] 监控体系建立了吗？（monitoring-orchestrator 产出，防止上线裸奔）
-- [ ] docs/handoff/pm-to-solo.md 交接文档产出了吗？
+- [ ] Exploration hard gate passed? (Target users/core problem/market opportunity/business model/user confirmation)
+- [ ] PRODUCT_STRATEGY.md updated? (Produced by planning-orchestrator, setup only fills skeleton)
+- [ ] PRD passed 4 quality gates? (Completeness/consistency/ambiguity elimination/traceability)
+- [ ] Confidence check passed? (Low-confidence items human-confirmed)
+- [ ] Tracking plan designed? (Produced by metrics-orchestrator)
+- [ ] Monitoring system established? (Produced by monitoring-orchestrator, prevent launching blind)
+- [ ] docs/handoff/pm-to-solo.md handoff document produced?
 
-## 失败处理
+## Failure Handling
 
-| 失败点 | 处理方式 |
+| Failure point | Handling |
 |--------|---------|
-| 探索硬门没过 | 停下来问用户，补充调研数据 |
-| LOOP 迭代超 5 次 | 请求人类介入，不硬撑 |
-| PRD 质量门禁未过 | 修订后重新验证，不许跳过 |
-| 置信度 < 0.3 | 阻断，请求人类确认是否继续 |
-| 监控配置缺失 | 必须在 session-end 前补齐 monitoring-orchestrator 产出 |
+| Exploration hard gate not passed | Stop and ask user, supplement research data |
+| LOOP iteration exceeds 5 times | Request human intervention, don't force |
+| PRD quality gate not passed | Revise and re-validate, no skipping |
+| Confidence < 0.3 | Block, request human confirmation whether to continue |
+| Monitoring config missing | Must complete monitoring-orchestrator output before session-end |
 
-## 下一步
+## Next Steps
 
-- 工程开发完成 → 进入 **launch** 工作流（验收发布）
-- 产品已上线需要增长 → 进入 **growth** 工作流
-- 产品需要数据驱动优化 → 进入 **optimization** 工作流
+- Engineering development complete → enter **launch** workflow (acceptance & release)
+- Product already live needs growth → enter **growth** workflow
+- Product needs data-driven optimization → enter **optimization** workflow

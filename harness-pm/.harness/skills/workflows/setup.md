@@ -4,113 +4,118 @@ name: setup
 default_mode: skip
 ---
 
-# 工作流 G：立项引导
+# Workflow G: Project Initiation Guide
 
-> 适用场景：新项目首次使用 harness-pm，需要初始化配置文件
-> 核心模式：引导填写 constitution.md / SOUL.md / PRODUCT_STRATEGY.md / PRD.md
+> Applicable scenario: New project using harness-pm for the first time, needs to initialize configuration files
+> Core mode: Guide filling in constitution.md / SOUL.md / PRODUCT_STRATEGY.md / PRD.md
 
-## 与其他工作流的差异
+## Differences from Other Workflows
 
-| 维度 | new-product | **setup** |
+| Dimension | new-product | **setup** |
 |------|-------------|----------|
-| 目标 | 做产品工作 | 初始化项目配置 |
-| 前置 | 无 | **install.sh 已执行** |
-| LOOP | research→validate | **无 LOOP（配置为主）** |
-| 产出 | 产品文档 | **配置文件填写完整** |
+| Goal | Product work | Initialize project configuration |
+| Prerequisite | None | **install.sh executed** |
+| LOOP | research→validate | **No LOOP (configuration-focused)** |
+| Output | Product documents | **Configuration files fully filled in** |
 
-## 流程
+## Process
 
 ```
 ┌─────────────────┐
-│ session-start   │  加载上下文，确认是首次使用
+│ session-start   │  Load context, confirm first-time use
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ 检查 install.sh 是否已执行              │
+│ Check if install.sh has been executed   │
 │                                         │
-│  - .harness/ 目录存在？                 │
+│  - .harness/ directory exists?          │
 │  - AGENTS.md / SOUL.md / constitution.md│
-│    已从模板创建？                        │
-│  - docs/ 目录结构已创建？               │
+│    created from templates?              │
+│  - docs/ directory structure created?   │
 │                                         │
-│  ★ 如未执行 → 提示用户先运行 install.sh │
+│  ★ If not executed → prompt user to     │
+│    run install.sh first                 │
 └────────┬────────────────────────────────┘
-         │ 已执行
+         │ Executed
          ▼
 ┌─────────────────┐
-│ 填写 SOUL.md    │  人格 + 产品偏好
-│                 │  - [用户名] 替换
-│                 │  - 产品类型偏好（SaaS/电商/工具）
-│                 │  - 方法论偏好（JTBD/Kano/North Star）
-│                 │  - 工具偏好（Figma/Notion/Mixpanel）
+│ Fill in SOUL.md │  Persona + product preferences
+│                 │  - [Username] replacement
+│                 │  - Product type preferences (SaaS/e-commerce/tools)
+│                 │  - Methodology preferences (JTBD/Kano/North Star)
+│                 │  - Tool preferences (Figma/Notion/Mixpanel)
 └────────┬────────┘
          ▼
 ┌─────────────────┐
-│ 填写            │  项目宪法
-│ constitution.md │  - 从产品特性推导（不是抄通用规则）
-│                 │  - 每条款可验证
-│                 │  - 示例：PRD 必须过4道门禁 / 关键决策人类审批
+│ Fill in         │  Project constitution
+│ constitution.md │  - Derived from product characteristics (not copying generic rules)
+│                 │  - Each clause verifiable
+│                 │  - Example: PRD must pass 4 gates / key decisions require human approval
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ 填写 PRODUCT_STRATEGY.md（骨架）         │
+│ Fill in PRODUCT_STRATEGY.md (skeleton)  │
 │                                         │
-│  - 产品概述 / 背景动机 / 目标用户        │
-│  - 核心价值主张                          │
-│  - 成功指标（可量化）                    │
-│  - 不做的事（边界）                      │
-│  - 里程碑                                │
+│  - Product overview / background        │
+│    motivation / target users            │
+│  - Core value proposition               │
+│  - Success metrics (quantifiable)       │
+│  - Out of scope (boundaries)            │
+│  - Milestones                           │
 │                                         │
-│  ★ 仅填写用户已知的骨架信息             │
-│  ★ 完整产出由 new-product 工作流的      │
-│    planning-orchestrator 丰富和更新      │
+│  ★ Only fill in skeleton info known to  │
+│    user                                 │
+│  ★ Full output enriched and updated by  │
+│    planning-orchestrator in new-product │
+│    workflow                             │
 └────────┬────────────────────────────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ 初始化 PRD.md（骨架）                    │
+│ Initialize PRD.md (skeleton)            │
 │                                         │
-│  - 创建 docs/product/PRD.md 骨架          │
-│  - 标注"待 design-prd skill 填充"        │
-│  - 不在此阶段写完整 PRD                  │
+│  - Create docs/product/PRD.md skeleton  │
+│  - Mark "to be filled by design-prd     │
+│    skill"                               │
+│  - Don't write complete PRD at this     │
+│    stage                                │
 └────────┬────────────────────────────────┘
          ▼
 ┌─────────────────┐
-│ 验证配置完整性  │
-│                 │  - 4 个文件都填写了？
-│                 │  - constitution 条款可验证？
-│                 │  - PRODUCT_STRATEGY 的指标可量化？
-│                 │  - PRD 骨架已创建？
+│ Validate        │  - All 4 files filled in?
+│ configuration   │  - Constitution clauses verifiable?
+│ completeness    │  - PRODUCT_STRATEGY metrics quantifiable?
+│                 │  - PRD skeleton created?
 └────────┬────────┘
-         │ 通过
+         │ Pass
          ▼
 ┌─────────────────┐
-│ session-end     │  记录立项信息到 progress.md
-│                 │  - 产品名称 / 类型 / 宪法要点
-│                 │  - 下一步：进入 new-product 工作流
+│ session-end     │  Record initiation info to progress.md
+│                 │  - Product name / type / constitution key points
+│                 │  - Next step: enter new-product workflow
 └─────────────────┘
 ```
 
-## 关键检查点
+## Key Checkpoints
 
-- [ ] SOUL.md 的 [用户名] 替换了？产品偏好填了？
-- [ ] constitution.md 条款可验证？（不是"产品要好"，而是"PRD 必须过 4 道门禁"）
-- [ ] PRODUCT_STRATEGY.md 的成功指标可量化？（不是"用户喜欢"，而是"DAU > 10000"）
-- [ ] PRD.md 骨架已创建？
-- [ ] 4 个文件都保存了？
+- [ ] [Username] in SOUL.md replaced? Product preferences filled?
+- [ ] constitution.md clauses verifiable? (Not "product should be good", but "PRD must pass 4 gates")
+- [ ] PRODUCT_STRATEGY.md success metrics quantifiable? (Not "users like it", but "DAU > 10000")
+- [ ] PRD.md skeleton created?
+- [ ] All 4 files saved?
 
-## 失败处理
+## Failure Handling
 
-| 失败点 | 处理方式 |
+| Failure point | Handling |
 |--------|---------|
-| install.sh 未执行 | 提示用户先运行 install.sh |
-| constitution 条款不可验证 | 帮用户改写为可验证的描述 |
-| PRODUCT_STRATEGY 的指标不可量化 | 帮用户改写为可量化的描述 |
+| install.sh not executed | Prompt user to run install.sh first |
+| Constitution clauses not verifiable | Help user rewrite as verifiable descriptions |
+| PRODUCT_STRATEGY metrics not quantifiable | Help user rewrite as quantifiable descriptions |
 
-## 与 install.sh 的分工
+## Division of Labor with install.sh
 
-| 阶段 | 职责 |
+| Stage | Responsibility |
 |------|------|
-| install.sh | 拷贝模板文件到项目目录（机械操作） |
-| **setup 工作流** | 引导用户填写模板内容（智能引导） |
+| install.sh | Copy template files to project directory (mechanical operation) |
+| **setup workflow** | Guide user to fill in template content (intelligent guidance) |
 
-install.sh 只负责"文件到位"，setup 工作流负责"内容填写正确"。
+install.sh only ensures "files in place", setup workflow ensures "content filled correctly".

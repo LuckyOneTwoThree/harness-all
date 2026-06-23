@@ -1,108 +1,108 @@
 # harness-ops
 
-> 个人**运维与基础设施保障**框架 · harness 家族成员
+> Personal **Operations & Infrastructure Reliability** Framework · harness family member
 
-## 定位
+## Positioning
 
-专注"护航与交付"——基础设施即代码(IaC)、自动化部署(CI/CD)、监控告警体系、容灾与应急响应。
+Focused on "escorting and delivering" — Infrastructure as Code (IaC), automated deployment (CI/CD), monitoring & alerting systems, disaster recovery and incident response.
 
-产品研究/UI 设计/工程开发/运营增长由 harness 家族其他成员负责，通过 `docs/handoff/` 契约文档交接。
+Product research / UI design / engineering development / growth operations are handled by other members of the harness family, handed off via `docs/handoff/` contract documents.
 
-## 核心特性
+## Core Features
 
-- **SRE 四原则**：Stability-First / IaC / Observability / Automation
-- **Loop 循环引擎**：PLAN → PROVISION/DEPLOY → VERIFY，支持 5 种循环类型（provision/incident/optimization/recovery/audit）
-- **半自动化架构**：Agent 建议 + 人类审批 + GitOps 执行，生产环境通过 PR 间接操作
-- **契约协作**：接收 `solo-to-ops.md`（工程交付），产出 `ops-to-pm.md`（SLA 报告 + 故障复盘）
-- **安全红线**：Secret 严格隔离（Agent 不接触明文）、破坏性变更拦截、环境隔离
-- **四类操作原语**：inspect（自动）/ propose（生成 PR）/ mutate-staging（Agent 执行）/ mutate-prod（人类审批）
+- **SRE Four Principles** : Stability-First / IaC / Observability / Automation
+- **Loop Cycle Engine** : PLAN → PROVISION/DEPLOY → VERIFY, supports 5 cycle types (provision/incident/optimization/recovery/audit)
+- **Semi-automated architecture** : Agent proposes + human approves + GitOps executes; production environment operated indirectly via PRs
+- **Contract collaboration** : Receives `solo-to-ops.md` (engineering handoff), produces `ops-to-pm.md` (SLA report + incident retrospective)
+- **Security red lines** : Strict secret isolation (Agent never touches plaintext), destructive change interception, environment isolation
+- **Four operation primitives** : inspect (automatic) / propose (generate PR) / mutate-staging (Agent executes) / mutate-prod (human approval)
 
-## Skill 体系（8 模块 28 领域 skill + 4 meta = 32）
+## Skill System (8 modules, 28 domain skills + 4 meta = 32)
 
-- **模块1 部署交付**（4）：deployment-pipeline / release-strategy / rollback / deployment-verify
-- **模块2 基础设施**（4）：infrastructure-as-code / kubernetes-manifest / helm-management / gitops-sync
-- **模块3 监控可观测**（4）：monitoring-setup / alerting-rules / log-analysis / dashboard-design
-- **模块4 故障响应**（4）：incident-detection / root-cause-analysis / incident-mitigation / post-mortem
-- **模块5 安全合规**（4）：secret-management / policy-as-code / security-scan / audit-review
-- **模块6 容量成本**（3）：resource-right-sizing / cost-analysis / capacity-planning
-- **模块7 容灾备份**（3）：backup-management / recovery-drill / disaster-recovery-plan
-- **模块8 运维审查**（2）：ops-review / sla-report
+- **Module 1 Deployment & Delivery** (4): deployment-pipeline / release-strategy / rollback / deployment-verify
+- **Module 2 Infrastructure** (4): infrastructure-as-code / kubernetes-manifest / helm-management / gitops-sync
+- **Module 3 Monitoring & Observability** (4): monitoring-setup / alerting-rules / log-analysis / dashboard-design
+- **Module 4 Incident Response** (4): incident-detection / root-cause-analysis / incident-mitigation / post-mortem
+- **Module 5 Security & Compliance** (4): secret-management / policy-as-code / security-scan / audit-review
+- **Module 6 Capacity & Cost** (3): resource-right-sizing / cost-analysis / capacity-planning
+- **Module 7 Disaster Recovery & Backup** (3): backup-management / recovery-drill / disaster-recovery-plan
+- **Module 8 Ops Review** (2): ops-review / sla-report
 
-## 工作流（7 个）
+## Workflows (7)
 
-- **deployment-workflow** — 部署全流程：solo-to-ops → IaC plan → provision → verify → ops-to-pm
-- **incident-response-workflow** — 故障全流程：detect → mitigate → verify → root-cause → post-mortem
-- **infrastructure-setup-workflow** — 基础设施搭建：IaC → K8s → Helm → GitOps → verify
-- **monitoring-deployment-workflow** — 监控部署：monitoring-setup → alerting → dashboard → verify
-- **security-audit-workflow** — 安全审计：scan → policy → audit-review → 修复建议
-- **disaster-recovery-workflow** — 容灾演练：backup → recovery-drill → 验证 → 报告
-- **ops-review-workflow** — 运维回顾：sla + cost → ops-review → ops-to-pm
+- **deployment-workflow** — Full deployment flow: solo-to-ops → IaC plan → provision → verify → ops-to-pm
+- **incident-response-workflow** — Full incident flow: detect → mitigate → verify → root-cause → post-mortem
+- **infrastructure-setup-workflow** — Infrastructure setup: IaC → K8s → Helm → GitOps → verify
+- **monitoring-deployment-workflow** — Monitoring deployment: monitoring-setup → alerting → dashboard → verify
+- **security-audit-workflow** — Security audit: scan → policy → audit-review → fix recommendations
+- **disaster-recovery-workflow** — Disaster recovery drill: backup → recovery-drill → verify → report
+- **ops-review-workflow** — Ops review: sla + cost → ops-review → ops-to-pm
 
-## 快速开始
+## Quick Start
 
 ```bash
-# 1. 进入项目目录
+# 1. Enter the project directory
 cd your-project
 
-# 2. 安装 harness-ops 框架
+# 2. Install the harness-ops framework
 bash /path/to/harness-ops/install.sh
 
-# 3. 按需填写 OPS_STRATEGY.md（基础设施战略）
-# 4. 开始使用：Agent 启动时读取 AGENTS.md
+# 3. Fill in OPS_STRATEGY.md as needed (infrastructure strategy)
+# 4. Start using: Agent reads AGENTS.md on startup
 ```
 
-## 目录结构
+## Directory Structure
 
 ```
 harness-ops/
-├── AGENTS.md              # Agent 启动必读（唯一强制入口）
-├── SOUL.md                # Agent 人格定义
-├── constitution.md        # 项目宪法
-├── install.sh             # 安装脚本
+├── AGENTS.md              # Agent must-read on startup (only mandatory entry point)
+├── SOUL.md                # Agent persona definition
+├── constitution.md        # Project constitution
+├── install.sh             # Install script
 ├── .harness/
-│   ├── loops/LOOP.md      # 循环引擎定义（5 种循环类型）
-│   ├── skills/            # 技能库（8 模块 28 领域 + 4 meta = 32）
-│   │   ├── meta/          # 4 个元 skill
-│   │   ├── deployment/    # 部署交付 skill（4个）
-│   │   ├── infrastructure/# 基础设施 skill（4个）
-│   │   ├── monitoring/    # 监控可观测 skill（4个）
-│   │   ├── incident/      # 故障响应 skill（4个）
-│   │   ├── security/      # 安全合规 skill（4个）
-│   │   ├── capacity/      # 容量成本 skill（3个）
-│   │   ├── recovery/      # 容灾备份 skill（3个）
-│   │   ├── review/        # 运维审查 skill（2个）
-│   │   └── workflows/     # 工作流（7个）
-│   ├── rules/             # 安全规则与防护
-│   ├── memory/            # 跨会话记忆（7 张知识库表）
-│   └── templates/         # 项目模板
+│   ├── loops/LOOP.md      # Cycle engine definition (5 cycle types)
+│   ├── skills/            # Skill library (8 modules, 28 domain + 4 meta = 32)
+│   │   ├── meta/          # 4 meta skills
+│   │   ├── deployment/    # Deployment & delivery skills (4)
+│   │   ├── infrastructure/# Infrastructure skills (4)
+│   │   ├── monitoring/    # Monitoring & observability skills (4)
+│   │   ├── incident/      # Incident response skills (4)
+│   │   ├── security/      # Security & compliance skills (4)
+│   │   ├── capacity/      # Capacity & cost skills (3)
+│   │   ├── recovery/      # Disaster recovery & backup skills (3)
+│   │   ├── review/        # Ops review skills (2)
+│   │   └── workflows/     # Workflows (7)
+│   ├── rules/             # Security rules and defense
+│   ├── memory/            # Cross-session memory (7 knowledge base tables)
+│   └── templates/         # Project templates
 └── docs/
-    ├── handoff/           # 跨框架交接文档
-    ├── infrastructure/    # 基础设施架构与资产
-    ├── monitoring/        # 监控大盘与告警规则
-    ├── incident/          # 故障排查与工单记录
-    └── deployment/        # 部署配置记录
+    ├── handoff/           # Cross-framework handoff documents
+    ├── infrastructure/    # Infrastructure architecture and assets
+    ├── monitoring/        # Monitoring dashboards and alerting rules
+    ├── incident/          # Incident investigation and ticket records
+    └── deployment/        # Deployment configuration records
 ```
 
-## 自动化边界（核心设计）
+## Automation Boundaries (Core Design)
 
-| 操作类型 | staging | production |
+| Operation Type | staging | production |
 |---------|---------|------------|
-| inspect（get/describe/plan/scan） | Agent 全自动 | Agent 全自动 |
-| propose（生成 Manifest/PR） | Agent | Agent |
-| mutate（scale/rollback/restart） | Agent 直接执行 | GitOps PR + 人类 review |
-| mutate 高风险（delete/RBAC） | 人类审批 | 人类双重确认 |
-| Secret 值操作 | ❌ 禁止 | ❌ 禁止 |
+| inspect (get/describe/plan/scan) | Agent fully automatic | Agent fully automatic |
+| propose (generate Manifest/PR) | Agent | Agent |
+| mutate (scale/rollback/restart) | Agent executes directly | GitOps PR + human review |
+| mutate high-risk (delete/RBAC) | Human approval | Human double confirmation |
+| Secret value operations | ❌ Forbidden | ❌ Forbidden |
 
-## 与 harness 家族的关系
+## Relationship with the harness Family
 
-| 成员 | 职责 | 与 ops 的交接 |
+| Member | Responsibility | Handoff with ops |
 |------|------|--------------|
-| harness-pm | 产品研究/PRD | 接收 ops 的 SLA 报告 |
-| harness-solo | 工程开发 | 产出 solo-to-ops.md 交给 ops 部署 |
-| harness-design | UI/视觉设计 | 不直接交接 |
-| harness-growth | 运营增长 | 不直接交接 |
-| **harness-ops** | **运维与基础设施** | 产出 ops-to-pm.md 反馈生产状态 |
+| harness-pm | Product research / PRD | Receives ops SLA reports |
+| harness-solo | Engineering development | Produces solo-to-ops.md handed to ops for deployment |
+| harness-design | UI / visual design | No direct handoff |
+| harness-growth | Growth operations | No direct handoff |
+| **harness-ops** | **Operations & Infrastructure** | Produces ops-to-pm.md feeding back production status |
 
-## 设计依据
+## Design Basis
 
-详见 `../ARCHITECTURE.md` 第 2.1 节（框架家族定位）和第 4.2 节（契约流转矩阵）。
+See `../ARCHITECTURE.md` Section 2.1 (Framework Family Positioning) and Section 4.2 (Contract Flow Matrix) for details.

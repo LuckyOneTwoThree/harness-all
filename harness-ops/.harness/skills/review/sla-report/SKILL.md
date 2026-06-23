@@ -1,12 +1,12 @@
 ---
 name: sla-report
-description: SLA 计算与报告，基于监控数据计算可用性，生成 SLA 达成报告
+description: SLA calculation and reporting, computing availability from monitoring data and generating SLA achievement reports
 triggers:
-  - 月度 SLA 报告时
-  - 用户要求"计算 SLA"时
-  - SLA 未达标需要分析时
-  - ops-review 需要数据支撑时
-  - 合同/合规需要 SLA 证明时
+  - During monthly SLA reporting
+  - When the user requests "calculate SLA"
+  - When SLA targets are not met and analysis is required
+  - When ops-review needs data support
+  - When contracts/compliance require SLA evidence
 reads:
   - docs/infrastructure/OPS_STRATEGY.md
   - memory/knowledge-base.md
@@ -20,93 +20,93 @@ operation_tier: inspect
 requires_approval: false
 ---
 
-# SLA Report — SLA 计算与报告
+# SLA Report — SLA Calculation and Reporting
 
-## 铁律
+## Ground Rules
 
-1. **SLA 基于监控数据** —— 不估算，用 Prometheus 实际数据
-2. **SLA 计算有明确公式** —— 可复现，可审计
-3. **SLA 未达标必须分析** —— 不只报数字，给原因
-4. **SLA 报告可对外** —— 可能用于合同/合规
+1. **SLA is based on monitoring data** — no estimation; use actual Prometheus data
+2. **SLA calculation has a clear formula** — reproducible and auditable
+3. **SLA misses must be analyzed** — do not just report numbers, provide root causes
+4. **SLA reports are shareable externally** — may be used for contracts/compliance
 
-## 流程
+## Process
 
-### 1. 定义 SLA 指标
+### 1. Define SLA Metrics
 
 ```
-## SLA 指标定义
+## SLA Metric Definition
 
-### 可用性（Availability）
-- 公式: (总时间 - 不可用时间) / 总时间 * 100%
-- 不可用定义: 错误率 > 5% 持续 > 1 分钟
-- 目标: 99.9%（每月不可用 < 43.2 分钟）
+### Availability
+- Formula: (total time - downtime) / total time * 100%
+- Downtime definition: error rate > 5% sustained for > 1 minute
+- Target: 99.9% (monthly downtime < 43.2 minutes)
 
-### 延迟（Latency）
-- 公式: p95 延迟
-- 目标: p95 < 200ms
+### Latency
+- Formula: p95 latency
+- Target: p95 < 200ms
 
-### 错误率（Error Rate）
-- 公式: 5xx 请求数 / 总请求数
-- 目标: < 0.1%
+### Error Rate
+- Formula: 5xx requests / total requests
+- Target: < 0.1%
 ```
 
-### 2. 计算 SLA
+### 2. Calculate SLA
 
 ```promql
-# 可用性计算（本月）
+# Availability calculation (this month)
 1 - (
   sum(rate(http_requests_total{service="payment-service",status=~"5.."}[30d]))
   / sum(rate(http_requests_total{service="payment-service"}[30d]))
 )
 
-# 不可用时间计算
+# Downtime calculation
 sum(count_over_time(
   (sum(rate(http_requests_total{status=~"5.."}[1m])) / sum(rate(http_requests_total[1m])) > 0.05)[30d:]
 )) * 60
 
-# p95 延迟（本月平均）
+# p95 latency (monthly average)
 avg(histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[30d])))
 
-# 错误率（本月）
+# Error rate (this month)
 sum(rate(http_requests_total{status=~"5.."}[30d])) / sum(rate(http_requests_total[30d]))
 ```
 
-### 3. 生成 SLA 报告
+### 3. Generate the SLA Report
 
 ```
-## SLA 月度报告（2026年5月）
+## Monthly SLA Report (May 2026)
 
-### 服务级 SLA
+### Service-Level SLA
 
-| 服务 | 可用性 | 目标 | 达成? | 不可用时间 | p95延迟 | 延迟目标 | 错误率 | 错误目标 |
+| Service | Availability | Target | Met? | Downtime | p95 Latency | Latency Target | Error Rate | Error Target |
 |------|--------|------|-------|-----------|---------|---------|--------|---------|
 | payment-service | 99.92% | 99.9% | ✓ | 34min | 180ms | 200ms | 0.08% | 0.1% |
 | order-service | 99.99% | 99.9% | ✓ | 4min | 95ms | 200ms | 0.01% | 0.1% |
 | user-service | 99.85% | 99.9% | ✗ | 65min | 350ms | 200ms | 0.15% | 0.1% |
 
-### 整体 SLA
-- 平均可用性: 99.92%
-- 目标: 99.9%
-- 达成: ✓（但 user-service 未达标）
+### Overall SLA
+- Average availability: 99.92%
+- Target: 99.9%
+- Met: ✓ (but user-service did not meet the target)
 
-### SLA 未达标分析
+### SLA Miss Analysis
 
-#### user-service（99.85% vs 目标 99.9%）
-- 不可用时间: 65 分钟
-- 主要事件:
-  1. 2026-05-15: Redis 连接池耗尽（25min）
-  2. 2026-05-22: 部署失败回滚（20min）
-  3. 2026-05-28: 数据库慢查询（20min）
-- 根因: 资源配置不足 + 依赖服务不稳定
-- 改进: 扩容 + 优化慢查询 + 调整部署策略
+#### user-service (99.85% vs target 99.9%)
+- Downtime: 65 minutes
+- Major incidents:
+  1. 2026-05-15: Redis connection pool exhausted (25min)
+  2. 2026-05-22: Deployment failed and rolled back (20min)
+  3. 2026-05-28: Database slow queries (20min)
+- Root cause: insufficient resource allocation + unstable dependencies
+- Improvements: scale up + optimize slow queries + adjust deployment strategy
 ```
 
-### 4. 生成 SLA 趋势
+### 4. Generate SLA Trends
 
 ```
-## SLA 趋势（近 6 个月）
+## SLA Trend (Last 6 Months)
 
-| 月份 | payment | order | user | 整体 |
+| Month | payment | order | user | Overall |
 |------|---------|-------|------|------|
 | 2025-12 | 99.95% | 99.98% | 99.92% | 99.95% |
 | 2026-01 | 99.93% | 99.99% | 99.90% | 99.94% |
@@ -115,35 +115,35 @@ sum(rate(http_requests_total{status=~"5.."}[30d])) / sum(rate(http_requests_tota
 | 2026-04 | 99.95% | 99.98% | 99.99% | 99.97% |
 | 2026-05 | 99.92% | 99.99% | 99.85% | 99.92% |
 
-### 趋势分析
-- payment-service: 稳定在 99.9%+，本月略降
-- order-service: 持续优秀
-- user-service: 波动较大，本月未达标，需重点关注
+### Trend Analysis
+- payment-service: stable above 99.9%, slightly down this month
+- order-service: consistently excellent
+- user-service: high volatility, missed target this month, needs focused attention
 ```
 
-### 5. 写入报告
+### 5. Write the Report
 
-写入 `docs/monitoring/sla-report-2026-05.md`。
+Write to `docs/monitoring/sla-report-2026-05.md`.
 
-### 6. 更新知识库
+### 6. Update the Knowledge Base
 
-`memory/knowledge-base.md` 追加：
+Append to `memory/knowledge-base.md`:
 ```
-| 月份 | 整体SLA | 目标 | 达成 | 未达标服务 | 主要原因 |
+| Month | Overall SLA | Target | Met | Services Missing Target | Primary Cause |
 |------|---------|------|------|-----------|---------|
-| 2026-05 | 99.92% | 99.9% | ✓ | user-service | Redis+部署+慢查询 |
+| 2026-05 | 99.92% | 99.9% | ✓ | user-service | Redis + deployment + slow queries |
 ```
 
-## 禁止事项
+## Prohibitions
 
-- 不基于估算计算 SLA（必须用监控数据）
-- 不篡改 SLA 数据
-- 不隐瞒 SLA 未达标
-- 不在报告中包含用户 PII
+- Do not calculate SLA based on estimation (must use monitoring data)
+- Do not tamper with SLA data
+- Do not conceal SLA misses
+- Do not include user PII in the report
 
-## 与 LOOP 的关系
+## Relationship to LOOP
 
-**所属 LOOP 类型**：无（报告类 skill）
+**LOOP type**: none (reporting skill)
 
-本 skill 产出 SLA 报告，供 ops-review 引用。
-通常月度执行，或用户显式要求时执行。
+This skill produces SLA reports for ops-review to reference.
+Usually executed monthly, or on explicit user request.

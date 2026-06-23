@@ -1,12 +1,12 @@
 ---
 name: cost-analysis
-description: 云成本分析与优化，识别闲置资源/超额配置/可预留实例，生成成本报告
+description: Cloud cost analysis and optimization, identifying idle resources, over-provisioning, and reservable instances, producing cost reports
 triggers:
-  - 月度成本审计时
-  - 用户要求"分析云成本"时
-  - 成本异常增长时
-  - optimization LOOP 触发时
-  - 预算超支预警时
+  - During monthly cost audits
+  - When the user requests "cloud cost analysis"
+  - When cost grows abnormally
+  - When the optimization LOOP triggers
+  - On budget overrun alerts
 reads:
   - docs/infrastructure/OPS_STRATEGY.md
   - rules/security.md
@@ -21,18 +21,18 @@ operation_tier: inspect
 requires_approval: false
 ---
 
-# Cost Analysis — 云成本分析与优化
+# Cost Analysis — Cloud Cost Analysis and Optimization
 
-## 铁律
+## Ground Rules
 
-1. **成本数据来自云厂商** —— 不估算，用实际账单数据
-2. **优化不牺牲可用性** —— 不为省钱删生产资源
-3. **预留实例需长期承诺** —— 不盲目购买 RI/SP
-4. **成本报告面向决策** —— 不只列数据，给优化建议
+1. **Cost data comes from the cloud provider** — do not estimate, use actual billing data
+2. **Optimization must not sacrifice availability** — never delete production resources to save money
+3. **Reserved instances require long-term commitment** — do not purchase RI/SP blindly
+4. **Cost reports are decision-oriented** — do not just list data, provide optimization recommendations
 
-## 流程
+## Process
 
-### 1. 收集成本数据
+### 1. Collect Cost Data
 
 ```bash
 # AWS Cost Explorer
@@ -42,133 +42,133 @@ aws ce get-cost-and-usage \
   --metrics BlendedCost \
   --group-by Type=SERVICE
 
-# 阿里云/腾讯云通过账单 API 获取
+# For Alibaba Cloud / Tencent Cloud, use the billing API
 ```
 
-### 2. 分析成本结构
+### 2. Analyze Cost Structure
 
 ```
-## 月度成本报告（2026年5月）
+## Monthly Cost Report (May 2026)
 
-### 总成本: ¥45,678
+### Total Cost: ¥45,678
 
-### 按服务分类
-| 服务 | 成本 | 占比 | 同比变化 |
+### By Service
+| Service | Cost | Share | YoY Change |
 |------|------|------|---------|
 | EC2/ECS | ¥18,000 | 39% | +5% |
 | RDS | ¥12,000 | 26% | +0% |
 | S3/OSS | ¥5,000 | 11% | +15% |
 | LoadBalancer | ¥3,500 | 8% | +0% |
 | CloudWatch | ¥2,000 | 4% | +20% |
-| 其他 | ¥5,178 | 11% | -2% |
+| Other | ¥5,178 | 11% | -2% |
 
-### 按环境分类
-| 环境 | 成本 | 占比 |
+### By Environment
+| Environment | Cost | Share |
 |------|------|------|
 | production | ¥35,000 | 77% |
 | staging | ¥8,000 | 18% |
 | dev | ¥2,678 | 6% |
 ```
 
-### 3. 识别优化机会
+### 3. Identify Optimization Opportunities
 
-#### 闲置资源
+#### Idle Resources
 ```
-## 闲置资源识别
+## Idle Resource Identification
 
-### EC2 实例
-| 实例ID | 类型 | 月成本 | CPU平均使用 | 状态 | 建议 |
+### EC2 Instances
+| Instance ID | Type | Monthly Cost | Avg CPU Usage | Status | Recommendation |
 |--------|------|--------|-----------|------|------|
-| i-xxx1 | t3.large | ¥800 | 3% | 闲置 | 停止或销毁 |
-| i-xxx2 | t3.medium | ¥500 | 8% | 低使用 | 降配到 t3.small |
+| i-xxx1 | t3.large | ¥800 | 3% | Idle | Stop or terminate |
+| i-xxx2 | t3.medium | ¥500 | 8% | Low usage | Downsize to t3.small |
 
-### EBS 卷
-| 卷ID | 大小 | 月成本 | 最后挂载 | 状态 | 建议 |
+### EBS Volumes
+| Volume ID | Size | Monthly Cost | Last Attached | Status | Recommendation |
 |------|------|--------|---------|------|------|
-| vol-xxx | 100GB | ¥100 | 30天前 | 未挂载 | 快照后销毁 |
+| vol-xxx | 100GB | ¥100 | 30 days ago | Unattached | Snapshot then terminate |
 
-### 负载均衡器
-| LB ID | 类型 | 月成本 | 后端实例 | 状态 | 建议 |
+### Load Balancers
+| LB ID | Type | Monthly Cost | Backend Instances | Status | Recommendation |
 |-------|------|--------|---------|------|------|
-| lb-xxx | ALB | ¥300 | 0 | 空闲 | 销毁 |
+| lb-xxx | ALB | ¥300 | 0 | Idle | Terminate |
 ```
 
-#### 超额配置
+#### Over-provisioning
 ```
-## 超额配置识别
+## Over-provisioning Identification
 
-### RDS 实例
-| 实例ID | 类型 | 月成本 | CPU使用 | 连接数 | 建议 |
+### RDS Instances
+| Instance ID | Type | Monthly Cost | CPU Usage | Connections | Recommendation |
 |--------|------|--------|--------|--------|------|
-| db-xxx | db.r5.xlarge | ¥3,000 | 15% | 20/1000 | 降配到 db.r5.large |
+| db-xxx | db.r5.xlarge | ¥3,000 | 15% | 20/1000 | Downsize to db.r5.large |
 
-### ECS 任务
-| 服务 | 当前配置 | 月成本 | CPU使用 | 建议 |
+### ECS Tasks
+| Service | Current Config | Monthly Cost | CPU Usage | Recommendation |
 |------|---------|--------|--------|------|
-| payment | 2 vCPU/4GB | ¥1,200 | 25% | 调用 resource-right-sizing |
+| payment | 2 vCPU/4GB | ¥1,200 | 25% | Invoke resource-right-sizing |
 ```
 
-#### 预留实例机会
+#### Reserved Instance Opportunities
 ```
-## 预留实例建议
+## Reserved Instance Recommendations
 
-### 长期运行的 EC2 实例
-| 实例类型 | 数量 | 按需月成本 | RI月成本 | 节省 | 承诺期 |
+### Long-running EC2 Instances
+| Instance Type | Count | On-Demand Monthly Cost | RI Monthly Cost | Savings | Commitment |
 |---------|------|-----------|---------|------|--------|
-| t3.medium | 5 | ¥2,500 | ¥1,500 | 40% | 1年 |
+| t3.medium | 5 | ¥2,500 | ¥1,500 | 40% | 1 year |
 
-### 建议
-- 购买 5 个 t3.medium 1年 RI，月节省 ¥1,000
-- 生产环境核心服务，长期运行，适合 RI
+### Recommendations
+- Purchase 5 t3.medium 1-year RIs, monthly savings ¥1,000
+- Core production services, long-running, suitable for RI
 ```
 
-### 4. 生成优化建议
+### 4. Produce Optimization Recommendations
 
 ```
-## 成本优化建议
+## Cost Optimization Recommendations
 
-### 立即可执行（低风险）
-1. 停止闲置 EC2 i-xxx1 → 月节省 ¥800
-2. 销毁未挂载 EBS vol-xxx → 月节省 ¥100
-3. 销毁空闲 ALB lb-xxx → 月节省 ¥300
-小计: 月节省 ¥1,200
+### Immediately Executable (Low Risk)
+1. Stop idle EC2 i-xxx1 → monthly savings ¥800
+2. Terminate unattached EBS vol-xxx → monthly savings ¥100
+3. Terminate idle ALB lb-xxx → monthly savings ¥300
+Subtotal: monthly savings ¥1,200
 
-### 需评估（中风险）
-4. 降配 RDS db-xxx → 月节省 ¥1,500（需评估性能影响）
-5. 调用 resource-right-sizing 优化 ECS → 月节省 ¥600
-小计: 月节省 ¥2,100
+### Needs Assessment (Medium Risk)
+4. Downsize RDS db-xxx → monthly savings ¥1,500 (performance impact must be assessed)
+5. Invoke resource-right-sizing to optimize ECS → monthly savings ¥600
+Subtotal: monthly savings ¥2,100
 
-### 需长期承诺（低风险但需预算）
-6. 购买 5 个 t3.medium RI → 月节省 ¥1,000（需预付）
-小计: 月节省 ¥1,000
+### Long-term Commitment (Low Risk but Requires Budget)
+6. Purchase 5 t3.medium RIs → monthly savings ¥1,000 (upfront payment required)
+Subtotal: monthly savings ¥1,000
 
-### 总计优化潜力: 月节省 ¥4,300（9.4%）
+### Total Optimization Potential: monthly savings ¥4,300 (9.4%)
 ```
 
-### 5. 更新知识库
+### 5. Update Knowledge Base
 
-`memory/knowledge-base.md` 追加：
+Append to `memory/knowledge-base.md`:
 ```
-| 月份 | 总成本 | 优化前 | 优化后 | 节省 | 主要优化项 |
+| Month | Total Cost | Before Optimization | After Optimization | Savings | Main Optimization Items |
 |------|--------|--------|--------|------|-----------|
-| 2026-05 | ¥45,678 | ¥45,678 | ¥41,378 | ¥4,300 | 闲置资源+降配+RI |
+| 2026-05 | ¥45,678 | ¥45,678 | ¥41,378 | ¥4,300 | Idle resources + downsizing + RI |
 ```
 
-## 禁止事项
+## Prohibitions
 
-- 不为省钱删除生产环境关键资源
-- 不在未评估性能影响的情况下降配
-- 不盲目购买 RI（需确认长期需求）
-- 不只报告成本不给优化建议
+- Do not delete critical production environment resources to save money
+- Do not downsize without assessing performance impact
+- Do not purchase RIs blindly (long-term demand must be confirmed)
+- Do not report cost without providing optimization recommendations
 
-## 与 LOOP 的关系
+## Relationship to LOOP
 
-**所属 LOOP 类型**：optimization
+**LOOP type**: optimization
 
 ```
 LOOP(optimization):
-  PLAN:       收集成本数据 → 分析结构
-  PROVISION:  识别优化机会 → 生成建议
-  VERIFY:     评估风险 → 确认可执行
-  通过? DONE : 暂不优化 → 下次再分析
+  PLAN:       Collect cost data → analyze structure
+  PROVISION:  Identify optimization opportunities → produce recommendations
+  VERIFY:     Assess risk → confirm executability
+  Pass? DONE : Skip optimization for now → re-analyze next time
 ```

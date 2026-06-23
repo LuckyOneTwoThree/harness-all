@@ -1,21 +1,21 @@
 ---
 name: growth-model
-description: 当需要诊断产品增长模式时使用。增长模式自动诊断Pipeline，分析产品特征、用户数据和商业模式，自动匹配最优增长模式（PLG/SLG/MLG/混合），输出增长飞轮模型、关键约束条件和瓶颈分析。关键词：增长模式、PLG、SLG、增长飞轮、增长诊断。
+description: Use when you need to diagnose the product growth model. Growth Model Auto-Diagnosis Pipeline analyzes product features, user data, and business model to automatically match the optimal growth model (PLG/SLG/MLG/Hybrid), outputting a growth flywheel model, key constraints, and bottleneck analysis. Keywords: growth model, PLG, SLG, growth flywheel, growth diagnosis.
 metadata:
-  module: "产品增长与运营"
-  sub-module: "增长模式"
+  module: "Product Growth & Operations"
+  sub-module: "Growth Model"
   type: "pipeline"
   version: "2.0"
   interaction_mode: "ai_suggest_human_approve"
   trigger_examples:
-    - "诊断一下产品的增长模式"
-    - "我们是PLG还是SLG"
-    - "增长飞轮怎么搭"
-    - "增长瓶颈在哪里"
+    - "Diagnose the product's growth model"
+    - "Are we PLG or SLG"
+    - "How to build the growth flywheel"
+    - "Where is the growth bottleneck"
 execution_depth:
   default: standard
-  quick_description: "直接输出增长模式诊断和瓶颈定位"
-  deep_description: "完整诊断 + 飞轮建模推演 + 冷启动模拟 + 增长阶段演进路线"
+  quick_description: "Directly output growth model diagnosis and bottleneck localization"
+  deep_description: "Complete diagnosis + flywheel modeling + cold-start simulation + growth stage evolution roadmap"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -27,106 +27,106 @@ writes:
   - growth_model.json
 ---
 
-# 增长模式自动诊断
+# Growth Model Auto-Diagnosis
 
-## 核心原则
+## Core Principles
 
-1. **模式匹配产品本质**：PLG/SLG/MLG不是选择，而是产品特征和商业模式的必然结果
-2. **飞轮必须闭环**：增长飞轮必须形成增强回路，开环不是飞轮是链条
-3. **瓶颈决定杠杆**：当前最大瓶颈决定了最高杠杆的投入方向，资源永远投向瓶颈
+1. **Model matches product essence**: PLG/SLG/MLG is not a choice but the inevitable result of product features and business model
+2. **Flywheel must form a closed loop**: The growth flywheel must form a reinforcing loop; an open loop is a chain, not a flywheel
+3. **Bottleneck determines leverage**: The current biggest bottleneck determines the highest-leverage investment direction; resources always go to the bottleneck
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Input
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 产品特征 | object | 是 | 用户提供 | 产品类型、核心功能、价值主张 |
-| 用户数据 | object | 是 | docs/metrics/data-analysis-report.md（“留存分析”章节） | 用户行为、转化漏斗、留存曲线 |
-| 商业模式 | object | 是 | 用户提供 | 定价策略、目标客户、市场定位 |
+| Product features | object | Yes | User-provided | Product type, core features, value proposition |
+| User data | object | Yes | docs/metrics/data-analysis-report.md ("Retention Analysis" section) | User behavior, conversion funnel, retention curve |
+| Business model | object | Yes | User-provided | Pricing strategy, target customers, market positioning |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 增长模式匹配决策树 [核心]
+### Step 1: Growth Model Matching Decision Tree [Core]
 
-分析以下维度判断最优增长模式：
+Analyze the following dimensions to determine the optimal growth model:
 
-#### PLG（产品驱动增长）特征
-- 产品能够独立交付用户价值
-- 用户可以自助注册和使用
-- 存在网络效应或使用量越大价值越高
-- 口碑传播是重要获客渠道
+#### PLG (Product-Led Growth) Characteristics
+- Product can independently deliver user value
+- Users can self-register and self-serve
+- Network effects exist or value increases with usage
+- Word-of-mouth is an important acquisition channel
 
-#### SLG（销售驱动增长）特征
-- 客单价较高（B2B决策复杂）
-- 需要人工演示和定制化服务
-- 销售团队是核心获客引擎
-- 客户成功是留存的关键
+#### SLG (Sales-Led Growth) Characteristics
+- High average deal size (complex B2B decisions)
+- Requires manual demos and customized services
+- Sales team is the core acquisition engine
+- Customer success is key to retention
 
-#### MLG（营销驱动增长）特征
-- 品牌认知是购买的前置条件
-- 内容营销和SEO是重要渠道
-- 需要持续的市场投入维持增长
-- 产品相对标准化
+#### MLG (Marketing-Led Growth) Characteristics
+- Brand awareness is a prerequisite for purchase
+- Content marketing and SEO are important channels
+- Requires sustained marketing investment to maintain growth
+- Product is relatively standardized
 
-#### 混合模式判断
-- 不同用户群采用不同增长模式
-- 不同产品线采用不同增长模式
-- 不同市场阶段采用不同增长模式
+#### Hybrid Model Determination
+- Different user segments adopt different growth models
+- Different product lines adopt different growth models
+- Different market stages adopt different growth models
 
-### Step 2: 飞轮自动建模 [核心]
+### Step 2: Flywheel Auto-Modeling [Core]
 
-基于识别的增长模式，构建增长飞轮模型：
+Based on the identified growth model, construct the growth flywheel model:
 
-1. **识别核心价值循环**：找到产品价值创造的核心因果链
-2. **识别飞轮节点**：关键的用户行为和业务指标
-3. **识别增强回路**：哪些节点会正向强化其他节点
-4. **识别阻力点**：飞轮转动时的摩擦力来源
+1. **Identify core value loop**: Find the core causal chain of product value creation
+2. **Identify flywheel nodes**: Key user behaviors and business metrics
+3. **Identify reinforcing loops**: Which nodes positively reinforce other nodes
+4. **Identify friction points**: Sources of friction when the flywheel rotates
 
-### Step 3: 冷启动门槛识别 [核心]
+### Step 3: Cold-Start Threshold Identification [Core]
 
-分析增长飞轮的冷启动条件：
+Analyze the cold-start conditions of the growth flywheel:
 
-- 需要多少初始用户/收入才能触发飞轮自转？
-- 冷启动阶段需要哪些外部资源支持？
-- 如何验证飞轮假设的成立？
+- How many initial users/revenue are needed to trigger flywheel self-rotation?
+- What external resources are needed during the cold-start phase?
+- How to validate the flywheel hypothesis?
 
-### Step 4: 关键杠杆识别 [核心]
+### Step 4: Key Leverage Identification [Core]
 
-基于飞轮模型，识别当前阶段最高杠杆的增长动作：
+Based on the flywheel model, identify the highest-leverage growth actions for the current stage:
 
-- 优先强化哪个节点能带来最大飞轮加速？
-- 消除哪个瓶颈能释放最大增长潜力？
-- 资源应该优先投入哪个环节？
+- Which node, if strengthened first, would bring the greatest flywheel acceleration?
+- Which bottleneck, if removed, would unlock the greatest growth potential?
+- Which stage should resources be prioritized for?
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 增长模式诊断和瓶颈定位 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整诊断 + 飞轮建模推演 + 冷启动模拟 + 增长阶段演进路线 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Growth model diagnosis and bottleneck localization | Core conclusions + minimum viable artifact |
+| standard | Complete artifact (current default) | Complete artifact, including all Step outputs |
+| deep | Complete diagnosis + flywheel modeling + cold-start simulation + growth stage evolution roadmap | Complete artifact + extended analysis + deep inference |
 
-## 输出
+## Output
 
-**存储路径**：`docs/growth/growth-strategy.md（“增长模型”章节）`
+**Storage path**: `docs/growth/growth-strategy.md ("Growth Model" section)`
 
-**输出文件**：growth_model.json
+**Output file**: growth_model.json
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["model", "flywheel", "bottleneck"],
   "properties": {
-    "model": {"type": "string", "description": "增长模式：PLG/SLG/MLG/Hybrid"},
-    "flywheel": {"type": "object", "description": "增长飞轮模型，包含节点和边"},
-    "key_constraints": {"type": "array", "description": "关键约束条件列表"},
-    "bottleneck": {"type": "string", "description": "当前最大瓶颈描述"},
-    "confidence": {"type": "number", "description": "诊断置信度"}
+    "model": {"type": "string", "description": "Growth model: PLG/SLG/MLG/Hybrid"},
+    "flywheel": {"type": "object", "description": "Growth flywheel model, including nodes and edges"},
+    "key_constraints": {"type": "array", "description": "List of key constraints"},
+    "bottleneck": {"type": "string", "description": "Description of current biggest bottleneck"},
+    "confidence": {"type": "number", "description": "Diagnosis confidence"}
   }
 }
 ```
@@ -136,121 +136,121 @@ writes:
 {
   "model": "PLG|SLG|MLG|Hybrid",
   "flywheel": {
-    "nodes": ["教师注册使用", "创建发布课程", "学员加入学习", "学习数据反馈", "口碑推荐传播"],
-    "edges": [{"from": "学员加入学习", "to": "口碑推荐传播", "description": "学员学习效果越好，教师越愿意推荐给同行"}]
+    "nodes": ["Teacher registers and uses", "Creates and publishes courses", "Students join and learn", "Learning data feedback", "Word-of-mouth referral"],
+    "edges": [{"from": "Students join and learn", "to": "Word-of-mouth referral", "description": "The better the student learning outcomes, the more willing teachers are to recommend to peers"}]
   },
-  "key_constraints": ["免费版课程数量限制为3门，影响教师深度使用"],
-  "bottleneck": "教师激活率仅35%，课程创建门槛偏高",
+  "key_constraints": ["Free version limits courses to 3, affecting teacher depth of usage"],
+  "bottleneck": "Teacher activation rate only 35%, course creation threshold too high",
   "confidence": 0.95
 }
 ```
 
-### 诊断输出示例
+### Diagnosis Output Example
 
 ```
-增长模式: Hybrid (PLG + SLG)
+Growth Model: Hybrid (PLG + SLG)
 
-增长飞轮:
-├── PLG飞轮: 用户注册 → 使用产品 → 发现价值 → 口碑推荐 → 新用户注册
-├── SLG飞轮: 市场活动 → 线索获取 → 销售跟进 → 企业采购 → 客户成功 → 增购
+Growth Flywheel:
+├── PLG flywheel: User registration → Product usage → Value discovery → Word-of-mouth referral → New user registration
+├── SLG flywheel: Marketing campaigns → Lead generation → Sales follow-up → Enterprise purchase → Customer success → Upsell
 
-关键约束:
-1. PLG侧: 免费用户向付费转化率仅2.3%，需要优化付费漏斗
-2. SLG侧: 销售周期平均45天，线索转化率12%
+Key Constraints:
+1. PLG side: Free-to-paid conversion rate only 2.3%, payment funnel needs optimization
+2. SLG side: Average sales cycle 45 days, lead conversion rate 12%
 
-当前最大瓶颈: PLG用户激活率低（35%），导致口碑推荐量不足
+Current Biggest Bottleneck: PLG user activation rate low (35%), leading to insufficient word-of-mouth referrals
 
-建议优先动作:
-1. 优化Onboarding流程，目标激活率提升至50%
-2. 识别高激活率用户的共同行为特征
-3. 针对低激活用户设计激活干预策略
+Recommended Priority Actions:
+1. Optimize Onboarding flow, target activation rate increase to 50%
+2. Identify common behavioral characteristics of high-activation-rate users
+3. Design activation intervention strategies for low-activation users
 ```
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| model | string | 是 | 增长模式，仅允许PLG/SLG/MLG/Hybrid四值 |
-| flywheel | object | 是 | 飞轮模型，须含nodes和edges |
-| flywheel.nodes | array | 是 | 飞轮节点列表，至少4个节点 |
-| flywheel.nodes[].node_name | string | 是 | 节点名称，不可为空 |
-| flywheel.edges | array | 是 | 飞轮边列表，至少2条边，须含from/to/description |
-| flywheel.edges[].from | string | 是 | 起始节点，不可为空 |
-| flywheel.edges[].to | string | 是 | 目标节点，不可为空 |
-| flywheel.edges[].description | string | 是 | 因果关系描述，不可为空 |
-| key_constraints | array | 是 | 关键约束列表，最多5个 |
-| key_constraints[].constraint | string | 是 | 约束描述，不可为空 |
-| key_constraints[].impact | string | 否 | 影响评估 |
-| key_constraints[].suggested_action | string | 否 | 建议行动 |
-| bottleneck | string | 是 | 瓶颈描述，不可为空 |
-| confidence | number | 是 | 诊断置信度，范围0-1 |
+| model | string | Yes | Growth model, only PLG/SLG/MLG/Hybrid allowed |
+| flywheel | object | Yes | Flywheel model, must contain nodes and edges |
+| flywheel.nodes | array | Yes | Flywheel node list, at least 4 nodes |
+| flywheel.nodes[].node_name | string | Yes | Node name, cannot be empty |
+| flywheel.edges | array | Yes | Flywheel edge list, at least 2 edges, must contain from/to/description |
+| flywheel.edges[].from | string | Yes | Source node, cannot be empty |
+| flywheel.edges[].to | string | Yes | Target node, cannot be empty |
+| flywheel.edges[].description | string | Yes | Causal relationship description, cannot be empty |
+| key_constraints | array | Yes | Key constraints list, max 5 |
+| key_constraints[].constraint | string | Yes | Constraint description, cannot be empty |
+| key_constraints[].impact | string | No | Impact assessment |
+| key_constraints[].suggested_action | string | No | Suggested action |
+| bottleneck | string | Yes | Bottleneck description, cannot be empty |
+| confidence | number | Yes | Diagnosis confidence, range 0-1 |
 
-## 决策规则
+## Decision Rules
 
-| 条件 | 决策 |
+| Condition | Decision |
 |------|------|
-| 产品自助完成率≥60% + 病毒系数K>1 | 建议PLG模式 |
-| 客单价≥5万元 + 销售周期≥30天 | 建议SLG模式 |
-| 内容驱动获客占比≥40% | 建议MLG模式 |
-| 以上条件均不明确满足 | 建议混合模式，标注需验证 |
-| 增长飞轮自驱力评分≥7/10 | 标记"可自动执行" |
-| 增长飞轮自驱力评分<7/10 | 标记"需人工干预"，人类最终确认增长模式 |
-| 瓶颈约束≥3个 | 优先解决约束度最高的1个，其余列入观察 |
-| 北极星指标与当前增长模式不匹配 | 建议重新评估增长模式 |
+| Product self-service completion rate ≥60% + viral coefficient K>1 | Recommend PLG model |
+| Average deal size ≥50,000 + sales cycle ≥30 days | Recommend SLG model |
+| Content-driven acquisition share ≥40% | Recommend MLG model |
+| None of the above conditions clearly met | Recommend Hybrid model, mark as needing validation |
+| Growth flywheel self-driving score ≥7/10 | Mark "can auto-execute" |
+| Growth flywheel self-driving score <7/10 | Mark "needs human intervention", human confirms final growth model |
+| Bottleneck constraints ≥3 | Prioritize solving the 1 with highest constraint, others on watchlist |
+| North Star metric mismatched with current growth model | Recommend re-evaluating growth model |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (quick/standard/deep must all pass)
 
-- [ ] 北极星指标与≥1个OKR Objective直接关联
-- [ ] 增长模型包含≥3个可量化变量，变量间因果关系明确
+- [ ] North Star metric directly linked to ≥1 OKR Objective
+- [ ] Growth model contains ≥3 quantifiable variables with clear causal relationships
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (standard/deep must pass)
 
-- [ ] 输入变量100%可追踪（有数据源或采集方案）
-- [ ] 诊断建议每条至少引用1个数据点
-- [ ] 增长飞轮包含≥4个节点且形成闭环
-- [ ] 瓶颈约束识别≤5个，每个有量化影响评估
+- [ ] Input variables 100% trackable (have data source or collection plan)
+- [ ] Each diagnostic recommendation cites at least 1 data point
+- [ ] Growth flywheel contains ≥4 nodes and forms a closed loop
+- [ ] Bottleneck constraints identified ≤5, each with quantified impact assessment
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep inference and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Instructions |
 |----------|----------|----------|------------|
-| 产品特征缺失 | 用户描述产品 → 基于描述诊断增长模式 | 产品特征基于用户描述，诊断精度受限 | 要求用户提供产品描述（产品是什么、解决什么问题、核心价值主张） |
-| 用户数据缺失 | 跳过数据驱动的增长阶段判断，基于用户描述推断 | 增长阶段判断基于定性描述 | 要求用户提供当前增长阶段和核心增长指标（如DAU、GMV、MRR等） |
-| 商业模式缺失 | 使用通用商业模式模板，标注"待确认" | 商业模式适配度可能不高 | 要求用户提供商业模式类型（订阅/交易/广告/平台等）和收入来源 |
-| 产品特征 + 用户数据 + 商业模式均缺失 | 用户描述产品 → 基于描述诊断增长模式 | 输出基于描述的增长诊断，关键参数标注"待确认" | 要求用户提供产品描述、增长阶段和商业模式信息 |
+| Product features missing | User describes product → diagnose growth model based on description | Product features based on user description, diagnosis accuracy limited | Require user to provide product description (what the product is, what problem it solves, core value proposition) |
+| User data missing | Skip data-driven growth stage assessment, infer based on user description | Growth stage assessment based on qualitative description | Require user to provide current growth stage and core growth metrics (e.g., DAU, GMV, MRR) |
+| Business model missing | Use generic business model template, mark "to be confirmed" | Business model fit may be low | Require user to provide business model type (subscription/transaction/advertising/platform) and revenue sources |
+| Product features + user data + business model all missing | User describes product → diagnose growth model based on description | Output growth diagnosis based on description, key parameters marked "to be confirmed" | Require user to provide product description, growth stage, and business model info |
 
-### 数据获取说明
+### Data Acquisition Instructions
 
-当上游文件缺失时，需用户提供以下信息以支撑降级生成：
-- **产品描述**：产品是什么，解决什么问题，核心价值主张
-- **当前增长阶段**（可选）：产品处于探索期/增长期/成熟期/衰退期
-- **核心增长指标**（可选）：当前最关注的增长指标（如DAU、GMV、MRR等）
+When upstream files are missing, the user needs to provide the following information to support degraded generation:
+- **Product Description**: What the product is, what problem it solves, core value proposition
+- **Current Growth Stage** (optional): Product is in exploration/growth/mature/decline phase
+- **Core Growth Metrics** (optional): Current most-watched growth metrics (e.g., DAU, GMV, MRR)
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游来源 | 变更类型 | 影响范围 | 响应动作 |
+| Upstream Source | Change Type | Impact Scope | Response Action |
 |----------|----------|----------|----------|
-| analysis-retention | 留存曲线形态变更 | 增长模式判断和飞轮建模 | 重新评估增长模式，调整飞轮节点 |
-| 用户提供-产品特征 | 产品功能重大变更 | PLG/SLG/MLG模式匹配 | 重新运行决策树，更新模式判断 |
-| 用户提供-商业模式 | 定价或目标客户变更 | 增长模式匹配和瓶颈定位 | 重新评估商业模式适配度 |
+| analysis-retention | Retention curve shape change | Growth model assessment and flywheel modeling | Re-evaluate growth model, adjust flywheel nodes |
+| User-provided - Product features | Major product feature changes | PLG/SLG/MLG model matching | Re-run decision tree, update model assessment |
+| User-provided - Business model | Pricing or target customer changes | Growth model matching and bottleneck localization | Re-evaluate business model fit |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 下游消费者 | 通知条件 | 通知方式 | 通知内容 |
+| Downstream Consumer | Notification Condition | Notification Method | Notification Content |
 |------------|----------|----------|----------|
-| growth-strategy-report | 增长模式或瓶颈变更 | 写入输出文件 | 新的增长模式、飞轮模型和瓶颈定位 |
-| acquisition-orchestrator | 增长模式变更 | 输出文件更新 | 模式诊断完成状态和关键结论 |
-| activation-orchestrator | 增长模式变更 | 输出文件更新 | 模式诊断完成状态和关键结论 |
-| retention-orchestrator | 增长模式变更 | 输出文件更新 | 模式诊断完成状态和关键结论 |
-| revenue-orchestrator | 增长模式变更 | 输出文件更新 | 模式诊断完成状态和关键结论 |
+| growth-strategy-report | Growth model or bottleneck change | Write to output file | New growth model, flywheel model, and bottleneck localization |
+| acquisition-orchestrator | Growth model change | Output file update | Model diagnosis completion status and key conclusions |
+| activation-orchestrator | Growth model change | Output file update | Model diagnosis completion status and key conclusions |
+| retention-orchestrator | Growth model change | Output file update | Model diagnosis completion status and key conclusions |
+| revenue-orchestrator | Growth model change | Output file update | Model diagnosis completion status and key conclusions |

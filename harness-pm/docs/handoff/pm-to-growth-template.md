@@ -1,103 +1,103 @@
-# 交接：harness-pm → harness-growth
+# Handoff: harness-pm → harness-growth
 
-> 生成时间：YYYY-MM-DD HH:MM
-> 源框架：harness-pm
-> 目标框架：harness-growth
+> Generated at: YYYY-MM-DD HH:MM
+> Source framework: harness-pm
+> Target framework: harness-growth
 
-## 阶段总结
+## Phase Summary
 
-<本阶段做了什么，一句话概括。如：完成 V1 产品定位 + 北极星指标定义 + OKR 拆解>
+<One-sentence summary of what was done in this phase. e.g., Completed V1 product positioning + North Star metric definition + OKR breakdown>
 
-## 产品基本信息
+## Product Basics
 
-| 字段 | 值 | 说明 |
+| Field | Value | Notes |
 |------|-----|------|
-| 产品名称 | <名称> | |
-| 产品类型 | <web app / mobile app / desktop / landing page / ...> | 决定增长渠道策略 |
-| 目标受众 | <受众描述> | 影响获客策略 |
-| 当前阶段 | <MVP / PMF / 规模化 / ...> | 决定增长重点 |
+| Product name | <name> | |
+| Product type | <web app / mobile app / desktop / landing page / ...> | Determines growth channel strategy |
+| Target audience | <audience description> | Influences acquisition strategy |
+| Current stage | <MVP / PMF / Scaling / ...> | Determines growth focus |
 
-## 定位陈述
+## Positioning Statement
 
-<一句话定位，来自 positioning skill 产出。如：为独立开发者提供一站式项目管理工具>
+<One-sentence positioning, from positioning skill output. e.g., A one-stop project management tool for indie developers>
 
-## 北极星指标
+## North Star Metric
 
-| 字段 | 值 | 说明 |
+| Field | Value | Notes |
 |------|-----|------|
-| 指标名称 | <如：周活跃用户数 / 付费用户数> | |
-| 当前值 | <数值> | 如无数据填"待测" |
-| 目标值 | <数值> | 本阶段目标 |
+| Metric name | <e.g., Weekly Active Users / Paid Users> | |
+| Current value | <value> | If no data, fill in "To be measured" |
+| Target value | <value> | Target for this phase |
 
 ## OKR
 
-> 来自 planning-okr skill 产出。
+> From planning-okr skill output.
 
-| Objective | Key Result | 当前值 | 目标值 | 周期 |
+| Objective | Key Result | Current value | Target value | Cycle |
 |-----------|------------|--------|--------|------|
-| <目标1> | <KR1> | <值> | <值> | <如：2026 Q2> |
-| <目标1> | <KR2> | <值> | <值> | |
-| <目标2> | <KR3> | <值> | <值> | |
+| <Objective 1> | <KR1> | <value> | <value> | <e.g., 2026 Q2> |
+| <Objective 1> | <KR2> | <value> | <value> | |
+| <Objective 2> | <KR3> | <value> | <value> | |
 
 ## Persona
 
-| Persona | 路径 | 增长特征 |
+| Persona | Path | Growth traits |
 |---------|------|---------|
-| 主用户 | docs/discovery/user-research.md（"用户画像"章节） | <获客渠道偏好/付费意愿> |
-| 次用户 | docs/discovery/user-research.md（"用户画像"章节） | <获客渠道偏好/付费意愿> |
+| Primary user | docs/discovery/user-research.md ("User Personas" section) | <acquisition channel preference / willingness to pay> |
+| Secondary user | docs/discovery/user-research.md ("User Personas" section) | <acquisition channel preference / willingness to pay> |
 
-> Persona 数据存储在 user-research.md 的"用户画像"章节。
+> Persona data is stored in the "User Personas" section of user-research.md.
 
-## 已有数据资产（如有）
+## Existing Data Assets (if any)
 
-| 资产 | 路径 | 说明 |
+| Asset | Path | Notes |
 |------|------|------|
-| 指标定义 | docs/metrics/ | <如已有> |
-| 埋点方案 | docs/metrics/tracking-plan.md | <如已有> |
-| 历史实验 | docs/metrics/experiments/ | <如已有> |
-| 决策记录 | docs/metrics/decision-report.md | <如已有> |
+| Metric definitions | docs/metrics/ | <if any> |
+| Tracking plan | docs/metrics/tracking-plan.md | <if any> |
+| Historical experiments | docs/metrics/experiments/ | <if any> |
+| Decision records | docs/metrics/decision-report.md | <if any> |
 
-> 如为全新项目，填"无"。
+> For a brand-new project, fill in "None".
 
-## 增长假设
+## Growth Hypotheses
 
-<待验证的增长假设列表，如：>
-- 假设1：通过内容营销获客 CAC < 50 元
-- 假设2：免费试用 → 付费转化率 > 5%
-- 假设3：用户第 7 天留存 > 30%
+<List of growth hypotheses to validate, e.g.,:>
+- Hypothesis 1: Content marketing acquisition CAC < $7
+- Hypothesis 2: Free trial → paid conversion rate > 5%
+- Hypothesis 3: Day-7 retention > 30%
 
-## 关键决策
+## Key Decisions
 
-| 决策 | 理由 | 影响范围 |
+| Decision | Rationale | Impact scope |
 |------|------|---------|
-| 优先增长渠道 X | 目标受众匹配 + CAC 可控 | 获客策略 |
-| 不做渠道 Y | ROI 不达预期 | 范围边界 |
+| Prioritize growth channel X | Target audience match + controllable CAC | Acquisition strategy |
+| Skip channel Y | ROI below expectations | Scope boundary |
 
-## 未决事项
+## Open Items
 
-需 harness-growth 处理或与 harness-pm 确认的问题：
+Issues for harness-growth to handle or confirm with harness-pm:
 
-- 待定 1: <问题描述>
-- 待定 2: <问题描述>
+- TBD 1: <issue description>
+- TBD 2: <issue description>
 
-## 建议下一步
+## Suggested Next Steps
 
-harness-growth 应优先处理：
+harness-growth should prioritize:
 
-1. 消费本文件的 OKR + 增长假设
-2. 设计增长实验（A/B test）
-3. 建立指标看板 + 告警
+1. Consume the OKR + growth hypotheses in this file
+2. Design growth experiments (A/B tests)
+3. Set up metric dashboards + alerts
 
-## 风险提示
+## Risk Notes
 
-| 风险 | 等级 | 缓解措施 |
+| Risk | Level | Mitigation |
 |------|------|---------|
-| 基线数据缺失 | 高/中/低 | <措施> |
-| 指标定义不清 | 高/中/低 | <措施> |
+| Baseline data missing | High/Medium/Low | <action> |
+| Metric definitions unclear | High/Medium/Low | <action> |
 
 ---
 
-## 下游框架使用说明
+## Downstream Framework Usage Notes
 
-harness-growth 的增长实验 skill 会自动检测本文件并读取 OKR + 增长假设。
-如未自动识别，可手动指向本文件路径让 Agent 读取。
+harness-growth's growth experiment skill will auto-detect this file and read the OKR + growth hypotheses.
+If not auto-detected, you can manually point the Agent to this file path to read it.

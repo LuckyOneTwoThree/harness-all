@@ -1,17 +1,17 @@
 ---
 name: decision-orchestrator
-description: 当需要将数据分析结果转化为决策行动时使用。数据驱动决策指挥官，调度 decision-dace（DACE决策循环+洞察转化）、decision-culture（数据文化建设），实现从数据到决策的闭环。关键词：数据决策、DACE循环、数据洞察、决策框架、数据文化、decision-dace、decision-culture、数据驱动、决策支持。
+description: Use when you need to transform data analysis results into decision actions. Data-driven decision commander, orchestrating decision-dace (DACE decision cycle + insight transformation) and decision-culture (data culture building), achieving a closed loop from data to decisions. Keywords: data decision, DACE cycle, data insights, decision framework, data culture, decision-dace, decision-culture, data-driven, decision support.
 metadata:
-  module: "产品度量运营"
-  sub-module: "决策闭环"
+  module: "Product Metrics & Operations"
+  sub-module: "Decision Loop"
   type: "orchestrator"
   version: "7.0"
-  domain_tags: ["通用"]
+  domain_tags: ["General"]
   trigger_examples:
-    - "基于数据做决策"
-    - "建立数据驱动决策机制"
-    - "把分析结果转化为行动"
-    - "推动数据文化建设"
+    - "Make decisions based on data"
+    - "Build a data-driven decision mechanism"
+    - "Transform analysis results into actions"
+    - "Drive data culture building"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -22,23 +22,23 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 数据驱动决策指挥官
+# Data-driven Decision Commander
 
-## 核心原则
+## Core Principles
 
-**数据驱动决策，但决策权在人类**
+**Data-driven decisions, but decision authority belongs to humans**
 
-数据的作用是照亮决策的盲区，而非替代决策者。DACE循环中，Define和Analyze由数据驱动，Conclude由人类决策，Execute由系统追踪——这是数据与人类的最优分工。
+The role of data is to illuminate blind spots in decision-making, not to replace decision-makers. In the DACE cycle, Define and Analyze are data-driven, Conclude is human-decided, and Execute is system-tracked — this is the optimal division of labor between data and humans.
 
-## 编排理念
+## Orchestration Philosophy
 
-1. **DACE循环是主线，洞察已内嵌，文化是支撑**：DACE循环驱动决策闭环，Analyze阶段已融合洞察转化能力，文化建设保障决策落地
-2. **Conclude阶段必须有人类参与**：无论数据多明确，涉及业务策略的决策必须由人类确认
-3. **决策边界分级传递**：data_decision自动执行、data_reference推送确认、human_decision等待审批
+1. **DACE cycle is the main line, insights are embedded, culture is the support**: The DACE cycle drives the decision loop, the Analyze phase has integrated insight transformation capabilities, and culture building ensures decision implementation
+2. **The Conclude phase must have human participation**: No matter how clear the data is, decisions involving business strategy must be confirmed by humans
+3. **Decision boundary tiered transmission**: data_decision auto-executes, data_reference pushes for confirmation, human_decision waits for approval
 
-## 编排协议
+## Orchestration Protocol
 
-遵循 [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) 编排协议。
+Follows the [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) orchestration protocol.
 
 ## Pipeline
 
@@ -52,114 +52,114 @@ post_pipeline:
 
 stages:
   - id: phase-1
-    name: "DACE决策循环"
+    name: "DACE Decision Cycle"
     depends_on: []
     skills: [decision-dace]
     gate:
-      condition: "目标已定义、数据已分析、洞察已生成、决策选项已提供"
-      fail_action: "补充数据或重新定义目标"
+      condition: "Goals defined, data analyzed, insights generated, decision options provided"
+      fail_action: "Supplement data or redefine goals"
 
   - id: phase-2
-    name: "数据文化建设"
+    name: "Data Culture Building"
     depends_on: [phase-1]
     skills: [decision-culture]
     gate:
-      condition: "报告体系正常运行（每日/每周/每月/每季）"
-      fail_action: "检查上游数据源或调整报告模板"
+      condition: "Reporting system operating normally (daily/weekly/monthly/quarterly)"
+      fail_action: "Check upstream data sources or adjust report templates"
 ```
 
-## 阶段执行计划
+## Phase Execution Plan
 
-#### 调用 decision-dace
+#### Call decision-dace
 
 ```
 Skill: decision-dace
-输入:
-  okr_data: 用户提供
+Input:
+  okr_data: User-provided
   kr_progress: analysis-anomaly → anomaly_report.json
   experiment_result: experiment-execution → experiment_result.json
   analysis_result: analysis-anomaly → anomaly_report.json
-  business_context: 用户提供（可选）
-  insight_library: decision-dace → insight_library.json（可选）
-输出: docs/metrics/decision-report.md（“DACE决策”章节）
-验证: Define阶段目标可量化、有基线；Analyze阶段覆盖所有数据源；Conclude阶段提供至少2个决策选项；Execute阶段设置监控和回滚机制；洞察叙述使用业务语言而非数据术语；每个洞察至少提供2个决策选项；决策边界标注正确（auto/reference/human）；推荐行动有明确的下一步和负责人
-模式: 🤖→👤
+  business_context: User-provided (optional)
+  insight_library: decision-dace → insight_library.json (optional)
+Output: docs/metrics/decision-report.md ("DACE Decisions" section)
+Validation: Define phase goals quantifiable with baselines; Analyze phase covers all data sources; Conclude phase provides at least 2 decision options; Execute phase sets monitoring and rollback mechanisms; Insight narrative uses business language rather than data terminology; Each insight provides at least 2 decision options; Decision boundary annotation correct (auto/reference/human); Recommended actions have clear next steps and owners
+Mode: 🤖→👤
 ```
 
-#### 调用 decision-culture
+#### Call decision-culture
 
 ```
 Skill: decision-culture
-输入:
+Input:
   okr_data: decision-dace → dace_status.json
   decision_records: decision-dace → decision_insight.json
-  team_feedback: 用户提供（可选）
-输出: docs/metrics/decision-report.md（“数据文化”章节）
-验证: 每日摘要无异常时未产生噪音告警；周报包含OKR进度和实验汇总；月报包含完整指标趋势和偏差分析；报告中所有数据引用可追溯至数据源
-模式: 🤖→👤
+  team_feedback: User-provided (optional)
+Output: docs/metrics/decision-report.md ("Data Culture" section)
+Validation: Daily summary produces no noisy alerts when no anomalies exist; Weekly report includes OKR progress and experiment summary; Monthly report includes complete metric trends and deviation analysis; All data references in reports are traceable to data sources
+Mode: 🤖→👤
 ```
 
-### 阶段总结（post_pipeline）
+### Phase Summary (post_pipeline)
 
-所有子Skill执行完成后，必须生成阶段总结文档，写入 `output/phase-reports/decision-orchestrator.json`，包含以下6项结构（均不可为空）：
+After all sub-skills have executed, a phase summary document must be generated and written to `output/phase-reports/decision-orchestrator.json`, containing the following 6 structures (none can be empty):
 
-1. **执行概览**：编排器名称与版本、执行时间、子Skill执行状态（成功/失败/降级）
-2. **关键发现**：每个子Skill的核心输出摘要（1-3条）、跨子Skill的交叉洞察
-3. **决策记录**：人类决策点及决策结果、AI自动决策及依据
-4. **产出清单**：所有输出文件路径及内容摘要、产出质量评估（是否通过验证）
-5. **风险与待办**：未通过验证的项、降级执行的项、建议后续跟进的事项
-6. **下游衔接**：本编排器产出可被哪些下游编排器消费、推荐的下一步编排器
+1. **Execution Overview**: Orchestrator name and version, execution time, sub-skill execution status (success/failure/degraded)
+2. **Key Findings**: Core output summary for each sub-skill (1-3 items), cross-sub-skill insights
+3. **Decision Records**: Human decision points and decision results, AI automatic decisions and rationale
+4. **Output List**: All output file paths and content summaries, output quality assessment (whether validation passed)
+5. **Risks & Todos**: Items that failed validation, items executed in degraded mode, recommended follow-up items
+6. **Downstream Handoff**: Which downstream orchestrators can consume this orchestrator's outputs, recommended next orchestrator
 
-| 参数 | 值 |
+| Parameter | Value |
 |------|-----|
-| 子Skill输出路径 | docs/metrics/ |
-| 总结输出路径 | output/phase-reports/decision-orchestrator.json |
-| 审批记录路径 | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
+| Sub-skill output path | docs/metrics/ |
+| Summary output path | output/phase-reports/decision-orchestrator.json |
+| Approval record path | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
 
-下游衔接:
-  primary: prd-orchestrator（决策完成，将决策结论转化为PRD变更）
+Downstream handoff:
+  primary: prd-orchestrator (Decision complete, transform decision conclusions into PRD changes)
   alternatives:
     - target: experiment-orchestrator
-      reason: 决策需A/B测试验证效果
-      condition: 决策结论需要量化验证时
+      reason: Decision needs A/B test to validate effectiveness
+      condition: When decision conclusions require quantitative validation
     - target: iteration-orchestrator
-      reason: 决策涉及迭代优先级调整
-      condition: 决策结论影响迭代计划时
+      reason: Decision involves iteration priority adjustment
+      condition: When decision conclusions affect the iteration plan
   special_cases:
     - target: decision-dace
-      reason: 仅需DACE决策循环，无需完整决策编排
-      condition: 已有分析结论，仅需快速决策闭环时
+      reason: Only need DACE decision cycle, no need for full decision orchestration
+      condition: When analysis conclusions already exist and only a quick decision loop is needed
 
-## 阶段卡口
+## Phase Gates
 
-| 卡口 | 条件 | 未通过处理 |
+| Gate | Condition | Failure Handling |
 |------|------|------------|
-| DACE循环Define/Analyze完成 | decision-dace输出文件已生成且非空 | 补充数据或重新定义目标 |
-| 决策选项已提供 | decision-dace输出文件已生成且非空 | 标记为待处理，持续追踪 |
-| 数据文化报告体系运行 | decision-culture输出文件已生成且非空 | 检查上游数据源或调整报告模板 |
-| 阶段总结已生成 | output/phase-reports/decision-orchestrator.json 已生成且6项结构均非空 | 补充缺失结构项后重新生成 |
+| DACE cycle Define/Analyze complete | decision-dace output file generated and non-empty | Supplement data or redefine goals |
+| Decision options provided | decision-dace output file generated and non-empty | Mark as pending, continue tracking |
+| Data culture reporting system running | decision-culture output file generated and non-empty | Check upstream data sources or adjust report templates |
+| Phase summary generated | output/phase-reports/decision-orchestrator.json generated and all 6 structures non-empty | Regenerate after supplementing missing structure items |
 
-## 人类决策点
+## Human Decision Points
 
-| 决策点 | 触发条件 | 决策内容 |
+| Decision Point | Trigger Condition | Decision Content |
 |--------|----------|----------|
-| Conclude阶段决策 | DACE循环进入Conclude阶段 | 审核分析结论，做出最终决策 |
+| Conclude phase decision | DACE cycle enters Conclude phase | Review analysis conclusions, make final decision |
 
-## 决策边界管理
+## Decision Boundary Management
 
-| 决策类型 | 说明 | 执行方式 |
+| Decision Type | Description | Execution Method |
 |---------|------|---------|
-| data_decision | 数据明确支持，可自动执行 | AI自动执行 + 事后报告 |
-| data_reference | 数据供参考，人类决策 | 推送洞察，等待决策 |
-| human_decision | 复杂决策，人类主导 | 提供分析，人类决策 |
+| data_decision | Data clearly supports, can auto-execute | AI auto-executes + post-hoc report |
+| data_reference | Data for reference, human decision | Push insights, wait for decision |
+| human_decision | Complex decision, human-led | Provide analysis, human decides |
 
-## 异常处理
+## Exception Handling
 
-| 异常类型 | 处理策略 |
+| Exception Type | Handling Strategy |
 |----------|----------|
-| DACE循环Conclude阶段人类未响应 | 暂停Execute阶段，保留Conclude状态，支持人类恢复后继续 |
-| 洞察置信度过低（<0.5） | 标记为human_decision，不自动传递到文化报告，等待人类确认 |
-| OKR数据缺失 | 降级为用户提供指标数据执行DACE，标注"OKR数据待补充" |
-| 决策边界标注冲突 | 标记冲突项，暂停自动执行，提交人类裁决 |
-| 文化报告体系数据源中断 | 跳过受影响报告，标注"数据源中断"，其他报告正常生成 |
-| 阶段总结生成失败 | 基于已完成的子Skill输出生成部分总结，缺失项标注"数据缺失"，不阻塞编排完成 |
+| DACE cycle Conclude phase human not responding | Pause Execute phase, retain Conclude state, support resuming after human returns |
+| Insight confidence too low (<0.5) | Mark as human_decision, do not auto-transmit to culture report, wait for human confirmation |
+| OKR data missing | Degrade to user-provided metric data for DACE execution, annotate "OKR data to be supplemented" |
+| Decision boundary annotation conflict | Mark conflicting items, pause auto-execution, submit for human arbitration |
+| Culture reporting system data source interruption | Skip affected reports, annotate "data source interrupted", other reports generated normally |
+| Phase summary generation failed | Generate partial summary based on completed sub-skill outputs, mark missing items as "data missing", do not block orchestration completion |

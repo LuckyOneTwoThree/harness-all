@@ -1,21 +1,21 @@
 ---
 name: revenue-nrr
-description: 当需要追踪净收入留存率时使用。NRR自动追踪与预警Pipeline，自动计算净收入留存率，分析NRR趋势，识别流失预警，识别扩张收入机会。关键词：NRR、净收入留存、收入留存、流失预警、扩张收入、续费率、老客户收入、收入在涨还是跌。
+description: Use when tracking Net Revenue Retention. NRR Auto-Tracking and Early Warning Pipeline automatically calculates NRR, analyzes NRR trends, identifies churn warnings, and identifies expansion revenue opportunities. Keywords: NRR, Net Revenue Retention, revenue retention, churn warning, expansion revenue, renewal rate, existing customer revenue, is revenue growing or declining.
 metadata:
-  module: "产品增长与运营"
-  sub-module: "变现"
+  module: "Product Growth & Operations"
+  sub-module: "Monetization"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["SaaS", "企业服务", "通用"]
+  domain_tags: ["SaaS", "Enterprise Services", "General"]
   trigger_examples:
-    - "净收入留存率怎么算"
-    - "老客户续费情况怎么样"
-    - "收入留存趋势怎么看"
+    - "How to calculate Net Revenue Retention"
+    - "How are existing customer renewals doing"
+    - "How to view revenue retention trends"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出NRR分析和留存策略"
-  deep_description: "完整分析 + 客户健康评分 + 流失预警模型 + 增购机会识别"
+  quick_description: "Directly output NRR analysis and retention strategy"
+  deep_description: "Full analysis + customer health score + churn prediction model + expansion opportunity identification"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -26,141 +26,141 @@ writes:
   - nrr_analysis.json
 ---
 
-# NRR自动追踪与预警
+# NRR Auto-Tracking and Early Warning
 
-## 核心原则
+## Core Principles
 
-1. **NRR是收入健康体温计**：NRR>100%意味着产品在自我增长，NRR<100%意味着产品在自我消耗
-2. **扩张与流失同等重要**：提升NRR既要减少流失，也要主动识别扩张机会
-3. **信号驱动而非周期驱动**：基于风险信号和扩张信号触发行动，而非等待月度报告
+1. **NRR is the revenue health thermometer**: NRR >100% means the product is self-growing; NRR <100% means the product is self-consuming
+2. **Expansion is as important as churn**: Improving NRR requires both reducing churn and proactively identifying expansion opportunities
+3. **Signal-driven, not cycle-driven**: Trigger actions based on risk signals and expansion signals, not waiting for monthly reports
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 收入数据 | object | 是 | 用户提供 | MRR、ARR、收入明细 |
-| 用户账户数据 | object | 是 | 用户提供 | 付费状态、产品配置 |
-| 用户行为数据 | object | ○ | 用户提供 | 使用数据、互动数据 |
+| Revenue data | object | Yes | User-provided | MRR, ARR, revenue details |
+| User account data | object | Yes | User-provided | Payment status, product configuration |
+| User behavior data | object | ○ | User-provided | Usage data, interaction data |
 
-## NRR定义与计算
+## NRR Definition and Calculation
 
-### NRR（净收入留存率）
-NRR是衡量收入健康度最重要的指标，反映现有客户在报告期内的收入贡献变化。
+### NRR (Net Revenue Retention)
+NRR is the most important metric for measuring revenue health, reflecting the change in revenue contribution from existing customers during the reporting period.
 
 ```
-NRR = (期初收入 - 流失收入 + 扩张收入) / 期初收入
+NRR = (Starting revenue - Churned revenue + Expansion revenue) / Starting revenue
 
-其中：
-- 期初收入：期初的MRR
-- 流失收入：因流失减少的收入
-- 扩张收入：增购和涨价带来的收入
+Where:
+- Starting revenue: MRR at period start
+- Churned revenue: Revenue lost due to churn
+- Expansion revenue: Revenue gained from add-ons and price increases
 ```
 
-### NRR解读
-| NRR范围 | 含义 | 评价 |
+### NRR Interpretation
+| NRR Range | Meaning | Assessment |
 |--------|------|------|
-| NRR ≥ 120% | 优秀 | 极强的收入留存和扩张能力 |
-| NRR ≥ 110% | 良好 | 健康增长，可持续 |
-| NRR ≥ 100% | 及格 | 勉强留存，需改进 |
-| NRR < 100% | 危险 | 收入持续流失 |
+| NRR ≥ 120% | Excellent | Very strong revenue retention and expansion capability |
+| NRR ≥ 110% | Good | Healthy growth, sustainable |
+| NRR ≥ 100% | Passing | Barely retaining, needs improvement |
+| NRR < 100% | Dangerous | Revenue continuously churning |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: NRR自动计算 [核心]
+### Step 1: NRR Auto-Calculation [Core]
 
-#### 收入数据处理
-1. 计算期初收入：月初MRR
-2. 计算期末收入：月末MRR
-3. 识别收入变动明细：
-   - 新增收入（新付费客户）
-   - 扩张收入（增购、升级、涨价）
-   - 收缩收入（降级、减少用量）
-   - 流失收入（流失、取消）
+#### Revenue Data Processing
+1. Calculate starting revenue: Beginning-of-month MRR
+2. Calculate ending revenue: End-of-month MRR
+3. Identify revenue change details:
+   - New revenue (new paying customers)
+   - Expansion revenue (add-ons, upgrades, price increases)
+   - Contraction revenue (downgrades, reduced usage)
+   - Churned revenue (churned, cancelled)
 
-#### NRR公式实现
+#### NRR Formula Implementation
 ```python
 nrr = (start_mrr - churned_mrr + expansion_mrr) / start_mrr
 ```
 
-#### 分维度计算
-- 按用户分群计算NRR
-- 按产品线计算NRR
-- 按用户规模计算NRR
-- 按行业计算NRR
+#### Multi-dimensional Calculation
+- Calculate NRR by user segment
+- Calculate NRR by product line
+- Calculate NRR by user scale
+- Calculate NRR by industry
 
-### Step 2: NRR趋势分析 [核心]
+### Step 2: NRR Trend Analysis [Core]
 
-#### 趋势指标
-| 指标 | 说明 |
+#### Trend Metrics
+| Metric | Description |
 |------|------|
-| 月度NRR | 每月NRR |
-| 季度NRR | 季度NRR |
-| 年度滚动NRR | 12个月滚动NRR |
-| NRR加速度 | NRR变化趋势 |
+| Monthly NRR | NRR per month |
+| Quarterly NRR | NRR per quarter |
+| Annual rolling NRR | 12-month rolling NRR |
+| NRR acceleration | NRR change trend |
 
-#### 趋势分析
-- NRR环比变化
-- NRR同比变化
-- NRR分解分析（扩张/收缩/流失占比变化）
+#### Trend Analysis
+- NRR month-over-month change
+- NRR year-over-year change
+- NRR breakdown analysis (expansion/contraction/churn ratio changes)
 
-#### 预测分析
-基于历史趋势，预测未来NRR：
-- 乐观预测
-- 基准预测
-- 悲观预测
+#### Predictive Analysis
+Based on historical trends, predict future NRR:
+- Optimistic forecast
+- Baseline forecast
+- Pessimistic forecast
 
-### Step 3: 流失预警 [核心]
+### Step 3: Churn Warning [Core]
 
-#### 流失风险信号
-| 信号类型 | 具体信号 | 风险权重 |
+#### Churn Risk Signals
+| Signal Type | Specific Signal | Risk Weight |
 |---------|---------|---------|
-| 活跃度信号 | 使用频率下降 | 高 |
-| 功能信号 | 核心功能使用减少 | 高 |
-| 财务信号 | 付款延迟 | 高 |
-| 组织信号 | 关键联系人离职 | 中 |
-| 反馈信号 | 负面反馈/NPS下降 | 中 |
-| 竞品信号 | 使用竞品迹象 | 低 |
+| Activity signal | Usage frequency decline | High |
+| Feature signal | Core feature usage reduction | High |
+| Financial signal | Payment delay | High |
+| Organizational signal | Key contact departure | Medium |
+| Feedback signal | Negative feedback / NPS decline | Medium |
+| Competitor signal | Signs of competitor usage | Low |
 
-#### 风险用户分级
-| 风险等级 | 定义 | 响应策略 |
+#### Risk User Tiering
+| Risk Level | Definition | Response Strategy |
 |---------|------|---------|
-| 极高风险 | 多重流失信号+高价值 | 立即介入 |
-| 高风险 | 明显流失信号 | 3天内介入 |
-| 中风险 | 部分流失信号 | 1周内介入 |
-| 低风险 | 轻微流失信号 | 持续监控 |
+| Very high risk | Multiple churn signals + high value | Immediate intervention |
+| High risk | Obvious churn signals | Intervene within 3 days |
+| Medium risk | Some churn signals | Intervene within 1 week |
+| Low risk | Minor churn signals | Continuous monitoring |
 
-#### 流失预警触发
+#### Churn Warning Trigger
 ```yaml
 warning_rules:
   - condition: "usage_decline > 50% AND payment_delayed == true"
     level: "critical"
     action: "immediate_escalation"
-    
+
   - condition: "usage_decline > 30%"
     level: "high"
     action: "customer_success_outreach"
-    
+
   - condition: "nps_score < 6"
     level: "medium"
     action: "feedback_followup"
 ```
 
-### Step 4: 扩张机会识别 [核心]
+### Step 4: Expansion Opportunity Identification [Core]
 
-#### 扩张信号
-| 信号类型 | 具体信号 | 扩张潜力 |
+#### Expansion Signals
+| Signal Type | Specific Signal | Expansion Potential |
 |---------|---------|---------|
-| 用量信号 | 使用量达到上限 | 高 |
-| 频次信号 | 高频使用核心功能 | 高 |
-| 协作信号 | 团队协作功能使用增加 | 中 |
-| 功能信号 | 高级功能使用增加 | 中 |
-| 需求信号 | 主动询问更高规格 | 高 |
+| Usage signal | Usage reaches limit | High |
+| Frequency signal | High-frequency use of core features | High |
+| Collaboration signal | Team collaboration feature usage increase | Medium |
+| Feature signal | Advanced feature usage increase | Medium |
+| Need signal | Proactively asks for higher tier | High |
 
-#### 扩张机会评分
+#### Expansion Opportunity Scoring
 ```python
 expansion_score = (
     usage_intensity * 0.4 +
@@ -170,40 +170,40 @@ expansion_score = (
 )
 ```
 
-#### 扩张策略推荐
-| 扩张类型 | 触发条件 | 推荐策略 |
+#### Expansion Strategy Recommendation
+| Expansion Type | Trigger Condition | Recommended Strategy |
 |---------|---------|---------|
-| 升级 | 使用量达到上限 | 升级引导+优惠 |
-| 增购 | 团队规模扩大 | 席位增购推荐 |
-| 扩展 | 新业务需求 | 新产品线推荐 |
+| Upgrade | Usage reaches limit | Upgrade guidance + discount |
+| Add-on | Team size expansion | Seat add-on recommendation |
+| Extension | New business need | New product line recommendation |
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | NRR分析和留存策略 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整分析 + 客户健康评分 + 流失预警模型 + 增购机会识别 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | NRR analysis and retention strategy | Core conclusions + minimum viable artifact |
+| standard | Full artifact (current default) | Full artifact, including all Step outputs |
+| deep | Full analysis + customer health score + churn prediction model + expansion opportunity identification | Full artifact + extended analysis + deep reasoning |
 
-## 输出
+## Output
 
-**存储路径**：`docs/growth/growth-strategy.md（“NRR分析”章节）`
+**Storage path**: `docs/growth/growth-strategy.md ("NRR Analysis" section)`
 
-**输出文件**：nrr_analysis.json
+**Output file**: nrr_analysis.json
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["current_nrr", "nrr_breakdown"],
   "properties": {
-    "current_nrr": {"type": "number", "description": "当前净收入留存率"},
-    "nrr_breakdown": {"type": "object", "description": "NRR分解，包含扩张/收缩/流失收入占比"},
-    "trend": {"type": "array", "description": "NRR趋势数据，包含月度NRR和各部分占比"},
-    "churn_warnings": {"type": "array", "description": "流失预警列表，包含风险信号和推荐行动"},
-    "expansion_opportunities": {"type": "array", "description": "扩张机会列表，包含升级信号和预期收入增长"},
-    "summary": {"type": "object", "description": "收入汇总，包含活跃收入、扩张、流失和净新增"}
+    "current_nrr": {"type": "number", "description": "Current Net Revenue Retention"},
+    "nrr_breakdown": {"type": "object", "description": "NRR breakdown, including expansion/contraction/churn revenue ratios"},
+    "trend": {"type": "array", "description": "NRR trend data, including monthly NRR and component ratios"},
+    "churn_warnings": {"type": "array", "description": "Churn warning list, including risk signals and recommended actions"},
+    "expansion_opportunities": {"type": "array", "description": "Expansion opportunity list, including upgrade signals and expected revenue growth"},
+    "summary": {"type": "object", "description": "Revenue summary, including active revenue, expansion, churn, and net new"}
   }
 }
 ```
@@ -229,19 +229,19 @@ expansion_score = (
   "churn_warnings": [
     {
       "user_id": "EDU-20240156",
-      "company_name": "启航教育集团",
+      "company_name": "Qihang Education Group",
       "monthly_revenue": 5000,
-      "risk_signals": ["使用量下降", "联系人离职"],
+      "risk_signals": ["Usage decline", "Contact departure"],
       "risk_level": "high",
-      "recommended_action": "客户成功主动联系"
+      "recommended_action": "Customer success proactive outreach"
     }
   ],
   "expansion_opportunities": [
     {
       "user_id": "EDU-20240203",
-      "company_name": "博学在线科技",
+      "company_name": "Boxue Online Tech",
       "current_plan": "pro",
-      "expansion_signals": ["使用量接近上限", "高频使用核心功能"],
+      "expansion_signals": ["Usage near limit", "High-frequency core feature usage"],
       "recommended_upgrade": "enterprise",
       "expected_revenue_increase": 3000
     }
@@ -257,111 +257,111 @@ expansion_score = (
 }
 ```
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| current_nrr | number | 是 | 当前NRR，须>0 |
-| nrr_breakdown | object | 是 | NRR分解，须含expansion_revenue_ratio/contraction_revenue_ratio/churned_revenue_ratio |
-| nrr_breakdown.expansion_revenue_ratio | number | 是 | 扩张收入占比，须≥0 |
-| nrr_breakdown.contraction_revenue_ratio | number | 是 | 收缩收入占比 |
-| nrr_breakdown.churned_revenue_ratio | number | 是 | 流失收入占比，须≥0 |
-| trend | array | 否 | NRR趋势数据，每项须含month/nrr |
-| trend[].month | string | 是 | 月份标识 |
-| trend[].nrr | number | 是 | NRR值 |
-| trend[].expansion | number | 否 | 扩张收入 |
-| trend[].contraction | number | 否 | 收缩收入 |
-| trend[].churn | number | 否 | 流失收入 |
-| churn_warnings | array | 否 | 流失预警列表，每项须含user_id/risk_signals/risk_level |
-| churn_warnings[].user_id | string | 是 | 用户ID |
-| churn_warnings[].company_name | string | 否 | 公司名称 |
-| churn_warnings[].monthly_revenue | number | 否 | 月收入 |
-| churn_warnings[].risk_signals | string[] | 是 | 风险信号列表 |
-| churn_warnings[].risk_level | string | 是 | 风险等级，枚举：high/medium/low |
-| churn_warnings[].recommended_action | string | 否 | 推荐行动 |
-| expansion_opportunities | array | 否 | 扩张机会列表，每项须含user_id/expansion_signals/recommended_upgrade |
-| expansion_opportunities[].user_id | string | 是 | 用户ID |
-| expansion_opportunities[].company_name | string | 否 | 公司名称 |
-| expansion_opportunities[].current_plan | string | 否 | 当前套餐 |
-| expansion_opportunities[].expansion_signals | string[] | 是 | 扩张信号列表 |
-| expansion_opportunities[].recommended_upgrade | string | 是 | 推荐升级套餐 |
-| expansion_opportunities[].expected_revenue_increase | number | 否 | 预期收入增长 |
-| summary | object | 否 | 收入汇总，须含total_active_revenue |
-| summary.total_active_revenue | number | 是 | 总活跃收入 |
-| summary.expansion_this_month | number | 否 | 本月扩张收入 |
-| summary.churn_this_month | number | 否 | 本月流失收入 |
-| summary.net_new_revenue | number | 否 | 净新增收入 |
-| summary.at_risk_revenue | number | 否 | 风险收入 |
-| summary.expansion_pipeline | number | 否 | 扩张管线 |
+| current_nrr | number | Yes | Current NRR, must be >0 |
+| nrr_breakdown | object | Yes | NRR breakdown, must include expansion_revenue_ratio/contraction_revenue_ratio/churned_revenue_ratio |
+| nrr_breakdown.expansion_revenue_ratio | number | Yes | Expansion revenue ratio, must be ≥0 |
+| nrr_breakdown.contraction_revenue_ratio | number | Yes | Contraction revenue ratio |
+| nrr_breakdown.churned_revenue_ratio | number | Yes | Churned revenue ratio, must be ≥0 |
+| trend | array | No | NRR trend data, each item must include month/nrr |
+| trend[].month | string | Yes | Month identifier |
+| trend[].nrr | number | Yes | NRR value |
+| trend[].expansion | number | No | Expansion revenue |
+| trend[].contraction | number | No | Contraction revenue |
+| trend[].churn | number | No | Churned revenue |
+| churn_warnings | array | No | Churn warning list, each item must include user_id/risk_signals/risk_level |
+| churn_warnings[].user_id | string | Yes | User ID |
+| churn_warnings[].company_name | string | No | Company name |
+| churn_warnings[].monthly_revenue | number | No | Monthly revenue |
+| churn_warnings[].risk_signals | string[] | Yes | Risk signal list |
+| churn_warnings[].risk_level | string | Yes | Risk level, enum: high/medium/low |
+| churn_warnings[].recommended_action | string | No | Recommended action |
+| expansion_opportunities | array | No | Expansion opportunity list, each item must include user_id/expansion_signals/recommended_upgrade |
+| expansion_opportunities[].user_id | string | Yes | User ID |
+| expansion_opportunities[].company_name | string | No | Company name |
+| expansion_opportunities[].current_plan | string | No | Current plan |
+| expansion_opportunities[].expansion_signals | string[] | Yes | Expansion signal list |
+| expansion_opportunities[].recommended_upgrade | string | Yes | Recommended upgrade plan |
+| expansion_opportunities[].expected_revenue_increase | number | No | Expected revenue increase |
+| summary | object | No | Revenue summary, must include total_active_revenue |
+| summary.total_active_revenue | number | Yes | Total active revenue |
+| summary.expansion_this_month | number | No | Expansion revenue this month |
+| summary.churn_this_month | number | No | Churned revenue this month |
+| summary.net_new_revenue | number | No | Net new revenue |
+| summary.at_risk_revenue | number | No | At-risk revenue |
+| summary.expansion_pipeline | number | No | Expansion pipeline |
 
-## 决策规则
+## Decision Rules
 
-| 情况 | 处理方式 |
+| Situation | Action |
 |------|----------|
-| NRR<100% | 触发收入流失告警，建议紧急干预 |
-| 流失风险信号≥2个 | 3天内客户成功介入 |
-| 扩张评分>0.7 | 主动推荐升级或增购 |
-| NRR连续3个月下降 | 触发战略级Review |
+| NRR <100% | Trigger revenue churn alert, recommend emergency intervention |
+| Churn risk signals ≥2 | Customer success intervention within 3 days |
+| Expansion score >0.7 | Proactively recommend upgrade or add-on |
+| NRR declines for 3 consecutive months | Trigger strategic-level review |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] NRR计算包含扩张、收缩、流失三部分
-- [ ] 流失预警覆盖活跃度、功能、财务、组织4类信号
+- [ ] NRR calculation includes expansion, contraction, and churn components
+- [ ] Churn warning covers activity, feature, financial, and organizational 4 signal types
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 扩张机会识别有评分和推荐策略
-- [ ] 分维度NRR计算覆盖用户分群和产品线
+- [ ] Expansion opportunity identification has scoring and recommendation strategy
+- [ ] Multi-dimensional NRR calculation covers user segments and product lines
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only required for deep)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep reasoning and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Instructions |
 |----------|----------|----------|------------|
-| 收入数据缺失 | 用户提供收入和流失数据 → 计算NRR | NRR计算基于用户提供的汇总数据 | 要求用户提供月初MRR、扩张MRR、收缩MRR、流失MRR |
-| 账户数据缺失 | 跳过账户级NRR分析，仅计算整体NRR | 无法识别高流失风险账户 | 要求用户提供付费账户列表、付费状态和产品配置信息 |
-| 用户行为数据缺失 | 跳过行为驱动的流失信号分析，仅基于收入和账户数据预警 | 流失预警缺少行为维度，预警精准度降低 | 要求用户提供用户活跃度、功能使用频率和互动数据 |
-| 收入数据 + 账户数据均缺失 | 用户提供收入和流失数据 → 计算NRR | 输出基础NRR计算，账户级分析标注"待补充" | 要求用户提供收入汇总数据和客户分层分布 |
+| Revenue data missing | User provides revenue and churn data → calculate NRR | NRR calculation based on summary data provided by user | Require user to provide beginning-of-month MRR, expansion MRR, contraction MRR, churned MRR |
+| Account data missing | Skip account-level NRR analysis, calculate only overall NRR | Cannot identify high churn risk accounts | Require user to provide paying account list, payment status, and product configuration info |
+| User behavior data missing | Skip behavior-driven churn signal analysis, warn only based on revenue and account data | Churn warning lacks behavioral dimension, prediction precision reduced | Require user to provide user activity, feature usage frequency, and interaction data |
+| Revenue data + account data both missing | User provides revenue and churn data → calculate NRR | Output basic NRR calculation, account-level analysis marked "pending supplement" | Require user to provide revenue summary data and customer tier distribution |
 
-### 数据获取说明
+### Data Acquisition Instructions
 
-当上游文件缺失时，需用户提供以下信息以支撑降级生成：
-- **收入数据**：月初MRR、扩张MRR、收缩MRR、流失MRR
-- **流失数据**（可选）：流失客户数和流失MRR
-- **客户分层**（可选）：按规模或价值分的客户分布
+When upstream files are missing, the following information is needed from the user to support degraded generation:
+- **Revenue data**: Beginning-of-month MRR, expansion MRR, contraction MRR, churned MRR
+- **Churn data** (optional): Churned customer count and churned MRR
+- **Customer tiering** (optional): Customer distribution by scale or value
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游来源 | 变更类型 | 影响范围 | 响应动作 |
+| Upstream Source | Change Type | Impact Scope | Response Action |
 |----------|----------|----------|----------|
-| 用户提供-收入数据 | MRR口径变更 | NRR计算和趋势分析 | 按新口径重新计算NRR |
-| 用户提供-账户数据 | 付费状态变更 | 流失预警和扩张机会 | 更新风险评分和扩张信号 |
-| 用户提供-行为数据 | 使用指标变更 | 流失信号和扩张信号 | 更新信号权重和触发规则 |
+| User-provided - revenue data | MRR definition change | NRR calculation and trend analysis | Recalculate NRR per new definition |
+| User-provided - account data | Payment status change | Churn warning and expansion opportunities | Update risk scores and expansion signals |
+| User-provided - behavior data | Usage metric change | Churn signals and expansion signals | Update signal weights and trigger rules |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 下游消费者 | 通知条件 | 通知方式 | 通知内容 |
+| Downstream Consumer | Notification Condition | Notification Method | Notification Content |
 |------------|----------|----------|----------|
-| revenue-upsell | 扩张机会变更 | 写入输出文件 | 新的扩张机会和升级推荐 |
-| revenue-funnel | NRR数据更新 | 写入输出文件 | NRR趋势和付费转化基准 |
-| revenue-orchestrator | NRR追踪完成 | 输出文件更新 | NRR追踪完成状态和关键结论 |
+| revenue-upsell | Expansion opportunity change | Write to output file | New expansion opportunities and upgrade recommendations |
+| revenue-funnel | NRR data update | Write to output file | NRR trends and payment conversion baseline |
+| revenue-orchestrator | NRR tracking complete | Output file updated | NRR tracking completion status and key conclusions |
 
-## 关键成功指标
+## Key Success Metrics
 
-| 指标 | 定义 | 目标值 |
+| Metric | Definition | Target Value |
 |------|------|--------|
-| NRR | 净收入留存率 | ≥115% |
-| 流失率 | 月流失MRR/月初MRR | ≤3% |
-| 扩张率 | 月扩张MRR/月初MRR | ≥10% |
-| 收缩率 | 月收缩MRR/月初MRR | ≤2% |
-| 风险收入占比 | 高风险用户MRR/总MRR | ≤10% |
+| NRR | Net Revenue Retention | ≥115% |
+| Churn rate | Monthly churned MRR / beginning-of-month MRR | ≤3% |
+| Expansion rate | Monthly expansion MRR / beginning-of-month MRR | ≥10% |
+| Contraction rate | Monthly contraction MRR / beginning-of-month MRR | ≤2% |
+| At-risk revenue ratio | High-risk user MRR / total MRR | ≤10% |

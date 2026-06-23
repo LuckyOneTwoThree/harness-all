@@ -1,21 +1,21 @@
 ---
 name: user-research-report
-description: 当需要产出完整的用户研究报告时使用。用户研究报告自动生成，整合用户声音分析、行为分析、用户建模和访谈数据，补充研究方法论说明和行动建议，输出结构化Markdown报告。关键词：用户研究报告、用户调研报告、用户洞察报告、研究报告、用户分析报告、调研报告、用户分析、出报告。
+description: Used when a complete user research report is needed. Auto-generates a user research report by integrating user voice analysis, behavior analysis, user modeling, and interview data, supplemented with research methodology notes and actionable recommendations, and outputs a structured Markdown report. Keywords: user research report, user study report, user insight report, research report, user analysis report, study report, user analysis, generate report.
 metadata:
-  module: "产品探索与发现"
-  sub-module: "用户研究"
+  module: "Product Discovery"
+  sub-module: "User Research"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["通用"]
+  domain_tags: ["General"]
   trigger_examples:
-    - "帮我出一份用户研究报告"
-    - "用户调研结果怎么整理"
-    - "出个用户分析报告"
+    - "Help me generate a user research report"
+    - "How to organize the user research findings"
+    - "Produce a user analysis report"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出研究结论和建议"
-  deep_description: "完整报告 + 研究方法论反思 + 洞察深度分析 + 行动建议路线图"
+  quick_description: "Directly output research conclusions and recommendations"
+  deep_description: "Full report + research methodology reflection + in-depth insight analysis + action recommendation roadmap"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -25,269 +25,269 @@ writes:
   - memory/progress.md
 ---
 
-# 用户研究报告自动生成
+# User Research Report Auto-Generation
 
-## 核心原则
+## Core Principles
 
-1. **洞察重于数据**——数据是证据，洞察是结论，每条数据必须回答"这对产品意味着什么"
-2. **用户声音优先**——直接引用用户原话，比AI总结更有说服力
-3. **行动导向**——研究不是目的，驱动产品改进才是目的
-4. **方法透明**——研究结论的可信度取决于方法论的透明度
+1. **Insights over data** — Data is evidence, insights are conclusions; every piece of data must answer "what does this mean for the product"
+2. **User voice first** — Directly quote user verbatims; they are more persuasive than AI summaries
+3. **Action-oriented** — Research is not the goal; driving product improvement is
+4. **Methodology transparency** — The credibility of research conclusions depends on the transparency of the methodology
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 用户声音分析 | JSON | ○ | docs/discovery/user-research.md（追加“用户声音分析”章节） | 情感分布、主题聚类、痛点提取 |
-| 行为分析 | JSON | ○ | docs/discovery/user-research.md（追加“用户行为分析”章节） | 漏斗健康度、Aha Moment、功能使用深度 |
-| 用户建模 | JSON | ○ | docs/discovery/user-research.md（追加“用户画像”章节） | Persona、Empathy Map、Journey Map |
-| 访谈数据 | JSON | ○ | docs/discovery/user-research.md（追加“访谈脚本记录”章节） | 访谈脚本、访谈记录、洞察提取 |
-| 研究目标 | string | 是 | 用户提供 | 本次研究要回答的核心问题 |
-| 产品/品类信息 | string | ○ | 用户提供 | 产品名称、品类、目标市场 |
+| User voice analysis | JSON | ○ | docs/discovery/user-research.md (append "User Voice Analysis" section) | Sentiment distribution, theme clustering, pain point extraction |
+| Behavior analysis | JSON | ○ | docs/discovery/user-research.md (append "User Behavior Analysis" section) | Funnel health, Aha Moment, feature usage depth |
+| User modeling | JSON | ○ | docs/discovery/user-research.md (append "User Persona" section) | Persona, Empathy Map, Journey Map |
+| Interview data | JSON | ○ | docs/discovery/user-research.md (append "Interview Script Records" section) | Interview scripts, interview records, insight extraction |
+| Research objectives | string | Yes | User-provided | Core questions this research aims to answer |
+| Product/category info | string | ○ | User-provided | Product name, category, target market |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 研究背景与目标梳理 [核心]
+### Step 1: Research Background & Objectives [Core]
 
-基于用户提供的研究目标和产品信息，明确：
+Based on the research objectives and product information provided by the user, clarify:
 
-- 研究背景：为什么做这次研究
-- 核心研究问题：3-5个要回答的关键问题
-- 研究范围：目标用户群、产品范围、时间范围
-- 研究方法概述：使用了哪些方法（VOC分析/行为分析/访谈/问卷）
+- Research background: Why this research is being conducted
+- Core research questions: 3-5 key questions to answer
+- Research scope: Target user group, product scope, time range
+- Research methodology overview: Which methods were used (VOC analysis / behavior analysis / interviews / surveys)
 
-### Step 2: 用户画像整合 [核心]
+### Step 2: User Persona Integration [Core]
 
-整合 persona.json 数据，生成可读的用户画像章节：
+Integrate persona.json data to generate a readable user persona section:
 
-| 画像要素 | 数据来源 | 报告呈现 |
+| Persona element | Data source | Report presentation |
 |----------|---------|---------|
-| 基本属性 | persona → demographics | 人口统计学描述 |
-| 行为特征 | docs/discovery/user-research.md（追加“用户行为分析”章节） | 使用习惯描述 |
-| 目标与动机 | persona → goals | 引用原话+总结 |
-| 痛点与挫折 | docs/discovery/user-research.md（追加“用户声音分析”章节） | 引用原话+频率标注 |
-| 情感地图 | persona → empathy_map | 思维导图描述 |
+| Demographics | persona → demographics | Demographic description |
+| Behavioral traits | docs/discovery/user-research.md (append "User Behavior Analysis" section) | Usage habit description |
+| Goals & motivations | persona → goals | Quote + summary |
+| Pain points & frustrations | docs/discovery/user-research.md (append "User Voice Analysis" section) | Quote + frequency annotation |
+| Empathy map | persona → empathy_map | Mind map description |
 
-**画像数量规则**：
-- 2-4个核心Persona
-- 每个Persona标注代表性用户原话（至少2条）
+**Persona quantity rules**:
+- 2-4 core Personas
+- Each Persona annotated with representative user quotes (at least 2)
 
-### Step 3: 用户旅程整合 [核心]
+### Step 3: User Journey Integration [Core]
 
-整合 Journey Map 和行为数据：
+Integrate Journey Map and behavior data:
 
-**旅程阶段划分**：
+**Journey stage division**:
 ```
-认知 → 评估 → 首次使用 → 深度使用 → 流失/续费
+Awareness → Evaluation → First Use → Deep Use → Churn/Renewal
 ```
 
-每个阶段包含：
+Each stage includes:
 
-| 维度 | 内容 |
+| Dimension | Content |
 |------|------|
-| 用户行为 | 实际做了什么（行为数据支撑） |
-| 触点 | 与产品的交互点 |
-| 情绪曲线 | 高峰/低谷/关键时刻 |
-| 痛点 | 该阶段的核心障碍 |
-| 机会 | 可改进的空间 |
+| User behavior | What users actually do (supported by behavior data) |
+| Touchpoints | Interaction points with the product |
+| Emotion curve | Peaks / valleys / key moments |
+| Pain points | Core obstacles at this stage |
+| Opportunities | Room for improvement |
 
-**关键指标嵌入**：
-- 漏斗转化率（来自 behavior-analysis）
-- Aha Moment 触发条件
-- 流失预警信号
+**Key metric embedding**:
+- Funnel conversion rate (from behavior-analysis)
+- Aha Moment trigger conditions
+- Churn warning signals
 
-### Step 4: 洞察提炼 [核心]
+### Step 4: Insight Extraction [Core]
 
-从所有上游数据中提炼核心洞察：
+Extract core insights from all upstream data:
 
-**洞察提取规则**：
-- 每条洞察 = 观察 + 证据 + 产品含义
-- 证据必须标注来源（VOC/行为/访谈）
-- 洞察按影响范围排序：全局性 > 局部性
+**Insight extraction rules**:
+- Each insight = Observation + Evidence + Product implication
+- Evidence must be annotated with source (VOC / behavior / interview)
+- Insights sorted by impact scope: Global > Local
 
-**洞察分类**：
+**Insight categories**:
 
-| 类别 | 说明 | 示例 |
+| Category | Description | Example |
 |------|------|------|
-| 需求洞察 | 用户真正想要什么 | "用户不是要更快的马，而是要更短的通勤时间" |
-| 痛点洞察 | 核心障碍的本质 | "不是功能不够，而是找不到功能" |
-| 行为洞察 | 用户实际行为 vs 预期 | "注册后3天内未完成首次操作的用户流失率87%" |
-| 机会洞察 | 未被满足的需求空间 | "40%用户在搜索后放弃，存在意图理解的机会" |
+| Need insight | What users really want | "Users don't want a faster horse; they want a shorter commute" |
+| Pain point insight | The essence of core obstacles | "It's not that features are missing; it's that features can't be found" |
+| Behavior insight | Actual user behavior vs. expected | "Users who don't complete the first action within 3 days of registration have an 87% churn rate" |
+| Opportunity insight | Unmet need space | "40% of users abandon after search; there's an opportunity in intent understanding" |
 
-### Step 5: 行动建议 [核心]
+### Step 5: Action Recommendations [Core]
 
-基于洞察生成可执行的产品改进建议：
+Generate executable product improvement recommendations based on insights:
 
-| 建议要素 | 要求 |
+| Recommendation element | Requirement |
 |----------|------|
-| 建议描述 | 具体到可执行的操作 |
-| 对应洞察 | 引用支撑的洞察编号 |
-| 预期影响 | 对核心指标的影响评估 |
-| 优先级 | P0（必须做）/ P1（应该做）/ P2（可以做） |
-| 验证方式 | 如何验证改进效果 |
+| Recommendation description | Specific enough to be actionable |
+| Linked insight | Reference the supporting insight ID |
+| Expected impact | Impact assessment on core metrics |
+| Priority | P0 (must do) / P1 (should do) / P2 (could do) |
+| Validation method | How to validate the improvement effect |
 
-**优先级推导规则**：
-- 影响核心漏斗的痛点 → P0
-- 影响留存/活跃的障碍 → P1
-- 体验优化类建议 → P2
+**Priority derivation rules**:
+- Pain points affecting the core funnel → P0
+- Obstacles affecting retention/engagement → P1
+- Experience optimization recommendations → P2
 
-### Step 6: 报告组装 [核心]
+### Step 6: Report Assembly [Core]
 
-将所有章节整合为完整的 Markdown 报告：
+Integrate all sections into a complete Markdown report:
 
-**报告结构**：
+**Report structure**:
 
 ```
-# {产品名}用户研究报告
+# {Product Name} User Research Report
 
-## 执行摘要
-- 研究概述（一段话）
-- 3条核心发现
-- Top1行动建议
+## Executive Summary
+- Research overview (one paragraph)
+- 3 core findings
+- Top 1 action recommendation
 
-## 1. 研究背景与方法
-- 研究目标
-- 研究问题
-- 研究方法与样本
-- 数据来源与局限性
+## 1. Research Background & Methodology
+- Research objectives
+- Research questions
+- Research methods & sample
+- Data sources & limitations
 
-## 2. 用户画像
-### 2.1 核心用户群A：{名称}
-- 基本属性
-- 目标与动机
-- 核心痛点
-- 代表性原话
-### 2.2 核心用户群B：{名称}
+## 2. User Personas
+### 2.1 Core User Group A: {Name}
+- Demographics
+- Goals & motivations
+- Core pain points
+- Representative quotes
+### 2.2 Core User Group B: {Name}
 - ...
 
-## 3. 用户旅程
-- 旅程全景图
-- 各阶段分析
-- 关键时刻（Aha Moment / 流失点）
-- 情绪曲线
+## 3. User Journey
+- Journey overview
+- Stage-by-stage analysis
+- Key moments (Aha Moment / churn points)
+- Emotion curve
 
-## 4. 核心洞察
-### 4.1 需求洞察
-### 4.2 痛点洞察
-### 4.3 行为洞察
-### 4.4 机会洞察
+## 4. Core Insights
+### 4.1 Need insights
+### 4.2 Pain point insights
+### 4.3 Behavior insights
+### 4.4 Opportunity insights
 
-## 5. 行动建议
-| 优先级 | 建议 | 对应洞察 | 预期影响 | 验证方式 |
+## 5. Action Recommendations
+| Priority | Recommendation | Linked insight | Expected impact | Validation method |
 |--------|------|---------|---------|---------|
 
-## 附录
-- 数据来源清单
-- 研究方法详细说明
-- 样本描述与局限性
+## Appendix
+- Data source list
+- Detailed research methodology
+- Sample description & limitations
 ```
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth level | Output scope | Description |
 |----------|----------|------|
-| quick | 研究结论和建议 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整报告 + 研究方法论反思 + 洞察深度分析 + 行动建议路线图 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Research conclusions and recommendations | Core conclusions + minimum viable deliverable |
+| standard | Full deliverable (current default) | Complete deliverable, including all Step outputs |
+| deep | Full report + research methodology reflection + in-depth insight analysis + action recommendation roadmap | Full deliverable + extended analysis + deep inference |
 
-## 输出
+## Output
 
-**存储路径**：`docs/discovery/user-research.md（作为汇总章节或覆盖）`
+**Storage path**: `docs/discovery/user-research.md (as summary section or overwrite)`
 
-**输出文件**：
+**Output files**:
 
-| 文件 | 格式 | 说明 |
+| File | Format | Description |
 |------|------|------|
-| user-research-report.md | Markdown | 完整用户研究报告 |
-| user-research-report.json | JSON | 结构化数据（供下游Skill引用） |
+| user-research-report.md | Markdown | Complete user research report |
+| user-research-report.json | JSON | Structured data (for downstream Skill reference) |
 
-**user-research-report.json 结构**：
+**user-research-report.json structure**:
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["report_metadata", "executive_summary", "personas", "insights", "recommendations"],
   "properties": {
-    "report_metadata": {"type": "object", "description": "报告元数据，含产品名、研究目标和置信度"},
-    "executive_summary": {"type": "object", "description": "执行摘要，含概述、核心发现和Top建议"},
-    "personas": {"type": "array", "description": "用户画像列表"},
-    "journey": {"type": "object", "description": "用户旅程，含阶段、情绪曲线和关键时刻"},
-    "insights": {"type": "array", "description": "核心洞察列表"},
-    "recommendations": {"type": "array", "description": "行动建议列表"}
+    "report_metadata": {"type": "object", "description": "Report metadata, including product name, research objectives, and confidence"},
+    "executive_summary": {"type": "object", "description": "Executive summary, including overview, key findings, and top recommendation"},
+    "personas": {"type": "array", "description": "User persona list"},
+    "journey": {"type": "object", "description": "User journey, including stages, emotion curve, and key moments"},
+    "insights": {"type": "array", "description": "Core insight list"},
+    "recommendations": {"type": "array", "description": "Action recommendation list"}
   }
 }
 ```
 
-**输出校验规则**：
+**Output validation rules**:
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field path | Type | Required | Description |
 |----------|------|------|------|
-| report_metadata | object | 是 | 报告元数据 |
-| report_metadata.product | string | 是 | 产品名称 |
-| report_metadata.research_goals | string[] | 是 | 研究目标列表，不可为空 |
-| report_metadata.generated_at | string | 是 | 生成时间戳 |
-| report_metadata.data_sources | string[] | 是 | 数据来源列表 |
-| report_metadata.overall_confidence | number | 是 | 整体置信度，0-1 |
-| executive_summary | object | 是 | 执行摘要 |
-| executive_summary.overview | string | 是 | 研究概述，一段话 |
-| executive_summary.key_findings | string[] | 是 | 核心发现，须≥3条 |
-| executive_summary.top_recommendation | string | 是 | Top1行动建议 |
-| personas | array | 是 | 用户画像列表，2-4个 |
-| personas[].name | string | 是 | 用户群名称 |
-| personas[].demographics | object | 否 | 人口统计学信息 |
-| personas[].goals | string[] | 否 | 目标与动机列表 |
-| personas[].pain_points | string[] | 否 | 核心痛点列表 |
-| personas[].quotes | string[] | 是 | 代表性原话，每个Persona≥2条 |
-| journey | object | 否 | 用户旅程 |
-| journey.stages | array | 否 | 旅程阶段列表 |
-| journey.stages[].name | string | 是 | 阶段名称 |
-| journey.stages[].behaviors | string[] | 是 | 用户行为 |
-| journey.stages[].touchpoints | string[] | 否 | 触点列表 |
-| journey.stages[].emotion_peak | string | 否 | 情绪高峰描述 |
-| journey.stages[].emotion_valley | string | 否 | 情绪低谷描述 |
-| journey.stages[].pain_points | string[] | 是 | 痛点 |
-| journey.stages[].opportunities | string[] | 是 | 机会点 |
-| journey.stages[].metrics | object | 否 | 关键指标（转化率、留存率等） |
-| journey.aha_moment | string | 否 | Aha Moment描述 |
-| journey.churn_signals | string[] | 否 | 流失信号列表 |
-| insights | array | 是 | 核心洞察列表，≤15条 |
-| insights[].id | string | 是 | 洞察编号，格式INS-XXX |
-| insights[].category | string | 是 | 洞察类别枚举：需求/痛点/行为/机会 |
-| insights[].observation | string | 是 | 观察描述 |
-| insights[].evidence | string | 是 | 证据及来源 |
-| insights[].implication | string | 是 | 产品含义 |
-| insights[].scope | string | 是 | 影响范围枚举：全局/局部 |
-| recommendations | array | 是 | 行动建议列表，≥3条 |
-| recommendations[].id | string | 是 | 建议编号，格式REC-XXX |
-| recommendations[].description | string | 是 | 建议描述 |
-| recommendations[].linked_insights | string[] | 是 | 关联洞察编号列表 |
-| recommendations[].expected_impact | string | 是 | 预期影响 |
-| recommendations[].priority | string | 是 | 优先级枚举：P0/P1/P2 |
-| recommendations[].validation_method | string | 是 | 验证方式 |
+| report_metadata | object | Yes | Report metadata |
+| report_metadata.product | string | Yes | Product name |
+| report_metadata.research_goals | string[] | Yes | Research objectives list, cannot be empty |
+| report_metadata.generated_at | string | Yes | Generation timestamp |
+| report_metadata.data_sources | string[] | Yes | Data source list |
+| report_metadata.overall_confidence | number | Yes | Overall confidence, 0-1 |
+| executive_summary | object | Yes | Executive summary |
+| executive_summary.overview | string | Yes | Research overview, one paragraph |
+| executive_summary.key_findings | string[] | Yes | Key findings, must be ≥3 |
+| executive_summary.top_recommendation | string | Yes | Top 1 action recommendation |
+| personas | array | Yes | User persona list, 2-4 personas |
+| personas[].name | string | Yes | User group name |
+| personas[].demographics | object | No | Demographic information |
+| personas[].goals | string[] | No | Goals & motivations list |
+| personas[].pain_points | string[] | No | Core pain points list |
+| personas[].quotes | string[] | Yes | Representative quotes, each Persona ≥2 |
+| journey | object | No | User journey |
+| journey.stages | array | No | Journey stage list |
+| journey.stages[].name | string | Yes | Stage name |
+| journey.stages[].behaviors | string[] | Yes | User behaviors |
+| journey.stages[].touchpoints | string[] | No | Touchpoint list |
+| journey.stages[].emotion_peak | string | No | Emotion peak description |
+| journey.stages[].emotion_valley | string | No | Emotion valley description |
+| journey.stages[].pain_points | string[] | Yes | Pain points |
+| journey.stages[].opportunities | string[] | Yes | Opportunities |
+| journey.stages[].metrics | object | No | Key metrics (conversion rate, retention rate, etc.) |
+| journey.aha_moment | string | No | Aha Moment description |
+| journey.churn_signals | string[] | No | Churn signal list |
+| insights | array | Yes | Core insight list, ≤15 items |
+| insights[].id | string | Yes | Insight ID, format INS-XXX |
+| insights[].category | string | Yes | Insight category enum: need/pain_point/behavior/opportunity |
+| insights[].observation | string | Yes | Observation description |
+| insights[].evidence | string | Yes | Evidence and source |
+| insights[].implication | string | Yes | Product implication |
+| insights[].scope | string | Yes | Impact scope enum: global/local |
+| recommendations | array | Yes | Action recommendation list, ≥3 items |
+| recommendations[].id | string | Yes | Recommendation ID, format REC-XXX |
+| recommendations[].description | string | Yes | Recommendation description |
+| recommendations[].linked_insights | string[] | Yes | Linked insight ID list |
+| recommendations[].expected_impact | string | Yes | Expected impact |
+| recommendations[].priority | string | Yes | Priority enum: P0/P1/P2 |
+| recommendations[].validation_method | string | Yes | Validation method |
 
 ```json
 {
   "report_metadata": {
-    "product": "产品名",
+    "product": "Product Name",
     "research_goals": [],
-    "generated_at": "时间戳",
+    "generated_at": "Timestamp",
     "data_sources": [],
     "overall_confidence": 0.0
   },
   "executive_summary": {
-    "overview": "一段话",
+    "overview": "One paragraph",
     "key_findings": [],
     "top_recommendation": ""
   },
   "personas": [
     {
-      "name": "用户群名称",
+      "name": "User group name",
       "demographics": {},
       "goals": [],
       "pain_points": [],
@@ -297,7 +297,7 @@ writes:
   "journey": {
     "stages": [
       {
-        "name": "阶段名",
+        "name": "Stage name",
         "behaviors": [],
         "touchpoints": [],
         "emotion_peak": "",
@@ -313,84 +313,84 @@ writes:
   "insights": [
     {
       "id": "INS-001",
-      "category": "需求/痛点/行为/机会",
-      "observation": "观察描述",
-      "evidence": "证据及来源",
-      "implication": "产品含义",
-      "scope": "全局/局部"
+      "category": "need/pain_point/behavior/opportunity",
+      "observation": "Observation description",
+      "evidence": "Evidence and source",
+      "implication": "Product implication",
+      "scope": "global/local"
     }
   ],
   "recommendations": [
     {
       "id": "REC-001",
-      "description": "建议描述",
+      "description": "Recommendation description",
       "linked_insights": ["INS-001"],
-      "expected_impact": "预期影响",
+      "expected_impact": "Expected impact",
       "priority": "P0/P1/P2",
-      "validation_method": "验证方式"
+      "validation_method": "Validation method"
     }
   ]
 }
 ```
 
-## 决策规则
+## Decision Rules
 
-| 条件 | 决策 |
+| Condition | Decision |
 |------|------|
-| 上游数据全部缺失 | 基于研究目标和AI知识库生成报告，标注"缺乏实证数据，建议补充研究" |
-| 仅有VOC数据 | 聚焦情感和痛点洞察，行为洞察标注"缺乏行为数据" |
-| 仅有行为数据 | 聚焦漏斗和使用深度，需求洞察标注"缺乏用户声音数据" |
-| Persona数量>6 | 按用户量排序取Top4 |
-| 洞察数量>15 | 按影响范围和优先级排序取Top10 |
+| All upstream data missing | Generate report based on research objectives and AI knowledge base, annotate "lacks empirical data, recommend supplementary research" |
+| Only VOC data available | Focus on sentiment and pain point insights, annotate behavior insights with "lacks behavior data" |
+| Only behavior data available | Focus on funnel and usage depth, annotate need insights with "lacks user voice data" |
+| Persona count > 6 | Sort by user volume, take Top 4 |
+| Insight count > 15 | Sort by impact scope and priority, take Top 10 |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 执行摘要包含3条核心发现+Top1建议
-- [ ] 每个Persona有代表性用户原话
+- [ ] Executive summary includes 3 key findings + Top 1 recommendation
+- [ ] Each Persona has representative user quotes
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 用户旅程包含情绪曲线和关键时刻
-- [ ] 每条洞察有观察+证据+含义三要素
-- [ ] 行动建议至少3条，每条有优先级和验证方式
-- [ ] 数据来源和局限性已说明
+- [ ] User journey includes emotion curve and key moments
+- [ ] Each insight has the three elements: observation + evidence + implication
+- [ ] At least 3 action recommendations, each with priority and validation method
+- [ ] Data sources and limitations are explained
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep inference and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
-## 降级策略
+## Degradation Strategy
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing upstream input | Degradation plan | Output impact | Data acquisition instructions |
 |---------------|---------|---------|------------|
-| voice-analysis缺失 | 用户画像和痛点基于行为数据和AI推断 | 痛点洞察缺乏用户原话支撑 | 要求用户提供用户反馈文本或上传voice-analysis.json文件 |
-| behavior-analysis缺失 | 旅程和行为洞察基于VOC和访谈数据 | 行为洞察缺乏量化数据 | 要求用户提供行为事件日志或上传behavior-analysis.json文件 |
-| persona缺失 | 基于VOC和行为数据推导用户画像 | 画像可能不够精细 | 要求用户提供目标用户画像描述或上传persona.json文件 |
-| interview数据缺失 | 洞察基于VOC和行为数据 | 缺乏深度定性洞察 | 要求用户提供访谈记录文本或上传interview数据文件 |
-| 所有上游数据均缺失 | 基于研究目标和AI知识库生成，整体置信度降低 | 报告需人类大量补充验证 | 要求用户提供研究目标、目标用户描述和产品信息 |
-| 若用户未提供研究目标 | 提示用户提供研究目标，否则无法确定报告聚焦方向 | 无法生成定向报告 | 要求用户提供研究目标（如"了解用户付费决策因素"） |
-| 若用户未提供产品/品类信息 | 跳过该输入相关步骤，报告中产品相关描述基于推断 | 产品背景描述可能不够准确 | 要求用户提供产品名称、品类和核心功能描述 |
+| voice-analysis missing | User personas and pain points based on behavior data and AI inference | Pain point insights lack user quote support | Ask user to provide user feedback text or upload voice-analysis.json file |
+| behavior-analysis missing | Journey and behavior insights based on VOC and interview data | Behavior insights lack quantitative data | Ask user to provide behavior event logs or upload behavior-analysis.json file |
+| persona missing | Derive user personas from VOC and behavior data | Personas may be less refined | Ask user to provide target user persona description or upload persona.json file |
+| interview data missing | Insights based on VOC and behavior data | Lacks in-depth qualitative insights | Ask user to provide interview record text or upload interview data file |
+| All upstream data missing | Generate based on research objectives and AI knowledge base, overall confidence reduced | Report requires substantial human supplementation and validation | Ask user to provide research objectives, target user description, and product information |
+| If user does not provide research objectives | Prompt user to provide research objectives, otherwise the report focus cannot be determined | Cannot generate a targeted report | Ask user to provide research objectives (e.g., "understand user payment decision factors") |
+| If user does not provide product/category info | Skip steps related to this input, product-related descriptions in the report are based on inference | Product background description may be inaccurate | Ask user to provide product name, category, and core feature description |
 
 ---
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响
+### Upstream Change Impact
 
-| 上游Skill | 变更类型 | 影响范围 | 响应动作 |
+| Upstream Skill | Change type | Impact scope | Response action |
 |-----------|---------|---------|---------|
-| user-research-voice-analysis | voice-analysis.json结构变更 | 情感分布、痛点、主题数据格式变化 | 检查输入字段映射，适配新结构，不兼容时标记"上游数据格式异常" |
-| user-research-voice-analysis | voice-analysis.json内容更新 | 痛点等级、情感分布、分群结果变化 | 重新整合用户画像和痛点洞察，标注"基于更新数据重建" |
-| user-research-behavior-analysis | behavior-analysis.json结构变更 | 漏斗、Aha Moment、功能使用数据格式变化 | 检查输入字段映射，适配新结构，不兼容时标记"上游数据格式异常" |
-| user-research-behavior-analysis | behavior-analysis.json内容更新 | 漏斗健康度、行为路径、异常检测结果变化 | 重新整合用户旅程和行为洞察，标注"基于更新数据重建" |
-| user-research-user-modeling | persona.json结构变更 | Persona字段映射变化 | 检查输入字段映射，适配新结构，不兼容时标记"上游数据格式异常" |
-| user-research-user-modeling | persona.json内容更新 | Persona特征、痛点、JTBD变化 | 重新整合用户画像章节，标注"基于更新Persona重建" |
-| user-research-interview-assist | interview-insights.json结构变更 | 访谈洞察、跨访谈模式数据格式变化 | 检查输入字段映射，适配新结构，不兼容时标记"上游数据格式异常" |
-| user-research-interview-assist | interview-insights.json内容更新 | 验证/推翻假设、新发现、Persona更新变化 | 重新整合洞察和行动建议，标注"基于更新访谈数据重建" |
+| user-research-voice-analysis | voice-analysis.json structure change | Sentiment distribution, pain points, theme data format changes | Check input field mapping, adapt to new structure, mark "upstream data format anomaly" if incompatible |
+| user-research-voice-analysis | voice-analysis.json content update | Pain point severity, sentiment distribution, segment results change | Re-integrate user personas and pain point insights, annotate "rebuilt based on updated data" |
+| user-research-behavior-analysis | behavior-analysis.json structure change | Funnel, Aha Moment, feature usage data format changes | Check input field mapping, adapt to new structure, mark "upstream data format anomaly" if incompatible |
+| user-research-behavior-analysis | behavior-analysis.json content update | Funnel health, behavior paths, anomaly detection results change | Re-integrate user journey and behavior insights, annotate "rebuilt based on updated data" |
+| user-research-user-modeling | persona.json structure change | Persona field mapping changes | Check input field mapping, adapt to new structure, mark "upstream data format anomaly" if incompatible |
+| user-research-user-modeling | persona.json content update | Persona traits, pain points, JTBD change | Re-integrate user persona section, annotate "rebuilt based on updated Persona" |
+| user-research-interview-assist | interview-insights.json structure change | Interview insights, cross-interview pattern data format changes | Check input field mapping, adapt to new structure, mark "upstream data format anomaly" if incompatible |
+| user-research-interview-assist | interview-insights.json content update | Validated/disproved hypotheses, new findings, Persona updates change | Re-integrate insights and action recommendations, annotate "rebuilt based on updated interview data" |
 
-### 下游通知机制
+### Downstream Notification Mechanism
 
-本Skill为终端Skill，无下游依赖，不涉及下游通知。
+This Skill is a terminal Skill with no downstream dependencies and does not involve downstream notifications.

@@ -1,9 +1,9 @@
 ---
 name: session-start
-description: 会话启动，加载上下文恢复工作状态
+description: Session start, load context to restore working state
 triggers:
-  - Agent 接到新任务时
-  - 跨会话恢复工作时
+  - When the Agent receives a new task
+  - When resuming work across sessions
 reads:
   - SOUL.md
   - constitution.md
@@ -16,45 +16,45 @@ writes:
   - memory/progress.md
 ---
 
-# Session Start — 会话启动
+# Session Start — Session Start
 
-## 铁律
-会话开始前必须加载上下文，不允许"失忆"干活
+## Core Rules
+Context must be loaded before the session begins; working with "amnesia" is not allowed.
 
-## 流程
+## Process
 
-1. **读取进度日志**
-   读 `.harness/memory/progress.md`，了解上次会话做到哪、待续什么
+1. **Read the progress log**
+   Read `.harness/memory/progress.md` to understand where the last session left off and what is pending.
 
-2. **读取知识库**（如有相关）
-   读 `.harness/memory/knowledge-base.md`，查找与当前任务相关的设计决策、踩坑记录
+2. **Read the knowledge base** (if relevant)
+   Read `.harness/memory/knowledge-base.md` to find design decisions and pitfalls related to the current task.
 
-3. **检查进行中的任务**
-   扫描 `.harness/loops/specs/*/state.yaml`，找出 status 为 `running` 或 `retrying` 的任务
-   如有，向用户报告："发现进行中的设计任务 X，是否继续？"
-   同时读取 `exploration_mode` 字段，报告当前模式（如"当前探索模式：deep"）
+3. **Check in-progress tasks**
+   Scan `.harness/loops/specs/*/state.yaml` to find tasks with status `running` or `retrying`.
+   If found, report to the user: "Found in-progress design task X. Continue?"
+   Also read the `exploration_mode` field and report the current mode (e.g., "Current exploration mode: deep").
 
-4. **读取任务看板**
-   读 `.harness/FEATURES.md`，了解项目整体设计进度
+4. **Read the task board**
+   Read `.harness/FEATURES.md` to understand overall project design progress.
 
-5. **检查交接文档**（来自 harness 家族其他成员）
-   扫描 `docs/handoff/` 目录：
-   - 如有 `pm-to-design.md` 文件，向用户报告："发现交接文档（来自 harness-pm），是否本次会话消费？"
-   - 交接文档可能包含 PRD 路径、关键决策、未决事项，是 design-brief 的重要输入
-   - 如未消费过的交接文档存在，提醒用户优先处理
+5. **Check handoff documents** (from other harness family members)
+   Scan the `docs/handoff/` directory:
+   - If `pm-to-design.md` exists, report to the user: "Found handoff document (from harness-pm). Consume it in this session?"
+   - Handoff documents may include PRD paths, key decisions, and open items; they are important input for design-brief
+   - If unconsumed handoff documents exist, remind the user to prioritize them
 
-6. **确认任务范围**
-   向用户确认本次会话要做什么，写入 progress.md 新会话块：
+6. **Confirm task scope**
+   Confirm with the user what this session will accomplish, and write a new session block to progress.md:
    ```
-   ## 会话: YYYY-MM-DD HH:MM
-   ### 任务
-   [本次会话目标]
+   ## Session: YYYY-MM-DD HH:MM
+   ### Task
+   [Session goal]
    ```
 
-## 禁止事项
-- 不读 progress.md 直接开干（会丢失上下文）
-- 不确认任务范围就动手（可能跑偏）
+## Prohibitions
+- Starting work without reading progress.md (context will be lost)
+- Starting work without confirming task scope (may drift off course)
 
-## 与 LOOP 的关系
-本 skill 在 LOOP 之前执行，为循环准备上下文。
-session-start → design-brief → new-design/iteration/redesign workflow（含 LOOP）→ ... → session-end
+## Relationship with LOOP
+This skill runs before LOOP, preparing context for the loop.
+session-start → design-brief → new-design/iteration/redesign workflow (with LOOP) → ... → session-end

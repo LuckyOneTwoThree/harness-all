@@ -1,11 +1,11 @@
 ---
 name: writing-documentation
-description: 文档编写，ADR/API doc/CHANGELOG，document the why
+description: Documentation — ADR/API doc/CHANGELOG, document the why
 triggers:
-  - 做架构决策时
-  - 改公开 API 时
-  - 发版时
-  - 用户要求写文档时
+  - When making architectural decisions
+  - When changing public APIs
+  - On release
+  - When the user asks to write documentation
 reads:
   - constitution.md
   - rules/security.md
@@ -16,25 +16,25 @@ writes:
   - docs/
 ---
 
-# Writing Documentation — 文档编写
+# Writing Documentation — Documentation
 
-## 铁律
-**Document the *why*, not the *what*.** 代码说"做了什么"，文档说"为什么这么做、考虑过什么替代方案、有什么约束"。
+## Iron Rule
+**Document the *why*, not the *what*.** Code says "what was done"; documentation says "why it was done this way, what alternatives were considered, and what the constraints are".
 
-## 文档类型与流程
+## Document Types and Process
 
-### 1. ADR（架构决策记录）— 最高价值
+### 1. ADR (Architecture Decision Record) — Highest Value
 
-**何时写**：做架构决策时（选型、模式选择、重大 tradeoff）
+**When to write**: when making architectural decisions (selection, pattern choice, major tradeoffs)
 
-**流程**：
-1. 在 `docs/decisions/` 下创建 `ADR-NNN-<short-title>.md`
-   - 编号：用 Glob 扫描 `docs/decisions/ADR-*`，取最大编号 +1
-   - 如目录不存在，用工具创建（不用 `mkdir -p`）
-2. 按模板填写：
+**Process**:
+1. Create `ADR-NNN-<short-title>.md` under `docs/decisions/`
+   - Numbering: use Glob to scan `docs/decisions/ADR-*` and take the max number +1
+   - If the directory does not exist, create it with a tool (do not use `mkdir -p`)
+2. Fill in the template:
 
 ```markdown
-# ADR-NNN: <决策标题>
+# ADR-NNN: <decision title>
 
 ## Status
 PROPOSED | ACCEPTED | SUPERSEDED by ADR-XXX | DEPRECATED
@@ -43,115 +43,115 @@ PROPOSED | ACCEPTED | SUPERSEDED by ADR-XXX | DEPRECATED
 YYYY-MM-DD
 
 ## Context
-[为什么需要做这个决策？当前面临什么问题？]
+[Why is this decision needed? What problem are we facing?]
 
 ## Decision
-[决定是什么？]
+[What is the decision?]
 
 ## Alternatives Considered
-- 方案A：[描述] — 为什么没选
-- 方案B：[描述] — 为什么没选
+- Option A: [description] — why it was not chosen
+- Option B: [description] — why it was not chosen
 
 ## Consequences
-- 正面：[好处]
-- 负面：[代价]
-- 风险：[需关注的点]
+- Positive: [benefits]
+- Negative: [costs]
+- Risks: [points to watch]
 ```
 
-3. **不要删除旧 ADR**——它们记录历史，新决策写新 ADR 并在旧 ADR 标注 `SUPERSEDED by ADR-XXX`
+3. **Do not delete old ADRs** — they record history; new decisions get new ADRs and the old ones are marked `SUPERSEDED by ADR-XXX`
 
-### 2. API 文档
+### 2. API Documentation
 
-**何时写**：改公开 API 时（新增/修改/废弃）
+**When to write**: when changing public APIs (adding/modifying/deprecating)
 
-**流程**：
-- 类型语言（TS/Go/Rust）：类型定义即文档，确保类型完整（不用 `any`）
-- 无类型语言（JS/Python）：写 docstring，包含参数、返回值、异常
-- REST API：维护 OpenAPI/Swagger 规格文件
-- GraphQL：schema 即文档，确保有 description
+**Process**:
+- Typed languages (TS/Go/Rust): type definitions are the docs; ensure types are complete (no `any`)
+- Untyped languages (JS/Python): write docstrings including parameters, return values, exceptions
+- REST API: maintain OpenAPI/Swagger spec files
+- GraphQL: the schema is the doc; ensure there are descriptions
 
-**最小必要**：
+**Minimum required**:
 ```typescript
 /**
- * 按截止日期升序排序 Todo 列表
- * @param todos - Todo 数组（不修改原数组）
- * @returns 新数组，有截止日期的升序在前，无截止日期的排末尾
+ * Sort the Todo list by due date in ascending order
+ * @param todos - array of Todos (does not mutate the original array)
+ * @returns a new array, with those having a due date in ascending order first, and those without a due date at the end
  */
 ```
 
 ### 3. CHANGELOG
 
-**何时写**：发版时
+**When to write**: on release
 
-**格式**（Keep a Changelog 风格）：
+**Format** (Keep a Changelog style):
 ```markdown
 ## [Unreleased]
 
 ## [1.2.0] - 2026-06-21
 ### Added
-- 按截止日期排序功能 (#12)
+- Sort by due date feature (#12)
 ### Fixed
-- 空截止日期排序异常 (#15)
+- Empty due date sorting exception (#15)
 ### Changed
-- 重构排序逻辑为独立模块 (#16)
+- Refactored sorting logic into a standalone module (#16)
 ```
 
 ### 4. README
 
-**最小必要内容**：
-- 项目一句话介绍
-- Quick Start（如何安装、运行、测试）
-- 常用命令清单
-- 架构概览（指向 docs/）
+**Minimum required content**:
+- One-sentence project introduction
+- Quick Start (how to install, run, test)
+- Common command list
+- Architecture overview (pointing to docs/)
 
-### 5. 代码注释
+### 5. Code Comments
 
-**写注释的原则**：
-- 注释 **why**（为什么这么做），不注释 **what**（代码已经说了 what）
-- 注释非显而易见的意图、约束、踩坑
-- 删除注释掉的代码（git 有历史）
-- TODO 必须带日期和负责人：`// TODO(2026-06-21): <描述>`
+**Principles for writing comments**:
+- Comment on **why** (why it's done this way), not **what** (the code already says what)
+- Comment on non-obvious intent, constraints, pitfalls
+- Delete commented-out code (git has history)
+- TODOs must have a date and owner: `// TODO(2026-06-21): <description>`
 
-**反例**（禁止）：
+**Anti-example** (forbidden):
 ```javascript
-// Increment counter by 1   ← 重述代码，删掉
+// Increment counter by 1   ← restates the code, delete it
 counter++;
 ```
 
-**正例**（保留）：
+**Positive example** (keep):
 ```javascript
-// 用 || null 归一化空字符串，避免 localeCompare 把 '' 排在正常日期前
+// Use || null to normalize empty strings, preventing localeCompare from sorting '' before normal dates
 const normalized = deadline || null;
 ```
 
-## 反合理化表
+## Anti-Rationalization Table
 
-| 借口 | 反驳 |
+| Excuse | Rebuttal |
 |------|------|
-| "代码自解释" | 代码不解释为什么、考虑过什么替代 |
-| "等 API 稳定再写文档" | 文档是设计的第一个测试，越拖 API 越不稳 |
-| "ADR 太麻烦" | 10 分钟的 ADR 避免 2 小时的重复争论 |
-| "注释重述代码帮助理解" | 重述代码的注释是噪音，注释意图 |
-| "旧 ADR 过时了删掉" | 旧 ADR 记录历史，新 ADR supersede 旧的 |
+| "Code is self-documenting" | Code does not explain why or what alternatives were considered |
+| "Wait until the API is stable to write docs" | Documentation is the first test of design; the longer you wait, the less stable the API |
+| "ADR is too much hassle" | A 10-minute ADR avoids 2 hours of repeated arguments |
+| "Comments restating code help understanding" | Comments that restate code are noise; comment on intent |
+| "Old ADRs are outdated, delete them" | Old ADRs record history; new ADRs supersede the old ones |
 
-## 禁止事项
-- 注释重述代码（`// Increment counter by 1`）
-- 留注释掉的代码（git 有历史，删掉）
-- 留无日期无负责人的 TODO
-- 删除旧 ADR（应标注 SUPERSEDED）
-- API 无类型/docstring（`any` 满天飞）
-- README 不写如何运行项目
+## Prohibitions
+- Comments that restate code (`// Increment counter by 1`)
+- Leaving commented-out code (git has history; delete it)
+- Leaving TODOs without a date or owner
+- Deleting old ADRs (should be marked SUPERSEDED)
+- APIs without types/docstrings (`any` everywhere)
+- README without instructions on how to run the project
 
-## 与 LOOP 的关系
-本 skill 通常在 LOOP 之外触发：
-- 架构决策 → brainstorming 阶段触发本 skill 写 ADR
-- API 变更 → verify 阶段检查文档同步
-- 发版 → session-end 或独立发版流程触发 CHANGELOG
+## Relationship with LOOP
+This skill is usually triggered outside LOOP:
+- Architectural decisions → the brainstorming phase triggers this skill to write an ADR
+- API changes → the verify phase checks that docs are in sync
+- Release → session-end or a standalone release flow triggers the CHANGELOG
 
-## 与其他 skill 的分工
-| Skill | 职责 |
+## Division of Labor with Other Skills
+| Skill | Responsibility |
 |-------|------|
-| writing-documentation | 文档编写（ADR/API/CHANGELOG/README/注释） |
-| brainstorming | 架构决策的思考过程（决策定下来后写 ADR） |
-| verify | 检查 API 变更是否同步文档 |
-| session-end | 发版时触发 CHANGELOG 更新 |
+| writing-documentation | Documentation (ADR/API/CHANGELOG/README/comments) |
+| brainstorming | The thinking process for architectural decisions (write the ADR after the decision is made) |
+| verify | Check whether API changes are synced with docs |
+| session-end | Trigger CHANGELOG update on release |

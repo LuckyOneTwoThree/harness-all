@@ -1,22 +1,22 @@
-<!-- 从 SKILL.md 提取的参考材料，按需查阅 -->
+<!-- Reference material extracted from SKILL.md, consult as needed -->
 
-# 上游变更响应
+# Upstream Change Response
 
-## 上游变更影响
+## Upstream Change Impact
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| Problem Statement变更 | HMW陈述的聚焦方向 | 标注受影响的HMW，建议人类确认是否重新生成 |
-| 用户研究数据更新 | HMW的数据支撑、source_data关联 | 标注受影响的HMW，建议人类确认是否补充数据关联 |
-| 当前方案变更 | SCAMPER替代/修改维度方案 | 标注受影响的维度方案，建议人类确认是否重新生成 |
-| 竞品方案数据更新 | SCAMPER借鉴维度方案 | 标注受影响的借鉴方案，建议人类确认是否补充 |
-| 产品上下文变更 | 反转思维失败路径优先级、收敛战略对齐评分 | 标注受影响的评分维度，建议人类确认是否重新评分 |
+| Problem Statement change | HMW statement focus direction | Annotate affected HMW, recommend human confirmation on whether to regenerate |
+| User research data update | HMW data support, source_data association | Annotate affected HMW, recommend human confirmation on whether to supplement data association |
+| Current solution change | SCAMPER substitute/modify dimension solutions | Annotate affected dimension solutions, recommend human confirmation on whether to regenerate |
+| Competitor solution data update | SCAMPER adapt dimension solutions | Annotate affected adapt solutions, recommend human confirmation on whether to supplement |
+| Product context change | Reverse thinking failure path priority, convergence strategic alignment score | Annotate affected scoring dimensions, recommend human confirmation on whether to re-score |
 
-## 下游通知机制
+## Downstream Notification Mechanism
 
-| 变更类型 | 通知范围 | 通知方式 |
+| Change Type | Notification Scope | Notification Method |
 |----------|----------|----------|
-| 收敛方案选择变更 | design-prd、validation-assumption-map | 标记方案变更，触发PRD和假设地图更新 |
-| 收敛方案深化内容变更 | design-prd | 标记深化内容变更，触发PRD功能规格更新 |
-| 对比矩阵评分变更 | design-prd | 标记评分变更，触发PRD优先级调整 |
-| MVP范围变更 | validation-mvp | 标记MVP范围变更，触发MVP界定更新 |
+| Convergence solution selection change | design-prd, validation-assumption-map | Mark solution change, trigger PRD and assumption map update |
+| Convergence solution deepening content change | design-prd | Mark deepening content change, trigger PRD feature specification update |
+| Comparison matrix score change | design-prd | Mark score change, trigger PRD priority adjustment |
+| MVP scope change | validation-mvp | Mark MVP scope change, trigger MVP definition update |

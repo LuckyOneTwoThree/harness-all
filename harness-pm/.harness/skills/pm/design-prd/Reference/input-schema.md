@@ -1,22 +1,22 @@
-# PRD生成器 输入Schema参考
+# PRD Generator Input Schema Reference
 
-> 本文档从 design-prd SKILL.md 拆分而来，包含PRD生成器的完整输入数据结构定义和验证规则。
+> This document is split from design-prd SKILL.md, containing the complete input data structure definition and validation rules for the PRD generator.
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| metadata | JSON/object | 是 | 系统生成 | 请求元信息（request_id、trigger、requester、timestamp） |
-| insight_analysis | JSON/object | ○ | docs/discovery/insight.md | 洞察分析产出：用户洞察、痛点、行为模式，替代原 requirements-collection 输入 |
-| opportunity_definition | JSON/object | ○ | docs/discovery/opportunity.md | 机会定义产出：机会列表、优先级排序、问题陈述，替代原 requirements-understanding/prioritization 输入 |
-| exploration_outputs | JSON/object | ○ | 上游探索阶段 | 探索阶段输出：用户洞察、问题陈述 |
-| strategy_outputs | JSON/object | ○ | 上游战略阶段 | 战略阶段输出：OKR、路线图 |
-| north_star_metric | JSON/object | ○ | docs/strategy/PRODUCT_STRATEGY.md（"North Star"章节） | 北极星指标及驱动功能 |
-| okr_candidates | JSON/object | ○ | docs/strategy/OKR.md | OKR候选及驱动功能 |
-| ideation_outputs | JSON/object | ○ | docs/product/PRD.md（"创意方案"章节） | 构思阶段输出：解决方案、功能列表 |
-| design_outputs | JSON/object | ○ | 上游设计阶段 | 设计阶段输出：原型、用户流程、信息架构 |
-| metrics_outputs | JSON/object | ○ | 上游度量阶段 | 度量阶段输出：指标体系、埋点方案 |
-| requirement | JSON/object | 是 | 用户提供 | 需求上下文（product_name必填）及手动覆盖配置 |
+| metadata | JSON/object | Yes | System-generated | Request metadata (request_id, trigger, requester, timestamp) |
+| insight_analysis | JSON/object | ○ | docs/discovery/insight.md | Insight analysis output: user insights, pain points, behavior patterns; replaces the original requirements-collection input |
+| opportunity_definition | JSON/object | ○ | docs/discovery/opportunity.md | Opportunity definition output: opportunity list, priority ranking, problem statements; replaces the original requirements-understanding/prioritization input |
+| exploration_outputs | JSON/object | ○ | Upstream discovery phase | Discovery phase outputs: user insights, problem statements |
+| strategy_outputs | JSON/object | ○ | Upstream strategy phase | Strategy phase outputs: OKR, roadmap |
+| north_star_metric | JSON/object | ○ | docs/strategy/PRODUCT_STRATEGY.md ("North Star" section) | North Star Metric and driving features |
+| okr_candidates | JSON/object | ○ | docs/strategy/OKR.md | OKR candidates and driving features |
+| ideation_outputs | JSON/object | ○ | docs/product/PRD.md ("Creative Solutions" section) | Ideation phase outputs: solutions, feature list |
+| design_outputs | JSON/object | ○ | Upstream design phase | Design phase outputs: prototypes, user flows, information architecture |
+| metrics_outputs | JSON/object | ○ | Upstream metrics phase | Metrics phase outputs: metric system, tracking plan |
+| requirement | JSON/object | Yes | User-provided | Requirement context (product_name required) and manual override configuration |
 
-### 7.1 输入数据结构
+### 7.1 Input Data Structure
 
 ```json
 {
@@ -207,12 +207,12 @@
 }
 ```
 
-### 7.2 输入验证规则
+### 7.2 Input Validation Rules
 
-**必填字段**：
+**Required Fields**:
 - metadata.request_id
-- upstream至少包含一个阶段的输出
+- upstream must contain at least one phase output
 - requirement.context.product_name
 
-**可选字段**：
-- 其他字段缺失按L0/L1/L2策略处理
+**Optional Fields**:
+- Other missing fields are handled according to L0/L1/L2 strategy

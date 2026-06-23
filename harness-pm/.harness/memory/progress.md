@@ -1,21 +1,21 @@
-# 会话进度日志
+# Session progress log
 
-> append-only，由 session-start / session-end 维护。
-> 超过 200 行时按 session-end SKILL.md 步骤归档到 archives/，保留最后一个完整会话块。
-> 首次使用：复制本文件到 .harness/memory/progress.md。
+> append-only, maintained by session-start / session-end.
+> When it exceeds 200 lines, archive to archives/ following the session-end SKILL.md steps; keep the last complete session block.
+> First use: copy this file to .harness/memory/progress.md.
 
-## 会话: YYYY-MM-DD HH:MM
+## Session: YYYY-MM-DD HH:MM
 
-### 任务
-[本次会话的目标，一句话描述]
+### Task
+[Goal of this session, in one sentence]
 
-### 完成
-- [完成的事项，带证据]
+### Completed
+- [Completed items, with evidence]
 
-### 待续
-- [下次会话需要继续的上下文]
+### To continue
+- [Context to continue in the next session]
 
-### 证据
-[verify 输出摘要 / 数据分析结果 / 关键决策]
+### Evidence
+[verify output summary / data analysis results / key decisions]
 
 ---

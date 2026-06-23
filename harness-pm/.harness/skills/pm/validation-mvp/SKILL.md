@@ -1,21 +1,21 @@
 ---
 name: validation-mvp
-description: 当需要界定MVP功能范围时使用。MVP范围自动界定工具，基于假设地图和资源约束，智能识别Must Have、MUST NOT和Nice to Have功能，并评估MVP规模占比。关键词：MVP范围、最小可行产品、功能优先级、资源约束、最小产品、核心功能。
+description: Used when defining the MVP feature scope. MVP scope auto-definition tool that intelligently identifies Must Have, MUST NOT, and Nice to Have features based on the assumption map and resource constraints, and evaluates the MVP size ratio. Keywords: MVP scope, Minimum Viable Product, feature priority, resource constraints, minimal product, core features.
 metadata:
-  module: "产品构思与设计"
-  sub-module: "方案验证"
+  module: "Product Ideation & Design"
+  sub-module: "Solution Validation"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["互联网", "软件", "通用"]
+  domain_tags: ["Internet", "Software", "General"]
   trigger_examples:
-    - "MVP应该包含哪些功能"
-    - "最小产品怎么做"
-    - "哪些功能可以先不做"
+    - "What features should the MVP include"
+    - "How to build the minimal product"
+    - "Which features can be deferred"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出MVP范围和验证计划"
-  deep_description: "完整方案 + MVP范围优化 + 验证指标体系 + 迭代演进路线"
+  quick_description: "Directly output MVP scope and validation plan"
+  deep_description: "Full solution + MVP scope optimization + validation metrics system + iteration evolution roadmap"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -27,46 +27,46 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# MVP范围自动界定
+# MVP Scope Auto-Definition
 
-## 核心原则
+## Core Principles
 
-1. **MVP验证的是假设不是方案**——MVP的目标是学习而非交付，用最小成本获取最大置信度
-2. **Must Have是MVP的底线**——Must Have功能不可裁剪，Nice to Have功能全部可裁剪
-3. **2周是MVP的时间红线**——超过2周的MVP不是MVP，是完整产品
-4. **验证结果只有三种**——验证通过/验证失败/需更多数据，不允许模糊结论
+1. **MVP validates hypotheses, not solutions** — The goal of an MVP is learning, not delivery; acquire maximum confidence at minimum cost
+2. **Must Have is the MVP baseline** — Must Have features cannot be cut; Nice to Have features are all cuttable
+3. **2 weeks is the MVP time redline** — An MVP exceeding 2 weeks is not an MVP, it is a full product
+4. **Validation results have only three outcomes** — Validated / Invalidated / Needs more data; ambiguous conclusions are not allowed
 
-### 基本信息
+### Basic Information
 
-| 属性 | 值 |
+| Attribute | Value |
 |------|-----|
 | Pipeline ID | 11 |
-| 名称 | MVP范围自动界定 |
-| 执行模式 | 🤖→👤 AI建议，人类审批 |
-| 输入 | 方案设计 + 假设地图 + 资源约束 |
+| Name | MVP Scope Auto-Definition |
+| Execution Mode | 🤖→👤 AI suggests, human approves |
+| Input | Solution design + Assumption map + Resource constraints |
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Input
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 方案设计 | JSON | 是 | 用户提供或 harness-design 产出 | 完整功能列表及描述 |
-| 假设地图 | JSON | 是 | docs/product/PRD.md（“假设图”章节） | Pipeline 10输出的假设地图 |
-| 资源约束 | JSON | ○ | 用户提供 | 时间、人力、预算限制 |
+| Solution design | JSON | Yes | User-provided or harness-design output | Complete feature list and descriptions |
+| Assumption map | JSON | Yes | docs/product/PRD.md ("Assumption Map" section) | Assumption map output from Pipeline 10 |
+| Resource constraints | JSON | ○ | User-provided | Time, staffing, and budget constraints |
 
-### 输入格式
+### Input Format
 ```json
 {
   "solution_design": {
     "features": [
       {
         "id": "F001",
-        "name": "功能名称",
-        "description": "功能描述",
-        "effort_estimate": "工作量估算"
+        "name": "Feature name",
+        "description": "Feature description",
+        "effort_estimate": "Effort estimate"
       }
     ]
   },
@@ -74,83 +74,83 @@ writes:
   "resource_constraints": {
     "timeline_weeks": 8,
     "team_size": 4,
-    "budget": "预算限制"
+    "budget": "Budget limit"
   }
 }
 ```
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 核心假设提取与 Must Have 识别 [核心]
+### Step 1: Core Hypothesis Extraction and Must Have Identification [Core]
 
-**定义**: 与最大风险假设直接相关的功能 = 必须包含
+**Definition**: Features directly related to the highest-risk assumptions = must include
 
-**判断逻辑**:
-1. 找出所有 is_max_risk = true 的假设
-2. 提取核心假设列表
-3. 识别与这些假设关联的功能
-4. 标记为 Must Have
+**Logic**:
+1. Find all assumptions where is_max_risk = true
+2. Extract the core hypothesis list
+3. Identify features linked to these hypotheses
+4. Mark as Must Have
 
-**输出格式**:
+**Output Format**:
 ```json
 {
   "core_hypothesis": [
     {
       "id": "A001",
-      "description": "假设描述",
+      "description": "Hypothesis description",
       "risk_score": 20
     }
   ],
   "must_have": [
     {
-      "feature": "功能名称",
-      "linked_assumption": "关联的最大风险假设",
-      "effort_estimate": "工作量估算",
-      "rationale": "必须包含的理由"
+      "feature": "Feature name",
+      "linked_assumption": "Linked highest-risk assumption",
+      "effort_estimate": "Effort estimate",
+      "rationale": "Reason for must-include"
     }
   ]
 }
 ```
 
-### Step 2: 裁剪功能识别 [核心]
+### Step 2: Cut Feature Identification [Core]
 
-**定义**: 干扰核心假设验证的功能 = 排除
+**Definition**: Features that interfere with core hypothesis validation = exclude
 
-**排除标准**:
+**Exclusion Criteria**:
 
-| 排除类型 | 说明 | 示例 |
+| Exclusion Type | Description | Example |
 |----------|------|------|
-| 过于丰富 | 超出MVP验证需要的完整功能 | MVP验证需要列表，却做完整搜索+筛选+排序 |
-| 过于精美 | 高保真设计非MVP必要 | 投入大量时间在交互动效 |
-| 过多配置 | 复杂配置项非验证必要 | 多个维度的自定义设置 |
+| Over-built | Full features beyond MVP validation needs | MVP needs a list, but full search + filter + sort is built |
+| Over-polished | High-fidelity design not necessary for MVP | Heavy investment in interaction animations |
+| Over-configured | Complex configuration items not necessary for validation | Multi-dimensional custom settings |
 
-**输出格式**:
+**Output Format**:
 ```json
 {
   "cut_features": [
     {
-      "feature": "功能名称",
-      "rationale": "排除的理由（干扰核心假设验证）"
+      "feature": "Feature name",
+      "rationale": "Reason for exclusion (interferes with core hypothesis validation)"
     }
   ]
 }
 ```
 
-### Step 3: Nice to Have 归类 [核心]
+### Step 3: Nice to Have Classification [Core]
 
-**定义**: 既非Must Have也非裁剪功能的功能
+**Definition**: Features that are neither Must Have nor cut features
 
-**优先级规则**:
-1. 关联高风险假设但非直接相关的功能 → P1
-2. 关联中风险假设的功能 → P2
-3. 关联低风险假设的功能 → P3
+**Priority Rules**:
+1. Features linked to high-risk assumptions but not directly related → P1
+2. Features linked to medium-risk assumptions → P2
+3. Features linked to low-risk assumptions → P3
 
-**输出格式**:
+**Output Format**:
 ```json
 {
   "nice_to_have": [
     {
-      "feature": "功能名称",
+      "feature": "Feature name",
       "priority": "P1/P2/P3",
       "target_version": "v2.0/v3.0"
     }
@@ -158,69 +158,69 @@ writes:
 }
 ```
 
-### Step 4: MVP规模评估 [核心]
+### Step 4: MVP Size Assessment [Core]
 
-**计算公式**:
+**Formula**:
 
 ```
-MVP占比 = Must Have工作量 / 完整方案工作量 × 100%
+MVP ratio = Must Have effort / Full solution effort × 100%
 ```
 
-**工作量单位**: 人天/人周/story point（根据团队习惯）
+**Effort Unit**: person-days / person-weeks / story points (per team convention)
 
-**评估标准**:
+**Assessment Criteria**:
 
-| MVP占比 | 评估结果 | 建议 |
+| MVP Ratio | Assessment | Recommendation |
 |---------|----------|------|
-| < 40% | ✅ 理想 | 可启动MVP开发 |
-| 40-60% | ⚠️ 可接受 | 审视Nice to Have是否可精简 |
-| > 60% | 🚨 需评审 | 升级人类判断，确认是否调整 |
+| < 40% | ✅ Ideal | Can start MVP development |
+| 40-60% | ⚠️ Acceptable | Review whether Nice to Have can be further trimmed |
+| > 60% | 🚨 Needs review | Escalate to human judgment, confirm whether to adjust |
 
-### Step 5: 时间规划 [核心]
+### Step 5: Timeline Planning [Core]
 
-**定义**: 基于MVP功能工作量与资源约束，制定时间规划
+**Definition**: Build a timeline based on MVP feature effort and resource constraints
 
-**规划逻辑**:
-1. 汇总 Must Have 功能工作量
-2. 结合资源约束中的 timeline_weeks 和 team_size
-3. 确保总周数 ≤ 2（MVP时间红线）
-4. 拆分里程碑节点
+**Planning Logic**:
+1. Sum Must Have feature effort
+2. Combine with timeline_weeks and team_size from resource constraints
+3. Ensure total weeks ≤ 2 (MVP time redline)
+4. Break down milestone checkpoints
 
-**输出格式**:
+**Output Format**:
 ```json
 {
   "timeline": {
     "total_weeks": 2,
     "milestones": [
       {
-        "name": "里程碑名称",
+        "name": "Milestone name",
         "week": 1,
-        "deliverables": ["交付物1", "交付物2"]
+        "deliverables": ["Deliverable 1", "Deliverable 2"]
       }
     ]
   }
 }
 ```
 
-### Step 6: 资源估算 [核心]
+### Step 6: Resource Estimation [Core]
 
-**定义**: 基于MVP功能工作量与时间规划，估算所需资源
+**Definition**: Estimate required resources based on MVP feature effort and timeline
 
-**估算逻辑**:
-1. 根据 Must Have 功能工作量计算人力需求
-2. 结合 timeline.total_weeks 推算团队配置
-3. 评估是否需要外部资源支持
+**Estimation Logic**:
+1. Calculate staffing needs based on Must Have feature effort
+2. Derive team configuration from timeline.total_weeks
+3. Assess whether external resource support is needed
 
-**输出格式**:
+**Output Format**:
 ```json
 {
   "resource_estimate": {
     "team_size": 3,
     "roles": [
       {
-        "role": "角色名称",
+        "role": "Role name",
         "count": 1,
-        "rationale": "配置理由"
+        "rationale": "Configuration rationale"
       }
     ],
     "external_dependencies": []
@@ -228,248 +228,248 @@ MVP占比 = Must Have工作量 / 完整方案工作量 × 100%
 }
 ```
 
-### Step 7: 成功标准与风险缓解 [核心]
+### Step 7: Success Criteria and Risk Mitigation [Core]
 
-**定义**: 定义MVP验证的成功标准，并识别风险及缓解措施
+**Definition**: Define success criteria for MVP validation and identify risks with mitigation measures
 
-**成功标准逻辑**:
-1. 将核心假设转化为可量化的验证指标
-2. 每个核心假设至少对应1个成功标准
-3. 成功标准必须可量化（含具体数值或阈值）
+**Success Criteria Logic**:
+1. Convert core hypotheses into quantifiable validation metrics
+2. Each core hypothesis maps to at least one success criterion
+3. Success criteria must be quantifiable (with specific values or thresholds)
 
-**风险缓解逻辑**:
-1. 识别MVP执行过程中的关键风险
-2. 为每个风险制定缓解措施
-3. 评估风险影响等级
+**Risk Mitigation Logic**:
+1. Identify key risks during MVP execution
+2. Develop mitigation measures for each risk
+3. Assess risk impact level
 
-**输出格式**:
+**Output Format**:
 ```json
 {
   "success_criteria": [
     {
-      "criterion": "成功标准描述",
-      "metric": "量化指标",
-      "target_value": "目标值",
-      "linked_hypothesis": "关联假设ID"
+      "criterion": "Success criterion description",
+      "metric": "Quantitative metric",
+      "target_value": "Target value",
+      "linked_hypothesis": "Linked hypothesis ID"
     }
   ],
   "risk_mitigation": [
     {
-      "risk": "风险描述",
+      "risk": "Risk description",
       "impact": "high/medium/low",
-      "mitigation": "缓解措施"
+      "mitigation": "Mitigation measure"
     }
   ]
 }
 ```
 
-### Step 8: Go/No-Go决策框架 [核心]
+### Step 8: Go/No-Go Decision Framework [Core]
 
-**定义**: 基于成功标准构建Go/No-Go决策框架，metrics直接引用success_criteria中的量化指标
+**Definition**: Build a Go/No-Go decision framework based on success criteria; metrics directly reference the quantitative metrics in success_criteria
 
-**决策逻辑**:
-1. 从 success_criteria 中提取关键决策指标（每个核心假设选取1个主指标）
-2. 为每个指标定义 Go/No-Go 阈值（基于success_criteria.target_value上下浮动）
-3. 至少包含2个 metrics 和对应 thresholds
-4. metrics 不重复定义指标，通过 linked_criterion 引用 success_criteria
+**Decision Logic**:
+1. Extract key decision metrics from success_criteria (select one primary metric per core hypothesis)
+2. Define Go/No-Go thresholds for each metric (based on fluctuation around success_criteria.target_value)
+3. Include at least 2 metrics and corresponding thresholds
+4. Metrics do not redefine indicators; they reference success_criteria via linked_criterion
 
-**输出格式**:
+**Output Format**:
 ```json
 {
   "go_no_go": {
     "metrics": [
       {
-        "name": "指标名称",
-        "linked_criterion": "关联的success_criteria索引",
-        "description": "指标描述"
+        "name": "Metric name",
+        "linked_criterion": "Linked success_criteria index",
+        "description": "Metric description"
       }
     ],
     "thresholds": {
-      "go": "Go条件描述",
-      "no_go": "No-Go条件描述",
-      "needs_more_data": "需更多数据条件描述"
+      "go": "Go condition description",
+      "no_go": "No-Go condition description",
+      "needs_more_data": "Needs more data condition description"
     }
   }
 }
 ```
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | MVP范围和验证计划 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整方案 + MVP范围优化 + 验证指标体系 + 迭代演进路线 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | MVP scope and validation plan | Core conclusions + minimum viable artifact |
+| standard | Full artifact (current default) | Full artifact, including all Step outputs |
+| deep | Full solution + MVP scope optimization + validation metrics system + iteration evolution roadmap | Full artifact + extended analysis + deep reasoning |
 
-## 输出
+## Output
 
-**存储路径**：`docs/product/PRD.md（“MVP方案”章节）`
-**输出文件**：mvp_definition.json
+**Storage Path**: `docs/product/PRD.md ("MVP Plan" section)`
+**Output File**: mvp_definition.json
 
 ```json
 {
   "mvp_scope": {
     "core_hypothesis": [
-      { "id": "A001", "description": "假设描述", "risk_score": 20 }
-      // ... 同结构可扩展
+      { "id": "A001", "description": "Hypothesis description", "risk_score": 20 }
+      // ... same structure extensible
     ],
     "must_have": [
-      { "feature": "功能名称", "linked_assumption": "关联假设ID", "effort_estimate": 8, "rationale": "必须包含的理由" }
-      // ... 同结构可扩展
+      { "feature": "Feature name", "linked_assumption": "Linked hypothesis ID", "effort_estimate": 8, "rationale": "Reason for must-include" }
+      // ... same structure extensible
     ],
     "nice_to_have": [
-      { "feature": "功能名称", "priority": "P1", "target_version": "v2.0" }
-      // ... 同结构可扩展
+      { "feature": "Feature name", "priority": "P1", "target_version": "v2.0" }
+      // ... same structure extensible
     ],
     "cut_features": [
-      { "feature": "功能名称", "rationale": "排除理由" }
-      // ... 同结构可扩展
+      { "feature": "Feature name", "rationale": "Exclusion reason" }
+      // ... same structure extensible
     ],
-    "timeline": { "total_weeks": 2, "milestones": [{ /* 同Step5结构 */ }] },
-    "resource_estimate": { "team_size": 3, "roles": [{ /* 同Step6结构 */ }], "external_dependencies": [] },
-    "success_criteria": [{ /* 同Step7结构 */ }],
-    "risk_mitigation": [{ /* 同Step7结构 */ }],
+    "timeline": { "total_weeks": 2, "milestones": [{ /* same as Step 5 structure */ }] },
+    "resource_estimate": { "team_size": 3, "roles": [{ /* same as Step 6 structure */ }], "external_dependencies": [] },
+    "success_criteria": [{ /* same as Step 7 structure */ }],
+    "risk_mitigation": [{ /* same as Step 7 structure */ }],
     "effort_summary": { "mvp_total": 24, "full_solution_total": 60, "mvp_ratio": "40%" },
-    "go_no_go": { "metrics": [{ /* 同Step8结构 */ }], "thresholds": { "go": "...", "no_go": "...", "needs_more_data": "..." } }
+    "go_no_go": { "metrics": [{ /* same as Step 8 structure */ }], "thresholds": { "go": "...", "no_go": "...", "needs_more_data": "..." } }
   },
   "approval_status": "pending|approved|needs_discussion",
-  "recommendation": "AI建议说明"
+  "recommendation": "AI recommendation notes"
 }
 ```
 
-**输出校验规则**：详见下方输出校验规则章节
+**Output Validation Rules**: See the Output Validation Rules section below
 
-## 决策规则
+## Decision Rules
 
-| 规则 | 条件 | 动作 |
+| Rule | Condition | Action |
 |------|------|------|
-| 人工审批触发 | MVP占比 > 60% | 升级人类判断 |
-| 审批触发 | Must Have无假设关联 | 需补充说明 |
-| 审批触发 | cut_features理由不充分 | 需补充排除依据 |
+| Human approval triggered | MVP ratio > 60% | Escalate to human judgment |
+| Approval triggered | Must Have has no hypothesis linkage | Requires supplementary explanation |
+| Approval triggered | cut_features rationale insufficient | Requires supplementary exclusion basis |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 核心假设（core_hypothesis非空且与must_have关联）
-- [ ] 假设关联（Must Have功能都有假设关联）
+- [ ] Core hypotheses (core_hypothesis is non-empty and linked to must_have)
+- [ ] Hypothesis linkage (Must Have features all have hypothesis linkage)
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 排除理由（cut_features功能都有充分理由）
-- [ ] 占比计算（MVP占比已计算）
-- [ ] 优先级完整（Nice to Have都有优先级）
-- [ ] 时间红线（timeline.total_weeks ≤ 2，超过时 human_override 必须为 true）
-- [ ] 成功标准可量化（success_criteria包含量化指标和目标值）
-- [ ] Go/No-Go完整（go_no_go包含至少2个metrics和对应thresholds）
+- [ ] Exclusion rationale (cut_features all have sufficient rationale)
+- [ ] Ratio calculation (MVP ratio calculated)
+- [ ] Priority completeness (Nice to Have all have priority)
+- [ ] Time redline (timeline.total_weeks ≤ 2; when exceeded, human_override must be true)
+- [ ] Success criteria quantifiable (success_criteria contains quantitative metrics and target values)
+- [ ] Go/No-Go completeness (go_no_go contains at least 2 metrics and corresponding thresholds)
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep reasoning and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Notes |
 |---------------|---------|---------|------------|
-| 假设地图缺失 | 用户描述关键假设，界定MVP | 缺乏结构化假设数据，MVP范围可能不够精准 | 要求用户提供关键假设列表和验证优先级或上传假设地图文件 |
-| 方案设计数据缺失 | 用户描述方案，界定MVP | 缺乏方案数据，功能裁剪可能不够合理 | 要求用户提供功能方案描述和核心功能列表或上传ideation输出文件 |
-| 资源约束数据缺失 | 用户描述资源约束，界定MVP | 缺乏资源约束数据，时间规划可能不够合理 | 要求用户提供团队规模、可用工期和技术栈等资源约束信息 |
-| 假设地图+方案设计+资源约束均缺失 | 用户描述假设和方案，界定MVP | 整体置信度降低，MVP范围可能不够完整 | 要求用户提供关键假设、功能方案和资源约束描述 |
-| 所有上游文件均缺失 | 提示用户先执行前序阶段，或基于用户描述界定MVP | 输出仅为基本MVP框架 | 要求用户提供核心假设、最小功能集和资源约束 |
+| Assumption map missing | User describes key hypotheses, define MVP | Lacks structured hypothesis data, MVP scope may be less precise | Ask user to provide key hypothesis list and validation priority or upload assumption map file |
+| Solution design data missing | User describes solution, define MVP | Lacks solution data, feature cuts may be less reasonable | Ask user to provide feature solution description and core feature list or upload ideation output file |
+| Resource constraint data missing | User describes resource constraints, define MVP | Lacks resource constraint data, timeline may be less reasonable | Ask user to provide team size, available timeline, and tech stack resource constraints |
+| Assumption map + solution design + resource constraints all missing | User describes hypotheses and solution, define MVP | Overall confidence reduced, MVP scope may be incomplete | Ask user to provide key hypotheses, feature solution, and resource constraint descriptions |
+| All upstream files missing | Prompt user to run preceding stages first, or define MVP based on user description | Output is only a basic MVP framework | Ask user to provide core hypotheses, minimum feature set, and resource constraints |
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| mvp_scope | object | 是 | MVP范围定义 |
-| mvp_scope.core_hypothesis | array | 是 | 核心假设列表 |
-| mvp_scope.must_have | array | 是 | Must Have功能列表 |
-| mvp_scope.nice_to_have | array | 是 | Nice to Have功能列表 |
-| mvp_scope.cut_features | array | 是 | 裁剪功能列表 |
-| mvp_scope.timeline | object | 是 | 时间规划 |
-| mvp_scope.timeline.total_weeks | number | 是 | 总周数（≤2，超过时需 human_override: true） |
-| mvp_scope.timeline.milestones | array | 是 | 里程碑列表 |
-| mvp_scope.resource_estimate | object | 是 | 资源估算 |
-| mvp_scope.effort_summary | object | 是 | 工作量汇总 |
-| mvp_scope.effort_summary.mvp_total | number | 是 | MVP总工作量 |
-| mvp_scope.effort_summary.full_solution_total | number | 是 | 完整方案总工作量 |
-| mvp_scope.effort_summary.mvp_ratio | string | 是 | MVP占比 |
-| mvp_scope.success_criteria | array | 是 | 成功标准 |
-| mvp_scope.risk_mitigation | array | 是 | 风险缓解措施 |
-| mvp_scope.go_no_go | object | 是 | Go/No-Go决策框架 |
-| mvp_scope.go_no_go.metrics | array | 是 | 决策指标 |
-| mvp_scope.go_no_go.thresholds | object | 是 | 阈值定义 |
-| human_override | boolean | 是 | 人类覆盖标记（默认 false，当 total_weeks > 2 时必须为 true） |
+| mvp_scope | object | Yes | MVP scope definition |
+| mvp_scope.core_hypothesis | array | Yes | Core hypothesis list |
+| mvp_scope.must_have | array | Yes | Must Have feature list |
+| mvp_scope.nice_to_have | array | Yes | Nice to Have feature list |
+| mvp_scope.cut_features | array | Yes | Cut feature list |
+| mvp_scope.timeline | object | Yes | Timeline |
+| mvp_scope.timeline.total_weeks | number | Yes | Total weeks (≤2; when exceeded, human_override: true required) |
+| mvp_scope.timeline.milestones | array | Yes | Milestone list |
+| mvp_scope.resource_estimate | object | Yes | Resource estimate |
+| mvp_scope.effort_summary | object | Yes | Effort summary |
+| mvp_scope.effort_summary.mvp_total | number | Yes | MVP total effort |
+| mvp_scope.effort_summary.full_solution_total | number | Yes | Full solution total effort |
+| mvp_scope.effort_summary.mvp_ratio | string | Yes | MVP ratio |
+| mvp_scope.success_criteria | array | Yes | Success criteria |
+| mvp_scope.risk_mitigation | array | Yes | Risk mitigation measures |
+| mvp_scope.go_no_go | object | Yes | Go/No-Go decision framework |
+| mvp_scope.go_no_go.metrics | array | Yes | Decision metrics |
+| mvp_scope.go_no_go.thresholds | object | Yes | Threshold definitions |
+| human_override | boolean | Yes | Human override flag (default false; must be true when total_weeks > 2) |
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响
+### Upstream Change Impact
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| 假设地图变更（假设增删/风险评分变更） | 核心假设、Must Have功能 | 标注受影响的假设和功能，建议人类确认是否重新界定MVP |
-| 方案设计变更 | 功能列表、裁剪决策 | 标注受影响的功能，建议人类确认是否调整MVP范围 |
-| 资源约束变更 | 时间规划、资源估算 | 标注受影响的时间线，建议人类确认是否调整MVP范围 |
-| 实验结果更新 | 核心假设验证状态 | 标注受影响的假设，建议人类确认是否调整MVP策略 |
+| Assumption map change (hypothesis add/remove or risk score change) | Core hypotheses, Must Have features | Mark affected hypotheses and features; recommend human confirm whether to redefine MVP |
+| Solution design change | Feature list, cut decisions | Mark affected features; recommend human confirm whether to adjust MVP scope |
+| Resource constraint change | Timeline, resource estimate | Mark affected timeline; recommend human confirm whether to adjust MVP scope |
+| Experiment result update | Core hypothesis validation status | Mark affected hypotheses; recommend human confirm whether to adjust MVP strategy |
 
-### 下游通知机制
+### Downstream Notification Mechanism
 
-| MVP范围变更类型 | 通知范围 | 通知方式 |
+| MVP Scope Change Type | Notification Scope | Notification Method |
 |----------------|----------|----------|
-| Must Have功能增删 | validation-experiment、validation-usability | 标记功能变更，触发实验设计和可用性测试更新 |
-| 时间规划变更 | validation-experiment | 标记时间变更，触发实验周期调整 |
-| 成功标准变更 | validation-experiment | 标记标准变更，触发实验指标更新 |
-| Go/No-Go决策变更 | 所有下游Skill | 标记决策变更，触发全流程更新 |
+| Must Have feature add/remove | validation-experiment, validation-usability | Mark feature change, trigger experiment design and usability test update |
+| Timeline change | validation-experiment | Mark timeline change, trigger experiment cycle adjustment |
+| Success criteria change | validation-experiment | Mark criteria change, trigger experiment metric update |
+| Go/No-Go decision change | All downstream Skills | Mark decision change, trigger full-flow update |
 
 ---
 
-## 使用示例
+## Usage Example
 
-**假设地图中的最大风险假设**:
-- A001: 用户认为推荐内容与兴趣匹配（风险分数: 20）
+**Highest-risk hypothesis in the assumption map**:
+- A001: Users feel recommended content matches their interests (risk score: 20)
 
-**方案设计中的功能**:
-- F001: 智能推荐算法
-- F002: 推荐结果展示
-- F003: 收藏功能
-- F004: 分享功能
-- F005: 高保真动效
+**Features in the solution design**:
+- F001: Intelligent recommendation algorithm
+- F002: Recommendation result display
+- F003: Favorites feature
+- F004: Share feature
+- F005: High-fidelity animations
 
-**AI分析**:
+**AI Analysis**:
 ```
-核心假设:
-- A001: 用户认为推荐内容与兴趣匹配（风险分数: 20）
+Core Hypothesis:
+- A001: Users feel recommended content matches their interests (risk score: 20)
 
 Must Have:
-- F001 智能推荐算法（直接验证A001）
-- F002 推荐结果展示（验证A001必需）
+- F001 Intelligent recommendation algorithm (directly validates A001)
+- F002 Recommendation result display (required to validate A001)
 
-裁剪功能:
-- F005 高保真动效（干扰核心验证，非MVP必要）
+Cut Features:
+- F005 High-fidelity animations (interferes with core validation, not necessary for MVP)
 
 Nice to Have:
-- F003 收藏功能（P2，v2.0）
-- F004 分享功能（P3，v3.0）
+- F003 Favorites feature (P2, v2.0)
+- F004 Share feature (P3, v3.0)
 
-时间规划:
-- 总计2周，第1周完成核心算法，第2周完成展示与验证
+Timeline:
+- Total 2 weeks; Week 1 complete core algorithm, Week 2 complete display and validation
 
-资源估算:
-- 3人：1后端+1前端+1数据
+Resource Estimate:
+- 3 people: 1 backend + 1 frontend + 1 data
 
-成功标准:
-- 推荐匹配度 ≥ 60%（关联A001）
+Success Criteria:
+- Recommendation match rate ≥ 60% (linked to A001)
 
-风险缓解:
-- 算法精度不足（high）→ 降级为规则推荐
+Risk Mitigation:
+- Insufficient algorithm accuracy (high) → Degrade to rule-based recommendations
 
 Go/No-Go:
-- metrics: 推荐匹配度、用户点击率
-- Go: 匹配度≥60%且点击率≥30%
-- No-Go: 匹配度<40%或点击率<15%
+- metrics: recommendation match rate, user click-through rate
+- Go: match rate ≥ 60% and click-through rate ≥ 30%
+- No-Go: match rate < 40% or click-through rate < 15%
 
-MVP占比: 40% ✅ 理想
+MVP Ratio: 40% ✅ Ideal
 ```

@@ -1,21 +1,21 @@
 ---
 name: release-gradual
-description: 当需要执行灰度发布时使用。灰度发布自动执行，执行渐进式灰度发布，从1%到10%到50%到100%，各阶段自动监控指标并判断是否进入下一阶段，支持P0指标恶化时自动回滚。🤖 AI自动执行。关键词：灰度发布、渐进式发布、Feature Flag、自动回滚、发布策略、金丝雀发布、小流量、逐步放量。
+description: Used when executing canary release. Canary release auto-execution, performs progressive canary release from 1% to 10% to 50% to 100%, automatically monitors metrics at each stage and determines whether to proceed to the next stage, supports auto-rollback when P0 metrics deteriorate. 🤖 AI auto-executes. Keywords: canary release, progressive release, Feature Flag, auto-rollback, release strategy, canary deployment, small traffic, gradual traffic increase.
 metadata:
-  module: "产品监控与迭代"
-  sub-module: "发布上线"
+  module: "Product Monitoring & Iteration"
+  sub-module: "Release Launch"
   type: "pipeline"
   version: "2.0"
-  domain_tags: ["互联网", "通用"]
+  domain_tags: ["Internet", "General"]
   trigger_examples:
-    - "做灰度发布，先放1%流量"
-    - "帮我做小流量验证"
-    - "逐步放量到全量"
+    - "Do a canary release, start with 1% traffic"
+    - "Help me do small traffic validation"
+    - "Gradually increase traffic to full"
   interaction_mode: "ai_auto"
 execution_depth:
   default: standard
-  quick_description: "执行灰度计划生成和Feature Flag配置，输出灰度发布方案"
-  deep_description: "完整灰度流程 + 各阶段自动监控 + 自动回滚触发 + 回滚影响评估 + 灰度指标深度分析"
+  quick_description: "Generate canary plan and Feature Flag configuration, output canary release plan"
+  deep_description: "Full canary flow + per-stage auto-monitoring + auto-rollback trigger + rollback impact assessment + in-depth canary metric analysis"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -25,59 +25,59 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 灰度发布自动执行
+# Canary Release Auto-Execution
 
-## 核心原则
+## Core Principles
 
-1. **触发器驱动**：由质量门禁通过事件自动触发灰度发布，指标恶化自动触发回滚
-2. **自动化验收**：各阶段指标自动监控，阶段转换自动判定，回滚自动执行
-3. **持续部署**：灰度策略配合Feature Flag，实现渐进式部署和即时回滚
-4. **实时复盘**：各阶段指标实时汇总，发布完成后即时生成复盘输入
+1. **Trigger-driven**: Canary release auto-triggered by quality gate pass event, metric deterioration auto-triggers rollback
+2. **Automated acceptance**: Per-stage metrics auto-monitored, stage transitions auto-determined, rollback auto-executed
+3. **Continuous deployment**: Canary strategy combined with Feature Flag for progressive deployment and instant rollback
+4. **Real-time retrospective**: Per-stage metrics aggregated in real-time, retrospective input generated immediately after release completion
 
-## 交互模式
+## Interaction Mode
 
-🤖 **AI自动执行**
+🤖 **AI auto-executes**
 
-触发条件：
-- 质量门禁通过
-- 手动触发（发布负责人确认）
+Trigger conditions:
+- Quality gate passed
+- Manual trigger (release lead confirmation)
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 发布内容 | JSON | 是 | 发布管理系统 | 待发布的版本和变更内容 |
-| Feature Flag配置 | JSON | 是 | Feature Flag系统 | 灰度开关配置 |
-| 监控指标定义 | JSON | 是 | 监控系统 | 各阶段监控指标 |
-| 灰度策略配置 | JSON | 是 | 发布策略库 | 各阶段流量比例和持续时间 |
+| Release content | JSON | Yes | Release management system | Version and change content to be released |
+| Feature Flag configuration | JSON | Yes | Feature Flag system | Canary switch configuration |
+| Monitoring metric definitions | JSON | Yes | Monitoring system | Per-stage monitoring metrics |
+| Canary strategy configuration | JSON | Yes | Release strategy library | Per-stage traffic ratio and duration |
 
-### 发布内容结构示例
+### Release Content Structure Example
 
 ```json
 {
   "release_id": "release_2024_0125_001",
   "version": "v2.1.0",
   "build_ref": "abc123def",
-  "change_summary": "新增微信登录功能，优化登录流程",
+  "change_summary": "Add WeChat login feature, optimize login flow",
   "affected_services": ["auth-service", "user-service"],
   "rollback_version": "v2.0.9",
   "rollback_strategy": "feature_flag_offline"
 }
 ```
 
-## 灰度阶段配置
+## Canary Stage Configuration
 
-### 标准灰度阶段
+### Standard Canary Stages
 
-| 阶段 | 流量比例 | 持续时间 | 最小持续时间 | 通过条件 |
+| Stage | Traffic Ratio | Duration | Min Duration | Pass Condition |
 |------|----------|----------|--------------|----------|
-| Stage 0 | 0% (验证) | - | 10分钟 | 构建验证通过 |
-| Stage 1 | 1% | 30分钟 | 30分钟 | 核心指标无异常 |
-| Stage 2 | 10% | 2小时 | 1小时 | P0指标稳定 |
-| Stage 3 | 50% | 4小时 | 2小时 | 无新增异常 |
-| Stage 4 | 100% | - | - | 所有条件通过 |
+| Stage 0 | 0% (verification) | - | 10 minutes | Build verification passed |
+| Stage 1 | 1% | 30 minutes | 30 minutes | Core metrics no anomaly |
+| Stage 2 | 10% | 2 hours | 1 hour | P0 metrics stable |
+| Stage 3 | 50% | 4 hours | 2 hours | No new anomalies |
+| Stage 4 | 100% | - | - | All conditions passed |
 
-### 护栏指标配置
+### Guardrail Metrics Configuration
 
 ```json
 {
@@ -85,7 +85,7 @@ writes:
     "p0_metrics": [
       {
         "name": "error_rate",
-        "description": "5xx错误率",
+        "description": "5xx error rate",
         "unit": "percentage",
         "warning_threshold": 0.01,
         "rollback_threshold": 0.03,
@@ -93,7 +93,7 @@ writes:
       },
       {
         "name": "latency_p99",
-        "description": "P99响应时间",
+        "description": "P99 response time",
         "unit": "milliseconds",
         "warning_threshold": 500,
         "rollback_threshold": 1000,
@@ -101,7 +101,7 @@ writes:
       },
       {
         "name": "availability",
-        "description": "服务可用性",
+        "description": "Service availability",
         "unit": "percentage",
         "warning_threshold": 99.9,
         "rollback_threshold": 99.0,
@@ -111,14 +111,14 @@ writes:
     "p1_metrics": [
       {
         "name": "api_success_rate",
-        "description": "API成功率",
+        "description": "API success rate",
         "unit": "percentage",
         "warning_threshold": 99,
         "rollback_threshold": 97
       },
       {
         "name": "error_count",
-        "description": "错误次数",
+        "description": "Error count",
         "unit": "count",
         "warning_threshold": 100,
         "rollback_threshold": 500
@@ -127,7 +127,7 @@ writes:
     "p2_metrics": [
       {
         "name": "conversion_rate",
-        "description": "业务转化率",
+        "description": "Business conversion rate",
         "unit": "percentage",
         "warning_threshold": -10,
         "rollback_threshold": -30,
@@ -138,23 +138,23 @@ writes:
 }
 ```
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 灰度计划生成 [核心]
+### Step 1: Canary Plan Generation [Core]
 
-#### 1.1 发布前验证
+#### 1.1 Pre-Release Verification
 
-**验证清单**：
+**Verification Checklist**:
 
-| 验证项 | 检查内容 | 失败处理 |
+| Verification Item | Check Content | Failure Handling |
 |--------|----------|----------|
-| 构建产物 | 验证构建产物完整性 | 阻止发布 |
-| 回滚版本 | 确认回滚版本可用 | 阻止发布 |
-| Feature Flag | 验证Flag配置正确 | 阻止发布 |
-| 监控告警 | 验证告警规则已配置 | 阻止发布 |
-| 值班人员 | 确认值班人员在线 | 警告 |
+| Build artifact | Verify build artifact integrity | Block release |
+| Rollback version | Confirm rollback version available | Block release |
+| Feature Flag | Verify Flag configuration correct | Block release |
+| Monitoring alerts | Verify alert rules configured | Block release |
+| On-call personnel | Confirm on-call personnel online | Warning |
 
-**验证输出**：
+**Verification Output**:
 
 ```json
 {
@@ -169,9 +169,9 @@ writes:
 }
 ```
 
-#### 1.2 灰度计划生成
+#### 1.2 Canary Plan Generation
 
-**计划结构**：
+**Plan Structure**:
 
 ```json
 {
@@ -242,11 +242,11 @@ writes:
 }
 ```
 
-### Step 2: Feature Flag自动配置 [核心]
+### Step 2: Feature Flag Auto-Configuration [Core]
 
-#### 2.1 Flag配置生成
+#### 2.1 Flag Configuration Generation
 
-**配置规则**：
+**Configuration Rules**:
 
 ```json
 {
@@ -300,9 +300,9 @@ writes:
 }
 ```
 
-#### 2.2 Flag状态追踪
+#### 2.2 Flag Status Tracking
 
-**状态记录**：
+**Status Record**:
 
 ```json
 {
@@ -321,11 +321,11 @@ writes:
 }
 ```
 
-### Step 3: 各阶段自动监控 [条件]
+### Step 3: Per-Stage Auto-Monitoring [Conditional]
 
-#### 3.1 指标采集
+#### 3.1 Metric Collection
 
-**采集配置**：
+**Collection Configuration**:
 
 ```json
 {
@@ -340,18 +340,18 @@ writes:
 }
 ```
 
-#### 3.2 阶段状态评估
+#### 3.2 Stage Status Assessment
 
-**评估规则**：
+**Assessment Rules**:
 
-| 指标类型 | 评估条件 | 评估结果 |
+| Metric Type | Assessment Condition | Assessment Result |
 |----------|----------|----------|
-| P0全部正常 | 无指标超warning阈值 | **可进入下一阶段** |
-| P0任一告警 | 任一指标超warning但未超rollback | **继续观察** |
-| P0恶化 | 任一指标超rollback阈值 | **立即回滚** |
-| P1告警 | P1指标超阈值 | **延迟+告警** |
+| All P0 normal | No metric exceeds warning threshold | **Can proceed to next stage** |
+| Any P0 warning | Any metric exceeds warning but not rollback | **Continue observation** |
+| P0 deterioration | Any metric exceeds rollback threshold | **Immediately rollback** |
+| P1 alert | P1 metric exceeds threshold | **Delay + alert** |
 
-**阶段评估输出**：
+**Stage Assessment Output**:
 
 ```json
 {
@@ -379,41 +379,44 @@ writes:
 }
 ```
 
-#### 3.3 阶段转换决策
+#### 3.3 Stage Transition Decision
 
-**决策流程**：
+**Decision Flow**:
 
 ```
 ┌─────────────────┐
-│ 阶段时间已满？  │
+│ Stage time met? │
 └────────┬────────┘
          │
     ┌────┴────┐
     │         │
-   是        否
+   Yes       No
     │         │
     ▼         ▼
 ┌────────┐ ┌─────────────────┐
-│指标评估│ │继续监控         │
+│Metric  │ │Continue         │
+│eval    │ │monitoring       │
 └───┬────┘ └─────────────────┘
     │
     ▼
 ┌─────────────────┐
-│ 所有P0指标正常？│
+│ All P0 metrics  │
+│ normal?         │
 └────────┬────────┘
          │
     ┌────┴────┐
     │         │
-   是        否
+   Yes       No
     │         │
     ▼         ▼
 ┌────────┐ ┌─────────────────┐
-│进入下一 │ │ 告警/观察/回滚  │
-│阶段     │ └─────────────────┘
+│Proceed │ │ Alert/Observe/  │
+│to next │ │ Rollback        │
+│stage   │ └─────────────────┘
 └────────┘
 ```
 
-**转换输出**：
+**Transition Output**:
 
 ```json
 {
@@ -421,7 +424,7 @@ writes:
     "current_phase": "phase_2",
     "decision": "proceed_to_next_phase",
     "next_phase": "phase_3",
-    "reason": "阶段持续时间已满，所有P0指标正常",
+    "reason": "Stage duration met, all P0 metrics normal",
     "metrics_verified": true,
     "approved_by": "release-gradual-pipeline",
     "scheduled_at": "ISO8601"
@@ -429,72 +432,77 @@ writes:
 }
 ```
 
-### Step 4: 自动回滚触发 [深度]
+### Step 4: Auto-Rollback Trigger [Deep]
 
-#### 4.1 回滚触发条件
+#### 4.1 Rollback Trigger Conditions
 
-**触发规则**：
+**Trigger Rules**:
 
-| 条件 | 触发动作 | 延迟 |
+| Condition | Trigger Action | Delay |
 |------|----------|------|
-| P0指标超rollback阈值 | **立即自动回滚** | 0秒 |
-| 服务不可用 | **立即自动回滚** | 0秒 |
-| P1指标超rollback阈值 | 延迟观察 | 5分钟 |
-| 人工确认异常 | 手动触发 | 0秒 |
+| P0 metric exceeds rollback threshold | **Immediate auto-rollback** | 0 seconds |
+| Service unavailable | **Immediate auto-rollback** | 0 seconds |
+| P1 metric exceeds rollback threshold | Delayed observation | 5 minutes |
+| Human-confirmed anomaly | Manual trigger | 0 seconds |
 
-#### 4.2 回滚执行
+#### 4.2 Rollback Execution
 
-**回滚流程**：
+**Rollback Flow**:
 
 ```
-触发回滚
+Trigger rollback
     │
     ▼
 ┌─────────────────┐
-│ 通知相关人员    │
+│ Notify relevant │
+│ personnel       │
 └────────┬────────┘
          │
     ┌────┴────┐
     │         │
-   自动化    人工
+  Automated  Manual
     │         │
     ▼         ▼
 ┌─────────┐ ┌─────────────────┐
-│关闭Flag │ │确认并执行      │
-│切换流量 │ └─────────────────┘
+│Turn off │ │Confirm and      │
+│Flag     │ │execute          │
+│Switch   │ └─────────────────┘
+│traffic  │
 └────┬────┘
      │
      ▼
 ┌─────────────────┐
-│ 验证回滚结果    │
+│ Verify rollback │
+│ result          │
 └────────┬────────┘
          │
     ┌────┴────┐
     │         │
-   成功      失败
+  Success   Failure
     │         │
     ▼         ▼
 ┌─────────┐ ┌─────────────────┐
-│记录完成 │ │告警升级人工介入 │
+│Record   │ │Alert escalation │
+│complete │ │human intervention│
 └─────────┘ └─────────────────┘
 ```
 
-**回滚执行输出**：
+**Rollback Execution Output**:
 
 ```json
 {
   "rollback_execution": {
     "rollback_id": "rollback_2024_0125_002",
     "trigger": {
-      "reason": "P0指标恶化",
+      "reason": "P0 metric deterioration",
       "metric": "error_rate",
       "current_value": 0.035,
       "threshold": 0.03
     },
     "action": {
-      "step_1": "关闭Feature Flag",
-      "step_2": "等待流量完全切换",
-      "step_3": "验证旧版本健康"
+      "step_1": "Turn off Feature Flag",
+      "step_2": "Wait for traffic to fully switch",
+      "step_3": "Verify old version health"
     },
     "status": "completed",
     "completed_at": "ISO8601",
@@ -508,127 +516,127 @@ writes:
 }
 ```
 
-#### 4.3 回滚后处理
+#### 4.3 Post-Rollback Processing
 
-**处理清单**：
+**Processing Checklist**:
 
 ```json
 {
   "post_rollback_actions": [
     {
-      "action": "通知发布团队",
+      "action": "Notify release team",
       "type": "notification",
       "recipients": ["release_lead", "dev_lead", "product_manager"]
     },
     {
-      "action": "记录回滚事件",
+      "action": "Record rollback event",
       "type": "documentation",
-      "content": "回滚原因、持续时间、影响范围"
+      "content": "Rollback reason, duration, impact scope"
     },
     {
-      "action": "创建事件跟进Ticket",
+      "action": "Create incident follow-up ticket",
       "type": "ticket",
       "template": "post_incident_review"
     },
     {
-      "action": "分析根因",
+      "action": "Analyze root cause",
       "type": "analysis",
-      "deadline": "24小时内"
+      "deadline": "Within 24 hours"
     }
   ]
 }
 ```
 
-## 输出
+## Output
 
-**存储路径**：`docs/monitoring/release-notes.md（“灰度计划”章节）`
+**Storage path**: `docs/monitoring/release-notes.md ("Canary Plan" section)`
 
-**输出文件**：`release_status.json`
+**Output file**: `release_status.json`
 
-## 输出 Schema
+## Output Schema
 
-完整 Schema 和校验规则见 [Reference/schema.md](./Reference/schema.md)
+For complete Schema and validation rules, see [Reference/schema.md](./Reference/schema.md)
 
-## 上游变更响应
+## Upstream Change Response
 
-当上游输入发生变更时，本Skill的响应策略：
+When upstream inputs change, this Skill's response strategy:
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| 发布检查清单变更 | 灰度策略和门禁 | 重新评估灰度门禁条件，标记需人类确认 |
-| 验收报告变更 | 灰度启动条件 | 更新灰度启动条件，重新评估是否可以开始灰度 |
-| 监控指标变更 | 监控配置和告警规则 | 更新监控指标和告警阈值，标记需人类确认 |
-| PRD需求变更 | 灰度范围和功能验证 | 重新评估灰度范围，标记需人类确认 |
+| Release checklist change | Canary strategy and gate | Re-evaluate canary gate conditions, mark for human confirmation |
+| Acceptance report change | Canary start conditions | Update canary start conditions, re-evaluate whether canary can begin |
+| Monitoring metric change | Monitoring configuration and alert rules | Update monitoring metrics and alert thresholds, mark for human confirmation |
+| PRD requirement change | Canary scope and feature verification | Re-evaluate canary scope, mark for human confirmation |
 
-当灰度发布自身变更时，对下游的通知机制：
+When the canary release itself changes, the notification mechanism for downstream:
 
-| 灰度变更类型 | 通知范围 | 通知方式 |
+| Canary Change Type | Notification Scope | Notification Method |
 |-------------|----------|----------|
-| 灰度阶段推进 | release-notes | 标记阶段推进，触发发布说明更新 |
-| 灰度回滚 | 全部下游 | 标记回滚事件，触发问题排查和修复 |
-| 灰度完成 | release-notes | 标记灰度完成，触发全量发布决策 |
+| Canary stage advancement | release-notes | Mark stage advancement, trigger release notes update |
+| Canary rollback | All downstream | Mark rollback event, trigger troubleshooting and fix |
+| Canary complete | release-notes | Mark canary complete, trigger full release decision |
 
 ---
 
-## 决策规则
+## Decision Rules
 
-### 自动回滚规则
+### Auto-Rollback Rules
 
-| 触发条件 | 执行动作 | 优先级 |
+| Trigger Condition | Execution Action | Priority |
 |----------|----------|--------|
-| P0指标超rollback阈值 | 立即自动回滚 | 最高 |
-| 服务完全不可用 | 立即自动回滚 | 最高 |
-| P1指标超rollback阈值 | 5分钟延迟后回滚 | 高 |
-| P2指标超rollback阈值 | 告警，等待人工确认 | 中 |
+| P0 metric exceeds rollback threshold | Immediate auto-rollback | Highest |
+| Service completely unavailable | Immediate auto-rollback | Highest |
+| P1 metric exceeds rollback threshold | Rollback after 5-minute delay | High |
+| P2 metric exceeds rollback threshold | Alert, wait for human confirmation | Medium |
 
-### 阶段通过规则
+### Stage Pass Rules
 
-| 条件 | 决策 |
+| Condition | Decision |
 |------|------|
-| P0指标全部正常 | 可进入下一阶段 |
-| 阶段持续时间已满 | 评估是否进入下一阶段 |
-| 存在P0告警（未超阈值） | 延长观察时间 |
-| 存在P1告警 | 警告，进入下一阶段 |
+| All P0 metrics normal | Can proceed to next stage |
+| Stage duration met | Evaluate whether to proceed to next stage |
+| P0 alert exists (not exceeding threshold) | Extend observation time |
+| P1 alert exists | Warning, proceed to next stage |
 
-## 质量检查
+## Quality Checks
 
 ### Quality Gates
 
-| 检查项 | 标准 | 未达标处理 |
+| Check Item | Standard | Handling on Failure |
 |--------|------|------------|
-| 发布前验证（P0） | 所有验证项通过 | 阻止发布 |
-| P0指标稳定（P0） | 指标无恶化趋势 | 停止灰度 |
-| 回滚机制就绪（P0） | Feature Flag可用 | 阻止发布 |
-| 告警配置正确（P1） | 所有指标已配置告警 | 阻止发布 |
+| Pre-release verification (P0) | All verification items passed | Block release |
+| P0 metric stability (P0) | No metric deterioration trend | Stop canary |
+| Rollback mechanism ready (P0) | Feature Flag available | Block release |
+| Alert configuration correct (P1) | All metrics have alerts configured | Block release |
 
-### 质量检查清单
+### Quality Checklist
 
-- [ ] 发布前验证全部通过（P0）
-- [ ] Feature Flag配置正确（P0）
-- [ ] 监控告警已配置（P1）
-- [ ] 回滚机制就绪（P0）
-- [ ] 值班人员已确认（P1）
-- [ ] 阶段转换记录完整（P2）
+- [ ] Pre-release verification all passed (P0)
+- [ ] Feature Flag configuration correct (P0)
+- [ ] Monitoring alerts configured (P1)
+- [ ] Rollback mechanism ready (P0)
+- [ ] On-call personnel confirmed (P1)
+- [ ] Stage transition records complete (P2)
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失范围 | 降级方案 | 输出影响 |
+| Missing Scope | Degradation Plan | Output Impact |
 |----------|----------|----------|
-| 发布内容缺失 | 用户提供发布功能列表 → 生成灰度计划模板 | 发布内容细节需人工补充 |
-| Feature Flag配置缺失 | 生成灰度计划但不包含Flag自动配置步骤 | 需人工配置Feature Flag |
-| 监控指标缺失 | 使用默认P0/P1/P2指标模板，标注"待确认" | 告警阈值基于通用模板 |
-| 发布内容 + Feature Flag + 监控指标均缺失 | 用户提供发布功能列表 → 生成灰度计划模板 | 输出灰度计划模板，各配置项标注"待确认" |
+| Release content missing | User provides release feature list → generate canary plan template | Release content details need manual supplementation |
+| Feature Flag configuration missing | Generate canary plan but exclude Flag auto-configuration steps | Feature Flag needs manual configuration |
+| Monitoring metrics missing | Use default P0/P1/P2 metric template, mark "to be confirmed" | Alert thresholds based on generic template |
+| Release content + Feature Flag + monitoring metrics all missing | User provides release feature list → generate canary plan template | Output canary plan template, each configuration item marked "to be confirmed" |
 
-### 数据获取说明
+### Data Acquisition Instructions
 
-当上游文件缺失时，需用户提供以下信息以支撑降级生成：
-- **发布功能列表**：本次发布包含的功能和变更
-- **回滚版本**（可选）：可回滚的上一版本号
-- **关键监控指标**（可选）：需要重点关注的业务和技术指标
+When upstream files are missing, the user needs to provide the following information to support degraded generation:
+- **Release feature list**: Features and changes included in this release
+- **Rollback version** (optional): Previous version number that can be rolled back to
+- **Key monitoring metrics** (optional): Business and technical metrics requiring special attention
 
-## 执行日志
+## Execution Log
 
 ```json
 {

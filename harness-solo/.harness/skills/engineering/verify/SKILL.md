@@ -1,10 +1,10 @@
 ---
 name: verify
-description: 交付验证，声称完成前的强制综合检查
+description: Delivery Verification — mandatory comprehensive check before claiming completion
 triggers:
-  - 声称任务完成前（强制）
-  - LOOP 的 VERIFY 阶段
-  - 合并/推送前
+  - Before claiming a task is complete (mandatory)
+  - During the VERIFY phase of LOOP
+  - Before merge/push
 reads:
   - loops/LOOP.md
   - rules/security.md
@@ -19,193 +19,193 @@ writes:
   - loops/specs/<feature>/iterations.log
 ---
 
-# Verify — 交付验证
+# Verify — Delivery Verification
 
-## 铁律
-**没有证据不声称完成。** "应该过了"不算证据，必须展示实际输出。
+## Iron Rule
+**No claiming completion without evidence.** "Should have passed" is not evidence; you must show the actual output.
 
-## 流程
+## Process
 
-### 1. 测试通过检查
-运行项目测试命令，**展示完整输出**（不是"测试通过"四个字）：
+### 1. Test Pass Check
+Run the project's test command and **show the full output** (not just the four words "tests passed"):
 ```bash
-<项目的测试命令>
+<the project's test command>
 ```
-- 全部通过 → 继续
-- 有失败 → 写入 state.yaml 的 last_error，回到 tdd
+- All pass → continue
+- Any failure → write to state.yaml's last_error and return to tdd
 
-### 2. 验收标准逐条对照
-读 spec.md 的 AC-xxx 和 DAC-xxx，逐条检查（两源）：
+### 2. Acceptance Criteria Item-by-Item Check
+Read the AC-xxx and DAC-xxx in spec.md and check item by item (both sources):
 
-**工程 AC**（来自 spec.md 的 AC-xxx）：
+**Engineering ACs** (from spec.md's AC-xxx):
 ```
-## 验收标准 - 工程 AC
-- AC-001: ✓ <如何满足，引用测试或演示>
-- AC-002: ✓ <如何满足>
-- AC-003: ✗ <未满足，原因>
-```
-
-**设计 AC**（来自 spec.md 的 DAC-xxx，由 design-to-solo.md 流入）：
-```
-## 验收标准 - 设计 AC
-- DAC-001: ✓ <如何满足，如"对比度 4.8:1 ≥ 4.5:1，用 axe-core 验证">
-- DAC-002: ✓ <如何满足，如"375px 视口测试无溢出，截图见 evidence">
-- DAC-003: ✗ <未满足，原因>
+## Acceptance Criteria - Engineering AC
+- AC-001: ✓ <how it is satisfied, citing a test or demo>
+- AC-002: ✓ <how it is satisfied>
+- AC-003: ✗ <not satisfied, reason>
 ```
 
-**设计 AC 检查方式**：
-- 视觉类（对比度/间距/字号）→ 用设计 token 值对照，或用浏览器 DevTools 检查
-- 响应式类（断点/溢出）→ 用 webapp-testing 的响应式测试
-- 交互类（hover/focus/动画）→ 手动演示或 E2E 测试
-- 如设计 AC 无法在工程层验证（如纯视觉感受），标注"需 harness-design 复核"
+**Design ACs** (from spec.md's DAC-xxx, flowed in from design-to-solo.md):
+```
+## Acceptance Criteria - Design AC
+- DAC-001: ✓ <how it is satisfied, e.g. "contrast 4.8:1 ≥ 4.5:1, verified with axe-core">
+- DAC-002: ✓ <how it is satisfied, e.g. "no overflow at 375px viewport, screenshot in evidence">
+- DAC-003: ✗ <not satisfied, reason>
+```
 
-- 全部 ✓ → 继续
-- 有 ✗ → 回到 tdd 补实现（工程 AC）或反馈给 harness-design（设计 AC 不合理时）
+**Design AC check methods**:
+- Visual (contrast/spacing/font size) → compare against design token values, or use browser DevTools
+- Responsive (breakpoints/overflow) → use webapp-testing's responsive tests
+- Interaction (hover/focus/animation) → manual demo or E2E test
+- If a design AC cannot be verified at the engineering layer (e.g. pure visual feel), mark it as "needs harness-design review"
 
-### 3. 宪法合规检查
-读 constitution.md，逐条检查：
-- [ ] 是否引入未审批的新依赖？（详见 `dependency-management` skill 的审批流程）
-- [ ] 新增 API 是否有测试？
-- [ ] schema 变更是否有迁移脚本？（详见 `migration` skill）
-- [ ] 其他项目特定条款
+- All ✓ → continue
+- Any ✗ → return to tdd to add the implementation (engineering AC) or feed back to harness-design (when the design AC is unreasonable)
 
-### 4. 安全扫描（强制，跨平台）
+### 3. Constitution Compliance Check
+Read constitution.md and check item by item:
+- [ ] Are unapproved new dependencies introduced? (see the approval flow in the `dependency-management` skill)
+- [ ] Do new APIs have tests?
+- [ ] Do schema changes have migration scripts? (see the `migration` skill)
+- [ ] Other project-specific clauses
 
-**方式 A（推荐，Agent 用工具完成，不依赖 bash）**：
+### 4. Security Scan (mandatory, cross-platform)
 
-按 `rules/security.md` 的检查清单，Agent 用工具扫描本次变更的文件：
+**Method A (recommended; the Agent uses tools, no bash dependency)**:
 
-- **密钥泄露**：用 Grep 搜索变更文件中的敏感模式：
+Following the checklist in `rules/security.md`, the Agent uses tools to scan the files changed in this change:
+
+- **Secret leakage**: use Grep to search for sensitive patterns in changed files:
   ```
   (sk-|api[_-]?key|secret|password|token|AKIA|ghp_)[=:]\s*['"]?[A-Za-z0-9+/=_-]{16,}
   ```
-  命中 → 标记为泄露，必须修复后重新验证
+  Hit → mark as leakage; must fix and re-verify
 
-- **硬编码凭证**：用 Grep 搜索 IP/数据库连接串/私钥头：
+- **Hardcoded credentials**: use Grep to search for IPs/DB connection strings/private key headers:
   ```
   BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY|mongodb://|postgres://|redis://.*:.*@
   ```
 
-- **危险命令**：用 Grep 搜索 `rm -rf|curl.*\|.*sh|wget.*\|.*sh`
+- **Dangerous commands**: use Grep to search for `rm -rf|curl.*\|.*sh|wget.*\|.*sh`
 
-- **.gitignore 检查**：用 Read 读 .gitignore，确认 .env / node_modules / dist 等已忽略
+- **.gitignore check**: use Read to read .gitignore and confirm .env / node_modules / dist etc. are ignored
 
-**方式 B（可选脚本兜底）**：
-如果当前环境 bash 可用，可执行：
+**Method B (optional script fallback)**:
+If bash is available in the current environment, you may run:
 ```bash
 bash .harness/scripts/security-check.sh
 ```
-脚本逻辑与方式 A 一致，作为可选兜底。**Windows 或无 bash 环境下，必须用方式 A。**
+The script logic is the same as Method A, as an optional fallback. **On Windows or in environments without bash, you must use Method A.**
 
-**展示完整输出**，不能只写"安全检查通过"。
-- 通过 → 继续
-- 未通过 → 修复后重新验证
+**Show the full output**; do not just write "security check passed".
+- Pass → continue
+- Fail → fix and re-verify
 
-### 5. 熵检查（可选，跨平台）
+### 5. Entropy Check (optional, cross-platform)
 
-**方式 A（推荐，Agent 用工具完成）**：
+**Method A (recommended; the Agent uses tools)**:
 
-读取 `.harness/memory/baseline.json`（上次 session-end 写入），与当前指标对比：
+Read `.harness/memory/baseline.json` (written by the last session-end) and compare against current metrics:
 
-- **files 增长率**：用 Glob 统计当前源文件数，对比 baseline.files
-  - 增长 > 20% 且绝对值 > 50 → WARN（可能文件爆炸）
-- **loc 增长率**：用 Read 累加当前代码行数，对比 baseline.loc
-  - 增长 > 50% → WARN（可能过度实现）
-- **deps 增长**：读依赖清单，对比 baseline.deps
-  - 新增 > 3 个 → WARN（可能依赖膨胀）
-- **todos 积压**：用 Grep 搜索 TODO/FIXME
-  - 数量 > 20 或较 baseline 增长 > 50% → WARN（技术债积累）
+- **files growth rate**: use Glob to count the current number of source files and compare against baseline.files
+  - Growth > 20% and absolute value > 50 → WARN (possible file explosion)
+- **loc growth rate**: use Read to sum the current lines of code and compare against baseline.loc
+  - Growth > 50% → WARN (possible over-implementation)
+- **deps growth**: read the dependency list and compare against baseline.deps
+  - More than 3 new → WARN (possible dependency bloat)
+- **todos backlog**: use Grep to search for TODO/FIXME
+  - Count > 20 or growth > 50% over baseline → WARN (tech debt accumulating)
 
-**方式 B（可选脚本兜底）**：
-如果当前环境 bash 可用，可执行：
+**Method B (optional script fallback)**:
+If bash is available in the current environment, you may run:
 ```bash
 bash .harness/scripts/entropy-check.sh
 ```
 
-如果有 WARN，评估是否需要先重构再交付。
+If there are WARNs, evaluate whether to refactor before delivery.
 
-### 6. 前端验证（如涉及前端代码）
-用 Glob 扫描本次变更的文件，如包含 `*.tsx` / `*.vue` / `*.svelte` / `*.html` / `*.css`，调用 `webapp-testing` skill 做前端专项验证：
-- 构建验证（强制）
-- 类型检查（如有 TypeScript）
-- Lint 检查（如有）
-- 结构验证（组件/可访问性/路由）
-- 前端安全（XSS / 硬编码地址）
+### 6. Frontend Verification (if frontend code is involved)
+Use Glob to scan the files changed in this change; if they include `*.tsx` / `*.vue` / `*.svelte` / `*.html` / `*.css`, invoke the `webapp-testing` skill for frontend-specific verification:
+- Build verification (mandatory)
+- Type check (if TypeScript)
+- Lint check (if any)
+- Structural verification (components/accessibility/routing)
+- Frontend security (XSS / hardcoded addresses)
 
-结果合并到 evidence.md 的"前端验证"章节。如无前端代码变更，跳过本步骤。
+Merge the results into the "Frontend Verification" section of evidence.md. If there are no frontend code changes, skip this step.
 
-### 7. 写入证据
-将以上 6 项的实际输出汇总写入 evidence.md：
+### 7. Write Evidence
+Summarize the actual output of the above 6 items into evidence.md:
 ```markdown
-# 验证证据
+# Verification Evidence
 
-## 时间
+## Time
 YYYY-MM-DD HH:MM
 
-## 1. 测试结果
-$ <命令>
-<实际输出>
+## 1. Test Results
+$ <command>
+<actual output>
 
-## 2. 验收标准
-### 工程 AC
+## 2. Acceptance Criteria
+### Engineering AC
 - AC-001: ✓ ...
 - AC-002: ✓ ...
 
-### 设计 AC（如涉及前端）
+### Design AC (if frontend is involved)
 - DAC-001: ✓ ...
 - DAC-002: ✓ ...
-（如无 design-to-solo.md，填"无设计 AC"）
+(If there is no design-to-solo.md, fill in "no design AC")
 
-## 3. 宪法合规
-- [x] 零新依赖
-- [x] API 有测试
-- [x] 迁移脚本
+## 3. Constitution Compliance
+- [x] Zero new dependencies
+- [x] APIs have tests
+- [x] Migration scripts
 
-## 4. 安全扫描
-方式：Agent Grep 扫描 / 可选 bash security-check.sh
-<实际输出，列出扫描的模式和命中情况>
+## 4. Security Scan
+Method: Agent Grep scan / optional bash security-check.sh
+<actual output, listing the patterns scanned and hits>
 
-## 5. 熵检查
-方式：Agent Glob+Read 统计 / 可选 bash entropy-check.sh
-<实际输出或"跳过">
+## 5. Entropy Check
+Method: Agent Glob+Read statistics / optional bash entropy-check.sh
+<actual output or "skipped">
 
-## 6. 前端验证（如涉及）
-方式：调用 webapp-testing skill
-<实际输出或"无前端代码变更，跳过">
+## 6. Frontend Verification (if involved)
+Method: invoke webapp-testing skill
+<actual output or "no frontend code changes, skipped">
 ```
 
-### 8. 更新状态
-按 `loops/LOOP.md` 的 "state.yaml Schema" 更新：
+### 8. Update State
+Update per the "state.yaml Schema" in `loops/LOOP.md`:
 - `stage`: `verify`
-- `status`: `done`（全部通过）或 `retrying`（有失败）
-- `last_error`: 成功清空为 ""，失败填错误描述
+- `status`: `done` (all pass) or `retrying` (any failure)
+- `last_error`: clear to "" on success; fill in error description on failure
 
-字段完整定义和写入责任见 LOOP.md。
+For full field definitions and write responsibilities, see LOOP.md.
 
-**更新 iterations.log（必须追加，禁止覆盖）**：
-- 工具方式：先 Read 当前 iterations.log → 拼接新行 → Write 回去
-- 或终端命令：`echo "[YYYY-MM-DD HH:MM] iter=<N> stage=verify → PASSED" >> .harness/loops/specs/<feature>/iterations.log`
-- 禁止用 Write 直接覆盖 iterations.log（会抹掉历史迭代记录）
+**Update iterations.log (must append, overwriting is forbidden)**:
+- Tool approach: first Read the current iterations.log → append the new line → Write it back
+- Or terminal command: `echo "[YYYY-MM-DD HH:MM] iter=<N> stage=verify → PASSED" >> .harness/loops/specs/<feature>/iterations.log`
+- Do not use Write to overwrite iterations.log directly (it would erase historical iteration records)
 
 ```
 [YYYY-MM-DD HH:MM] iter=<N> stage=verify → PASSED
 ```
 
-## 禁止事项
-- 跳过任何一项检查
-- 只写"通过"不展示实际输出（违反铁律）
-- 测试失败还声称完成
-- 安全扫描没跑就说"没问题"
-- 涉及前端代码但跳过前端验证（步骤 6）
+## Prohibitions
+- Skipping any check
+- Writing only "passed" without showing the actual output (violates the iron rule)
+- Claiming completion while tests fail
+- Saying "no problem" without running the security scan
+- Skipping frontend verification when frontend code is involved (step 6)
 
-## 与 LOOP 的关系
-本 skill 对应 LOOP 的 VERIFY 阶段。
-- tdd（ACT）→ verify（VERIFY）→ 通过 → 可进入 code-review
-- tdd（ACT）→ verify（VERIFY）→ 失败 → systematic-debugging → 回到 tdd
+## Relationship with LOOP
+This skill corresponds to the VERIFY phase of LOOP.
+- tdd (ACT) → verify (VERIFY) → pass → may enter code-review
+- tdd (ACT) → verify (VERIFY) → fail → systematic-debugging → return to tdd
 
-## 与其他 skill 的分工
-| Skill | 职责 | 时机 |
+## Division of Labor with Other Skills
+| Skill | Responsibility | Timing |
 |-------|------|------|
-| tdd | 写测试、跑测试 | ACT 阶段 |
-| verify | 综合验证（测试+AC+宪法+安全+熵） | VERIFY 阶段 |
-| code-review | 代码质量审查 | LOOP 之后 |
+| tdd | Write tests, run tests | ACT phase |
+| verify | Comprehensive verification (tests+AC+constitution+security+entropy) | VERIFY phase |
+| code-review | Code quality review | After LOOP |

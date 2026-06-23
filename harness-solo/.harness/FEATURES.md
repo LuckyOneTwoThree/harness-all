@@ -1,26 +1,26 @@
-# FEATURES.md — 功能状态看板
+# FEATURES.md — Feature status board
 
-> 动态状态跟踪（开发中更新）。
-> 与 PROJECT.md 的分工：PROJECT.md 是静态定义（立项时写），本文件是动态状态（开发中更新）。
-> 更新触发点：verify skill 通过后，将对应功能状态改为 done。
+> Dynamic status tracking (updated during development).
+> Division of labor with PROJECT.md: PROJECT.md is a static definition (written at project initiation), while this file is dynamic status (updated during development).
+> Update trigger: after the verify skill passes, change the corresponding feature status to done.
 
-## 功能状态
+## Feature status
 
-| 编号 | 功能 | 优先级 | 状态 | 最后更新 | 说明 |
+| ID | Feature | Priority | Status | Last updated | Note |
 |------|------|--------|------|---------|------|
-| F-001 | [功能名] | P1 | pending | | |
+| F-001 | [feature name] | P1 | pending | | |
 
-## 状态定义
+## Status definitions
 
-- `pending` — 未开始
-- `in_progress` — 开发中（对应 loops/specs/ 有 state.yaml）
-- `review` — verify 通过，待 code-review
-- `done` — 完全完成（code-review 通过）
-- `blocked` — 被阻塞（说明原因）
+- `pending` — not started
+- `in_progress` — in development (corresponding loops/specs/ has state.yaml)
+- `review` — verify passed, awaiting code-review
+- `done` — fully complete (code-review passed)
+- `blocked` — blocked (explain the reason)
 
-## 更新规则
+## Update rules
 
-1. **开始开发**：状态改 `in_progress`，创建 `loops/specs/<feature>/`
-2. **verify 通过**：状态改 `review`
-3. **code-review 通过**：状态改 `done`
-4. **session-end 批量更新**：扫描 `loops/specs/*/state.yaml` 中 status:done 的功能，批量同步到本文件
+1. **Start development**: change status to `in_progress`, create `loops/specs/<feature>/`
+2. **verify passed**: change status to `review`
+3. **code-review passed**: change status to `done`
+4. **session-end batch update**: scan features with status:done in `loops/specs/*/state.yaml`, batch sync to this file

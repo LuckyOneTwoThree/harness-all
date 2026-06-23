@@ -1,18 +1,18 @@
 ---
 name: business-orchestrator
-description: 当需要设计或评估产品商业模式时使用。商业模式指挥官，调度business-model-canvas/value-fit/pricing/strategy-report。关键词：商业模式、商业画布、定价策略、商业战略报告、怎么赚钱、盈利模式、收费模式、商业评估。
+description: Used when designing or evaluating a product business model. Business Model Orchestrator, dispatching business-model-canvas/value-fit/pricing/strategy-report. Keywords: business model, business canvas, pricing strategy, business strategy report, how to make money, revenue model, charging model, business assessment.
 metadata:
-  module: "产品商业与战略"
-  sub-module: "商业模式设计"
+  module: "Product Business & Strategy"
+  sub-module: "Business Model Design"
   type: "orchestrator"
   version: "7.1"
-  domain_tags: ["电商", "SaaS", "金融", "教育", "通用"]
+  domain_tags: ["E-commerce", "SaaS", "Finance", "Education", "General"]
   trigger_examples:
-    - "帮我设计商业模式"
-    - "产品怎么赚钱"
-    - "设计一下定价策略"
-    - "评估一下商业模式是否可行"
-    - "做一下商业画布"
+    - "Help me design a business model"
+    - "How does the product make money"
+    - "Design a pricing strategy"
+    - "Assess whether the business model is viable"
+    - "Create a business canvas"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -23,19 +23,19 @@ writes:
   - memory/progress.md
 ---
 
-# 商业模式设计指挥官
+# Business Model Design Orchestrator
 
-## 核心原则
+## Core Principles
 
-商业模式不是设计出来的，是验证出来的。
+A business model is not designed, it is validated.
 
-1. **验证优先于设计**——商业模式假设必须可验证，每个画布要素都应附带验证方法和成功标准
-2. **财务闭环驱动**——单位经济模型先于规模扩张假设，确保单点盈利逻辑成立再推演增长
-3. **多方案并行比较**——定价与收入模式生成多个可比较方案，避免单一方案锁定思维
+1. **Validation over design** — Business model assumptions must be verifiable; each canvas element should come with a validation method and success criteria
+2. **Financial closed-loop driven** — Unit economics precede scale expansion assumptions; ensure single-point profitability logic holds before projecting growth
+3. **Multi-option parallel comparison** — Pricing and revenue models generate multiple comparable options to avoid single-option lock-in thinking
 
-## 编排协议
+## Orchestration Protocol
 
-遵循 [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) 编排协议。
+Follows the [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) orchestration protocol.
 
 ## Pipeline
 
@@ -45,145 +45,145 @@ version: 7.1
 
 stages:
   - id: phase-1
-    name: "商业模式画布"
+    name: "Business Model Canvas"
     skills: [business-model-canvas]
     gate:
-      condition: "BMC 9格全部填充、假设已标注"
-      fail_action: "补充缺失要素，无法填充的标注为待验证假设"
+      condition: "BMC 9 blocks all filled, assumptions annotated"
+      fail_action: "Fill in missing elements; those that cannot be filled are annotated as assumptions to be validated"
 
   - id: phase-2
-    name: "价值匹配验证"
+    name: "Value Fit Validation"
     depends_on: [phase-1]
     skills: [business-value-fit]
     gate:
-      condition: "价值主张匹配度≥3.0"
-      fail_action: "调整价值主张或目标用户，重新验证"
+      condition: "Value proposition fit score ≥ 3.0"
+      fail_action: "Adjust value proposition or target users, re-validate"
 
   - id: phase-3
-    name: "定价策略"
+    name: "Pricing Strategy"
     depends_on: [phase-1, phase-2]
     skills: [business-pricing]
     gate:
-      condition: "3个定价方案已生成"
-      fail_action: "补充定价方案，确保差异化"
+      condition: "3 pricing options generated"
+      fail_action: "Supplement pricing options, ensure differentiation"
 
   - id: phase-4
-    name: "商业战略报告"
+    name: "Business Strategy Report"
     depends_on: [phase-1, phase-2, phase-3]
     skills: [business-strategy-report]
     gate:
-      condition: "报告执行摘要完整，至少2个战略方向"
-      fail_action: "补充战略方向或标注建议补充战略分析"
+      condition: "Report executive summary complete, at least 2 strategic directions"
+      fail_action: "Supplement strategic directions or flag 'strategic analysis supplementation recommended'"
 
 post_pipeline:
   - action: stage-summary
     output: output/phase-reports/business-orchestrator.json
 ```
 
-## 阶段执行计划
+## Stage Execution Plan
 
-#### 调用 business-model-canvas
+#### Call business-model-canvas
 
 ```
 Skill: business-model-canvas
-输入:
-  product_context: 来自 user-research-user-modeling / opportunity-definition
-  market_data: 来自 market-competitor-analysis
-输出: docs/strategy/business-strategy.md（“商业模式画布”章节）
-验证: BMC 9格全部填充、假设已标注
-模式: 🤖→👤
+Inputs:
+  product_context: from user-research-user-modeling / opportunity-definition
+  market_data: from market-competitor-analysis
+Output: docs/strategy/business-strategy.md ("Business Model Canvas" section)
+Validation: BMC 9 blocks all filled, assumptions annotated
+Mode: 🤖→👤
 ```
 
-#### 调用 business-value-fit
+#### Call business-value-fit
 
 ```
 Skill: business-value-fit
-输入:
-  bmc_value_proposition: 来自阶段1 docs/strategy/business-strategy.md（“商业模式画布”章节）
-  user_research_data: 来自 user-research-user-modeling / user-research-voice-analysis
-输出: docs/strategy/business-strategy.md（“价值匹配”章节）
-验证: 价值主张匹配度≥3.0
-模式: 🤖
+Inputs:
+  bmc_value_proposition: from phase 1 docs/strategy/business-strategy.md ("Business Model Canvas" section)
+  user_research_data: from user-research-user-modeling / user-research-voice-analysis
+Output: docs/strategy/business-strategy.md ("Value Fit" section)
+Validation: Value proposition fit score ≥ 3.0
+Mode: 🤖
 ```
 
-#### 调用 business-pricing
+#### Call business-pricing
 
 ```
 Skill: business-pricing
-输入:
-  bmc_data: 来自阶段1 docs/strategy/business-strategy.md（“商业模式画布”章节）
-  competitor_pricing_data: 来自 market-competitor-analysis → competitor-analysis.json
-  willingness_to_pay: 用户提供
-输出: docs/strategy/business-strategy.md（“定价策略”章节）
-验证: 3个定价方案已生成
-模式: 🤖→👤
+Inputs:
+  bmc_data: from phase 1 docs/strategy/business-strategy.md ("Business Model Canvas" section)
+  competitor_pricing_data: from market-competitor-analysis → competitor-analysis.json
+  willingness_to_pay: user provided
+Output: docs/strategy/business-strategy.md ("Pricing Strategy" section)
+Validation: 3 pricing options generated
+Mode: 🤖→👤
 ```
 
-#### 调用 business-strategy-report
+#### Call business-strategy-report
 
 ```
 Skill: business-strategy-report
-输入:
-  bmc: 来自阶段1 docs/strategy/business-strategy.md（“商业模式画布”章节）
-  pricing_strategy: 来自阶段3 docs/strategy/business-strategy.md（“定价策略”章节）
-  product_business_info: 用户提供
-  optional_inputs: SWOT、OKR、路线图、定位、价值曲线、差异化评估、利益相关者、北极星指标
-输出: docs/strategy/business-strategy.md（汇总覆盖）
-验证: 报告执行摘要完整，至少2个战略方向
-模式: 🤖→👤
+Inputs:
+  bmc: from phase 1 docs/strategy/business-strategy.md ("Business Model Canvas" section)
+  pricing_strategy: from phase 3 docs/strategy/business-strategy.md ("Pricing Strategy" section)
+  product_business_info: user provided
+  optional_inputs: SWOT, OKR, roadmap, positioning, value curve, differentiation assessment, stakeholders, North Star Metric
+Output: docs/strategy/business-strategy.md (consolidated overwrite)
+Validation: Report executive summary complete, at least 2 strategic directions
+Mode: 🤖→👤
 ```
 
-### 阶段总结（post_pipeline）
+### Stage Summary (post_pipeline)
 
-所有子Skill执行完成后，必须生成阶段总结文档，写入 `output/phase-reports/business-orchestrator.json`，包含以下6项结构（均不可为空）：
+After all sub-Skills have executed, a stage summary document must be generated and written to `output/phase-reports/business-orchestrator.json`, containing the following 6 structural items (none may be empty):
 
-1. **执行概览**：编排器名称与版本、执行时间、子Skill执行状态（成功/失败/降级）
-2. **关键发现**：每个子Skill的核心输出摘要（1-3条）、跨子Skill的交叉洞察
-3. **决策记录**：人类决策点及决策结果、AI自动决策及依据
-4. **产出清单**：所有输出文件路径及内容摘要、产出质量评估（是否通过验证）
-5. **风险与待办**：未通过验证的项、降级执行的项、建议后续跟进的事项
-6. **下游衔接**：本编排器产出可被哪些下游编排器消费、推荐的下一步编排器
+1. **Execution Overview**: Orchestrator name and version, execution time, sub-Skill execution status (success/failure/degraded)
+2. **Key Findings**: Core output summary for each sub-Skill (1-3 items), cross-sub-Skill cross-cutting insights
+3. **Decision Records**: Human decision points and decision results, AI automatic decisions and rationale
+4. **Deliverables List**: All output file paths and content summaries, output quality assessment (whether validation passed)
+5. **Risks and TODOs**: Items that failed validation, items executed in degraded mode, recommended follow-up items
+6. **Downstream Handoff**: Which downstream orchestrators can consume this orchestrator's outputs, recommended next orchestrator
 
-| 参数 | 值 |
+| Parameter | Value |
 |------|-----|
-| 子Skill输出路径 | docs/strategy/ |
-| 总结输出路径 | output/phase-reports/business-orchestrator.json |
-| 审批记录路径 | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
+| Sub-Skill output path | docs/strategy/ |
+| Summary output path | output/phase-reports/business-orchestrator.json |
+| Approval record path | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
 
-下游衔接:
-  primary: planning-orchestrator（商业模式设计完成，进入战略规划）
+Downstream Handoff:
+  primary: planning-orchestrator (business model design complete, proceed to strategic planning)
   alternatives:
     - target: planning-orchestrator
-      reason: 定位已明确，直接进入战略规划
-      condition: 产品定位已在商业模式设计中确定时
+      reason: Positioning is clear, proceed directly to strategic planning
+      condition: When product positioning is determined during business model design
     - target: prd-orchestrator
-      reason: 商业模式和定位均已确定，直接进入PRD生成
-      condition: 商业模式与定位均已完成，需快速进入产品构建时
+      reason: Business model and positioning both determined, proceed directly to PRD generation
+      condition: When both business model and positioning are complete and rapid entry into product construction is needed
   special_cases: []
 
-## 阶段卡口
+## Stage Gates
 
-| 卡口 | 条件 | 未通过处理 |
+| Gate | Condition | Fail Handling |
 |------|------|------------|
-| BMC生成完成 | business-model-canvas输出文件已生成且非空 | 补充缺失要素，无法填充的标注为待验证假设 |
-| 定价方案完成 | pricing输出文件已生成且非空 | 补充缺失方案，确保差异化定位 |
-| 商业战略报告完成 | strategy-report输出文件已生成且非空 | 补充战略方向或标注"建议补充战略分析" |
-| 阶段总结已生成 | output/phase-reports/business-orchestrator.json 已生成且6项结构均非空 | 补充缺失结构项后重新生成 |
+| BMC generation complete | business-model-canvas output file generated and non-empty | Fill in missing elements; those that cannot be filled are annotated as assumptions to be validated |
+| Pricing options complete | pricing output file generated and non-empty | Supplement missing options, ensure differentiated positioning |
+| Business strategy report complete | strategy-report output file generated and non-empty | Supplement strategic directions or flag "strategic analysis supplementation recommended" |
+| Stage summary generated | output/phase-reports/business-orchestrator.json generated and all 6 structural items non-empty | Regenerate after supplementing missing structural items |
 
-## 异常处理
+## Exception Handling
 
-| 异常类型 | 处理策略 |
+| Exception Type | Handling Strategy |
 |----------|----------|
-| 阶段1某子Skill失败 | 暂停编排，输出失败诊断信息，请求人类介入修复后重试该阶段 |
-| 上游数据缺失 | 标注缺失数据项，使用合理假设填充（标注置信度≤0.3），继续执行并在输出中高亮标注 |
-| 关键决策点未获人类确认 | 暂停编排，输出待确认事项清单，等待人类确认后继续 |
-| 所有上游数据全部缺失 | 标注"全数据缺失"状态，输出最小化模板（仅含元信息和空结构），整体置信度设为0.3，强制人类确认是否继续。人类确认后基于用户提供信息和AI知识库推断生成，所有推断内容标注confidence≤0.5和needs_human_validation:true |
-| 阶段总结生成失败 | 基于已完成的子Skill输出生成部分总结，缺失项标注"数据缺失"，不阻塞编排完成 |
+| A sub-Skill in phase 1 fails | Pause orchestration, output failure diagnostics, request human intervention to fix and retry that phase |
+| Upstream data missing | Flag missing data items, fill with reasonable assumptions (annotate confidence ≤0.3), continue execution and highlight in output |
+| Key decision point not confirmed by human | Pause orchestration, output pending confirmation list, wait for human confirmation to continue |
+| All upstream data missing | Flag "all data missing" status, output minimal template (only metadata and empty structure), set overall confidence to 0.3, force human confirmation on whether to continue. After human confirmation, generate based on user-provided info and AI knowledge base inference, all inferred content annotated with confidence≤0.5 and needs_human_validation:true |
+| Stage summary generation fails | Generate partial summary based on completed sub-Skill outputs, missing items flagged "data missing", does not block orchestration completion |
 
-## 人类决策点
+## Human Decision Points
 
-| 决策点 | 触发条件 | 决策内容 |
+| Decision Point | Trigger Condition | Decision Content |
 |--------|----------|----------|
-| 收入模型选择 | 阶段1 business-model-canvas 生成多个收入模式选项 | 人类选择最终收入模式方案 |
-| 定价数字拍板 | 阶段3 business-pricing 提供定价分析和方案 | 人类决定具体定价数字和套餐结构 |
-| 商业战略方向确认 | 阶段4 business-strategy-report 推荐战略方向 | 人类确认最终战略选择 |
+| Revenue model selection | phase 1 business-model-canvas generates multiple revenue model options | Human selects the final revenue model option |
+| Pricing number sign-off | phase 3 business-pricing provides pricing analysis and options | Human decides specific pricing numbers and tier structure |
+| Business strategy direction confirmation | phase 4 business-strategy-report recommends strategic directions | Human confirms the final strategic choice |

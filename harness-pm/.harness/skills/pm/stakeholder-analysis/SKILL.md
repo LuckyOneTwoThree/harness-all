@@ -1,24 +1,24 @@
 ---
 name: stakeholder-analysis
-description: 当需要进行利益相关者分析、干系人对齐或沟通策略设计时使用。整合利益相关者地图、沟通策略和战略简报。关键词：利益相关者、Stakeholder、利益相关者地图、沟通策略。
+description: Used when stakeholder analysis, stakeholder alignment, or communication strategy design is needed. Integrates stakeholder map, communication strategy, and strategic briefs. Keywords: stakeholder, Stakeholder, stakeholder map, communication strategy.
 metadata:
-  module: "产品商业与战略"
-  sub-module: "利益相关者管理"
+  module: "Product Business & Strategy"
+  sub-module: "Stakeholder Management"
   type: "pipeline"
   version: "3.0"
-  domain_tags: ["通用"]
+  domain_tags: ["General"]
   trigger_examples:
-    - "帮我梳理一下利益相关方"
-    - "谁会影响这个项目"
-    - "帮我制定利益相关者管理策略"
-    - "怎么和各方沟通"
-    - "帮我写一份给老板的战略简报"
-    - "一页纸汇报战略"
+    - "Help me map out the stakeholders"
+    - "Who will influence this project"
+    - "Help me develop a stakeholder management strategy"
+    - "How to communicate with each party"
+    - "Help me write a strategic brief for my boss"
+    - "One-page strategy report"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出利益相关方地图和影响力评估"
-  deep_description: "完整分析 + 影响力动态推演 + 沟通策略设计 + 利益平衡方案"
+  quick_description: "Directly output stakeholder map and influence assessment"
+  deep_description: "Complete analysis + influence dynamic simulation + communication strategy design + interest balancing plan"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -28,491 +28,491 @@ writes:
   - memory/progress.md
 ---
 
-# 利益相关者分析
+# Stakeholder Analysis
 
-## 核心原则
+## Core Principles
 
-1. **四类全覆盖**——产品决策者/资源控制者/受影响方/外部相关方四类缺一不可
-2. **双维度量化**——影响力和关注度1-5分评估，四象限分类有据可依
-3. **关键决策者不遗漏**——关键决策者未在地图中则阻塞后续流程
-4. **沟通策略具体化**——每个Stakeholder的沟通策略必须包含关切点和建议话题
-5. **六章节闭环**——背景→机会→选择→成功→风险→资源形成完整逻辑闭环
-6. **数据源标注**——每个章节标注数据来源，不可无据推演
-7. **质量评分门控**——文档质量<60分自动修改，修改后仍不达标则人类审核
-8. **跨部门强制审批**——涉及≥3个部门资源时强制人类审批
-9. **一页纸原则**——决策层没有时间看长文，核心论点必须一页纸说清
-10. **受众适配**——高管侧重战略ROI、团队侧重执行协作、外部侧重价值信任
-11. **关键信息不遗漏**——战略目标/核心风险/行动项缺一不可，缺一则退回
-12. **敏感数据脱敏**——外部简报自动脱敏，行动项>3个时建议聚焦
+1. **Full coverage of four categories** — Product decision makers / resource controllers / affected parties / external stakeholders, all four categories are indispensable
+2. **Dual-dimension quantification** — Influence and interest scored 1-5, four-quadrant classification is evidence-based
+3. **No key decision makers missed** — If key decision makers are not in the map, subsequent flow is blocked
+4. **Specific communication strategy** — Each stakeholder's communication strategy must include concerns and suggested topics
+5. **Six-section closed loop** — Background → Opportunity → Choice → Success → Risk → Resource forms a complete logical loop
+6. **Data source annotation** — Each section annotates data sources, no inference without evidence
+7. **Quality score gating** — Document quality <60 auto-revises; if still below standard after revision, human review
+8. **Cross-department mandatory approval** — When ≥3 departments' resources are involved, mandatory human approval
+9. **One-page principle** — Decision makers have no time for long texts; core arguments must fit on one page
+10. **Audience adaptation** — Executives focus on strategic ROI, teams focus on execution collaboration, externals focus on value trust
+11. **No key information missing** — Strategic goals / core risks / action items are all indispensable; missing any returns for revision
+12. **Sensitive data desensitization** — External briefs auto-desensitized; when action items >3, recommend focusing
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Input
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 商业模式画布 | JSON | 是 | docs/strategy/business-strategy.md（“商业模式画布”章节） | 关键伙伴、客户关系 |
-| 产品/业务信息 | string | 是 | 用户提供 | 产品名称、组织架构、业务模式 |
-| 商业战略报告 | JSON | ○ | docs/strategy/business-strategy.md（汇总覆盖） | 战略方向、OKR、路线图 |
-| 受众类型 | string | 是 | 用户提供 | executive/team/external |
+| Business Model Canvas | JSON | Yes | docs/strategy/business-strategy.md ("Business Model Canvas" section) | Key partners, customer relationships |
+| Product/Business Information | string | Yes | User-provided | Product name, organizational structure, business model |
+| Business Strategy Report | JSON | Optional | docs/strategy/business-strategy.md (summary coverage) | Strategic direction, OKRs, roadmap |
+| Audience Type | string | Yes | User-provided | executive/team/external |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 利益相关者地图 [核心]
+### Step 1: Stakeholder Map [Core]
 
-#### 利益相关者识别
+#### Stakeholder Identification
 
-从4个维度识别利益相关者：
+Identify stakeholders from 4 dimensions:
 
-**1. 产品决策者**
-- 产品负责人
-- 业务负责人
-- 技术负责人
-- 高管层
+**1. Product Decision Makers**
+- Product Owner
+- Business Owner
+- Tech Lead
+- Executive Leadership
 
-**2. 资源控制者**
-- 预算审批人
-- 人力资源
-- 技术资源
-- 数据资源
+**2. Resource Controllers**
+- Budget Approver
+- Human Resources
+- Technical Resources
+- Data Resources
 
-**3. 受影响方**
-- 内部团队
-- 现有用户
-- 合作伙伴
-- 运营团队
+**3. Affected Parties**
+- Internal Teams
+- Existing Users
+- Partners
+- Operations Team
 
-**4. 外部相关方**
-- 监管机构
-- 行业协会
-- 媒体
-- 投资人
+**4. External Stakeholders**
+- Regulatory Bodies
+- Industry Associations
+- Media
+- Investors
 
-#### 影响力-关注度评估
+#### Influence-Interest Assessment
 
-对每个利益相关者进行双维度评估：
+Assess each stakeholder on two dimensions:
 
-**影响力评分 (1-5)**：
+**Influence Score (1-5)**:
 ```
-5分：有最终决策权
-4分：有重大影响权
-3分：有中等影响
-2分：有较小影响
-1分：几乎无影响
-```
-
-**关注度评分 (1-5)**：
-```
-5分：极度关注，主动参与
-4分：高度关注，定期跟进
-3分：中等关注，偶尔过问
-2分：低度关注，被动了解
-1分：几乎不关注
+5: Has final decision authority
+4: Has significant influence
+3: Has moderate influence
+2: Has minor influence
+1: Almost no influence
 ```
 
-#### 四象限分类
+**Interest Score (1-5)**:
+```
+5: Extremely concerned, actively involved
+4: Highly concerned, follows up regularly
+3: Moderately concerned, occasionally checks in
+2: Low concern, passively informed
+1: Almost no concern
+```
 
-基于影响力-关注度矩阵进行分类：
+#### Four-Quadrant Classification
+
+Classify based on the influence-interest matrix:
 
 ```
-          │ 高关注度        │ 低关注度
+          │ High Interest    │ Low Interest
 ──────────┼─────────────────┼──────────────
-高影响力  │ 重点管理        │ 保持满意
+High Influence │ Manage Closely   │ Keep Satisfied
           │ (Key Player)    │ (Keep Satisfied)
 ──────────┼─────────────────┼──────────────
-低影响力  │ 保持告知        │ 最小关注
+Low Influence  │ Keep Informed    │ Minimal Effort
           │ (Keep Informed) │ (Minimal Effort)
 ```
 
-#### 沟通策略制定
+#### Communication Strategy Formulation
 
-为每个利益相关者制定沟通策略：
+Develop a communication strategy for each stakeholder:
 
-| 要素 | 内容 |
+| Element | Content |
 |------|------|
-| 沟通频率 | 日常/周度/月度/按需 |
-| 沟通方式 | 会议/邮件/简报/一对一 |
-| 关切点 | 该Stakeholder最关心什么 |
-| 建议话题 | 沟通时应该讨论什么 |
-| 风险 | 不沟通可能导致的后果 |
+| Frequency | Daily/Weekly/Monthly/As needed |
+| Method | Meeting/Email/Brief/1-on-1 |
+| Concerns | What this stakeholder cares about most |
+| Suggested Topics | What to discuss during communication |
+| Risk | Consequences of not communicating |
 
-### Step 2: 沟通策略 [核心]
+### Step 2: Communication Strategy [Core]
 
-#### 文档结构规划
+#### Document Structure Planning
 
-确定文档的6个核心章节：
+Determine the 6 core sections of the document:
 
-1. **背景与现状**：为什么需要利益相关者管理
-2. **机会与挑战**：利益相关者带来的机会和挑战
-3. **策略选择**：针对不同利益相关者的策略
-4. **成功标准**：如何衡量策略成功
-5. **风险与预案**：利益相关者管理中的风险
-6. **资源与行动**：需要的资源和行动计划
+1. **Background & Current State**: Why stakeholder management is needed
+2. **Opportunities & Challenges**: Opportunities and challenges brought by stakeholders
+3. **Strategy Selection**: Strategies for different stakeholders
+4. **Success Criteria**: How to measure strategy success
+5. **Risks & Contingencies**: Risks in stakeholder management
+6. **Resources & Actions**: Required resources and action plan
 
-#### 背景与现状
+#### Background & Current State
 
-整合利益相关者地图和战略报告：
+Integrate stakeholder map and strategy report:
 
-**内容要点**：
-- 产品战略背景
-- 利益相关者全景图
-- 关键利益相关者识别
-- 当前关系状态
+**Key Content**:
+- Product strategic context
+- Stakeholder panorama
+- Key stakeholder identification
+- Current relationship status
 
-#### 机会与挑战
+#### Opportunities & Challenges
 
-分析利益相关者带来的机会和挑战：
+Analyze opportunities and challenges brought by stakeholders:
 
-**机会分析**：
-- 哪些利益相关者可以成为战略助力
-- 如何利用影响力高的支持者
-- 合作机会识别
+**Opportunity Analysis**:
+- Which stakeholders can become strategic allies
+- How to leverage high-influence supporters
+- Partnership opportunity identification
 
-**挑战分析**：
-- 哪些利益相关者可能成为阻碍
-- 利益冲突识别
-- 潜在风险点
+**Challenge Analysis**:
+- Which stakeholders may become obstacles
+- Interest conflict identification
+- Potential risk points
 
-#### 策略选择
+#### Strategy Selection
 
-为每个关键利益相关者制定策略：
+Develop a strategy for each key stakeholder:
 
-| 利益相关者 | 当前态度 | 目标态度 | 策略 | 关键行动 |
+| Stakeholder | Current Attitude | Target Attitude | Strategy | Key Actions |
 |-----------|---------|---------|------|---------|
-| 产品VP | 支持 | 强力支持 | 深度参与 | 周度战略对齐会 |
-| 技术总监 | 中立 | 支持 | 利益绑定 | 技术方案联合评审 |
-| 财务总监 | 观望 | 支持 | 数据说服 | ROI专项汇报 |
+| Product VP | Support | Strong Support | Deep Involvement | Weekly strategy alignment meeting |
+| Tech Director | Neutral | Support | Interest Alignment | Joint technical solution review |
+| Finance Director | Wait-and-see | Support | Data Persuasion | ROI dedicated report |
 
-#### 成功标准
+#### Success Criteria
 
-定义策略成功的衡量标准：
+Define metrics for strategy success:
 
-| 指标 | 当前值 | 目标值 | 衡量方式 |
+| Metric | Current Value | Target Value | Measurement Method |
 |------|--------|--------|---------|
-| 关键决策者支持率 | 60% | 90% | 决策通过率 |
-| 资源获取效率 | 中 | 高 | 资源申请周期 |
-| 利益相关者满意度 | 3.5 | 4.5 | 季度调研 |
+| Key Decision Maker Support Rate | 60% | 90% | Decision pass rate |
+| Resource Acquisition Efficiency | Medium | High | Resource request cycle |
+| Stakeholder Satisfaction | 3.5 | 4.5 | Quarterly survey |
 
-#### 风险与预案
+#### Risks & Contingencies
 
-识别利益相关者管理中的风险：
+Identify risks in stakeholder management:
 
-| 风险 | 概率 | 影响 | 预案 |
+| Risk | Probability | Impact | Contingency |
 |------|------|------|------|
-| 关键决策者变更 | 中 | 高 | 建立多决策者关系 |
-| 利益冲突升级 | 低 | 高 | 提前识别+调解机制 |
-| 沟通不畅 | 中 | 中 | 定期沟通+反馈机制 |
+| Key decision maker change | Medium | High | Build relationships with multiple decision makers |
+| Interest conflict escalation | Low | High | Early identification + mediation mechanism |
+| Poor communication | Medium | Medium | Regular communication + feedback mechanism |
 
-#### 文档组装
+#### Document Assembly
 
-**文档结构**：
+**Document Structure**:
 
 ```
-# {产品名}利益相关者战略文档
+# {Product Name} Stakeholder Strategy Document
 
-## 1. 背景与现状
-### 1.1 战略背景
-### 1.2 利益相关者全景图
-### 1.3 关键利益相关者
+## 1. Background & Current State
+### 1.1 Strategic Context
+### 1.2 Stakeholder Panorama
+### 1.3 Key Stakeholders
 
-## 2. 机会与挑战
-### 2.1 战略助力识别
-### 2.2 潜在阻碍分析
-### 2.3 利益冲突地图
+## 2. Opportunities & Challenges
+### 2.1 Strategic Ally Identification
+### 2.2 Potential Obstacle Analysis
+### 2.3 Interest Conflict Map
 
-## 3. 策略选择
-### 3.1 重点管理策略
-### 3.2 保持满意策略
-### 3.3 保持告知策略
-### 3.4 最小关注策略
+## 3. Strategy Selection
+### 3.1 Manage Closely Strategy
+### 3.2 Keep Satisfied Strategy
+### 3.3 Keep Informed Strategy
+### 3.4 Minimal Effort Strategy
 
-## 4. 成功标准
-### 4.1 关键指标
-### 4.2 衡量方式
-### 4.3 评估周期
+## 4. Success Criteria
+### 4.1 Key Metrics
+### 4.2 Measurement Methods
+### 4.3 Evaluation Cycle
 
-## 5. 风险与预案
-### 5.1 风险矩阵
-### 5.2 缓解措施
-### 5.3 应急预案
+## 5. Risks & Contingencies
+### 5.1 Risk Matrix
+### 5.2 Mitigation Measures
+### 5.3 Contingency Plans
 
-## 6. 资源与行动
-### 6.1 资源需求
-### 6.2 行动计划
-### 6.3 时间线
+## 6. Resources & Actions
+### 6.1 Resource Requirements
+### 6.2 Action Plan
+### 6.3 Timeline
 
-## 附录
-- 利益相关者详细档案
-- 沟通记录模板
-- 数据来源
+## Appendix
+- Detailed stakeholder profiles
+- Communication record template
+- Data sources
 ```
 
-### Step 3: 战略简报 [核心]
+### Step 3: Strategic Brief [Core]
 
-#### 受众分析
+#### Audience Analysis
 
-根据受众类型确定简报策略：
+Determine brief strategy based on audience type:
 
-| 受众 | 关注点 | 深度 | 表达方式 |
+| Audience | Focus | Depth | Expression |
 |------|--------|------|----------|
-| 高管(executive) | 战略ROI、风险、决策 | 高层概览 | 数据驱动、结论先行 |
-| 团队(team) | 目标、协作、执行 | 中等细节 | 清晰行动项、时间线 |
-| 外部(external) | 价值、信任、合作 | 精选信息 | 价值导向、脱敏处理 |
+| Executive | Strategic ROI, risks, decisions | High-level overview | Data-driven, conclusion-first |
+| Team | Goals, collaboration, execution | Medium detail | Clear action items, timeline |
+| External | Value, trust, partnership | Curated information | Value-oriented, desensitized |
 
-#### 核心信息提取
+#### Core Information Extraction
 
-从战略报告中提取核心信息：
+Extract core information from the strategy report:
 
-**必含信息（缺一不可）**：
-1. 战略目标（1-3个）
-2. 核心风险（Top3）
-3. 行动项（3-5个）
+**Required Information (all indispensable)**:
+1. Strategic goals (1-3)
+2. Core risks (Top 3)
+3. Action items (3-5)
 
-**可选信息**：
-- 市场数据
-- 竞争态势
-- 资源需求
-- 时间线
+**Optional Information**:
+- Market data
+- Competitive landscape
+- Resource requirements
+- Timeline
 
-#### 简报生成
+#### Brief Generation
 
-按受众类型生成简报：
+Generate briefs by audience type:
 
-**高管简报模板**：
+**Executive Brief Template**:
 ```
-# {产品名}战略简报
+# {Product Name} Strategic Brief
 
-## 战略方向
-- [方向1]：[一句话说明+预期ROI]
-- [方向2]：[一句话说明+预期ROI]
+## Strategic Direction
+- [Direction 1]: [One-sentence description + expected ROI]
+- [Direction 2]: [One-sentence description + expected ROI]
 
-## 关键指标
-- 北极星指标：[指标名]=[当前值]→[目标值]
-- 核心OKR：[O1] / [O2]
+## Key Metrics
+- North Star Metric: [Metric Name]=[Current Value]→[Target Value]
+- Core OKRs: [O1] / [O2]
 
-## 核心风险
-1. [风险1]：[概率]×[影响]=[风险等级]
-2. [风险2]：[概率]×[影响]=[风险等级]
-3. [风险3]：[概率]×[影响]=[风险等级]
+## Core Risks
+1. [Risk 1]: [Probability]×[Impact]=[Risk Level]
+2. [Risk 2]: [Probability]×[Impact]=[Risk Level]
+3. [Risk 3]: [Probability]×[Impact]=[Risk Level]
 
-## 决策请求
-- [ ] [决策项1]
-- [ ] [决策项2]
+## Decision Requests
+- [ ] [Decision Item 1]
+- [ ] [Decision Item 2]
 
-## 下一步行动
-1. [行动1] - 负责人 - 截止日期
-2. [行动2] - 负责人 - 截止日期
-```
-
-**团队简报模板**：
-```
-# {产品名}战略对齐简报
-
-## 我们的方向
-- 战略目标：[O1] / [O2]
-- 本季度重点：[重点1] / [重点2]
-
-## 我们的目标
-- KR1：[目标值]（当前：[基线值]）
-- KR2：[目标值]（当前：[基线值]）
-
-## 协作要点
-- [团队A]负责[事项]
-- [团队B]负责[事项]
-- 依赖关系：[说明]
-
-## 里程碑
-- [日期]：[里程碑1]
-- [日期]：[里程碑2]
+## Next Actions
+1. [Action 1] - Owner - Due Date
+2. [Action 2] - Owner - Due Date
 ```
 
-**外部简报模板**：
+**Team Brief Template**:
 ```
-# {产品名}合作简报
+# {Product Name} Strategic Alignment Brief
 
-## 产品价值
-- [价值主张1]
-- [价值主张2]
+## Our Direction
+- Strategic Goals: [O1] / [O2]
+- This Quarter's Focus: [Focus 1] / [Focus 2]
 
-## 合作机会
-- [合作方向1]
-- [合作方向2]
+## Our Goals
+- KR1: [Target Value] (Current: [Baseline Value])
+- KR2: [Target Value] (Current: [Baseline Value])
 
-## 联系方式
-- [联系人]
+## Collaboration Points
+- [Team A] responsible for [Item]
+- [Team B] responsible for [Item]
+- Dependencies: [Description]
+
+## Milestones
+- [Date]: [Milestone 1]
+- [Date]: [Milestone 2]
 ```
 
-#### 脱敏处理
+**External Brief Template**:
+```
+# {Product Name} Partnership Brief
 
-对外部简报进行脱敏：
-- 移除内部OKR数据
-- 移除具体财务数字
-- 移除竞品对比细节
-- 保留价值主张和合作方向
+## Product Value
+- [Value Proposition 1]
+- [Value Proposition 2]
 
-### 输出深度分级
+## Partnership Opportunities
+- [Partnership Direction 1]
+- [Partnership Direction 2]
 
-| 深度级别 | 输出范围 | 说明 |
+## Contact
+- [Contact Person]
+```
+
+#### Desensitization Processing
+
+Desensitize external briefs:
+- Remove internal OKR data
+- Remove specific financial figures
+- Remove competitor comparison details
+- Retain value propositions and partnership directions
+
+### Output Depth Classification
+
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 利益相关方地图和影响力评估 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整分析 + 影响力动态推演 + 沟通策略设计 + 利益平衡方案 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Stakeholder map and influence assessment | Core conclusions + minimum viable artifact |
+| standard | Complete artifact (current default) | Complete artifact, including all Step outputs |
+| deep | Complete analysis + influence dynamic simulation + communication strategy design + interest balancing plan | Complete artifact + extended analysis + deep simulation |
 
-## 输出
+## Output
 
-**存储路径**：`docs/strategy/stakeholder-analysis.md`
+**Storage Path**: `docs/strategy/stakeholder-analysis.md`
 
-**输出文件**：
+**Output Files**:
 
-| 文件 | 格式 | 说明 |
+| File | Format | Description |
 |------|------|------|
-| stakeholder-analysis.json | JSON | 结构化数据（包含map + strategy + brief） |
-| stakeholder-analysis.md | Markdown | 完整利益相关者分析报告 |
+| stakeholder-analysis.json | JSON | Structured data (including map + strategy + brief) |
+| stakeholder-analysis.md | Markdown | Complete stakeholder analysis report |
 
-**stakeholder-analysis.json 输出Schema**：
+**stakeholder-analysis.json Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["stakeholder_map", "strategy_doc", "brief"],
   "properties": {
-    "stakeholder_map": {"type": "object", "description": "利益相关者地图，含四象限分类和沟通策略"},
-    "strategy_doc": {"type": "object", "description": "利益相关者战略文档，含六章节闭环"},
-    "brief": {"type": "object", "description": "战略简报，含受众适配内容"}
+    "stakeholder_map": {"type": "object", "description": "Stakeholder map, including four-quadrant classification and communication strategy"},
+    "strategy_doc": {"type": "object", "description": "Stakeholder strategy document, including six-section closed loop"},
+    "brief": {"type": "object", "description": "Strategic brief, including audience-adapted content"}
   }
 }
 ```
 
-### 输出校验规则
+### Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| stakeholder_map.stakeholders | array | 是 | 利益相关者列表 |
-| stakeholder_map.stakeholders[].name | string | 是 | 姓名/角色 |
-| stakeholder_map.stakeholders[].category | string | 是 | decision_maker/resource_controller/affected/external |
-| stakeholder_map.stakeholders[].influence | number | 是 | 影响力1-5 |
-| stakeholder_map.stakeholders[].interest | number | 是 | 关注度1-5 |
-| stakeholder_map.stakeholders[].quadrant | string | 是 | key_player/keep_satisfied/keep_informed/minimal_effort |
-| stakeholder_map.stakeholders[].communication_strategy | object | 是 | 沟通策略 |
-| stakeholder_map.stakeholders[].communication_strategy.frequency | string | 是 | 沟通频率 |
-| stakeholder_map.stakeholders[].communication_strategy.method | string | 是 | 沟通方式 |
-| stakeholder_map.stakeholders[].communication_strategy.concerns | array | 是 | 关切点列表 |
-| stakeholder_map.stakeholders[].communication_strategy.suggested_topics | array | 是 | 建议话题列表 |
-| stakeholder_map.stakeholders[].communication_strategy.risk | string | 是 | 不沟通的风险 |
-| stakeholder_map.quadrant_summary | object | 是 | 四象限汇总 |
-| stakeholder_map.key_decision_makers_identified | boolean | 是 | 关键决策者是否已识别 |
-| strategy_doc.doc_metadata.product_name | string | 是 | 产品名称 |
-| strategy_doc.doc_metadata.generated_at | string | 是 | 生成时间戳 |
-| strategy_doc.doc_metadata.data_sources | array | 是 | 数据来源列表 |
-| strategy_doc.doc_metadata.quality_score | number | 是 | 文档质量评分0-100 |
-| strategy_doc.background.strategic_context | string | 是 | 战略背景 |
-| strategy_doc.background.stakeholder_overview | array | 是 | 利益相关者全景 |
-| strategy_doc.background.key_stakeholders | array | 是 | 关键利益相关者 |
-| strategy_doc.opportunities_and_challenges.opportunities | array | 是 | 机会列表 |
-| strategy_doc.opportunities_and_challenges.challenges | array | 是 | 挑战列表 |
-| strategy_doc.strategies | array | 是 | 策略列表，每项含stakeholder/current_attitude/target_attitude/strategy/key_actions |
-| strategy_doc.success_criteria | array | 是 | 成功标准列表 |
-| strategy_doc.risks_and_contingencies | array | 是 | 风险与预案列表 |
-| strategy_doc.resources_and_actions | object | 是 | 资源与行动计划 |
-| brief.brief_metadata.audience_type | string | 是 | executive/team/external |
-| brief.brief_metadata.generated_at | string | 是 | 生成时间戳 |
-| brief.brief_content.strategic_goals | array | 是 | 1-3个战略目标 |
-| brief.brief_content.key_risks | array | 是 | Top3风险 |
-| brief.brief_content.action_items | array | 是 | 3-5个行动项 |
-| brief.brief_content.decision_requests | array | ○ | 决策请求（高管简报必填） |
-| brief.brief_content.milestones | array | ○ | 里程碑（团队简报必填） |
-| brief.brief_content.value_propositions | array | ○ | 价值主张（外部简报必填） |
-| brief.brief_content.desensitized | boolean | 是 | 是否已脱敏（外部简报必须为true） |
+| stakeholder_map.stakeholders | array | Yes | Stakeholder list |
+| stakeholder_map.stakeholders[].name | string | Yes | Name/Role |
+| stakeholder_map.stakeholders[].category | string | Yes | decision_maker/resource_controller/affected/external |
+| stakeholder_map.stakeholders[].influence | number | Yes | Influence 1-5 |
+| stakeholder_map.stakeholders[].interest | number | Yes | Interest 1-5 |
+| stakeholder_map.stakeholders[].quadrant | string | Yes | key_player/keep_satisfied/keep_informed/minimal_effort |
+| stakeholder_map.stakeholders[].communication_strategy | object | Yes | Communication strategy |
+| stakeholder_map.stakeholders[].communication_strategy.frequency | string | Yes | Communication frequency |
+| stakeholder_map.stakeholders[].communication_strategy.method | string | Yes | Communication method |
+| stakeholder_map.stakeholders[].communication_strategy.concerns | array | Yes | Concerns list |
+| stakeholder_map.stakeholders[].communication_strategy.suggested_topics | array | Yes | Suggested topics list |
+| stakeholder_map.stakeholders[].communication_strategy.risk | string | Yes | Risk of not communicating |
+| stakeholder_map.quadrant_summary | object | Yes | Four-quadrant summary |
+| stakeholder_map.key_decision_makers_identified | boolean | Yes | Whether key decision makers are identified |
+| strategy_doc.doc_metadata.product_name | string | Yes | Product name |
+| strategy_doc.doc_metadata.generated_at | string | Yes | Generation timestamp |
+| strategy_doc.doc_metadata.data_sources | array | Yes | Data sources list |
+| strategy_doc.doc_metadata.quality_score | number | Yes | Document quality score 0-100 |
+| strategy_doc.background.strategic_context | string | Yes | Strategic context |
+| strategy_doc.background.stakeholder_overview | array | Yes | Stakeholder panorama |
+| strategy_doc.background.key_stakeholders | array | Yes | Key stakeholders |
+| strategy_doc.opportunities_and_challenges.opportunities | array | Yes | Opportunities list |
+| strategy_doc.opportunities_and_challenges.challenges | array | Yes | Challenges list |
+| strategy_doc.strategies | array | Yes | Strategy list, each item includes stakeholder/current_attitude/target_attitude/strategy/key_actions |
+| strategy_doc.success_criteria | array | Yes | Success criteria list |
+| strategy_doc.risks_and_contingencies | array | Yes | Risks and contingencies list |
+| strategy_doc.resources_and_actions | object | Yes | Resources and action plan |
+| brief.brief_metadata.audience_type | string | Yes | executive/team/external |
+| brief.brief_metadata.generated_at | string | Yes | Generation timestamp |
+| brief.brief_content.strategic_goals | array | Yes | 1-3 strategic goals |
+| brief.brief_content.key_risks | array | Yes | Top 3 risks |
+| brief.brief_content.action_items | array | Yes | 3-5 action items |
+| brief.brief_content.decision_requests | array | Optional | Decision requests (required for executive brief) |
+| brief.brief_content.milestones | array | Optional | Milestones (required for team brief) |
+| brief.brief_content.value_propositions | array | Optional | Value propositions (required for external brief) |
+| brief.brief_content.desensitized | boolean | Yes | Whether desensitized (must be true for external brief) |
 
-## 决策规则
+## Decision Rules
 
-| 条件 | 决策 |
+| Condition | Decision |
 |------|------|
-| 关键决策者检查 | 至少1个决策者已识别 |
-| 评分校准 | 影响力评分需人类校准 |
-| 沟通策略 | 需人类审批确认 |
-| 文档质量评分≥60 | 通过，可输出 |
-| 文档质量评分<60 | 自动修改后重新评分 |
-| 修改后仍<60 | 升级人类审核 |
-| 涉及≥3个部门资源 | 强制人类审批 |
-| 关键利益相关者未覆盖 | 退回补充 |
-| 战略目标缺失 | 退回补充，不可生成简报 |
-| 核心风险缺失 | 退回补充，不可生成简报 |
-| 行动项缺失 | 退回补充，不可生成简报 |
-| 行动项>3个 | 标注"建议聚焦Top3" |
-| 外部简报含敏感数据 | 自动脱敏处理 |
+| Key decision maker check | At least 1 decision maker identified |
+| Score calibration | Influence score requires human calibration |
+| Communication strategy | Requires human approval |
+| Document quality score ≥60 | Pass, can output |
+| Document quality score <60 | Auto-revise and re-score |
+| Still <60 after revision | Escalate to human review |
+| Involves ≥3 departments' resources | Mandatory human approval |
+| Key stakeholders not covered | Return for supplementation |
+| Strategic goals missing | Return for supplementation, cannot generate brief |
+| Core risks missing | Return for supplementation, cannot generate brief |
+| Action items missing | Return for supplementation, cannot generate brief |
+| Action items >3 | Mark "Recommend focusing on Top 3" |
+| External brief contains sensitive data | Auto-desensitize |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 4类利益相关者都已识别
-- [ ] 每个利益相关者有双维度评分
+- [ ] All 4 stakeholder categories identified
+- [ ] Each stakeholder has dual-dimension scores
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 四象限分类已完成
-- [ ] 沟通策略具体可执行
-- [ ] 关键决策者已识别
-- [ ] 6个章节完整
-- [ ] 每个章节有数据来源标注
-- [ ] 利益相关者覆盖完整
-- [ ] 策略具体可执行
-- [ ] 成功标准可衡量
-- [ ] 风险有预案
-- [ ] 文档质量评分≥60
-- [ ] 一页纸可读完
-- [ ] 三要素齐全（目标/风险/行动）
-- [ ] 受众适配正确
-- [ ] 外部简报已脱敏
-- [ ] 行动项有负责人和截止日期
+- [ ] Four-quadrant classification completed
+- [ ] Communication strategy is specific and executable
+- [ ] Key decision makers identified
+- [ ] 6 sections complete
+- [ ] Each section has data source annotation
+- [ ] Stakeholder coverage complete
+- [ ] Strategy is specific and executable
+- [ ] Success criteria are measurable
+- [ ] Risks have contingencies
+- [ ] Document quality score ≥60
+- [ ] Can be read on one page
+- [ ] Three elements complete (goals/risks/actions)
+- [ ] Audience adaptation correct
+- [ ] External brief desensitized
+- [ ] Action items have owners and due dates
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (must pass for deep only)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep simulation and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-当上游文件不存在时，本Skill仍可独立执行：
+When upstream files are missing, this skill can still execute independently:
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Notes |
 |---------------|---------|---------|------------|
-| bmc.json | 用户提供组织架构和业务信息 → 识别利益相关者 | 缺乏BMC数据，关键伙伴和客户关系可能遗漏 | 要求用户提供商业模式关键要素或上传bmc.json文件 |
-| 产品/业务信息（用户提供） | 若用户未提供产品/业务信息，提示用户提供或跳过该输入相关步骤 | 利益相关者识别缺乏业务上下文 | 要求用户提供产品名称、核心功能和业务模式描述 |
-| bmc.json + 产品/业务信息 | 用户提供组织架构和业务信息 → 识别利益相关者 | 整体置信度降低，利益相关者列表可能不完整 | 要求用户提供组织架构、业务模式和关键伙伴信息 |
-| 所有上游文件均缺失 | 提示用户先执行前序阶段，或基于用户提供的组织架构信息识别利益相关者 | 整体置信度显著降低，地图仅为通用参考 | 要求用户提供组织架构、产品功能和业务目标 |
-| business-strategy-report.json | 用户提供战略要点 → 生成战略文档和简报 | 缺乏结构化战略数据，策略与战略对齐度可能不足 | 要求用户提供战略方向和关键策略要点或上传business-strategy-report.json文件 |
-| stakeholder-analysis.json（brief部分） | 若战略简报缺失，不影响核心文档生成 | 简报内容需从战略报告中重新提取 | 要求用户提供利益相关者分析摘要或上传stakeholder-analysis.json文件 |
+| bmc.json | User provides organizational structure and business info → identify stakeholders | Lacks BMC data, key partners and customer relationships may be missed | Request user to provide key business model elements or upload bmc.json file |
+| Product/Business Information (user-provided) | If user does not provide product/business info, prompt user to provide or skip steps related to this input | Stakeholder identification lacks business context | Request user to provide product name, core features, and business model description |
+| bmc.json + Product/Business Information | User provides organizational structure and business info → identify stakeholders | Overall confidence reduced, stakeholder list may be incomplete | Request user to provide organizational structure, business model, and key partner info |
+| All upstream files missing | Prompt user to execute prior phases first, or identify stakeholders based on user-provided organizational structure info | Overall confidence significantly reduced, map is only a general reference | Request user to provide organizational structure, product features, and business goals |
+| business-strategy-report.json | User provides strategic key points → generate strategy document and brief | Lacks structured strategy data, strategy-strategy alignment may be insufficient | Request user to provide strategic direction and key strategy points or upload business-strategy-report.json file |
+| stakeholder-analysis.json (brief section) | If strategic brief is missing, does not affect core document generation | Brief content needs to be re-extracted from strategy report | Request user to provide stakeholder analysis summary or upload stakeholder-analysis.json file |
 
-## 数据获取说明
+## Data Acquisition Notes
 
-本Skill需要商业模式画布和产品/业务信息，请通过以下方式之一提供：
-  1. 直接提供组织架构、产品名称和业务模式
-  2. 上传bmc.json文件
-  3. 提供数据文件路径
-- AI不负责外部数据采集，仅负责分析
+This skill requires business model canvas and product/business information. Please provide via one of the following methods:
+  1. Directly provide organizational structure, product name, and business model
+  2. Upload bmc.json file
+  3. Provide data file path
+- AI is not responsible for external data collection, only for analysis
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| bmc.json关键伙伴变更 | 外部相关方识别 | 重新执行Step 1，更新外部相关方 |
-| bmc.json客户关系变更 | 受影响方识别 | 重新执行Step 1，更新受影响方 |
-| 组织架构变更 | 决策者和资源控制者 | 重新执行Step 1，更新决策者和资源控制者 |
-| business-strategy-report战略调整 | 背景与现状、机会与挑战 | 重新执行Step 2，更新战略背景和机会挑战分析 |
+| bmc.json key partner change | External stakeholder identification | Re-execute Step 1, update external stakeholders |
+| bmc.json customer relationship change | Affected party identification | Re-execute Step 1, update affected parties |
+| Organizational structure change | Decision makers and resource controllers | Re-execute Step 1, update decision makers and resource controllers |
+| business-strategy-report strategy adjustment | Background & current state, opportunities & challenges | Re-execute Step 2, update strategic context and opportunity/challenge analysis |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 变更类型 | 影响范围 | 通知方式 |
+| Change Type | Impact Scope | Notification Method |
 |----------|----------|----------|
-| 利益相关者列表变更 | business-strategy-report | 输出文件版本号+变更摘要 |
-| 策略调整 | business-strategy-report | 输出文件版本号+变更摘要 |
-| 风险预案更新 | business-strategy-report | 输出文件版本号+变更摘要 |
-| 简报内容变更 | 无特定下游 | 输出文件版本号+变更摘要 |
+| Stakeholder list change | business-strategy-report | Output file version number + change summary |
+| Strategy adjustment | business-strategy-report | Output file version number + change summary |
+| Risk contingency update | business-strategy-report | Output file version number + change summary |
+| Brief content change | No specific downstream | Output file version number + change summary |

@@ -4,100 +4,115 @@ name: growth
 default_mode: standard
 ---
 
-# 工作流 C：增长突破
+# Workflow C: Growth Breakthrough
 
-> 适用场景：需要获取用户、提升留存、商业化变现
-> 核心模式：增长诊断 → LOOP 实验验证 → 全量发布
+> Applicable scenario: Need to acquire users, improve retention, monetize
+> Core mode: Growth diagnosis → LOOP experiment validation → full release
 
-## 流程
+## Process
 
 ```
 ┌─────────────────┐
-│ session-start   │  加载上下文，确认增长目标
+│ session-start   │  Load context, confirm growth goals
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ 模块6：增长诊断                          │
+│ Module 6: Growth Diagnosis              │
 │                                         │
 │  - growth-orchestrator                  │
-│    （增长模型+策略报告+GTM+运营手册）     │
-│  - 识别增长瓶颈（由 growth-orchestrator  │
-│    内部条件触发调度）：                   │
-│    ├── 获客问题 → acquisition-orchestrator│
-│    ├── 激活问题 → activation-orchestrator│
-│    ├── 留存问题 → retention-orchestrator │
-│    └── 变现问题 → revenue-orchestrator   │
-│      （如识别定价问题 → 回溯             │
-│       business-orchestrator 调整定价）   │
+│    (Growth model + strategy report +    │
+│     GTM + operations manual)            │
+│  - Identify growth bottlenecks (by      │
+│    growth-orchestrator internal         │
+│    conditional trigger scheduling):     │
+│    ├── Acquisition issues →             │
+│    │   acquisition-orchestrator         │
+│    ├── Activation issues →              │
+│    │   activation-orchestrator          │
+│    ├── Retention issues →               │
+│    │   retention-orchestrator           │
+│    └── Monetization issues →            │
+│        revenue-orchestrator             │
+│      (If pricing issue identified →     │
+│       backtrack to business-            │
+│       orchestrator to adjust pricing)   │
 │                                         │
-│  产出：docs/growth/growth-strategy.md    │
+│  Output: docs/growth/growth-strategy.md │
 └────────┬────────────────────────────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│              LOOP 循环验证               │
+│              LOOP Validation            │
 │  ┌─────────────────────────────────┐    │
-│  │ 模块5：实验设计 (RESEARCH)       │    │
+│  │ Module 5: Experiment Design     │    │
+│  │   (RESEARCH)                    │    │
 │  │  - experiment-orchestrator      │    │
-│  │    （实验设计：假设+指标+护栏）   │    │
+│  │    (Experiment design:          │    │
+│  │     hypothesis+metrics+guardrails)│   │
 │  └──────────┬──────────────────────┘    │
 │             ▼                            │
 │  ┌─────────────────────────────────┐    │
 │  │ VALIDATE                        │    │
-│  │  - 实验设计合理性                │    │
-│  │  - 护栏指标定义                  │    │
-│  │  - 人类审批实验方案              │    │
+│  │  - Experiment design soundness  │    │
+│  │  - Guardrail metric definition  │    │
+│  │  - Human approval of experiment │    │
+│  │    plan                         │    │
 │  └──────────┬──────────────────────┘    │
 │             │                            │
-│             ├── 通过 → 跳出 LOOP ────────┼──→
+│             ├── Pass → exit LOOP ────────┼──→
 │             │                            │
-│             └── 失败 → 回到 RESEARCH ────┘
+│             └── Fail → back to RESEARCH ─┘
 │                                          │
-│  迭代上限：3 次（growth 类型）           │
-│  注：实验执行由人类在实际环境中跑，       │
-│  AI 只负责设计+分析结果                  │
+│  Iteration limit: 3 times (growth type) │
+│  Note: Experiment execution is run by   │
+│  humans in real environment, AI only    │
+│  handles design + result analysis       │
 └─────────────────────────────────────────┘
          │
          ▼
 ┌─────────────────────────────────────────┐
-│ 模块7：实验结果分析与发布                │
+│ Module 7: Experiment Result Analysis    │
+│   & Release                             │
 │                                         │
-│  - 实验结果分析（experiment-orchestrator │
-│    的 execution 阶段 + decision-         │
-│    orchestrator 做决策）                 │
-│  - 如实验成功 → release-orchestrator    │
-│    （全量发布增长方案）                   │
-│  - 如实验失败 → 回到增长诊断重新规划     │
+│  - Experiment result analysis           │
+│    (experiment-orchestrator execution   │
+│    phase + decision-orchestrator for    │
+│    decision)                            │
+│  - If experiment succeeds →             │
+│    release-orchestrator (full release   │
+│    of growth solution)                  │
+│  - If experiment fails → back to growth │
+│    diagnosis for replanning             │
 │                                         │
-│  产出：docs/metrics/experiment-report.md │
+│  Output: docs/metrics/experiment-report.md │
 │    + docs/monitoring/monitoring-config.md │
 └────────┬────────────────────────────────┘
          ▼
 ┌─────────────────┐
-│ session-end     │  归档 + 更新 FEATURES.md
-│                 │  + 记录实验结果到 memory/knowledge-base.md
+│ session-end     │  Archive + update FEATURES.md
+│                 │  + Record experiment results to memory/knowledge-base.md
 └─────────────────┘
 ```
 
-## 关键检查点
+## Key Checkpoints
 
-- [ ] 增长瓶颈识别了吗？（获客/激活/留存/变现哪个环节）
-- [ ] 增长策略有数据支撑吗？（不是拍脑袋）
-- [ ] 如识别定价问题，是否回溯 business-orchestrator？
-- [ ] 实验设计合理吗？（假设+指标+护栏）
-- [ ] 人类审批实验方案了吗？
-- [ ] 实验结果有分析吗？（experiment-execution + decision-orchestrator）
+- [ ] Growth bottleneck identified? (Which stage: acquisition/activation/retention/monetization)
+- [ ] Growth strategy data-supported? (Not gut feeling)
+- [ ] If pricing issue identified, backtracked to business-orchestrator?
+- [ ] Experiment design sound? (Hypothesis+metrics+guardrails)
+- [ ] Human approved experiment plan?
+- [ ] Experiment results analyzed? (experiment-execution + decision-orchestrator)
 
-## 失败处理
+## Failure Handling
 
-| 失败点 | 处理方式 |
+| Failure point | Handling |
 |--------|---------|
-| 增长瓶颈不清 | 补充数据分析，定位瓶颈环节 |
-| 实验设计不合理 | 修订假设和指标，重新设计 |
-| 实验失败 | 分析原因，回到增长诊断重新规划 |
-| 定价问题识别 | 回溯 business-orchestrator 的 business-pricing 调整定价策略 |
+| Growth bottleneck unclear | Supplement data analysis, locate bottleneck stage |
+| Experiment design unsound | Revise hypothesis and metrics, redesign |
+| Experiment failed | Analyze cause, back to growth diagnosis for replanning |
+| Pricing issue identified | Backtrack to business-orchestrator's business-pricing to adjust pricing strategy |
 
-## 下一步
+## Next Steps
 
-- 增长方案发布后需加强监控 → 进入 **launch** 工作流的监控准备
-- 增长数据需要深度分析 → 进入 **optimization** 工作流
-- 增长遇到瓶颈需诊断 → 进入 **diagnosis** 工作流
+- Need enhanced monitoring after growth solution release → enter **launch** workflow's monitoring preparation
+- Growth data needs deep analysis → enter **optimization** workflow
+- Growth hits bottleneck needing diagnosis → enter **diagnosis** workflow

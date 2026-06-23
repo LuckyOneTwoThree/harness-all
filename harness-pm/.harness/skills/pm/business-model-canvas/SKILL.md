@@ -1,20 +1,20 @@
 ---
 name: business-model-canvas
-description: 当需要设计或评估产品商业模式时触发。商业模式画布自动生成，将产品探索阶段洞察转化为9格商业画布。关键词：商业模式画布、BMC、价值主张、收入模式、成本结构、怎么赚钱、商业模式梳理。
+description: Triggered when designing or evaluating a product business model. Business Model Canvas auto-generation, transforms product discovery stage insights into a 9-block business canvas. Keywords: business model canvas, BMC, value proposition, revenue model, cost structure, how to make money, business model mapping.
 metadata:
-  module: "产品商业与战略"
-  sub-module: "商业模式设计"
+  module: "Product Business & Strategy"
+  sub-module: "Business Model Design"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["SaaS", "电商", "通用"]
+  domain_tags: ["SaaS", "E-commerce", "General"]
   trigger_examples:
-    - "帮我把商业模式理清楚"
-    - "我们的商业模式怎么赚钱"
+    - "Help me clarify the business model"
+    - "How does our business model make money"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "生成9格画布核心要素（客户细分、价值主张、收入来源、成本结构）及基础假设清单"
-  deep_description: "额外包含单位经济敏感性分析、假设验证路线图、象限间联动一致性校验、长期商业模式演进推演"
+  quick_description: "Generate 9-block canvas core elements (customer segments, value proposition, revenue streams, cost structure) and basic assumption list"
+  deep_description: "Additionally includes unit economics sensitivity analysis, assumption validation roadmap, inter-block linkage consistency check, long-term business model evolution projection"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -25,189 +25,189 @@ writes:
   - memory/progress.md
 ---
 
-# 商业模式画布自动生成
+# Business Model Canvas Auto-Generation
 
-## 核心原则
+## Core Principles
 
-1. **九格联动**——画布9要素必须逻辑自洽，客户细分→价值主张→渠道→收入形成闭环
-2. **选项优于定论**——收入模式等关键决策点生成2-3个可比较选项，由人类选择
-3. **假设显式标注**——所有推断内容标注为假设，含风险等级和验证方法
-4. **财务自动推算**——单位经济、敏感性分析由AI自动完成，人类只审核结论
+1. **Nine-block linkage** — The 9 building blocks of the canvas must be logically self-consistent. Customer segments → value proposition → channels → revenue form a closed loop.
+2. **Options over conclusions** — Generate 2-3 comparable options for key decision points such as revenue model, for human selection.
+3. **Explicit assumption annotation** — All inferred content is annotated as assumptions, including risk level and validation method.
+4. **Automatic financial inference** — Unit economics and sensitivity analysis are automatically completed by AI; humans only review conclusions.
 
-**执行周期**：在产品探索阶段完成后触发
+**Execution cycle**: Triggered after the product discovery stage is complete.
 
-**核心目标**：将产品探索阶段收集的用户洞察、市场数据转化为结构化的商业模式画布，明确价值创造、传递和获取的系统架构。
+**Core objective**: Transform user insights and market data collected during the product discovery stage into a structured business model canvas, clarifying the system architecture for value creation, delivery, and capture.
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| product_context | JSON | 是 | user-research-user-modeling / opportunity-definition | 探索阶段输出：用户画像、问题陈述、机会定义 |
-| market_data | JSON | 是 | market-competitor-analysis | 市场数据：竞品商业模式、市场规模、行业基准 |
+| product_context | JSON | Yes | user-research-user-modeling / opportunity-definition | Discovery stage output: user persona, problem statement, opportunity definition |
+| market_data | JSON | Yes | market-competitor-analysis | Market data: competitor business models, market size, industry benchmarks |
 
-### 必需输入
+### Required Inputs
 
-**product_context（来自探索阶段）：**
+**product_context (from discovery stage):**
 ```json
 {
-  "persona_summary": "目标用户画像摘要，包含用户特征、需求、痛点",
-  "problem_statement": "用户问题陈述，明确要解决的核心问题",
-  "opportunity_definition": "商业机会定义，包含市场规模、机会描述"
+  "persona_summary": "Target user persona summary, including user characteristics, needs, pain points",
+  "problem_statement": "User problem statement, clarifying the core problem to solve",
+  "opportunity_definition": "Business opportunity definition, including market size, opportunity description"
 }
 ```
 
-**market_data（市场数据）：**
+**market_data (market data):**
 ```json
 {
   "competitor_business_models": [
     {
-      "competitor_name": "竞品名称",
-      "business_model_type": "竞品商业模式类型",
+      "competitor_name": "Competitor name",
+      "business_model_type": "Competitor business model type",
       "key_elements": {
-        "value_proposition": "竞品价值主张",
-        "revenue_model": "竞品收入模式",
-        "pricing": "竞品定价"
+        "value_proposition": "Competitor value proposition",
+        "revenue_model": "Competitor revenue model",
+        "pricing": "Competitor pricing"
       }
     }
   ],
   "market_size": {
-    "tam": "总可寻址市场",
-    "sam": "可服务市场",
-    "som": "可获得市场"
+    "tam": "Total Addressable Market",
+    "sam": "Serviceable Available Market",
+    "som": "Serviceable Obtainable Market"
   },
   "industry_benchmarks": {
-    "typical_margin": "行业典型利润率",
-    "typical_pricing": "行业典型定价范围",
-    "customer_acquisition_cost": "行业获客成本基准"
+    "typical_margin": "Industry typical profit margin",
+    "typical_pricing": "Industry typical pricing range",
+    "customer_acquisition_cost": "Industry customer acquisition cost benchmark"
   }
 }
 ```
 
-## 执行步骤
+## Execution Steps
 
-### Step 1：客户细分填充 [核心]
+### Step 1: Customer Segments Population [Core]
 
-**任务**：基于用户画像和痛点分析，定义目标客户细分群体。
+**Task**: Based on user persona and pain point analysis, define target customer segments.
 
-**执行逻辑**：
-1. 提取探索阶段的用户画像关键特征
-2. 按需求优先级和可触达性划分细分群体
-3. 为每个细分群体定义核心特征
+**Execution logic**:
+1. Extract key characteristics of user personas from the discovery stage
+2. Divide segments by need priority and reachability
+3. Define core characteristics for each segment
 
-**输出格式**：
+**Output format**:
 ```json
 {
   "customer_segments": [
     {
       "segment_id": "segment-1",
-      "name": "中小型培训机构",
-      "characteristics": ["学员规模50-500人", "有线上化转型需求"],
-      "primary_pains": ["缺乏技术能力自建在线教学平台"],
+      "name": "Small and medium training institutions",
+      "characteristics": ["Student scale 50-500", "Has online transformation needs"],
+      "primary_pains": ["Lack technical capability to build online teaching platforms"],
       "priority": "high/medium/low"
     }
   ]
 }
 ```
 
-**验收标准**：
-- 至少识别2个差异化客户细分群体
-- 每个群体有明确的特征描述
-- 优先级排序有数据支撑
+**Acceptance criteria**:
+- At least 2 differentiated customer segments identified
+- Each segment has clear characteristic description
+- Priority ranking supported by data
 
-### Step 2：价值主张填充 [核心]
+### Step 2: Value Proposition Population [Core]
 
-**任务**：基于用户痛点和竞品分析，设计差异化价值主张。
+**Task**: Based on user pain points and competitive analysis, design differentiated value propositions.
 
-**执行逻辑**：
-1. 提取用户核心痛点和高优先级需求
-2. 分析竞品价值主张的覆盖和缺口
-3. 设计能够解决关键痛点的价值主张
-4. 定义Pain Relievers（痛点解决方式）和Gain Creators（收益创造方式）
+**Execution logic**:
+1. Extract core user pain points and high-priority needs
+2. Analyze coverage and gaps in competitor value propositions
+3. Design value propositions that address key pain points
+4. Define Pain Relievers and Gain Creators
 
-**输出格式**：
+**Output format**:
 ```json
 {
   "value_propositions": [
     {
       "proposition_id": "vp-1",
-      "headline": "AI驱动的个性化教学SaaS平台",
-      "description": "通过AI自适应学习引擎为培训机构提供开箱即用的在线教学解决方案",
+      "headline": "AI-driven personalized teaching SaaS platform",
+      "description": "Provides out-of-the-box online teaching solutions for training institutions through AI adaptive learning engine",
       "target_segment": "segment-1",
-      "pain_relievers": ["降低培训机构线上化技术门槛", "提升学员学习效率与完课率"],
-      "gain_creators": ["培训机构运营成本降低40%", "学员完课率提升至85%"],
-      "differentiation": "AI自适应学习引擎动态调整教学路径，区别于静态课程平台"
+      "pain_relievers": ["Lower technical barriers for training institutions to go online", "Improve student learning efficiency and completion rate"],
+      "gain_creators": ["Training institution operating costs reduced by 40%", "Student completion rate increased to 85%"],
+      "differentiation": "AI adaptive learning engine dynamically adjusts teaching paths, distinct from static course platforms"
     }
   ]
 }
 ```
 
-**验收标准**：
-- 每个客户细分群体至少有1个价值主张
-- 价值主张直接对应高优先级痛点
-- 包含Pain Relievers和Gain Creators的具体描述
+**Acceptance criteria**:
+- Each customer segment has at least 1 value proposition
+- Value propositions directly correspond to high-priority pain points
+- Include specific descriptions of Pain Relievers and Gain Creators
 
-### Step 3a：收入来源填充（决策树匹配） [核心]
+### Step 3a: Revenue Streams Population (Decision Tree Matching) [Core]
 
-**任务**：基于产品特性和市场基准，自动匹配潜在收入模式类型。
+**Task**: Based on product characteristics and market benchmarks, automatically match potential revenue model types.
 
-**决策树逻辑**：
+**Decision tree logic**:
 
 ```
-开始
+Start
   │
-  ├─ 产品形态 = 实物商品？
-  │     └─ 是 → 检查点：是否需要订阅服务？
-  │           ├─ 是 → 收入模式 = 订阅+单购
-  │           └─ 否 → 收入模式 = 一次性销售
+  ├─ Product form = Physical goods?
+  │     └─ Yes → Checkpoint: Need subscription service?
+  │           ├─ Yes → Revenue model = Subscription + One-time purchase
+  │           └─ No → Revenue model = One-time sales
   │
-  ├─ 产品形态 = 软件/数字服务？
-  │     └─ 是 → 检查点：用户使用频率？
-  │           ├─ 高频（>1次/周）→ 收入模式 = 订阅制
-  │           ├─ 中频（1次/月）→ 收入模式 = 用量计费
-  │           └─ 低频（<1次/月）→ 收入模式 = 项目制/一次性
+  ├─ Product form = Software/Digital service?
+  │     └─ Yes → Checkpoint: User usage frequency?
+  │           ├─ High frequency (>1 time/week) → Revenue model = Subscription
+  │           ├─ Medium frequency (1 time/month) → Revenue model = Usage-based billing
+  │           └─ Low frequency (<1 time/month) → Revenue model = Project-based/One-time
   │
-  ├─ 产品形态 = 平台服务？
-  │     └─ 是 → 收入模式 = 平台佣金/抽成
+  ├─ Product form = Platform service?
+  │     └─ Yes → Revenue model = Platform commission/revenue share
   │
-  └─ 是否有多边市场？
-        ├─ 是 → 收入模式 = 订阅+平台佣金
-        └─ 否 → 基于产品形态选择
+  └─ Multi-sided market?
+        ├─ Yes → Revenue model = Subscription + Platform commission
+        └─ No → Select based on product form
 ```
 
-**Step 3b：多选项收入模式生成** [条件]
+**Step 3b: Multi-option Revenue Model Generation** [Conditional]
 
-**任务**：基于Step 3a的决策树结果，生成至少2个可比较的收入模式选项。
+**Task**: Based on Step 3a decision tree results, generate at least 2 comparable revenue model options.
 
-**执行逻辑**：
-1. 基于决策树结果确定主收入模式
-2. 生成至少1个备选收入模式（考虑混合模式）
-3. 分析每个模式的优势和风险
+**Execution logic**:
+1. Determine primary revenue model based on decision tree results
+2. Generate at least 1 alternative revenue model (consider hybrid models)
+3. Analyze strengths and risks of each model
 
-**输出格式**：
+**Output format**:
 ```json
 {
   "revenue_models": [
     {
       "model_id": "rm-1",
-      "type": "SaaS订阅制",
-      "description": "按机构学员人数阶梯定价的月度/年度订阅",
+      "type": "SaaS Subscription",
+      "description": "Monthly/annual subscription with tiered pricing based on institution student count",
       "pricing_structure": {
         "base_price": "2980",
-        "unit": "元/机构/月",
-        "tiers": ["基础版：50人以内2980元/月", "专业版：200人以内6980元/月"]
+        "unit": "yuan/institution/month",
+        "tiers": ["Basic: 50 or fewer students 2980 yuan/month", "Professional: 200 or fewer students 6980 yuan/month"]
       },
-      "pros": ["收入可预测，现金流稳定", "随客户规模增长自然增收"],
-      "cons": ["初期获客成本较高", "需持续投入产品迭代"],
+      "pros": ["Predictable revenue, stable cash flow", "Natural revenue growth as customer scale grows"],
+      "cons": ["Higher initial acquisition cost", "Requires continuous product iteration investment"],
       "risk_level": "low/medium/high"
     },
     {
       "model_id": "rm-2",
-      "type": "用量计费+订阅混合",
-      "description": "基础订阅+按AI调用量超额计费",
+      "type": "Usage-based + Subscription hybrid",
+      "description": "Basic subscription + overage billing based on AI call volume",
       "pricing_structure": {...},
       "pros": [...],
       "cons": [...],
@@ -217,70 +217,70 @@ writes:
 }
 ```
 
-**验收标准**：
-- 至少生成2个收入模式选项
-- 每个模式包含清晰的定价结构
-- 优劣分析和风险等级已标注
+**Acceptance criteria**:
+- At least 2 revenue model options generated
+- Each model includes clear pricing structure
+- Pros/cons analysis and risk level annotated
 
-### Step 4：成本结构填充 [条件]
+### Step 4: Cost Structure Population [Conditional]
 
-**任务**：基于商业模式需求，分析和估算成本结构。
+**Task**: Based on business model requirements, analyze and estimate cost structure.
 
-**执行逻辑**：
-1. 基于关键活动和资源配置识别成本驱动因素
-2. 区分固定成本和可变成本
-3. 估算各成本项的量级和占比
-4. 与行业基准进行对比
+**Execution logic**:
+1. Identify cost drivers based on key activities and resource allocation
+2. Distinguish fixed costs and variable costs
+3. Estimate the magnitude and proportion of each cost item
+4. Compare with industry benchmarks
 
-**输出格式**：
+**Output format**:
 ```json
 {
   "cost_structure": {
     "fixed_costs": [
       {
-        "item": "研发团队薪资",
+        "item": "R&D team salaries",
         "estimated_monthly": "800000",
-        "category": "人员/基础设施/运营"
+        "category": "Personnel/Infrastructure/Operations"
       }
     ],
     "variable_costs": [
       {
-        "item": "AI算力调用费",
-        "unit_cost": "0.5元/次推理调用",
-        "driver": "活跃学员数×人均AI交互次数"
+        "item": "AI computing call fees",
+        "unit_cost": "0.5 yuan per inference call",
+        "driver": "Active student count × per-capita AI interaction count"
       }
     ],
     "unit_economics": {
-      "target_cac": "5000元/机构",
-      "target_ltv": "80000元",
+      "target_cac": "5000 yuan/institution",
+      "target_ltv": "80000 yuan",
       "ltv_cac_ratio": "16:1"
     }
   }
 }
 ```
 
-**验收标准**：
-- 主要成本项已识别
-- 固定成本和可变成本已分类
-- 单位经济指标已设定
+**Acceptance criteria**:
+- Main cost items identified
+- Fixed and variable costs classified
+- Unit economics indicators set
 
-### Step 5：渠道通路填充 [条件]
+### Step 5: Channels Population [Conditional]
 
-**任务**：定义触达客户和交付价值的渠道。
+**Task**: Define channels for reaching customers and delivering value.
 
-**执行逻辑**：
-1. 基于客户细分确定触达渠道偏好
-2. 分析各渠道的成本和效率
-3. 设计线上线下渠道组合
-4. 规划渠道优先级
+**Execution logic**:
+1. Determine reach channel preferences based on customer segments
+2. Analyze cost and efficiency of each channel
+3. Design online/offline channel mix
+4. Plan channel priority
 
-**输出格式**：
+**Output format**:
 ```json
 {
   "channels": [
     {
       "channel_id": "ch-1",
-      "name": "教育行业展会与社群运营",
+      "name": "Education industry exhibitions and community operations",
       "type": "direct/indirect",
       "phase": "awareness/evaluation/purchase/delivery",
       "cost_efficiency": "high/medium/low",
@@ -290,170 +290,170 @@ writes:
 }
 ```
 
-**验收标准**：
-- 覆盖客户旅程全阶段
-- 直接和间接渠道组合
-- 优先级排序合理
+**Acceptance criteria**:
+- Covers all stages of customer journey
+- Direct and indirect channel mix
+- Reasonable priority ranking
 
-### Step 6：关键活动/资源/伙伴填充 [条件]
+### Step 6: Key Activities/Resources/Partners Population [Conditional]
 
-**任务**：定义实现商业模式所需的关键活动、资源和合作伙伴。
+**Task**: Define key activities, resources, and partners needed to realize the business model.
 
-**执行逻辑**：
+**Execution logic**:
 
-**关键活动识别：**
-1. 价值创造活动
-2. 平台/网络建设活动
-3. 客户获取活动
+**Key activities identification:**
+1. Value creation activities
+2. Platform/network building activities
+3. Customer acquisition activities
 
-**关键资源识别：**
-1. 实体资产
-2. 知识产权
-3. 人力资源
-4. 财务资源
+**Key resources identification:**
+1. Physical assets
+2. Intellectual property
+3. Human resources
+4. Financial resources
 
-**关键伙伴识别：**
-1. 供应商
-2. 战略联盟
-3. 合资伙伴
+**Key partners identification:**
+1. Suppliers
+2. Strategic alliances
+3. Joint venture partners
 
-**输出格式**：
+**Output format**:
 ```json
 {
   "key_activities": [
     {
-      "activity": "AI学习引擎算法优化",
+      "activity": "AI learning engine algorithm optimization",
       "type": "creation/delivery/platform",
       "priority": "high/medium/low"
     }
   ],
   "key_resources": [
     {
-      "resource": "自适应学习算法引擎",
+      "resource": "Adaptive learning algorithm engine",
       "type": "physical/intellectual/human/financial",
-      "ownership": "自建/外包/合作"
+      "ownership": "self-built/outsourced/partnership"
     }
   ],
   "key_partners": [
     {
-      "partner": "职业院校内容合作方",
+      "partner": "Vocational college content partner",
       "type": "supplier/strategic/joint_venture",
-      "purpose": "获取权威课程内容授权",
-      "dependency": "依赖程度"
+      "purpose": "Obtain authoritative course content licensing",
+      "dependency": "Dependency level"
     }
   ]
 }
 ```
 
-**验收标准**
-- 关键活动覆盖价值创造全流程
-- 资源需求与能力匹配
-- 伙伴关系设计合理
+**Acceptance criteria**
+- Key activities cover the full value creation process
+- Resource requirements match capabilities
+- Partnership design reasonable
 
-### Step 7：客户关系填充 [条件]
+### Step 7: Customer Relationships Population [Conditional]
 
-**任务**：定义与不同客户细分群体的关系类型。
+**Task**: Define relationship types with different customer segments.
 
-**执行逻辑**：
-1. 分析客户旅程各阶段的关系需求
-2. 确定自助服务/辅助服务/社区服务的组合
-3. 规划客户关系演进路径
+**Execution logic**:
+1. Analyze relationship needs at each stage of the customer journey
+2. Determine the mix of self-service/assisted service/community service
+3. Plan customer relationship evolution path
 
-**输出格式**：
+**Output format**:
 ```json
 {
   "customer_relationships": [
     {
       "segment_id": "segment-1",
       "relationship_type": "personal_assistance/dedicated_assistance/self_service/automated_service/community",
-      "description": "自助服务+客户成功经理辅助",
-      "touchpoints": ["在线帮助中心与知识库", "专属客户成功经理月度回访"]
+      "description": "Self-service + Customer Success Manager assistance",
+      "touchpoints": ["Online help center and knowledge base", "Dedicated Customer Success Manager monthly check-in"]
     }
   ]
 }
 ```
 
-**验收标准**：
-- 每个客户细分群体有对应关系类型
-- 关系类型与产品特性匹配
-- 触点清晰
+**Acceptance criteria**:
+- Each customer segment has a corresponding relationship type
+- Relationship type matches product characteristics
+- Touchpoints clear
 
-## 输出
+## Output
 
-**存储路径**：`docs/strategy/business-strategy.md（“商业模式画布”章节）`
+**Storage path**: `docs/strategy/business-strategy.md ("Business Model Canvas" section)`
 
-**输出文件**：bmc.json, assumptions.json
+**Output files**: bmc.json, assumptions.json
 
-### 输出校验规则
+### Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| bmc.customer_segments | array | 是 | 客户细分列表，至少2个 |
-| bmc.customer_segments[].segment_name | string | 是 | 客户群体名称，不可为空 |
-| bmc.customer_segments[].characteristics | string[] | 是 | 群体特征列表，不可为空 |
-| bmc.value_propositions | array | 是 | 价值主张列表，至少1个 |
-| bmc.value_propositions[].proposition | string | 是 | 价值主张描述，不可为空 |
-| bmc.value_propositions[].pain_addressed | string | 是 | 解决的痛点，不可为空 |
-| bmc.value_propositions[].gain_created | string | 否 | 创造的收益 |
-| bmc.channels | array | 是 | 覆盖客户旅程全阶段 |
-| bmc.channels[].channel_name | string | 是 | 渠道名称，不可为空 |
-| bmc.channels[].type | string | 是 | 渠道类型，枚举：direct/indirect/partner |
-| bmc.channels[].phase | string | 是 | 渠道阶段，枚举：awareness/evaluation/purchase/delivery/after_sales |
-| bmc.customer_relationships | array | 是 | 每个细分群体有对应关系类型 |
-| bmc.customer_relationships[].type | string | 是 | 关系类型，枚举：personal/automated/community/self_service |
-| bmc.customer_relationships[].segment | string | 是 | 对应客户群体，不可为空 |
-| bmc.revenue_streams | array | 是 | 收入来源列表，至少1个 |
-| bmc.revenue_streams[].stream_name | string | 是 | 收入来源名称，不可为空 |
-| bmc.revenue_streams[].pricing_model | string | 是 | 定价模式，枚举：subscription/transaction/freemium/advertising/licensing |
-| bmc.revenue_streams[].estimated_amount | string | 否 | 预估金额区间 |
-| bmc.revenue_streams[].target_segment | string | 否 | 对应客户群体 |
-| bmc.key_resources | array | 是 | 覆盖实体/知识产权/人力/财务 |
-| bmc.key_resources[].resource | string | 是 | 核心资源描述，不可为空 |
-| bmc.key_resources[].type | string | 是 | 资源类型，枚举：physical/intellectual/human/financial |
-| bmc.key_activities | array | 是 | 覆盖价值创造全流程 |
-| bmc.key_activities[].activity | string | 是 | 核心活动描述，不可为空 |
-| bmc.key_activities[].type | string | 是 | 活动类型，枚举：production/problem_solving/platform/network |
-| bmc.key_partnerships | array | 是 | 含供应商/战略联盟/合资伙伴 |
-| bmc.key_partnerships[].partner | string | 是 | 合作伙伴名称，不可为空 |
-| bmc.key_partnerships[].type | string | 是 | 合作类型，枚举：strategic_alliance/joint_venture/buyer_supplier |
-| bmc.key_partnerships[].purpose | string | 是 | 合作目的，不可为空 |
-| bmc.cost_structure | array | 是 | 成本结构列表，至少1个 |
-| bmc.cost_structure[].cost_item | string | 是 | 成本项名称，不可为空 |
-| bmc.cost_structure[].type | string | 是 | 成本类型，枚举：fixed/variable |
-| bmc.cost_structure[].estimated_range | string | 否 | 预估成本区间 |
-| bmc.cost_structure[].category | string | 否 | 成本分类，枚举：infrastructure/marketing/operations/personnel |
-| metadata.confidence | number | 是 | 0-1之间，整体置信度 |
-| metadata.requires_human_review | boolean | 是 | 是否需要人类审核 |
-| assumptions[].assumption_id | string | 是 | 假设唯一标识 |
-| assumptions[].description | string | 是 | 假设描述，不可为空 |
-| assumptions[].related_bmc_element | string | 是 | 关联画布要素路径 |
-| assumptions[].validation_method | string | 否 | 验证方法 |
-| assumptions[].priority | string | 是 | critical/high/medium/low |
-| assumptions[].confidence | number | 是 | 0-1之间，假设置信度 |
+| bmc.customer_segments | array | Yes | Customer segments list, at least 2 |
+| bmc.customer_segments[].segment_name | string | Yes | Customer group name, cannot be empty |
+| bmc.customer_segments[].characteristics | string[] | Yes | Group characteristics list, cannot be empty |
+| bmc.value_propositions | array | Yes | Value propositions list, at least 1 |
+| bmc.value_propositions[].proposition | string | Yes | Value proposition description, cannot be empty |
+| bmc.value_propositions[].pain_addressed | string | Yes | Pain point addressed, cannot be empty |
+| bmc.value_propositions[].gain_created | string | No | Gain created |
+| bmc.channels | array | Yes | Covers all stages of customer journey |
+| bmc.channels[].channel_name | string | Yes | Channel name, cannot be empty |
+| bmc.channels[].type | string | Yes | Channel type, enum: direct/indirect/partner |
+| bmc.channels[].phase | string | Yes | Channel phase, enum: awareness/evaluation/purchase/delivery/after_sales |
+| bmc.customer_relationships | array | Yes | Each segment has a corresponding relationship type |
+| bmc.customer_relationships[].type | string | Yes | Relationship type, enum: personal/automated/community/self_service |
+| bmc.customer_relationships[].segment | string | Yes | Corresponding customer group, cannot be empty |
+| bmc.revenue_streams | array | Yes | Revenue streams list, at least 1 |
+| bmc.revenue_streams[].stream_name | string | Yes | Revenue stream name, cannot be empty |
+| bmc.revenue_streams[].pricing_model | string | Yes | Pricing model, enum: subscription/transaction/freemium/advertising/licensing |
+| bmc.revenue_streams[].estimated_amount | string | No | Estimated amount range |
+| bmc.revenue_streams[].target_segment | string | No | Corresponding customer group |
+| bmc.key_resources | array | Yes | Covers physical/intellectual/human/financial |
+| bmc.key_resources[].resource | string | Yes | Core resource description, cannot be empty |
+| bmc.key_resources[].type | string | Yes | Resource type, enum: physical/intellectual/human/financial |
+| bmc.key_activities | array | Yes | Covers full value creation process |
+| bmc.key_activities[].activity | string | Yes | Core activity description, cannot be empty |
+| bmc.key_activities[].type | string | Yes | Activity type, enum: production/problem_solving/platform/network |
+| bmc.key_partnerships | array | Yes | Includes suppliers/strategic alliances/joint venture partners |
+| bmc.key_partnerships[].partner | string | Yes | Partner name, cannot be empty |
+| bmc.key_partnerships[].type | string | Yes | Partnership type, enum: strategic_alliance/joint_venture/buyer_supplier |
+| bmc.key_partnerships[].purpose | string | Yes | Partnership purpose, cannot be empty |
+| bmc.cost_structure | array | Yes | Cost structure list, at least 1 |
+| bmc.cost_structure[].cost_item | string | Yes | Cost item name, cannot be empty |
+| bmc.cost_structure[].type | string | Yes | Cost type, enum: fixed/variable |
+| bmc.cost_structure[].estimated_range | string | No | Estimated cost range |
+| bmc.cost_structure[].category | string | No | Cost category, enum: infrastructure/marketing/operations/personnel |
+| metadata.confidence | number | Yes | Between 0-1, overall confidence |
+| metadata.requires_human_review | boolean | Yes | Whether human review is needed |
+| assumptions[].assumption_id | string | Yes | Assumption unique identifier |
+| assumptions[].description | string | Yes | Assumption description, cannot be empty |
+| assumptions[].related_bmc_element | string | Yes | Related canvas element path |
+| assumptions[].validation_method | string | No | Validation method |
+| assumptions[].priority | string | Yes | critical/high/medium/low |
+| assumptions[].confidence | number | Yes | Between 0-1, assumption confidence |
 
-### 完整商业画布JSON
+### Complete Business Canvas JSON
 
 ```json
 {
   "bmc": {
     "customer_segments": [
       {
-        "segment_name": "string - 客户群体名称",
-        "description": "string - 群体描述",
-        "characteristics": ["string - 群体特征"]
+        "segment_name": "string - Customer group name",
+        "description": "string - Group description",
+        "characteristics": ["string - Group characteristics"]
       }
     ],
     "value_propositions": [
       {
-        "proposition": "string - 价值主张",
-        "target_segment": "string - 对应客户群体",
-        "pain_addressed": "string - 解决的痛点",
-        "gain_created": "string - 创造的收益"
+        "proposition": "string - Value proposition",
+        "target_segment": "string - Corresponding customer group",
+        "pain_addressed": "string - Pain point addressed",
+        "gain_created": "string - Gain created"
       }
     ],
     "channels": [
       {
-        "channel_name": "string - 渠道名称",
+        "channel_name": "string - Channel name",
         "type": "direct|indirect|partner",
         "phase": "awareness|evaluation|purchase|delivery|after_sales"
       }
@@ -461,42 +461,42 @@ writes:
     "customer_relationships": [
       {
         "type": "personal|automated|community|self_service",
-        "segment": "string - 对应客户群体",
-        "description": "string - 关系描述"
+        "segment": "string - Corresponding customer group",
+        "description": "string - Relationship description"
       }
     ],
     "revenue_streams": [
       {
-        "stream_name": "string - 收入来源名称",
+        "stream_name": "string - Revenue stream name",
         "pricing_model": "subscription|transaction|freemium|advertising|licensing",
-        "estimated_amount": "string - 预估金额区间",
-        "target_segment": "string - 对应客户群体"
+        "estimated_amount": "string - Estimated amount range",
+        "target_segment": "string - Corresponding customer group"
       }
     ],
     "key_resources": [
       {
-        "resource": "string - 核心资源",
+        "resource": "string - Core resource",
         "type": "physical|intellectual|human|financial"
       }
     ],
     "key_activities": [
       {
-        "activity": "string - 核心活动",
+        "activity": "string - Core activity",
         "type": "production|problem_solving|platform|network"
       }
     ],
     "key_partnerships": [
       {
-        "partner": "string - 合作伙伴",
+        "partner": "string - Partner",
         "type": "strategic_alliance|joint_venture|buyer_supplier",
-        "purpose": "string - 合作目的"
+        "purpose": "string - Partnership purpose"
       }
     ],
     "cost_structure": [
       {
-        "cost_item": "string - 成本项",
+        "cost_item": "string - Cost item",
         "type": "fixed|variable",
-        "estimated_range": "string - 预估成本区间",
+        "estimated_range": "string - Estimated cost range",
         "category": "infrastructure|marketing|operations|personnel"
       }
     ]
@@ -509,16 +509,16 @@ writes:
 }
 ```
 
-### 假设清单
+### Assumption List
 
 ```json
 {
   "assumptions": [
     {
-      "assumption_id": "string - 假设ID",
-      "description": "string - 假设描述",
-      "related_bmc_element": "string - 关联的画布要素（如customer_segments.0）",
-      "validation_method": "string - 验证方法",
+      "assumption_id": "string - Assumption ID",
+      "description": "string - Assumption description",
+      "related_bmc_element": "string - Related canvas element (e.g., customer_segments.0)",
+      "validation_method": "string - Validation method",
       "priority": "critical|high|medium|low",
       "confidence": 0.0
     }
@@ -526,102 +526,102 @@ writes:
 }
 ```
 
-## 决策规则
+## Decision Rules
 
-### 收入模式决策规则
+### Revenue Model Decision Rules
 
-1. **选项生成规则**：必须生成至少2个收入模式选项供选择
+1. **Option generation rule**: Must generate at least 2 revenue model options for selection
 
-2. **风险评估规则**：
-   - 高风险假设需在建议中明确标注
-   - 高风险假设失效影响>50%收入时，强制升级人类审批
+2. **Risk assessment rule**:
+   - High-risk assumptions must be explicitly annotated in recommendations
+   - When high-risk assumption failure affects > 50% of revenue, force escalation to human approval
 
-3. **假设显式化规则**：
-   - 所有收入假设必须列出
-   - 每个假设需标注风险等级（low/medium/high）
-   - 假设来源需可追溯
+3. **Explicit assumption rule**:
+   - All revenue assumptions must be listed
+   - Each assumption must be annotated with risk level (low/medium/high)
+   - Assumption sources must be traceable
 
-### 整体决策规则
+### Overall Decision Rules
 
-1. **多选项呈现**：每个关键决策点生成2-3个可比较选项
+1. **Multi-option presentation**: Generate 2-3 comparable options for each key decision point
 
-2. **数据支撑标注**：每个画布要素需标注数据来源和推断依据
+2. **Data support annotation**: Each canvas element must annotate data source and inference basis
 
-3. **不确定性透明**：所有推断内容需标注置信度
+3. **Uncertainty transparency**: All inferred content must be annotated with confidence
 
-## 质量检查
+## Quality Checks
 
-### 自检清单
+### Self-Check List
 
-- [ ] 商业模式画布9个要素全部填充（P0）
-- [ ] 每个要素包含内容有数据支撑或假设标注（P0）
-- [ ] 至少生成2个收入模式选项（P1）
-- [ ] 假设清单完整，每个假设包含：（P1）
-  - 描述清晰
-  - 风险等级已标注
-  - 验证状态已标注
-  - 影响评估已提供
-- [ ] 核心假设的验证方法已建议（P1）
-- [ ] 单位经济指标已设定（P2）
+- [ ] All 9 building blocks of the business model canvas populated (P0)
+- [ ] Each element's content has data support or assumption annotation (P0)
+- [ ] At least 2 revenue model options generated (P1)
+- [ ] Assumption list complete, each assumption includes: (P1)
+  - Clear description
+  - Risk level annotated
+  - Validation status annotated
+  - Impact assessment provided
+- [ ] Validation method recommended for core assumptions (P1)
+- [ ] Unit economics indicators set (P2)
 
-### 输出质量标准
+### Output Quality Standards
 
-1. **完整性（P0）**：9格画布每格至少1条内容，且value_propositions与customer_segments有对应关系
-2. **可追溯性（P0）**：每格内容标注data_source(上游skill/用户描述/AI推断)
-3. **假设完整性（P1）**：assumptions列表≥3条，每条包含assumption+validation_method+priority
-4. **收入可验证性（P2）**：revenue_streams包含≥1个具体收入来源且定价策略有数字区间
+1. **Completeness (P0)**: Each of the 9 blocks has at least 1 content item, and value_propositions correspond to customer_segments
+2. **Traceability (P0)**: Each block annotates data_source (upstream skill/user description/AI inference)
+3. **Assumption completeness (P1)**: assumptions list ≥ 3 items, each including assumption+validation_method+priority
+4. **Revenue verifiability (P2)**: revenue_streams includes ≥ 1 specific revenue stream and pricing strategy has numeric range
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-当上游文件不存在时，本Skill仍可独立执行：
+When upstream files do not exist, this Skill can still execute independently:
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Notes |
 |---------------|---------|---------|------------|
-| product_context缺失 | 用户提供产品描述和目标用户 → 基于描述生成BMC | 客户细分和价值主张缺乏探索阶段数据支撑，整体置信度从0.8降至0.5，相关画布格置信度≤0.4，标注needs_human_validation: true | 要求用户提供产品概念、目标用户画像和核心痛点描述 |
-| market_data缺失 | 用户提供竞品和行业信息 → 基于描述推断市场规模和竞品模式 | 收入模式和成本结构缺乏市场基准数据，定价参考缺失，相关画布格置信度≤0.4 | 要求用户提供竞品商业模式、行业典型定价和市场规模数据 |
-| product_context + market_data均缺失 | 用户提供产品描述和目标用户 → 基于描述生成BMC | 各模块整体置信度从0.8降至0.5，假设条目增多，相关画布格置信度≤0.3，标注auto_filled: true | 要求用户提供产品描述、目标用户画像、竞品信息和行业定价参考 |
-| 所有上游文件均缺失 | 提示用户先执行前序阶段，或基于用户提供的产品描述和目标用户直接生成BMC | 整体置信度从0.8降至0.3，大部分内容为假设推断，相关画布格置信度≤0.3，标注auto_filled: true | 要求用户提供产品概念、目标用户、价值主张，或上传persona.json/opportunity-definition.json文件 |
+| product_context missing | User provides product description and target users → generate BMC based on description | Customer segments and value propositions lack discovery stage data support, overall confidence drops from 0.8 to 0.5, related canvas blocks confidence ≤ 0.4, annotate needs_human_validation: true | Require user to provide product concept, target user persona, and core pain point description |
+| market_data missing | User provides competitor and industry info → infer market size and competitor models based on description | Revenue model and cost structure lack market benchmark data, pricing reference missing, related canvas blocks confidence ≤ 0.4 | Require user to provide competitor business models, industry typical pricing, and market size data |
+| product_context + market_data both missing | User provides product description and target users → generate BMC based on description | Each module's overall confidence drops from 0.8 to 0.5, more assumption items, related canvas blocks confidence ≤ 0.3, annotate auto_filled: true | Require user to provide product description, target user persona, competitor info, and industry pricing reference |
+| All upstream files missing | Prompt user to execute prior stages first, or generate BMC directly based on user-provided product description and target users | Overall confidence drops from 0.8 to 0.3, most content is assumption inference, related canvas blocks confidence ≤ 0.3, annotate auto_filled: true | Require user to provide product concept, target users, value proposition, or upload persona.json/opportunity-definition.json files |
 
-## 数据获取说明
+## Data Acquisition Notes
 
-本Skill需要探索阶段输出数据（Persona、机会简报等），请通过以下方式之一提供：
-  1. 直接描述产品概念、目标用户和价值主张
-  2. 上传persona.json / opportunity-definition.json等文件
-  3. 提供数据文件路径
-- AI不负责外部数据采集，仅负责分析
+This Skill requires discovery stage output data (Persona, opportunity brief, etc.). Please provide via one of the following:
+  1. Directly describe product concept, target users, and value proposition
+  2. Upload persona.json / opportunity-definition.json and other files
+  3. Provide data file paths
+- AI is not responsible for external data collection, only analysis
 
 ---
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| persona.json用户画像更新 | 客户细分、客户关系模块需重新填充 | 重新执行Step 1和Step 7，标注变更来源 |
-| opportunity-definition机会定义更新 | 价值主张、收入模式可能需调整 | 重新评估价值主张优先级，检查收入模式匹配度 |
-| competitor-analysis竞品数据更新 | 价值主张差异化、收入模式定价参考 | 重新执行Step 2和Step 3，更新竞品对标数据 |
-| 市场规模数据变更 | 收入预期和成本结构 | 重新计算单位经济指标，更新市场规模假设 |
+| persona.json user persona update | Customer segments, customer relationships modules need re-population | Re-execute Step 1 and Step 7, annotate change source |
+| opportunity-definition update | Value proposition, revenue model may need adjustment | Re-evaluate value proposition priority, check revenue model match |
+| competitor-analysis competitor data update | Value proposition differentiation, revenue model pricing reference | Re-execute Step 2 and Step 3, update competitor benchmarking data |
+| Market size data change | Revenue expectations and cost structure | Recalculate unit economics indicators, update market size assumptions |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 变更类型 | 影响范围 | 通知方式 |
+| Change Type | Impact Scope | Notification Method |
 |----------|----------|----------|
-| 客户细分调整 | business-value-fit、business-pricing | 输出文件版本号+变更摘要 |
-| 价值主张变更 | business-value-fit、positioning-strategy | 输出文件版本号+变更摘要 |
-| 收入模式变更 | business-pricing | 输出文件版本号+变更摘要 |
-| 成本结构变更 | business-pricing、business-strategy-report | 输出文件版本号+变更摘要 |
+| Customer segment adjustment | business-value-fit, business-pricing | Output file version number + change summary |
+| Value proposition change | business-value-fit, positioning-strategy | Output file version number + change summary |
+| Revenue model change | business-pricing | Output file version number + change summary |
+| Cost structure change | business-pricing, business-strategy-report | Output file version number + change summary |
 
 ---
 
 ## Human Review Checklist
 
-在提交人类审批前，确保以下内容：
+Before submitting for human approval, ensure the following:
 
-- [ ] 客户细分符合市场实际情况
-- [ ] 价值主张差异化明显且可实现
-- [ ] 收入模式选项各有清晰优劣
-- [ ] 成本结构与运营计划匹配
-- [ ] 关键假设可验证且有验证计划
+- [ ] Customer segments match actual market conditions
+- [ ] Value proposition differentiation is clear and achievable
+- [ ] Revenue model options each have clear pros/cons
+- [ ] Cost structure matches operational plan
+- [ ] Key assumptions are verifiable with a validation plan

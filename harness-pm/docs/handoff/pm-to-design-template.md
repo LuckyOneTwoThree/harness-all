@@ -1,107 +1,107 @@
-# 交接：harness-pm → harness-design
+# Handoff: harness-pm → harness-design
 
-> 生成时间：YYYY-MM-DD HH:MM
-> 源框架：harness-pm
-> 目标框架：harness-design
+> Generated at: YYYY-MM-DD HH:MM
+> Source framework: harness-pm
+> Target framework: harness-design
 
-## 阶段总结
+## Phase Summary
 
-<本阶段做了什么，一句话概括。如：完成 V1 PRD，含 3 个核心功能>
+<One-sentence summary of what was done in this phase. e.g., Completed V1 PRD, including 3 core features>
 
-## 产品基本信息
+## Product Basics
 
-| 字段 | 值 | 说明 |
+| Field | Value | Notes |
 |------|-----|------|
-| 产品名称 | <名称> | |
-| 产品类型 | <web app / mobile app / desktop / landing page / ...> | 决定设计范式 |
-| 目标受众 | <受众描述> | 影响风格定位 |
-| 技术栈 | <React / Vue / Svelte / 原生 / ...> | 决定 component-map.json 的 props Type 体系 |
-| 平台 | <iOS / Android / Web / 桌面> | 决定响应式策略 |
+| Product name | <name> | |
+| Product type | <web app / mobile app / desktop / landing page / ...> | Determines design paradigm |
+| Target audience | <audience description> | Influences style positioning |
+| Tech stack | <React / Vue / Svelte / vanilla / ...> | Determines the props Type system in component-map.json |
+| Platform | <iOS / Android / Web / desktop> | Determines responsive strategy |
 
-## 定位陈述
+## Positioning Statement
 
-<一句话定位，来自 positioning skill 产出。如：为独立开发者提供一站式项目管理工具>
+<One-sentence positioning, from positioning skill output. e.g., A one-stop project management tool for indie developers>
 
 ## Persona
 
-| Persona | 路径 | 关键特征 |
+| Persona | Path | Key traits |
 |---------|------|---------|
-| 主用户 | docs/discovery/user-research.md（"用户画像"章节） | <一句话特征> |
-| 次用户 | docs/discovery/user-research.md（"用户画像"章节） | <一句话特征> |
+| Primary user | docs/discovery/user-research.md ("User Personas" section) | <one-sentence trait> |
+| Secondary user | docs/discovery/user-research.md ("User Personas" section) | <one-sentence trait> |
 
-> Persona 数据存储在 user-research.md 的"用户画像"章节，如尚未产出，填"待补"并标注影响范围。
+> Persona data is stored in the "User Personas" section of user-research.md. If not yet produced, fill in "To be supplemented" and note the impact scope.
 
-## PRD 路径与验收标准
+## PRD Path and Acceptance Criteria
 
-**PRD 文档**：`docs/product/PRD.md`
+**PRD document**: `docs/product/PRD.md`
 
-**验收标准清单（AC-xxx）**：
+**Acceptance criteria list (AC-xxx)**:
 
-> 以下 AC 直接复用 PRD 的 acceptance_criteria，已带 ac_id 编号。
-> harness-design 的 design-brief skill 应直接沿用此编号，不重新编号。
-> ⚠️ **警告**：PM 在此列出的 AC 仅限于描述【业务规则、数据流转、前置后置条件】。严禁包含具体的 UI 布局、颜色或排版指示。必须将视觉与交互的探索空间 100% 留给 harness-design。
+> The following ACs directly reuse the acceptance_criteria from the PRD, already numbered with ac_id.
+> harness-design's design-brief skill should reuse these IDs as-is, do not renumber.
+> ⚠️ **Warning**: The ACs listed here by PM are limited to describing [business rules, data flows, pre/post-conditions]. Do NOT include specific UI layout, color, or typography instructions. The entire visual and interaction exploration space must be left 100% to harness-design.
 
-- [ ] AC-001: <Given-When-Then 或可测试描述>
-- [ ] AC-002: <可测试描述>
-- [ ] AC-003: <可测试描述>
+- [ ] AC-001: <Given-When-Then or testable description>
+- [ ] AC-002: <testable description>
+- [ ] AC-003: <testable description>
 
-## 风格关键词
+## Style Keywords
 
-<3-5 个风格关键词，来自 positioning 或用户明确要求。如：极简 / 专业 / 可信赖 / 科技感>
+<3-5 style keywords, from positioning or explicit user request. e.g., minimalist / professional / trustworthy / tech-feel>
 
-> 如未明确，填"待 harness-design 的 design-brief skill 探索"。
+> If not specified, fill in "Pending exploration by harness-design's design-brief skill".
 
-## 不做清单（Out of Scope）
+## Out of Scope
 
-明确不在本次设计范围内的内容：
+Content explicitly excluded from this design scope:
 
-- 不做 <X>
-- 不做 <Y>
+- Not doing <X>
+- Not doing <Y>
 
-## 已有设计系统资产（如有）
+## Existing Design System Assets (if any)
 
-> 以下路径为 harness-design 项目内的路径（非 harness-pm），PM 仅标注是否已存在，由 harness-design 确认。
+> The following paths are inside the harness-design project (not harness-pm). PM only marks whether they exist; harness-design confirms.
 
-| 资产 | harness-design 内路径 | 是否已存在 |
+| Asset | Path inside harness-design | Already exists? |
 |------|----------------------|-----------|
-| 设计系统 | docs/design-system/DESIGN.md | <是/否/未知> |
-| 设计令牌 | docs/design-system/tokens.json | <是/否/未知> |
-| 组件库 | docs/design-system/components/ | <是/否/未知> |
+| Design system | docs/design-system/DESIGN.md | <yes/no/unknown> |
+| Design tokens | docs/design-system/tokens.json | <yes/no/unknown> |
+| Component library | docs/design-system/components/ | <yes/no/unknown> |
 
-> 如为全新项目，填"无"。如 PM 不确定，填"未知，由 harness-design 确认"。
+> For a brand-new project, fill in "None". If PM is unsure, fill in "Unknown, to be confirmed by harness-design".
 
-## 关键决策
+## Key Decisions
 
-| 决策 | 理由 | 影响范围 |
+| Decision | Rationale | Impact scope |
 |------|------|---------|
-| 选用方案 X | 用户调研支撑 | 全项目 |
-| 不做功能 Y | 不在 MVP 范围 | 范围边界 |
+| Choose solution X | Supported by user research | Whole project |
+| Skip feature Y | Not in MVP scope | Scope boundary |
 
-## 未决事项
+## Open Items
 
-需 harness-design 处理或与 harness-pm 确认的问题：
+Issues for harness-design to handle or confirm with harness-pm:
 
-- 待定 1: <问题描述>
-- 待定 2: <问题描述>
+- TBD 1: <issue description>
+- TBD 2: <issue description>
 
-## 建议下一步
+## Suggested Next Steps
 
-harness-design 应优先处理：
+harness-design should prioritize:
 
-1. 运行 design-brief skill，消费本文件的 AC-xxx 和风格关键词
-2. 运行 design-system-setup workflow，建立设计系统骨架
-3. 运行 new-design workflow，进入 LOOP 产出设计稿
+1. Run the design-brief skill, consume the AC-xxx and style keywords in this file
+2. Run the design-system-setup workflow, build the design system skeleton
+3. Run the new-design workflow, enter the LOOP to produce design drafts
 
-## 风险提示
+## Risk Notes
 
-| 风险 | 等级 | 缓解措施 |
+| Risk | Level | Mitigation |
 |------|------|---------|
-| 技术栈未定 | 高/中/低 | <措施> |
-| Persona 缺失 | 高/中/低 | <措施> |
+| Tech stack undecided | High/Medium/Low | <action> |
+| Persona missing | High/Medium/Low | <action> |
 
 ---
 
-## 下游框架使用说明
+## Downstream Framework Usage Notes
 
-harness-design 的 design-brief skill 会自动检测本文件并读取 AC-xxx 清单。
-如未自动识别，可手动指向本文件路径让 Agent 读取。
+harness-design's design-brief skill will auto-detect this file and read the AC-xxx list.
+If not auto-detected, you can manually point the Agent to this file path to read it.

@@ -1,12 +1,12 @@
 ---
 name: kubernetes-manifest
-description: K8s YAML Manifest 生成与维护，遵循最佳实践（资源限制/探针/RBAC/NetworkPolicy）
+description: K8s YAML Manifest generation and maintenance, following best practices (resource limits / probes / RBAC / NetworkPolicy)
 triggers:
-  - 需要生成 K8s 部署配置时
-  - 需要修改现有 Manifest 时
-  - K8s 资源异常需要排查时
-  - deployment-pipeline 生成部署配置时
-  - 用户要求"写一个 K8s 部署文件"时
+  - When K8s deployment config needs to be generated
+  - When existing Manifests need to be modified
+  - When K8s resources are abnormal and need troubleshooting
+  - When deployment-pipeline generates deployment config
+  - When the user requests "write a K8s deployment file"
 reads:
   - docs/infrastructure/OPS_STRATEGY.md
   - docs/handoff/solo-to-ops.md
@@ -23,29 +23,29 @@ operation_tier: propose
 requires_approval: false
 ---
 
-# Kubernetes Manifest — K8s YAML 生成与维护
+# Kubernetes Manifest — K8s YAML Generation and Maintenance
 
-## 铁律
+## Ground Rules
 
-1. **所有 Pod 必须有资源限制** —— requests + limits 缺一不可
-2. **所有工作负载必须有探针** —— liveness + readiness
-3. **不使用 latest 标签** —— 镜像必须固定版本
-4. **不使用 default namespace** —— 必须指定 namespace
-5. **Secret 不硬编码** —— 使用引用或外部 Secret 管理
+1. **All Pods must have resource limits** — requests + limits, both mandatory
+2. **All workloads must have probes** — liveness + readiness
+3. **Do not use the latest tag** — image version must be pinned
+4. **Do not use the default namespace** — namespace must be specified
+5. **Secrets must not be hardcoded** — use references or external Secret management
 
-## 流程
+## Process
 
-### 1. 评估工作负载需求
+### 1. Assess Workload Requirements
 
-读取 `solo-to-ops.md`：
-- 镜像地址和版本
-- 环境变量清单
-- 端口暴露
-- 资源需求（CPU/内存预估）
-- 持久化需求
-- 健康检查端点
+Read `solo-to-ops.md`:
+- Image address and version
+- Environment variable list
+- Port exposure
+- Resource requirements (CPU/memory estimate)
+- Persistence requirements
+- Health check endpoints
 
-### 2. 生成 Manifest
+### 2. Generate Manifest
 
 #### Deployment
 ```yaml
@@ -76,7 +76,7 @@ spec:
     spec:
       containers:
       - name: app
-        image: registry.example.com/payment-service:v1.2.3  # 固定版本
+        image: registry.example.com/payment-service:v1.2.3  # pinned version
         ports:
         - containerPort: 8080
         env:
@@ -146,7 +146,7 @@ data:
       new_checkout: true
 ```
 
-#### HPA（水平扩缩容）
+#### HPA (Horizontal Pod Autoscaler)
 ```yaml
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -175,7 +175,7 @@ spec:
         averageUtilization: 80
 ```
 
-#### NetworkPolicy（安全隔离）
+#### NetworkPolicy (security isolation)
 ```yaml
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -207,24 +207,24 @@ spec:
       port: 5432
 ```
 
-### 3. 最佳实践检查
+### 3. Best Practice Checks
 
-生成 Manifest 后自动检查：
+After generating the Manifest, auto-check:
 
-| 检查项 | 要求 | 严重度 |
+| Check Item | Requirement | Severity |
 |--------|------|--------|
-| 镜像标签 | 非 latest，固定版本 | 高 |
-| 资源限制 | requests + limits 都有 | 高 |
-| 探针 | liveness + readiness | 高 |
-| namespace | 非 default | 中 |
-| securityContext | runAsNonRoot + readOnlyRootFilesystem | 高 |
-| Secret 引用 | 不硬编码敏感值 | 高 |
-| 副本数 | ≥ 2（生产环境） | 中 |
-| PDB | 配置 PodDisruptionBudget | 中 |
+| Image tag | not latest, pinned version | High |
+| Resource limits | both requests + limits | High |
+| Probes | liveness + readiness | High |
+| namespace | not default | Medium |
+| securityContext | runAsNonRoot + readOnlyRootFilesystem | High |
+| Secret references | no hardcoded sensitive values | High |
+| Replica count | ≥ 2 (production) | Medium |
+| PDB | configure PodDisruptionBudget | Medium |
 
-### 4. 生成 GitOps PR
+### 4. Generate GitOps PR
 
-将 Manifest 写入 GitOps 仓库：
+Write the Manifest to the GitOps repo:
 ```
 gitops-repo/
 ├── production/
@@ -236,60 +236,60 @@ gitops-repo/
 │   │   └── networkpolicy.yaml
 ```
 
-生成 PR 描述：
+Generate PR description:
 ```
-## 部署 payment-service v1.2.3
+## Deploy payment-service v1.2.3
 
-### 变更内容
-- 镜像升级: v1.2.2 → v1.2.3
-- 新增环境变量: REDIS_URL
-- 资源限制调整: CPU limits 500m → 800m
+### Changes
+- Image upgrade: v1.2.2 → v1.2.3
+- New env var: REDIS_URL
+- Resource limit adjustment: CPU limits 500m → 800m
 
-### 来源
-- solo-to-ops.md: [链接]
-- 影响面: 中
+### Source
+- solo-to-ops.md: [link]
+- Impact: medium
 
-### 验证
-- [x] 最佳实践检查通过
-- [x] staging 环境验证通过
-- [ ] production 部署待审批
+### Verification
+- [x] Best practice checks passed
+- [x] Staging environment verified
+- [ ] Production deployment pending approval
 ```
 
-### 5. K8s 资源排查（如需）
+### 5. K8s Resource Troubleshooting (if needed)
 
-当 K8s 资源异常时，执行诊断：
+When K8s resources are abnormal, run diagnostics:
 ```bash
-# Pod 异常状态
+# Pod abnormal status
 kubectl get pods -n <ns> --field-selector=status.phase!=Running
 
-# 事件查看
+# View events
 kubectl describe pod <pod-name> -n <ns>
 
-# 日志查看
-kubectl logs <pod-name> -n <ns> --previous  # 查看崩溃前的日志
+# View logs
+kubectl logs <pod-name> -n <ns> --previous  # view logs before crash
 
-# 资源使用
+# Resource usage
 kubectl top pods -n <ns>
 kubectl top nodes
 ```
 
-常见问题诊断：
-- **CrashLoopBackOff**：检查启动日志、资源限制、探针配置
-- **OOMKilled**：增加 memory limits 或排查内存泄漏
-- **ImagePullBackOff**：检查镜像地址、仓库凭据
-- **Pending**：检查资源是否足够、nodeSelector/affinity
+Common issue diagnosis:
+- **CrashLoopBackOff**: check startup logs, resource limits, probe config
+- **OOMKilled**: increase memory limits or investigate memory leaks
+- **ImagePullBackOff**: check image address, registry credentials
+- **Pending**: check whether resources are sufficient, nodeSelector/affinity
 
-## 禁止事项
+## Prohibitions
 
-- 不使用 latest 镜像标签
-- 不硬编码 Secret 值
-- 不使用 default namespace
-- 不配置 privileged: true
-- 不跳过资源限制
-- 不在生产环境直接 kubectl apply（走 GitOps PR）
+- Do not use the latest image tag
+- Do not hardcode Secret values
+- Do not use the default namespace
+- Do not set privileged: true
+- Do not skip resource limits
+- Do not run kubectl apply directly in production (go through a GitOps PR)
 
-## 与 LOOP 的关系
+## Relationship to LOOP
 
-**所属 LOOP 类型**：provision（PLAN 阶段）
+**LOOP type**: provision (PLAN stage)
 
-本 skill 在 deployment-pipeline 的 PLAN 阶段被调用，生成 Manifest 后由 deployment-pipeline 编排后续部署。
+This skill is invoked during the PLAN stage of deployment-pipeline; after generating the Manifest, deployment-pipeline orchestrates the subsequent deployment.

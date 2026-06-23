@@ -1,50 +1,50 @@
-# FEATURES.md — 功能看板
+# FEATURES.md — Feature board
 
-> 记录运维任务与基础设施建设的整体进度。
-> 由 session-end 批量更新（扫描 loops/specs/*/state.yaml）。
+> Records the overall progress of ops tasks and infrastructure buildout.
+> Batch updated by session-end (scans loops/specs/*/state.yaml).
 
-## Skill 建设进度
+## Skill build progress
 
-| 模块 | 总数 | 已建 | 状态 |
+| Module | Total | Built | Status |
 |------|------|------|------|
-| 元（meta） | 4 | 4 | ✅ 完成 |
-| 模块1 部署交付 | 4 | 4 | ✅ 完成 |
-| 模块2 基础设施 | 4 | 4 | ✅ 完成 |
-| 模块3 监控可观测 | 4 | 4 | ✅ 完成 |
-| 模块4 故障响应 | 4 | 4 | ✅ 完成 |
-| 模块5 安全合规 | 4 | 4 | ✅ 完成 |
-| 模块6 容量成本 | 3 | 3 | ✅ 完成 |
-| 模块7 容灾备份 | 3 | 3 | ✅ 完成 |
-| 模块8 运维审查 | 2 | 2 | ✅ 完成 |
-| **合计** | **32** | **32** | ✅ 全部完成 |
+| Meta | 4 | 4 | ✅ Complete |
+| Module 1 Deployment & Delivery | 4 | 4 | ✅ Complete |
+| Module 2 Infrastructure | 4 | 4 | ✅ Complete |
+| Module 3 Monitoring & Observability | 4 | 4 | ✅ Complete |
+| Module 4 Incident Response | 4 | 4 | ✅ Complete |
+| Module 5 Security & Compliance | 4 | 4 | ✅ Complete |
+| Module 6 Capacity & Cost | 3 | 3 | ✅ Complete |
+| Module 7 Disaster Recovery & Backup | 3 | 3 | ✅ Complete |
+| Module 8 Ops Review | 2 | 2 | ✅ Complete |
+| **Total** | **32** | **32** | ✅ All complete |
 
-## Workflow 建设进度
+## Workflow build progress
 
-| Workflow | 状态 |
+| Workflow | Status |
 |----------|------|
-| deployment-workflow | ✅ 已建设 |
-| incident-response-workflow | ✅ 已建设 |
-| infrastructure-setup-workflow | ✅ 已建设 |
-| monitoring-deployment-workflow | ✅ 已建设 |
-| security-audit-workflow | ✅ 已建设 |
-| disaster-recovery-workflow | ✅ 已建设 |
-| ops-review-workflow | ✅ 已建设 |
+| deployment-workflow | ✅ Built |
+| incident-response-workflow | ✅ Built |
+| infrastructure-setup-workflow | ✅ Built |
+| monitoring-deployment-workflow | ✅ Built |
+| security-audit-workflow | ✅ Built |
+| disaster-recovery-workflow | ✅ Built |
+| ops-review-workflow | ✅ Built |
 
-## 进行中
+## In Progress
 
-| ID | 任务 | 循环类型 | 状态 | 最后更新 |
+| ID | Task | Loop type | Status | Last updated |
 |----|------|---------|------|---------|
 | - | - | - | - | - |
 
-## 已完成
+## Completed
 
-| ID | 任务 | 循环类型 | 完成日期 | 备注 |
+| ID | Task | Loop type | Completion date | Note |
 |----|------|---------|---------|------|
 | - | - | - | - | - |
 
-## 待规划
+## To Plan
 
-- [ ] 基础设施战略文档（OPS_STRATEGY.md）填写
-- [ ] CI/CD 流水线搭建
-- [ ] 监控告警体系部署
-- [ ] 容灾演练方案设计
+- [ ] Fill in infrastructure strategy document (OPS_STRATEGY.md)
+- [ ] Set up CI/CD pipeline
+- [ ] Deploy monitoring & alerting system
+- [ ] Design disaster recovery drill plan

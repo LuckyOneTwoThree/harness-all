@@ -2,9 +2,9 @@
 name: design-lint
 description: Mechanically verifies design against design system rules using script execution. Use after verify in LOOP. Use before design-review.
 triggers:
-  - LOOP 内 verify 之后
-  - 设计稿需要机械规则检查
-  - design-review 之前
+  - In-LOOP, after verify
+  - Design mockups need mechanical rule checks
+  - Before design-review
 reads:
   - .harness/craft/anti-ai-slop.md
   - docs/design-system/DESIGN.md
@@ -20,31 +20,31 @@ writes:
 
 ## Overview
 
-AI 设计 Linter，机械可验证规则检查，零主观判断。对照设计系统自身一致性，像 ESLint 捕获代码错误一样。
+AI design Linter; mechanically verifiable rule checks with zero subjective judgment. Checks consistency against the design system itself, like ESLint catching code errors.
 
-**关键**：真正的机械规则必须交给真正的代码执行，不是 LLM 脑补。Agent 编写并运行一次性 Node.js 脚本做正则扫描。
+**Key**: Real mechanical rules must be executed by real code, not LLM hallucination. The Agent writes and runs a one-off Node.js script to do regex scanning.
 
 ## When to Use
 
-- ✅ LOOP 内 verify 之后
-- ✅ 设计稿需要机械规则检查
-- ✅ design-review 之前
-- ❌ NOT for 主观设计判断（用 design-review skill）
+- ✅ In-LOOP, after verify
+- ✅ Design mockups need mechanical rule checks
+- ✅ Before design-review
+- ❌ NOT for subjective design judgment (use the design-review skill)
 
 ## Process
 
-### 1. 读取上下文
+### 1. Read Context
 
-- `docs/design-system/DESIGN.md`：设计系统
-- `docs/design-system/tokens.json`：token 定义
-- 待检查的设计稿（`docs/visual/<page>.md`）
+- `docs/design-system/DESIGN.md`: Design system
+- `docs/design-system/tokens.json`: Token definitions
+- Design mockups to be checked (`docs/visual/<page>.md`)
 
-### 2. 编写 Lint 脚本
+### 2. Write Lint Script
 
-Agent 编写一次性 Node.js 脚本，正则扫描设计稿：
+The Agent writes a one-off Node.js script that regex-scans the design mockups:
 
 ```javascript
-// lint-design.mjs - 一次性脚本，用完即弃
+// lint-design.mjs - One-off script, discard after use
 import { readFileSync, writeFileSync } from 'fs';
 
 const design = readFileSync('docs/visual/<page>.md', 'utf8');
@@ -52,7 +52,7 @@ const tokens = JSON.parse(readFileSync('docs/design-system/tokens.json', 'utf8')
 
 const errors = [];
 
-// L001: 所有颜色必须来自 token（禁止硬编码 hex）
+// L001: All colors must come from tokens (no hardcoded hex)
 const hexMatches = design.matchAll(/#[0-9a-fA-F]{6}/g);
 const tokenColors = Object.values(tokens.color || {}).map(t => t.$value.toLowerCase());
 for (const match of hexMatches) {
@@ -68,7 +68,7 @@ for (const match of hexMatches) {
   }
 }
 
-// L011: 禁用 Inter/Roboto/Arial 作为主字体
+// L011: Forbid Inter/Roboto/Arial as primary font
 if (/font-family.*?(Inter|Roboto|Arial)/i.test(design)) {
   errors.push({
     rule: 'L011',
@@ -79,7 +79,7 @@ if (/font-family.*?(Inter|Roboto|Arial)/i.test(design)) {
   });
 }
 
-// L012: 禁用 #6366f1 紫色
+// L012: Forbid #6366f1 purple
 if (/#6366f1/i.test(design)) {
   errors.push({
     rule: 'L012',
@@ -90,7 +90,7 @@ if (/#6366f1/i.test(design)) {
   });
 }
 
-// L013: 禁用紫蓝渐变
+// L013: Forbid purple-blue gradient
 if (/(indigo|violet|purple).*?(purple|violet|indigo)/i.test(design)) {
   errors.push({
     rule: 'L013',
@@ -101,7 +101,7 @@ if (/(indigo|violet|purple).*?(purple|violet|indigo)/i.test(design)) {
   });
 }
 
-// L015: 禁用 Lorem ipsum
+// L015: Forbid Lorem ipsum
 if (/lorem\s+ipsum/i.test(design)) {
   errors.push({
     rule: 'L015',
@@ -116,15 +116,15 @@ writeFileSync('loops/specs/<task>/lint-report.md', formatReport(errors));
 console.log(`Lint complete: ${errors.length} issues found`);
 ```
 
-### 3. 运行脚本
+### 3. Run the Script
 
 ```bash
 node lint-design.mjs
 ```
 
-### 4. 解析报告
+### 4. Parse the Report
 
-脚本输出 `loops/specs/<task>/lint-report.md`，格式：
+The script outputs `loops/specs/<task>/lint-report.md`, formatted as:
 
 ```markdown
 # Lint Report
@@ -136,89 +136,89 @@ node lint-design.mjs
 
 ## Details
 
-### L001: 硬编码 hex 颜色 [ERROR]
-- 位置：line 42
-- 当前值：#3B82F6
-- 期望值：token reference
-- 修复：use --color-primary
+### L001: Hardcoded hex color [ERROR]
+- Location: line 42
+- Current value: #3B82F6
+- Expected value: token reference
+- Fix: use --color-primary
 
-### L011: 禁用字体 [ERROR]
-- 位置：line 15
-- 当前值：Inter
-- 期望值：project design system font
-- 修复：use font from DESIGN.md
+### L011: Forbidden font [ERROR]
+- Location: line 15
+- Current value: Inter
+- Expected value: project design system font
+- Fix: use font from DESIGN.md
 ```
 
-### 5. 处理结果
+### 5. Handle Results
 
-- `error` 级：必须修复，回到 visual-design 修订
-- `warning` 级：建议修复，标注处理决策（"修"或"忽略原因"）
-- `info` 级：仅提示，无需处理
+- `error` level: Must fix; return to visual-design for revision
+- `warning` level: Recommended fix; annotate the decision ("fix" or "ignore with reason")
+- `info` level: Informational only; no action needed
 
-## Lint 规则清单
+## Lint Rule List
 
-### Token 一致性
-- L001: 所有颜色必须来自 token（禁止硬编码 hex）
-- L002: 所有间距必须在 spacing scale 上
-- L003: 所有圆角必须来自 radius scale
-- L004: 所有字号必须在 type scale 上
-- L005: 所有阴影必须来自 elevation scale
+### Token Consistency
+- L001: All colors must come from tokens (no hardcoded hex)
+- L002: All spacing must be on the spacing scale
+- L003: All border radii must come from the radius scale
+- L004: All font sizes must be on the type scale
+- L005: All shadows must come from the elevation scale
 
-### 组件一致性
-- L006: 同语义组件不超过 3 种实现
-- L007: 组件变体差异 ≤2 个 prop 时建议合并
-- L008: 组件必须标注所有状态
+### Component Consistency
+- L006: No more than 3 implementations for the same semantic component
+- L007: Component variants differing by ≤2 props should be merged
+- L008: Components must annotate all states
 
-### 布局一致性
-- L009: 对齐基线一致
-- L010: 栅格列数一致（12 栅格）
+### Layout Consistency
+- L009: Consistent alignment baseline
+- L010: Consistent grid column count (12-column grid)
 
-### 反 AI-slop
-- L011: 禁用 Inter/Roboto/Arial 作为主字体
-- L012: 禁用 #6366f1 紫色
-- L013: 禁用紫蓝渐变
-- L014: 禁用统一圆角（rounded-2xl 全场）
-- L015: 禁用 Lorem ipsum 占位文本
+### Anti AI-slop
+- L011: Forbid Inter/Roboto/Arial as primary font
+- L012: Forbid #6366f1 purple
+- L013: Forbid purple-blue gradient
+- L014: Forbid uniform border radius (rounded-2xl everywhere)
+- L015: Forbid Lorem ipsum placeholder text
 
 ## Common Rationalizations
 
-| 借口 | 现实 |
-|------|------|
-| "lint 规则太严格限制创意" | lint 检查一致性不检查创意，创意在 token 定义层 |
-| "手动检查就行" | 手动检查不可重复，lint 可自动化 |
-| "LLM 脑补检查就够了" | LLM 会注意力漂移产生幻觉，必须用脚本执行 |
-| "写脚本太麻烦" | 一次性脚本用完即弃，比手动检查更可靠 |
+| Excuse | Reality |
+|--------|---------|
+| "Lint rules are too strict and limit creativity" | Lint checks consistency, not creativity; creativity lives at the token definition layer |
+| "Manual checks are enough" | Manual checks are not repeatable; lint is automatable |
+| "LLM hallucinated checks are enough" | LLMs drift and hallucinate; scripts must be used |
+| "Writing a script is too much trouble" | One-off scripts are discarded after use and are more reliable than manual checks |
 
 ## Red Flags
 
-- 未编写脚本，仅靠 LLM 脑补检查
-- 脚本未运行就声称通过
-- error 级违规未修复就继续
-- warning 级违规未标注处理决策
+- No script written; only LLM hallucinated checks
+- Claiming pass without running the script
+- Continuing with unresolved error-level violations
+- Warning-level violations without annotated decisions
 
 ## Verification
 
-- [ ] Lint 脚本已编写（证据：lint-design.mjs 文件存在）
-- [ ] 脚本已运行（证据：命令执行记录）
-- [ ] lint-report.md 已生成（证据：文件存在）
-- [ ] 所有 error 级违规已修复（证据：重新运行脚本无 error）
-- [ ] warning 级违规有处理决策（证据：每条 warning 标注"修"或"忽略原因"）
+- [ ] Lint script written (evidence: lint-design.mjs file exists)
+- [ ] Script run (evidence: command execution record)
+- [ ] lint-report.md generated (evidence: file exists)
+- [ ] All error-level violations fixed (evidence: re-running the script yields no errors)
+- [ ] Warning-level violations have decisions (evidence: each warning annotated "fix" or "ignore with reason")
 
-## 与 LOOP 的关系
+## Relationship with LOOP
 
-- 所属阶段：LINT（LOOP 内，verify 之后）
-- 不独立成 LOOP，作为设计 LOOP 的第三步
-- 流程：DESIGN → VERIFY → LINT
-- 循环类型：所有循环类型（visual-design / interaction-design / wireframe / component）均适用
+- Stage: LINT (inside LOOP, after verify)
+- Not a separate LOOP; serves as the third step of the design LOOP
+- Flow: DESIGN → VERIFY → LINT
+- Loop type: applies to all loop types (visual-design / interaction-design / wireframe / component)
 
-## 失败处理
+## Failure Handling
 
-lint 失败时：
-1. 更新 `state.yaml` 的 `last_error` 字段，格式：`Lint L00X: <描述>`（复用现有字段，不新增 lint_status）
-2. 更新 `state.yaml` 的 `stage` 为 `lint`，`status` 为 `retrying`
-3. 追加一行到 `iterations.log`：`[<时间>] iter=<N> stage=lint → FAILED: L00X <描述>`
-4. 回到 DESIGN 阶段修复，iteration +1
+On lint failure:
+1. Update the `last_error` field of `state.yaml`, format: `Lint L00X: <description>` (reuse existing field; do not add a new lint_status)
+2. Update `state.yaml` `stage` to `lint`, `status` to `retrying`
+3. Append a line to `iterations.log`: `[<time>] iter=<N> stage=lint → FAILED: L00X <description>`
+4. Return to the DESIGN stage to fix; iteration +1
 
-lint 通过时：
-1. 清空 `state.yaml` 的 `last_error` 字段
-2. 更新 `stage` 为下一阶段（LOOP 外门禁或 DONE）
+On lint pass:
+1. Clear the `last_error` field of `state.yaml`
+2. Update `stage` to the next stage (out-of-LOOP gate or DONE)

@@ -1,21 +1,21 @@
 ---
 name: validation-experiment
-description: 当需要设计验证实验方案时使用。验证实验自动设计工具，根据假设地图和MVP范围，智能选择验证方法并设计实验方案，包括A/B测试和可用性测试的参数设计。关键词：实验设计、A/B测试、样本量、验证方法、验证方案、测试设计。本Skill只负责选择验证方法和输出实验设计框架，不生成具体的可用性测试任务脚本（由 validation-usability 负责）。
+description: Used when designing validation experiment plans. Validation experiment auto-design tool, based on assumption map and MVP scope, intelligently selects validation methods and designs experiment plans, including parameter design for A/B testing and usability testing. Keywords: experiment design, A/B testing, sample size, validation method, validation plan, test design. This Skill is only responsible for selecting validation methods and outputting the experiment design framework; it does not generate specific usability test task scripts (handled by validation-usability).
 metadata:
-  module: "产品构思与设计"
-  sub-module: "方案验证"
+  module: "Product Ideation & Design"
+  sub-module: "Solution Validation"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["互联网", "软件", "通用"]
+  domain_tags: ["Internet", "Software", "General"]
   trigger_examples:
-    - "怎么验证这个假设"
-    - "帮我设计A/B测试"
-    - "实验方案怎么做"
+    - "How to validate this hypothesis"
+    - "Help me design an A/B test"
+    - "How to make an experiment plan"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出实验方案和验证指标"
-  deep_description: "完整方案 + 实验设计优化 + 统计功效分析 + 结果解读框架"
+  quick_description: "Directly output experiment plan and validation metrics"
+  deep_description: "Full plan + experiment design optimization + statistical power analysis + result interpretation framework"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -26,37 +26,37 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 验证实验自动设计
+# Validation Experiment Auto-Design
 
-## 核心原则
+## Core Principles
 
-1. **实验是假设的审判庭**——每个实验必须对应一个假设，没有假设的实验是浪费
-2. **最小成本获取最大置信度**——实验设计追求成本最小化，而非完美数据
-3. **统计显著性是底线**——样本量和置信水平必须预先设定，事后调整是作弊
-4. **失败实验和成功实验同样有价值**——证伪假设与证实假设等效，关键是学到什么
+1. **Experiments are the court of judgment for hypotheses**—every experiment must correspond to a hypothesis; an experiment without a hypothesis is waste
+2. **Maximum confidence at minimum cost**—experiment design pursues cost minimization, not perfect data
+3. **Statistical significance is the baseline**—sample size and confidence level must be set in advance; post-hoc adjustment is cheating
+4. **Failed experiments are as valuable as successful ones**—falsifying a hypothesis is equivalent to confirming one; the key is what was learned
 
-### 基本信息
+### Basic Information
 
-| 属性 | 值 |
+| Attribute | Value |
 |------|-----|
 | Pipeline ID | 12 |
-| 名称 | 验证实验自动设计 |
-| 执行模式 | 🤖→👤 AI建议，人类审批 |
-| 输入 | 假设地图 + MVP范围 + 可用流量/用户数据 |
+| Name | Validation Experiment Auto-Design |
+| Execution Mode | 🤖→👤 AI suggests, human approves |
+| Inputs | Assumption map + MVP scope + available traffic/user data |
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 假设地图 | JSON | 是 | docs/product/PRD.md（“假设图”章节） | Pipeline 10输出的假设地图 |
-| MVP范围 | JSON | 是 | docs/product/PRD.md（“MVP方案”章节） | Pipeline 11输出的MVP范围 |
-| 可用流量/用户数据 | JSON | ○ | 用户提供 | 当前用户量、日活、新增等数据 |
+| Assumption map | JSON | Yes | docs/product/PRD.md ("Assumption Map" section) | Assumption map output by Pipeline 10 |
+| MVP scope | JSON | Yes | docs/product/PRD.md ("MVP Plan" section) | MVP scope output by Pipeline 11 |
+| Available traffic/user data | JSON | ○ | User-provided | Current user count, DAU, new users, etc. |
 
-### 输入格式
+### Input Format
 ```json
 {
   "assumption_map": [...],
@@ -70,135 +70,135 @@ writes:
 }
 ```
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 验证方法选择 [核心]
+### Step 1: Validation Method Selection [Core]
 
-**决策树**:
+**Decision tree**:
 
 ```
-开始
+Start
   ↓
-流量是否足够A/B测试?
+Is traffic sufficient for A/B testing?
   ↓
-是 → 考虑A/B测试
-否 → 考虑可用性测试
+Yes → Consider A/B testing
+No → Consider usability testing
   ↓
-成本考量
+Cost considerations
   ↓
-向导MVP / 原型测试 / 落地页测试
+Wizard MVP / Prototype testing / Landing page testing
 ```
 
-**验证方法对比**:
+**Validation method comparison**:
 
-| 方法 | 适用场景 | 成本 | 可靠性 |
+| Method | Applicable Scenario | Cost | Reliability |
 |------|----------|------|--------|
-| A/B测试 | 流量充足、需量化验证 | 高 | ⭐⭐⭐⭐⭐ |
-| 可用性测试 | 流量不足、需定性洞察 | 中 | ⭐⭐⭐⭐ |
-| 落地页测试 | 价值假设验证 | 低 | ⭐⭐⭐ |
-| 向导MVP | 可行性验证 | 高 | ⭐⭐⭐⭐ |
-| 原型测试 | 可用性假设验证 | 低 | ⭐⭐⭐⭐ |
+| A/B testing | Sufficient traffic, needs quantitative validation | High | ⭐⭐⭐⭐⭐ |
+| Usability testing | Insufficient traffic, needs qualitative insights | Medium | ⭐⭐⭐⭐ |
+| Landing page testing | Value hypothesis validation | Low | ⭐⭐⭐ |
+| Wizard MVP | Feasibility validation | High | ⭐⭐⭐⭐ |
+| Prototype testing | Usability hypothesis validation | Low | ⭐⭐⭐⭐ |
 
-**选择规则**:
+**Selection rules**:
 
-| 条件 | 推荐方法 |
+| Condition | Recommended Method |
 |------|----------|
-| 日活 > 5000，且假设可量化 | A/B测试 |
-| 日活 < 5000 | 可用性测试 |
-| 需要快速验证价值假设 | 落地页测试 |
-| 需要验证技术可行性 | 向导MVP |
+| DAU > 5000, and hypothesis is quantifiable | A/B testing |
+| DAU < 5000 | Usability testing |
+| Need to quickly validate value hypothesis | Landing page testing |
+| Need to validate technical feasibility | Wizard MVP |
 
-### Step 2: 实验方案设计 [核心]
+### Step 2: Experiment Plan Design [Core]
 
-#### A/B测试设计方案
+#### A/B Test Design Plan
 
 ```json
 {
   "experiment_design": {
     "type": "A/B_TEST",
-    "experiment_group": "实验组描述",
-    "control_group": "对照组描述",
+    "experiment_group": "Experiment group description",
+    "control_group": "Control group description",
     "split_ratio": "50/50",
-    "primary_metric": "主指标",
-    "secondary_metrics": ["辅助指标"],
+    "primary_metric": "Primary metric",
+    "secondary_metrics": ["Secondary metrics"],
     "sample_size": 10000,
     "duration_days": 14,
     "minimum_detectable_effect": "MDE",
     "stopping_criteria": {
       "significance_level": 0.05,
       "statistical_power": 0.8,
-      "early_stopping_conditions": ["达到显著性"]
+      "early_stopping_conditions": ["Reached significance"]
     }
   }
 }
 ```
 
-**参数计算说明**:
+**Parameter calculation description**:
 
-| 参数 | 说明 | 计算依据 |
+| Parameter | Description | Calculation Basis |
 |------|------|----------|
-| sample_size | 所需样本量 | 基于MDE、显著性水平、统计功效 |
-| duration_days | 实验时长 | sample_size / 日均流量 |
-| split_ratio | 分流比例 | 常用50/50，可调整 |
+| sample_size | Required sample size | Based on MDE, significance level, statistical power |
+| duration_days | Experiment duration | sample_size / daily average traffic |
+| split_ratio | Traffic split ratio | Commonly 50/50, adjustable |
 
-#### 可用性测试设计框架
+#### Usability Test Design Framework
 
-当方法=可用性测试时，本Skill只输出**方法选择 + 实验框架**，不生成具体的可用性测试任务脚本。
+When method = usability testing, this Skill only outputs **method selection + experiment framework**, and does not generate specific usability test task scripts.
 
 ```json
 {
   "method_selection": {
     "selected_method": "USABILITY_TEST",
-    "reason": "流量不足或需定性洞察"
+    "reason": "Insufficient traffic or needs qualitative insights"
   },
   "experiment_framework": {
-    "hypothesis": "待验证的可用性假设",
-    "metrics": ["任务完成率", "任务耗时", "错误率"],
+    "hypothesis": "Usability hypothesis to be validated",
+    "metrics": ["Task completion rate", "Task duration", "Error rate"],
     "sample_size": 8,
     "duration_days": 7
   }
 }
 ```
 
-> ⚠️ **职责边界**：具体测试任务脚本（task_script）、招募筛选问卷（recruitment_criteria）等详细产物由 **validation-usability** Skill 负责生成，本Skill不输出这些字段。当 method=USABILITY_TEST 时，下游 validation-usability 消费本Skill的 method_selection 和 experiment_framework。
+> ⚠️ **Responsibility boundary**: Specific test task scripts (task_script), recruitment screening questionnaires (recruitment_criteria) and other detailed artifacts are generated by the **validation-usability** Skill; this Skill does not output these fields. When method=USABILITY_TEST, downstream validation-usability consumes this Skill's method_selection and experiment_framework.
 
-### Step 3: 结果预判 [核心]
+### Step 3: Outcome Prediction [Core]
 
-**三种场景**:
+**Three scenarios**:
 
 ```json
 {
   "outcome_scenarios": {
     "optimistic": {
-      "condition": "指标提升≥MDE",
-      "action": "推进开发，持续监控"
+      "condition": "Metric lift ≥ MDE",
+      "action": "Proceed with development, continue monitoring"
     },
     "neutral": {
-      "condition": "指标有提升但不显著",
-      "action": "延长实验或调整方案"
+      "condition": "Metric has lift but not significant",
+      "action": "Extend experiment or adjust plan"
     },
     "pessimistic": {
-      "condition": "指标无提升或下降",
-      "action": "重新审视假设或调整方案"
+      "condition": "Metric has no lift or declines",
+      "action": "Re-examine hypothesis or adjust plan"
     }
   }
 }
 ```
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 实验方案和验证指标 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整方案 + 实验设计优化 + 统计功效分析 + 结果解读框架 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Experiment plan and validation metrics | Core conclusion + minimum viable artifact |
+| standard | Full artifact (current default) | Full artifact, includes all Step outputs |
+| deep | Full plan + experiment design optimization + statistical power analysis + result interpretation framework | Full artifact + extended analysis + deep inference |
 
-## 输出
+## Output
 
 
-**输出校验规则**：详见下方章节
-**存储路径**：`docs/metrics/experiment-report.md（“实验设计”章节）`
-**输出文件**：experiment_plan.json
+**Output validation rules**: See section below
+**Storage path**: `docs/metrics/experiment-report.md ("Experiment Design" section)`
+**Output file**: experiment_plan.json
 
 ```json
 {
@@ -207,20 +207,20 @@ writes:
       "id": "EXP001",
       "assumption_id": "A001",
       "type": "A_B_TEST",
-      "hypothesis": "假设内容",
+      "hypothesis": "Hypothesis content",
       "method": "A_B_TEST|USABILITY_TEST|LANDING_PAGE|WIZARD_MVP",
       "metrics": [
         {
-          "name": "点击率",
+          "name": "Click-through rate",
           "type": "primary",
-          "target": "提升10%"
+          "target": "Increase 10%"
         }
       ],
       "sample_size": {
         "minimum": 10000,
         "actual": 10000
       },
-      "duration": "14天",
+      "duration": "14 days",
       "confidence_level": 0.95,
       "cost_estimate": {
         "development": "...",
@@ -230,7 +230,7 @@ writes:
         "experiment_group": "...",
         "control_group": "...",
         "split_ratio": "50/50",
-        "primary_metric": "点击率",
+        "primary_metric": "Click-through rate",
         "duration_days": 14,
         "stopping_criteria": {}
       },
@@ -240,128 +240,128 @@ writes:
       "id": "EXP002",
       "assumption_id": "A002",
       "type": "USABILITY_TEST",
-      "hypothesis": "另一假设内容",
+      "hypothesis": "Another hypothesis content",
       "method": "USABILITY_TEST",
       "metrics": [
         {
-          "name": "任务完成率",
+          "name": "Task completion rate",
           "type": "primary",
-          "target": "提升15%"
+          "target": "Increase 15%"
         }
       ],
       "sample_size": {
         "minimum": 20,
         "actual": 25
       },
-      "duration": "7天",
+      "duration": "7 days",
       "confidence_level": 0.9,
       "cost_estimate": {
         "development": "...",
         "operation": "..."
       },
       "experiment_design": {
-        "primary_metric": "任务完成率",
+        "primary_metric": "Task completion rate",
         "duration_days": 7,
         "stopping_criteria": {},
-        "task_script_source": "由 validation-usability 生成"
+        "task_script_source": "Generated by validation-usability"
       },
       "outcome_scenarios": {}
     }
   ],
   "approval_status": "pending",
-  "ai_recommendation": "AI建议说明"
+  "ai_recommendation": "AI recommendation description"
 }
 ```
 
-**输出校验规则**：详见下方输出校验规则章节
+**Output validation rules**: See output validation rules section below
 
-## 决策规则
+## Decision Rules
 
-| 规则 | 条件 | 动作 |
+| Rule | Condition | Action |
 |------|------|------|
-| 人类审核 | 所有实验方案 | 必须人类审核 |
-| 样本量不足 | sample_size > 可用流量 | 降低MDE或改用可用性测试 |
-| 周期过长 | duration_days > 30 | 考虑提高流量或降低MDE |
+| Human review | All experiment plans | Must be human-reviewed |
+| Insufficient sample size | sample_size > available traffic | Lower MDE or switch to usability testing |
+| Duration too long | duration_days > 30 | Consider increasing traffic or lowering MDE |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 方法选择有依据（决策树结果有说明）
-- [ ] 实验设计完整（含所有必要参数）
+- [ ] Method selection has basis (decision tree result has explanation)
+- [ ] Experiment design complete (includes all necessary parameters)
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 成功标准明确（有量化指标）
-- [ ] 场景预判完整（三种场景都有）
-- [ ] 终止条件明确（含显著性/功效要求）
+- [ ] Success criteria clear (has quantifiable metrics)
+- [ ] Scenario prediction complete (all three scenarios present)
+- [ ] Termination conditions clear (includes significance/power requirements)
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep inference and roadmap generated)
+- [ ] Decision record complete (key decisions have rationale and alternatives)
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Instructions |
 |---------------|---------|----------|------------|
-| 假设地图缺失 | 用户提供假设描述，设计实验 | 缺乏结构化假设数据，实验设计可能不够精准 | 要求用户提供假设描述和优先级或上传assumption-map文件 |
-| MVP方案缺失 | 用户提供方案描述，设计实验 | 缺乏MVP方案数据，实验变量可能不够聚焦 | 要求用户提供MVP方案描述或上传validation-mvp输出文件 |
-| 假设地图+MVP方案均缺失 | 用户提供假设和方案描述，设计实验 | 整体置信度降低，实验设计可能不够完整 | 要求用户提供假设描述和方案概述 |
-| 所有上游文件均缺失 | 提示用户先执行前序阶段，或基于用户描述设计实验 | 输出仅为基本实验框架 | 要求用户提供核心假设、方案描述和可用资源 |
+| Assumption map missing | User provides hypothesis description, design experiment | Lacks structured hypothesis data, experiment design may not be precise enough | Require user to provide hypothesis description and priority or upload assumption-map file |
+| MVP plan missing | User provides solution description, design experiment | Lacks MVP plan data, experiment variables may not be focused enough | Require user to provide MVP plan description or upload validation-mvp output file |
+| Assumption map + MVP plan both missing | User provides hypothesis and solution description, design experiment | Overall confidence reduced, experiment design may not be complete enough | Require user to provide hypothesis description and solution overview |
+| All upstream files missing | Prompt user to execute prior stages first, or design experiment based on user description | Output is only a basic experiment framework | Require user to provide core hypotheses, solution description, and available resources |
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| experiments | array | 是 | 实验列表 |
-| experiments[].id | string | 是 | 实验唯一标识 |
-| experiments[].assumption_id | string | 是 | 关联假设ID |
-| experiments[].type | string | 是 | 实验类型 |
-| experiments[].hypothesis | string | 是 | 实验假设 |
-| experiments[].method | string | 是 | 实验方法 |
-| experiments[].metrics | array | 是 | 指标列表 |
-| experiments[].metrics[].name | string | 是 | 指标名称 |
-| experiments[].metrics[].type | string | 是 | 指标类型（primary/secondary） |
-| experiments[].metrics[].target | string | 是 | 目标值 |
-| experiments[].sample_size | object | 是 | 样本量 |
-| experiments[].sample_size.minimum | integer | 是 | 最小样本量 |
-| experiments[].duration | string | 是 | 实验周期 |
-| experiments[].confidence_level | number | 是 | 置信水平 |
-| experiments[].cost_estimate | object | 是 | 成本估算 |
-| experiments[].result | object | 否 | 实验结果（实验完成后填充） |
-| experiments[].result.conclusion | string | 否 | 实验结论 |
-| experiments[].result.learnings | array | 否 | 学习要点 |
+| experiments | array | Yes | Experiment list |
+| experiments[].id | string | Yes | Experiment unique identifier |
+| experiments[].assumption_id | string | Yes | Associated hypothesis ID |
+| experiments[].type | string | Yes | Experiment type |
+| experiments[].hypothesis | string | Yes | Experiment hypothesis |
+| experiments[].method | string | Yes | Experiment method |
+| experiments[].metrics | array | Yes | Metric list |
+| experiments[].metrics[].name | string | Yes | Metric name |
+| experiments[].metrics[].type | string | Yes | Metric type (primary/secondary) |
+| experiments[].metrics[].target | string | Yes | Target value |
+| experiments[].sample_size | object | Yes | Sample size |
+| experiments[].sample_size.minimum | integer | Yes | Minimum sample size |
+| experiments[].duration | string | Yes | Experiment duration |
+| experiments[].confidence_level | number | Yes | Confidence level |
+| experiments[].cost_estimate | object | Yes | Cost estimate |
+| experiments[].result | object | No | Experiment result (filled after experiment completion) |
+| experiments[].result.conclusion | string | No | Experiment conclusion |
+| experiments[].result.learnings | array | No | Learning points |
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响
+### Upstream Change Impact
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| 假设地图变更（假设增删/评分变更） | 实验假设、实验优先级 | 标注受影响的实验，建议人类确认是否重新设计 |
-| 方案设计变更 | 实验设计细节 | 标注受影响的实验设计，建议人类确认是否调整 |
-| 资源约束变更 | 实验成本估算、样本量 | 标注受影响的成本和样本量，建议人类确认是否调整 |
+| Assumption map change (hypothesis add/remove/score change) | Experiment hypotheses, experiment priority | Flag affected experiments, suggest human confirm whether to redesign |
+| Solution design change | Experiment design details | Flag affected experiment designs, suggest human confirm whether to adjust |
+| Resource constraint change | Experiment cost estimate, sample size | Flag affected cost and sample size, suggest human confirm whether to adjust |
 
-### 下游通知机制
+### Downstream Notification Mechanism
 
-| 实验设计变更类型 | 通知范围 | 通知方式 |
+| Experiment Design Change Type | Notification Scope | Notification Method |
 |-----------------|----------|----------|
-| 实验增删 | validation-mvp | 标记实验变更，触发MVP范围调整 |
-| 实验优先级变更 | validation-mvp | 标记优先级变更，触发MVP验证计划更新 |
-| 实验结果更新 | validation-mvp | 标记结果更新，触发MVP假设验证状态更新 |
+| Experiment add/remove | validation-mvp | Mark experiment change, trigger MVP scope adjustment |
+| Experiment priority change | validation-mvp | Mark priority change, trigger MVP validation plan update |
+| Experiment result update | validation-mvp | Mark result update, trigger MVP hypothesis validation status update |
 
 ---
 
-## 使用示例
+## Usage Example
 
-**输入**:
+**Input**:
 ```json
 {
   "assumption_map": [
-    {"id": "A001", "assumption": "用户认为推荐内容与兴趣匹配", "risk_score": 20}
+    {"id": "A001", "assumption": "Users believe recommended content matches their interests", "risk_score": 20}
   ],
   "traffic_data": {
     "daily_active_users": 10000,
@@ -370,31 +370,31 @@ writes:
 }
 ```
 
-**AI分析**:
+**AI Analysis**:
 ```
-流量判断: 日活10000 > 5000，可进行A/B测试
-假设类型: 价值假设 + 可用性假设
-推荐方法: A/B测试
+Traffic assessment: DAU 10000 > 5000, can do A/B testing
+Hypothesis type: Value hypothesis + Usability hypothesis
+Recommended method: A/B testing
 
-实验设计:
-- 分流: 50/50
-- 主指标: 推荐内容点击率
-- 样本量: 约10000（基于MDE=10%）
-- 时长: 14天
+Experiment design:
+- Split: 50/50
+- Primary metric: Recommended content click-through rate
+- Sample size: About 10000 (based on MDE=10%)
+- Duration: 14 days
 ```
 
-**输出**:
+**Output**:
 ```json
 {
   "validation_experiment": {
     "method": "A_B_TEST",
     "target_assumption": {
       "id": "A001",
-      "assumption": "用户认为推荐内容与兴趣匹配"
+      "assumption": "Users believe recommended content matches their interests"
     },
     "experiment_design": {
       "type": "A_B_TEST",
-      "primary_metric": "推荐内容点击率",
+      "primary_metric": "Recommended content click-through rate",
       "sample_size": 10000,
       "duration_days": 14
     }

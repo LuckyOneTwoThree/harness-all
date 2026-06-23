@@ -1,101 +1,101 @@
-# 交接：harness-solo → harness-growth
+# Handoff: harness-solo → harness-growth
 
-> 生成时间：YYYY-MM-DD HH:MM
-> 源框架：harness-solo
-> 目标框架：harness-growth
+> Generated at: YYYY-MM-DD HH:MM
+> Source framework: harness-solo
+> Target framework: harness-growth
 
-## 阶段总结
+## Phase Summary
 
-<本阶段做了什么，一句话概括。如：完成 V1 核心功能开发，含 3 个 API 端点 + 2 个页面 + 埋点事件>
+<One-sentence summary of what was done in this phase. e.g., Completed V1 core feature development, including 3 API endpoints + 2 pages + tracking events>
 
-## 已实现功能清单
+## Implemented Features List
 
-| 功能 | 类型 | 路径/端点 | 状态 | 说明 |
+| Feature | Type | Path/Endpoint | Status | Notes |
 |------|------|----------|------|------|
-| <功能1> | API | GET /api/xxx | done | <一句话描述> |
-| <功能2> | 页面 | /page-path | done | <一句话描述> |
-| <功能3> | 事件 | event_name_xxx | 已埋点 | <触发条件描述> |
+| <feature 1> | API | GET /api/xxx | done | <one-sentence description> |
+| <feature 2> | Page | /page-path | done | <one-sentence description> |
+| <feature 3> | Event | event_name_xxx | tracked | <trigger condition description> |
 
-## 验收标准（AC-xxx）
+## Acceptance Criteria (AC-xxx)
 
-> 以下 AC 已全部通过 verify skill 验证，来自 spec.md。
+> The following ACs have all passed verify skill validation, sourced from spec.md.
 
-- [x] AC-001: <已通过的可测试描述>
-- [x] AC-002: <已通过的可测试描述>
-- [x] AC-003: <已通过的可测试描述>
+- [x] AC-001: <passed testable description>
+- [x] AC-002: <passed testable description>
+- [x] AC-003: <passed testable description>
 
-### 设计 AC（DAC-xxx，如涉及前端）
+### Design ACs (DAC-xxx, if frontend is involved)
 
-- [x] DAC-001: <已通过的设计可测试描述>
-- [x] DAC-002: <已通过的设计可测试描述>
+- [x] DAC-001: <passed design testable description>
+- [x] DAC-002: <passed design testable description>
 
-## 技术实现
+## Technical Implementation
 
-| 字段 | 值 | 说明 |
+| Field | Value | Notes |
 |------|-----|------|
-| 技术栈 | <React / Vue / Svelte / ...> | |
-| 部署方式 | <Vercel / Docker / ...> | |
-| 代码仓库 | <仓库地址> | |
-| 当前版本 | <v1.0.0> | |
+| Tech stack | <React / Vue / Svelte / ...> | |
+| Deployment method | <Vercel / Docker / ...> | |
+| Code repository | <repo URL> | |
+| Current version | <v1.0.0> | |
 
-## 性能指标（如已测量）
+## Performance Metrics (if measured)
 
-| 指标 | 当前值 | 目标值 | 说明 |
+| Metric | Current value | Target value | Notes |
 |------|--------|--------|------|
-| 首屏加载（LCP） | <X.Xs> | <2.5s> | Core Web Vitals |
-| 交互延迟（INP） | <Xms> | <200ms> | Core Web Vitals |
-| API 平均响应 | <Xms> | <200ms> | |
-| 测试覆盖率 | <XX%> | <80%> | |
+| First screen load (LCP) | <X.Xs> | <2.5s> | Core Web Vitals |
+| Interaction latency (INP) | <Xms> | <200ms> | Core Web Vitals |
+| Avg API response | <Xms> | <200ms> | |
+| Test coverage | <XX%> | <80%> | |
 
-## 埋点事件清单
+## Tracking Event List
 
-| 事件名 | 触发时机 | 参数 | 关联 AC |
+| Event name | Trigger timing | Parameters | Related AC |
 |--------|---------|------|--------|
-| <event_name_1> | <用户点击X按钮> | <param1, param2> | AC-001 |
-| <event_name_2> | <页面加载完成> | <page_path> | AC-002 |
+| <event_name_1> | <user clicks X button> | <param1, param2> | AC-001 |
+| <event_name_2> | <page load complete> | <page_path> | AC-002 |
 
-> 完整埋点方案见 `docs/metrics/tracking-plan.md`（来自 harness-pm）。
+> For the full tracking plan, see `docs/metrics/tracking-plan.md` (from harness-pm).
 
-## 已知问题与限制
+## Known Issues and Limitations
 
-| 问题 | 严重度 | 影响范围 | 计划 |
+| Issue | Severity | Impact scope | Plan |
 |------|--------|---------|------|
-| <已知Bug1> | P2 | <范围> | <计划修复时间> |
-| <技术债1> | P3 | <范围> | <暂不处理> |
+| <known bug 1> | P2 | <scope> | <planned fix time> |
+| <tech debt 1> | P3 | <scope> | <not addressing for now> |
 
-## 关键决策
+## Key Decisions
 
-| 决策 | 理由 | 影响范围 |
+| Decision | Rationale | Impact scope |
 |------|------|---------|
-| 选用状态管理 X | 团队熟悉度 + 性能 | 全项目 |
-| 不做 SSR | MVP 阶段不需要 | 性能 |
+| Choose state management X | Team familiarity + performance | Whole project |
+| Skip SSR | Not needed in MVP stage | Performance |
 
-## 未决事项
+## Open Items
 
-需 harness-growth 处理或与 harness-solo 确认的问题：
+Issues for harness-growth to handle or confirm with harness-solo:
 
-- 待定 1: <问题描述>
-- 待定 2: <问题描述>
+- TBD 1: <issue description>
+- TBD 2: <issue description>
 
-## 建议下一步
+## Suggested Next Steps
 
-harness-growth 应优先处理：
+harness-growth should prioritize:
 
-1. 消费本文件的功能清单 + 埋点事件
-2. 结合 pm-to-growth.md 的 OKR + 增长假设，设计增长实验
-3. 建立指标看板，监控已埋点事件
+1. Consume the feature list + tracking events in this file
+2. Combine with the OKR + growth hypotheses from pm-to-growth.md to design growth experiments
+3. Set up metric dashboards to monitor tracked events
 
-## 风险提示
+## Risk Notes
 
-| 风险 | 等级 | 缓解措施 |
+| Risk | Level | Mitigation |
 |------|------|---------|
-| 性能未达标 | 高/中/低 | <措施> |
-| 埋点不完整 | 高/中/低 | <措施> |
-| 已知 Bug 影响用户体验 | 高/中/低 | <措施> |
+| Performance below target | High/Medium/Low | <action> |
+| Incomplete tracking | High/Medium/Low | <action> |
+| Known bugs affecting user experience | High/Medium/Low | <action> |
 
 ---
 
-## 下游框架使用说明
+## Downstream Framework Usage Notes
 
-harness-growth 的增长实验 skill 会自动检测本文件并读取功能清单 + 埋点事件。
-如未自动识别，可手动指向本文件路径让 Agent 读取。
+harness-growth's growth experiment skill will auto-detect this file and read the feature list + tracking events.
+If not auto-detected, you can manually point the Agent to this file path to read it.

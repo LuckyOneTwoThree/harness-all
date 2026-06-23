@@ -1,10 +1,10 @@
 ---
 name: memory-maintenance
-description: 维护 memory 目录，执行 retention 策略，防止 progress/knowledge-base/archives 无限膨胀
+description: Maintain the memory directory, execute retention policy, prevent progress/knowledge-base/archives from growing unbounded
 triggers:
-  - session-end 可选调用
-  - 用户说"清理历史"/"归档"/"memory 太大"时
-  - memory 文件超过阈值时
+  - session-end optional invocation
+  - When the user says "clean up history" / "archive" / "memory too large"
+  - When memory files exceed thresholds
 reads:
   - .harness/loops/LOOP.md
   - .harness/skills/meta/session-end/SKILL.md
@@ -15,118 +15,118 @@ writes:
   - loops/specs/*/iterations.log
 ---
 
-# Memory Maintenance — 记忆维护
+# Memory Maintenance
 
-## 核心原则
+## Core Principle
 **Memory is not a dumpster. If you can't afford to read it, don't keep it.**
 
-Agent 的上下文有限。progress.md / knowledge-base.md / iterations.log 无限膨胀会污染上下文、降低效率。本 skill 负责定期清理和归档。
+The Agent's context is limited. Unbounded growth of progress.md / knowledge-base.md / iterations.log pollutes context and reduces efficiency. This skill handles periodic cleanup and archiving.
 
-## 什么是 memory 维护
+## What Memory Maintenance Is
 
-**维护的是：**
-- `memory/progress.md` 的长度
-- `memory/knowledge-base.md` 的长度
-- `memory/archives/` 的保留期限
-- `loops/specs/<feature>/iterations.log` 的长度
+**Maintains:**
+- The length of `memory/progress.md`
+- The length of `memory/knowledge-base.md`
+- The retention period of `memory/archives/`
+- The length of `loops/specs/<feature>/iterations.log`
 
-**不是：**
-- 删除当前活跃功能的 state.yaml / spec.md / evidence.md
-- 删除 `.git` 历史
-- 压缩或加密文件
+**Does not:**
+- Delete state.yaml / spec.md / evidence.md of currently active features
+- Delete `.git` history
+- Compress or encrypt files
 
-## Retention 策略
+## Retention Policy
 
-| 文件 | 阈值 | 超限处理 |
-|------|------|---------|
-| `progress.md` | 200 行 | 归档最旧会话块到 `archives/` |
-| `knowledge-base.md` | 150 行 | 拆分到主题归档 |
-| `iterations.log`（每个功能） | 100 行 | 归档到 `archives/iterations-<feature>-<date>.log` |
-| `archives/` 中的文件 | 90 天 | 询问用户后删除 |
+| File | Threshold | Over-limit handling |
+|------|-----------|----------------------|
+| `progress.md` | 200 lines | Archive the oldest session block to `archives/` |
+| `knowledge-base.md` | 150 lines | Split into topic archives |
+| `iterations.log` (per feature) | 100 lines | Archive to `archives/iterations-<feature>-<date>.log` |
+| Files in `archives/` | 90 days | Delete after asking the user |
 
-## 流程
+## Process
 
-1. **扫描文件大小**
-   - 用 Read 读取 `memory/progress.md`，统计行数
-   - 用 Read 读取 `memory/knowledge-base.md`，统计行数
-   - 用 Glob 扫描 `loops/specs/*/iterations.log`
-   - 用 Glob 扫描 `memory/archives/*`，记录文件日期
+1. **Scan file sizes**
+   - Use Read to read `memory/progress.md` and count lines
+   - Use Read to read `memory/knowledge-base.md` and count lines
+   - Use Glob to scan `loops/specs/*/iterations.log`
+   - Use Glob to scan `memory/archives/*` and record file dates
 
-2. **判断是否需要清理**
+2. **Determine whether cleanup is needed**
 
-   | 文件 | 条件 | 动作 |
-   |------|------|------|
-   | progress.md | 行数 > 200 | 执行步骤 3 |
-   | knowledge-base.md | 行数 > 150 | 执行步骤 4 |
-   | iterations.log | 行数 > 100 | 执行步骤 5 |
-   | archives/ 文件 | 修改时间 > 90 天 | 执行步骤 6 |
+   | File | Condition | Action |
+   |------|-----------|--------|
+   | progress.md | lines > 200 | Execute step 3 |
+   | knowledge-base.md | lines > 150 | Execute step 4 |
+   | iterations.log | lines > 100 | Execute step 5 |
+   | archives/ files | modified time > 90 days | Execute step 6 |
 
-3. **归档 progress.md**
-   - 找到最后一个完整会话块（以 `## 会话` 或类似标题分隔）
-   - 保留最后一个会话块在 progress.md（用于断点续传）
-   - 其余内容追加写入 `memory/archives/progress-<YYYY-MM-DD-HHMM>.md`
-   - 在 progress.md 顶部保留指向归档文件的链接
+3. **Archive progress.md**
+   - Find the last complete session block (separated by `## Session` or similar headings)
+   - Keep the last session block in progress.md (for resuming from a checkpoint)
+   - Append the rest to `memory/archives/progress-<YYYY-MM-DD-HHMM>.md`
+   - Keep a link to the archive file at the top of progress.md
 
-4. **拆分 knowledge-base.md**
-   - 按主题（`##` 标题）拆分
-   - 将最旧的主题归档到 `memory/archives/knowledge-<topic>-<date>.md`
-   - 保留最近 3 个主题在 knowledge-base.md
+4. **Split knowledge-base.md**
+   - Split by topic (`##` headings)
+   - Archive the oldest topics to `memory/archives/knowledge-<topic>-<date>.md`
+   - Keep the 3 most recent topics in knowledge-base.md
 
-5. **归档 iterations.log**
-   - 保留最近 20 行在原地
-   - 其余内容追加写入 `memory/archives/iterations-<feature>-<date>.log`
-   - 不删除原文件（LOOP 需要它）
+5. **Archive iterations.log**
+   - Keep the most recent 20 lines in place
+   - Append the rest to `memory/archives/iterations-<feature>-<date>.log`
+   - Do not delete the original file (LOOP needs it)
 
-6. **清理旧 archives**
-   - 列出 90 天前的归档文件
-   - **必须询问用户后删除**
-   - 用户确认 → 删除
-   - 用户拒绝 → 保留并记录
+6. **Clean up old archives**
+   - List archive files older than 90 days
+   - **Must ask the user before deleting**
+   - User confirms → delete
+   - User declines → keep and record
 
-7. **输出维护报告**
-   记录到 progress.md 或本次会话报告：
+7. **Output maintenance report**
+   Record to progress.md or this session's report:
    ```markdown
-   ## Memory 维护
+   ## Memory Maintenance
 
-   | 文件 | 操作前 | 操作后 | 动作 |
-   |------|--------|--------|------|
-   | progress.md | 250 行 | 45 行 | 归档到 archives/progress-2026-06-20-2000.md |
-   | knowledge-base.md | 180 行 | 60 行 | 拆分归档 2 个主题 |
-   | iterations.log | 120 行 | 20 行 | 归档到 archives/iterations-xxx-2026-06-20.log |
-   | archives/ | 5 个旧文件 | 删除 3 个 | 用户确认 |
+   | File | Before | After | Action |
+   |------|--------|-------|--------|
+   | progress.md | 250 lines | 45 lines | Archived to archives/progress-2026-06-20-2000.md |
+   | knowledge-base.md | 180 lines | 60 lines | Split and archived 2 topics |
+   | iterations.log | 120 lines | 20 lines | Archived to archives/iterations-xxx-2026-06-20.log |
+   | archives/ | 5 old files | Deleted 3 | User confirmed |
    ```
 
-## 证据要求
+## Evidence Requirements
 
-运行本 skill 后必须展示：
-- 每个文件的操作前行数/大小
-- 每个文件的操作后行数/大小
-- 归档文件的具体路径
-- 删除文件的用户确认记录
+After running this skill, you must show:
+- The pre-operation line count/size of each file
+- The post-operation line count/size of each file
+- The specific path of each archive file
+- The user confirmation record for each deleted file
 
-不能只写"已清理"。
+You cannot just write "cleaned up".
 
-## 禁止事项
-- 删除当前活跃功能的 state.yaml / spec.md / evidence.md
-- 清空 progress.md 不留任何会话块（破坏断点续传）
-- 不询问用户就删除 archives/ 中的文件
-- 归档时不保留最近内容
+## Prohibitions
+- Deleting state.yaml / spec.md / evidence.md of currently active features
+- Clearing progress.md without leaving any session block (breaks checkpoint resumption)
+- Deleting files in archives/ without asking the user
+- Not keeping the most recent content when archiving
 
-## 与 session-end 的关系
+## Relationship with session-end
 
-session-end 负责日常收尾，memory-maintenance 负责大扫除：
+session-end handles daily wrap-up, memory-maintenance handles deep cleanup:
 
-| Skill | 频率 | 职责 |
-|-------|------|------|
-| session-end | 每次会话结束 | 归档本次会话、写 baseline、更新看板 |
-| memory-maintenance | 按需/定期 | 大文件拆分、旧归档清理、retention 执行 |
+| Skill | Frequency | Responsibility |
+|-------|-----------|----------------|
+| session-end | Every session end | Archive this session, write baseline, update board |
+| memory-maintenance | On-demand/periodic | Split large files, clean old archives, execute retention |
 
-**建议**：session-end 每次检查 progress.md 长度，超过 200 行时调用 memory-maintenance。
+**Recommendation**: session-end should check the progress.md length each time and invoke memory-maintenance when it exceeds 200 lines.
 
-## 与 LOOP 的关系
+## Relationship with LOOP
 
-本 skill 不影响 LOOP 状态：
-- state.yaml 不清理
-- spec.md 不清理
-- evidence.md 不清理
-- 只清理日志类和归档类文件
+This skill does not affect LOOP state:
+- state.yaml is not cleaned
+- spec.md is not cleaned
+- evidence.md is not cleaned
+- Only log-type and archive-type files are cleaned

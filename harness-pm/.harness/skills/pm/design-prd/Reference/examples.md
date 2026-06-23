@@ -1,10 +1,10 @@
-# PRD生成器 示例数据
+# PRD Generator Example Data
 
-> 本文档提供 design-prd Skill 的完整 prd.json 示例，供下游 Backend/UI Skill 编程式消费参考。示例场景为"课程推荐功能"的 PRD-S 级别完整产物。
+> This document provides a complete prd.json example for the design-prd Skill, for reference by downstream Backend/UI Skills for programmatic consumption. The example scenario is a PRD-S level complete artifact for the "Course Recommendation Feature".
 
-## 完整 prd.json 示例
+## Complete prd.json Example
 
-场景：在线学习平台的"课程推荐功能"PRD-S 级别文档，包含全部 7 个顶层数组（features、pages、entities、user_flows、non_functional_requirements、tracking_plan、traceability）的真实数据。
+Scenario: An online learning platform's "Course Recommendation Feature" PRD-S level document, containing real data for all 7 top-level arrays (features, pages, entities, user_flows, non_functional_requirements, tracking_plan, traceability).
 
 ```json
 {
@@ -13,25 +13,25 @@
   "level": "S",
   "status": "approved",
   "meta": {
-    "title": "课程推荐功能 PRD",
-    "owner": "张三（产品经理）",
+    "title": "Course Recommendation Feature PRD",
+    "owner": "Zhang San (Product Manager)",
     "created_at": "2025-06-01T09:00:00+08:00",
     "updated_at": "2025-06-15T16:30:00+08:00"
   },
   "goals": [
     {
       "goal_id": "G001",
-      "description": "提升学员课程发现效率与学习参与度",
-      "okr_alignment": "O2-提升用户学习参与度",
+      "description": "Improve learner course discovery efficiency and learning engagement",
+      "okr_alignment": "O2-Improve user learning engagement",
       "success_metrics": [
         {
-          "metric_name": "推荐课程点击率",
+          "metric_name": "Recommended course click-through rate",
           "target_value": "25",
           "current_value": "12",
           "unit": "%"
         },
         {
-          "metric_name": "推荐课程完课率",
+          "metric_name": "Recommended course completion rate",
           "target_value": "60",
           "current_value": "45",
           "unit": "%"
@@ -42,29 +42,29 @@
   "features": [
     {
       "feature_id": "F001",
-      "name": "个性化推荐",
-      "description": "基于学员学习历史、兴趣标签和行为数据，在推荐首页展示个性化课程列表，支持刷新和反馈",
+      "name": "Personalized Recommendation",
+      "description": "Based on learner learning history, interest tags, and behavior data, display a personalized course list on the recommendation homepage, supporting refresh and feedback",
       "priority": "must",
       "status": "planned",
       "goal_id": "G001",
       "driven_by": {
-        "north_star_metric": "学员周活跃学习时长",
-        "okr_objective": "O2-提升用户学习参与度",
+        "north_star_metric": "Learner weekly active learning duration",
+        "okr_objective": "O2-Improve user learning engagement",
         "kr_id": "KR2.1",
-        "expected_lift": "推荐点击率从12%提升至25%"
+        "expected_lift": "Recommendation click-through rate increased from 12% to 25%"
       },
       "acceptance_criteria": [
         {
           "ac_id": "AC-001",
-          "given": "学员已登录且存在学习历史",
-          "when": "学员进入推荐首页",
-          "then": "3秒内展示不少于10条个性化推荐课程，且每条课程附带推荐理由"
+          "given": "Learner is logged in and has learning history",
+          "when": "Learner enters the recommendation homepage",
+          "then": "Display no fewer than 10 personalized recommended courses within 3 seconds, with each course including a recommendation reason"
         },
         {
           "criterion_id": "AC002",
-          "given": "学员在推荐首页点击「不感兴趣」",
-          "when": "学员对某条推荐课程反馈不感兴趣",
-          "then": "该课程立即从列表移除，并在30天内不再推荐"
+          "given": "Learner clicks \"Not Interested\" on the recommendation homepage",
+          "when": "Learner provides \"Not Interested\" feedback on a recommended course",
+          "then": "The course is immediately removed from the list and will not be recommended again within 30 days"
         }
       ],
       "dependencies": [],
@@ -73,23 +73,23 @@
     },
     {
       "feature_id": "F002",
-      "name": "学习路径推荐",
-      "description": "根据学员选择的职业方向和当前水平，生成结构化学习路径，按阶段推荐课程组合",
+      "name": "Learning Path Recommendation",
+      "description": "Based on the learner's selected career direction and current level, generate structured learning paths and recommend course combinations by stage",
       "priority": "should",
       "status": "planned",
       "goal_id": "G001",
       "driven_by": {
-        "north_star_metric": "学员周活跃学习时长",
-        "okr_objective": "O2-提升用户学习参与度",
+        "north_star_metric": "Learner weekly active learning duration",
+        "okr_objective": "O2-Improve user learning engagement",
         "kr_id": "KR2.2",
-        "expected_lift": "完课率从45%提升至60%"
+        "expected_lift": "Completion rate increased from 45% to 60%"
       },
       "acceptance_criteria": [
         {
           "ac_id": "AC-003",
-          "given": "学员已选择职业方向「前端工程师」",
-          "when": "学员查看学习路径推荐",
-          "then": "展示按基础-进阶-实战三阶段排列的课程路径，每阶段3-5门课程"
+          "given": "Learner has selected the career direction \"Frontend Engineer\"",
+          "when": "Learner views learning path recommendations",
+          "then": "Display course paths arranged in three stages: Foundation-Advanced-Practical, with 3-5 courses per stage"
         }
       ],
       "dependencies": ["F001"],
@@ -100,95 +100,95 @@
   "pages": [
     {
       "page_id": "P001",
-      "name": "推荐首页",
+      "name": "Recommendation Homepage",
       "route": "/recommend",
-      "description": "展示个性化推荐课程和学习路径入口，支持刷新、反馈和分类筛选",
+      "description": "Display personalized recommended courses and learning path entries, supporting refresh, feedback, and category filtering",
       "data_requirements": [
         {
-          "data_name": "个性化推荐课程列表",
+          "data_name": "Personalized recommended course list",
           "source": "api",
           "data_operations": ["read"],
           "related_entity": "E001",
           "fields": ["course_id", "title", "cover_url", "duration", "level", "match_score", "recommend_reason"],
-          "description": "从推荐服务获取个性化课程列表，按匹配度降序排列"
+          "description": "Get personalized course list from recommendation service, sorted by match score in descending order"
         },
         {
-          "data_name": "学习路径列表",
+          "data_name": "Learning path list",
           "source": "api",
           "data_operations": ["read"],
           "related_entity": "E001",
           "fields": ["path_id", "path_name", "stage_count", "course_count", "progress"],
-          "description": "获取学员已订阅和推荐的学习路径列表"
+          "description": "Get the list of learning paths the learner has subscribed to and recommended paths"
         },
         {
-          "data_name": "学员偏好标签",
+          "data_name": "Learner preference tags",
           "source": "cache",
           "data_operations": ["read"],
           "related_entity": "E002",
           "fields": ["user_id", "interest_tags", "career_goal", "current_level"],
-          "description": "从本地缓存读取学员偏好，用于推荐解释展示"
+          "description": "Read learner preferences from local cache for recommendation explanation display"
         }
       ],
-      "functional_areas": ["推荐课程瀑布流", "学习路径入口", "分类筛选", "反馈操作"],
+      "functional_areas": ["Recommended course waterfall", "Learning path entry", "Category filter", "Feedback action"],
       "user_flows": ["UF001"],
       "states": [
         {
-          "state_name": "加载中",
-          "description": "首次进入或刷新时展示骨架屏",
-          "triggers": ["页面进入", "下拉刷新"]
+          "state_name": "Loading",
+          "description": "Display skeleton screen on first entry or refresh",
+          "triggers": ["Page entry", "Pull-to-refresh"]
         },
         {
-          "state_name": "推荐为空",
-          "description": "学员无学习历史时展示引导内容",
-          "triggers": ["推荐结果为空"]
+          "state_name": "Empty recommendations",
+          "description": "Display guidance content when learner has no learning history",
+          "triggers": ["Recommendation results are empty"]
         },
         {
-          "state_name": "正常展示",
-          "description": "展示推荐课程列表和学习路径",
-          "triggers": ["推荐数据加载完成"]
+          "state_name": "Normal display",
+          "description": "Display recommended course list and learning paths",
+          "triggers": ["Recommendation data loading complete"]
         }
       ]
     },
     {
       "page_id": "P002",
-      "name": "课程详情页",
+      "name": "Course Detail Page",
       "route": "/courses/:courseId",
-      "description": "展示课程完整信息、章节目录、讲师介绍，支持立即学习和加入路径",
+      "description": "Display complete course information, chapter directory, instructor introduction, supporting immediate learning and joining path",
       "data_requirements": [
         {
-          "data_name": "课程详情",
+          "data_name": "Course details",
           "source": "api",
           "data_operations": ["read"],
           "related_entity": "E001",
           "fields": ["course_id", "title", "description", "cover_url", "duration", "level", "price", "instructor", "chapters", "rating", "enrolled_count"],
-          "description": "获取课程完整信息，包含章节目录和讲师信息"
+          "description": "Get complete course information, including chapter directory and instructor information"
         },
         {
-          "data_name": "学员学习进度",
+          "data_name": "Learner learning progress",
           "source": "api",
           "data_operations": ["read", "update"],
           "related_entity": "E002",
           "fields": ["user_id", "course_id", "progress", "last_lesson_id", "completed_lessons"],
-          "description": "获取学员在该课程的学习进度，支持更新"
+          "description": "Get the learner's progress in this course, supporting updates"
         }
       ],
-      "functional_areas": ["课程信息展示", "章节目录", "讲师介绍", "学习操作", "相关推荐"],
+      "functional_areas": ["Course information display", "Chapter directory", "Instructor introduction", "Learning action", "Related recommendations"],
       "user_flows": ["UF001"],
       "states": [
         {
-          "state_name": "未开始学习",
-          "description": "展示「开始学习」按钮",
-          "triggers": ["学员未学习该课程"]
+          "state_name": "Not started learning",
+          "description": "Display \"Start Learning\" button",
+          "triggers": ["Learner has not studied this course"]
         },
         {
-          "state_name": "学习中",
-          "description": "展示「继续学习」按钮和上次学习位置",
-          "triggers": ["学员已开始但未完成"]
+          "state_name": "Learning in progress",
+          "description": "Display \"Continue Learning\" button and last learning position",
+          "triggers": ["Learner has started but not completed"]
         },
         {
-          "state_name": "已完成",
-          "description": "展示「复习」按钮和完课证书入口",
-          "triggers": ["学员已完成全部章节"]
+          "state_name": "Completed",
+          "description": "Display \"Review\" button and completion certificate entry",
+          "triggers": ["Learner has completed all chapters"]
         }
       ]
     }
@@ -197,183 +197,183 @@
     {
       "entity_id": "E001",
       "name": "Course",
-      "description": "课程实体，包含课程基本信息、章节、难度和推荐元数据",
+      "description": "Course entity, including basic course information, chapters, difficulty, and recommendation metadata",
       "fields": [
         {
           "field_name": "course_id",
           "type": "string",
           "required": true,
-          "description": "课程唯一标识",
-          "constraints": "UUID格式"
+          "description": "Course unique identifier",
+          "constraints": "UUID format"
         },
         {
           "field_name": "title",
           "type": "string",
           "required": true,
-          "description": "课程标题",
-          "constraints": "最大长度100字符"
+          "description": "Course title",
+          "constraints": "Maximum length 100 characters"
         },
         {
           "field_name": "description",
           "type": "text",
           "required": true,
-          "description": "课程描述",
-          "constraints": "最大长度2000字符"
+          "description": "Course description",
+          "constraints": "Maximum length 2000 characters"
         },
         {
           "field_name": "cover_url",
           "type": "string",
           "required": true,
-          "description": "课程封面图URL",
-          "constraints": "HTTPS链接"
+          "description": "Course cover image URL",
+          "constraints": "HTTPS link"
         },
         {
           "field_name": "duration",
           "type": "integer",
           "required": true,
-          "description": "课程总时长（分钟）",
-          "constraints": "大于0"
+          "description": "Total course duration (minutes)",
+          "constraints": "Greater than 0"
         },
         {
           "field_name": "level",
           "type": "enum",
           "required": true,
-          "description": "课程难度",
-          "constraints": "枚举值：beginner/intermediate/advanced"
+          "description": "Course difficulty",
+          "constraints": "Enum values: beginner/intermediate/advanced"
         },
         {
           "field_name": "status",
           "type": "enum",
           "required": true,
-          "description": "课程状态",
-          "constraints": "枚举值：draft/published/offline"
+          "description": "Course status",
+          "constraints": "Enum values: draft/published/offline"
         },
         {
           "field_name": "instructor_id",
           "type": "string",
           "required": true,
-          "description": "讲师ID",
-          "constraints": "关联讲师表"
+          "description": "Instructor ID",
+          "constraints": "Associated with instructor table"
         },
         {
           "field_name": "tags",
           "type": "array",
           "required": false,
-          "description": "课程标签",
-          "constraints": "字符串数组，最多10个"
+          "description": "Course tags",
+          "constraints": "String array, up to 10 items"
         },
         {
           "field_name": "match_score",
           "type": "number",
           "required": false,
-          "description": "推荐匹配度评分",
-          "constraints": "0-1.0，由推荐服务计算"
+          "description": "Recommendation match score",
+          "constraints": "0-1.0, calculated by recommendation service"
         }
       ],
       "relationships": [
         {
           "target_entity_id": "E002",
           "type": "many_to_many",
-          "description": "一个课程可被多个学员学习，一个学员可学习多个课程"
+          "description": "A course can be studied by multiple learners, and a learner can study multiple courses"
         }
       ],
       "api_endpoints": [
         {
           "method": "GET",
           "path": "/api/v1/courses/:courseId",
-          "description": "获取课程详情"
+          "description": "Get course details"
         },
         {
           "method": "GET",
           "path": "/api/v1/recommend/courses",
-          "description": "获取个性化推荐课程列表"
+          "description": "Get personalized recommended course list"
         },
         {
           "method": "POST",
           "path": "/api/v1/recommend/feedback",
-          "description": "提交推荐反馈（不感兴趣等）"
+          "description": "Submit recommendation feedback (not interested, etc.)"
         }
       ]
     },
     {
       "entity_id": "E002",
       "name": "User",
-      "description": "学员实体，包含学员基本信息、学习偏好和学习进度",
+      "description": "Learner entity, including basic learner information, learning preferences, and learning progress",
       "fields": [
         {
           "field_name": "user_id",
           "type": "string",
           "required": true,
-          "description": "学员唯一标识",
-          "constraints": "UUID格式"
+          "description": "Learner unique identifier",
+          "constraints": "UUID format"
         },
         {
           "field_name": "nickname",
           "type": "string",
           "required": true,
-          "description": "学员昵称",
-          "constraints": "最大长度30字符"
+          "description": "Learner nickname",
+          "constraints": "Maximum length 30 characters"
         },
         {
           "field_name": "career_goal",
           "type": "string",
           "required": false,
-          "description": "职业方向",
-          "constraints": "如：前端工程师/产品经理"
+          "description": "Career direction",
+          "constraints": "e.g., Frontend Engineer/Product Manager"
         },
         {
           "field_name": "current_level",
           "type": "enum",
           "required": false,
-          "description": "当前学习水平",
-          "constraints": "枚举值：beginner/intermediate/advanced"
+          "description": "Current learning level",
+          "constraints": "Enum values: beginner/intermediate/advanced"
         },
         {
           "field_name": "interest_tags",
           "type": "array",
           "required": false,
-          "description": "兴趣标签",
-          "constraints": "字符串数组，最多20个"
+          "description": "Interest tags",
+          "constraints": "String array, up to 20 items"
         },
         {
           "field_name": "status",
           "type": "enum",
           "required": true,
-          "description": "学员状态",
-          "constraints": "枚举值：active/inactive/banned"
+          "description": "Learner status",
+          "constraints": "Enum values: active/inactive/banned"
         },
         {
           "field_name": "registered_at",
           "type": "datetime",
           "required": true,
-          "description": "注册时间",
-          "constraints": "ISO8601格式"
+          "description": "Registration time",
+          "constraints": "ISO8601 format"
         },
         {
           "field_name": "last_active_at",
           "type": "datetime",
           "required": true,
-          "description": "最后活跃时间",
-          "constraints": "ISO8601格式"
+          "description": "Last active time",
+          "constraints": "ISO8601 format"
         }
       ],
       "relationships": [
         {
           "target_entity_id": "E001",
           "type": "many_to_many",
-          "description": "一个学员可学习多个课程，一个课程可被多个学员学习"
+          "description": "A learner can study multiple courses, and a course can be studied by multiple learners"
         }
       ],
       "api_endpoints": [
         {
           "method": "GET",
           "path": "/api/v1/users/:userId/profile",
-          "description": "获取学员画像信息"
+          "description": "Get learner profile information"
         },
         {
           "method": "PATCH",
           "path": "/api/v1/users/:userId/preferences",
-          "description": "更新学员偏好（职业方向、兴趣标签）"
+          "description": "Update learner preferences (career direction, interest tags)"
         }
       ]
     }
@@ -381,46 +381,46 @@
   "user_flows": [
     {
       "flow_id": "UF001",
-      "name": "查看推荐课程",
-      "description": "学员从推荐首页浏览个性化推荐课程，进入课程详情页查看完整信息并开始学习",
+      "name": "View Recommended Courses",
+      "description": "Learner browses personalized recommended courses from the recommendation homepage, enters the course detail page to view complete information and starts learning",
       "entry_page": "P001",
       "steps": [
         {
           "step_id": "S001",
-          "action": "进入推荐首页",
+          "action": "Enter recommendation homepage",
           "page_id": "P001",
-          "expected_outcome": "展示个性化推荐课程列表和学习路径入口",
-          "error_handling": "网络异常时展示缓存数据并提示「网络异常，展示为历史数据」"
+          "expected_outcome": "Display personalized recommended course list and learning path entries",
+          "error_handling": "On network exception, display cached data and prompt \"Network exception, displaying historical data\""
         },
         {
           "step_id": "S002",
-          "action": "浏览推荐课程并点击感兴趣的卡片",
+          "action": "Browse recommended courses and click on a card of interest",
           "page_id": "P001",
-          "expected_outcome": "跳转到课程详情页",
+          "expected_outcome": "Navigate to course detail page",
           "error_handling": null
         },
         {
           "step_id": "S003",
-          "action": "查看课程详情、章节目录",
+          "action": "View course details and chapter directory",
           "page_id": "P002",
-          "expected_outcome": "展示课程完整信息和章节列表",
-          "error_handling": "课程已下线时展示「课程已下线」提示并返回推荐首页"
+          "expected_outcome": "Display complete course information and chapter list",
+          "error_handling": "When course is offline, display \"Course is offline\" prompt and return to recommendation homepage"
         },
         {
           "step_id": "S004",
-          "action": "点击「开始学习」或「继续学习」",
+          "action": "Click \"Start Learning\" or \"Continue Learning\"",
           "page_id": "P002",
-          "expected_outcome": "进入课程学习页开始或继续学习",
-          "error_handling": "未登录时跳转登录页，登录后返回原页面"
+          "expected_outcome": "Enter course learning page to start or continue learning",
+          "error_handling": "When not logged in, redirect to login page and return to original page after login"
         }
       ],
       "alternative_paths": [
         {
-          "condition": "学员对推荐课程不感兴趣",
+          "condition": "Learner is not interested in recommended courses",
           "steps": ["S002"]
         },
         {
-          "condition": "学员选择学习路径而非单门课程",
+          "condition": "Learner chooses a learning path instead of a single course",
           "steps": ["S001"]
         }
       ]
@@ -429,52 +429,52 @@
   "non_functional_requirements": {
     "performance": [
       {
-        "requirement": "推荐列表接口响应时间",
-        "metric": "P95响应时间",
+        "requirement": "Recommendation list API response time",
+        "metric": "P95 response time",
         "target": "≤500ms"
       },
       {
-        "requirement": "推荐首页首屏渲染时间",
-        "metric": "首屏FCP",
+        "requirement": "Recommendation homepage first screen render time",
+        "metric": "First Contentful Paint (FCP)",
         "target": "≤1.5s"
       }
     ],
     "availability": [
       {
-        "requirement": "推荐服务可用性",
-        "metric": "服务可用率",
+        "requirement": "Recommendation service availability",
+        "metric": "Service availability rate",
         "target": "≥99.9%",
-        "measurement": "按月统计，监控API成功率"
+        "measurement": "Monthly statistics, monitoring API success rate"
       },
       {
-        "requirement": "推荐服务降级能力",
-        "metric": "降级触发时间",
-        "target": "推荐服务异常时3秒内降级为热门课程",
-        "measurement": "故障演练验证"
+        "requirement": "Recommendation service degradation capability",
+        "metric": "Degradation trigger time",
+        "target": "Degrade to popular courses within 3 seconds when recommendation service is abnormal",
+        "measurement": "Fault drill verification"
       }
     ],
     "security": [
       {
         "category": "authorization",
-        "requirement": "学员只能查看自己的学习进度和推荐",
-        "implementation": "基于JWT的鉴权，接口层校验user_id与token一致性"
+        "requirement": "Learners can only view their own learning progress and recommendations",
+        "implementation": "JWT-based authentication, API layer validates user_id and token consistency"
       },
       {
         "category": "compliance",
-        "requirement": "推荐算法需符合个人信息保护法",
-        "implementation": "不收集非必要个人信息，提供推荐偏好关闭入口"
+        "requirement": "Recommendation algorithm must comply with Personal Information Protection Law",
+        "implementation": "Do not collect unnecessary personal information, provide an entry to turn off recommendation preferences"
       }
     ],
     "observability": [
       {
         "dimension": "metrics",
-        "indicator": "推荐点击率、推荐转化率、推荐服务错误率",
-        "alert_threshold": "错误率>1%持续5分钟触发告警"
+        "indicator": "Recommendation click-through rate, recommendation conversion rate, recommendation service error rate",
+        "alert_threshold": "Error rate >1% for 5 minutes triggers alert"
       },
       {
         "dimension": "logs",
-        "indicator": "推荐请求与响应日志",
-        "alert_threshold": "异常响应（非200）数量>50/分钟触发告警"
+        "indicator": "Recommendation request and response logs",
+        "alert_threshold": "Abnormal responses (non-200) >50/minute triggers alert"
       }
     ]
   },
@@ -483,7 +483,7 @@
       {
         "event_id": "EV001",
         "event_name": "recommend_click",
-        "trigger": "学员点击推荐首页的课程卡片",
+        "trigger": "Learner clicks a course card on the recommendation homepage",
         "properties": [
           {
             "property_name": "course_id",
@@ -506,12 +506,12 @@
             "required": true
           }
         ],
-        "related_metric": "推荐课程点击率"
+        "related_metric": "Recommended course click-through rate"
       },
       {
         "event_id": "EV002",
         "event_name": "course_view",
-        "trigger": "学员进入课程详情页",
+        "trigger": "Learner enters course detail page",
         "properties": [
           {
             "property_name": "course_id",
@@ -529,12 +529,12 @@
             "required": false
           }
         ],
-        "related_metric": "课程详情页浏览量"
+        "related_metric": "Course detail page views"
       },
       {
         "event_id": "EV003",
         "event_name": "recommend_feedback",
-        "trigger": "学员对推荐课程提交「不感兴趣」反馈",
+        "trigger": "Learner submits \"Not Interested\" feedback on a recommended course",
         "properties": [
           {
             "property_name": "course_id",
@@ -547,12 +547,12 @@
             "required": true
           }
         ],
-        "related_metric": "推荐满意度"
+        "related_metric": "Recommendation satisfaction"
       }
     ],
     "validation": {
       "coverage_target": 0.95,
-      "data_delay_threshold": "T+1天"
+      "data_delay_threshold": "T+1 day"
     }
   },
   "traceability": [
@@ -578,26 +578,26 @@
 }
 ```
 
-## 示例说明
+## Example Notes
 
-### 7 个顶层数组覆盖情况
+### 7 Top-level Arrays Coverage
 
-| 顶层数组 | 示例数量 | 说明 |
+| Top-level Array | Example Count | Description |
 |----------|----------|------|
-| features | 2 | 个性化推荐（must）、学习路径推荐（should） |
-| pages | 2 | 推荐首页、课程详情页 |
-| entities | 2 | Course、User，均包含完整 fields 和 relationships |
-| user_flows | 1 | 查看推荐课程（含 4 个步骤和 2 条替代路径） |
-| non_functional_requirements | 4 维度 | performance（2）、availability（2）、security（2）、observability（2） |
-| tracking_plan | 3 个事件 | recommend_click、course_view、recommend_feedback |
-| traceability | 3 条追溯关系 | 功能点→目标、功能点→机会定义、功能点→OKR |
+| features | 2 | Personalized Recommendation (must), Learning Path Recommendation (should) |
+| pages | 2 | Recommendation Homepage, Course Detail Page |
+| entities | 2 | Course, User, both include complete fields and relationships |
+| user_flows | 1 | View Recommended Courses (with 4 steps and 2 alternative paths) |
+| non_functional_requirements | 4 dimensions | performance (2), availability (2), security (2), observability (2) |
+| tracking_plan | 3 events | recommend_click, course_view, recommend_feedback |
+| traceability | 3 trace relationships | Feature→Goal, Feature→Opportunity Definition, Feature→OKR |
 
-### 引用一致性自检
+### Reference Consistency Self-check
 
-- `features[0].related_pages` 中的 `P001`、`P002` 在 `pages[]` 中存在 ✓
-- `features[0].related_entities` 中的 `E001`、`E002` 在 `entities[]` 中存在 ✓
-- `pages[0].user_flows` 中的 `UF001` 在 `user_flows[]` 中存在 ✓
-- `user_flows[0].entry_page` 为 `P001`，在 `pages[]` 中存在 ✓
-- `user_flows[0].steps[].page_id` 为 `P001`、`P002`，均在 `pages[]` 中存在 ✓
-- `traceability[].feature_id` 为 `F001`、`F002`，均在 `features[]` 中存在 ✓
-- `traceability[].goal_id` 为 `G001`，在 `goals[]` 中存在 ✓
+- `P001`, `P002` in `features[0].related_pages` exist in `pages[]` ✓
+- `E001`, `E002` in `features[0].related_entities` exist in `entities[]` ✓
+- `UF001` in `pages[0].user_flows` exists in `user_flows[]` ✓
+- `user_flows[0].entry_page` is `P001`, exists in `pages[]` ✓
+- `user_flows[0].steps[].page_id` are `P001`, `P002`, both exist in `pages[]` ✓
+- `traceability[].feature_id` are `F001`, `F002`, both exist in `features[]` ✓
+- `traceability[].goal_id` is `G001`, exists in `goals[]` ✓

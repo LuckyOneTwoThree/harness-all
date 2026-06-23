@@ -1,76 +1,76 @@
 # Typography Craft Rules
 
-> 通用工艺规则（品牌无关）· 被 visual-design / design-system / design-lint 引用
+> Generic craft rules (brand-agnostic) · referenced by visual-design / design-system / design-lint
 >
-> 来源：Open Design craft/typography.md + 排版最佳实践
+> Source: Open Design craft/typography.md + typography best practices
 
-## 核心理念
+## Core philosophy
 
-字体是设计的灵魂。AI slop 的首要标志就是字体选择（Inter/Roboto/Arial）。好的排版需要关注字距、字号阶梯、行高三个维度。
+Typography is the soul of design. The first sign of AI slop is font choice (Inter/Roboto/Arial). Good typography requires attention to letter spacing, type scale, and line height.
 
-## 字号阶梯（Type Scale）
+## Type scale
 
-采用 1.25 比率（Major Third）：
+Uses a 1.25 ratio (Major Third):
 
-| Token | Size | 用途 |
+| Token | Size | Usage |
 |-------|------|------|
-| text-xs | 0.8rem (12.8px) | 辅助文本/标签 |
-| text-sm | 1rem (16px) | 正文（小屏） |
-| text-base | 1.25rem (20px) | 正文（桌面） |
-| text-lg | 1.563rem (25px) | 小标题 |
-| text-xl | 1.953rem (31.25px) | 章节标题 |
-| text-2xl | 2.441rem (39px) | 页面标题 |
-| text-3xl | 3.052rem (49px) | Hero 标题 |
+| text-xs | 0.8rem (12.8px) | Secondary text / labels |
+| text-sm | 1rem (16px) | Body (small screens) |
+| text-base | 1.25rem (20px) | Body (desktop) |
+| text-lg | 1.563rem (25px) | Subtitle |
+| text-xl | 1.953rem (31.25px) | Section heading |
+| text-2xl | 2.441rem (39px) | Page title |
+| text-3xl | 3.052rem (49px) | Hero title |
 
-## 行高（Line Height）
+## Line height
 
-| 用途 | 行高 | 原因 |
+| Usage | Line height | Reason |
 |------|------|------|
-| 正文（多行） | 1.5-1.6 | 阅读舒适度 |
-| 标题（短行） | 1.1-1.3 | 紧凑感 |
-| UI 文本 | 1.4 | 平衡 |
+| Body (multi-line) | 1.5-1.6 | Reading comfort |
+| Heading (short lines) | 1.1-1.3 | Compact feel |
+| UI text | 1.4 | Balance |
 
-## 字距（Letter Spacing）
+## Letter spacing
 
-| 场景 | 字距 | 原因 |
+| Scenario | Letter spacing | Reason |
 |------|------|------|
-| ALL CAPS 文本 | ≥0.06em | 大写字母需更多间距 |
-| 大标题 | -0.02em | 大字号需收紧 |
-| 正文 | normal (0) | 默认即可 |
-| 小文本 | 0.01em | 小字号略加间距 |
+| ALL CAPS text | ≥0.06em | Caps need more spacing |
+| Large heading | -0.02em | Large sizes need tightening |
+| Body | normal (0) | Default is fine |
+| Small text | 0.01em | Small sizes need slight spacing |
 
-## 字重（Font Weight）
+## Font weight
 
-| 用途 | 字重 | 原因 |
+| Usage | Weight | Reason |
 |------|------|------|
-| 正文 | 400 (normal) | 阅读舒适 |
-| 强调 | 500-600 | 不抢标题 |
-| 标题 | 600-700 | 建立层级 |
-| 大标题 | 700-800 | 视觉焦点 |
+| Body | 400 (normal) | Reading comfort |
+| Emphasis | 500-600 | Does not steal from heading |
+| Heading | 600-700 | Establishes hierarchy |
+| Large heading | 700-800 | Visual focus |
 
-## 字体配对原则
+## Font pairing principles
 
-1. **衬线 + 无衬线**：标题用衬线（有个性），正文用无衬线（易读）
-2. **展示字 + UI 字**：标题用展示字（有特色），正文用 UI 字（中性）
-3. **避免同族配对**：两个无衬线或两个衬线配对缺乏对比
+1. **Serif + sans-serif**: serif for headings (personality), sans-serif for body (readability)
+2. **Display + UI font**: display font for headings (character), UI font for body (neutral)
+3. **Avoid same-family pairing**: two sans-serifs or two serifs lack contrast
 
-## 禁用配对
+## Forbidden pairings
 
-| 禁用 | 原因 |
+| Forbidden | Reason |
 |------|------|
-| Inter + Roboto | 两个 AI 默认字体 |
-| Arial + Helvetica | 太相似 |
-| 单字体全场景 | 缺乏层级 |
+| Inter + Roboto | Two AI default fonts |
+| Arial + Helvetica | Too similar |
+| Single font for all scenarios | Lacks hierarchy |
 
-## CSS Import 规范
+## CSS import spec
 
 ```css
-/* Google Fonts 导入示例（禁用 Inter/Roboto/Arial 作为主字体） */
+/* Google Fonts import example (do not use Inter/Roboto/Arial as primary font) */
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Manrope:wght@400;500&display=swap');
 ```
 
-## 检查时机
+## Check timing
 
-- **design-system**：定义字体系统时对照
-- **visual-design**：选字体时对照禁用配对
-- **design-lint**：L004 规则检查字号在 type scale 上
+- **design-system**: cross-check when defining the typography system
+- **visual-design**: cross-check forbidden pairings when choosing fonts
+- **design-lint**: L004 rule checks that font sizes are on the type scale

@@ -1,21 +1,21 @@
 ---
 name: growth-strategy-report
-description: 当需要将增长模式诊断和各环节优化方案汇总为完整可交付的增长策略报告时使用。增长策略报告自动生成，包含增长模式评估、AARRR漏斗诊断、杠杆策略、飞轮模型和执行路线图。关键词：增长策略报告、增长报告、AARRR报告、增长飞轮、增长路线图、增长瓶颈、怎么涨上去、增长计划。本报告是面向用户的可交付策略文档，整合各增长子Skill的输出，生成完整的增长策略。
+description: Use when you need to consolidate growth model diagnosis and stage optimization plans into a complete, deliverable growth strategy report. Growth Strategy Report auto-generation includes growth model evaluation, AARRR funnel diagnosis, leverage strategies, flywheel model, and execution roadmap. Keywords: growth strategy report, growth report, AARRR report, growth flywheel, growth roadmap, growth bottleneck, how to grow, growth plan. This report is a user-facing deliverable strategy document that integrates outputs from each growth sub-Skill to generate a complete growth strategy.
 metadata:
-  module: "产品增长与运营"
-  sub-module: "增长模式"
+  module: "Product Growth & Operations"
+  sub-module: "Growth Model"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["互联网", "SaaS", "通用"]
+  domain_tags: ["Internet", "SaaS", "General"]
   trigger_examples:
-    - "帮我出一份增长策略报告"
-    - "增长遇到瓶颈怎么办"
-    - "怎么制定增长计划"
+    - "Help me produce a growth strategy report"
+    - "What to do when growth hits a bottleneck"
+    - "How to formulate a growth plan"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出增长策略和优先动作"
-  deep_description: "完整报告 + 增长模型推演 + 渠道组合优化 + 增长实验路线图"
+  quick_description: "Directly output growth strategy and priority actions"
+  deep_description: "Complete report + growth model inference + channel mix optimization + growth experiment roadmap"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -26,144 +26,144 @@ writes:
   - docs/growth/growth-strategy.md
 ---
 
-# 增长策略报告生成
+# Growth Strategy Report Generation
 
-## 核心原则
+## Core Principles
 
-**增长策略报告是行动蓝图，不是数据看板**
+**The growth strategy report is an action blueprint, not a data dashboard**
 
-增长策略报告的核心价值在于将分散的增长诊断和各环节优化方案整合为一份可执行的增长蓝图。报告回答的不是"数据是什么"，而是"我们应该在哪里投入、投入多少、预期什么回报"。
+The core value of the growth strategy report lies in consolidating scattered growth diagnoses and stage optimization plans into an executable growth blueprint. The report answers not "what the data is" but "where we should invest, how much, and what return to expect".
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Input
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 增长模式诊断 | markdown | 是 | docs/growth/growth-strategy.md（“增长模型”章节） | 增长模式、飞轮模型、瓶颈环节 |
-| 获客方案 | markdown | 否 | docs/growth/growth-strategy.md（“获客分析”章节） | 渠道评估、漏斗优化 |
-| 激活方案 | markdown | 否 | docs/growth/growth-strategy.md（“Onboarding”章节） | Aha Moment、Onboarding优化 |
-| 留存方案 | markdown | 否 | docs/growth/growth-strategy.md（“留存管理”章节） | 流失预警、分层运营 |
-| 变现方案 | markdown | 否 | docs/growth/growth-strategy.md（“收入漏斗”章节） | 付费漏斗、NRR、增购 |
-| 业务目标 | text | 否 | 用户输入 | 北极星指标、增长目标、预算约束 |
+| Growth model diagnosis | markdown | Yes | docs/growth/growth-strategy.md ("Growth Model" section) | Growth model, flywheel model, bottleneck stage |
+| Acquisition plan | markdown | No | docs/growth/growth-strategy.md ("Acquisition Analysis" section) | Channel evaluation, funnel optimization |
+| Activation plan | markdown | No | docs/growth/growth-strategy.md ("Onboarding" section) | Aha Moment, Onboarding optimization |
+| Retention plan | markdown | No | docs/growth/growth-strategy.md ("Retention Management" section) | Churn prediction, segmented operations |
+| Monetization plan | markdown | No | docs/growth/growth-strategy.md ("Revenue Funnel" section) | Payment funnel, NRR, upsell |
+| Business goals | text | No | User-provided | North Star metric, growth targets, budget constraints |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1：增长模式评估 [核心]
+### Step 1: Growth Model Evaluation [Core]
 
-从增长模式诊断结果提炼核心判断：
+Distill core judgments from the growth model diagnosis results:
 
-1. **增长模式识别**：PLG / SLG / MLG / 混合模式及判定依据
-2. **飞轮模型构建**：飞轮节点、因果关系、增强回路、当前转动状态
-3. **瓶颈定位**：当前最大瓶颈环节及量化依据
-4. **增长阶段判断**：冷启动 / 起飞 / 规模化 / 成熟期
+1. **Growth model identification**: PLG / SLG / MLG / Hybrid model and the rationale
+2. **Flywheel model construction**: Flywheel nodes, causal relationships, reinforcing loops, current rotation status
+3. **Bottleneck localization**: Current biggest bottleneck stage and quantified rationale
+4. **Growth stage assessment**: Cold start / takeoff / scale / mature
 
-### Step 2：AARRR 漏斗诊断 [核心]
+### Step 2: AARRR Funnel Diagnosis [Core]
 
-整合各环节分析结果，构建全链路漏斗视图：
+Integrate the analysis results of each stage to build a full-funnel view:
 
-1. **获客漏斗**：曝光→点击→注册→激活，各环节转化率与行业基准对比
-2. **激活漏斗**：注册→Aha Moment→核心功能使用，时间衰减分析
-3. **留存曲线**：D1/D7/D30留存率，留存曲线形态（幂律/指数/对数）
-4. **变现漏斗**：免费→试用→付费→续费→增购，各环节ARPU贡献
+1. **Acquisition funnel**: Exposure → click → registration → activation, conversion rates at each stage vs. industry benchmarks
+2. **Activation funnel**: Registration → Aha Moment → core feature usage, time-decay analysis
+3. **Retention curve**: D1/D7/D30 retention rates, retention curve shape (power law/exponential/logarithmic)
+4. **Monetization funnel**: Free → trial → paid → renewal → upsell, ARPU contribution at each stage
 
-### Step 3：杠杆策略整合 [核心]
+### Step 3: Leverage Strategy Integration [Core]
 
-基于瓶颈定位和各环节方案，整合杠杆策略：
+Based on bottleneck localization and stage plans, integrate leverage strategies:
 
-1. **高杠杆策略**（投入产出比最高）：Top 3 策略 + 预期影响 + 所需资源
-2. **中杠杆策略**（稳健增长）：补充策略 + 预期影响
-3. **防御策略**（防止下滑）：风险缓解 + 预警指标
-4. **策略优先级矩阵**：按影响×可行性排序
+1. **High-leverage strategies** (highest ROI): Top 3 strategies + expected impact + required resources
+2. **Medium-leverage strategies** (steady growth): Supplementary strategies + expected impact
+3. **Defensive strategies** (prevent decline): Risk mitigation + early warning metrics
+4. **Strategy priority matrix**: Sorted by impact × feasibility
 
-### Step 4：执行路线图 [核心]
+### Step 4: Execution Roadmap [Core]
 
-将策略转化为可执行的路线图：
+Translate strategies into an executable roadmap:
 
-1. **Quick Wins**（0-2周）：低投入高回报的即时行动
-2. **核心优化**（2-8周）：关键杠杆的系统性优化
-3. **长期投资**（8周+）：飞轮加速的基础设施建设
-4. **里程碑与指标**：每个阶段的关键里程碑和验收指标
+1. **Quick Wins** (0-2 weeks): Low-investment, high-return immediate actions
+2. **Core optimization** (2-8 weeks): Systematic optimization of key levers
+3. **Long-term investment** (8 weeks+): Infrastructure buildout for flywheel acceleration
+4. **Milestones and metrics**: Key milestones and acceptance metrics for each phase
 
-### Step 5：报告组装 [核心]
+### Step 5: Report Assembly [Core]
 
-将以上内容组装为完整报告。
+Assemble the above content into a complete report.
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 增长策略和优先动作 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整报告 + 增长模型推演 + 渠道组合优化 + 增长实验路线图 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Growth strategy and priority actions | Core conclusions + minimum viable artifact |
+| standard | Complete artifact (current default) | Complete artifact, including all Step outputs |
+| deep | Complete report + growth model inference + channel mix optimization + growth experiment roadmap | Complete artifact + extended analysis + deep inference |
 
-## 输出
+## Output
 
-### 输出文件
+### Output Files
 
-| 文件 | 路径 | 说明 |
+| File | Path | Description |
 |------|------|------|
-| 增长策略报告 | `docs/growth/growth-strategy.md（汇总覆盖）` | 人类可读的完整报告 |
-| 结构化数据 | `docs/growth/growth-strategy.md（汇总覆盖）` | 机器可消费的结构化数据 |
+| Growth strategy report | `docs/growth/growth-strategy.md (aggregate overwrite)` | Human-readable complete report |
+| Structured data | `docs/growth/growth-strategy.md (aggregate overwrite)` | Machine-consumable structured data |
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["product_name", "growth_model", "leverage_strategies", "roadmap"],
   "properties": {
-    "product_name": {"type": "string", "description": "产品名称"},
-    "report_date": {"type": "string", "description": "报告日期"},
-    "growth_model": {"type": "object", "description": "增长模式评估，包含类型、飞轮模型和瓶颈"},
-    "aarrr_funnel": {"type": "object", "description": "AARRR漏斗诊断，包含获客/激活/留存/变现"},
-    "leverage_strategies": {"type": "object", "description": "杠杆策略，包含高/中/防御策略"},
-    "roadmap": {"type": "object", "description": "执行路线图，包含Quick Wins/核心优化/长期投资"},
-    "risks_and_assumptions": {"type": "array", "description": "风险与假设列表"}
+    "product_name": {"type": "string", "description": "Product name"},
+    "report_date": {"type": "string", "description": "Report date"},
+    "growth_model": {"type": "object", "description": "Growth model evaluation, including type, flywheel model, and bottleneck"},
+    "aarrr_funnel": {"type": "object", "description": "AARRR funnel diagnosis, including acquisition/activation/retention/monetization"},
+    "leverage_strategies": {"type": "object", "description": "Leverage strategies, including high/medium/defensive strategies"},
+    "roadmap": {"type": "object", "description": "Execution roadmap, including Quick Wins/core optimization/long-term investment"},
+    "risks_and_assumptions": {"type": "array", "description": "List of risks and assumptions"}
   }
 }
 ```
 
-### Markdown 报告结构
+### Markdown Report Structure
 
 ```markdown
-# 增长策略报告：{产品名称}
+# Growth Strategy Report: {Product Name}
 
-## 1. 执行摘要
-- 增长模式 / 当前阶段 / 核心瓶颈 / Top 3 行动
+## 1. Executive Summary
+- Growth model / current stage / core bottleneck / Top 3 actions
 
-## 2. 增长模式评估
-- 增长模式识别及依据
-- 飞轮模型（节点+因果关系）
-- 瓶颈定位与量化
+## 2. Growth Model Evaluation
+- Growth model identification and rationale
+- Flywheel model (nodes + causal relationships)
+- Bottleneck localization and quantification
 
-## 3. AARRR 漏斗诊断
-- 获客漏斗（转化率 + 行业基准）
-- 激活漏斗（Aha Moment + 时间衰减）
-- 留存曲线（D1/D7/D30 + 形态分析）
-- 变现漏斗（ARPU贡献分解）
+## 3. AARRR Funnel Diagnosis
+- Acquisition funnel (conversion rates + industry benchmarks)
+- Activation funnel (Aha Moment + time decay)
+- Retention curve (D1/D7/D30 + shape analysis)
+- Monetization funnel (ARPU contribution breakdown)
 
-## 4. 杠杆策略
-- 高杠杆策略 Top 3（影响×可行性矩阵）
-- 中杠杆策略
-- 防御策略
-- 策略优先级排序
+## 4. Leverage Strategies
+- High-leverage strategies Top 3 (impact × feasibility matrix)
+- Medium-leverage strategies
+- Defensive strategies
+- Strategy priority ranking
 
-## 5. 执行路线图
-- Quick Wins（0-2周）
-- 核心优化（2-8周）
-- 长期投资（8周+）
-- 里程碑与验收指标
+## 5. Execution Roadmap
+- Quick Wins (0-2 weeks)
+- Core optimization (2-8 weeks)
+- Long-term investment (8 weeks+)
+- Milestones and acceptance metrics
 
-## 6. 风险与假设
-- 关键假设清单
-- 风险缓解措施
-- 监控指标与预警阈值
+## 6. Risks and Assumptions
+- Key assumptions list
+- Risk mitigation measures
+- Monitoring metrics and alert thresholds
 ```
 
-### JSON 结构
+### JSON Structure
 
 ```json
 {
@@ -200,103 +200,103 @@ writes:
 }
 ```
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| product_name | string | 是 | 产品名称，不可为空 |
-| growth_model | object | 是 | 增长模式评估，须含type/flywheel/bottleneck |
-| growth_model.type | string | 是 | 增长模式类型，仅允许PLG/SLG/MLG/hybrid |
-| growth_model.evidence | string | 否 | 模式判定依据 |
-| growth_model.flywheel.nodes | array | 是 | 飞轮节点，至少3个 |
-| growth_model.flywheel.nodes[].node_name | string | 是 | 节点名称，不可为空 |
-| growth_model.flywheel.edges | array | 否 | 飞轮因果关系，至少2条 |
-| growth_model.flywheel.edges[].from | string | 是 | 起始节点 |
-| growth_model.flywheel.edges[].to | string | 是 | 目标节点 |
-| growth_model.flywheel.edges[].description | string | 否 | 因果关系描述 |
-| growth_model.bottleneck | string | 是 | 瓶颈描述，不可为空 |
-| aarrr_funnel | object | 否 | AARRR漏斗数据 |
-| aarrr_funnel.acquisition | object | 否 | 获客环节 |
-| aarrr_funnel.acquisition.current_rate | number | 否 | 当前获客率 |
-| aarrr_funnel.activation | object | 否 | 激活环节 |
-| aarrr_funnel.activation.current_rate | number | 否 | 当前激活率 |
-| aarrr_funnel.retention | object | 否 | 留存环节 |
-| aarrr_funnel.retention.current_rate | number | 否 | 当前留存率 |
-| aarrr_funnel.referral | object | 否 | 推荐环节 |
-| aarrr_funnel.referral.current_rate | number | 否 | 当前推荐率 |
-| aarrr_funnel.revenue | object | 否 | 收入环节 |
-| aarrr_funnel.revenue.current_rate | number | 否 | 当前付费率 |
-| leverage_strategies | object | 是 | 杠杆策略，须含high/medium/defensive |
-| leverage_strategies.high | array | 是 | 高杠杆策略，至少1条 |
-| leverage_strategies.high[].strategy | string | 是 | 策略描述，不可为空 |
-| leverage_strategies.high[].expected_impact | string | 否 | 预期影响 |
-| leverage_strategies.medium | array | 是 | 中杠杆策略，至少1条 |
-| leverage_strategies.medium[].strategy | string | 是 | 策略描述，不可为空 |
-| leverage_strategies.defensive | array | 否 | 防御策略 |
-| leverage_strategies.defensive[].strategy | string | 是 | 策略描述，不可为空 |
-| roadmap | object | 是 | 执行路线图，须含quick_wins/core_optimization/long_term |
-| roadmap.quick_wins | array | 是 | 快速收益项，至少1条 |
-| roadmap.quick_wins[].action | string | 是 | 行动描述 |
-| roadmap.quick_wins[].timeline | string | 否 | 时间线 |
-| roadmap.core_optimization | array | 是 | 核心优化项，至少1条 |
-| roadmap.core_optimization[].action | string | 是 | 行动描述 |
-| roadmap.core_optimization[].timeline | string | 否 | 时间线 |
-| roadmap.long_term | array | 否 | 长期投资项 |
-| roadmap.long_term[].action | string | 是 | 行动描述 |
-| roadmap.long_term[].timeline | string | 否 | 时间线 |
-| risks_and_assumptions | array | 否 | 风险与假设列表 |
-| risks_and_assumptions[].type | string | 是 | 类型，枚举：risk/assumption |
-| risks_and_assumptions[].description | string | 是 | 描述，不可为空 |
-| risks_and_assumptions[].impact | string | 否 | 影响评估 |
+| product_name | string | Yes | Product name, cannot be empty |
+| growth_model | object | Yes | Growth model evaluation, must contain type/flywheel/bottleneck |
+| growth_model.type | string | Yes | Growth model type, only PLG/SLG/MLG/hybrid allowed |
+| growth_model.evidence | string | No | Model determination rationale |
+| growth_model.flywheel.nodes | array | Yes | Flywheel nodes, at least 3 |
+| growth_model.flywheel.nodes[].node_name | string | Yes | Node name, cannot be empty |
+| growth_model.flywheel.edges | array | No | Flywheel causal relationships, at least 2 |
+| growth_model.flywheel.edges[].from | string | Yes | Source node |
+| growth_model.flywheel.edges[].to | string | Yes | Target node |
+| growth_model.flywheel.edges[].description | string | No | Causal relationship description |
+| growth_model.bottleneck | string | Yes | Bottleneck description, cannot be empty |
+| aarrr_funnel | object | No | AARRR funnel data |
+| aarrr_funnel.acquisition | object | No | Acquisition stage |
+| aarrr_funnel.acquisition.current_rate | number | No | Current acquisition rate |
+| aarrr_funnel.activation | object | No | Activation stage |
+| aarrr_funnel.activation.current_rate | number | No | Current activation rate |
+| aarrr_funnel.retention | object | No | Retention stage |
+| aarrr_funnel.retention.current_rate | number | No | Current retention rate |
+| aarrr_funnel.referral | object | No | Referral stage |
+| aarrr_funnel.referral.current_rate | number | No | Current referral rate |
+| aarrr_funnel.revenue | object | No | Revenue stage |
+| aarrr_funnel.revenue.current_rate | number | No | Current paid conversion rate |
+| leverage_strategies | object | Yes | Leverage strategies, must contain high/medium/defensive |
+| leverage_strategies.high | array | Yes | High-leverage strategies, at least 1 |
+| leverage_strategies.high[].strategy | string | Yes | Strategy description, cannot be empty |
+| leverage_strategies.high[].expected_impact | string | No | Expected impact |
+| leverage_strategies.medium | array | Yes | Medium-leverage strategies, at least 1 |
+| leverage_strategies.medium[].strategy | string | Yes | Strategy description, cannot be empty |
+| leverage_strategies.defensive | array | No | Defensive strategies |
+| leverage_strategies.defensive[].strategy | string | Yes | Strategy description, cannot be empty |
+| roadmap | object | Yes | Execution roadmap, must contain quick_wins/core_optimization/long_term |
+| roadmap.quick_wins | array | Yes | Quick win items, at least 1 |
+| roadmap.quick_wins[].action | string | Yes | Action description |
+| roadmap.quick_wins[].timeline | string | No | Timeline |
+| roadmap.core_optimization | array | Yes | Core optimization items, at least 1 |
+| roadmap.core_optimization[].action | string | Yes | Action description |
+| roadmap.core_optimization[].timeline | string | No | Timeline |
+| roadmap.long_term | array | No | Long-term investment items |
+| roadmap.long_term[].action | string | Yes | Action description |
+| roadmap.long_term[].timeline | string | No | Timeline |
+| risks_and_assumptions | array | No | List of risks and assumptions |
+| risks_and_assumptions[].type | string | Yes | Type, enum: risk/assumption |
+| risks_and_assumptions[].description | string | Yes | Description, cannot be empty |
+| risks_and_assumptions[].impact | string | No | Impact assessment |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (quick/standard/deep must all pass)
 
-- [ ] 飞轮模型完整性（至少3个节点+2条因果关系）
-- [ ] 策略与瓶颈一致（高杠杆策略直接针对核心瓶颈）
+- [ ] Flywheel model completeness (at least 3 nodes + 2 causal relationships)
+- [ ] Strategy aligned with bottleneck (high-leverage strategies directly target core bottleneck)
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (standard/deep must pass)
 
-- [ ] 路线图可执行（每项行动有负责人、时间、验收指标）
-- [ ] 漏斗数据完整（AARRR至少3个环节有数据）
+- [ ] Roadmap executable (each action has owner, timeline, acceptance metrics)
+- [ ] Funnel data complete (at least 3 of AARRR stages have data)
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep inference and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
-## 决策规则
+## Decision Rules
 
-- 当增长瓶颈为获客环节时，优先分配资源到获客策略
-- 当飞轮模型尚未验证时，策略建议标注"待飞轮验证"，避免过度投入
-- 当Quick Wins与长期投资冲突时，优先Quick Wins但保留长期投资路径
-- 需要人类确认的决策点：增长模式判定、核心瓶颈确认、资源分配比例、路线图优先级
+- When the growth bottleneck is the acquisition stage, prioritize allocating resources to acquisition strategies
+- When the flywheel model is not yet validated, mark strategy recommendations as "pending flywheel validation" to avoid over-investment
+- When Quick Wins conflict with long-term investment, prioritize Quick Wins but preserve the long-term investment path
+- Decision points requiring human confirmation: growth model determination, core bottleneck confirmation, resource allocation ratio, roadmap priority
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Instructions |
 |----------|----------|----------|------------|
-| 无增长模式诊断 | 基于各环节方案反推增长模式，标注"模式待确认" | 增长模式为推断结论，需后续验证 | 要求用户提供增长模式描述或执行growth-model技能 |
-| 仅有部分环节方案 | 仅覆盖已有数据的环节，缺失环节标注"待补充" | 报告覆盖不完整，缺失环节无策略建议 | 要求用户提供缺失环节的策略摘要或执行对应前序技能 |
-| 无任何上游输入 | 基于用户提供的产品信息生成增长策略框架，标注"需数据验证" | 报告为框架级，所有结论需数据验证 | 要求用户提供产品信息、增长目标和核心指标 |
-| 业务目标缺失 | 提示用户提供业务目标，否则无法确定策略聚焦方向 | 策略缺乏目标导向 | 要求用户提供业务目标（如提升DAU、提高付费转化率等） |
+| No growth model diagnosis | Reverse-engineer growth model from stage plans, mark "model to be confirmed" | Growth model is an inferred conclusion, needs subsequent validation | Require user to provide growth model description or execute growth-model skill |
+| Only partial stage plans | Cover only stages with available data, mark missing stages as "to be supplemented" | Report coverage incomplete, no strategy recommendations for missing stages | Require user to provide strategy summaries for missing stages or execute corresponding prior skills |
+| No upstream input at all | Generate growth strategy framework based on user-provided product info, mark "needs data validation" | Report is framework-level, all conclusions need data validation | Require user to provide product info, growth goals, and core metrics |
+| Business goals missing | Prompt user to provide business goals, otherwise cannot determine strategy focus direction | Strategy lacks goal orientation | Require user to provide business goals (e.g., increase DAU, improve paid conversion rate) |
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游来源 | 变更类型 | 影响范围 | 响应动作 |
+| Upstream Source | Change Type | Impact Scope | Response Action |
 |----------|----------|----------|----------|
-| growth-model | 增长模式或瓶颈变更 | 增长模式评估和杠杆策略 | 重新评估模式，调整策略优先级 |
-| acquisition-* / activation-* / retention-* / revenue-* | 优化方案更新 | AARRR漏斗诊断和策略整合 | 更新对应漏斗环节数据和策略 |
-| 用户提供-业务目标 | 目标或预算变更 | 杠杆策略和执行路线图 | 重新排序策略优先级，调整路线图 |
+| growth-model | Growth model or bottleneck change | Growth model evaluation and leverage strategies | Re-evaluate model, adjust strategy priorities |
+| acquisition-* / activation-* / retention-* / revenue-* | Optimization plan updates | AARRR funnel diagnosis and strategy integration | Update corresponding funnel stage data and strategies |
+| User-provided - Business goals | Goal or budget changes | Leverage strategies and execution roadmap | Re-rank strategy priorities, adjust roadmap |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 下游消费者 | 通知条件 | 通知方式 | 通知内容 |
+| Downstream Consumer | Notification Condition | Notification Method | Notification Content |
 |------------|----------|----------|----------|
-| growth-orchestrator | 报告生成完成 | 输出文件更新 | 报告完成状态和关键结论 |
-| 用户提供 | 报告生成完成 | 输出文件 | 完整增长策略报告 |
+| growth-orchestrator | Report generation completed | Output file update | Report completion status and key conclusions |
+| User-provided | Report generation completed | Output file | Complete growth strategy report |

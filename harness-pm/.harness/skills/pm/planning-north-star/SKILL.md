@@ -1,20 +1,20 @@
 ---
 name: planning-north-star
-description: 当需要确定产品核心指标、OKR北极星指标、指标体系设计时使用。北极星指标选择。AI辅助选择最能衡量产品成功和用户价值的指标。这是人类决策点，AI提供数据支撑，人类最终选择。关键词：北极星指标、核心指标、指标选择、产品成功指标、NSM、关键指标、看什么数据。
+description: Use when you need to determine product core metrics, OKR North Star Metric, or design a metric system. North Star Metric selection. AI assists in selecting the metric that best measures product success and user value. This is a human decision point — AI provides data support, humans make the final choice. Keywords: North Star Metric, core metric, metric selection, product success metric, NSM, key metric, what data to look at.
 metadata:
-  module: "产品商业与战略"
-  sub-module: "战略规划与路线图"
+  module: "Product Business & Strategy"
+  sub-module: "Strategic Planning & Roadmap"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["SaaS", "通用"]
+  domain_tags: ["SaaS", "General"]
   trigger_examples:
-    - "我们的核心指标该选什么"
-    - "怎么衡量产品成功"
+    - "What should our core metric be"
+    - "How do we measure product success"
   interaction_mode: "human_ai_collaborate"
 execution_depth:
   default: standard
-  quick_description: "直接输出推荐北极星指标和输入变量"
-  deep_description: "完整分析 + 指标相关性矩阵 + 操纵风险评估 + 指标演进路线"
+  quick_description: "Directly output recommended North Star Metric and input variables"
+  deep_description: "Full analysis + metric correlation matrix + gaming risk assessment + metric evolution roadmap"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -26,253 +26,253 @@ writes:
   - output/metrics/north-star.json
 ---
 
-# 北极星指标选择
+# North Star Metric Selection
 
-## 核心原则
+## Core Principles
 
-1. **多候选比较**——生成3-5个候选指标，四维度评分后推荐，人类最终选择
-2. **价值-商业双锚**——北极星必须同时关联用户价值和商业成功，缺一不可
-3. **输入变量可驱动**——推荐指标必须拆解为3个可量化、可追踪、可影响的输入变量
-4. **防操纵设计**——评估指标被操纵、失效、误导的风险并给出预警
+1. **Multi-candidate comparison** — Generate 3-5 candidate metrics, score them across four dimensions, and recommend; humans make the final choice
+2. **Value-Business dual anchor** — The North Star must link to both user value and business success; neither can be missing
+3. **Input variables must be actionable** — The recommended metric must be decomposed into 3 quantifiable, trackable, and influenceable input variables
+4. **Gaming-resistant design** — Assess the risks of the metric being gamed, becoming invalid, or misleading, and provide warnings
 
-## 交互模式
-👤→🤖 人类执行AI辅助
+## Interaction Mode
+👤→🤖 Human executes, AI assists
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 用户价值数据 | JSON | 是 | user-research-user-modeling / user-research-voice-analysis | 探索阶段用户价值数据 |
-| BMC商业模式画布 | JSON | 是 | docs/strategy/business-strategy.md（“商业模式画布”章节） | 价值主张、收入来源 |
-| 业务现状数据 | JSON | ○ | 用户提供 | 当前业务指标、用户规模 |
+| User value data | JSON | Yes | user-research-user-modeling / user-research-voice-analysis | User value data from the exploration phase |
+| BMC business model canvas | JSON | Yes | docs/strategy/business-strategy.md ("Business Model Canvas" section) | Value proposition, revenue streams |
+| Business status data | JSON | ○ | Provided by user | Current business metrics, user scale |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 候选指标生成 [核心]
+### Step 1: Candidate Metric Generation [Core]
 
-基于输入数据生成3-5个北极星指标候选：
+Generate 3-5 North Star Metric candidates based on input data:
 
-- 从BMC中提取价值主张关键词，映射为可量化指标
-- 从用户价值数据中提取用户核心行为，转化为行为指标
-- 从业务现状数据中提取现有指标，评估是否适合作为北极星
-- 每个候选指标必须包含：指标名称、计算公式、数据来源、更新频率
+- Extract value proposition keywords from BMC and map them to quantifiable metrics
+- Extract core user behaviors from user value data and convert them into behavioral metrics
+- Extract existing metrics from business status data and evaluate whether they are suitable as the North Star
+- Each candidate metric must include: metric name, calculation formula, data source, update frequency
 
-### Step 2: 四维度评分 [核心]
+### Step 2: Four-Dimension Scoring [Core]
 
-对每个候选指标按4个维度进行1-5分评分：
+Score each candidate metric on a 1-5 scale across 4 dimensions:
 
-| 维度 | 评分标准 |
+| Dimension | Scoring Criteria |
 |------|----------|
-| 与核心价值关系 | 5分=直接衡量用户价值实现 3分=间接关联 1分=无关联 |
-| 与商业成功相关性 | 5分=与收入/增长强相关 3分=弱相关 1分=无关 |
-| 可操作性 | 5分=团队可直接影响 3分=部分影响 1分=无法影响 |
-| 可衡量性 | 5分=数据定义清晰+自动采集 3分=需人工采集 1分=无法采集 |
+| Relationship to core value | 5 = directly measures user value realization; 3 = indirectly related; 1 = unrelated |
+| Correlation with business success | 5 = strongly correlated with revenue/growth; 3 = weakly correlated; 1 = unrelated |
+| Actionability | 5 = team can directly influence; 3 = partially influenceable; 1 = cannot influence |
+| Measurability | 5 = clear data definition + automated collection; 3 = requires manual collection; 1 = cannot be collected |
 
-**综合得分 = 0.3×价值关系 + 0.3×商业相关 + 0.2×可操作性 + 0.2×可衡量性**
+**Composite score = 0.3 × value relationship + 0.3 × business correlation + 0.2 × actionability + 0.2 × measurability**
 
-### Step 3: 推荐与备选 [核心]
+### Step 3: Recommendation and Alternatives [Core]
 
-- 综合得分≥4.0的指标作为推荐北极星指标
-- 综合得分3.0-4.0的指标作为备选指标
-- 综合得分<3.0的指标标注淘汰原因
-- 推荐指标需与BMC价值主张和OKR对齐验证
+- Metrics with composite score ≥ 4.0 are recommended as the North Star Metric
+- Metrics with composite score 3.0-4.0 are alternative metrics
+- Metrics with composite score < 3.0 are marked with the reason for elimination
+- The recommended metric must be validated for alignment with the BMC value proposition and OKR
 
-### Step 4: 输入变量定义 [核心]
+### Step 4: Input Variable Definition [Core]
 
-为推荐指标定义3个关键输入变量（驱动因素）：
+Define 3 key input variables (drivers) for the recommended metric:
 
-- 每个输入变量必须可量化、可追踪、可影响
-- 输入变量与北极星指标的因果关系需明确
-- 标注每个输入变量的数据来源和采集方式
+- Each input variable must be quantifiable, trackable, and influenceable
+- The causal relationship between input variables and the North Star Metric must be explicit
+- Annotate the data source and collection method for each input variable
 
-### Step 5: 驱动功能映射 [核心]
+### Step 5: Driving Feature Mapping [Core]
 
-为推荐指标定义2-4个可直接影响该指标的功能候选：
+Define 2-4 feature candidates that can directly influence the recommended metric:
 
-- 每个功能需标注优先级(P0/P1/P2)和预期提升
-- 功能需基于用户研究和战略分析推导，不可凭空设定
-- 功能描述应为占位符，等待 design-prd 生成具体 feature_id
+- Each feature must be tagged with priority (P0/P1/P2) and expected lift
+- Features must be derived from user research and strategic analysis, not invented
+- Feature descriptions are placeholders, awaiting design-prd to generate specific feature_id
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 推荐北极星指标和输入变量 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整分析 + 指标相关性矩阵 + 操纵风险评估 + 指标演进路线 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Recommended North Star Metric and input variables | Core conclusions + minimum viable artifact |
+| standard | Full artifact (current default) | Complete artifact, including all Step outputs |
+| deep | Full analysis + metric correlation matrix + gaming risk assessment + metric evolution roadmap | Full artifact + extended analysis + deep reasoning |
 
-## 输出
+## Output
 
-**存储路径**：`docs/strategy/PRODUCT_STRATEGY.md（“North Star”章节）`
+**Storage path**: `docs/strategy/PRODUCT_STRATEGY.md ("North Star" section)`
 
-**输出文件**：north_star.json → `output/metrics/north-star.json`
+**Output file**: north_star.json → `output/metrics/north-star.json`
 
-### 输出校验规则
+### Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| north_star_metric.recommended.metric_name | string | 是 | 推荐北极星指标名称 |
-| north_star_metric.recommended.definition | string | 是 | 指标定义和计算公式 |
-| north_star_metric.recommended.relationship_to_value | string | 是 | 与用户价值的关系说明 |
-| north_star_metric.recommended.relationship_to_business | string | 是 | 与商业成功的关系说明 |
-| north_star_metric.recommended.measurement.data_source | string | 是 | 数据来源 |
-| north_star_metric.recommended.measurement.calculation | string | 是 | 计算公式 |
-| north_star_metric.recommended.measurement.frequency | string | 是 | 更新频率 |
-| north_star_metric.recommended.drives_features | array | 是 | 驱动的功能列表 |
-| north_star_metric.recommended.drives_features[].feature_priority | string | 是 | 对应该功能的优先级(P0/P1/P2) |
-| north_star_metric.recommended.drives_features[].feature_description | string | 是 | 功能描述（占位，等待design-prd生成具体ID） |
-| north_star_metric.recommended.drives_features[].expected_lift | string | 是 | 该功能对指标的预期提升 |
-| north_star_metric.alternatives | array | 是 | 至少2个备选指标 |
-| north_star_metric.alternatives[].fit_score | number | 是 | 备选指标适配评分0-1 |
-| north_star_metric.analysis_summary.recommendation_rationale | string | 是 | 推荐理由 |
+| north_star_metric.recommended.metric_name | string | Yes | Recommended North Star Metric name |
+| north_star_metric.recommended.definition | string | Yes | Metric definition and calculation formula |
+| north_star_metric.recommended.relationship_to_value | string | Yes | Description of relationship to user value |
+| north_star_metric.recommended.relationship_to_business | string | Yes | Description of relationship to business success |
+| north_star_metric.recommended.measurement.data_source | string | Yes | Data source |
+| north_star_metric.recommended.measurement.calculation | string | Yes | Calculation formula |
+| north_star_metric.recommended.measurement.frequency | string | Yes | Update frequency |
+| north_star_metric.recommended.drives_features | array | Yes | List of driven features |
+| north_star_metric.recommended.drives_features[].feature_priority | string | Yes | Priority of the corresponding feature (P0/P1/P2) |
+| north_star_metric.recommended.drives_features[].feature_description | string | Yes | Feature description (placeholder, awaiting design-prd to generate specific ID) |
+| north_star_metric.recommended.drives_features[].expected_lift | string | Yes | Expected lift of the feature on the metric |
+| north_star_metric.alternatives | array | Yes | At least 2 alternative metrics |
+| north_star_metric.alternatives[].fit_score | number | Yes | Alternative metric fit score 0-1 |
+| north_star_metric.analysis_summary.recommendation_rationale | string | Yes | Recommendation rationale |
 
 ```yaml
 north_star_metric:
   recommended:
     metric_name: "Weekly Active Users (WAU)"
-    definition: "过去7天内至少访问1次的独立用户数"
-    relationship_to_value: "衡量用户持续使用产品的频率，反映产品为用户提供的持续价值"
-    relationship_to_business: "与广告收入和付费转化高度相关，是增长引擎的关键指标"
-    actionability: "高-可通过产品优化、内容运营、推送策略提升"
+    definition: "Number of unique users who visited at least once in the past 7 days"
+    relationship_to_value: "Measures the frequency of users' continued product usage, reflecting the sustained value the product provides to users"
+    relationship_to_business: "Highly correlated with ad revenue and paid conversion, a key metric for the growth engine"
+    actionability: "High — can be improved through product optimization, content operations, and push strategies"
     measurement:
-      data_source: "用户行为日志"
+      data_source: "User behavior logs"
       calculation: "COUNT(DISTINCT user_id WHERE last_active <= 7 days)"
-      frequency: "每日更新"
-      owner: "增长团队"
+      frequency: "Daily update"
+      owner: "Growth team"
     drives_features:
       - feature_priority: "P0"
-        feature_description: "个性化推荐首页"
-        expected_lift: "15% WAU提升"
+        feature_description: "Personalized recommendation homepage"
+        expected_lift: "15% WAU lift"
       - feature_priority: "P0"
-        feature_description: "每日签到体系"
-        expected_lift: "8% WAU提升"
+        feature_description: "Daily check-in system"
+        expected_lift: "8% WAU lift"
       - feature_priority: "P1"
-        feature_description: "内容分享功能"
-        expected_lift: "5% WAU提升"
+        feature_description: "Content sharing feature"
+        expected_lift: "5% WAU lift"
   alternatives:
     - metric_name: "Daily Active Users (DAU)"
-      pros: "实时性强，响应快"
-      cons: "波动大，稳定性差"
+      pros: "Strong real-time responsiveness"
+      cons: "High volatility, low stability"
       fit_score: 0.75
       drives_features: []
     - metric_name: "Monthly Active Users (MAU)"
-      pros: "稳定性好，反映长期用户基础"
-      cons: "响应慢，难以及时发现问题"
+      pros: "Good stability, reflects long-term user base"
+      cons: "Slow response, hard to detect issues in time"
       fit_score: 0.70
       drives_features: []
     - metric_name: "User Engagement Score"
-      pros: "综合反映用户参与度"
-      cons: "定义主观，难以标准化"
+      pros: "Comprehensively reflects user engagement"
+      cons: "Subjective definition, hard to standardize"
       fit_score: 0.65
       drives_features: []
   analysis_summary:
-    recommendation_rationale: "WAU平衡了实时性和稳定性，与用户价值和产品商业成功都有强关联，且团队有明确的提升路径"
-    implementation_notes: "需要建立用户ID体系和7天活跃计算逻辑，建议与DAU并行监测"
-    warning: "注意区分新用户和老用户的活跃模式差异"
+    recommendation_rationale: "WAU balances real-time responsiveness and stability, has strong correlation with both user value and product business success, and the team has a clear path to improve it"
+    implementation_notes: "Need to establish a user ID system and 7-day active calculation logic; recommend monitoring in parallel with DAU"
+    warning: "Be aware of the difference in activity patterns between new and existing users"
 ```
 
-## AI辅助分析内容
+## AI-Assisted Analysis Content
 
-AI应该提供以下分析支撑：
+AI should provide the following analytical support:
 
-1. **指标候选池**
-   - 基于BMC分析可能的指标
-   - 基于用户价值数据分析关联指标
-   - 基于行业benchmark推荐指标
+1. **Candidate metric pool**
+   - Analyze possible metrics based on BMC
+   - Analyze related metrics based on user value data
+   - Recommend metrics based on industry benchmarks
 
-2. **相关性分析**
-   - 各指标与收入的相关性分析
-   - 各指标与留存的相关性分析
-   - 指标间的相关性矩阵
+2. **Correlation analysis**
+   - Correlation analysis between each metric and revenue
+   - Correlation analysis between each metric and retention
+   - Correlation matrix between metrics
 
-3. **趋势分析**
-   - 各候选指标的历史趋势
-   - 指标变化的归因分析
-   - 预测指标未来的变化
+3. **Trend analysis**
+   - Historical trends of each candidate metric
+   - Attribution analysis of metric changes
+   - Predict future metric changes
 
-4. **风险评估**
-   - 指标操纵风险
-   - 指标失效风险
-   - 指标误导风险
+4. **Risk assessment**
+   - Metric gaming risk
+   - Metric invalidation risk
+   - Metric misleading risk
 
-### 决策流程
+### Decision Flow
 
 ```
-1. 人类发起需求
-2. AI分析并推荐指标候选
-3. 人类评估候选指标
-4. AI提供详细分析支撑
-5. 人类讨论并选择
-6. AI记录决策和理由
-7. 人类确认最终指标
+1. Human initiates the request
+2. AI analyzes and recommends metric candidates
+3. Human evaluates candidate metrics
+4. AI provides detailed analytical support
+5. Human discusses and selects
+6. AI records the decision and rationale
+7. Human confirms the final metric
 ```
 
-## 决策规则
+## Decision Rules
 
-1. **人类决策**：北极星指标选择是人类决策点
-2. **AI支撑**：AI只提供分析支撑，不做最终决策
-3. **多方参与**：建议产品、技术、业务多方参与讨论
+1. **Human decision**: North Star Metric selection is a human decision point
+2. **AI support**: AI only provides analytical support, does not make the final decision
+3. **Multi-party involvement**: Recommend involving product, engineering, and business stakeholders in the discussion
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 至少3个指标候选已分析
-- [ ] 每个候选有5个维度评估
+- [ ] At least 3 metric candidates analyzed
+- [ ] Each candidate has 5-dimension evaluation
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 相关性分析已完成
-- [ ] 风险评估已提供
-- [ ] 最终选择有人类确认记录
-- [ ] 选择理由已记录
-- [ ] drives_features[]非空且至少包含2个P0/P1功能
-- [ ] 每个驱动功能有预期提升描述
+- [ ] Correlation analysis completed
+- [ ] Risk assessment provided
+- [ ] Final selection has human confirmation record
+- [ ] Selection rationale recorded
+- [ ] drives_features[] is non-empty and contains at least 2 P0/P1 features
+- [ ] Each driving feature has an expected lift description
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only required for deep)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep reasoning and roadmap generated)
+- [ ] Decision record complete (key decisions have rationale and alternatives)
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-当上游文件不存在时，本Skill仍可独立执行：
+When upstream files are missing, this Skill can still execute independently:
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Instructions |
 |---------------|---------|---------|------------|
-| 用户价值数据（voice-analysis / persona） | 用户提供产品描述 → 推荐北极星候选 | 缺乏用户价值数据，指标与用户价值关联度可能偏弱 | 要求用户提供用户核心价值描述或上传persona.json/voice-analysis.json文件 |
-| bmc.json | 用户提供产品描述 → 推荐北极星候选 | 缺乏BMC数据，指标与商业模型关联度可能偏弱 | 要求用户提供商业模式描述或上传bmc.json文件 |
-| 用户价值数据 + bmc.json | 用户提供产品描述 → 推荐北极星候选 | 整体置信度降低，指标缺乏价值-商业双锚定 | 要求用户提供产品核心价值和商业模式描述 |
-| 所有上游文件均缺失 | 提示用户先执行前序阶段，或基于用户提供的产品描述推荐北极星候选 | 整体置信度显著降低，推荐仅为行业通用参考 | 要求用户提供产品描述、核心价值和商业模式信息 |
-| 业务现状数据（用户提供） | 若用户未提供业务现状数据，提示用户提供或跳过该输入相关步骤 | 缺乏基线数据，无法评估指标现状 | 要求用户提供当前核心指标数值（如DAU、留存率、收入等） |
+| User value data (voice-analysis / persona) | User provides product description → recommend North Star candidates | Lacking user value data, the correlation between metric and user value may be weak | Ask user to provide a description of core user value or upload persona.json/voice-analysis.json files |
+| bmc.json | User provides product description → recommend North Star candidates | Lacking BMC data, the correlation between metric and business model may be weak | Ask user to provide a business model description or upload bmc.json file |
+| User value data + bmc.json | User provides product description → recommend North Star candidates | Overall confidence reduced, metric lacks value-business dual anchoring | Ask user to provide product core value and business model description |
+| All upstream files missing | Prompt user to execute prior phases first, or recommend North Star candidates based on user-provided product description | Overall confidence significantly reduced, recommendation is only a general industry reference | Ask user to provide product description, core value, and business model information |
+| Business status data (user-provided) | If user does not provide business status data, prompt user to provide or skip steps related to this input | Lacking baseline data, unable to assess current metric status | Ask user to provide current core metric values (e.g., DAU, retention rate, revenue, etc.) |
 
-## 数据获取说明
+## Data Acquisition Instructions
 
-本Skill需要用户价值数据和BMC数据，请通过以下方式之一提供：
-  1. 直接描述产品核心价值和业务模式
-  2. 上传persona.json / voice-analysis.json / bmc.json文件
-  3. 提供数据文件路径
-- AI不负责外部数据采集，仅负责分析
+This Skill requires user value data and BMC data. Please provide via one of the following methods:
+  1. Directly describe the product's core value and business model
+  2. Upload persona.json / voice-analysis.json / bmc.json files
+  3. Provide the data file path
+- AI is not responsible for external data collection, only for analysis
 
 ---
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| bmc.json价值主张变更 | 候选指标与价值主张的关联需重新评估 | 重新执行Step 1-2，更新候选指标和评分 |
-| bmc.json收入模式变更 | 指标与商业成功相关性 | 重新评分商业相关维度 |
-| persona/voice-analysis用户价值更新 | 候选指标池和用户价值关联 | 重新执行Step 1，更新候选指标 |
+| bmc.json value proposition change | Candidate metrics' correlation with value proposition needs re-evaluation | Re-execute Step 1-2, update candidate metrics and scores |
+| bmc.json revenue model change | Metric's correlation with business success | Re-score the business correlation dimension |
+| persona/voice-analysis user value update | Candidate metric pool and user value correlation | Re-execute Step 1, update candidate metrics |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 变更类型 | 影响范围 | 通知方式 |
+| Change Type | Impact Scope | Notification Method |
 |----------|----------|----------|
-| 北极星指标变更 | planning-okr、planning-roadmap、design-prd | 输出文件版本号+变更摘要 |
-| 输入变量定义变更 | planning-okr | 输出文件版本号+变更摘要 |
-| 候选指标评分变更 | planning-okr | 输出文件版本号+变更摘要 |
-| drives_features变更 | design-prd | 输出文件版本号+变更摘要 |
+| North Star Metric change | planning-okr, planning-roadmap, design-prd | Output file version number + change summary |
+| Input variable definition change | planning-okr | Output file version number + change summary |
+| Candidate metric scoring change | planning-okr | Output file version number + change summary |
+| drives_features change | design-prd | Output file version number + change summary |

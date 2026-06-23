@@ -10,7 +10,7 @@
       "children": "ReactNode"
     },
     "states": ["default", "hover", "active", "disabled", "loading"],
-    "notes": "React 项目主操作按钮，每屏最多 1 个 primary 变体。children 类型为 ReactNode，与 DESIGN_BRIEF.md 中 Tech Stack = React 匹配。触控目标 ≥ 44px（可访问性硬约束）。"
+    "notes": "React project primary action button; at most one primary variant per screen. children type is ReactNode, matching Tech Stack = React in DESIGN_BRIEF.md. Touch target >= 44px (accessibility hard constraint)."
   },
   "Card": {
     "designToken": "card.product",
@@ -23,7 +23,7 @@
       "default": "VNode"
     },
     "states": ["default", "hover", "selected"],
-    "notes": "Vue 项目产品列表卡片，支持选中态。header/default slot 类型为 VNode，与 DESIGN_BRIEF.md 中 Tech Stack = Vue 匹配。hover 态有 200ms 过渡动画（ease-out）。"
+    "notes": "Vue project product list card; supports selected state. header/default slot type is VNode, matching Tech Stack = Vue in DESIGN_BRIEF.md. Hover state has a 200ms transition animation (ease-out)."
   },
   "Modal": {
     "designToken": "modal.dialog",
@@ -37,7 +37,7 @@
       "children": "Snippet"
     },
     "states": ["closed", "opening", "open", "closing"],
-    "notes": "Svelte 项目模态对话框。trigger/children 类型为 Snippet（Svelte 5 语法），与 DESIGN_BRIEF.md 中 Tech Stack = Svelte 匹配。需支持 ESC 键关闭 + 焦点陷阱（可访问性）。"
+    "notes": "Svelte project modal dialog. trigger/children type is Snippet (Svelte 5 syntax), matching Tech Stack = Svelte in DESIGN_BRIEF.md. Must support ESC key close + focus trap (accessibility)."
   },
   "Navigation": {
     "designToken": "nav.main",
@@ -49,6 +49,6 @@
       "container": "HTMLElement"
     },
     "states": ["default", "item-hover", "item-active", "scrolled"],
-    "notes": "原生 Web Components 项目主导航。container 类型为 HTMLElement，与 DESIGN_BRIEF.md 中 Tech Stack = Vanilla/Web Components 匹配。键盘导航需支持 Tab/Arrow 键，符合 WAI-ARIA Menu 模式。"
+    "notes": "Native Web Components project main navigation. container type is HTMLElement, matching Tech Stack = Vanilla/Web Components in DESIGN_BRIEF.md. Keyboard navigation must support Tab/Arrow keys, conforming to the WAI-ARIA Menu pattern."
   }
 }

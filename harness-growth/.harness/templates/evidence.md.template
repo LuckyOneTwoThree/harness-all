@@ -1,37 +1,37 @@
-# 验证证据
+# Verification evidence
 
-> 来源：由 measure skill 产出。
-> 文件语义：覆盖写入（只保留最终成功的证据）。
+> Source: produced by the measure skill.
+> File semantics: overwrite write (only the final successful evidence is kept).
 
-## 时间
+## Time
 YYYY-MM-DD HH:MM
 
-## 1. 实验结果
-[实验组 vs 对照组的核心指标对比]
-[实际数据，不是"应该有效"]
+## 1. Experiment results
+[Comparison of core metrics between experiment group and control group]
+[Actual data, not "should be effective"]
 
-## 2. 统计显著性
-- 主要度量：[p 值 / 置信区间]
-- 样本量：[实验组 N=X，对照组 N=Y]
-- 结论：[显著 / 不显著]
+## 2. Statistical significance
+- Primary metric: [p-value / confidence interval]
+- Sample size: [experiment group N=X, control group N=Y]
+- Conclusion: [significant / not significant]
 
-## 3. 验收标准
-- AC-001: ✓ <如何满足>
-- AC-002: ✓ <如何满足>
+## 3. Acceptance criteria
+- AC-001: ✓ <how satisfied>
+- AC-002: ✓ <how satisfied>
 
-## 4. 数据完整性
-- [x] 样本量达标
-- [x] 实验时长达标
-- [x] 分组随机性验证
-- [x] 数据脱敏（无 PII）
+## 4. Data integrity
+- [x] Sample size meets requirement
+- [x] Experiment duration meets requirement
+- [x] Group randomness verified
+- [x] Data desensitized (no PII)
 
-## 5. 宪法合规
-- [x] 实验有假设和度量
-- [x] 内容质量门通过
-- [x] 无黑帽 SEO 手段
-- [x] 无刷量行为
-- [x] 数据闭环（结论已写入 knowledge-base.md）
+## 5. Constitution compliance
+- [x] Experiment has hypothesis and metric
+- [x] Content quality gate passed
+- [x] No black-hat SEO tactics
+- [x] No fake traffic behavior
+- [x] Data closed loop (conclusion written to knowledge-base.md)
 
-## 6. 护栏指标检查
-- [指标名]：[实验组 vs 对照组，是否在阈值内]
-- [结论：无副作用 / 触发护栏，停止实验]
+## 6. Guardrail metric check
+- [metric name]: [experiment group vs control group, within threshold?]
+- [Conclusion: no side effects / guardrail triggered, stop experiment]

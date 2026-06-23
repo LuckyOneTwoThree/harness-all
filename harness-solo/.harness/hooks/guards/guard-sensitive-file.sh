@@ -1,16 +1,16 @@
 #!/bin/bash
-# guard-sensitive-file.sh — 敏感文件阻止
-# 用法：bash guard-sensitive-file.sh [file_path...]
-# 不带参数时检查 staged 文件
+# guard-sensitive-file.sh — Sensitive file blocking
+# Usage: bash guard-sensitive-file.sh [file_path...]
+# Checks staged files when no argument is provided
 
-# CRLF 防御：Windows 下 core.autocrlf 可能导致脚本含 \r，Git Bash 无法执行
+# CRLF defense: on Windows, core.autocrlf may cause scripts to contain \r, which Git Bash cannot execute
 if grep -qI $'\r' "$0" 2>/dev/null; then
   exec bash < <(tr -d '\r' < "$0")
 fi
 
 set -e
 
-# 受保护文件（禁止修改/删除）
+# Protected files (modification/deletion forbidden)
 PROTECTED_PATHS=(
   'AGENTS\.md$'
   'SOUL\.md$'
@@ -22,7 +22,7 @@ PROTECTED_PATHS=(
   '\.github/workflows/'
 )
 
-# 敏感文件（禁止提交）
+# Sensitive files (committing forbidden)
 SENSITIVE_PATHS=(
   '\.env$'
   '\.env\.local$'
@@ -42,20 +42,20 @@ exit_code=0
 check_file() {
   local file="$1"
 
-  # 检查受保护文件
+  # Check protected files
   for pattern in "${PROTECTED_PATHS[@]}"; do
     if [[ "$file" =~ $pattern ]]; then
-      echo "BLOCK: 受保护文件被修改: $file"
-      echo "如需修改 $file，请用户明确确认"
+      echo "BLOCK: protected file modified: $file"
+      echo "To modify $file, get explicit confirmation from the user"
       exit_code=1
     fi
   done
 
-  # 检查敏感文件
+  # Check sensitive files
   for pattern in "${SENSITIVE_PATHS[@]}"; do
     if [[ "$file" =~ $pattern ]]; then
-      echo "BLOCK: 敏感文件: $file"
-      echo "此类文件不应提交到 Git"
+      echo "BLOCK: sensitive file: $file"
+      echo "These files should not be committed to Git"
       exit_code=1
     fi
   done
@@ -71,13 +71,13 @@ else
       check_file "$f"
     done < <(git diff --cached --name-only --diff-filter=ACMR)
   else
-    echo "WARN: 不在 git 仓库，且未传参数"
+    echo "WARN: not in a git repository and no arguments provided"
     exit 1
   fi
 fi
 
 if [ $exit_code -eq 0 ]; then
-  echo "OK: 未检测到敏感/受保护文件变更"
+  echo "OK: no sensitive/protected file changes detected"
 fi
 
 exit $exit_code

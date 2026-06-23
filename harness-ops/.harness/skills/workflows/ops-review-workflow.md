@@ -4,38 +4,39 @@ name: ops-review-workflow
 default_mode: skip
 ---
 
-# Workflow: 运维回顾（Ops Review Workflow）
+# Workflow: Ops Review Workflow
 
-> 所属 LOOP 类型：无（周期性报告）
-> 触发场景：周会/月会/季度回顾、session-end 检测到结题任务
-> 编排 Skill：sla-report + cost-analysis → ops-review → [产出 ops-to-pm.md]
+> LOOP type: None (periodic report)
+> Trigger scenarios: Weekly/monthly/quarterly review, session-end detects concluded tasks
+> Orchestration Skill: sla-report + cost-analysis → ops-review → [produce ops-to-pm.md]
 
-## 流程图
+## Flowchart
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│ 并行执行数据分析                                          │
-│  ├── sla-report         SLA 计算与报告                   │
-│  └── cost-analysis      成本分析与优化建议                │
+│ Parallel data analysis                                  │
+│  ├── sla-report         SLA calculation and report      │
+│  └── cost-analysis      Cost analysis and optimization  │
+│                         suggestions                      │
 └───────────────────────────┬─────────────────────────────┘
                             ▼
           ┌─────────────────────────────────┐
-          │ ops-review                       │  汇总指标+故障+部署
-          │                                   │  产出 ops-to-pm.md
+          │ ops-review                       │  Summarize metrics + incidents + deployments
+          │                                   │  Produce ops-to-pm.md
           └─────────────────────────────────┘
 ```
 
-## 质量门控
+## Quality Gates
 
-| 门控点 | 检查内容 | 不通过处理 |
+| Gate | Checks | On Failure |
 |--------|---------|-----------|
-| ops-review 产出前 | 数据完整（至少有本月部署/故障记录） | 标注"数据不足" |
-| ops-to-pm.md 产出前 | 字段完整（SLA/故障/建议） | 补充缺失字段 |
+| Before ops-review output | Data complete (at least this month's deployment/incident records) | Tag as "insufficient data" |
+| Before ops-to-pm.md output | Fields complete (SLA/incidents/suggestions) | Supplement missing fields |
 
-## 使用方式
+## Usage
 
-对 Agent 说：
-- "生成本月运维回顾" → 触发本 workflow
-- "准备交接给 PM" → 触发 ops-review 产出 ops-to-pm.md
-- "计算本月 SLA" → 从 sla-report 开始
-- session-end 自动触发（如有结题任务）
+Tell the Agent:
+- "Generate this month's ops review" → Trigger this workflow
+- "Prepare handoff to PM" → Trigger ops-review to produce ops-to-pm.md
+- "Calculate this month's SLA" → Start from sla-report
+- session-end auto-trigger (if concluded tasks exist)

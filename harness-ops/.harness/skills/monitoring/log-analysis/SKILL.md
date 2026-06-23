@@ -1,12 +1,12 @@
 ---
 name: log-analysis
-description: 日志查询与分析，生成 LogQL/ES DSL 查询，日志模式发现与异常聚类
+description: Log query and analysis, generating LogQL/ES DSL queries, log pattern discovery and anomaly clustering
 triggers:
-  - 故障排查需要查询日志时
-  - root-cause-analysis 需要日志证据时
-  - 用户要求"查日志"时
-  - 监控告警需要日志关联时
-  - 需要分析日志模式时
+  - When troubleshooting requires querying logs
+  - When root-cause-analysis needs log evidence
+  - When the user requests "query logs"
+  - When monitoring alerts need log correlation
+  - When log patterns need to be analyzed
 reads:
   - loops/specs/<incident-id>/spec.md
   - rules/security.md
@@ -21,57 +21,57 @@ operation_tier: inspect
 requires_approval: false
 ---
 
-# Log Analysis — 日志查询与分析
+# Log Analysis — Log Query and Analysis
 
-## 铁律
+## Ground Rules
 
-1. **查询有时间范围** —— 不全量扫描，限定时间窗口
-2. **查询有目的** —— 知道要找什么，不做无目的浏览
-3. **日志不含 PII** —— 查询结果脱敏后再展示
-4. **模式发现优先于逐行阅读** —— 用聚合查询，不逐行看
+1. **Queries must have a time range** — do not scan everything; limit the time window
+2. **Queries must have a purpose** — know what to look for; do not browse aimlessly
+3. **Logs must not contain PII** — mask query results before displaying
+4. **Pattern discovery over line-by-line reading** — use aggregation queries; do not read line by line
 
-## 流程
+## Process
 
-### 1. 明确查询目的
+### 1. Clarify the Query Purpose
 
-- **故障诊断**：找 ERROR/Exception/堆栈
-- **性能分析**：找慢查询/超时/重试
-- **安全审计**：找异常访问/权限变更
-- **业务分析**：找特定用户/订单的行为轨迹
+- **Incident diagnosis**: find ERROR/Exception/stack traces
+- **Performance analysis**: find slow queries / timeouts / retries
+- **Security audit**: find abnormal access / permission changes
+- **Business analysis**: find the behavior trail of specific users / orders
 
-### 2. 生成 LogQL 查询（Loki）
+### 2. Generate LogQL Queries (Loki)
 
-#### 基础查询
+#### Basic Queries
 ```logql
-# 查询特定服务的日志
+# Query logs of a specific service
 {app="payment-service", namespace="production"}
 
-# 查询特定时间范围
+# Query a specific time range
 {app="payment-service"} |= "2026-06-22T14:"
 
-# 查询 ERROR 日志
+# Query ERROR logs
 {app="payment-service"} |= "ERROR" | json
 
-# 查询异常堆栈
+# Query exception stack traces
 {app="payment-service"} |~ "Exception|Error|Traceback"
 
-# 查询特定请求
+# Query a specific request
 {app="payment-service", request_id="abc-123"}
 ```
 
-#### 聚合查询
+#### Aggregation Queries
 ```logql
-# 错误日志计数（按时间）
+# Error log count (over time)
 sum(count_over_time({app="payment-service"} |= "ERROR" [5m]))
 
-# 错误率趋势
+# Error rate trend
 sum(rate({app="payment-service"} |= "ERROR" [5m])) by (status)
 
-# 日志模式发现
+# Log pattern discovery
 pattern({app="payment-service"} |= "ERROR")
 ```
 
-### 3. 生成 ES DSL 查询（Elasticsearch）
+### 3. Generate ES DSL Queries (Elasticsearch)
 
 ```json
 {
@@ -89,30 +89,30 @@ pattern({app="payment-service"} |= "ERROR")
 }
 ```
 
-### 4. 日志模式发现
+### 4. Log Pattern Discovery
 
-#### 识别重复模式
+#### Identify Repeated Patterns
 ```logql
-# 使用 pattern 提取日志模式
+# Use pattern to extract log patterns
 {app="payment-service"} | pattern "<ip> <method> <path> <status> <duration>"
 ```
 
-#### 异常聚类
-- 相同堆栈的 ERROR 聚合
-- 相同错误码的请求聚合
-- 相同超时模式的查询聚合
+#### Anomaly Clustering
+- Aggregate ERRORs with the same stack trace
+- Aggregate requests with the same error code
+- Aggregate queries with the same timeout pattern
 
-### 5. 多源日志关联
+### 5. Multi-Source Log Correlation
 
-#### 链路追踪关联
+#### Trace Correlation
 ```
-1. 从 trace_id 找到完整调用链
-2. 找到失败的 span
-3. 查询该 span 对应的日志
-4. 查询上下游服务的日志
+1. Find the full call chain from trace_id
+2. Find the failed span
+3. Query the logs corresponding to that span
+4. Query the logs of upstream and downstream services
 ```
 
-#### 时间线关联
+#### Timeline Correlation
 ```
 14:30:00  payment-service  ERROR  Database connection timeout
 14:30:01  postgres         LOG    too many connections
@@ -120,51 +120,51 @@ pattern({app="payment-service"} |= "ERROR")
 14:30:05  payment-service  ERROR  Max retries exceeded
 ```
 
-### 6. 生成日志分析报告
+### 6. Generate Log Analysis Report
 
 ```
-## 日志分析报告
+## Log Analysis Report
 
-### 查询条件
-- 服务: payment-service
-- 时间范围: 2026-06-22 14:25:00 ~ 14:45:00
-- 关键词: ERROR / Exception
+### Query Conditions
+- Service: payment-service
+- Time range: 2026-06-22 14:25:00 ~ 14:45:00
+- Keywords: ERROR / Exception
 
-### 发现
-1. 14:30:00 开始出现数据库连接超时错误
-2. 错误模式: "Database connection timeout after 30s"
-3. 频率: 每分钟约 50 次
-4. 关联: postgres 日志显示 "too many connections" (max_connections=100)
+### Findings
+1. Database connection timeout errors started at 14:30:00
+2. Error pattern: "Database connection timeout after 30s"
+3. Frequency: about 50 per minute
+4. Correlation: postgres logs show "too many connections" (max_connections=100)
 
-### 异常模式
-- 14:30-14:35: 连接超时错误密集（50/min）
-- 14:35-14:40: 错误率下降（回滚生效）
-- 14:40-14:45: 错误消失（服务恢复）
+### Anomaly Patterns
+- 14:30-14:35: connection timeout errors dense (50/min)
+- 14:35-14:40: error rate dropped (rollback took effect)
+- 14:40-14:45: errors disappeared (service recovered)
 
-### 结论
-根因指向数据库连接池耗尽，与 root-cause-analysis 的假设一致。
+### Conclusion
+The root cause points to database connection pool exhaustion, consistent with the hypothesis from root-cause-analysis.
 ```
 
-### 7. 更新知识库
+### 7. Update Knowledge Base
 
-如发现新的日志模式，追加到 `memory/knowledge-base.md`：
+If new log patterns are discovered, append to `memory/knowledge-base.md`:
 ```
-| 日志模式 | 含义 | 关联根因 | 处置方式 | 来源 |
+| Log Pattern | Meaning | Related Root Cause | Handling | Source |
 |---------|------|---------|---------|------|
-| "too many connections" | DB连接池耗尽 | 慢查询/连接泄漏 | 扩容/修复慢查询 | INC-xxx |
+| "too many connections" | DB connection pool exhausted | Slow query / connection leak | Scale out / fix slow query | INC-xxx |
 ```
 
-## 禁止事项
+## Prohibitions
 
-- 不全量扫描日志（必须限定时间范围）
-- 不在日志中暴露用户 PII（查询时脱敏）
-- 不无目的浏览日志（必须有查询假设）
-- 不篡改日志（只读，不修改）
-- 不将敏感日志内容写入交接文档
+- Do not scan all logs (must limit the time range)
+- Do not expose user PII in logs (mask when querying)
+- Do not browse logs aimlessly (must have a query hypothesis)
+- Do not tamper with logs (read-only, do not modify)
+- Do not write sensitive log content into handoff documents
 
-## 与 LOOP 的关系
+## Relationship to LOOP
 
-**所属 LOOP 类型**：incident（DEBUG 阶段）
+**LOOP type**: incident (DEBUG stage)
 
-本 skill 在 root-cause-analysis 执行时被调用，提供日志证据。
-也可在 incident-detection 阶段被调用，快速判断故障现象。
+This skill is invoked when root-cause-analysis executes, providing log evidence.
+It can also be invoked during the incident-detection stage to quickly judge the incident phenomenon.

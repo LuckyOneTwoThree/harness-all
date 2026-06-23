@@ -1,17 +1,17 @@
 ---
 name: monitoring-orchestrator
-description: 当需要建立产品监控体系或处理异常告警时使用。监控预警指挥官，调度 monitoring-alert-detection、monitoring-attribution、user-feedback-loop-report 子Skill执行。关键词：监控预警、异常检测、告警分级、监控系统、健康监控、监控仪表盘、告警升级、反馈闭环、线上告警、系统监控、异常归因、根因分析。
+description: Used when establishing a product monitoring system or handling anomaly alerts. Monitoring & alerting orchestrator that dispatches monitoring-alert-detection, monitoring-attribution, and user-feedback-loop-report sub-skills. Keywords: monitoring & alerting, anomaly detection, alert triage, monitoring system, health monitoring, monitoring dashboard, alert escalation, feedback loop, production alerts, system monitoring, anomaly attribution, root cause analysis.
 metadata:
-  module: "产品监控与迭代"
-  sub-module: "监控预警"
+  module: "Product Monitoring & Iteration"
+  sub-module: "Monitoring & Alerting"
   type: "orchestrator"
   version: "9.0"
-  domain_tags: ["通用"]
+  domain_tags: ["General"]
   trigger_examples:
-    - "建立产品监控体系"
-    - "线上有异常告警"
-    - "配置监控仪表盘"
-    - "处理线上问题"
+    - "Establish a product monitoring system"
+    - "Production anomaly alert"
+    - "Configure monitoring dashboards"
+    - "Handle production issues"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -23,22 +23,22 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 监控预警指挥官
+# Monitoring & Alerting Orchestrator
 
-## 核心原则
+## Core Principle
 
-**让问题在用户发现之前被解决**
+**Solve problems before users discover them**
 
-监控的最高境界不是快速响应，而是提前预防。当用户感知到问题时，损害已经发生。监控系统的价值在于将问题发现的时间点前移到用户感知之前。
+The highest state of monitoring is not rapid response, but proactive prevention. By the time users perceive a problem, damage has already occurred. The value of a monitoring system lies in moving problem detection earlier, ahead of user perception.
 
-## 编排理念
+## Orchestration Philosophy
 
-1. **体系先行，告警跟进，升级兜底**：先构建监控体系建立基线，再基于告警归因精准响应，最后用升级机制兜底
-2. **数据在体系→归因→升级间递进流转**：监控体系定义告警规则，告警归因提供根因，升级机制基于根因精准通知
+1. **System first, alerts follow, escalation as backstop**: First build the monitoring system to establish baselines, then respond precisely based on alert attribution, and finally use escalation mechanisms as a safety net
+2. **Data flows progressively across system → attribution → escalation**: The monitoring system defines alert rules, alert attribution provides root causes, and the escalation mechanism notifies precisely based on root causes
 
-## 编排协议
+## Orchestration Protocol
 
-遵循 [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) 编排协议。
+Follows the [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) orchestration protocol.
 
 ## Pipeline
 
@@ -52,138 +52,138 @@ post_pipeline:
 
 stages:
   - id: phase-1
-    name: "监控告警检测"
+    name: "Monitoring Alert Detection"
     depends_on: []
     skills: [monitoring-alert-detection]
     gate:
-      condition: "监控告警检测完成（核心路径覆盖率≥95%，告警噪音率<15%）"
-      fail_action: "补充缺失路径的监控配置、优化告警规则"
+      condition: "Monitoring alert detection complete (core path coverage ≥ 95%, alert noise rate < 15%)"
+      fail_action: "Supplement monitoring config for missing paths, optimize alert rules"
 
   - id: phase-2
-    name: "异常归因分析"
+    name: "Anomaly Attribution Analysis"
     depends_on: [phase-1]
     skills: [monitoring-attribution]
-    trigger: 异常告警触发
+    trigger: Anomaly alert triggered
     gate:
-      condition: "归因分析完成（每个告警事件有根因结论和影响评估）"
-      fail_action: "补充证据数据或人工排查候选根因"
+      condition: "Attribution analysis complete (each alert event has root cause conclusion and impact assessment)"
+      fail_action: "Supplement evidence data or manually investigate candidate root causes"
 
   - id: phase-3
-    name: "用户反馈闭环"
+    name: "User Feedback Loop"
     depends_on: [phase-2]
     skills: [user-feedback-loop-report]
-    trigger: 用户反馈闭环需求
+    trigger: User feedback loop requirement
     gate:
-      condition: "反馈闭环报告经人类审核确认"
-      fail_action: "补充分析或修改改进建议"
+      condition: "Feedback loop report confirmed by human review"
+      fail_action: "Supplement analysis or revise improvement suggestions"
 ```
 
-## 阶段执行计划
+## Stage Execution Plan
 
-#### 调用 monitoring-alert-detection
+#### Call monitoring-alert-detection
 
 ```
 Skill: monitoring-alert-detection
-输入:
-  product_architecture: 用户提供
+Input:
+  product_architecture: User-provided
   metrics_system: metrics-system → metric_system.json
-  sla_requirements: 用户提供
-  release_info: release-gradual → release_record.json（可选）
-  user_roles: 用户提供
-  oncall_schedule: 值班管理系统 → 排班表
-输出: docs/monitoring/monitoring-config.md（“预警规则”章节）
-验证: 核心路径覆盖率≥95%；每个核心路径至少有4个黄金指标；告警噪音率<15%；告警分类准确率≥85%；所有角色都有对应Dashboard；告警分级准确率≥90%；升级触发及时性100%
-模式: 🤖
+  sla_requirements: User-provided
+  release_info: release-gradual → release_record.json (optional)
+  user_roles: User-provided
+  oncall_schedule: On-call management system → schedule
+Output: docs/monitoring/monitoring-config.md ("Alert Rules" section)
+Validation: Core path coverage ≥ 95%; each core path has at least 4 golden signals; alert noise rate < 15%; alert classification accuracy ≥ 85%; all roles have corresponding dashboards; alert severity accuracy ≥ 90%; escalation trigger timeliness 100%
+Mode: 🤖
 ```
 
-#### 调用 monitoring-attribution
+#### Call monitoring-attribution
 
 ```
 Skill: monitoring-attribution
-输入:
+Input:
   alert_events: monitoring-alert-detection → monitoring-alert-detection.json
-  classification: monitoring-alert-detection → 告警分类
-  correlation: monitoring-alert-detection → 关联分析
-  release_info: release-gradual → release_record.json（可选）
-  root_cause_kb: 用户提供（可选）
-  product_architecture: 用户提供（可选）
-输出: docs/monitoring/monitoring-config.md（“归因模型”章节）
-验证: 每个告警事件有根因结论和证据支撑；影响范围已量化；修复建议可执行且有回滚方案；根因置信度已标注
-模式: 🤖
+  classification: monitoring-alert-detection → alert classification
+  correlation: monitoring-alert-detection → correlation analysis
+  release_info: release-gradual → release_record.json (optional)
+  root_cause_kb: User-provided (optional)
+  product_architecture: User-provided (optional)
+Output: docs/monitoring/monitoring-config.md ("Attribution Model" section)
+Validation: Each alert event has root cause conclusion and evidence; impact scope quantified; remediation suggestions actionable with rollback plans; root cause confidence labeled
+Mode: 🤖
 ```
 
-#### 调用 user-feedback-loop-report
+#### Call user-feedback-loop-report
 
 ```
 Skill: user-feedback-loop-report
-输入:
-  voice_analysis: user-research-voice-analysis（可选）
-  anomaly_attribution: monitoring-attribution（可选）
-  feedback_data: 用户提供
-输出: docs/monitoring/feedback-loop.md
-验证: 闭环率可计算；P0未解决已列出；改进建议可执行
-模式: 🤖→👤
+Input:
+  voice_analysis: user-research-voice-analysis (optional)
+  anomaly_attribution: monitoring-attribution (optional)
+  feedback_data: User-provided
+Output: docs/monitoring/feedback-loop.md
+Validation: Closure rate calculable; unresolved P0 issues listed; improvement suggestions actionable
+Mode: 🤖→👤
 ```
 
-### 阶段总结（post_pipeline）
+### Stage Summary (post_pipeline)
 
-所有子Skill执行完成后，必须生成阶段总结文档，写入 `output/phase-reports/monitoring-orchestrator.json`，包含以下6项结构（均不可为空）：
+After all sub-skills complete execution, a stage summary document must be generated and written to `output/phase-reports/monitoring-orchestrator.json`, containing the following 6 structures (none may be empty):
 
-1. **执行概览**：编排器名称与版本、执行时间、子Skill执行状态（成功/失败/降级）
-2. **关键发现**：每个子Skill的核心输出摘要（1-3条）、跨子Skill的交叉洞察
-3. **决策记录**：人类决策点及决策结果、AI自动决策及依据
-4. **产出清单**：所有输出文件路径及内容摘要、产出质量评估（是否通过验证）
-5. **风险与待办**：未通过验证的项、降级执行的项、建议后续跟进的事项
-6. **下游衔接**：本编排器产出可被哪些下游编排器消费、推荐的下一步编排器
+1. **Execution Overview**: Orchestrator name and version, execution time, sub-skill execution status (success/failure/degraded)
+2. **Key Findings**: Core output summary for each sub-skill (1-3 items), cross-sub-skill cross-cutting insights
+3. **Decision Records**: Human decision points and decision results, AI automated decisions and rationale
+4. **Deliverables List**: All output file paths and content summaries, deliverable quality assessment (whether validation passed)
+5. **Risks & Follow-ups**: Items that failed validation, items executed in degraded mode, recommended follow-up items
+6. **Downstream Handoff**: Which downstream orchestrators can consume this orchestrator's outputs, recommended next orchestrator
 
-| 参数 | 值 |
+| Parameter | Value |
 |------|-----|
-| 子Skill输出路径 | docs/monitoring/ |
-| 总结输出路径 | output/phase-reports/monitoring-orchestrator.json |
-| 审批记录路径 | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
+| Sub-skill output path | docs/monitoring/ |
+| Summary output path | output/phase-reports/monitoring-orchestrator.json |
+| Approval record path | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
 
-下游衔接:
-  primary: diagnosis-orchestrator（监控预警建立完成，如发现异常进入诊断定位根因）
+Downstream handoff:
+  primary: diagnosis-orchestrator (monitoring & alerting established; if anomalies are found, proceed to diagnosis to locate root causes)
   alternatives:
     - target: release-orchestrator
-      reason: 监控发现需发布修复
-      condition: 监控预警触发P0/P1级异常需紧急修复时
+      reason: Monitoring detects need for a release fix
+      condition: When monitoring & alerting triggers P0/P1 level anomalies requiring emergency fixes
     - target: iteration-orchestrator
-      reason: 监控数据表明需调整迭代优先级
-      condition: 监控指标趋势持续恶化，需调整迭代方向时
+      reason: Monitoring data indicates need to adjust iteration priorities
+      condition: When monitoring metric trends continuously deteriorate and iteration direction needs adjustment
   special_cases:
     - target: monitoring-alert-detection
-      reason: 仅需搭建监控，无需完整监控编排
-      condition: 已有反馈闭环机制，仅需监控预警配置时
+      reason: Only need to set up monitoring, no need for full monitoring orchestration
+      condition: When a feedback loop mechanism already exists and only monitoring & alerting configuration is needed
 
-## 阶段卡口
+## Stage Gates
 
-| 卡口 | 条件 | 未通过处理 |
+| Gate | Condition | Handling if Not Passed |
 |------|------|------------|
-| 监控告警检测完成 | monitoring-alert-detection 输出文件已生成且非空，核心路径覆盖率≥95% | 补充缺失路径的监控配置、优化告警规则、补充可视化配置或升级规则 |
-| 异常归因分析完成 | monitoring-attribution 输出文件已生成且非空，每个告警事件有根因结论 | 补充证据数据或人工排查候选根因 |
-| 反馈闭环报告已审核 | 反馈闭环报告经人类审核确认 | 补充分析或修改改进建议 |
-| 阶段总结已生成 | output/phase-reports/monitoring-orchestrator.json 已生成且6项结构均非空 | 补充缺失结构项后重新生成 |
+| Monitoring alert detection complete | monitoring-alert-detection output file generated and non-empty, core path coverage ≥ 95% | Supplement monitoring config for missing paths, optimize alert rules, supplement visualization config or escalation rules |
+| Anomaly attribution analysis complete | monitoring-attribution output file generated and non-empty, each alert event has root cause conclusion | Supplement evidence data or manually investigate candidate root causes |
+| Feedback loop report reviewed | Feedback loop report confirmed by human review | Supplement analysis or revise improvement suggestions |
+| Stage summary generated | output/phase-reports/monitoring-orchestrator.json generated and all 6 structures non-empty | Regenerate after supplementing missing structure items |
 
-## 人类决策点
+## Human Decision Points
 
-| 决策点 | 触发条件 | 决策内容 |
+| Decision Point | Trigger Condition | Decision Content |
 |--------|----------|----------|
-| 告警阈值调整 | 告警噪音率过高或漏报率过高 | 确认告警阈值调整方案 |
-| 仪表盘布局确认 | 仪表盘构建完成 | 确认核心指标展示和布局 |
-| 升级策略确认 | 升级规则生成完成 | 确认升级路径和通知渠道配置 |
-| 根因确认 | 候选根因≥3个或置信度<0.6 | 确认最终根因或指定人工排查方向 |
-| 反馈闭环报告确认 | 反馈闭环报告生成完成 | 确认闭环率和改进建议 |
+| Alert threshold adjustment | Alert noise rate too high or miss rate too high | Confirm alert threshold adjustment plan |
+| Dashboard layout confirmation | Dashboard build complete | Confirm core metric display and layout |
+| Escalation strategy confirmation | Escalation rules generated | Confirm escalation paths and notification channel config |
+| Root cause confirmation | Candidate root causes ≥ 3 or confidence < 0.6 | Confirm final root cause or specify manual investigation direction |
+| Feedback loop report confirmation | Feedback loop report generation complete | Confirm closure rate and improvement suggestions |
 
-## 异常处理
+## Exception Handling
 
-| 异常类型 | 处理策略 |
+| Exception Type | Handling Strategy |
 |----------|----------|
-| 监控体系核心路径覆盖率不足（<80%） | 暂停后续阶段，要求用户补充产品架构信息以完善核心路径 |
-| 告警噪音率过高（>30%） | 暂停告警分析，回退至监控体系优化告警规则后再继续 |
-| 根因不确定（候选原因≥3个） | 输出Top3候选原因及置信度，标记需人工排查，不阻塞归因报告生成 |
-| On-Call排班缺失 | 使用默认升级规则，标注"排班待配置"，P0告警直接通知产品负责人 |
-| 子Skill输出校验未通过 | 回退至当前阶段重新执行，最多重试1次；仍失败则标记异常并上报人类 |
-| 上下游数据格式不兼容 | 按下游子Skill输入Schema做字段映射和默认值填充，记录映射关系 |
-| 阶段总结生成失败 | 基于已完成的子Skill输出生成部分总结，缺失项标注"数据缺失"，不阻塞编排完成 |
-| 发布需求 | 转交 release-orchestrator 处理 |
+| Monitoring system core path coverage insufficient (< 80%) | Pause subsequent stages, require user to supplement product architecture info to complete core paths |
+| Alert noise rate too high (> 30%) | Pause alert analysis, fall back to monitoring system to optimize alert rules before continuing |
+| Root cause uncertain (candidate causes ≥ 3) | Output Top 3 candidate causes and confidence, mark for manual investigation, do not block attribution report generation |
+| On-Call schedule missing | Use default escalation rules, mark "schedule pending configuration", P0 alerts notify product owner directly |
+| Sub-skill output validation failed | Fall back to current stage and re-execute, max 1 retry; if still fails, mark exception and escalate to human |
+| Upstream/downstream data format incompatible | Map fields and fill defaults per downstream sub-skill input schema, record mapping relationships |
+| Stage summary generation failed | Generate partial summary based on completed sub-skill outputs, mark missing items as "data missing", do not block orchestration completion |
+| Release requirement | Hand off to release-orchestrator |

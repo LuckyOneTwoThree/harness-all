@@ -1,10 +1,10 @@
 ---
 name: test-driven-development
-description: 测试驱动开发，红→绿→重构
+description: Test-Driven Development (TDD) — red→green→refactor
 triggers:
-  - 写新功能代码前
-  - 修改现有功能前
-  - Bug 修复写复现测试时
+  - Before writing new feature code
+  - Before modifying existing features
+  - When writing a reproduction test for a bug fix
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -16,73 +16,73 @@ writes:
 
 # Test-Driven Development — TDD
 
-## 铁律
-**没有失败测试，不准写生产代码。** 测试立刻通过 = 你在测已有行为，不是新行为。
+## Iron Rule
+**No production code without a failing test.** A test that passes immediately = you are testing existing behavior, not new behavior.
 
-## 流程
+## Process
 
-### 红（Red）
-1. 根据 spec.md 的验收标准，写一个失败的测试
-2. 运行测试，**确认它失败**（不是"应该失败"，而是实际看到 FAIL）
-3. 失败原因必须是"功能未实现"，不是"测试本身有 bug"
+### Red
+1. Based on the acceptance criteria in spec.md, write a failing test
+2. Run the test and **confirm it fails** (not "should fail", but actually see FAIL)
+3. The failure reason must be "feature not implemented", not "the test itself has a bug"
 
-### 绿（Green）
-1. 写**最小的**实现让测试通过
-2. 运行测试，确认通过
-3. 不许过度设计——能过就行，重构留到下一步
+### Green
+1. Write the **minimal** implementation to make the test pass
+2. Run the test and confirm it passes
+3. Do not over-engineer — just enough to pass; leave refactoring for the next step
 
-### 重构（Refactor）
-1. 在测试全绿的前提下重构代码
-2. 每次重构后立即跑测试，确认不回归
-3. 重构目标：可读性、消除重复，不是加功能
+### Refactor
+1. Refactor the code while the tests are all green
+2. Run the tests immediately after each refactor and confirm no regression
+3. Refactor goal: readability, eliminating duplication, not adding features
 
-## 每次迭代的状态维护
+## State Maintenance Per Iteration
 
-完成一次红→绿→重构后，按 `loops/LOOP.md` 的 "state.yaml Schema" 更新 state.yaml：
+After completing one red→green→refactor, update state.yaml per the "state.yaml Schema" in `loops/LOOP.md`:
 - `iteration`: +1
 - `stage`: `act`
 - `status`: `running`
-- `last_error`: 成功则清空为 ""
+- `last_error`: clear to "" on success
 
-如失败，更新：
-- `stage`: `verify`（即将进入验证但失败）
-- `last_error`: `"test_xxx FAILED: <错误信息>"`
+On failure, update:
+- `stage`: `verify` (about to enter verification but failed)
+- `last_error`: `"test_xxx FAILED: <error message>"`
 - `status`: `retrying`
 
-字段完整定义和写入责任见 LOOP.md 的 "字段写入责任" 表。
+For full field definitions and write responsibilities, see the "Field Write Responsibilities" table in LOOP.md.
 
-**更新 iterations.log（必须追加，禁止覆盖）**：
-- 工具方式：先 Read 当前 iterations.log → 拼接新行 → Write 回去
-- 或终端命令：`echo "[YYYY-MM-DD HH:MM] iter=<N> stage=act → verify FAILED: <测试名>" >> .harness/loops/specs/<feature>/iterations.log`
-- 禁止用 Write 直接覆盖 iterations.log（会抹掉历史迭代记录）
+**Update iterations.log (must append, overwriting is forbidden)**:
+- Tool approach: first Read the current iterations.log → append the new line → Write it back
+- Or terminal command: `echo "[YYYY-MM-DD HH:MM] iter=<N> stage=act → verify FAILED: <test name>" >> .harness/loops/specs/<feature>/iterations.log`
+- Do not use Write to overwrite iterations.log directly (it would erase historical iteration records)
 
-追加格式：
+Append format:
 ```
-[YYYY-MM-DD HH:MM] iter=<N> stage=act → verify FAILED: <测试名>
+[YYYY-MM-DD HH:MM] iter=<N> stage=act → verify FAILED: <test name>
 ```
 
-## 禁止事项
-- 先写代码再补测试（本末倒置）
-- 测试写完不跑就说"应该过了"（必须看到实际输出）
-- 一次写多个测试再实现（违反小步迭代）
-- 绿阶段过度设计（YAGNI）
-- 重构时加新功能（职责混淆）
+## Prohibitions
+- Writing code first and adding tests later (putting the cart before the horse)
+- Saying "should pass" without running the test after writing it (you must see the actual output)
+- Writing multiple tests at once before implementing (violates small-step iteration)
+- Over-engineering in the green phase (YAGNI)
+- Adding new features during refactoring (mixing responsibilities)
 
-## 与 LOOP 的关系
-本 skill 对应 LOOP 的 ACT 阶段。
-- 红 = 写测试（ACT 的输入）
-- 绿 = 写实现（ACT 的执行）
-- 重构 = ACT 的优化
-- 完成后进入 VERIFY（由 verify skill 接手）
+## Relationship with LOOP
+This skill corresponds to the ACT phase of LOOP.
+- Red = write tests (input to ACT)
+- Green = write implementation (execution of ACT)
+- Refactor = optimization of ACT
+- After completion, enter VERIFY (handed off to the verify skill)
 
-## 证据要求
-测试通过后，将实际输出写入 evidence.md：
+## Evidence Requirements
+After tests pass, write the actual output into evidence.md:
 ```
-## 测试结果
-$ <测试命令>
-<实际输出，包含通过数>
+## Test Results
+$ <test command>
+<actual output, including the number of passes>
 
-## 验收标准
-- AC-001: ✓ <如何满足>
-- AC-002: ✓ <如何满足>
+## Acceptance Criteria
+- AC-001: ✓ <how it is satisfied>
+- AC-002: ✓ <how it is satisfied>
 ```

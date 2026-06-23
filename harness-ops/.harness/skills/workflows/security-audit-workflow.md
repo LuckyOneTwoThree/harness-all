@@ -4,52 +4,55 @@ name: security-audit-workflow
 default_mode: deep
 ---
 
-# Workflow: 安全审计（Security Audit Workflow）
+# Workflow: Security Audit Workflow
 
-> 所属 LOOP 类型：audit
-> 触发场景：定期安全审计、新服务上线前安全检查、合规要求、安全事件后审查
-> 编排 Skill：security-scan → policy-as-code → audit-review → [修复建议]
+> LOOP type: audit
+> Trigger scenarios: Periodic security audit, pre-launch security check for new service, compliance requirements, post-security-incident review
+> Orchestration Skill: security-scan → policy-as-code → audit-review → [fix suggestions]
 
-## 流程图
+## Flowchart
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│ 确定审计范围（镜像/集群/IaC/操作记录）                    │
+│ Determine audit scope (images/clusters/IaC/operation    │
+│ records)                                                │
 └───────────────────────────┬─────────────────────────────┘
                             ▼
           ┌─────────────────────────────────┐
-          │ security-scan                    │  镜像漏洞+CIS基线+配置审计
-          │                                   │  生成扫描报告[质量门]
+          │ security-scan                    │  Image vulnerabilities + CIS baseline + config audit
+          │                                   │  Generate scan report [Quality Gate]
           └─────────────────┬───────────────┘
                             ▼
           ┌─────────────────────────────────┐
-          │ policy-as-code                   │  生成/检查 Kyverno 策略
-          │                                   │  识别策略缺口
+          │ policy-as-code                   │  Generate/check Kyverno policies
+          │                                   │  Identify policy gaps
           └─────────────────┬───────────────┘
                             ▼
           ┌─────────────────────────────────┐
-          │ audit-review                     │  K8s audit + Git + Agent 操作
-          │                                   │  识别异常行为
+          │ audit-review                     │  K8s audit + Git + Agent operations
+          │                                   │  Identify anomalous behavior
           └─────────────────┬───────────────┘
                             ▼
           ┌─────────────────────────────────┐
-          │ 生成综合安全报告                  │
-          │ 修复建议 + 优先级排序             │
+          │ Generate comprehensive security  │
+          │ report                           │
+          │ Fix suggestions + priority       │
+          │ ranking                          │
           └─────────────────────────────────┘
 ```
 
-## 质量门控
+## Quality Gates
 
-| 门控点 | 检查内容 | 不通过处理 |
+| Gate | Checks | On Failure |
 |--------|---------|-----------|
-| security-scan 后 | 无 CRITICAL 漏洞（生产） | 阻断部署，修复后重扫 |
-| policy-as-code 后 | 策略覆盖所有安全规范 | 补充缺失策略 |
-| audit-review 后 | 无高风险异常行为 | 调查并处理 |
+| After security-scan | No CRITICAL vulnerabilities (production) | Block deployment, rescan after fix |
+| After policy-as-code | Policies cover all security standards | Supplement missing policies |
+| After audit-review | No high-risk anomalous behavior | Investigate and handle |
 
-## 使用方式
+## Usage
 
-对 Agent 说：
-- "执行安全审计" → 触发本 workflow
-- "扫描镜像漏洞" → 从 security-scan 开始
-- "检查策略合规" → 从 policy-as-code 开始
-- "审查操作记录" → 从 audit-review 开始
+Tell the Agent:
+- "Run security audit" → Trigger this workflow
+- "Scan image vulnerabilities" → Start from security-scan
+- "Check policy compliance" → Start from policy-as-code
+- "Review operation records" → Start from audit-review

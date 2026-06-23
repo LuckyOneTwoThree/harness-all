@@ -1,8 +1,8 @@
-# release-gradual 输出 Schema
+# release-gradual Output Schema
 
-> 本文档从 release-gradual SKILL.md 拆分而来，包含完整输出数据结构定义、最终输出结构、输出字段说明和输出校验规则。
+> This document is split from the release-gradual SKILL.md and contains the complete output data structure definition, final output structure, output field descriptions, and output validation rules.
 
-## 输出Schema
+## Output Schema
 
 ```json
 {
@@ -11,27 +11,27 @@
   "properties": {
     "gradual_release": {
       "type": "object",
-      "description": "灰度发布根对象",
+      "description": "Gradual release root object",
       "required": ["strategy", "monitoring", "rollback_plan"],
       "properties": {
         "strategy": {
           "type": "object",
-          "description": "灰度策略",
+          "description": "Release strategy",
           "required": ["type", "stages"],
           "properties": {
-            "type": {"type": "string", "description": "策略类型，枚举值：canary/blue_green/rolling/feature_flag"},
+            "type": {"type": "string", "description": "Strategy type, enum: canary/blue_green/rolling/feature_flag"},
             "stages": {
               "type": "array",
-              "description": "灰度阶段列表，至少2个",
+              "description": "List of release stages, minimum 2",
               "items": {
                 "type": "object",
                 "required": ["name", "traffic_percentage", "duration", "success_criteria", "rollback_criteria"],
                 "properties": {
-                  "name": {"type": "string", "description": "阶段名称"},
-                  "traffic_percentage": {"type": "number", "description": "流量百分比，0-100"},
-                  "duration": {"type": "string", "description": "持续时间"},
-                  "success_criteria": {"type": "object", "description": "成功标准"},
-                  "rollback_criteria": {"type": "object", "description": "回滚标准"}
+                  "name": {"type": "string", "description": "Stage name"},
+                  "traffic_percentage": {"type": "number", "description": "Traffic percentage, 0-100"},
+                  "duration": {"type": "string", "description": "Duration"},
+                  "success_criteria": {"type": "object", "description": "Success criteria"},
+                  "rollback_criteria": {"type": "object", "description": "Rollback criteria"}
                 }
               }
             }
@@ -39,20 +39,20 @@
         },
         "monitoring": {
           "type": "object",
-          "description": "监控配置",
+          "description": "Monitoring configuration",
           "required": ["metrics", "alert_rules"],
           "properties": {
-            "metrics": {"type": "array", "description": "监控指标列表"},
-            "alert_rules": {"type": "array", "description": "告警规则列表"}
+            "metrics": {"type": "array", "description": "List of monitoring metrics"},
+            "alert_rules": {"type": "array", "description": "List of alert rules"}
           }
         },
         "rollback_plan": {
           "type": "object",
-          "description": "回滚计划",
+          "description": "Rollback plan",
           "required": ["trigger_conditions", "steps"],
           "properties": {
-            "trigger_conditions": {"type": "array", "description": "触发条件"},
-            "steps": {"type": "array", "description": "回滚步骤"}
+            "trigger_conditions": {"type": "array", "description": "Trigger conditions"},
+            "steps": {"type": "array", "description": "Rollback steps"}
           }
         }
       }
@@ -61,7 +61,7 @@
 }
 ```
 
-## 最终输出结构
+## Final Output Structure
 
 ```json
 {
@@ -73,50 +73,50 @@
           "name": "phase_1",
           "traffic_percentage": 1,
           "duration": "30m",
-          "success_criteria": { /* 见Step 1.2灰度计划生成 */ },
-          "rollback_criteria": { /* 见Step 3.2阶段状态评估 */ }
+          "success_criteria": { /* see Step 1.2 Release Plan Generation */ },
+          "rollback_criteria": { /* see Step 3.2 Stage Status Evaluation */ }
         }
       ]
     },
     "monitoring": {
-      "metrics": [ { /* 见Step 3.1指标采集 */ } ],
-      "alert_rules": [ { /* 见护栏指标配置 */ } ]
+      "metrics": [ { /* see Step 3.1 Metric Collection */ } ],
+      "alert_rules": [ { /* see Guardrail Metric Configuration */ } ]
     },
     "rollback_plan": {
-      "trigger_conditions": [ { /* 见Step 4.1回滚触发条件 */ } ],
-      "steps": [ { /* 见Step 4.2回滚执行 */ } ]
+      "trigger_conditions": [ { /* see Step 4.1 Rollback Trigger Conditions */ } ],
+      "steps": [ { /* see Step 4.2 Rollback Execution */ } ]
     }
   }
 }
 ```
 
-## 输出字段说明
+## Output Field Descriptions
 
-| 字段 | 类型 | 说明 |
+| Field | Type | Description |
 |------|------|------|
-| gradual_release | object | 灰度发布根对象 |
-| gradual_release.strategy | object | 灰度策略 |
-| gradual_release.strategy.type | string | 策略类型 |
-| gradual_release.strategy.stages | array | 灰度阶段列表 |
-| gradual_release.monitoring | object | 监控配置 |
-| gradual_release.rollback_plan | object | 回滚计划 |
+| gradual_release | object | Gradual release root object |
+| gradual_release.strategy | object | Release strategy |
+| gradual_release.strategy.type | string | Strategy type |
+| gradual_release.strategy.stages | array | List of release stages |
+| gradual_release.monitoring | object | Monitoring configuration |
+| gradual_release.rollback_plan | object | Rollback plan |
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| gradual_release | object | 是 | 灰度发布根对象 |
-| gradual_release.strategy | object | 是 | 灰度策略 |
-| gradual_release.strategy.type | string | 是 | 策略类型，枚举值：canary/blue_green/rolling/feature_flag |
-| gradual_release.strategy.stages | array | 是 | 灰度阶段列表，至少2个 |
-| gradual_release.strategy.stages[].name | string | 是 | 阶段名称 |
-| gradual_release.strategy.stages[].traffic_percentage | number | 是 | 流量百分比，0-100 |
-| gradual_release.strategy.stages[].duration | string | 是 | 持续时间 |
-| gradual_release.strategy.stages[].success_criteria | object | 是 | 成功标准 |
-| gradual_release.strategy.stages[].rollback_criteria | object | 是 | 回滚标准 |
-| gradual_release.monitoring | object | 是 | 监控配置 |
-| gradual_release.monitoring.metrics | array | 是 | 监控指标列表 |
-| gradual_release.monitoring.alert_rules | array | 是 | 告警规则列表 |
-| gradual_release.rollback_plan | object | 是 | 回滚计划 |
-| gradual_release.rollback_plan.trigger_conditions | array | 是 | 触发条件 |
-| gradual_release.rollback_plan.steps | array | 是 | 回滚步骤 |
+| gradual_release | object | Yes | Gradual release root object |
+| gradual_release.strategy | object | Yes | Release strategy |
+| gradual_release.strategy.type | string | Yes | Strategy type, enum: canary/blue_green/rolling/feature_flag |
+| gradual_release.strategy.stages | array | Yes | List of release stages, minimum 2 |
+| gradual_release.strategy.stages[].name | string | Yes | Stage name |
+| gradual_release.strategy.stages[].traffic_percentage | number | Yes | Traffic percentage, 0-100 |
+| gradual_release.strategy.stages[].duration | string | Yes | Duration |
+| gradual_release.strategy.stages[].success_criteria | object | Yes | Success criteria |
+| gradual_release.strategy.stages[].rollback_criteria | object | Yes | Rollback criteria |
+| gradual_release.monitoring | object | Yes | Monitoring configuration |
+| gradual_release.monitoring.metrics | array | Yes | List of monitoring metrics |
+| gradual_release.monitoring.alert_rules | array | Yes | List of alert rules |
+| gradual_release.rollback_plan | object | Yes | Rollback plan |
+| gradual_release.rollback_plan.trigger_conditions | array | Yes | Trigger conditions |
+| gradual_release.rollback_plan.steps | array | Yes | Rollback steps |

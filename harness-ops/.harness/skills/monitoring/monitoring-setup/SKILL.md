@@ -1,12 +1,12 @@
 ---
 name: monitoring-setup
-description: Prometheus/Grafana 监控体系部署，采集器/存储/告警/可视化四件套
+description: Prometheus/Grafana monitoring stack deployment, the four-part suite of collectors / storage / alerting / visualization
 triggers:
-  - 新服务需要配置监控时
-  - 需要部署 Prometheus/Grafana 时
-  - 监控体系缺失需要搭建时
-  - OPS_STRATEGY.md 定义监控规范时
-  - monitoring-deployment-workflow 触发时
+  - When a new service needs monitoring configured
+  - When Prometheus/Grafana needs to be deployed
+  - When the monitoring stack is missing and needs to be built
+  - When OPS_STRATEGY.md defines monitoring standards
+  - When monitoring-deployment-workflow triggers
 reads:
   - docs/infrastructure/OPS_STRATEGY.md
   - rules/security.md
@@ -22,34 +22,34 @@ operation_tier: propose
 requires_approval: false
 ---
 
-# Monitoring Setup — 监控体系部署
+# Monitoring Setup — Monitoring Stack Deployment
 
-## 铁律
+## Ground Rules
 
-1. **无监控不上线** —— 服务上线前必须有基础监控
-2. **三大信号齐全** —— Metrics + Logs + Traces 缺一不可
-3. **告警必须有意义** —— 不告噪，每个告警都需要有人响应
-4. **Dashboard 面向用户** —— 不是给开发者看的调试信息，是给运维决策的
+1. **No monitoring, no go-live** — services must have basic monitoring before going live
+2. **All three signals present** — Metrics + Logs + Traces, none can be missing
+3. **Alerts must be meaningful** — no noise; every alert needs a responder
+4. **Dashboards are user-facing** — not debug info for developers, but decision support for ops
 
-## 流程
+## Process
 
-### 1. 评估监控需求
+### 1. Assess Monitoring Requirements
 
-读取 `OPS_STRATEGY.md` 的监控告警矩阵：
-- 业务网关：HTTP 错误率/延迟/吞吐
-- 数据库层：连接数/慢查询/复制延迟
-- 主机/Pod：CPU/内存/磁盘/网络
-- 业务日志：ERROR 率/关键业务事件
+Read the monitoring/alerting matrix in `OPS_STRATEGY.md`:
+- Business gateway: HTTP error rate / latency / throughput
+- Database tier: connections / slow queries / replication lag
+- Hosts/Pods: CPU / memory / disk / network
+- Business logs: ERROR rate / key business events
 
-确定监控栈：
-- **Metrics**：Prometheus + Alertmanager
-- **Logs**：Loki + Promtail / Elasticsearch + Fluentd
-- **Traces**：Tempo / Jaeger
-- **可视化**：Grafana
+Determine the monitoring stack:
+- **Metrics**: Prometheus + Alertmanager
+- **Logs**: Loki + Promtail / Elasticsearch + Fluentd
+- **Traces**: Tempo / Jaeger
+- **Visualization**: Grafana
 
-### 2. 部署 Prometheus 采集
+### 2. Deploy Prometheus Collection
 
-#### ServiceMonitor（Prometheus Operator）
+#### ServiceMonitor (Prometheus Operator)
 ```yaml
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -68,22 +68,22 @@ spec:
     path: /metrics
 ```
 
-#### 应用埋点建议
+#### Application Instrumentation Recommendations
 ```python
-# 应用必须暴露的指标
-- http_requests_total{method, path, status}  # 请求总数
-- http_request_duration_seconds{method, path}  # 请求延迟
-- http_inprogress_requests  # 当前进行中的请求
-- app_business_events_total{event_type}  # 业务事件
+# Metrics the application must expose
+- http_requests_total{method, path, status}  # total requests
+- http_request_duration_seconds{method, path}  # request latency
+- http_inprogress_requests  # in-flight requests
+- app_business_events_total{event_type}  # business events
 ```
 
-### 3. 配置告警规则
+### 3. Configure Alerting Rules
 
-调用 `alerting-rules` skill 生成告警规则。
+Invoke the `alerting-rules` skill to generate alerting rules.
 
-### 4. 部署日志采集
+### 4. Deploy Log Collection
 
-#### Promtail（Loki 采集器）
+#### Promtail (Loki collector)
 ```yaml
 apiVersion: apps/v1
 kind: DaemonSet
@@ -109,7 +109,7 @@ spec:
           path: /var/log
 ```
 
-#### Promtail 配置
+#### Promtail Config
 ```yaml
 # promtail.yaml
 positions:
@@ -127,7 +127,7 @@ scrape_configs:
       target_label: app
 ```
 
-### 5. 部署链路追踪
+### 5. Deploy Distributed Tracing
 
 #### OpenTelemetry Collector
 ```yaml
@@ -155,7 +155,7 @@ spec:
           exporters: [tempo]
 ```
 
-### 6. 部署 Grafana
+### 6. Deploy Grafana
 
 #### Grafana DataSource
 ```yaml
@@ -183,42 +183,42 @@ data:
       access: proxy
 ```
 
-调用 `dashboard-design` skill 生成 Dashboard。
+Invoke the `dashboard-design` skill to generate Dashboards.
 
-### 7. 验证监控体系
+### 7. Verify the Monitoring Stack
 
-- Prometheus targets 都 up
-- 应用指标可查询
-- 日志可查询（Loki）
-- 链路可追踪（Tempo）
-- Grafana Dashboard 可访问
-- 告警规则可触发
+- All Prometheus targets up
+- Application metrics queryable
+- Logs queryable (Loki)
+- Traces queryable (Tempo)
+- Grafana Dashboard accessible
+- Alerting rules can trigger
 
-### 8. 更新监控配置库
+### 8. Update Monitoring Config Library
 
-`memory/knowledge-base.md` 追加：
+Append to `memory/knowledge-base.md`:
 ```
-| 服务 | Metrics 端点 | 日志标签 | Dashboard URL | 告警规则 | 部署日期 |
+| Service | Metrics Endpoint | Log Label | Dashboard URL | Alerting Rules | Deploy Date |
 |------|-------------|---------|--------------|---------|---------|
 | payment-service | :8080/metrics | app=payment-service | grafana/d/payment | payment-alerts | 2026-06-22 |
 ```
 
-## 禁止事项
+## Prohibitions
 
-- 不在无监控的情况下上线服务
-- 不配置无意义的告警（"CPU > 50%" 这种）
-- 不将日志采集器部署为 Deployment（必须 DaemonSet）
-- 不在 Grafana 存储明文数据源密码
-- 不跳过监控验证就声称"部署完成"
+- Do not go live with a service that has no monitoring
+- Do not configure meaningless alerts (e.g., "CPU > 50%")
+- Do not deploy log collectors as Deployments (must be DaemonSet)
+- Do not store plaintext datasource passwords in Grafana
+- Do not claim "deployment complete" without monitoring verification
 
-## 与 LOOP 的关系
+## Relationship to LOOP
 
-**所属 LOOP 类型**：provision
+**LOOP type**: provision
 
 ```
 LOOP(provision):
-  PLAN:       评估监控需求 → 生成配置
-  PROVISION:  部署 Prometheus/Loki/Tempo/Grafana
-  VERIFY:     验证采集+查询+告警+可视化
-  通过? DONE : 修复配置 → 回到 PROVISION
+  PLAN:       Assess monitoring requirements → generate config
+  PROVISION:  Deploy Prometheus/Loki/Tempo/Grafana
+  VERIFY:     Verify collection + query + alerting + visualization
+  Pass? DONE : Fix config → back to PROVISION
 ```

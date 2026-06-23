@@ -1,21 +1,21 @@
 ---
 name: market-tam-som
-description: 当需要评估目标市场的TAM/SAM/SOM规模时使用。市场规模自动测算，支持自上而下与自下而上双路径交叉验证，差异>20%时标注并升级人类判断，输出区间估计与置信度评估。关键词：市场规模、TAM、SAM、SOM、市场容量、区间估计、双路径交叉验证、市场有多大、天花板、能做多大。
+description: Used when evaluating the TAM/SAM/SOM size of the target market. Market size auto-estimation, supports top-down and bottom-up dual-path cross-validation, marks and escalates to human judgment when divergence > 20%, outputs range estimates and confidence assessment. Keywords: market size, TAM, SAM, SOM, market capacity, range estimate, dual-path cross-validation, how big is the market, ceiling, growth potential.
 metadata:
-  module: "产品探索与发现"
-  sub-module: "市场竞品"
+  module: "Product Discovery"
+  sub-module: "Market & Competition"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["互联网", "金融", "通用"]
+  domain_tags: ["Internet", "Finance", "General"]
   trigger_examples:
-    - "这个市场有多大"
-    - "帮我算一下市场规模"
-    - "我们的天花板在哪"
+    - "How big is this market"
+    - "Help me estimate the market size"
+    - "Where is our ceiling"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出市场规模估算"
-  deep_description: "完整估算 + 细分市场拆解 + 增长率预测 + 市场进入优先级"
+  quick_description: "Directly output market size estimation"
+  deep_description: "Full estimation + segment market breakdown + growth rate forecast + market entry prioritization"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -24,194 +24,194 @@ writes:
   - memory/progress.md
 ---
 
-# 市场规模自动测算
+# Market Size Auto-Estimation
 
-## 核心原则
+## Core Principles
 
-1. **双路径交叉验证**——自上而下与自下而上两条路径独立测算，差异>20%时必须标注并升级人类判断，单一路径结论不可信
-2. **区间优于点估计**——所有规模数字输出区间估计（乐观/中性/保守），不输出单一确定值，因为市场规模的确定性是幻觉
-3. **假设显式化**——每个测算步骤的假设必须显式列出（assumption/basis/impact_direction），假设变化对结果影响>30%的标注为高敏感
-4. **置信度分层**——TAM置信度最高（行业数据支撑），SAM次之（叠加过滤系数），SOM最低（叠加竞争与资源约束），逐层递减是正常的
+1. **Dual-path cross-validation** — Top-down and bottom-up paths are estimated independently; when divergence > 20%, must be marked and escalated to human judgment. Single-path conclusions are unreliable.
+2. **Range over point estimate** — All size numbers output range estimates (optimistic/neutral/conservative), not a single deterministic value, because certainty in market size is an illusion.
+3. **Explicit assumptions** — Assumptions for each estimation step must be explicitly listed (assumption/basis/impact_direction); assumptions whose change affects results by > 30% are marked as highly sensitive.
+4. **Tiered confidence** — TAM confidence is highest (supported by industry data), SAM next (with filter coefficients applied), SOM lowest (with competition and resource constraints applied). Decreasing layer by layer is normal.
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| category_keywords | string | 是 | 用户提供 | 品类关键词，如"在线教育""SaaS CRM" |
-| geographic_scope | string | 是 | 用户提供 | 目标市场地理范围，如"中国大陆""东南亚" |
-| time_range | string | 是 | 用户提供 | 测算时间范围，如"2025-2027" |
+| category_keywords | string | Yes | User-provided | Category keywords, e.g., "online education", "SaaS CRM" |
+| geographic_scope | string | Yes | User-provided | Target market geographic scope, e.g., "Mainland China", "Southeast Asia" |
+| time_range | string | Yes | User-provided | Estimation time range, e.g., "2025-2027" |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: TAM测算 [核心]
+### Step 1: TAM Estimation [Core]
 
-采用双路径交叉验证：
+Adopts dual-path cross-validation:
 
-**自上而下路径：**
-- 获取行业总规模数据（统计局/行业协会/第三方研报）
-- 确定目标品类在行业中的占比
-- 计算：TAM = 行业总规模 × 目标品类占比
+**Top-down path:**
+- Obtain industry total size data (statistics bureau/industry association/third-party research reports)
+- Determine the target category's share of the industry
+- Calculate: TAM = Industry total size × Target category share
 
-**自下而上路径：**
-- 估算目标用户总数（人口基数 × 目标人群渗透率）
-- 获取ARPU（每用户年均收入）参考值
-- 计算：TAM = 目标用户数 × ARPU
+**Bottom-up path:**
+- Estimate total target users (population base × target audience penetration rate)
+- Obtain ARPU (average revenue per user per year) reference value
+- Calculate: TAM = Target user count × ARPU
 
-**输出要求：**
-- 区间估计：乐观值 / 中性值 / 保守值
-- 每个估计值标注数据来源
-- 两条路径结果差异>20%时标注需人类判断
+**Output requirements:**
+- Range estimate: optimistic / neutral / conservative
+- Each estimate annotates data source
+- When divergence between the two paths > 20%, mark as needing human judgment
 
-### Step 2: SAM测算 [核心]
+### Step 2: SAM Estimation [Core]
 
-在TAM基础上逐层过滤：
+Filter layer by layer on top of TAM:
 
-| 过滤维度 | 说明 |
+| Filter Dimension | Description |
 |---------|------|
-| 地理范围限制 | 根据geographic_scope裁剪至目标区域市场规模 |
-| 目标客群过滤 | 排除非目标客群，叠加客群画像过滤系数 |
-| 服务能力边界 | 扣除自身渠道/技术/合规无法覆盖的部分 |
+| Geographic scope limit | Trim to target region market size based on geographic_scope |
+| Target audience filter | Exclude non-target audiences, apply audience profile filter coefficient |
+| Service capability boundary | Deduct portions that own channels/technology/compliance cannot cover |
 
-**计算逻辑：** SAM = TAM × 地理系数 × 客群系数 × 服务能力系数
+**Calculation logic:** SAM = TAM × Geographic coefficient × Audience coefficient × Service capability coefficient
 
-**输出要求：**
-- 各过滤系数及依据
-- SAM区间估计（乐观/中性/保守）
+**Output requirements:**
+- Each filter coefficient and its basis
+- SAM range estimate (optimistic/neutral/conservative)
 
-### Step 3: SOM测算 [核心]
+### Step 3: SOM Estimation [Core]
 
-在SAM基础上叠加竞争与资源约束：
+Apply competition and resource constraints on top of SAM:
 
-| 约束维度 | 说明 |
+| Constraint Dimension | Description |
 |---------|------|
-| 竞争格局 | 现有竞品已占据份额 + 竞品壁垒强度 |
-| 自身资源约束 | 团队规模 / 资金 / 技术储备 / 渠道资源 |
-| 获客能力预估 | 预期获客渠道效率 + 转化率 + 留存率 |
+| Competitive landscape | Existing competitor share + competitor barrier strength |
+| Own resource constraints | Team size / funding / technology reserves / channel resources |
+| Acquisition capability estimate | Expected acquisition channel efficiency + conversion rate + retention rate |
 
-**计算逻辑：** SOM = SAM × (1 - 竞争约束%) × (1 - 资源约束%) × (1 - 获客约束%)
+**Calculation logic:** SOM = SAM × (1 - Competition constraint%) × (1 - Resource constraint%) × (1 - Acquisition constraint%)
 
-> SOM以SAM为基数，逐层扣除竞争、资源、获客三方面约束后得到可获取市场份额。
+> SOM uses SAM as the base, deducting competition, resource, and acquisition constraints layer by layer to obtain the obtainable market share.
 
-**输出要求：**
-- SOM区间估计（乐观/中性/保守）
-- 可达时间线（6个月/12个月/24个月里程碑）
+**Output requirements:**
+- SOM range estimate (optimistic/neutral/conservative)
+- Achievable timeline (6-month/12-month/24-month milestones)
 
-### Step 4: 置信度评估 [核心]
+### Step 4: Confidence Assessment [Core]
 
-对整体测算结果进行可信度评估：
+Assess the credibility of the overall estimation results:
 
-| 评估维度 | 方法 |
+| Assessment Dimension | Method |
 |---------|------|
-| 数据来源可靠性 | 对每个数据源评估可靠性评分（0-1），来源包括官方统计、行业协会、第三方研报、专家访谈等 |
-| 假设敏感度分析 | 对关键假设做±20%变动，观察对最终结果的影响幅度 |
-| 关键假设标注 | 列出所有核心假设，标注假设内容、依据、对结果影响方向 |
+| Data source reliability | Evaluate reliability score (0-1) for each data source; sources include official statistics, industry associations, third-party research reports, expert interviews, etc. |
+| Assumption sensitivity analysis | Apply ±20% variation to key assumptions and observe impact magnitude on final results |
+| Key assumption annotation | List all core assumptions, annotate assumption content, basis, and impact direction on results |
 
-**输出要求：**
-- 整体confidence评分（0-1）
-- 关键假设清单及敏感度分析结果
-- 低置信度数据点标注
+**Output requirements:**
+- Overall confidence score (0-1)
+- Key assumption list and sensitivity analysis results
+- Low-confidence data points annotated
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 市场规模估算 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整估算 + 细分市场拆解 + 增长率预测 + 市场进入优先级 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Market size estimation | Core conclusions + minimum viable artifact |
+| standard | Full artifact (current default) | Full artifact, including all Step outputs |
+| deep | Full estimation + segment market breakdown + growth rate forecast + market entry prioritization | Full artifact + extended analysis + deep projection |
 
-## 输出
+## Output
 
-输出文件：`docs/discovery/market-analysis.md（“市场规模”章节）`
+Output file: `docs/discovery/market-analysis.md ("Market Size" section)`
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["category_keywords", "geographic_scope", "time_range", "tam", "sam", "som", "confidence"],
   "properties": {
-    "category_keywords": {"type": "string", "description": "品类关键词"},
-    "geographic_scope": {"type": "string", "description": "目标市场地理范围"},
-    "time_range": {"type": "string", "description": "测算时间范围"},
-    "tam": {"type": "object", "description": "TAM总可达市场规模测算，含自上而下和自下而上双路径"},
-    "sam": {"type": "object", "description": "SAM可服务市场规模测算"},
-    "som": {"type": "object", "description": "SOM可获取市场规模测算"},
-    "confidence": {"type": "object", "description": "置信度评估，含数据源可靠性和敏感度分析"}
+    "category_keywords": {"type": "string", "description": "Category keywords"},
+    "geographic_scope": {"type": "string", "description": "Target market geographic scope"},
+    "time_range": {"type": "string", "description": "Estimation time range"},
+    "tam": {"type": "object", "description": "TAM total addressable market estimation, including top-down and bottom-up dual paths"},
+    "sam": {"type": "object", "description": "SAM serviceable available market estimation"},
+    "som": {"type": "object", "description": "SOM serviceable obtainable market estimation"},
+    "confidence": {"type": "object", "description": "Confidence assessment, including data source reliability and sensitivity analysis"}
   }
 }
 ```
 
-**输出校验规则**：
+**Output Validation Rules**:
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |---------|------|------|------|
-| category_keywords | string | 是 | 品类关键词，不可为空 |
-| geographic_scope | string | 是 | 目标市场地理范围，不可为空 |
-| time_range | string | 是 | 测算时间范围，格式如"2025-2027" |
-| tam | object | 是 | TAM测算结果，必须包含top_down和bottom_up两个子对象 |
-| tam.top_down | object | 是 | 自上而下测算路径，必须包含industry_total、category_ratio、estimates、data_sources |
-| tam.top_down.industry_total | string | 是 | 行业总规模，需带单位 |
-| tam.top_down.category_ratio | string | 是 | 目标品类占比，百分比格式 |
-| tam.top_down.estimates | object | 是 | 必须包含optimistic、neutral、conservative三个区间值 |
-| tam.top_down.data_sources | array | 是 | 数据来源列表，可为空数组但不可缺失 |
-| tam.bottom_up | object | 是 | 自下而上测算路径，必须包含target_users、arpu、estimates、data_sources |
-| tam.bottom_up.target_users | string | 是 | 目标用户总数，需带单位 |
-| tam.bottom_up.arpu | string | 是 | 每用户年均收入，需带单位 |
-| tam.bottom_up.estimates | object | 是 | 必须包含optimistic、neutral、conservative三个区间值 |
-| tam.bottom_up.data_sources | array | 是 | 数据来源列表，可为空数组但不可缺失 |
-| sam | object | 是 | SAM测算结果 |
-| sam.geo_coefficient | string | 是 | 地理过滤系数，0-1之间 |
-| sam.audience_coefficient | string | 是 | 客群过滤系数，0-1之间 |
-| sam.service_coefficient | string | 是 | 服务能力系数，0-1之间 |
-| sam.estimates | object | 是 | 必须包含optimistic、neutral、conservative三个区间值 |
-| sam.data_sources | array | 是 | 数据来源列表 |
-| som | object | 是 | SOM测算结果 |
-| som.base | string | 是 | 计算基数，固定为"SAM" |
-| som.competition_constraint | string | 是 | 竞争约束百分比，0-1之间 |
-| som.resource_constraint | string | 是 | 资源约束百分比，0-1之间 |
-| som.acquisition_constraint | string | 是 | 获客约束百分比，0-1之间 |
-| som.calculation | string | 是 | 计算公式，展示完整乘法过程 |
-| som.estimates | object | 是 | 必须包含optimistic、neutral、conservative三个区间值 |
-| som.timeline | object | 是 | 可达时间线，必须包含6m、12m、24m三个里程碑 |
-| som.data_sources | array | 是 | 数据来源列表 |
-| confidence | object | 是 | 置信度评估 |
-| confidence.overall_score | number | 是 | 整体置信度评分，0-1之间 |
-| confidence.data_source_reliability | array | 是 | 各数据源可靠性评分列表 |
-| confidence.sensitivity_analysis | array | 是 | 敏感度分析结果列表 |
-| confidence.key_assumptions | array | 是 | 关键假设清单，每项必须包含assumption、basis、impact_direction |
-| confidence.key_assumptions[].assumption | string | 是 | 假设内容描述 |
-| confidence.key_assumptions[].basis | string | 是 | 假设依据 |
-| confidence.key_assumptions[].impact_direction | string | 是 | 对结果影响方向：正向/负向/双向 |
-| confidence.key_assumptions[].sensitivity | string | 否 | 敏感度标注，影响>30%时标注为"高" |
-| confidence.key_assumptions[].needs_human_validation | boolean | 否 | 是否需要人类验证，高敏感假设默认为true |
+| category_keywords | string | Yes | Category keywords, cannot be empty |
+| geographic_scope | string | Yes | Target market geographic scope, cannot be empty |
+| time_range | string | Yes | Estimation time range, format like "2025-2027" |
+| tam | object | Yes | TAM estimation result, must include top_down and bottom_up sub-objects |
+| tam.top_down | object | Yes | Top-down estimation path, must include industry_total, category_ratio, estimates, data_sources |
+| tam.top_down.industry_total | string | Yes | Industry total size, with unit |
+| tam.top_down.category_ratio | string | Yes | Target category share, percentage format |
+| tam.top_down.estimates | object | Yes | Must include optimistic, neutral, conservative range values |
+| tam.top_down.data_sources | array | Yes | Data source list, can be empty array but cannot be missing |
+| tam.bottom_up | object | Yes | Bottom-up estimation path, must include target_users, arpu, estimates, data_sources |
+| tam.bottom_up.target_users | string | Yes | Total target users, with unit |
+| tam.bottom_up.arpu | string | Yes | Average revenue per user per year, with unit |
+| tam.bottom_up.estimates | object | Yes | Must include optimistic, neutral, conservative range values |
+| tam.bottom_up.data_sources | array | Yes | Data source list, can be empty array but cannot be missing |
+| sam | object | Yes | SAM estimation result |
+| sam.geo_coefficient | string | Yes | Geographic filter coefficient, between 0-1 |
+| sam.audience_coefficient | string | Yes | Audience filter coefficient, between 0-1 |
+| sam.service_coefficient | string | Yes | Service capability coefficient, between 0-1 |
+| sam.estimates | object | Yes | Must include optimistic, neutral, conservative range values |
+| sam.data_sources | array | Yes | Data source list |
+| som | object | Yes | SOM estimation result |
+| som.base | string | Yes | Calculation base, fixed as "SAM" |
+| som.competition_constraint | string | Yes | Competition constraint percentage, between 0-1 |
+| som.resource_constraint | string | Yes | Resource constraint percentage, between 0-1 |
+| som.acquisition_constraint | string | Yes | Acquisition constraint percentage, between 0-1 |
+| som.calculation | string | Yes | Calculation formula, showing the full multiplication process |
+| som.estimates | object | Yes | Must include optimistic, neutral, conservative range values |
+| som.timeline | object | Yes | Achievable timeline, must include 6m, 12m, 24m milestones |
+| som.data_sources | array | Yes | Data source list |
+| confidence | object | Yes | Confidence assessment |
+| confidence.overall_score | number | Yes | Overall confidence score, between 0-1 |
+| confidence.data_source_reliability | array | Yes | Reliability score list for each data source |
+| confidence.sensitivity_analysis | array | Yes | Sensitivity analysis results list |
+| confidence.key_assumptions | array | Yes | Key assumption list, each must include assumption, basis, impact_direction |
+| confidence.key_assumptions[].assumption | string | Yes | Assumption content description |
+| confidence.key_assumptions[].basis | string | Yes | Assumption basis |
+| confidence.key_assumptions[].impact_direction | string | Yes | Impact direction on results: positive/negative/bidirectional |
+| confidence.key_assumptions[].sensitivity | string | No | Sensitivity annotation, marked as "high" when impact > 30% |
+| confidence.key_assumptions[].needs_human_validation | boolean | No | Whether human validation is needed; defaults to true for highly sensitive assumptions |
 
 ```json
 {
-  "category_keywords": "在线教育",
-  "geographic_scope": "中国大陆",
+  "category_keywords": "Online Education",
+  "geographic_scope": "Mainland China",
   "time_range": "2025-2027",
   "tam": {
     "top_down": {
-      "industry_total": "5000亿",
+      "industry_total": "500 billion",
       "category_ratio": "8%",
       "estimates": {
-        "optimistic": "400亿",
-        "neutral": "300亿",
-        "conservative": "200亿"
+        "optimistic": "40 billion",
+        "neutral": "30 billion",
+        "conservative": "20 billion"
       },
       "data_sources": []
     },
     "bottom_up": {
-      "target_users": "1.2亿",
-      "arpu": "3000元/年",
+      "target_users": "120 million",
+      "arpu": "3000 yuan/year",
       "estimates": {
-        "optimistic": "360亿",
-        "neutral": "280亿",
-        "conservative": "200亿"
+        "optimistic": "36 billion",
+        "neutral": "28 billion",
+        "conservative": "20 billion"
       },
       "data_sources": []
     }
@@ -221,9 +221,9 @@ writes:
     "audience_coefficient": "0.35",
     "service_coefficient": "0.60",
     "estimates": {
-      "optimistic": "120亿",
-      "neutral": "85亿",
-      "conservative": "55亿"
+      "optimistic": "12 billion",
+      "neutral": "8.5 billion",
+      "conservative": "5.5 billion"
     },
     "data_sources": []
   },
@@ -234,14 +234,14 @@ writes:
     "acquisition_constraint": "0.50",
     "calculation": "SAM × (1 - 0.60) × (1 - 0.65) × (1 - 0.50) = SAM × 0.07",
     "estimates": {
-      "optimistic": "9亿",
-      "neutral": "6亿",
-      "conservative": "3亿"
+      "optimistic": "0.9 billion",
+      "neutral": "0.6 billion",
+      "conservative": "0.3 billion"
     },
     "timeline": {
-      "6m": "完成产品MVP，获取首批1000名付费用户",
-      "12m": "产品迭代至v2.0，付费用户突破1万",
-      "24m": "建立品牌影响力，付费用户达10万"
+      "6m": "Complete product MVP, acquire first 1000 paid users",
+      "12m": "Iterate product to v2.0, paid users exceed 10,000",
+      "24m": "Establish brand influence, paid users reach 100,000"
     },
     "data_sources": []
   },
@@ -249,41 +249,41 @@ writes:
     "overall_score": 0.65,
     "data_source_reliability": [
       {
-        "source": "教育部教育统计年鉴",
-        "type": "官方统计",
+        "source": "Ministry of Education Education Statistics Yearbook",
+        "type": "Official statistics",
         "reliability_score": 0.85
       },
       {
-        "source": "中国互联网络发展状况统计报告（CNNIC）",
-        "type": "官方统计",
+        "source": "China Internet Network Development Status Statistics Report (CNNIC)",
+        "type": "Official statistics",
         "reliability_score": 0.80
       },
       {
-        "source": "艾瑞咨询在线教育行业研究报告",
-        "type": "第三方研报",
+        "source": "iResearch Online Education Industry Research Report",
+        "type": "Third-party research report",
         "reliability_score": 0.70
       }
     ],
     "sensitivity_analysis": [
       {
-        "assumption": "K12在线教育渗透率将持续增长",
+        "assumption": "K12 online education penetration rate will continue to grow",
         "variation": "±20%",
-        "impact_on_result": "TAM中性值波动范围±24亿，SOM中性值波动范围±1.4亿",
-        "sensitivity": "高"
+        "impact_on_result": "TAM neutral value fluctuation range ±2.4 billion, SOM neutral value fluctuation range ±0.14 billion",
+        "sensitivity": "high"
       },
       {
-        "assumption": "ARPU维持在3000元/年",
+        "assumption": "ARPU maintained at 3000 yuan/year",
         "variation": "±20%",
-        "impact_on_result": "bottom_up路径TAM中性值波动±56亿",
-        "sensitivity": "中"
+        "impact_on_result": "bottom_up path TAM neutral value fluctuation ±5.6 billion",
+        "sensitivity": "medium"
       }
     ],
     "key_assumptions": [
       {
-        "assumption": "K12在线教育渗透率将持续增长",
-        "basis": "教育部推进教育数字化政策",
-        "impact_direction": "正向",
-        "sensitivity": "高",
+        "assumption": "K12 online education penetration rate will continue to grow",
+        "basis": "Ministry of Education promotes education digitalization policy",
+        "impact_direction": "positive",
+        "sensitivity": "high",
         "needs_human_validation": true
       }
     ]
@@ -291,74 +291,74 @@ writes:
 }
 ```
 
-## 决策规则
+## Decision Rules
 
-| 规则 | 触发条件 | 动作 |
+| Rule | Trigger Condition | Action |
 |------|---------|------|
-| 数据源可靠性低 | 数据来源可靠性评分 < 0.5 | 标注需人类验证，暂停该数据点使用 |
-| 假设敏感度高 | 关键假设变化对结果影响 > 30% | 标注为高敏感假设，建议人类确认 |
-| 双路径差异大 | 自上而下与自下而上结果差异 > 20% | 标注需人类判断，提供差异分析 |
+| Low data source reliability | Data source reliability score < 0.5 | Mark as needing human validation, suspend use of that data point |
+| High assumption sensitivity | Key assumption change impact on result > 30% | Mark as highly sensitive assumption, recommend human confirmation |
+| Large dual-path divergence | Top-down and bottom-up result divergence > 20% | Mark as needing human judgment, provide divergence analysis |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (quick/standard/deep must all pass)
 
-- [ ] TAM/SAM/SOM三层测算完整
-- [ ] 每层均含区间估计（乐观/中性/保守）
+- [ ] TAM/SAM/SOM three-tier estimation complete
+- [ ] Each tier includes range estimates (optimistic/neutral/conservative)
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (standard/deep must pass)
 
-- [ ] 关键假设已标注
-- [ ] 数据来源已列出
-- [ ] 置信度评分已完成
-- [ ] 低可靠性数据源已标注需人类验证
-- [ ] 高敏感假设已标注
+- [ ] Key assumptions annotated
+- [ ] Data sources listed
+- [ ] Confidence score completed
+- [ ] Low-reliability data sources annotated as needing human validation
+- [ ] Highly sensitive assumptions annotated
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep projection and roadmap generated)
+- [ ] Decision record complete (key decisions have basis and alternatives)
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-当上游文件不存在时，本Skill仍可独立执行：
+When upstream files do not exist, this Skill can still execute independently:
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Notes |
 |---------------|---------|---------|------------|
-| 无强依赖 | 本Skill可独立运行，用户提供品类关键词和目标市场即可执行 | 无影响，输出完整 | 要求用户提供品类关键词和目标市场 |
-| 所有上游文件均缺失 | 用户提供品类关键词和目标市场 → 基于AI知识库中的公开数据估算TAM/SAM/SOM | 数据来源可靠性评分降低，confidence.overall_score可能<0.5，标注"基于AI知识库推算" | 要求用户提供品类关键词（如"在线教育"）和目标市场（如"中国大陆"） |
-| 若用户未提供category_keywords | 提示用户提供品类关键词，否则无法执行市场规模测算 | 无法生成输出，流程阻塞 | 要求用户提供品类关键词（如"在线教育""SaaS CRM"） |
-| 若用户未提供geographic_scope | 提示用户提供目标市场地理范围，否则默认使用"全球" | sam.geo_coefficient默认为1.0（无地理过滤），SAM=TAM，置信度降低 | 要求用户提供目标市场地理范围（如"中国大陆""北美"） |
-| 若用户未提供time_range | 提示用户提供测算时间范围，否则默认使用当前年份起3年 | time_range字段为推断值，标注"默认值"，趋势预测准确性降低 | 要求用户提供测算时间范围（如"2024-2026"） |
+| No strong dependencies | This Skill can run independently; user provides category keywords and target market to execute | No impact, output complete | Require user to provide category keywords and target market |
+| All upstream files missing | User provides category keywords and target market → estimate TAM/SAM/SOM based on public data in AI knowledge base | Data source reliability score lowered, confidence.overall_score may be < 0.5, marked as "based on AI knowledge base inference" | Require user to provide category keywords (e.g., "online education") and target market (e.g., "Mainland China") |
+| If user does not provide category_keywords | Prompt user to provide category keywords, otherwise market size estimation cannot be executed | Cannot generate output, flow blocked | Require user to provide category keywords (e.g., "online education", "SaaS CRM") |
+| If user does not provide geographic_scope | Prompt user to provide target market geographic scope, otherwise default to "Global" | sam.geo_coefficient defaults to 1.0 (no geographic filter), SAM = TAM, confidence lowered | Require user to provide target market geographic scope (e.g., "Mainland China", "North America") |
+| If user does not provide time_range | Prompt user to provide estimation time range, otherwise default to 3 years from current year | time_range field is an inferred value, marked as "default value", trend forecast accuracy lowered | Require user to provide estimation time range (e.g., "2024-2026") |
 
-## 数据获取说明
+## Data Acquisition Notes
 
-本Skill需要品类关键词和目标市场信息，请通过以下方式之一提供：
-  1. 直接输入品类关键词（如"在线教育""SaaS CRM"）和目标市场（如"中国大陆"）
-  2. 上传市场调研数据文件
-  3. 提供数据文件路径
-- AI不负责外部数据采集，仅负责分析
+This Skill requires category keywords and target market information. Please provide via one of the following:
+  1. Directly input category keywords (e.g., "online education", "SaaS CRM") and target market (e.g., "Mainland China")
+  2. Upload market research data files
+  3. Provide data file paths
+- AI is not responsible for external data collection, only analysis
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游文件 | 变更类型 | 影响范围 | 影响说明 |
+| Upstream File | Change Type | Impact Scope | Impact Description |
 |---------|---------|---------|---------|
-| pest.json | 政策法规变化 | SAM地理系数、SAM客群系数 | 新政策可能扩大或缩小可服务市场范围，需重新评估geo_coefficient和audience_coefficient |
-| pest.json | 经济指标变化 | TAM行业总规模 | GDP/消费支出等指标变化直接影响top_down路径的industry_total |
-| pest.json | 技术动态变化 | SAM服务能力系数 | 新技术突破可能提升service_coefficient，扩大可服务边界 |
-| competitor-analysis.json | 竞争格局变化 | SOM竞争约束系数 | 新竞品进入或竞品份额变化直接影响competition_constraint |
-| competitor-analysis.json | 竞品定价策略变化 | SOM获客约束系数 | 竞品价格战可能提高获客成本，影响acquisition_constraint |
+| pest.json | Political/regulatory change | SAM geographic coefficient, SAM audience coefficient | New policies may expand or shrink the serviceable market scope; need to re-evaluate geo_coefficient and audience_coefficient |
+| pest.json | Economic indicator change | TAM industry total size | GDP/consumer spending and other indicator changes directly affect top_down path's industry_total |
+| pest.json | Technology dynamics change | SAM service capability coefficient | New technology breakthroughs may improve service_coefficient, expanding serviceable boundaries |
+| competitor-analysis.json | Competitive landscape change | SOM competition constraint coefficient | New competitor entry or competitor share changes directly affect competition_constraint |
+| competitor-analysis.json | Competitor pricing strategy change | SOM acquisition constraint coefficient | Competitor price wars may increase acquisition costs, affecting acquisition_constraint |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 触发事件 | 通知目标 | 通知内容 | 优先级 |
+| Trigger Event | Notify Target | Notification Content | Priority |
 |---------|---------|---------|--------|
-| TAM中性值变化>20% | market-competitor-analysis | TAM规模显著变化，建议重新评估市场吸引力与竞争策略 | 高 |
-| SAM过滤系数调整>0.1 | market-competitor-analysis | 可服务市场范围变化，建议更新竞品覆盖分析 | 中 |
-| SOM可获取份额变化>30% | opportunity-definition | 可获取市场规模显著变化，建议重新评估机会评分 | 高 |
-| 关键假设新增或变更 | 所有下游Skill | 新增/变更关键假设，可能影响依赖本Skill输出的分析结论 | 中 |
-| confidence.overall_score降至<0.5 | 所有下游Skill | 整体置信度低于阈值，下游使用本输出时需附加不确定性说明 | 高 |
+| TAM neutral value change > 20% | market-competitor-analysis | TAM size significantly changed, recommend re-evaluating market attractiveness and competitive strategy | High |
+| SAM filter coefficient adjustment > 0.1 | market-competitor-analysis | Serviceable market scope changed, recommend updating competitor coverage analysis | Medium |
+| SOM obtainable share change > 30% | opportunity-definition | Obtainable market size significantly changed, recommend re-evaluating opportunity score | High |
+| Key assumption added or changed | All downstream Skills | New/changed key assumption may affect analysis conclusions that depend on this Skill's output | Medium |
+| confidence.overall_score drops to < 0.5 | All downstream Skills | Overall confidence below threshold; downstream usage of this output should attach uncertainty notes | High |

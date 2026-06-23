@@ -2,9 +2,9 @@
 name: design-brief
 description: Guides agents through design requirement discovery. Use when starting a new design task or when requirements are unclear. Use when no DESIGN_BRIEF.md exists.
 triggers:
-  - 新设计任务开始
-  - 需求不明确
-  - 无 DESIGN_BRIEF.md
+  - New design task starting
+  - Requirements unclear
+  - No DESIGN_BRIEF.md
 reads:
   - .harness/rules/security.md
   - .harness/data/design/vibes.csv
@@ -17,168 +17,168 @@ writes:
 
 ## Overview
 
-设计任务的入口 skill，强制澄清需求，产出 DESIGN_BRIEF.md。15 分钟 brief 防止数小时返工。
+The entry skill for design tasks; forces requirement clarification and produces DESIGN_BRIEF.md. A 15-minute brief prevents hours of rework.
 
 ## When to Use
 
-- ✅ 新设计任务开始
-- ✅ 需求不明确或模糊
-- ✅ 无 DESIGN_BRIEF.md
-- ❌ NOT for 已有 DESIGN_BRIEF.md 且需求未变
+- ✅ New design task starting
+- ✅ Requirements unclear or ambiguous
+- ✅ No DESIGN_BRIEF.md
+- ❌ NOT for cases where DESIGN_BRIEF.md already exists and requirements are unchanged
 
 ## Process
 
-### 1. Surface Assumptions（显式列出假设）
+### 1. Surface Assumptions (Explicitly List Assumptions)
 
-非平凡决策前显式列出假设，让用户确认：
+Before non-trivial decisions, explicitly list assumptions for user confirmation:
 
 ```
 ASSUMPTIONS I'M MAKING:
-1. 这是 web 不是 mobile
-2. 用项目现有色板
-3. 目标现代浏览器
-→ Correct me now or I'll proceed with these.
+1. This is web, not mobile
+2. Use the project's existing color palette
+3. Target modern browsers
+ Correct me now or I'll proceed with these.
 ```
 
-### 1.5 审查与剥离越权 AC（Push-back Mechanism）
+### 1.5 Review and Strip Overreach ACs (Push-back Mechanism)
 
-审查上游 `pm-to-design.md` 传递的 AC-xxx。如果发现 PM 的 AC 包含了具体的 UI 形态指示（如"顶部导航栏放个购物车图标"、"弹出一个红色确认框"），你必须**行使抗旨权**：
-1. 拒绝照抄死板的 UI 布局，保持设计的专业独立性。
-2. 将其重写（Reframe）为纯粹的业务意图或 UX 目标（如"用户能在任何页面便捷地访问购物车"、"提供一个高优先级的防误触确认机制"）。
-3. 记录这种修改，以便在产出文档的 `[AC 净化记录]` 中向用户公示。
+Review the AC-xxx items passed down from upstream `pm-to-design.md`. If you find PM ACs that contain specific UI form directives (e.g., "put a shopping cart icon in the top nav bar", "pop up a red confirmation box"), you must **exercise push-back authority**:
+1. Refuse to copy rigid UI layouts verbatim; preserve the professional independence of design.
+2. Reframe them as pure business intent or UX goals (e.g., "users can conveniently access the shopping cart from any page", "provide a high-priority, mis-tap-resistant confirmation mechanism").
+3. Record such changes for disclosure to the user in the `[AC Cleanup Log]` section of the output document.
 
-### 2. 产品类型识别
+### 2. Product Type Identification
 
-识别产品类型（SaaS/电商/金融/医疗/教育/...），用于后续 design-recommendation。
+Identify the product type (SaaS / E-commerce / Finance / Healthcare / Education / ...) for downstream design-recommendation.
 
-### 3. 需求 4 要素抽取
+### 3. Extract the 4 Requirement Elements
 
-- 产品类型（必填）
-- 目标受众（必填）
-- 风格关键词（可选）
-- 技术栈（可选）
+- Product Type (required)
+- Target Audience (required)
+- Style Keywords (optional)
+- Tech Stack (optional)
 
-### 4. Vibe Translation（氛围词翻译）
+### 4. Vibe Translation
 
-接受氛围词输入，翻译成 token 建议：
+Accept vibe-word input and translate it into token recommendations:
 
-1. 询问用户："你希望这个设计给人什么感觉？"（如"温暖、复古、小众"）
-2. Grep `.harness/data/design/vibes.csv` 匹配氛围词
-3. **Fallback**：若 vibes.csv 未命中或文件为空，调用先验知识推理，但必须加警告：
+1. Ask the user: "What feeling should this design convey?" (e.g., "warm, retro, niche")
+2. Grep `.harness/data/design/vibes.csv` to match vibe words
+3. **Fallback**: If vibes.csv has no match or is empty, invoke prior knowledge reasoning, but must add a warning:
    ```
    [WARNING: Using LLM Prior Knowledge due to empty/unmatched CSV]
    ```
-4. 输出：色板/字体/圆角/阴影/质感建议
+4. Output: color palette / font / border radius / shadow / texture recommendations
 
-### 5. 审美方向选择
+### 5. Aesthetic Direction Selection
 
-提供 2-3 个视觉方向，每个说明：
-- Tone（调性）
-- 适用场景
-- 风险
+Provide 2-3 visual directions, each describing:
+- Tone
+- Applicable scenarios
+- Risks
 
-### 6. Reframe（把模糊需求翻译成可测 AC）
+### 6. Reframe (Translate Vague Requirements into Testable ACs)
 
-把模糊需求翻译成可测条件，并编号为 AC-xxx（供 LOOP.md PLAN 阶段直接读取）：
+Translate vague requirements into testable conditions, numbered as AC-xxx (for direct consumption by the PLAN stage of LOOP.md):
 
-| 模糊需求 | 可测条件（AC） |
-|---------|---------|
-| "make it look better" | AC-001: 卡片间距 8px 一致 / AC-002: 对比度 ≥4.5:1 / AC-003: 移动端 375px 无溢出 |
-| "做个好看的按钮" | AC-001: 按钮 4 种状态（default/hover/active/disabled） / AC-002: 标注尺寸+颜色+圆角 |
-| "这个页面要现代" | AC-001: 页面用 12 栅格 / AC-002: 主色 #xxx / AC-003: 间距 8px 基准 |
+| Vague Requirement | Testable Condition (AC) |
+|-------------------|-------------------------|
+| "make it look better" | AC-001: Card spacing 8px consistent / AC-002: Contrast ≥4.5:1 / AC-003: No overflow at mobile 375px |
+| "make a nice button" | AC-001: Button has 4 states (default/hover/active/disabled) / AC-002: Annotate size + color + radius |
+| "this page should be modern" | AC-001: Page uses 12-column grid / AC-002: Primary color #xxx / AC-003: 8px spacing baseline |
 
-**AC 编号规则**：
-- 格式：`AC-<3位数字>`（如 AC-001、AC-002）
-- 全局唯一（同一 DESIGN_BRIEF.md 内不重复）
-- 每条 AC 必须可验证（含具体数值/条件/状态）
+**AC Numbering Rules**:
+- Format: `AC-<3-digit number>` (e.g., AC-001, AC-002)
+- Globally unique (no duplicates within the same DESIGN_BRIEF.md)
+- Each AC must be verifiable (containing specific values / conditions / states)
 
-### 7. Anti AI-Slop 显式字段
+### 7. Anti AI-Slop Explicit Field
 
-在 DESIGN_BRIEF.md 增加 Anti AI-Slop Requirements 字段，引用 craft/anti-ai-slop.md。
+Add an Anti AI-Slop Requirements field to DESIGN_BRIEF.md, referencing craft/anti-ai-slop.md.
 
-### 8. 宪法检查
+### 8. Constitution Check
 
-检查是否违反 constitution.md。
+Check for violations of constitution.md.
 
-### 9. 输出
+### 9. Output
 
-写入 `docs/visual/DESIGN_BRIEF.md`，格式见下方。
+Write to `docs/visual/DESIGN_BRIEF.md`, format below.
 
-## DESIGN_BRIEF.md 输出格式
+## DESIGN_BRIEF.md Output Format
 
 ```markdown
 # Design Brief
 
 ## Product Type
-<识别结果>
+<Identification result>
 
 ## Target Audience
-<目标用户>
+<Target users>
 
 ## Style Keywords
-<风格关键词>
+<Style keywords>
 
 ## Tech Stack
-<技术栈>
+<Tech stack>
 
 ## Vibe Translation
-- 输入氛围词：<用户输入>
-- 推荐色板：<从 vibes.csv 匹配或先验知识>
-- 推荐字体：<...>
-- 推荐圆角：<...>
-- 推荐阴影：<...>
+- Input vibe words: <User input>
+- Recommended color palette: <Matched from vibes.csv or prior knowledge>
+- Recommended font: <...>
+- Recommended border radius: <...>
+- Recommended shadow: <...>
 
 ## Aesthetic Direction
-<2-3 个视觉方向，用户选择>
+<2-3 visual directions, user selects>
 
 ## Reframed Success Criteria
-- AC-001: <可测条件1>
-- AC-002: <可测条件2>
-- AC-003: <可测条件3>
+- AC-001: <Testable condition 1>
+- AC-002: <Testable condition 2>
+- AC-003: <Testable condition 3>
 
-## AC 净化记录 (Push-back Log)
-> 记录被设计侧拒绝并重写的越权 UI 指令
-- 原 AC-xxx: <PM的死板指令> → 重写为: <纯粹的UX目标>
+## AC Cleanup Log (Push-back Log)
+> Records overreaching UI directives refused and rewritten by the design side
+- Original AC-xxx: <PM's rigid directive> → Rewritten as: <Pure UX goal>
 
 ## Anti AI-Slop Requirements
-- 禁止：紫蓝渐变 / 对称三列 / emoji 图标 / Inter 字体
-- 要求：用项目设计系统的字体和色板
+- Forbidden: purple-blue gradient / symmetric three-column / emoji icons / Inter font
+- Required: Use the project design system's fonts and color palette
 
 ## Assumptions
-1. <假设1>
-2. <假设2>
+1. <Assumption 1>
+2. <Assumption 2>
 ```
 
 ## Common Rationalizations
 
-| 借口 | 现实 |
-|------|------|
-| "需求很清楚，直接开始设计吧" | 15 分钟 brief 防止数小时返工 |
-| "用户说的就是想要的" | 用户说的是解决方案不是需求，要 Reframe |
-| "氛围词太主观没法落地" | Vibe Translation 把氛围词翻译成可执行 token |
-| "假设很明显不用列" | 不显式列出的假设会被 Agent 静默填空，导致方向偏差 |
+| Excuse | Reality |
+|--------|---------|
+| "Requirements are clear, let's just start designing" | A 15-minute brief prevents hours of rework |
+| "What the user says is what they want" | Users describe solutions, not requirements; Reframe them |
+| "Vibe words are too subjective to act on" | Vibe Translation turns vibe words into executable tokens |
+| "Assumptions are obvious, no need to list them" | Unlisted assumptions get silently filled in by the Agent, causing direction drift |
 
 ## Red Flags
 
-- 跳过 Surface Assumptions 直接开始设计
-- 全盘照抄包含死板 UI 指令的上游 AC（放弃了设计的专业判断）
-- 用模糊需求作为验收标准
-- 未识别产品类型就进入设计
-- 未提供 Anti AI-Slop 字段
+- Skipping Surface Assumptions and starting design directly
+- Copying upstream ACs containing rigid UI directives verbatim (abandoning professional design judgment)
+- Using vague requirements as acceptance criteria
+- Entering design without identifying the product type
+- Missing the Anti AI-Slop field
 
 ## Verification
 
-- [ ] DESIGN_BRIEF.md 包含 4 要素（证据：文件存在且字段齐全）
-- [ ] 假设已显式列出并经用户确认（证据：对话记录）
-- [ ] 审美方向有 2-3 个选项（证据：文件内容）
-- [ ] Vibe Translation 有输出（证据：文件内容，若用先验知识有 WARNING 标签）
-- [ ] Anti AI-Slop Requirements 字段存在（证据：文件内容）
-- [ ] 若存在上游越权 AC，已执行剥离并记录在"AC 净化记录"中（证据：文件内容）
-- [ ] Reframed Success Criteria 可测且编号为 AC-xxx（证据：每条含 AC 编号 + 具体数值/条件）
+- [ ] DESIGN_BRIEF.md contains the 4 elements (evidence: file exists and fields are complete)
+- [ ] Assumptions explicitly listed and confirmed by the user (evidence: conversation record)
+- [ ] Aesthetic Direction has 2-3 options (evidence: file content)
+- [ ] Vibe Translation has output (evidence: file content; if prior knowledge used, has WARNING label)
+- [ ] Anti AI-Slop Requirements field present (evidence: file content)
+- [ ] If upstream overreaching ACs exist, push-back executed and recorded in "AC Cleanup Log" (evidence: file content)
+- [ ] Reframed Success Criteria are testable and numbered as AC-xxx (evidence: each contains AC number + specific value/condition)
 
-## 与 LOOP 的关系
+## Relationship with LOOP
 
-- 不在 LOOP 内运行（在 LOOP 前的 design-brief 阶段运行）
-- 产出的 AC-xxx 列表供 LOOP.md PLAN 阶段直接读取写入 spec.md
-- 产出的 Aesthetic Direction 供 visual-design skill 读取
-- 产出的 Anti AI-Slop Requirements 供 design-lint skill 检查
+- Not run inside LOOP (runs in the pre-LOOP design-brief stage)
+- The AC-xxx list produced is consumed directly by the LOOP.md PLAN stage and written into spec.md
+- The Aesthetic Direction produced is consumed by the visual-design skill
+- The Anti AI-Slop Requirements produced are checked by the design-lint skill

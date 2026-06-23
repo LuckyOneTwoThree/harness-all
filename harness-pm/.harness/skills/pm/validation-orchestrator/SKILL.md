@@ -1,17 +1,17 @@
 ---
 name: validation-orchestrator
-description: 当需要验证产品方案时使用。方案验证子模块指挥官，调度子Skill：validation-assumption-map、validation-mvp、validation-experiment、validation-usability。关键词：方案验证、假设验证、MVP、可用性测试、实验设计、假设地图、风险评估、验证想法、最小可行产品。
+description: Used when validating product solutions. Solution validation sub-module orchestrator, dispatches sub-skills: validation-assumption-map, validation-mvp, validation-experiment, validation-usability. Keywords: solution validation, hypothesis validation, MVP, usability testing, experiment design, assumption map, risk assessment, validate idea, minimum viable product.
 metadata:
-  module: "产品构思与设计"
-  sub-module: "方案验证"
+  module: "Product Ideation & Design"
+  sub-module: "Solution Validation"
   type: "orchestrator"
   version: "6.1"
-  domain_tags: ["通用"]
+  domain_tags: ["General"]
   trigger_examples:
-    - "验证一下产品方案"
-    - "设计MVP范围"
-    - "做一下假设验证"
-    - "评估一下方案风险"
+    - "Validate the product solution"
+    - "Design MVP scope"
+    - "Do some hypothesis validation"
+    - "Assess the solution risks"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -23,30 +23,30 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 方案验证指挥官
+# Solution Validation Orchestrator
 
-## 核心原则
+## Core Principles
 
-1. **验证的是假设不是方案**——用最小成本获取最大置信度，MVP的目标是学习而非交付
-2. **假设驱动验证顺序**——最大风险假设优先验证，验证结果决定方案走向
-3. **验证闭环必须完整**——假设→实验→数据→结论→决策，任何环节断裂都是浪费
+1. **Validate hypotheses, not solutions**—acquire maximum confidence at minimum cost; the goal of MVP is learning, not delivery
+2. **Hypothesis-driven validation order**—validate highest-risk hypotheses first; validation results determine solution direction
+3. **Validation loop must be complete**—hypothesis→experiment→data→conclusion→decision; any broken link is waste
 
-## 异常处理
+## Exception Handling
 
-| 异常类型 | 处理策略 |
+| Exception Type | Handling Strategy |
 |----------|----------|
-| 子Skill输出文件缺失 | 阻塞当前阶段，提示人类补充上游输入或提供替代数据 |
-| 假设地图功能点覆盖不全 | 标注缺失功能点，建议人类确认是否补充假设 |
-| MVP占比超过60% | 升级人类判断，输出裁剪建议，确认是否调整MVP范围 |
-| 实验方案无法满足统计显著性 | 降低置信水平或增加样本量，标注"统计功效不足" |
-| 可用性测试参与者不足5人 | 结果仅供参考，标注"样本量不足"，建议补充测试 |
-| 人类决策超时未响应 | 暂停编排流程，保留当前状态，等待人类决策后继续 |
-| 上下文接近上限 | 优先保留当前阶段内容，将已完成阶段的输出摘要为关键结论写入文件 |
-| 阶段总结生成失败 | 基于已完成的子Skill输出生成部分总结，缺失项标注"数据缺失"，不阻塞编排完成 |
+| Sub-skill output file missing | Block current stage, prompt human to supplement upstream input or provide alternative data |
+| Assumption map incomplete feature coverage | Flag missing feature points, suggest human confirm whether to supplement hypotheses |
+| MVP share exceeds 60% | Escalate to human judgment, output trimming recommendations, confirm whether to adjust MVP scope |
+| Experiment plan cannot meet statistical significance | Lower confidence level or increase sample size, mark "insufficient statistical power" |
+| Usability test participants fewer than 5 | Results for reference only, mark "insufficient sample size", suggest supplementary testing |
+| Human decision timeout without response | Pause orchestration flow, preserve current state, wait for human decision to continue |
+| Context approaching limit | Prioritize preserving current stage content, summarize completed stage outputs as key conclusions written to file |
+| Stage summary generation fails | Generate partial summary based on completed sub-skill outputs, missing items marked "data missing", do not block orchestration completion |
 
-## 编排协议
+## Orchestration Protocol
 
-遵循 [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) 编排协议。
+Follows the [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) orchestration protocol.
 
 ## Pipeline
 
@@ -60,137 +60,137 @@ post_pipeline:
 
 stages:
   - id: phase-1
-    name: "假设地图"
+    name: "Assumption Map"
     depends_on: []
     skills: [validation-assumption-map]
     gate:
-      condition: "最大风险假设已识别，每个功能点至少1个假设"
-      fail_action: "每个功能点至少1个假设，最大风险假设必须有验证计划"
+      condition: "Maximum risk hypothesis identified, at least 1 hypothesis per feature point"
+      fail_action: "At least 1 hypothesis per feature point, maximum risk hypothesis must have a validation plan"
 
   - id: phase-2
-    name: "MVP范围界定"
+    name: "MVP Scope Definition"
     depends_on: [phase-1]
     skills: [validation-mvp]
     gate:
-      condition: "MVP占比<60%，Must Have功能都有假设关联"
-      fail_action: "MVP占比>60%升级人类判断，确认是否调整"
+      condition: "MVP share < 60%, Must Have features all have hypothesis associations"
+      fail_action: "MVP share > 60% escalate to human judgment, confirm whether to adjust"
 
   - id: phase-3
-    name: "实验设计"
+    name: "Experiment Design"
     depends_on: [phase-1, phase-2]
     skills: [validation-experiment]
     gate:
-      condition: "实验方案人类已审核，含验证方法、样本量、时长、终止条件"
-      fail_action: "所有实验方案必须人类审核"
+      condition: "Experiment plan human-reviewed, includes validation method, sample size, duration, termination conditions"
+      fail_action: "All experiment plans must be human-reviewed"
 
   - id: phase-4
-    name: "可用性测试"
-    depends_on: [phase-1, phase-2, phase-3]  # phase-3 为条件依赖：当 phase-3 选择可用性测试时，phase-4 消费 phase-3 的方法选择
+    name: "Usability Testing"
+    depends_on: [phase-1, phase-2, phase-3]  # phase-3 is conditional dependency: when phase-3 selects usability testing, phase-4 consumes phase-3's method selection
     skills: [validation-usability]
     gate:
-      condition: "问题严重程度分级合理（P0/P1/P2/P3），洞察与假设地图有对应关系"
-      fail_action: "测试执行必须由人类研究员主持"
+      condition: "Problem severity grading reasonable (P0/P1/P2/P3), insights correspond to assumption map"
+      fail_action: "Test execution must be led by a human researcher"
 ```
 
-## 阶段执行计划
+## Stage Execution Plan
 
-#### 调用 validation-assumption-map
+#### Call validation-assumption-map
 
 ```
 Skill: validation-assumption-map
-输入:
-  design_output: 用户提供或 harness-design 产出（可选）
+Inputs:
+  design_output: User-provided or harness-design output (optional)
   prd: docs/product/PRD.md
-输出: docs/product/PRD.md（“假设图”章节）
-验证: 最大风险假设已识别，每个功能点至少1个假设
-模式: 🤖
+Output: docs/product/PRD.md ("Assumption Map" section)
+Validation: Maximum risk hypothesis identified, at least 1 hypothesis per feature point
+Mode: 🤖
 ```
 
-#### 调用 validation-mvp
+#### Call validation-mvp
 
 ```
 Skill: validation-mvp
-输入:
-  design_output: 用户提供或 harness-design 产出（可选）
-  assumption_map: docs/product/PRD.md（“假设图”章节）
-  resource_constraints: 可选
-输出: docs/product/PRD.md（“MVP方案”章节）
-验证: MVP占比<60%，Must Have功能都有假设关联
-模式: 🤖→👤
+Inputs:
+  design_output: User-provided or harness-design output (optional)
+  assumption_map: docs/product/PRD.md ("Assumption Map" section)
+  resource_constraints: Optional
+Output: docs/product/PRD.md ("MVP Plan" section)
+Validation: MVP share < 60%, Must Have features all have hypothesis associations
+Mode: 🤖→👤
 ```
 
-#### 调用 validation-experiment
+#### Call validation-experiment
 
 ```
 Skill: validation-experiment
-输入:
-  assumption_map: docs/product/PRD.md（“假设图”章节）
-  mvp_scope: docs/product/PRD.md（“MVP方案”章节）
-  traffic_data: 可选（可用流量/用户数据）
-输出: docs/metrics/experiment-report.md（“实验设计”章节）
-验证: 实验方案人类已审核，含验证方法、样本量、时长、终止条件
-模式: 🤖→👤
+Inputs:
+  assumption_map: docs/product/PRD.md ("Assumption Map" section)
+  mvp_scope: docs/product/PRD.md ("MVP Plan" section)
+  traffic_data: Optional (available traffic/user data)
+Output: docs/metrics/experiment-report.md ("Experiment Design" section)
+Validation: Experiment plan human-reviewed, includes validation method, sample size, duration, termination conditions
+Mode: 🤖→👤
 ```
 
-#### 调用 validation-usability
+#### Call validation-usability
 
 ```
 Skill: validation-usability
-输入:
-  test_plan: docs/product/PRD.md（“假设图”章节）
-  participants: 用户提供
-  test_scenarios: 用户提供或 harness-design 产出
-  experiment_method: docs/metrics/experiment-report.md（“实验设计”章节）
-输出: docs/product/PRD.md（“可用性测试”章节）
-验证: 问题严重程度分级合理（P0/P1/P2/P3），洞察与假设地图有对应关系
-模式: 👤→🤖
+Inputs:
+  test_plan: docs/product/PRD.md ("Assumption Map" section)
+  participants: User-provided
+  test_scenarios: User-provided or harness-design output
+  experiment_method: docs/metrics/experiment-report.md ("Experiment Design" section)
+Output: docs/product/PRD.md ("Usability Testing" section)
+Validation: Problem severity grading reasonable (P0/P1/P2/P3), insights correspond to assumption map
+Mode: 👤→🤖
 ```
 
-### 阶段总结（post_pipeline）
+### Stage Summary (post_pipeline)
 
-所有子Skill执行完成后，必须生成阶段总结文档，写入 `output/phase-reports/validation-orchestrator.json`，包含以下6项结构（均不可为空）：
+After all sub-skills complete execution, a stage summary document must be generated and written to `output/phase-reports/validation-orchestrator.json`, containing the following 6 structures (none can be empty):
 
-1. **执行概览**：编排器名称与版本、执行时间、子Skill执行状态（成功/失败/降级）
-2. **关键发现**：每个子Skill的核心输出摘要（1-3条）、跨子Skill的交叉洞察
-3. **决策记录**：人类决策点及决策结果、AI自动决策及依据
-4. **产出清单**：所有输出文件路径及内容摘要、产出质量评估（是否通过验证）
-5. **风险与待办**：未通过验证的项、降级执行的项、建议后续跟进的事项
-6. **下游衔接**：本编排器产出可被哪些下游编排器消费、推荐的下一步编排器
+1. **Execution Overview**: Orchestrator name and version, execution time, sub-skill execution status (success/failure/degraded)
+2. **Key Findings**: Core output summary of each sub-skill (1-3 items), cross-sub-skill insights
+3. **Decision Record**: Human decision points and decision results, AI automatic decisions and rationale
+4. **Output Inventory**: All output file paths and content summaries, output quality assessment (whether validation passed)
+5. **Risks & TODOs**: Items that failed validation, items executed with degradation, recommended follow-up items
+6. **Downstream Handoff**: Which downstream orchestrators can consume this orchestrator's outputs, recommended next orchestrator
 
-| 参数 | 值 |
+| Parameter | Value |
 |------|-----|
-| 子Skill输出路径 | docs/product/ 与 docs/metrics/ |
-| 总结输出路径 | output/phase-reports/validation-orchestrator.json |
-| 审批记录路径 | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
+| Sub-skill output path | docs/product/ and docs/metrics/ |
+| Summary output path | output/phase-reports/validation-orchestrator.json |
+| Approval record path | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
 
-下游衔接:
-  primary: prd-orchestrator（方案验证完成，基于验证结论更新PRD）
+Downstream handoff:
+  primary: prd-orchestrator (solution validation complete, update PRD based on validation conclusions)
   alternatives:
     - target: experiment-orchestrator
-      reason: 验证结论需A/B测试进一步确认
-      condition: 验证结果不确定（置信度<80%），需量化实验验证时
+      reason: Validation conclusion needs A/B testing for further confirmation
+      condition: When validation result is uncertain (confidence < 80%), needs quantitative experiment validation
     - target: ideation-workshop
-      reason: 验证否定当前方案，需重新创意发散
-      condition: MVP验证结论为否定，核心假设不成立时
+      reason: Validation negates current solution, needs re-ideation divergence
+      condition: When MVP validation conclusion is negative, core hypothesis not established
   special_cases:
     - target: validation-usability
-      reason: 仅需可用性测试，无需完整验证流程
-      condition: 方案已通过假设验证，仅需用户体验测试时
+      reason: Only usability testing needed, no full validation flow required
+      condition: When solution has passed hypothesis validation, only user experience testing needed
 
-## 阶段卡口
+## Stage Gates
 
-| 卡口 | 条件 | 未通过处理 |
+| Gate | Condition | Non-pass Handling |
 |------|------|------------|
-| 假设地图完成 | validation-assumption-map输出文件已生成且非空 | 每个功能点至少1个假设，最大风险假设必须有验证计划 |
-| MVP范围完成 | validation-mvp输出文件已生成且非空 | MVP占比>60%升级人类判断，确认是否调整 |
-| 实验设计完成 | 实验方案人类已审核 | 所有实验方案必须人类审核 |
-| 可用性测试完成 | validation-usability输出文件已生成且非空 | 测试执行必须由人类研究员主持 |
-| 阶段总结已生成 | output/phase-reports/validation-orchestrator.json 已生成且6项结构均非空 | 补充缺失结构项后重新生成 |
+| Assumption map complete | validation-assumption-map output file generated and non-empty | At least 1 hypothesis per feature point, maximum risk hypothesis must have a validation plan |
+| MVP scope complete | validation-mvp output file generated and non-empty | MVP share > 60% escalate to human judgment, confirm whether to adjust |
+| Experiment design complete | Experiment plan human-reviewed | All experiment plans must be human-reviewed |
+| Usability testing complete | validation-usability output file generated and non-empty | Test execution must be led by a human researcher |
+| Stage summary generated | output/phase-reports/validation-orchestrator.json generated and all 6 structures non-empty | Regenerate after supplementing missing structure items |
 
-## 人类决策点
+## Human Decision Points
 
-| 决策点 | 触发条件 | 决策内容 |
+| Decision Point | Trigger Condition | Decision Content |
 |--------|----------|----------|
-| MVP范围确认 | MVP范围界定完成，MVP占比>60%或Must Have有争议 | 人类审批并决定最终MVP范围 |
-| 实验方案审核 | 实验方案设计完成 | 人类审核并批准实验方案 |
-| 验证结论决策 | 可用性测试完成，验证数据已整理 | 人类做最终产品方案决策 |
+| MVP scope confirmation | MVP scope definition complete, MVP share > 60% or Must Have disputed | Human approval and decide final MVP scope |
+| Experiment plan review | Experiment plan design complete | Human review and approve experiment plan |
+| Validation conclusion decision | Usability testing complete, validation data organized | Human makes final product solution decision |

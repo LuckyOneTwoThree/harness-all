@@ -1,10 +1,10 @@
 ---
 name: onpage-optimization
-description: 站内优化建议，含IA/URL/内链/内容优化/Schema标记
+description: On-page optimization recommendations, including IA / URL / internal links / content optimization / Schema markup
 triggers:
-  - SERP分析后，需要优化页面时
-  - SEO优化Loop的EXPERIMENT阶段
-  - 用户要求"优化这个页面的SEO"
+  - After SERP analysis, when pages need optimization
+  - EXPERIMENT phase of the SEO optimization Loop
+  - User asks to "optimize this page's SEO"
 reads:
   - docs/seo/keyword-research.md
   - docs/seo/serp-analysis.md
@@ -16,111 +16,111 @@ quality_gates: []
 max_iterations: 3
 ---
 
-# Onpage Optimization — 站内优化
+# Onpage Optimization — On-Page Optimization
 
-## 铁律
-- 优化必须基于 SERP 分析的数据，不是"我觉得应该这样"
-- 不做黑帽 SEO（关键词堆砌/隐藏文本/门页/链接农场）
-- 优化建议必须具体可执行（指出改什么 + 改成什么）
+## Iron Rules
+- Optimization must be based on SERP analysis data, not "I think it should be this way"
+- No black-hat SEO (keyword stuffing / hidden text / doorway pages / link farms)
+- Optimization recommendations must be specific and actionable (point out what to change + change to what)
 
-## 流程
+## Process
 
-1. **读取分析数据**
-   - 读取 `docs/seo/keyword-research.md` 的目标关键词
-   - 读取 `docs/seo/serp-analysis.md` 的内容差距和优化建议
+1. **Read analysis data**
+   - Read target keywords from `docs/seo/keyword-research.md`
+   - Read content gaps and optimization recommendations from `docs/seo/serp-analysis.md`
 
-2. **信息架构（IA）优化**
-   - 网站结构是否扁平（重要页面 ≤ 3 次点击到达）？
-   - URL 结构是否含关键词、用连字符、短？
-   - 面包屑导航是否完整？
-   - 分类/标签是否合理？
+2. **Information Architecture (IA) optimization**
+   - Is the site structure flat (important pages reachable in ≤ 3 clicks)?
+   - Does the URL structure include keywords, use hyphens, and stay short?
+   - Is breadcrumb navigation complete?
+   - Are categories / tags reasonable?
 
-3. **页面级优化**
-   对每个目标页面：
+3. **Page-level optimization**
+   For each target page:
 
-   ### 标题优化
-   - 含目标关键词（尽量靠前）
-   - < 60 字符（避免截断）
-   - 吸引点击（含数字/问题/情感词）
+   ### Title optimization
+   - Include the target keyword (preferably near the front)
+   - < 60 chars (avoid truncation)
+   - Click-worthy (include numbers / questions / emotional words)
 
    ### Meta Description
-   - 含关键词 + 相关词
-   - < 160 字符
-   - 含 CTA（了解更多/立即试用/免费下载）
+   - Include keyword + related words
+   - < 160 chars
+   - Include a CTA (learn more / try now / free download)
 
-   ### Heading 结构
-   - H1 唯一，含目标关键词
-   - H2/H3 层次清晰，含相关关键词（LSI）
-   - 不跳层级（H1 → H3 是错误的）
+   ### Heading structure
+   - H1 unique, includes target keyword
+   - H2/H3 clear hierarchy, includes related keywords (LSI)
+   - Don't skip levels (H1 → H3 is wrong)
 
-   ### 内容优化
-   - 关键词密度 1-2%（自然出现，不堆砌）
-   - 相关关键词/LSI 词覆盖
-   - 搜索意图全覆盖（信息型要全/交易型要对比）
-   - 内容长度 ≥ SERP Top10 平均（参考 serp-analysis）
-   - 多媒体（图片/视频/图表）提升体验
+   ### Content optimization
+   - Keyword density 1-2% (natural occurrence, no stuffing)
+   - Cover related keywords / LSI words
+   - Fully cover search intent (informational = comprehensive / transactional = comparison)
+   - Content length ≥ SERP Top 10 average (refer to serp-analysis)
+   - Multimedia (images / videos / charts) to improve experience
 
-   ### 内链优化
-   - 每页 3-5 个相关内链
-   - 锚文本含关键词（自然，不堆砌）
-   - 重要页面获得更多内链
+   ### Internal link optimization
+   - 3-5 relevant internal links per page
+   - Anchor text includes keywords (natural, not stuffed)
+   - Important pages get more internal links
 
-   ### 图片优化
-   - 文件名含关键词（如 how-to-do-x.png）
-   - Alt 文本描述性 + 关键词
-   - 压缩图片大小（WebP 格式）
+   ### Image optimization
+   - Filename includes keyword (e.g., how-to-do-x.png)
+   - Alt text descriptive + keyword
+   - Compress image size (WebP format)
    - Lazy loading
 
-4. **Schema 标记**
-   按内容类型添加 Schema：
-   | 内容类型 | Schema 类型 |
-   |---------|-----------|
-   | 博客文章 | Article |
-   | 教程 | HowTo |
-   | 问答 | FAQPage |
-   | 产品 | Product |
-   | 评测 | Review |
-   | 面包屑 | BreadcrumbList |
+4. **Schema markup**
+   Add Schema by content type:
+   | Content type | Schema type |
+   |--------------|-------------|
+   | Blog article | Article |
+   | Tutorial | HowTo |
+   | FAQ | FAQPage |
+   | Product | Product |
+   | Review | Review |
+   | Breadcrumb | BreadcrumbList |
 
-5. **技术优化检查**
-   - Canonical 标签（避免重复内容）
+5. **Technical optimization check**
+   - Canonical tag (avoid duplicate content)
    - Robots.txt / Meta Robots
    - Open Graph / Twitter Card
-   - 移动端适配
-   - 页面加载速度（Core Web Vitals）
+   - Mobile responsiveness
+   - Page load speed (Core Web Vitals)
 
-6. **产出优化方案**
-   写入 `docs/seo/onpage-optimization.md`：
+6. **Produce optimization plan**
+   Write to `docs/seo/onpage-optimization.md`:
    ```markdown
-   # 站内优化方案: [页面/关键词]
+   # On-Page Optimization Plan: [page / keyword]
 
-   ## 当前状态
-   [页面 URL、当前排名、当前问题]
+   ## Current state
+   [Page URL, current ranking, current issues]
 
-   ## 优化建议
-   | 优化项 | 当前 | 建议 | 优先级 |
-   |--------|------|------|--------|
-   | 标题 | [当前标题] | [建议标题] | 高 |
-   | Meta | [当前] | [建议] | 高 |
-   | 字数 | 1200 | 2500 | 高 |
-   | Schema | 无 | Article+FAQ | 中 |
+   ## Optimization recommendations
+   | Item | Current | Recommendation | Priority |
+   |------|---------|-----------------|----------|
+   | Title | [current title] | [recommended title] | High |
+   | Meta | [current] | [recommended] | High |
+   | Word count | 1200 | 2500 | High |
+   | Schema | None | Article+FAQ | Medium |
 
-   ## 具体修改
-   [逐项修改的详细说明]
+   ## Specific changes
+   [Detailed description of each change]
    ```
 
-7. **更新 state.yaml**
+7. **Update state.yaml**
    stage=experiment, substage=onpage-optimization
 
-## 禁止事项
-- 不堆砌关键词（密度 > 3% 算堆砌）
-- 不做隐藏文本（同色文字/小字号）
-- 不做门页（为不同关键词创建相同内容的页面）
-- 不买外链（违反搜索引擎规则）
+## Prohibitions
+- Don't stuff keywords (density > 3% counts as stuffing)
+- Don't use hidden text (same-color text / tiny font)
+- Don't build doorway pages (creating identical-content pages for different keywords)
+- Don't buy backlinks (violates search engine rules)
 
-## 与 LOOP 的关系
-本 skill 在 LOOP(seo) 的 **EXPERIMENT 阶段**执行。
+## Relationship to LOOP
+This skill runs in the **EXPERIMENT phase** of LOOP(seo).
 PLAN(research → serp) → EXPERIMENT(onpage → technical) → MEASURE(ranking)
 
-## 与 Workflow 的关系
-本 skill 是 **seo-optimization-workflow** 的第 3 步。
+## Relationship to Workflow
+This skill is step 3 of **seo-optimization-workflow**.

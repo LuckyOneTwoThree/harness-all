@@ -1,64 +1,64 @@
-# 交接：<源框架> → <目标框架>
+# Handoff: <source framework> → <target framework>
 
-> 生成时间：YYYY-MM-DD HH:MM
-> 源框架：<harness-pm / harness-solo / harness-design / ...>
-> 目标框架：<harness-solo / harness-growth / harness-design / ...>
+> Generated at: YYYY-MM-DD HH:MM
+> Source framework: <harness-pm / harness-solo / harness-design / ...>
+> Target framework: <harness-solo / harness-growth / harness-design / ...>
 
-## 阶段总结
+## Phase Summary
 
-<本阶段做了什么，一句话概括>
+<One-sentence summary of what was done in this phase>
 
-## 产出物清单
+## Deliverables List
 
-| 产出物 | 路径 | 类型 | 说明 |
+| Deliverable | Path | Type | Notes |
 |--------|------|------|------|
-| PRD | docs/product/PRD.md | Markdown | 产品需求文档，含功能列表和验收标准 |
-| 埋点方案 | docs/metrics/tracking-plan.md | Markdown | 事件埋点定义 |
+| PRD | docs/product/PRD.md | Markdown | Product requirements document, including feature list and acceptance criteria |
+| Tracking plan | docs/metrics/tracking-plan.md | Markdown | Event tracking definitions |
 
-> 注：harness-pm 产出的是本交接文档（含 PRD 路径指引），不是直接写工程的 PROJECT.md。
-> 工程的 PROJECT.md 由 harness-solo 的 brainstorming skill 维护（从交接文档提取需求后写入）。
-> 视觉/交互/组件等设计产出归 harness-design，通过 pm-to-design.md 交接，不在本模板范围内。
+> Note: harness-pm produces this handoff document (with PRD path references), not the engineering PROJECT.md directly.
+> The engineering PROJECT.md is maintained by harness-solo's brainstorming skill (written after extracting requirements from the handoff document).
+> Visual / interaction / component design outputs belong to harness-design, handed off via pm-to-design.md, and are out of scope for this template.
 
-## 关键决策
+## Key Decisions
 
-| 决策 | 理由 | 影响范围 |
+| Decision | Rationale | Impact scope |
 |------|------|---------|
-| 选用方案 X | 用户调研支撑 + 技术可行 | 全项目 |
-| 不做功能 Y | 不在 MVP 范围 | 范围边界 |
+| Choose solution X | Supported by user research + technically feasible | Whole project |
+| Skip feature Y | Not in MVP scope | Scope boundary |
 
-## 验收标准（AC）
+## Acceptance Criteria (AC)
 
-下游框架实现时必须满足的可测试条件：
+Testable conditions that downstream frameworks must satisfy when implementing:
 
-- [ ] AC-001: <可测试的描述>
-- [ ] AC-002: <可测试的描述>
-- [ ] AC-003: <可测试的描述>
+- [ ] AC-001: <testable description>
+- [ ] AC-002: <testable description>
+- [ ] AC-003: <testable description>
 
-## 未决事项
+## Open Items
 
-需下游框架处理或与上游确认的问题：
+Issues for downstream frameworks to handle or confirm with upstream:
 
-- 待定 1: <问题描述>
-- 待定 2: <问题描述>
+- TBD 1: <issue description>
+- TBD 2: <issue description>
 
-## 建议下一步
+## Suggested Next Steps
 
-下游框架应优先处理：
+Downstream frameworks should prioritize:
 
-1. <任务 1>
-2. <任务 2>
-3. <任务 3>
+1. <task 1>
+2. <task 2>
+3. <task 3>
 
-## 风险提示
+## Risk Notes
 
-| 风险 | 等级 | 缓解措施 |
+| Risk | Level | Mitigation |
 |------|------|---------|
-| 技术风险 X | 高/中/低 | <措施> |
-| 依赖风险 Y | 高/中/低 | <措施> |
+| Technical risk X | High/Medium/Low | <action> |
+| Dependency risk Y | High/Medium/Low | <action> |
 
 ---
 
-## 下游框架使用说明
+## Downstream Framework Usage Notes
 
-下游框架的 session-start skill 会自动检测本文件并读取。
-如未自动识别，可手动指向本文件路径让 Agent 读取。
+The downstream framework's session-start skill will auto-detect this file and read it.
+If not auto-detected, you can manually point the Agent to this file path to read it.

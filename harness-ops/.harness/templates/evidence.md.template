@@ -1,19 +1,19 @@
-# 验证证据（Verification Evidence）
+# Verification evidence (Verification Evidence)
 
-> 存储在 `.harness/loops/specs/<task-name>/evidence.md`。用于记录单次变更或部署成功的客观证据。没有证据，不得将状态置为 DONE。
+> Stored in `.harness/loops/specs/<task-name>/evidence.md`. Used to record objective evidence that a single change or deployment succeeded. Without evidence, the state must not be set to DONE.
 
-## 1. 自动化验证结果
+## 1. Automated verification results
 
-- **CI/CD 日志截图或链接**：`[请贴入发布流水线全部绿灯通过的日志链接]`
-- **冒烟测试结果**：`[如果跑了 curl 或者健康检查脚本，贴出 200 OK 响应]`
+- **CI/CD log screenshot or link**: `[paste the link showing all pipeline stages green]`
+- **Smoke test results**: `[if you ran curl or a health check script, paste the 200 OK response]`
 
-## 2. 可观测性大盘指标（Monitoring Metrics）
+## 2. Observability dashboard metrics (Monitoring Metrics)
 
-- **上线前核心指标基线**：`[例如：发版前 CPU 水位 30%，5xx 错误率 0%]`
-- **上线后 10 分钟观察期指标**：`[例如：发版后 CPU 水位 32%，5xx 错误率保持为 0%]`
-- **结论**：各项指标平稳，未触发任何警报阈值。
+- **Pre-release core metric baseline**: `[e.g., before release CPU was at 30%, 5xx error rate 0%]`
+- **Post-release 10-minute observation window metrics**: `[e.g., after release CPU is at 32%, 5xx error rate remains 0%]`
+- **Conclusion**: all metrics are stable, no alert thresholds triggered.
 
-## 3. 现场检查（Spot Checks）
+## 3. Spot checks
 
-- `[如果需要人工点击页面确保 JS 没挂掉，记录一下"已访问主站，页面正常加载"]`
-- `[如果变更了 DB 结构，记录"已通过 DB console 查询，新字段 default 值正确填充"]`
+- `[If a manual page visit is needed to confirm JS is not broken, record "visited the main site, page loaded normally"]`
+- `[If the DB schema was changed, record "verified via DB console that the new field's default value is populated correctly"]`

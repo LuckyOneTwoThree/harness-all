@@ -1,32 +1,32 @@
-# 交接单：[交接标题]
+# Handoff: [handoff title]
 
-> **来自**：harness-ops (运维)
-> **发往**：[目标框架]
-> **目的**：[一句话说明交接目的]
-> **日期**：YYYY-MM-DD
+> **From**: harness-ops (Operations)
+> **To**: [target framework]
+> **Purpose**: [one-sentence description of the handoff purpose]
+> **Date**: YYYY-MM-DD
 
-## 1. 交接摘要
+## 1. Handoff Summary
 
-[本次交接的核心内容，一段话描述]
+[Core content of this handoff, described in one paragraph]
 
-## 2. 交付物清单
+## 2. Deliverables List
 
-| 交付物 | 路径/位置 | 状态 | 备注 |
+| Deliverable | Path/Location | Status | Notes |
 |--------|----------|------|------|
-| [交付物1] | [路径] | [就绪/部分就绪] | [备注] |
+| [deliverable 1] | [path] | [Ready/Partially ready] | [notes] |
 
-## 3. 验证状态
+## 3. Verification Status
 
-- [ ] [验证项1]
-- [ ] [验证项2]
+- [ ] [verification item 1]
+- [ ] [verification item 2]
 
-## 4. 待办与风险
+## 4. To-dos and Risks
 
-- [待办或风险1]
-- [待办或风险2]
+- [to-do or risk 1]
+- [to-do or risk 2]
 
-## 5. 联系与确认
+## 5. Contact and Confirmation
 
-- 产出人：harness-ops Agent
-- 消费方：[目标框架] Agent
-- 确认方式：消费方在 progress.md 记录"已消费 [文件名]"
+- Producer: harness-ops Agent
+- Consumer: [target framework] Agent
+- Confirmation method: consumer records "Consumed [filename]" in progress.md

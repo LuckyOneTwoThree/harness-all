@@ -2,8 +2,8 @@
 name: component-design
 description: Designs atomic components (Button/Input/Card/Modal) with state machines, variants, and composition rules. Use when DESIGN.md exists and component design is needed. Use for component design tasks in LOOP.
 triggers:
-  - 组件设计任务（Button/Input/Card/Modal 等）
-  - LOOP 内 component 阶段
+  - Component design tasks (Button/Input/Card/Modal, etc.)
+  - In-LOOP component stage
   - design-system-setup workflow
 reads:
   - docs/design-system/DESIGN.md
@@ -18,147 +18,147 @@ writes:
 
 ## Overview
 
-原子组件设计，产出状态机 + 变体表 + 组合规则。聚焦"原子组件"本身，不涉及页面级布局（那是 visual-design 的职责）。
+Atomic component design, producing state machines + variant tables + composition rules. Focus on the "atomic component" itself; page-level layout is the responsibility of visual-design.
 
 ## When to Use
 
-- ✅ 设计核心组件（Button/Input/Card/Modal/Toast/Dialog 等）
-- ✅ LOOP 内 component 阶段
-- ✅ DESIGN.md 和 tokens.json 已存在
-- ❌ NOT for 页面级视觉设计（用 visual-design skill）
-- ❌ NOT for 低保真线框图（用 wireframe skill）
+- ✅ Designing core components (Button/Input/Card/Modal/Toast/Dialog, etc.)
+- ✅ In-LOOP component stage
+- ✅ DESIGN.md and tokens.json already exist
+- ❌ NOT for page-level visual design (use the visual-design skill)
+- ❌ NOT for low-fidelity wireframes (use the wireframe skill)
 
 ## Process
 
-### 1. 读取上下文
+### 1. Read Context
 
-- `docs/design-system/DESIGN.md`：设计系统（10 段，特别是第 4 段 Component Stylings 和第 10 段 Semantic Vocabulary）
-- `docs/design-system/tokens.json`：可用 token（color/spacing/radius/shadow/typography）
-- `docs/visual/DESIGN_BRIEF.md`：需求上下文（若有）
+- `docs/design-system/DESIGN.md`: Design System (10 sections, especially Section 4 Component Stylings and Section 10 Semantic Vocabulary)
+- `docs/design-system/tokens.json`: Available tokens (color/spacing/radius/shadow/typography)
+- `docs/visual/DESIGN_BRIEF.md`: Requirement context (if present)
 
-### 2. 识别组件需求
+### 2. Identify Component Requirements
 
-从 DESIGN.md 第 10 段 Semantic Vocabulary 提取需要的组件清单：
-- 基础组件：Button / Input / Select / Checkbox / Radio / Switch
-- 容器组件：Card / Modal / Dialog / Drawer / Popover
-- 反馈组件：Toast / Alert / Progress / Skeleton
-- 导航组件：Tabs / Breadcrumb / Pagination
+Extract the required component list from Section 10 Semantic Vocabulary of DESIGN.md:
+- Basic components: Button / Input / Select / Checkbox / Radio / Switch
+- Container components: Card / Modal / Dialog / Drawer / Popover
+- Feedback components: Toast / Alert / Progress / Skeleton
+- Navigation components: Tabs / Breadcrumb / Pagination
 
-### 3. 设计单个组件
+### 3. Design Each Component
 
-对每个组件，按以下结构产出：
+For each component, produce the following structure:
 
 ```markdown
 ## Component: <Name>
 
-### 描述
-<1-2 句组件用途>
+### Description
+<1-2 sentences on component purpose>
 
 ### Props
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| variant | 'primary' \| 'secondary' \| 'ghost' | 'primary' | 视觉变体 |
-| size | 'sm' \| 'md' \| 'lg' | 'md' | 尺寸 |
-| disabled | boolean | false | 是否禁用 |
-| loading | boolean | false | 是否加载中 |
+| variant | 'primary' \| 'secondary' \| 'ghost' | 'primary' | Visual variant |
+| size | 'sm' \| 'md' \| 'lg' | 'md' | Size |
+| disabled | boolean | false | Whether disabled |
+| loading | boolean | false | Whether loading |
 
-### States（状态机）
-| State | 触发条件 | 视觉变化 | 动效 |
-|-------|---------|---------|------|
-| default | 初始 | token: button.primary | - |
-| hover | 鼠标进入 | token: button.primary.hover | 80-150ms ease-out |
-| active | 鼠标按下 | token: button.primary.active | 80ms ease-out |
-| focus | 键盘聚焦 | outline: 2px token: focus.ring | 立即 |
+### States (State Machine)
+| State | Trigger | Visual Change | Motion |
+|-------|---------|---------------|--------|
+| default | Initial | token: button.primary | - |
+| hover | Mouse enter | token: button.primary.hover | 80-150ms ease-out |
+| active | Mouse down | token: button.primary.active | 80ms ease-out |
+| focus | Keyboard focus | outline: 2px token: focus.ring | Immediate |
 | disabled | disabled=true | opacity: 0.5, cursor: not-allowed | - |
-| loading | loading=true | 显示 Spinner, 文字隐藏 | 200ms ease-in-out |
+| loading | loading=true | Show Spinner, hide text | 200ms ease-in-out |
 
-### Variants（变体表）
+### Variants (Variant Table)
 | Variant | Color Token | Use Case |
 |---------|------------|----------|
-| primary | color.primary | 主操作（每屏最多 1 个） |
-| secondary | color.secondary | 次要操作 |
-| ghost | transparent | 第三级操作 / 工具栏 |
+| primary | color.primary | Primary action (max 1 per screen) |
+| secondary | color.secondary | Secondary action |
+| ghost | transparent | Tertiary action / toolbar |
 
-### Sizes（尺寸表）
+### Sizes (Size Table)
 | Size | Padding | Font Size | Min Height |
 |------|---------|-----------|------------|
 | sm | spacing.xs spacing.sm | text.sm | 32px |
 | md | spacing.sm spacing.md | text.base | 40px |
 | lg | spacing.md spacing.lg | text.lg | 48px |
 
-### Composition Rules（组合规则）
-- 与 Icon 组合：Icon 在左，间距 spacing.sm
-- 与 Badge 组合：Badge 在右上角
-- 与 Loading 组合：文字隐藏，Spinner 居中
-- 禁止组合：Button 内嵌 Button
+### Composition Rules
+- With Icon: Icon on the left, spacing.sm gap
+- With Badge: Badge in the top-right corner
+- With Loading: Hide text, center Spinner
+- Forbidden composition: Button nested inside Button
 
 ### Accessibility
 - role: button
-- keyboard: Enter/Space 触发
+- keyboard: Enter/Space triggers
 - focus visible: outline 2px
-- aria-disabled: 当 disabled
+- aria-disabled: when disabled
 ```
 
-### 4. Token 一致性检查
+### 4. Token Consistency Check
 
-- 所有颜色必须来自 token（禁止硬编码 hex）
-- 所有间距必须来自 spacing scale
-- 所有圆角必须来自 radius scale
-- 所有字号必须来自 type scale
-- 所有阴影必须来自 elevation scale
+- All colors must come from tokens (no hardcoded hex)
+- All spacing must come from the spacing scale
+- All border radii must come from the radius scale
+- All font sizes must come from the type scale
+- All shadows must come from the elevation scale
 
-### 5. 反 AI-slop 检查
+### 5. Anti AI-slop Check
 
-逐条对照 `.harness/craft/anti-ai-slop.md`：
-- [ ] 未使用统一圆角（rounded-2xl 全场）
-- [ ] 未使用重阴影
-- [ ] 未使用 Inter/Roboto/Arial 作为主字体
-- [ ] 未使用 #6366f1 紫色
+Check item by item against `.harness/craft/anti-ai-slop.md`:
+- [ ] No uniform border radius (rounded-2xl everywhere)
+- [ ] No heavy shadows
+- [ ] No Inter/Roboto/Arial as primary font
+- [ ] No #6366f1 purple
 
-### 6. 触控目标检查
+### 6. Touch Target Check
 
-- 所有可点击元素 ≥44×44pt（iOS）/ 48×48dp（Android）
-- 间距足够防止误触
+- All clickable elements ≥44×44pt (iOS) / 48×48dp (Android)
+- Sufficient spacing to prevent mis-taps
 
-### 7. 输出
+### 7. Output
 
-写入 `docs/design-system/components/<ComponentName>.md`，每个组件一个文件。
+Write to `docs/design-system/components/<ComponentName>.md`, one file per component.
 
 ## Common Rationalizations
 
-| 借口 | 现实 |
-|------|------|
-| "组件状态后面再加" | 状态是组件的核心，不是装饰；缺状态的组件无法交付 |
-| "变体太多用户会困惑" | 变体是设计系统的价值；用语义命名（primary/secondary/ghost）不会困惑 |
-| "硬编码颜色更快" | 硬编码摧毁设计系统的一致性，lint 会拦截 |
-| "组件可以自由组合" | 没有组合规则的组件会被滥用（如 Button 内嵌 Button） |
-| "触控目标小一点没关系" | 44pt 是 WCAG 强制要求，小于此值无法通过 accessibility-audit |
+| Excuse | Reality |
+|--------|---------|
+| "We'll add component states later" | States are the core of a component, not decoration; a component without states cannot be handed off |
+| "Too many variants will confuse users" | Variants are the value of a design system; semantic naming (primary/secondary/ghost) avoids confusion |
+| "Hardcoding colors is faster" | Hardcoding destroys design system consistency; lint will catch it |
+| "Components can be freely composed" | Components without composition rules get misused (e.g., Button nested inside Button) |
+| "Slightly smaller touch targets are fine" | 44pt is a WCAG requirement; anything smaller fails accessibility-audit |
 
 ## Red Flags
 
-- 硬编码 hex 颜色（非 token）
-- 缺少状态定义（少于 4 个状态）
-- 缺少变体定义
-- 缺少组合规则
-- 触控目标 <44pt
-- 使用统一圆角
+- Hardcoded hex colors (not from tokens)
+- Missing state definitions (fewer than 4 states)
+- Missing variant definitions
+- Missing composition rules
+- Touch target <44pt
+- Using uniform border radius
 
 ## Verification
 
-- [ ] 每个组件有 Props 表（证据：文件含 ### Props 章节）
-- [ ] 每个组件有 States 表（≥4 个状态）（证据：文件含 ### States 章节）
-- [ ] 每个组件有 Variants 表（证据：文件含 ### Variants 章节）
-- [ ] 每个组件有 Sizes 表（证据：文件含 ### Sizes 章节）
-- [ ] 每个组件有 Composition Rules（证据：文件含 ### Composition Rules 章节）
-- [ ] 每个组件有 Accessibility 章节（证据：文件含 ### Accessibility 章节）
-- [ ] 所有颜色来自 token（证据：Grep 组件文件无硬编码 hex）
-- [ ] 触控目标 ≥44pt（证据：Sizes 表 Min Height ≥32px sm / ≥40px md）
-- [ ] 反 AI-slop 检查全通过（证据：逐条对照清单 ✓）
+- [ ] Each component has a Props table (evidence: file contains ### Props section)
+- [ ] Each component has a States table (≥4 states) (evidence: file contains ### States section)
+- [ ] Each component has a Variants table (evidence: file contains ### Variants section)
+- [ ] Each component has a Sizes table (evidence: file contains ### Sizes section)
+- [ ] Each component has Composition Rules (evidence: file contains ### Composition Rules section)
+- [ ] Each component has an Accessibility section (evidence: file contains ### Accessibility section)
+- [ ] All colors come from tokens (evidence: Grep of component files finds no hardcoded hex)
+- [ ] Touch target ≥44pt (evidence: Sizes table Min Height ≥32px sm / ≥40px md)
+- [ ] Anti AI-slop check fully passed (evidence: item-by-item checklist ✓)
 
-## 与 LOOP 的关系
+## Relationship with LOOP
 
-- 所属阶段：DESIGN
-- 循环类型：component
-- 最大迭代：5
-- 每次迭代后由 verify 检查，verify 通过后由 design-lint 检查
-- LOOP 退出后由 design-review 做 Five-Axis 审查
+- Stage: DESIGN
+- Loop type: component
+- Max iterations: 5
+- After each iteration, verify runs; after verify passes, design-lint runs
+- After LOOP exits, design-review performs the Five-Axis review

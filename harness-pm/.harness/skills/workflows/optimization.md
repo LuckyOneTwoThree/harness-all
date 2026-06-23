@@ -4,109 +4,119 @@ name: optimization
 default_mode: standard
 ---
 
-# 工作流 D：数据驱动优化
+# Workflow D: Data-Driven Optimization
 
-> 适用场景：已有产品需要基于数据优化体验/性能/转化
-> 核心模式：数据诊断 → 迭代决策 → LOOP 方案验证
+> Applicable scenario: Existing product needs data-driven optimization of experience/performance/conversion
+> Core mode: Data diagnosis → iteration decision → LOOP solution validation
 
-## 与 iteration 的边界（触发条件决策树）
+## Boundary with iteration (trigger condition decision tree)
 
 ```
-有明确变更需求（用户反馈/业务需求/功能缺失）？
-├── 是 → iteration（变更驱动）
-└── 否 → 有数据但无明确方案？
-    ├── 是 → optimization（数据驱动）← 本工作流
-    │   特征：有数据发现问题，但不知怎么改，需要数据诊断+方案探索
-    └── 否 → 需要战略级调整？
-        └── 是 → pivot（战略调整）
+Have clear change requirements (user feedback/business needs/missing features)?
+├── Yes → iteration (change-driven)
+└── No → Have data but no clear solution?
+    ├── Yes → optimization (data-driven) ← this workflow
+    │   Characteristics: Have data identifying problems, but don't know how to change, need data diagnosis + solution exploration
+    └── No → Need strategic-level adjustment?
+        └── Yes → pivot (strategic adjustment)
 ```
 
-| 维度 | iteration | optimization |
+| Dimension | iteration | optimization |
 |------|-----------|--------------|
-| 触发 | 明确变更需求 | 数据发现问题 |
-| 起点 | 变更影响分析 | 数据诊断 |
-| 设计 | 变更模块 PRD 更新 | 优化方案 PRD + 验证 |
-| LOOP | 数据诊断→方案设计 | 方案设计→验证 |
+| Trigger | Clear change requirement | Data-identified problem |
+| Starting point | Change impact analysis | Data diagnosis |
+| Design | Change module PRD update | Optimization solution PRD + validation |
+| LOOP | Data diagnosis→solution design | Solution design→validation |
 
-## 流程
+## Process
 
 ```
 ┌─────────────────┐
-│ session-start   │  加载上下文，确认优化目标
+│ session-start   │  Load context, confirm optimization goals
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ 模块5：数据诊断                          │
+│ Module 5: Data Diagnosis                │
 │                                         │
 │  - analysis-orchestrator                │
-│    （数据分析：异常检测+漏斗+留存+报告）  │
-│  - decision-orchestrator                 │
-│    （决策闭环：DACE 决策循环）            │
+│    (Data analysis: anomaly detection+   │
+│     funnel+retention+report)            │
+│  - decision-orchestrator                │
+│    (Decision loop: DACE decision cycle) │
 │                                         │
-│  ★ 硬门检查：                            │
-│  - 数据是否充分？（样本量/时间范围）      │
-│  - 问题是否定位？（根因分析）             │
-│  - 优化方向是否明确？（数据支撑）         │
+│  ★ Hard gate check:                     │
+│  - Is data sufficient? (Sample size/    │
+│    time range)                          │
+│  - Is problem located? (Root cause      │
+│    analysis)                            │
+│  - Is optimization direction clear?     │
+│    (Data-supported)                     │
 └────────┬────────────────────────────────┘
-         │ 通过
+         │ Pass
          ▼
 ┌─────────────────────────────────────────┐
-│ 模块7：迭代决策                          │
+│ Module 7: Iteration Decision            │
 │                                         │
 │  - iteration-orchestrator               │
-│    （Backlog 优化+迭代复盘）             │
-│  - 确定优化方案优先级                    │
+│    (Backlog optimization + iteration    │
+│     retrospective)                      │
+│  - Determine optimization solution      │
+│    priority                             │
 └────────┬────────────────────────────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│              LOOP 循环验证               │
+│              LOOP Validation            │
 │  ┌─────────────────────────────────┐    │
-│  │ 模块3：方案设计 (RESEARCH)       │    │
+│  │ Module 3: Solution Design       │    │
+│  │   (RESEARCH)                    │    │
 │  │  - prd-orchestrator             │    │
-│  │    （优化方案的 PRD 更新）        │    │
+│  │    (PRD update for optimization │    │
+│  │     solution)                   │    │
 │  │  - validation-orchestrator      │    │
-│  │    （验证：假设图+实验+可用性）   │    │
+│  │    (Validation: hypothesis map+ │    │
+│  │     experiment+usability)       │    │
 │  └──────────┬──────────────────────┘    │
 │             ▼                            │
 │  ┌─────────────────────────────────┐    │
 │  │ VALIDATE                        │    │
-│  │  - 优化方案有数据支撑            │    │
-│  │  - PRD 质量门禁                  │    │
-│  │  - 人类审批                      │    │
+│  │  - Optimization solution data-  │    │
+│  │    supported                    │    │
+│  │  - PRD quality gate             │    │
+│  │  - Human approval               │    │
 │  └──────────┬──────────────────────┘    │
 │             │                            │
-│             ├── 通过 → 跳出 LOOP ────────┼──→
+│             ├── Pass → exit LOOP ────────┼──→
 │             │                            │
-│             └── 失败 → 回到 RESEARCH ────┘
+│             └── Fail → back to RESEARCH ─┘
 │                                          │
-│  迭代上限：3 次（iteration 类型）        │
+│  Iteration limit: 3 times (iteration type)│
 └─────────────────────────────────────────┘
          │
          ▼
 ┌─────────────────┐
-│ session-end     │  归档 + 更新 FEATURES.md
-│                 │  + 产出 docs/handoff/pm-to-solo.md（优化方案交接工程）
-│                 │  + 记录数据洞察到 memory/knowledge-base.md
+│ session-end     │  Archive + update FEATURES.md
+│                 │  + Output docs/handoff/pm-to-solo.md (optimization solution handoff to engineering)
+│                 │  + Record data insights to memory/knowledge-base.md
 └─────────────────┘
 ```
 
-## 关键检查点
+## Key Checkpoints
 
-- [ ] 数据诊断有结论了吗？（根因分析，不是表面现象）
-- [ ] 优化方案有数据支撑吗？（基于分析，不是拍脑袋）
-- [ ] 优化方案通过验证了吗？（假设图/实验/可用性）
-- [ ] 人类审批了吗？
+- [ ] Data diagnosis has conclusions? (Root cause analysis, not surface symptoms)
+- [ ] Optimization solution data-supported? (Based on analysis, not gut feeling)
+- [ ] Optimization solution validated? (Hypothesis map/experiment/usability)
+- [ ] Human approved?
 
-## 失败处理
+## Failure Handling
 
-| 失败点 | 处理方式 |
+| Failure point | Handling |
 |--------|---------|
-| 数据不足 | 补充数据采集，等数据充分再优化 |
-| 根因不明 | 深入分析，不优化表面现象 |
-| LOOP 迭代超 3 次 | 请求人类介入 |
+| Insufficient data | Supplement data collection, wait for sufficient data before optimizing |
+| Root cause unclear | Deep analysis, don't optimize surface symptoms |
+| LOOP iteration exceeds 3 times | Request human intervention |
 
-## 下一步
+## Next Steps
 
-- 优化方案需发布 → 进入 **launch** 工作流
-- 优化涉及战略调整 → 进入 **pivot** 工作流
-- 优化后有明确变更需求 → 进入 **iteration** 工作流
+- Optimization solution needs release → enter **launch** workflow
+- Optimization involves strategic adjustment → enter **pivot** workflow
+- After optimization, have clear change requirements → enter **iteration** workflow

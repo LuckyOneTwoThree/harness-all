@@ -1,21 +1,21 @@
 ---
 name: change-impact-analysis
-description: 当需要分析PRD变更、设计变更或需求变更影响范围时使用。变更影响自动分析，分析需求变更对功能、IA、用户流程、原型、交互规范等维度的影响范围，生成变更影响报告和重评审建议。关键词：变更影响、需求变更、影响分析、变更评审、PRD变更。
+description: Used when analyzing the impact scope of PRD changes, design changes, or requirement changes. Automated change impact analysis, analyzing the impact of requirement changes on functionality, IA, user flows, prototypes, interaction specifications, and other dimensions, generating a change impact report and re-review recommendations. Keywords: change impact, requirement change, impact analysis, change review, PRD change.
 metadata:
-  module: "产品构思与设计"
-  sub-module: "设计评审"
+  module: "Product Ideation & Design"
+  sub-module: "Design Review"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["互联网", "通用"]
+  domain_tags: ["Internet", "General"]
   trigger_examples:
-    - "需求改了，看看影响范围"
-    - "分析一下这个变更会影响哪些模块"
-    - "改需求了帮我评估一下影响"
+    - "Requirements changed, check the impact scope"
+    - "Analyze which modules this change will affect"
+    - "Requirements changed, help me evaluate the impact"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "执行变更分类（L1-L4）和功能影响分析，输出变更级别与重评审必要性判断"
-  deep_description: "额外包含原型/交互规范两维度影响分析、版本联动更新建议、设计规范一致性评估、设计重做清单"
+  quick_description: "Execute change classification (L1-L4) and functional impact analysis, output change level and re-review necessity judgment"
+  deep_description: "Additionally includes prototype/interaction specification two-dimension impact analysis, version linkage update recommendations, design specification consistency assessment, design redo list"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -26,199 +26,199 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 需求变更影响分析自动化
+# Requirement Change Impact Analysis Automation
 
-## 核心原则
+## Core Principles
 
-1. **PRD变更驱动**：由 prd-orchestrator 在 PRD 变更时触发，而非人工发起
-2. **自动化验收**：变更分类、影响传播分析、重评审判断全流程自动化
-3. **结果同步**：分析结果同步到下游设计Skill（IA/用户流程/原型/交互规范），保持发布节奏
-4. **实时复盘**：变更影响分析完成后即时生成版本联动建议
+1. **PRD change driven**: Triggered by prd-orchestrator on PRD changes, not manually initiated
+2. **Automated validation**: Change classification, impact propagation analysis, re-review judgment fully automated
+3. **Result synchronization**: Analysis results synchronized to downstream design Skills (IA/user flow/prototype/interaction specification), maintaining release rhythm
+4. **Real-time retrospective**: Version linkage recommendations generated immediately after change impact analysis completes
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 **AI建议人类审批**
+🤖→👤 **AI suggests, human approves**
 
-触发条件：prd-orchestrator 在 PRD 变更时触发。
+Trigger condition: prd-orchestrator triggers on PRD changes.
 
-## 输入
+## Input
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 变更请求 | JSON | 是 | 用户提供（PRD变更内容） | 待分析的变更内容 |
-| 当前PRD | JSON | 是 | docs/product/PRD.md | 当前生效的PRD版本 |
+| Change request | JSON | Yes | User-provided (PRD change content) | Change content to be analyzed |
+| Current PRD | JSON | Yes | docs/product/PRD.md | Currently effective PRD version |
 
-> 注：原先还评估对 IA/userflow/prototype/interaction-spec 等设计产出的影响，
-> 这些产出已迁移至 harness-design。本 skill 现在仅评估对 PRD 自身和下游交接契约的影响。
-> 对设计产出的影响评估由 harness-design 负责，通过 docs/handoff/pm-to-design.md 通知。
-> 如需评估对设计的影响，通过 docs/handoff/pm-to-design.md 通知 harness-design。
+> Note: Previously also assessed impact on design outputs such as IA/userflow/prototype/interaction-spec.
+> These outputs have been migrated to harness-design. This skill now only assesses impact on the PRD itself and downstream handoff contracts.
+> Impact assessment on design outputs is handled by harness-design, notified via docs/handoff/pm-to-design.md.
+> If design impact assessment is needed, notify harness-design via docs/handoff/pm-to-design.md.
 
-### 变更请求结构示例
+### Change Request Structure Example
 
 ```json
 {
   "change_id": "CR_2024_001",
-  "title": "登录流程增加微信登录",
+  "title": "Add WeChat login to login flow",
   "requester": "product_manager_zhang",
   "created_at": "ISO8601",
   "change_type": "functional",
-  "description": "在现有手机号登录基础上增加微信授权登录方式",
-  "affected_scope": ["登录模块", "用户中心"],
-  "proposed_solution": "引入微信OpenID授权机制",
+  "description": "Add WeChat authorization login method on top of existing phone number login",
+  "affected_scope": ["Login module", "User center"],
+  "proposed_solution": "Introduce WeChat OpenID authorization mechanism",
   "priority": "high",
   "expected_completion": "2024-02-01"
 }
 ```
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 变更分类（L1-L4） [核心]
+### Step 1: Change Classification (L1-L4) [Core]
 
-#### 分类维度
+#### Classification Dimensions
 
-| 级别 | 变更类型 | 影响范围 | 决策层级 |
+| Level | Change Type | Impact Scope | Decision Level |
 |------|----------|----------|----------|
-| L1 轻微 | 文字修正、样式调整、文案优化 | 单个小功能 | 开发者自决策 |
-| L2 一般 | 功能细节调整、交互优化、非核心逻辑变更 | 单个功能模块 | 产品经理审批 |
-| L3 重大 | 核心功能变更、IA结构变更、用户流程重构 | 多个功能模块 | 多角色评审 |
-| L4 战略 | 架构变更、商业模式变更、跨系统影响 | 全局或跨系统 | 战略级评审 |
+| L1 Minor | Text corrections, style adjustments, copy optimization | Single small feature | Developer self-decision |
+| L2 General | Feature detail adjustments, interaction optimization, non-core logic changes | Single feature module | Product manager approval |
+| L3 Major | Core feature changes, IA structure changes, user flow restructuring | Multiple feature modules | Multi-role review |
+| L4 Strategic | Architecture changes, business model changes, cross-system impact | Global or cross-system | Strategic-level review |
 
-#### 分类决策树
+#### Classification Decision Tree
 
 ```
-变更请求
+Change request
     │
-    ├─ 是否影响核心业务流程？ ──是──→ L3
+    ├─ Does it affect core business flow? ──Yes──→ L3
     │
-    ├─ 是否改变IA结构？ ──是──→ L3
+    ├─ Does it change IA structure? ──Yes──→ L3
     │
-    ├─ 是否影响用户流程？ ──是──→ L3
+    ├─ Does it affect user flow? ──Yes──→ L3
     │
-    ├─ 是否影响多个功能模块？ ──是──→ L2
+    ├─ Does it affect multiple feature modules? ──Yes──→ L2
     │
-    └─ 其他 ──→ L1
+    └─ Other ──→ L1
 ```
 
-#### 分类输出
+#### Classification Output
 
 ```json
 {
   "classification": {
     "level": "L3",
-    "level_description": "重大变更",
+    "level_description": "Major change",
     "reasons": [
-      "核心登录流程发生重大变化",
-      "需要新增微信授权服务依赖"
+      "Core login flow underwent major change",
+      "Need to add WeChat authorization service dependency"
     ],
     "confidence": 0.92
   }
 }
 ```
 
-### Step 2: 影响传播分析 [核心]
+### Step 2: Impact Propagation Analysis [Core]
 
-#### 2.1 功能影响分析
+#### 2.1 Functional Impact Analysis
 
-**分析内容**：
+**Analysis content**:
 
-| 分析项 | 输出 |
+| Analysis Item | Output |
 |--------|------|
-| 直接影响功能 | 受变更直接影响的PRD功能点 |
-| 间接影响功能 | 受直接功能影响的关联功能 |
-| 依赖该功能的功能 | 上游功能是否受影响 |
+| Directly affected features | PRD feature points directly affected by the change |
+| Indirectly affected features | Related features affected by directly affected features |
+| Features dependent on this feature | Whether upstream features are affected |
 
-**功能影响矩阵**：
+**Functional impact matrix**:
 
 ```json
 {
   "functional_impact": {
     "directly_affected": [
-      {"feature_id": "F001", "feature_name": "手机号登录", "impact_type": "modified"}
+      {"feature_id": "F001", "feature_name": "Phone login", "impact_type": "modified"}
     ],
     "indirectly_affected": [
-      {"feature_id": "F002", "feature_name": "用户注册", "impact_type": "needs_regression"},
-      {"feature_id": "F003", "feature_name": "第三方绑定", "impact_type": "needs_regression"}
+      {"feature_id": "F002", "feature_name": "User registration", "impact_type": "needs_regression"},
+      {"feature_id": "F003", "feature_name": "Third-party binding", "impact_type": "needs_regression"}
     ],
     "dependent_features": [
-      {"feature_id": "F004", "feature_name": "订单创建", "reason": "依赖用户登录态"}
+      {"feature_id": "F004", "feature_name": "Order creation", "reason": "Depends on user login state"}
     ]
   }
 }
 ```
 
-#### 2.2 IA影响分析 [条件]
+#### 2.2 IA Impact Analysis [Conditional]
 
-**分析内容**：
+**Analysis content**:
 
-| 分析项 | 输出 |
+| Analysis Item | Output |
 |--------|------|
-| 直接影响IA节点 | 受变更直接影响的IA节点 |
-| IA结构变更 | 需要新增/修改/删除的IA节点 |
-| 导航路径影响 | 受影响的导航路径 |
+| Directly affected IA nodes | IA nodes directly affected by the change |
+| IA structure changes | IA nodes that need to be added/modified/deleted |
+| Navigation path impact | Affected navigation paths |
 
-**IA影响矩阵**：
+**IA impact matrix**:
 
 ```json
 {
   "ia_impact": {
     "directly_affected_nodes": [
-      {"node_id": "IA001", "node_name": "用户中心", "impact_type": "modified"}
+      {"node_id": "IA001", "node_name": "User center", "impact_type": "modified"}
     ],
     "structure_changes": [
-      {"node_id": "IA002", "node_name": "登录方式", "change_type": "add", "parent": "用户中心"}
+      {"node_id": "IA002", "node_name": "Login method", "change_type": "add", "parent": "User center"}
     ],
     "navigation_path_impact": [
-      {"path": "首页→登录→微信授权", "change_type": "new"}
+      {"path": "Home→Login→WeChat authorization", "change_type": "new"}
     ]
   }
 }
 ```
 
-#### 2.3 用户流程影响分析 [条件]
+#### 2.3 User Flow Impact Analysis [Conditional]
 
-**分析内容**：
+**Analysis content**:
 
-| 分析项 | 输出 |
+| Analysis Item | Output |
 |--------|------|
-| 直接影响流程 | 受变更直接影响的用户流程 |
-| 流程节点变更 | 需要新增/修改/删除的流程节点 |
-| 死胡同风险 | 变更是否引入新的死胡同 |
+| Directly affected flows | User flows directly affected by the change |
+| Flow node changes | Flow nodes that need to be added/modified/deleted |
+| Dead-end risks | Whether the change introduces new dead-ends |
 
-**用户流程影响矩阵**：
+**User flow impact matrix**:
 
 ```json
 {
   "userflow_impact": {
     "directly_affected_flows": [
-      {"flow_id": "UF001", "flow_name": "登录流程", "impact_type": "modified"}
+      {"flow_id": "UF001", "flow_name": "Login flow", "impact_type": "modified"}
     ],
     "node_changes": [
-      {"node_id": "UF001_N3", "node_name": "微信授权", "change_type": "add"}
+      {"node_id": "UF001_N3", "node_name": "WeChat authorization", "change_type": "add"}
     ],
     "dead_end_risks": [
-      {"risk": "微信未绑定用户无退出路径", "severity": "high"}
+      {"risk": "No exit path for users without WeChat binding", "severity": "high"}
     ]
   }
 }
 ```
 
-#### 2.4 原型影响分析 [深度]
+#### 2.4 Prototype Impact Analysis [Deep]
 
-**分析内容**：
+**Analysis content**:
 
-| 分析项 | 输出 |
+| Analysis Item | Output |
 |--------|------|
-| 受影响页面 | 需要修改的原型页面 |
-| 组件变更 | 需要新增/修改的组件 |
-| 设计规范一致性 | 变更对设计规范一致性的影响 |
+| Affected pages | Prototype pages that need modification |
+| Component changes | Components that need to be added/modified |
+| Design specification consistency | Impact of changes on design specification consistency |
 
-**原型影响矩阵**：
+**Prototype impact matrix**:
 
 ```json
 {
   "prototype_impact": {
     "affected_pages": [
-      {"page_id": "P001", "page_name": "登录页", "change_type": "modify"}
+      {"page_id": "P001", "page_name": "Login page", "change_type": "modify"}
     ],
     "component_changes": [
       {"component": "WechatLoginButton", "change_type": "new"}
@@ -226,29 +226,29 @@ writes:
     "design_consistency": {
       "consistency_score_before": 0.92,
       "consistency_score_after": 0.85,
-      "violations": ["新增按钮未遵循设计令牌规范"]
+      "violations": ["New button does not follow design token specification"]
     }
   }
 }
 ```
 
-#### 2.5 交互规范影响分析 [深度]
+#### 2.5 Interaction Specification Impact Analysis [Deep]
 
-**分析内容**：
+**Analysis content**:
 
-| 分析项 | 输出 |
+| Analysis Item | Output |
 |--------|------|
-| 受影响交互状态 | 需要修改的交互状态机 |
-| 动效变更 | 需要新增/修改的动效 |
-| 手势规范变更 | 需要新增/修改的手势规范 |
+| Affected interaction states | Interaction state machines that need modification |
+| Animation changes | Animations that need to be added/modified |
+| Gesture specification changes | Gesture specifications that need to be added/modified |
 
-**交互规范影响矩阵**：
+**Interaction specification impact matrix**:
 
 ```json
 {
   "interaction_spec_impact": {
     "affected_states": [
-      {"state": "loading", "scenario": "微信授权中", "change_type": "add"}
+      {"state": "loading", "scenario": "WeChat authorization in progress", "change_type": "add"}
     ],
     "animation_changes": [
       {"animation": "wechat_auth_loading", "change_type": "new"}
@@ -258,34 +258,34 @@ writes:
 }
 ```
 
-### Step 3: 重评审必要性判断 [核心]
+### Step 3: Re-review Necessity Judgment [Core]
 
-#### 评审触发规则
+#### Review Trigger Rules
 
-**决策矩阵**：
+**Decision matrix**:
 
-| 变更级别 | 涉及角色变化 | 假设变化 | 重评审必要性 |
+| Change Level | Involves Role Change | Hypothesis Change | Re-review Necessity |
 |----------|--------------|----------|--------------|
-| L4 | 任意 | 任意 | **必须重评审** |
-| L3 | 任意 | 是 | **必须重评审** |
-| L3 | 是 | 否 | **必须重评审** |
-| L3 | 否 | 否 | 建议评审 |
-| L2 | 是 | 是 | 建议评审 |
-| L2 | 其他 | - | 可选评审 |
-| L1 | - | - | 无需评审 |
+| L4 | Any | Any | **Must re-review** |
+| L3 | Any | Yes | **Must re-review** |
+| L3 | Yes | No | **Must re-review** |
+| L3 | No | No | Suggested review |
+| L2 | Yes | Yes | Suggested review |
+| L2 | Other | - | Optional review |
+| L1 | - | - | No review needed |
 
-#### 评审角色识别
+#### Review Role Identification
 
-| 角色 | 触发条件 |
+| Role | Trigger Condition |
 |------|----------|
-| 产品经理 | 需求变更涉及产品功能 |
-| 设计师 | UI/UX相关变更 |
-| IA设计师 | IA结构变更 |
-| 交互设计师 | 交互规范变更 |
-| 测试负责人 | 任何变更 |
-| 运营 | 运营相关变更 |
+| Product manager | Requirement change involves product features |
+| Designer | UI/UX related changes |
+| IA designer | IA structure changes |
+| Interaction designer | Interaction specification changes |
+| Test lead | Any change |
+| Operations | Operations related changes |
 
-#### 重评审必要性输出
+#### Re-review Necessity Output
 
 ```json
 {
@@ -293,32 +293,32 @@ writes:
     "required": true,
     "level": "L3_mandatory_review",
     "review_scope": [
-      {"role": "产品经理", "reason": "核心功能变更"},
-      {"role": "测试负责人", "reason": "测试范围扩大"}
+      {"role": "Product manager", "reason": "Core feature change"},
+      {"role": "Test lead", "reason": "Test scope expansion"}
     ],
     "review_content": [
-      "微信登录技术方案",
-      "与现有登录流程的兼容性",
-      "回归测试计划"
+      "WeChat login technical solution",
+      "Compatibility with existing login flow",
+      "Regression test plan"
     ],
     "review_deadline": "ISO8601"
   }
 }
 ```
 
-### Step 4: 版本联动分析 [深度]
+### Step 4: Version Linkage Analysis [Deep]
 
-#### 4.1 PRD版本更新
+#### 4.1 PRD Version Update
 
-**分析内容**：
+**Analysis content**:
 
-| 分析项 | 输出 |
+| Analysis Item | Output |
 |--------|------|
-| 需要更新的PRD章节 | 变更涉及的PRD章节 |
-| 变更类型 | 新增/修改/删除 |
-| 更新建议 | 具体的更新内容建议 |
+| PRD sections to update | PRD sections involved in the change |
+| Change type | Add/modify/delete |
+| Update recommendations | Specific update content suggestions |
 
-**PRD版本更新**：
+**PRD version update**:
 
 ```json
 {
@@ -327,24 +327,24 @@ writes:
     "new_version": "1.3.0",
     "update_type": "minor_version",
     "sections_to_update": [
-      {"chapter": "3.登录功能", "change_type": "modify", "suggestion": "增加微信登录章节"}
+      {"chapter": "3. Login feature", "change_type": "modify", "suggestion": "Add WeChat login section"}
     ],
-    "update_proposal": "详见附件PRD更新建议"
+    "update_proposal": "See attached PRD update recommendations"
   }
 }
 ```
 
-#### 4.2 IA版本更新
+#### 4.2 IA Version Update
 
-**分析内容**：
+**Analysis content**:
 
-| 分析项 | 输出 |
+| Analysis Item | Output |
 |--------|------|
-| 需要更新的IA节点 | 变更涉及的IA节点 |
-| 变更类型 | 新增/修改/删除 |
-| 更新建议 | 具体的IA结构调整建议 |
+| IA nodes to update | IA nodes involved in the change |
+| Change type | Add/modify/delete |
+| Update recommendations | Specific IA structure adjustment suggestions |
 
-**IA版本更新**：
+**IA version update**:
 
 ```json
 {
@@ -352,33 +352,33 @@ writes:
     "current_version": "1.2.0",
     "new_version": "1.3.0",
     "nodes_to_update": [
-      {"node_id": "IA001", "node_name": "用户中心", "change_type": "modify", "suggestion": "增加微信登录子节点"}
+      {"node_id": "IA001", "node_name": "User center", "change_type": "modify", "suggestion": "Add WeChat login sub-node"}
     ],
-    "update_proposal": "详见附件IA更新建议"
+    "update_proposal": "See attached IA update recommendations"
   }
 }
 ```
 
-#### 4.3 用户流程版本更新
+#### 4.3 User Flow Version Update
 
-**分析内容**：
+**Analysis content**:
 
-| 分析项 | 输出 |
+| Analysis Item | Output |
 |--------|------|
-| 需要新增的流程 | 针对新功能 |
-| 需要修改的流程 | 针对变更内容 |
-| 需要删除的流程 | 已废弃功能 |
+| Flows to add | For new features |
+| Flows to modify | For changed content |
+| Flows to delete | Deprecated features |
 
-**用户流程版本更新**：
+**User flow version update**:
 
 ```json
 {
   "userflow_version_update": {
     "flows_to_add": [
-      {"flow_id": "NEW_001", "flow_name": "微信登录流程", "priority": "P0"}
+      {"flow_id": "NEW_001", "flow_name": "WeChat login flow", "priority": "P0"}
     ],
     "flows_to_modify": [
-      {"flow_id": "UF_001", "flow_name": "登录流程", "change": "增加微信登录分支"}
+      {"flow_id": "UF_001", "flow_name": "Login flow", "change": "Add WeChat login branch"}
     ],
     "flows_to_delete": [],
     "estimated_redesign_effort_hours": 16
@@ -386,33 +386,33 @@ writes:
 }
 ```
 
-## 输出
+## Output
 
-**存储路径**：`docs/product/PRD.md（“变更影响分析”章节）`
+**Storage path**: `docs/product/PRD.md ("Change Impact Analysis" section)`
 
-**输出文件**：`change_impact_report.json`
+**Output file**: `change_impact_report.json`
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["output_id", "change_id", "classification", "impact_analysis", "review_needed"],
   "properties": {
-    "output_id": {"type": "string", "description": "输出唯一标识"},
-    "change_id": {"type": "string", "description": "变更请求ID"},
-    "generated_at": {"type": "string", "description": "生成时间"},
-    "classification": {"type": "object", "description": "变更分类，包含级别和原因"},
-    "impact_analysis": {"type": "object", "description": "影响分析，包含功能/IA/用户流程/原型/交互规范多维度"},
-    "review_needed": {"type": "boolean", "description": "是否需要重评审"},
-    "review_decision": {"type": "object", "description": "评审决策，包含评审范围和内容"},
-    "version_updates": {"type": "object", "description": "版本联动更新建议"},
-    "summary": {"type": "object", "description": "变更影响摘要，包含影响范围和风险等级"}
+    "output_id": {"type": "string", "description": "Output unique identifier"},
+    "change_id": {"type": "string", "description": "Change request ID"},
+    "generated_at": {"type": "string", "description": "Generation time"},
+    "classification": {"type": "object", "description": "Change classification, including level and reasons"},
+    "impact_analysis": {"type": "object", "description": "Impact analysis, including functional/IA/user flow/prototype/interaction specification multi-dimensions"},
+    "review_needed": {"type": "boolean", "description": "Whether re-review is needed"},
+    "review_decision": {"type": "object", "description": "Review decision, including review scope and content"},
+    "version_updates": {"type": "object", "description": "Version linkage update recommendations"},
+    "summary": {"type": "object", "description": "Change impact summary, including impact scope and risk level"}
   }
 }
 ```
 
-### 最终输出结构
+### Final Output Structure
 
 ```json
 {
@@ -421,7 +421,7 @@ writes:
   "generated_at": "ISO8601",
   "classification": {
     "level": "L3",
-    "level_description": "重大变更",
+    "level_description": "Major change",
     "reasons": [...]
   },
   "impact_analysis": {
@@ -439,137 +439,137 @@ writes:
     "userflow": {...}
   },
   "summary": {
-    "impact_scope": "多个功能模块",
+    "impact_scope": "Multiple feature modules",
     "estimated_effort_days": 10,
     "risk_level": "medium"
   }
 }
 ```
 
-### 输出字段说明
+### Output Field Descriptions
 
-| 字段 | 类型 | 说明 |
+| Field | Type | Description |
 |------|------|------|
-| classification | JSON | 变更级别及原因 |
-| impact_analysis | JSON | 多维度影响分析详情 |
-| review_needed | boolean | 是否需要重评审 |
-| review_decision | JSON | 评审范围和内容 |
-| version_updates | JSON | 版本联动更新建议 |
+| classification | JSON | Change level and reasons |
+| impact_analysis | JSON | Multi-dimensional impact analysis details |
+| review_needed | boolean | Whether re-review is needed |
+| review_decision | JSON | Review scope and content |
+| version_updates | JSON | Version linkage update recommendations |
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| output_id | string | 是 | 输出唯一标识 |
-| change_id | string | 是 | 变更请求ID，须与输入change_id一致 |
-| generated_at | string | 是 | 生成时间，ISO 8601格式 |
-| classification | object | 是 | 变更分类 |
-| classification.level | string | 是 | 变更级别，枚举值：L1/L2/L3/L4 |
-| classification.level_description | string | 是 | 级别描述 |
-| classification.reasons | array | 是 | 分级原因列表，不可为空 |
-| classification.confidence | number | 是 | 分配置信度，范围0.0-1.0 |
-| impact_analysis | object | 是 | 影响分析 |
-| impact_analysis.functional | object | 是 | 功能影响分析，含directly_affected/indirectly_affected/dependent_features |
-| impact_analysis.functional.directly_affected | array | 是 | 直接受影响功能列表，每项含feature_id/feature_name/impact_type |
-| impact_analysis.ia | object | 是 | IA影响分析，含directly_affected_nodes/structure_changes/navigation_path_impact |
-| impact_analysis.userflow | object | 是 | 用户流程影响分析，含directly_affected_flows/node_changes/dead_end_risks |
-| impact_analysis.prototype | object | 否 | 原型影响分析，含affected_pages/component_changes/design_consistency |
-| impact_analysis.interaction_spec | object | 否 | 交互规范影响分析，含affected_states/animation_changes/gesture_changes |
-| review_needed | boolean | 是 | 是否需要重评审 |
-| review_decision | object | 否 | 评审决策（review_needed为true时必填），含level/review_scope/review_content/review_deadline |
-| review_decision.level | string | 否 | 评审级别，枚举值：L1_optional/L2_suggested/L3_mandatory/L4_strategic |
-| review_decision.review_scope | array | 否 | 评审角色列表，每项含role/reason |
-| version_updates | object | 否 | 版本联动更新建议，含prd/ia/userflow |
-| version_updates.prd | object | 否 | PRD版本更新建议，含current_version/new_version/sections_to_update |
-| version_updates.ia | object | 否 | IA版本更新建议，含current_version/new_version/nodes_to_update |
-| version_updates.userflow | object | 否 | 用户流程版本更新建议，含flows_to_add/flows_to_modify/flows_to_delete |
-| summary | object | 是 | 变更影响摘要 |
-| summary.impact_scope | string | 是 | 影响范围描述 |
-| summary.estimated_effort_days | number | 是 | 预估影响人天，须≥0 |
-| summary.risk_level | string | 是 | 风险等级，枚举值：low/medium/high/critical |
+| output_id | string | Yes | Output unique identifier |
+| change_id | string | Yes | Change request ID, must match input change_id |
+| generated_at | string | Yes | Generation time, ISO 8601 format |
+| classification | object | Yes | Change classification |
+| classification.level | string | Yes | Change level, enum: L1/L2/L3/L4 |
+| classification.level_description | string | Yes | Level description |
+| classification.reasons | array | Yes | Classification reasons list, cannot be empty |
+| classification.confidence | number | Yes | Classification confidence, range 0.0-1.0 |
+| impact_analysis | object | Yes | Impact analysis |
+| impact_analysis.functional | object | Yes | Functional impact analysis, contains directly_affected/indirectly_affected/dependent_features |
+| impact_analysis.functional.directly_affected | array | Yes | Directly affected features list, each item contains feature_id/feature_name/impact_type |
+| impact_analysis.ia | object | Yes | IA impact analysis, contains directly_affected_nodes/structure_changes/navigation_path_impact |
+| impact_analysis.userflow | object | Yes | User flow impact analysis, contains directly_affected_flows/node_changes/dead_end_risks |
+| impact_analysis.prototype | object | No | Prototype impact analysis, contains affected_pages/component_changes/design_consistency |
+| impact_analysis.interaction_spec | object | No | Interaction specification impact analysis, contains affected_states/animation_changes/gesture_changes |
+| review_needed | boolean | Yes | Whether re-review is needed |
+| review_decision | object | No | Review decision (required when review_needed is true), contains level/review_scope/review_content/review_deadline |
+| review_decision.level | string | No | Review level, enum: L1_optional/L2_suggested/L3_mandatory/L4_strategic |
+| review_decision.review_scope | array | No | Review role list, each item contains role/reason |
+| version_updates | object | No | Version linkage update recommendations, contains prd/ia/userflow |
+| version_updates.prd | object | No | PRD version update recommendations, contains current_version/new_version/sections_to_update |
+| version_updates.ia | object | No | IA version update recommendations, contains current_version/new_version/nodes_to_update |
+| version_updates.userflow | object | No | User flow version update recommendations, contains flows_to_add/flows_to_modify/flows_to_delete |
+| summary | object | Yes | Change impact summary |
+| summary.impact_scope | string | Yes | Impact scope description |
+| summary.estimated_effort_days | number | Yes | Estimated impact person-days, must be ≥0 |
+| summary.risk_level | string | Yes | Risk level, enum: low/medium/high/critical |
 
-## 上游变更响应
+## Upstream Change Response
 
-当上游输入发生变更时，本Skill的响应策略：
+When upstream inputs change, this Skill's response strategy:
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| PRD需求变更 | 功能影响分析、版本联动 | 更新功能影响矩阵，重新评估变更级别和重评审必要性 |
-| IA方案变更 | IA影响分析 | 更新IA影响矩阵，重新评估IA结构变更范围 |
-| 用户流程变更 | 用户流程影响分析 | 更新用户流程影响矩阵，重新评估死胡同风险 |
-| 原型变更 | 原型影响分析 | 更新原型影响矩阵，重新评估设计规范一致性 |
-| 交互规范变更 | 交互规范影响分析 | 更新交互规范影响矩阵，重新评估状态机覆盖 |
+| PRD requirement change | Functional impact analysis, version linkage | Update functional impact matrix, re-evaluate change level and re-review necessity |
+| IA solution change | IA impact analysis | Update IA impact matrix, re-evaluate IA structure change scope |
+| User flow change | User flow impact analysis | Update user flow impact matrix, re-evaluate dead-end risks |
+| Prototype change | Prototype impact analysis | Update prototype impact matrix, re-evaluate design specification consistency |
+| Interaction specification change | Interaction specification impact analysis | Update interaction specification impact matrix, re-evaluate state machine coverage |
 
-当变更影响分析结果自身变更时，对下游的通知机制：
+When the change impact analysis results themselves change, the downstream notification mechanism:
 
-| 变更影响分析变更类型 | 通知范围 | 通知方式 |
+| Change Impact Analysis Change Type | Notification Scope | Notification Method |
 |---------------------|----------|----------|
-| 变更级别升级 | iteration-retrospective | 标记变更级别变化，触发复盘评估 |
-| 影响范围扩大 | design-prd | 标记影响范围变化，触发PRD更新评估 |
-| 重评审必要性变化 | quality-acceptance | 标记评审需求变化，触发验收标准更新 |
-| 版本规划调整 | iteration-orchestrator | 标记版本规划变化，触发迭代计划调整 |
+| Change level upgrade | iteration-retrospective | Mark change level change, trigger retrospective assessment |
+| Impact scope expansion | design-prd | Mark impact scope change, trigger PRD update assessment |
+| Re-review necessity change | quality-acceptance | Mark review need change, trigger acceptance criteria update |
+| Version planning adjustment | iteration-orchestrator | Mark version planning change, trigger iteration plan adjustment |
 
 ---
 
-## 决策规则
+## Decision Rules
 
-### 强制重评审规则
+### Mandatory Re-review Rules
 
-| 条件 | 决策 |
+| Condition | Decision |
 |------|------|
-| L3级别变更 | **必须触发重评审** |
-| L4级别变更 | **必须触发战略级评审** |
-| 涉及假设变化 | 必须重评审 |
-| 影响范围>3个功能模块 | 建议升级评审级别 |
+| L3 level change | **Must trigger re-review** |
+| L4 level change | **Must trigger strategic-level review** |
+| Involves hypothesis change | Must re-review |
+| Impact scope > 3 feature modules | Suggest upgrading review level |
 
-### 特殊处理规则
+### Special Handling Rules
 
-| 条件 | 处理方式 |
+| Condition | Handling Method |
 |------|----------|
-| 变更涉及IA结构重构 | 必须包含IA回滚方案 |
-| 变更涉及设计系统/令牌变更 | 必须包含设计规范降级方案 |
-| 变更影响P0功能 | 必须产品负责人签字确认 |
+| Change involves IA structure restructuring | Must include IA rollback plan |
+| Change involves design system/token changes | Must include design specification degradation plan |
+| Change affects P0 features | Must have product owner sign-off |
 
-## 质量检查
+## Quality Checks
 
 ### Quality Check
 
-| 检查项 | 标准 | 未达标处理 |
+| Check Item | Standard | Non-compliance Handling |
 |--------|------|------------|
-| 影响范围穷举（P0） | 功能/IA/用户流程/原型/交互规范多维度全覆盖 | 返回补充 |
-| 重评审判断依据（P0） | 每个判断都有对应证据 | 返回补充 |
-| 版本联动完整性（P1） | PRD/IA/用户流程版本同步 | 告警+人工确认 |
+| Impact scope enumeration (P0) | Functional/IA/user flow/prototype/interaction specification multi-dimensional full coverage | Return for supplementation |
+| Re-review judgment basis (P0) | Each judgment has corresponding evidence | Return for supplementation |
+| Version linkage completeness (P1) | PRD/IA/user flow version sync | Alert + manual confirmation |
 
-### 影响范围穷举检查清单
+### Impact Scope Enumeration Checklist
 
-- [ ] 功能影响：直接/间接/依赖功能已识别（P0）
-- [ ] IA影响：IA节点/结构/导航路径已识别（P1）
-- [ ] 用户流程影响：流程/节点/死胡同已识别（P1）
-- [ ] 原型影响：页面/组件/设计一致性已识别（P2）
-- [ ] 交互规范影响：状态/动效/手势已识别（P2）
+- [ ] Functional impact: direct/indirect/dependent features identified (P0)
+- [ ] IA impact: IA nodes/structure/navigation paths identified (P1)
+- [ ] User flow impact: flows/nodes/dead-ends identified (P1)
+- [ ] Prototype impact: pages/components/design consistency identified (P2)
+- [ ] Interaction specification impact: states/animations/gestures identified (P2)
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失范围 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Scope | Degradation Plan | Output Impact | Data Acquisition Notes |
 |----------|----------|----------|------------|
-| 变更请求缺失 | 无法执行，需用户描述变更内容 | - | 要求用户提供变更内容描述（变更了什么、涉及哪些功能模块） |
-| 当前PRD缺失 | 用户描述变更内容 → 直接分析影响，无PRD基准对比 | 无法精确定位受影响章节，影响范围基于推断 | 要求用户提供当前PRD文档或功能需求描述 |
-| 当前IA缺失 | 跳过IA影响分析 | IA影响分析不完整 | 要求用户提供IA方案或信息架构描述 |
-| 当前用户流程缺失 | 跳过用户流程影响分析 | 用户流程影响分析不完整 | 要求用户提供用户流程图或流程描述 |
-| 当前原型缺失 | 跳过原型影响分析 | 原型影响分析不完整 | 要求用户提供原型设计或页面描述 |
-| 当前交互规范缺失 | 跳过交互规范影响分析 | 交互规范影响分析不完整 | 要求用户提供交互规范或交互描述 |
-| 变更请求 + 当前PRD + 当前IA均缺失 | 用户描述变更内容 → 直接分析影响 | 输出简化影响分析，各维度标注"待补充" | 要求用户提供变更描述、当前PRD和IA方案 |
+| Change request missing | Cannot execute, need user to describe change content | - | Require user to provide change content description (what changed, which feature modules involved) |
+| Current PRD missing | User describes change content → directly analyze impact, no PRD baseline comparison | Cannot precisely locate affected sections, impact scope based on inference | Require user to provide current PRD document or feature requirement description |
+| Current IA missing | Skip IA impact analysis | IA impact analysis incomplete | Require user to provide IA solution or information architecture description |
+| Current user flow missing | Skip user flow impact analysis | User flow impact analysis incomplete | Require user to provide user flow diagrams or flow descriptions |
+| Current prototype missing | Skip prototype impact analysis | Prototype impact analysis incomplete | Require user to provide prototype design or page descriptions |
+| Current interaction specification missing | Skip interaction specification impact analysis | Interaction specification impact analysis incomplete | Require user to provide interaction specifications or interaction descriptions |
+| Change request + current PRD + current IA all missing | User describes change content → directly analyze impact | Output simplified impact analysis, each dimension labeled "pending supplementation" | Require user to provide change description, current PRD and IA solution |
 
-### 数据获取说明
+### Data Acquisition Notes
 
-当上游文件缺失时，需用户提供以下信息以支撑降级生成：
-- **变更内容描述**：变更了什么，涉及哪些功能模块
-- **变更原因**（可选）：为什么需要变更
-- **预期影响范围**（可选）：变更可能影响的模块或系统
+When upstream files are missing, the following information is needed from the user to support degraded generation:
+- **Change content description**: What changed, which feature modules are involved
+- **Change reason** (optional): Why the change is needed
+- **Expected impact scope** (optional): Modules or systems that may be affected by the change
 
-## 执行日志
+## Execution Log
 
 ```json
 {

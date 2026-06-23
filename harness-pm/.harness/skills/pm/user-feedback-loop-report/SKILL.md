@@ -1,21 +1,21 @@
 ---
 name: user-feedback-loop-report
-description: 当需要将用户反馈处理过程汇总为完整可交付的闭环报告时使用。用户反馈闭环报告自动生成，包含反馈来源分析、处理进度追踪、闭环率统计、未解决问题和改进建议。关键词：用户反馈闭环、反馈报告、反馈追踪、闭环率、VOC闭环、反馈处理、反馈处理完了没、用户意见。
+description: Used when summarizing user feedback handling into a complete, deliverable closed-loop report. Auto-generates user feedback loop reports including feedback source analysis, processing progress tracking, closure rate statistics, unresolved issues, and improvement suggestions. Keywords: user feedback loop, feedback report, feedback tracking, closure rate, VOC loop, feedback handling, is feedback handled, user opinions.
 metadata:
-  module: "产品监控与迭代"
-  sub-module: "监控预警"
+  module: "Product Monitoring & Iteration"
+  sub-module: "Monitoring & Alerting"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["互联网", "SaaS", "通用"]
+  domain_tags: ["Internet", "SaaS", "General"]
   trigger_examples:
-    - "用户反馈处理得怎么样了"
-    - "帮我出一份反馈闭环报告"
-    - "反馈闭环率怎么样"
+    - "How is user feedback handling going"
+    - "Help me generate a feedback loop report"
+    - "How is the feedback closure rate"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出闭环率和P0未解决清单"
-  deep_description: "完整报告 + 反馈趋势预测 + 根因深度分析 + 改进路线图"
+  quick_description: "Directly output closure rate and P0 unresolved list"
+  deep_description: "Full report + feedback trend forecast + root cause deep analysis + improvement roadmap"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -25,168 +25,168 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 用户反馈闭环报告生成
+# User Feedback Loop Report Generation
 
-## 核心原则
+## Core Principle
 
-**每一条用户反馈都值得被回应**
+**Every piece of user feedback deserves a response**
 
-用户反馈闭环报告的核心价值在于确保每一条用户反馈都有始有终。闭环不是形式上的"已读"，而是实质上的"已处理"或"已决策"。未闭环的反馈是用户信任的流失。
+The core value of user feedback loop reports lies in ensuring every piece of user feedback has a beginning and an end. Closure is not a formal "read", but a substantive "handled" or "decided". Unclosed feedback is a loss of user trust.
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Input
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 用户声音分析 | markdown | 否 | user-research-voice-analysis | 情感分析、主题提取、痛点清单 |
-| 异常监控数据 | markdown | 否 | monitoring-attribution | 异常事件、用户影响范围 |
-| 反馈数据 | text | 是 | 用户输入 | 各渠道用户反馈原始数据 |
-| 处理记录 | text | 否 | 用户输入 | 已处理反馈的记录和结果 |
+| Voice of Customer analysis | markdown | No | user-research-voice-analysis | Sentiment analysis, topic extraction, pain point list |
+| Anomaly monitoring data | markdown | No | monitoring-attribution | Anomaly events, user impact scope |
+| Feedback data | text | Yes | User input | Raw user feedback data from various channels |
+| Handling records | text | No | User input | Records and results of handled feedback |
 
-### 降级策略
+### Degradation Strategy
 
-| 缺失输入 | 降级方案 |
+| Missing Input | Degradation Plan |
 |----------|----------|
-| 无用户声音分析 | 基于原始反馈数据自行分类分析，标注"待VOC深度分析" |
-| 无异常监控数据 | 跳过异常关联分析，标注"待监控数据补充" |
-| 无处理记录 | 仅统计反馈来源和分类，闭环率标注"待处理记录补充" |
-| 无反馈数据 | 若用户未提供反馈数据，提示用户提供或跳过该输入相关步骤 |
+| No Voice of Customer analysis | Analyze and classify based on raw feedback data, label "pending VOC deep analysis" |
+| No anomaly monitoring data | Skip anomaly correlation analysis, label "pending monitoring data supplementation" |
+| No handling records | Only count feedback sources and classifications, closure rate labeled "pending handling records supplementation" |
+| No feedback data | If user does not provide feedback data, prompt user to provide or skip steps related to this input |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1：反馈来源分析 [核心]
+### Step 1: Feedback Source Analysis [Core]
 
-统计和分析反馈的来源分布：
+Count and analyze the source distribution of feedback:
 
-1. **渠道分布**：App内反馈 / 客服工单 / 社交媒体 / 应用商店 / 社区 / 邮件
-2. **情感分布**：正面 / 中性 / 负面 及占比
-3. **主题分布**：按功能模块分类的反馈分布
-4. **时间趋势**：反馈量的时间变化趋势
+1. **Channel distribution**: In-app feedback / Customer service tickets / Social media / App stores / Community / Email
+2. **Sentiment distribution**: Positive / Neutral / Negative and proportions
+3. **Topic distribution**: Feedback distribution classified by functional module
+4. **Time trend**: Time variation trend of feedback volume
 
-### Step 2：处理进度追踪 [条件]
+### Step 2: Processing Progress Tracking [Conditional]
 
-追踪每条反馈的处理状态：
+Track the processing status of each piece of feedback:
 
-1. **状态分类**：
-   - 🆕 新增（未处理）
-   - 👀 评估中（确认有效性）
-   - 📋 已排期（纳入迭代计划）
-   - 🔨 处理中（开发/修复进行中）
-   - ✅ 已闭环（问题已解决并验证）
-   - ❌ 已关闭（不处理，附理由）
-2. **处理时效**：各状态的平均停留时间
-3. **瓶颈识别**：处理流程中的堵点
+1. **Status classification**:
+   - 🆕 New (unprocessed)
+   - 👀 Under evaluation (validity confirmed)
+   - 📋 Scheduled (included in iteration plan)
+   - 🔨 In progress (development/fix in progress)
+   - ✅ Closed-loop (issue resolved and verified)
+   - ❌ Closed (not handled, with reason)
+2. **Processing timeliness**: Average dwell time per status
+3. **Bottleneck identification**: Blockages in the processing flow
 
-### Step 3：闭环率统计 [核心]
+### Step 3: Closure Rate Statistics [Core]
 
-计算和追踪反馈闭环率：
+Calculate and track feedback closure rate:
 
-1. **整体闭环率**：已闭环 + 已关闭 / 总反馈数
-2. **按渠道闭环率**：各渠道的闭环率对比
-3. **按严重度闭环率**：P0/P1/P2/P3的闭环率
-4. **闭环时效**：从反馈到闭环的平均时间
-5. **趋势对比**：与上一周期的闭环率对比
+1. **Overall closure rate**: Closed-loop + Closed / Total feedback count
+2. **Closure rate by channel**: Closure rate comparison across channels
+3. **Closure rate by severity**: P0/P1/P2/P3 closure rates
+4. **Closure timeliness**: Average time from feedback to closure
+5. **Trend comparison**: Closure rate comparison with previous period
 
-### Step 4：未解决问题分析 [条件]
+### Step 4: Unresolved Issue Analysis [Conditional]
 
-分析尚未闭环的反馈：
+Analyze feedback that has not been closed-loop:
 
-1. **P0/P1未解决清单**：高优先级未解决问题
-2. **长期未解决**：超过30天未闭环的反馈
-3. **重复反馈**：多次反馈的同类问题
-4. **根因分析**：未闭环的主要原因分类
+1. **P0/P1 unresolved list**: High-priority unresolved issues
+2. **Long-standing unresolved**: Feedback not closed-loop for over 30 days
+3. **Repeated feedback**: Same type of issue reported multiple times
+4. **Root cause analysis**: Main reason classification for non-closure
 
-### Step 5：改进建议 [深度]
+### Step 5: Improvement Suggestions [Deep]
 
-基于闭环分析提出改进建议：
+Propose improvement suggestions based on closure analysis:
 
-1. **流程改进**：缩短处理时效的流程优化
-2. **产品改进**：高频反馈对应的产品优化方向
-3. **沟通改进**：用户反馈回应的沟通策略
-4. **预防措施**：减少同类反馈的预防方案
+1. **Process improvement**: Process optimization to shorten handling time
+2. **Product improvement**: Product optimization directions corresponding to high-frequency feedback
+3. **Communication improvement**: Communication strategies for responding to user feedback
+4. **Preventive measures**: Prevention plans to reduce similar feedback
 
-### Step 6：报告组装 [核心]
+### Step 6: Report Assembly [Core]
 
-将以上内容组装为完整闭环报告。
+Assemble the above content into a complete loop report.
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 闭环率和P0未解决清单 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整报告 + 反馈趋势预测 + 根因深度分析 + 改进路线图 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Closure rate and P0 unresolved list | Core conclusions + minimum viable artifact |
+| standard | Full artifact (current default) | Full artifact, including all Step outputs |
+| deep | Full report + feedback trend forecast + root cause deep analysis + improvement roadmap | Full artifact + extended analysis + deep reasoning |
 
-## 输出
+## Output
 
-### 输出文件
+### Output Files
 
-| 文件 | 路径 | 说明 |
+| File | Path | Description |
 |------|------|------|
-| 反馈闭环报告 | `docs/monitoring/feedback-loop.md` | 人类可读的完整报告 |
-| 结构化数据 | `docs/monitoring/feedback-loop.md` | 机器可消费的结构化数据 |
+| Feedback loop report | `docs/monitoring/feedback-loop.md` | Human-readable complete report |
+| Structured data | `docs/monitoring/feedback-loop.md` | Machine-consumable structured data |
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["report_period", "summary", "closure_metrics"],
   "properties": {
-    "report_period": {"type": "object", "description": "报告周期，包含起止日期"},
-    "report_date": {"type": "string", "description": "报告日期"},
-    "summary": {"type": "object", "description": "执行摘要，包含总反馈数、闭环率和P0未解决数"},
-    "source_analysis": {"type": "object", "description": "反馈来源分析，包含渠道/情感/主题分布"},
-    "processing_status": {"type": "object", "description": "处理进度，包含状态分布和瓶颈"},
-    "closure_metrics": {"type": "object", "description": "闭环率统计，包含整体和分渠道/分严重度闭环率"},
-    "unresolved": {"type": "object", "description": "未解决问题，包含P0/P1清单和根因分析"},
-    "improvement_suggestions": {"type": "array", "description": "改进建议列表"}
+    "report_period": {"type": "object", "description": "Report period, including start and end dates"},
+    "report_date": {"type": "string", "description": "Report date"},
+    "summary": {"type": "object", "description": "Executive summary, including total feedback count, closure rate, and P0 unresolved count"},
+    "source_analysis": {"type": "object", "description": "Feedback source analysis, including channel/sentiment/topic distribution"},
+    "processing_status": {"type": "object", "description": "Processing progress, including status distribution and bottlenecks"},
+    "closure_metrics": {"type": "object", "description": "Closure rate statistics, including overall and by-channel/by-severity closure rates"},
+    "unresolved": {"type": "object", "description": "Unresolved issues, including P0/P1 list and root cause analysis"},
+    "improvement_suggestions": {"type": "array", "description": "Improvement suggestions list"}
   }
 }
 ```
 
-### Markdown 报告结构
+### Markdown Report Structure
 
 ```markdown
-# 用户反馈闭环报告：2026-06-W2
+# User Feedback Loop Report: 2026-06-W2
 
-## 1. 执行摘要
-- 总反馈数 / 闭环率 / 平均闭环时间 / P0未解决数
+## 1. Executive Summary
+- Total feedback count / Closure rate / Average closure time / P0 unresolved count
 
-## 2. 反馈来源分析
-- 渠道分布
-- 情感分布
-- 主题分布
-- 时间趋势
+## 2. Feedback Source Analysis
+- Channel distribution
+- Sentiment distribution
+- Topic distribution
+- Time trend
 
-## 3. 处理进度追踪
-- 状态分布
-- 处理时效
-- 瓶颈识别
+## 3. Processing Progress Tracking
+- Status distribution
+- Processing timeliness
+- Bottleneck identification
 
-## 4. 闭环率统计
-- 整体闭环率
-- 分渠道/分严重度闭环率
-- 闭环时效
-- 趋势对比
+## 4. Closure Rate Statistics
+- Overall closure rate
+- By-channel/by-severity closure rate
+- Closure timeliness
+- Trend comparison
 
-## 5. 未解决问题
-- P0/P1未解决清单
-- 长期未解决
-- 重复反馈
-- 根因分析
+## 5. Unresolved Issues
+- P0/P1 unresolved list
+- Long-standing unresolved
+- Repeated feedback
+- Root cause analysis
 
-## 6. 改进建议
-- 流程改进
-- 产品改进
-- 沟通改进
-- 预防措施
+## 6. Improvement Suggestions
+- Process improvement
+- Product improvement
+- Communication improvement
+- Preventive measures
 ```
 
-### JSON 结构
+### JSON Structure
 
 ```json
 {
@@ -225,61 +225,61 @@ writes:
 }
 ```
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 闭环率可计算（有明确的闭环定义和计算公式）
-- [ ] P0未解决已列出（所有P0未闭环反馈有清单）
+- [ ] Closure rate calculable (clear closure definition and calculation formula)
+- [ ] P0 unresolved listed (all P0 unclosed feedback has a list)
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 时效数据完整（各状态平均处理时间可计算）
-- [ ] 改进建议可执行（每项建议有责任方和时间节点）
+- [ ] Timeliness data complete (average processing time per status calculable)
+- [ ] Improvement suggestions executable (each suggestion has owner and timeline)
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep reasoning and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
-## 决策规则
+## Decision Rules
 
-- 当P0反馈未闭环数>0时，报告必须包含专项跟进计划
-- 当闭环率<80%时，自动生成流程改进建议
-- 当同类反馈重复出现≥3次时，升级为产品改进建议而非个案处理
-- 需要人类确认的决策点：反馈优先级判定、闭环标准定义、不处理反馈的关闭理由
+- When P0 feedback unresolved count > 0, report must include a dedicated follow-up plan
+- When closure rate < 80%, automatically generate process improvement suggestions
+- When same-type feedback appears ≥ 3 times, escalate to product improvement suggestion rather than case-by-case handling
+- Decision points requiring human confirmation: feedback priority determination, closure standard definition, closure reason for not-handled feedback
 
-## 降级策略
+## Degradation Strategy
 
-| 缺失的上游输入 | 降级方案 | 输出影响 |
+| Missing Upstream Input | Degradation Plan | Output Impact |
 |----------|----------|----------|
-| 无用户声音分析 | 基于用户提供反馈数据直接分析，标注"VOC分析待补充" | 反馈分析缺乏情感和主题维度 |
-| 无异常监控数据 | 跳过异常关联分析，标注"监控数据待补充" | 反馈与异常事件的关联缺失 |
-| 无处理记录 | 仅统计反馈数量和分类，闭环率标注"无法计算" | 闭环率不可计算 |
+| No Voice of Customer analysis | Analyze directly based on user-provided feedback data, label "VOC analysis pending supplementation" | Feedback analysis lacks sentiment and topic dimensions |
+| No anomaly monitoring data | Skip anomaly correlation analysis, label "monitoring data pending supplementation" | Correlation between feedback and anomaly events missing |
+| No handling records | Only count feedback quantity and classification, closure rate labeled "cannot calculate" | Closure rate not calculable |
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| summary | object | 是 | 执行摘要，须含total_feedback/closed_rate |
-| source_analysis | object | 是 | 反馈来源分析 |
-| progress_tracking | object | 否 | 处理进度追踪 |
-| closed_rate | object | 否 | 闭环率统计，须含overall/by_category |
-| unresolved_p0 | array | 否 | P0未解决清单 |
-| improvement_suggestions | array | 否 | 改进建议列表 |
+| summary | object | Yes | Executive summary, must contain total_feedback/closed_rate |
+| source_analysis | object | Yes | Feedback source analysis |
+| progress_tracking | object | No | Processing progress tracking |
+| closed_rate | object | No | Closure rate statistics, must contain overall/by_category |
+| unresolved_p0 | array | No | P0 unresolved list |
+| improvement_suggestions | array | No | Improvement suggestions list |
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游来源 | 变更类型 | 影响范围 | 响应动作 |
+| Upstream Source | Change Type | Impact Scope | Response Action |
 |----------|----------|----------|----------|
-| user-research-voice-analysis | VOC分析结果更新 | 反馈来源分析和情感维度 | 更新情感分布和主题分类 |
-| monitoring-attribution | 异常事件更新 | 反馈与异常关联分析 | 更新关联事件和影响范围 |
+| user-research-voice-analysis | VOC analysis results updated | Feedback source analysis and sentiment dimensions | Update sentiment distribution and topic classification |
+| monitoring-attribution | Anomaly events updated | Feedback and anomaly correlation analysis | Update correlated events and impact scope |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 下游消费者 | 通知条件 | 通知方式 | 通知内容 |
+| Downstream Consumer | Notification Condition | Notification Method | Notification Content |
 |------------|----------|----------|----------|
-| monitoring-orchestrator | 反馈闭环报告完成 | 输出文件更新 | 报告完成状态和关键结论 |
-| iteration-retrospective | P0未解决反馈 | 写入输出文件 | P0反馈清单和改进建议 |
+| monitoring-orchestrator | Feedback loop report completed | Output file updated | Report completion status and key conclusions |
+| iteration-retrospective | P0 unresolved feedback | Write to output file | P0 feedback list and improvement suggestions |

@@ -1,6 +1,6 @@
 # harness-ops gitignore
 
-# 运维敏感文件（绝不提交）
+# Ops sensitive files (never commit)
 .env
 .env.local
 .env.production
@@ -15,7 +15,7 @@ service-account*.json
 *.tfvars
 !*.tfvars.example
 
-# Terraform 状态
+# Terraform state
 *.tfstate
 *.tfstate.*
 .terraform/
@@ -24,14 +24,14 @@ service-account*.json
 # Ansible vault
 *.vault
 
-# 依赖
+# Dependencies
 node_modules/
 __pycache__/
 *.pyc
 .venv/
 venv/
 
-# 构建产物
+# Build artifacts
 dist/
 build/
 
@@ -41,15 +41,15 @@ build/
 *.swp
 *.swo
 
-# 临时文件
+# Temporary files
 .harness-ops-tmp-*/
 *.tmp
 *.bak
 
-# 归档与日志
+# Archives and logs
 .harness/memory/archives/
 *.log
 
-# 系统文件
+# System files
 .DS_Store
 Thumbs.db

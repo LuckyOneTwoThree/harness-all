@@ -1,17 +1,17 @@
 ---
 name: activation-orchestrator
-description: 当需要识别Aha Moment或设计Onboarding流程时使用。用户激活指挥官，调度activation-aha/onboarding。关键词：用户激活、Aha Moment、Onboarding、新用户引导、新手引导、激活率。
+description: Use when identifying the Aha Moment or designing the Onboarding flow. User Activation Orchestrator dispatches activation-aha/onboarding. Keywords: user activation, Aha Moment, Onboarding, new user guidance, onboarding tutorial, activation rate.
 metadata:
-  module: "产品增长与运营"
-  sub-module: "激活"
+  module: "Product Growth & Operations"
+  sub-module: "Activation"
   type: "orchestrator"
   version: "7.0"
-  domain_tags: ["电商", "社交", "工具", "通用"]
+  domain_tags: ["E-commerce", "Social", "Tools", "General"]
   trigger_examples:
-    - "找到Aha Moment"
-    - "设计新手引导流程"
-    - "提升用户激活率"
-    - "优化Onboarding"
+    - "Find the Aha Moment"
+    - "Design the onboarding flow"
+    - "Improve user activation rate"
+    - "Optimize Onboarding"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -23,22 +23,22 @@ writes:
   - output/approvals/activation-orchestrator/{stage-id}.approval.json
 ---
 
-# 用户激活指挥官
+# User Activation Orchestrator
 
-## 核心原则
+## Core Principles
 
-**Aha Moment是用户留存的起点**
+**Aha Moment is the starting point of user retention**
 
-用户激活的本质是帮助用户尽快到达Aha Moment——那个让用户感受到产品核心价值的瞬间。没有Aha Moment的激活只是流程完成，不是价值传递。
+The essence of user activation is helping users reach the Aha Moment as quickly as possible—that instant when users feel the core value of the product. Activation without an Aha Moment is merely flow completion, not value delivery.
 
-## 编排理念
+## Orchestration Philosophy
 
-1. **Aha Moment锚定Onboarding**：先识别Aha Moment，再以Aha Moment为终点设计Onboarding路径，确保引导有明确目标
-2. **数据从识别流向设计**：Aha Moment的到达率和路径数据直接驱动Onboarding的流程设计
+1. **Aha Moment anchors Onboarding**: First identify the Aha Moment, then design the Onboarding path with the Aha Moment as the endpoint, ensuring guidance has a clear target
+2. **Data flows from identification to design**: Aha Moment reach rate and path data directly drive Onboarding flow design
 
-## 编排协议
+## Orchestration Protocol
 
-遵循 [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) 编排协议。
+Follows the [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) orchestration protocol.
 
 ## Pipeline
 
@@ -52,101 +52,101 @@ post_pipeline:
 
 stages:
   - id: phase-1
-    name: "Aha Moment识别"
+    name: "Aha Moment Identification"
     depends_on: []
     skills: [activation-aha]
     gate:
-      condition: "至少产出1个Aha Moment候选行为，含留存提升和到达率数据"
-      fail_action: "扩大行为搜索范围"
+      condition: "At least 1 Aha Moment candidate behavior produced, with retention lift and reach rate data"
+      fail_action: "Expand behavior search scope"
 
   - id: phase-2
-    name: "Onboarding设计"
+    name: "Onboarding Design"
     depends_on: [phase-1]
     skills: [activation-onboarding]
     gate:
-      condition: "各用户分群的Onboarding路径和内容已设计"
-      fail_action: "补充分群数据或延长分析周期"
+      condition: "Onboarding paths and content designed for each user segment"
+      fail_action: "Supplement segment data or extend analysis period"
 ```
 
-## 阶段执行计划
+## Stage Execution Plan
 
-#### 调用 activation-aha
+#### Call activation-aha
 
 ```
 Skill: activation-aha
-输入:
+Inputs:
   retention_data: analysis-retention → retention_analysis.json
-  user_behavior_data: 用户提供
-  user_segment_data: 用户提供（可选）
-输出: docs/growth/growth-strategy.md（“Aha Moment”章节）
-验证: Aha候选通过相关性筛选（≥0.5）和显著性检验；到达率分析包含时间分布和路径分析；最短路径识别包含摩擦点分析；Onboarding优化建议可直接执行
-模式: 🤖→👤
+  user_behavior_data: User-provided
+  user_segment_data: User-provided (optional)
+Output: docs/growth/growth-strategy.md ("Aha Moment" section)
+Validation: Aha candidates pass correlation screening (≥0.5) and significance test; reach rate analysis includes time distribution and path analysis; shortest path identification includes friction point analysis; Onboarding optimization suggestions are directly executable
+Mode: 🤖→👤
 ```
 
-#### 调用 activation-onboarding
+#### Call activation-onboarding
 
 ```
 Skill: activation-onboarding
-输入:
-  onboarding_data: 用户提供
-  aha_moment_data: docs/growth/growth-strategy.md（“Aha Moment”章节）
-  user_segment_data: 用户提供（可选）
-输出: docs/growth/growth-strategy.md（“Onboarding”章节）
-验证: Onboarding阶段定义完整（欢迎→激活完成）；流失分析覆盖各阶段和用户分群；个性化引导与用户分群匹配；A/B测试包含护栏指标（后续留存、付费转化）
-模式: 🤖→👤
+Inputs:
+  onboarding_data: User-provided
+  aha_moment_data: docs/growth/growth-strategy.md ("Aha Moment" section)
+  user_segment_data: User-provided (optional)
+Output: docs/growth/growth-strategy.md ("Onboarding" section)
+Validation: Onboarding stage definition complete (Welcome → Activation Complete); drop-off analysis covers all stages and user segments; personalized guidance matches user segments; A/B tests include guardrail metrics (subsequent retention, paid conversion)
+Mode: 🤖→👤
 ```
 
-### 阶段总结（post_pipeline）
+### Stage Summary (post_pipeline)
 
-所有子Skill执行完成后，必须生成阶段总结文档，写入 `output/phase-reports/activation-orchestrator.json`，包含以下6项结构（均不可为空）：
+After all sub-skills finish executing, a stage summary document must be generated and written to `output/phase-reports/activation-orchestrator.json`, containing the following 6 structures (none may be empty):
 
-1. **执行概览**：编排器名称与版本、执行时间、子Skill执行状态（成功/失败/降级）
-2. **关键发现**：每个子Skill的核心输出摘要（1-3条）、跨子Skill的交叉洞察
-3. **决策记录**：人类决策点及决策结果、AI自动决策及依据
-4. **产出清单**：所有输出文件路径及内容摘要、产出质量评估（是否通过验证）
-5. **风险与待办**：未通过验证的项、降级执行的项、建议后续跟进的事项
-6. **下游衔接**：本编排器产出可被哪些下游编排器消费、推荐的下一步编排器
+1. **Execution Overview**: Orchestrator name and version, execution time, sub-skill execution status (success/failure/degraded)
+2. **Key Findings**: Core output summary of each sub-skill (1-3 items), cross-sub-skill insights
+3. **Decision Records**: Human decision points and decision results, AI automated decisions and rationale
+4. **Artifact Inventory**: All output file paths and content summaries, artifact quality assessment (whether validation passed)
+5. **Risks & TODOs**: Items that failed validation, items executed in degraded mode, recommended follow-up items
+6. **Downstream Handoff**: Which downstream orchestrators can consume this orchestrator's outputs, recommended next orchestrator
 
-| 参数 | 值 |
+| Parameter | Value |
 |------|-----|
-| 子Skill输出路径 | docs/growth/ |
-| 总结输出路径 | output/phase-reports/activation-orchestrator.json |
-| 审批记录路径 | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
+| Sub-skill output path | docs/growth/ |
+| Summary output path | output/phase-reports/activation-orchestrator.json |
+| Approval record path | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
 
-下游衔接:
-  primary: retention-orchestrator（用户激活优化完成，防止用户流失）
+Downstream handoff:
+  primary: retention-orchestrator (user activation optimization complete, prevent user churn)
   alternatives:
     - target: growth-orchestrator
-      reason: 激活不是当前瓶颈，回退到增长诊断重新评估
-      condition: 激活率优化效果不达预期或激活非当前最大瓶颈时
+      reason: Activation is not the current bottleneck, fall back to growth diagnosis for re-evaluation
+      condition: When activation rate optimization results fall short of expectations or activation is not the current biggest bottleneck
     - target: experiment-orchestrator
-      reason: 激活策略需A/B测试验证
-      condition: Onboarding方案变更需量化验证时
+      reason: Activation strategy needs A/B test validation
+      condition: When Onboarding scheme changes require quantitative validation
   special_cases:
     - target: activation-aha
-      reason: 仅需识别Aha Moment，无需完整激活编排
-      condition: 已有Onboarding方案，仅需确认Aha Moment时
+      reason: Only need to identify Aha Moment, no need for full activation orchestration
+      condition: When an Onboarding scheme already exists and only Aha Moment confirmation is needed
 
-## 阶段卡口
+## Stage Gates
 
-| 卡口 | 条件 | 未通过处理 |
+| Gate | Condition | Action if Not Met |
 |------|------|------------|
-| Aha Moment候选已识别 | activation-aha输出文件已生成且非空 | 扩大行为搜索范围 |
-| Onboarding策略已生成 | activation-onboarding输出文件已生成且非空 | 补充分群数据或延长分析周期 |
-| 阶段总结已生成 | output/phase-reports/activation-orchestrator.json 已生成且6项结构均非空 | 补充缺失结构项后重新生成 |
+| Aha Moment candidates identified | activation-aha output file generated and non-empty | Expand behavior search scope |
+| Onboarding strategy generated | activation-onboarding output file generated and non-empty | Supplement segment data or extend analysis period |
+| Stage summary generated | output/phase-reports/activation-orchestrator.json generated and all 6 structures non-empty | Regenerate after supplementing missing structure items |
 
-## 人类决策点
+## Human Decision Points
 
-| 决策点 | 触发条件 | 决策内容 |
+| Decision Point | Trigger Condition | Decision Content |
 |--------|----------|----------|
-| Aha Moment确认 | Aha Moment候选识别完成 | 确认主Aha Moment的选择和Onboarding路径设计 |
+| Aha Moment confirmation | Aha Moment candidate identification complete | Confirm the selection of the primary Aha Moment and Onboarding path design |
 
-## 异常处理
+## Exception Handling
 
-| 异常类型 | 处理策略 |
+| Exception Type | Handling Strategy |
 |----------|----------|
-| Aha Moment无候选通过筛选阈值 | 降低相关性阈值至0.3重新搜索；仍无结果则基于产品功能推断候选，标注"待数据验证" |
-| Onboarding数据完全缺失 | 基于Aha Moment数据设计通用Onboarding框架，标注"待Onboarding数据补充" |
-| 子Skill输出校验未通过 | 回退至当前阶段重新执行，最多重试1次；仍失败则标记异常并上报人类 |
-| 上下游数据格式不兼容 | 按下游子Skill输入Schema做字段映射和默认值填充，记录映射关系 |
-| 阶段总结生成失败 | 基于已完成的子Skill输出生成部分总结，缺失项标注"数据缺失"，不阻塞编排完成 |
+| No Aha Moment candidate passes screening threshold | Lower correlation threshold to 0.3 and re-search; if still no results, infer candidates based on product features, marked "pending data validation" |
+| Onboarding data completely missing | Design a general Onboarding framework based on Aha Moment data, marked "pending Onboarding data supplement" |
+| Sub-skill output validation failed | Fall back to current stage and re-execute, max 1 retry; if still fails, mark exception and escalate to human |
+| Upstream/downstream data format incompatible | Perform field mapping and default value filling per downstream sub-skill input Schema, record mapping relationship |
+| Stage summary generation failed | Generate partial summary based on completed sub-skill outputs, missing items marked "data missing", does not block orchestration completion |

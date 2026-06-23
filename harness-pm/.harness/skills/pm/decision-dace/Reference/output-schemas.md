@@ -1,31 +1,31 @@
-<!-- 从 SKILL.md 提取的参考材料，按需查阅 -->
+<!-- Reference material extracted from SKILL.md, consult as needed -->
 
-# 输出 Schema / 洞察输出示例 / 输出校验规则
+# Output Schema / Insight Output Examples / Output Validation Rules
 
-## 输出Schema
+## Output Schema
 
 ```json
 {
   "type": "object",
   "required": ["dace_status", "okr_tracking", "insight_id", "source", "narrative", "action_options"],
   "properties": {
-    "dace_status": {"type": "object", "description": "DACE循环状态，包含当前阶段和进度"},
-    "okr_tracking": {"type": "object", "description": "OKR追踪数据，包含目标、关键结果和达成率"},
-    "action_log": {"type": "array", "description": "行动日志，包含已执行决策和待执行项"},
-    "cycle_report": {"type": "object", "description": "周期报告，包含分析结论和执行建议"},
-    "insight_id": {"type": "string", "description": "洞察唯一标识"},
-    "created_at": {"type": "string", "description": "创建时间"},
-    "source": {"type": "object", "description": "洞察来源，包含类型和置信度"},
-    "narrative": {"type": "string", "description": "故事化叙述，包含背景、发现、影响和建议"},
-    "action_options": {"type": "array", "description": "决策选项列表，包含预期效果、风险和置信度"},
-    "decision_boundary": {"type": "object", "description": "决策边界，包含类型和自动执行资格"},
-    "decision_maker": {"type": "string", "description": "决策人角色"},
-    "deadline": {"type": "string", "description": "决策截止时间"}
+    "dace_status": {"type": "object", "description": "DACE cycle status, including current phase and progress"},
+    "okr_tracking": {"type": "object", "description": "OKR tracking data, including objectives, key results, and achievement rate"},
+    "action_log": {"type": "array", "description": "Action log, including executed decisions and pending items"},
+    "cycle_report": {"type": "object", "description": "Cycle report, including analysis conclusions and execution recommendations"},
+    "insight_id": {"type": "string", "description": "Insight unique identifier"},
+    "created_at": {"type": "string", "description": "Creation time"},
+    "source": {"type": "object", "description": "Insight source, including type and confidence"},
+    "narrative": {"type": "string", "description": "Narrative, including background, findings, impact, and recommendations"},
+    "action_options": {"type": "array", "description": "Decision options list, including expected effects, risks, and confidence"},
+    "decision_boundary": {"type": "object", "description": "Decision boundary, including type and auto-execution eligibility"},
+    "decision_maker": {"type": "string", "description": "Decision maker role"},
+    "deadline": {"type": "string", "description": "Decision deadline"}
   }
 }
 ```
 
-## 洞察输出示例
+## Insight Output Example
 
 ```yaml
 data_insight:
@@ -38,115 +38,115 @@ data_insight:
     confidence: "high"
 
   narrative: |
-    ## 简化注册流程实验洞察
+    ## Simplified Registration Flow Experiment Insight
 
-    ### 背景
-    产品团队在2024年1月15日启动了简化注册流程实验，
-    将5步注册流程缩短为3步。
-    实验持续14天，共24830名用户参与。
+    ### Background
+    The product team launched the simplified registration flow experiment on January 15, 2024,
+    shortening the 5-step registration flow to 3 steps.
+    The experiment lasted 14 days with 24,830 users participating.
 
-    ### 发现
-    实验组（简化流程）的注册转化率达到38.1%，
-    相比对照组（标准流程）的35.2%提升了8.2个百分点。
-    这个结论有99.9%的可信度（p=0.001）。
+    ### Findings
+    The experimental group (simplified flow) achieved a registration conversion rate of 38.1%,
+    an improvement of 8.2 percentage points compared to the control group (standard flow) at 35.2%.
+    This conclusion has 99.9% confidence (p=0.001).
 
-    更重要的是，这个提升是稳定的——
-    从实验第1天到第14天，效果没有衰减，
-    说明这不是用户的新奇效应，而是真实的体验改善。
+    More importantly, this improvement is stable —
+    from day 1 to day 14 of the experiment, the effect did not decay,
+    indicating this is not a novelty effect for users, but a genuine experience improvement.
 
-    ### 影响
-    如果我们全量发布这个功能：
-    - 每月预计新增注册用户 **+12%**（约3.6万用户/月）
-    - 按照当前转化漏斗，预计带来 **+8%** 的DAU增长
+    ### Impact
+    If we fully release this feature:
+    - Estimated new registered users per month **+12%** (about 36,000 users/month)
+    - Based on the current conversion funnel, estimated **+8%** DAU growth
 
-    ### 风险
-    我们检查了所有护栏指标：
-    - 用户7日留存：42.0% → 41.8%（下降0.2%，可接受）
-    - DAU：保持稳定
-    - 崩溃率：无变化
+    ### Risks
+    We checked all guardrail metrics:
+    - User 7-day retention: 42.0% → 41.8% (down 0.2%, acceptable)
+    - DAU: Stable
+    - Crash rate: No change
 
-    所有护栏指标都在安全范围内。
+    All guardrail metrics are within safe ranges.
 
-    ### 建议
-    **建议全量发布简化注册流程。**
-    这是低风险高回报的改动，数据支持立即执行。
+    ### Recommendation
+    **Recommend full release of the simplified registration flow.**
+    This is a low-risk, high-reward change, and the data supports immediate execution.
 
   action_options:
-    - option: "全量发布简化注册流程"
+    - option: "Full release of simplified registration flow"
       option_id: "opt_001"
       expected_effect:
-        primary: "注册转化率 +8.2%"
-        secondary: ["DAU +2%", "新用户 +12%"]
+        primary: "Registration conversion rate +8.2%"
+        secondary: ["DAU +2%", "New users +12%"]
       risk: "low"
       confidence: "high"
 
-    - option: "分平台发布（先iOS）"
+    - option: "Platform-specific release (iOS first)"
       option_id: "opt_002"
       expected_effect:
-        primary: "iOS转化 +5.2%"
-        secondary: ["Android待验证"]
+        primary: "iOS conversion +5.2%"
+        secondary: ["Android to be verified"]
       risk: "medium"
       confidence: "medium"
 
-    - option: "继续实验2周"
+    - option: "Continue experiment for 2 weeks"
       option_id: "opt_003"
       expected_effect:
-        primary: "更多数据验证"
-        secondary: ["降低不确定性"]
+        primary: "More data validation"
+        secondary: ["Reduce uncertainty"]
       risk: "low"
       confidence: "low"
 
   decision_boundary:
     type: "data_decision"
     description: |
-      数据明确支持"全量发布"选项：
-      - 统计显著（p=0.001）
-      - 实际意义显著（+8.2%）
-      - 护栏指标全部安全
-      - 无新奇效应
+      Data clearly supports the "full release" option:
+      - Statistically significant (p=0.001)
+      - Practically significant (+8.2%)
+      - All guardrail metrics safe
+      - No novelty effect
 
     auto_execute_eligible: true
 
     automation_conditions:
-      - condition: "技术团队确认可发布"
+      - condition: "Technical team confirms release readiness"
         required: true
-      - condition: "监控告警已配置"
+      - condition: "Monitoring alerts configured"
         required: true
-      - condition: "回滚方案已准备"
+      - condition: "Rollback plan prepared"
         required: true
 
     override_conditions:
-      - condition: "业务策略变更"
-        action: "暂停自动执行，等待人工确认"
+      - condition: "Business strategy change"
+        action: "Pause auto-execution, wait for manual confirmation"
 
   recommended_action:
-    action: "全量发布简化注册流程"
+    action: "Full release of simplified registration flow"
     priority: "high"
-    reason: "数据支持充分，风险低，收益显著"
+    reason: "Data support is sufficient, risk is low, benefit is significant"
 
     next_steps:
       - step: 1
-        task: "技术评审"
+        task: "Technical review"
         owner: "engineering"
         deadline: "2024-01-17"
       - step: 2
-        task: "配置监控告警"
+        task: "Configure monitoring alerts"
         owner: "data_team"
         deadline: "2024-01-18"
       - step: 3
-        task: "发布部署"
+        task: "Release deployment"
         owner: "engineering"
         deadline: "2024-01-19"
       - step: 4
-        task: "发布后监控"
+        task: "Post-release monitoring"
         owner: "data_team"
         duration: "2 weeks"
 ```
 
-## 输出文件结构
+## Output File Structure
 
 ```
-docs/metrics/decision-report.md（"DACE决策"章节）
+docs/metrics/decision-report.md ("DACE Decisions" section)
 ├── dace_status.json
 ├── okr_tracking.json
 ├── action_log.json
@@ -155,38 +155,38 @@ docs/metrics/decision-report.md（"DACE决策"章节）
 └── insight_library.json
 ```
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| dace_status | object | 是 | DACE循环状态 |
-| dace_status.cycle_id | string | 是 | 循环ID |
-| dace_status.current_phase | string | 是 | 当前阶段，枚举值：Define/Analyze/Conclude/Execute |
-| dace_status.phase_history | array | 是 | 阶段历史 |
-| okr_tracking | object | 是 | OKR追踪数据 |
-| okr_tracking.objectives | array | 是 | 目标列表 |
-| okr_tracking.objectives[].id | string | 是 | 目标ID |
-| okr_tracking.objectives[].progress | number | 是 | 进度百分比 |
-| okr_tracking.objectives[].status | string | 是 | 状态，枚举值：on_track/at_risk/behind |
-| action_log | array | 是 | 行动日志 |
-| action_log[].action_id | string | 是 | 行动ID |
-| action_log[].action | string | 是 | 行动描述 |
-| action_log[].status | string | 是 | 状态，枚举值：approved/in_progress/completed |
-| data_insight | object | 否 | 数据洞察根对象（Analyze阶段产出） |
-| data_insight.insight_id | string | 是 | 洞察唯一标识 |
-| data_insight.created_at | string | 是 | 创建时间 |
-| data_insight.source | object | 是 | 洞察来源 |
-| data_insight.source.type | string | 是 | 来源类型，枚举值：experiment_result/anomaly/funnel_analysis/retention_analysis |
-| data_insight.source.confidence | string | 是 | 来源置信度 |
-| data_insight.narrative | string | 是 | 故事化叙述 |
-| data_insight.action_options | array | 是 | 决策选项列表，至少2个 |
-| data_insight.action_options[].option_id | string | 是 | 选项ID |
-| data_insight.action_options[].expected_effect | object | 是 | 预期效果 |
-| data_insight.action_options[].risk | string | 是 | 风险等级 |
-| data_insight.action_options[].confidence | string | 是 | 置信度 |
-| data_insight.decision_boundary | object | 是 | 决策边界 |
-| data_insight.decision_boundary.type | string | 是 | 边界类型，枚举值：data_decision/data_reference/human_decision |
-| data_insight.decision_boundary.auto_execute_eligible | boolean | 是 | 是否可自动执行 |
-| data_insight.recommended_action | object | 是 | 推荐行动 |
-| data_insight.recommended_action.action | string | 是 | 行动描述 |
-| data_insight.recommended_action.priority | string | 是 | 优先级 |
+| dace_status | object | Yes | DACE cycle status |
+| dace_status.cycle_id | string | Yes | Cycle ID |
+| dace_status.current_phase | string | Yes | Current phase, enum values: Define/Analyze/Conclude/Execute |
+| dace_status.phase_history | array | Yes | Phase history |
+| okr_tracking | object | Yes | OKR tracking data |
+| okr_tracking.objectives | array | Yes | Objectives list |
+| okr_tracking.objectives[].id | string | Yes | Objective ID |
+| okr_tracking.objectives[].progress | number | Yes | Progress percentage |
+| okr_tracking.objectives[].status | string | Yes | Status, enum values: on_track/at_risk/behind |
+| action_log | array | Yes | Action log |
+| action_log[].action_id | string | Yes | Action ID |
+| action_log[].action | string | Yes | Action description |
+| action_log[].status | string | Yes | Status, enum values: approved/in_progress/completed |
+| data_insight | object | No | Data insight root object (Analyze phase output) |
+| data_insight.insight_id | string | Yes | Insight unique identifier |
+| data_insight.created_at | string | Yes | Creation time |
+| data_insight.source | object | Yes | Insight source |
+| data_insight.source.type | string | Yes | Source type, enum values: experiment_result/anomaly/funnel_analysis/retention_analysis |
+| data_insight.source.confidence | string | Yes | Source confidence |
+| data_insight.narrative | string | Yes | Narrative |
+| data_insight.action_options | array | Yes | Decision options list, at least 2 |
+| data_insight.action_options[].option_id | string | Yes | Option ID |
+| data_insight.action_options[].expected_effect | object | Yes | Expected effect |
+| data_insight.action_options[].risk | string | Yes | Risk level |
+| data_insight.action_options[].confidence | string | Yes | Confidence |
+| data_insight.decision_boundary | object | Yes | Decision boundary |
+| data_insight.decision_boundary.type | string | Yes | Boundary type, enum values: data_decision/data_reference/human_decision |
+| data_insight.decision_boundary.auto_execute_eligible | boolean | Yes | Whether auto-executable |
+| data_insight.recommended_action | object | Yes | Recommended action |
+| data_insight.recommended_action.action | string | Yes | Action description |
+| data_insight.recommended_action.priority | string | Yes | Priority |

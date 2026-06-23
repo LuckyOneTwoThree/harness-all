@@ -1,109 +1,109 @@
-# [项目名称] — 增长策略文档
+# [project name] — Growth strategy document
 
-> 来源：由用户立项时填写，或本框架 setup 工作流引导填写。
-> 加载时机：session-start / 增长 skill 读取。
-> 定位：立项时建立基线，策略变更时追加修订记录，不删除已确认策略。
-> 与 FEATURES.md 的分工：本文件是**策略定义**（立项时写），FEATURES.md 是**动态状态看板**（运营中更新）。
-> 实验编号规则：G-xxx 在本文件立项时分配，FEATURES.md 同步引用，编号一旦分配不复用。
+> Source: filled in by the user at project initiation, or guided by this framework's setup workflow.
+> Load timing: session-start / read by growth skills.
+> Positioning: establish the baseline at project initiation; append revision records when the strategy changes; do not delete confirmed strategies.
+> Division of labor with FEATURES.md: this file is the **strategy definition** (written at initiation), FEATURES.md is the **dynamic status board** (updated during operations).
+> Experiment numbering rule: G-xxx is assigned in this file at initiation and referenced in FEATURES.md; once assigned, numbers are not reused.
 
-## 项目概述
+## Project overview
 
-[一句话描述：什么产品、给谁用、增长目标]
+[One sentence: what product, for whom, growth goal]
 
-## 背景与动机
+## Background and motivation
 
-[为什么要做增长？当前产品状态、增长瓶颈是什么？]
+[Why do growth? What is the current product state and growth bottleneck?]
 
-## 增长目标
+## Growth goals
 
-| 维度 | 当前基线 | 目标值 | 时间窗口 |
+| Dimension | Current baseline | Target | Time window |
 |------|---------|--------|---------|
-| 用户量 | [当前] | [目标] | [如 3 个月] |
-| 留存率 | [当前] | [目标] | [时间] |
-| 转化率 | [当前] | [目标] | [时间] |
-| 内容产出 | [当前] | [目标] | [时间] |
-| SEO 流量 | [当前] | [目标] | [时间] |
+| User count | [current] | [target] | [e.g., 3 months] |
+| Retention rate | [current] | [target] | [time] |
+| Conversion rate | [current] | [target] | [time] |
+| Content output | [current] | [target] | [time] |
+| SEO traffic | [current] | [target] | [time] |
 
-## 目标用户
+## Target users
 
-| 用户角色 | 典型场景 | 核心需求 | 触达渠道 |
+| User role | Typical scenario | Core need | Reach channel |
 |---------|---------|---------|---------|
-| [角色1] | [场景描述] | [需求描述] | [渠道] |
-| [角色2] | [场景描述] | [需求描述] | [渠道] |
+| [role 1] | [scenario description] | [need description] | [channel] |
+| [role 2] | [scenario description] | [need description] | [channel] |
 
-## 增长渠道
+## Growth channels
 
-| 渠道 | 优先级 | 投入 | 预期产出 | 备注 |
+| Channel | Priority | Investment | Expected output | Notes |
 |------|--------|------|---------|------|
-| 内容营销（博客/公众号） | P0 | [人力/预算] | [流量/线索] | |
-| SEO | P0 | [人力/预算] | [自然流量] | 长期投资 |
-| 社媒（Twitter/小红书） | P1 | [人力/预算] | [曝光/互动] | |
-| 用户运营（社群/邮件） | P1 | [人力/预算] | [留存/复购] | |
-| 增长实验（A/B 测试） | P2 | [人力/预算] | [转化提升] | |
+| Content marketing (blog / official account) | P0 | [headcount / budget] | [traffic / leads] | |
+| SEO | P0 | [headcount / budget] | [organic traffic] | Long-term investment |
+| Social media (Twitter / Xiaohongshu) | P1 | [headcount / budget] | [exposure / engagement] | |
+| User operations (community / email) | P1 | [headcount / budget] | [retention / repurchase] | |
+| Growth experiments (A/B testing) | P2 | [headcount / budget] | [conversion lift] | |
 
-## 增长实验计划
+## Growth experiment plan
 
-| 编号 | 实验 | 假设 | 主要度量 | 优先级 | 状态 |
+| Number | Experiment | Hypothesis | Primary metric | Priority | Status |
 |------|------|------|---------|--------|------|
-| G-001 | [实验名] | [做 X 会让 Y 提升 Z%] | [指标] | P0 | pending |
-| G-002 | [实验名] | [假设] | [指标] | P1 | pending |
+| G-001 | [experiment name] | [doing X will lift Y by Z%] | [metric] | P0 | pending |
+| G-002 | [experiment name] | [hypothesis] | [metric] | P1 | pending |
 
-### 实验设计说明
+### Experiment design notes
 
-- 每个实验必须有可证伪的假设
-- 主要度量用于判定成败
-- 护栏度量用于监控副作用
-- 实验时长和样本量需达到统计显著性
+- Every experiment must have a falsifiable hypothesis
+- The primary metric is used to judge success or failure
+- Guardrail metrics are used to monitor side effects
+- Experiment duration and sample size must reach statistical significance
 
-## 不做的事（边界）
+## Out of scope (boundaries)
 
-[明确排除的范围，避免资源分散]
+[Explicitly excluded scope to avoid resource scatter]
 
-- 不做 [渠道X]，因为 [原因]
-- 不投放 [广告类型Y]，因为 [原因]
-- 不做 [营销手段Z]，因为 [违反原则]
+- No [channel X], because [reason]
+- No [ad type Y], because [reason]
+- No [tactic Z], because [violates principle]
 
-## 增长约束（非宪法）
+## Growth constraints (non-constitution)
 
-[constitution.md 未覆盖的外部约束，如预算限制、合规要求]
+[External constraints not covered by constitution.md, e.g., budget limits, compliance requirements]
 
-- [约束1，如：月度内容预算不超过 X 元]
-- [约束2，如：需通过广告法合规审查]
+- [Constraint 1, e.g., monthly content budget does not exceed X]
+- [Constraint 2, e.g., must pass advertising law compliance review]
 
-> 注：宪法级约束（实验驱动、内容优先、不做黑帽等）写在 constitution.md，不在此重复。
+> Note: constitution-level constraints (experiment-driven, content-first, no black-hat, etc.) are written in constitution.md and not repeated here.
 
-## 成功指标（增长完成度衡量）
+## Success metrics (growth completeness measure)
 
-[增长工作做完后，用什么指标衡量成功？达标即成功]
+[After the growth work is done, what metrics measure success? Meeting the bar means success]
 
-- 指标1：[如：自然搜索流量月增长 > 20%]
-- 指标2：[如：内容转化率 > 5%]
-- 指标3：[如：用户留存率（次日）> 40%]
+- Metric 1: [e.g., monthly organic search traffic growth > 20%]
+- Metric 2: [e.g., content conversion rate > 5%]
+- Metric 3: [e.g., D1 user retention > 40%]
 
-## 里程碑
+## Milestones
 
-| 阶段 | 目标 | 产出 |
+| Phase | Goal | Output |
 |------|------|------|
-| M1 | 内容基线建立 | 发布 X 篇高质量内容 |
-| M2 | SEO 见效 | 核心关键词进入前 10 |
-| M3 | 增长闭环 | 完成 X 个实验，形成数据闭环 |
+| M1 | Content baseline established | Publish X high-quality pieces |
+| M2 | SEO takes effect | Core keywords enter top 10 |
+| M3 | Growth closed loop | Complete X experiments, form a data closed loop |
 
-## 依赖与风险
+## Dependencies and risks
 
-| 类型 | 描述 | 影响 | 应对 |
+| Type | Description | Impact | Response |
 |------|------|------|------|
-| 依赖 | [如：依赖 harness-solo 上线埋点] | [高/中/低] | [措施] |
-| 风险 | [如：SEO 见效慢，3-6 个月] | [高/中/低] | [措施] |
+| Dependency | [e.g., depends on harness-solo to ship event tracking] | [high/medium/low] | [action] |
+| Risk | [e.g., SEO takes effect slowly, 3-6 months] | [high/medium/low] | [action] |
 
-## 未决事项
+## Open items
 
-[需要讨论或确认的问题]
+[Questions that need discussion or confirmation]
 
-- 待定 1: [问题描述]
-- 待定 2: [问题描述]
+- Open 1: [question description]
+- Open 2: [question description]
 
-## 修订记录
+## Revision history
 
-| 日期 | 修订内容 | 原因 |
+| Date | Revision | Reason |
 |------|---------|------|
-| YYYY-MM-DD | 初始版本 | 项目立项 |
+| YYYY-MM-DD | Initial version | Project initiation |

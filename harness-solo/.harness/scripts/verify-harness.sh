@@ -1,12 +1,12 @@
 #!/bin/bash
-# verify-harness.sh — 框架健康检查（可选兜底脚本）
-# 用法：bash verify-harness.sh
-# 检查 .harness/ 结构完整性、必填文件是否存在
+# verify-harness.sh — Framework health check (optional fallback script)
+# Usage: bash verify-harness.sh
+# Check .harness/ structural integrity and required file existence
 #
-# ⚠️ 跨平台说明：本脚本是可选兜底，仅在 bash 可用环境下执行。
-# Windows 或无 bash 环境下，Agent 可用 Glob/Read 工具按本脚本的检查清单自检。
+# ⚠️ Cross-platform note: this script is an optional fallback, only executed when bash is available.
+# On Windows or environments without bash, the Agent can self-check using Glob/Read tools according to this script's checklist.
 
-# CRLF 防御：Windows 下 core.autocrlf 可能导致脚本含 \r，Git Bash 无法执行
+# CRLF defense: on Windows, core.autocrlf may cause scripts to contain \r, which Git Bash cannot execute
 if grep -qI $'\r' "$0" 2>/dev/null; then
   exec bash < <(tr -d '\r' < "$0")
 fi
@@ -15,11 +15,11 @@ set -e
 
 HARNESS_DIR=".harness"
 
-echo "=== Harness 健康检查 ==="
+echo "=== Harness Health Check ==="
 
 errors=0
 
-# 自动创建运行时目录（在 .gitignore 里，新 clone 的项目不存在）
+# Auto-create runtime directories (listed in .gitignore; absent in freshly cloned projects)
 RUNTIME_DIRS=(
   ".harness/memory"
   ".harness/memory/archives"
@@ -29,7 +29,7 @@ for d in "${RUNTIME_DIRS[@]}"; do
   mkdir -p "$d" 2>/dev/null
 done
 
-# 必填文件检查
+# Required files check
 REQUIRED_FILES=(
   "AGENTS.md"
   "SOUL.md"
@@ -43,17 +43,17 @@ REQUIRED_FILES=(
   ".harness/.gitignore"
 )
 
-echo "→ 必填文件检查"
+echo "→ Required files check"
 for f in "${REQUIRED_FILES[@]}"; do
   if [ -f "$f" ]; then
     echo "  ✓ $f"
   else
-    echo "  ✗ 缺失: $f"
+    echo "  ✗ missing: $f"
     errors=$((errors + 1))
   fi
 done
 
-# 必填目录检查（骨架，缺失 = 报错）
+# Required directories check (skeleton; missing = error)
 REQUIRED_DIRS=(
   ".harness/skills/workflows"
   ".harness/skills/engineering"
@@ -67,17 +67,17 @@ REQUIRED_DIRS=(
   ".harness/rules"
 )
 
-echo "→ 必填目录检查（骨架）"
+echo "→ Required directories check (skeleton)"
 for d in "${REQUIRED_DIRS[@]}"; do
   if [ -d "$d" ]; then
     echo "  ✓ $d/"
   else
-    echo "  ✗ 缺失: $d/"
+    echo "  ✗ missing: $d/"
     errors=$((errors + 1))
   fi
 done
 
-# 可选目录检查（按需添加，缺失 = 提示但不报错）
+# Optional directories check (added on demand; missing = notice, no error)
 OPTIONAL_DIRS=(
   ".harness/gates"
   "docs/product"
@@ -86,17 +86,17 @@ OPTIONAL_DIRS=(
   "docs/handoff"
 )
 
-echo "→ 可选目录检查（按需，缺失不报错）"
+echo "→ Optional directories check (on demand; missing does not error)"
 for d in "${OPTIONAL_DIRS[@]}"; do
   if [ -d "$d" ]; then
     echo "  ✓ $d/"
   else
-    echo "  · 未启用: $d/（按需创建）"
+    echo "  · not enabled: $d/ (create on demand)"
   fi
 done
 
-# Guard 脚本检查
-echo "→ Guard 脚本检查"
+# Guard scripts check
+echo "→ Guard scripts check"
 GUARDS=(
   ".harness/hooks/guards/guard-secret.sh"
   ".harness/hooks/guards/guard-bash.sh"
@@ -109,13 +109,13 @@ for g in "${GUARDS[@]}"; do
   if [ -f "$g" ]; then
     echo "  ✓ $g"
   else
-    echo "  ✗ 缺失: $g"
+    echo "  ✗ missing: $g"
     errors=$((errors + 1))
   fi
 done
 
-# Scripts 脚本检查
-echo "→ Scripts 脚本检查"
+# Scripts check
+echo "→ Scripts check"
 SCRIPTS=(
   ".harness/scripts/archive-progress.sh"
   ".harness/scripts/entropy-check.sh"
@@ -126,30 +126,30 @@ for s in "${SCRIPTS[@]}"; do
   if [ -f "$s" ]; then
     echo "  ✓ $s"
   else
-    echo "  ✗ 缺失: $s"
+    echo "  ✗ missing: $s"
     errors=$((errors + 1))
   fi
 done
 
-# AGENTS.md 行数检查（constitution.md 上限 150 行）
-echo "→ AGENTS.md 行数检查"
+# AGENTS.md line count check (constitution.md upper limit 150 lines)
+echo "→ AGENTS.md line count check"
 if [ -f "AGENTS.md" ]; then
   agents_lines=$(wc -l < AGENTS.md | tr -d ' ')
   if [ "$agents_lines" -le 100 ]; then
-    echo "  ✓ $agents_lines 行（≤100）"
+    echo "  ✓ $agents_lines lines (≤100)"
   elif [ "$agents_lines" -le 150 ]; then
-    echo "  ⚠ $agents_lines 行（建议 ≤100，当前可接受）"
+    echo "  ⚠ $agents_lines lines (recommended ≤100, currently acceptable)"
   else
-    echo "  ✗ $agents_lines 行（超过 150，违反 constitution.md 原则5）"
+    echo "  ✗ $agents_lines lines (exceeds 150, violates constitution.md principle 5)"
     errors=$((errors + 1))
   fi
 fi
 
 echo ""
 if [ $errors -eq 0 ]; then
-  echo "✓ Harness 健康检查通过"
+  echo "✓ Harness health check passed"
   exit 0
 else
-  echo "✗ 发现 $errors 个问题"
+  echo "✗ Found $errors issue(s)"
   exit 1
 fi

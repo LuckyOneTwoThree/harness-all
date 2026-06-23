@@ -1,21 +1,21 @@
 ---
 name: diagnosis-competition
-description: 当需要追踪竞品动态并制定应对策略时使用。竞品动态追踪与应对，监控竞品功能变更，评估自身优势动态变化，生成应对策略并追踪效果。关键词：竞品追踪、竞品分析、竞品监控、功能变更、竞争分析、竞品变化、竞品动态、竞品变了、对手出招。
+description: Used when tracking competitor dynamics and formulating response strategies. Competitor dynamics tracking and response, monitoring competitor feature changes, assessing dynamic changes in own advantages, generating response strategies and tracking effectiveness. Keywords: competitor tracking, competitor analysis, competitor monitoring, feature changes, competitive analysis, competitor changes, competitor dynamics, competitor made a move, opponent made a move.
 metadata:
-  module: "产品监控与迭代"
-  sub-module: "问题诊断"
+  module: "Product Monitoring & Iteration"
+  sub-module: "Issue Diagnosis"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["互联网", "SaaS", "通用"]
+  domain_tags: ["Internet", "SaaS", "General"]
   trigger_examples:
-    - "竞品又更新了怎么办"
-    - "对手加了新功能怎么应对"
-    - "竞品动态怎么追踪"
+    - "What to do when competitors update again"
+    - "How to respond when opponent adds new feature"
+    - "How to track competitor dynamics"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出竞品诊断和功能对比"
-  deep_description: "完整诊断 + 竞品战略推演 + 差异化机会识别 + 竞争应对路线图"
+  quick_description: "Directly output competitor diagnosis and feature comparison"
+  deep_description: "Full diagnosis + competitor strategic reasoning + differentiation opportunity identification + competitive response roadmap"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -26,87 +26,87 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 竞品动态追踪与应对 🤖
+# Competitor Dynamics Tracking and Response 🤖
 
-## 核心原则
+## Core Principles
 
-1. **功能变更是信号不是噪音**：每次竞品功能变更都反映了其战略意图，关键是识别意图而非罗列变更
-2. **优势是动态的不是静态的**：竞争优势随时在变化，昨天的领先不保证明天的领先
-3. **应对策略必须可追踪**：策略的价值在于执行和效果验证，而非停留在建议层面
+1. **Feature changes are signals not noise**: Each competitor feature change reflects their strategic intent; the key is to identify intent rather than list changes
+2. **Advantages are dynamic not static**: Competitive advantages are constantly changing; yesterday's lead does not guarantee tomorrow's lead
+3. **Response strategies must be trackable**: The value of a strategy lies in execution and effectiveness validation, rather than staying at the recommendation level
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Input
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 竞品数据 | JSON | 是 | 竞品监控系统 → 竞品数据 | 功能列表、版本更新、用户评价 |
-| 自身数据 | JSON | 是 | 产品数据平台 → 自身数据 | 功能列表、用户评价、满意度 |
-| 市场数据 | JSON | ○ | 行业报告 → 市场数据 | 行业趋势、用户需求变化 |
-| 历史追踪 | JSON | ○ | docs/monitoring/diagnosis-report.md（“竞品诊断”章节） | 历史竞品分析报告 |
+| Competitor data | JSON | Yes | Competitor monitoring system → competitor data | Feature list, version updates, user reviews |
+| Self data | JSON | Yes | Product data platform → self data | Feature list, user reviews, satisfaction |
+| Market data | JSON | ○ | Industry report → market data | Industry trends, user demand changes |
+| Historical tracking | JSON | ○ | docs/monitoring/diagnosis-report.md ("Competitor Diagnosis" section) | Historical competitor analysis reports |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 功能变更监控 [条件]
+### Step 1: Feature Change Monitoring [Conditional]
 
-**目标**：识别竞品近期功能变更
+**Goal**: Identify competitor recent feature changes
 
-**监控渠道**：
-- 竞品官网/更新日志
-- 应用商店更新记录
-- 用户评价聚合
-- 社交媒体讨论
-- 行业媒体报道
+**Monitoring channels**:
+- Competitor official websites/update logs
+- App store update records
+- User review aggregation
+- Social media discussions
+- Industry media coverage
 
-**变更类型分类**：
+**Change type classification**:
 
-| 类型 | 定义 | 关注级别 |
+| Type | Definition | Attention Level |
 |------|------|----------|
-| 新功能 | 竞品独有的新能力 | P0 |
-| 功能优化 | 已有功能的体验/性能提升 | P1 |
-| 功能下线 | 停止支持的功能 | P2 |
-| 价格调整 | 定价策略变化 | P1 |
-| 生态扩展 | 合作伙伴/集成变化 | P2 |
+| New feature | New capability unique to competitor | P0 |
+| Feature optimization | Experience/performance improvement of existing feature | P1 |
+| Feature retirement | Discontinued feature | P2 |
+| Pricing adjustment | Pricing strategy change | P1 |
+| Ecosystem expansion | Partner/integration changes | P2 |
 
-**输出格式**：
+**Output format**:
 
 ```yaml
 feature_changes:
-  - competitor: 竞品A
+  - competitor: Competitor A
     change_type: new_feature | enhancement | deprecation | pricing | ecosystem
-    feature_name: 数据分析
+    feature_name: Data Analytics
     change_date: 2026-06-15
-    description: 核心功能相似，定位差异化
+    description: Core features similar, positioning differentiated
     user_reaction:
       sentiment: positive | negative | neutral
       volume: 128
-      key_themes: [体验提升, 响应更快]
+      key_themes: [Experience improvement, Faster response]
     source: https://example.com/changelog
     priority: P0 | P1 | P2
 ```
 
-### Step 2: 优势动态评估 [核心]
+### Step 2: Advantage Dynamic Assessment [Core]
 
-**目标**：评估自身相对竞品的优劣势变化
+**Goal**: Assess changes in own advantages/disadvantages relative to competitors
 
-**评估维度**：
+**Assessment dimensions**:
 
-| 维度 | 指标 | 数据来源 |
+| Dimension | Metric | Data Source |
 |------|------|----------|
-| 功能领先度 | 独有功能数 vs 竞品 | 功能对比矩阵 |
-| 用户体验 | 评分对比、功能易用性 | App Store/Google Play |
-| 性能指标 | 响应时间、稳定性对比 | 第三方评测 |
-| 价值感知 | 性价比、品牌认知 | 用户调研 |
-| 生态丰富度 | 集成数量、API 开放度 | 技术文档 |
+| Feature leadership | Unique feature count vs competitor | Feature comparison matrix |
+| User experience | Rating comparison, feature usability | App Store/Google Play |
+| Performance metrics | Response time, stability comparison | Third-party reviews |
+| Value perception | Cost-effectiveness, brand awareness | User research |
+| Ecosystem richness | Integration count, API openness | Technical documentation |
 
-**评估方法**：
-- 雷达图多维对比
-- 趋势线变化分析
-- 用户评论语义分析
+**Assessment methods**:
+- Radar chart multi-dimensional comparison
+- Trend line change analysis
+- User review semantic analysis
 
-**输出格式**：
+**Output format**:
 
 ```yaml
 advantage_changes:
@@ -116,57 +116,57 @@ advantage_changes:
       previous_status: leading | parity | lagging
       current_status: leading | parity | lagging
       change: improved | unchanged | declined
-      delta: 独有功能数从8增至10
+      delta: Unique feature count increased from 8 to 10
     - dimension: user_experience
       previous_status: leading | parity | lagging
       current_status: leading | parity | lagging
       change: improved | unchanged | declined
-      delta: App Store评分从4.5降至4.4
+      delta: App Store rating dropped from 4.5 to 4.4
   overall_trend:
     direction: gaining | holding | losing
     confidence: 85%
   critical_changes:
-    - description: "竞品 X 推出 Y 功能，缩小功能差距"
+    - description: "Competitor X launched Y feature, narrowing feature gap"
       impact_level: high | medium | low
 ```
 
-### Step 3: 应对策略生成 [核心]
+### Step 3: Response Strategy Generation [Core]
 
-**目标**：基于竞品动态生成应对策略
+**Goal**: Generate response strategies based on competitor dynamics
 
-**策略类型**：
+**Strategy types**:
 
-| 策略类型 | 适用场景 | 执行要求 |
+| Strategy Type | Applicable Scenario | Execution Requirements |
 |----------|----------|----------|
-| 加速 | 竞品抢占市场份额 | 快速迭代，高优先级 |
-| 差异化 | 竞品功能同质化 | 寻找独特价值点 |
-| 防御 | 竞品威胁核心功能 | 巩固护城河 |
-| 观望 | 影响不确定 | 持续监控，储备方案 |
+| Accelerate | Competitor seizing market share | Rapid iteration, high priority |
+| Differentiate | Competitor feature homogenization | Find unique value points |
+| Defend | Competitor threatening core features | Consolidate moat |
+| Monitor | Impact uncertain | Continuous monitoring, reserve plans |
 
-**策略生成规则**：
+**Strategy generation rules**:
 
 ```yaml
 response_strategy:
   - competitor_change:
-      feature: 数据分析
+      feature: Data Analytics
       change_type: new_feature
     recommended_approach: accelerate | differentiate | defend | monitor
     action:
-      title: 推出差异化数据分析模块
-      description: 在竞品基础上增加自定义看板能力
+      title: Launch differentiated data analytics module
+      description: Add custom dashboard capability on top of competitor features
       options:
         - option: aggressive
-          description: "快速跟进，功能优先"
+          description: "Fast follow-up, feature first"
           timeline: 2-4 weeks
           priority: P0
           resource_needed: 13
         - option: balanced
-          description: "差异化实现"
+          description: "Differentiated implementation"
           timeline: 4-8 weeks
           priority: P1
           resource_needed: 8
         - option: conservative
-          description: "持续观察，等待更多信息"
+          description: "Continue observing, wait for more information"
           timeline: tbd
           priority: P2
     selected_option: balanced
@@ -175,17 +175,17 @@ response_strategy:
       milestones: [...]
 ```
 
-### Step 4: 效果追踪 [条件]
+### Step 4: Effectiveness Tracking [Conditional]
 
-**目标**：追踪应对策略的执行效果
+**Goal**: Track the execution effectiveness of response strategies
 
-**追踪指标**：
-- 策略执行完成度
-- 功能发布后用户反馈
-- 市场份额变化
-- 用户评分变化
+**Tracking metrics**:
+- Strategy execution completeness
+- User feedback after feature release
+- Market share changes
+- User rating changes
 
-**追踪报告**：
+**Tracking report**:
 
 ```yaml
 effect_tracking:
@@ -205,31 +205,31 @@ effect_tracking:
       status_change: improved | unchanged | declined
 ```
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 竞品诊断和功能对比 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整诊断 + 竞品战略推演 + 差异化机会识别 + 竞争应对路线图 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Competitor diagnosis and feature comparison | Core conclusions + minimum viable artifact |
+| standard | Full artifact (current default) | Full artifact, including all Step outputs |
+| deep | Full diagnosis + competitor strategic reasoning + differentiation opportunity identification + competitive response roadmap | Full artifact + extended analysis + deep reasoning |
 
-## 输出
+## Output
 
 
-**输出文件路径**：`docs/monitoring/diagnosis-report.md（“竞品诊断”章节）`
-**输出Schema**：
+**Output file path**: `docs/monitoring/diagnosis-report.md ("Competitor Diagnosis" section)`
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["report_id", "feature_changes", "advantage_changes", "response_strategy"],
   "properties": {
-    "report_id": {"type": "string", "description": "报告唯一标识"},
-    "generated_at": {"type": "string", "description": "生成时间"},
-    "period": {"type": "object", "description": "分析周期，包含起止时间"},
-    "feature_changes": {"type": "object", "description": "功能变更汇总，包含总数和P0/P1计数"},
-    "advantage_changes": {"type": "object", "description": "优势变化，包含增长/保持/失去的维度"},
-    "response_strategy": {"type": "array", "description": "应对策略列表，包含竞品、功能和优先级"}
+    "report_id": {"type": "string", "description": "Report unique identifier"},
+    "generated_at": {"type": "string", "description": "Generation time"},
+    "period": {"type": "object", "description": "Analysis period, including start and end times"},
+    "feature_changes": {"type": "object", "description": "Feature change summary, including total and P0/P1 counts"},
+    "advantage_changes": {"type": "object", "description": "Advantage changes, including gaining/holding/losing dimensions"},
+    "response_strategy": {"type": "array", "description": "Response strategy list, including competitor, feature, and priority"}
   }
 }
 ```
@@ -244,7 +244,7 @@ effect_tracking:
     └── competition_report.md
 ```
 
-### 竞品应对输出格式
+### Competitor Response Output Format
 
 ```yaml
 competition_response:
@@ -261,89 +261,89 @@ competition_response:
     losing: [pricing]
   response_strategy:
     - id: STR-001
-      competitor: 竞品A
-      feature: 数据分析
+      competitor: Competitor A
+      feature: Data Analytics
       approach: accelerate
-      action: 推出差异化数据分析模块
+      action: Launch differentiated data analytics module
       timeline: 4
       priority: P0
       tracking:
         status: planned
 ```
 
-## 决策规则
+## Decision Rules
 
-| 场景 | 决策规则 |
+| Scenario | Decision Rule |
 |------|----------|
-| 竞品推出颠覆性功能 | 立即生成应对策略，标记 P0 |
-| 优势差距缩小 < 10% | 生成防御策略 |
-| 多个竞品同质化 | 触发差异化策略生成 |
-| 策略执行延期 | 重新评估优先级 |
-| 市场环境重大变化 | 重新评估整体策略 |
+| Competitor launches disruptive feature | Immediately generate response strategy, mark P0 |
+| Advantage gap narrows < 10% | Generate defense strategy |
+| Multiple competitors homogenize | Trigger differentiation strategy generation |
+| Strategy execution delayed | Re-evaluate priority |
+| Major market environment change | Re-evaluate overall strategy |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 竞品覆盖完整性 ≥ 90%
-- [ ] 功能变更识别及时性 ≤ 7 天
+- [ ] Competitor coverage completeness ≥ 90%
+- [ ] Feature change identification timeliness ≤ 7 days
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 优势评估与实际市场反馈一致
-- [ ] 策略可执行性 ≥ 80%
-- [ ] 效果追踪覆盖率 100%
-- [ ] 报告完整性（所有维度）
+- [ ] Advantage assessment consistent with actual market feedback
+- [ ] Strategy executability ≥ 80%
+- [ ] Effectiveness tracking coverage 100%
+- [ ] Report completeness (all dimensions)
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep reasoning and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失的上游输入 | 降级方案 | 输出影响 |
+| Missing Upstream Input | Degradation Plan | Output Impact |
 |---------------|---------|---------|
-| 竞品数据 | 用户提供竞品名称列表，AI基于公开信息和行业知识追踪竞品动态 | 基于AI知识的竞品追踪报告，数据来源和置信度需标注 |
-| 自身数据 | 用户提供自身产品功能清单和用户评价，AI进行手动对比 | 基于用户输入的优劣势分析，缺乏数据验证 |
-| 市场数据 | 跳过行业趋势分析，策略建议仅基于功能对比 | 无行业趋势的策略建议 |
-| 历史追踪 | 跳过历史趋势分析，仅输出当前快照 | 竞品现状快照报告，无趋势对比 |
+| Competitor data | User provides competitor name list, AI tracks competitor dynamics based on public information and industry knowledge | AI knowledge-based competitor tracking report, data sources and confidence need to be labeled |
+| Self data | User provides own product feature list and user reviews, AI performs manual comparison | User input-based advantage/disadvantage analysis, lacks data validation |
+| Market data | Skip industry trend analysis, strategy recommendations based only on feature comparison | Strategy recommendations without industry trends |
+| Historical tracking | Skip historical trend analysis, only output current snapshot | Competitor status snapshot report, no trend comparison |
 
-### 数据获取说明
+### Data Acquisition Notes
 
-当上游文件缺失时，通过以下方式获取必要数据：
+When upstream files are missing, obtain necessary data through the following methods:
 
-1. **竞品数据缺失**：请用户提供竞品名称列表，AI将基于公开信息（官网、应用商店、行业报告等）和AI知识库追踪竞品功能动态，输出中标注数据来源和置信度
-2. **自身数据缺失**：请用户提供自身产品功能清单和核心指标（用户评分、功能覆盖等），AI将基于用户输入与竞品进行手动对比分析
-3. **市场数据缺失**：AI跳过行业趋势分析环节，应对策略仅基于功能对比结果生成，建议后续补充市场数据以完善策略
+1. **Competitor data missing**: Ask user to provide competitor name list, AI will track competitor feature dynamics based on public information (official websites, app stores, industry reports, etc.) and AI knowledge base, labeling data sources and confidence in output
+2. **Self data missing**: Ask user to provide own product feature list and core metrics (user ratings, feature coverage, etc.), AI will perform manual comparative analysis with competitors based on user input
+3. **Market data missing**: AI skips industry trend analysis, response strategies generated only based on feature comparison results, recommend supplementing market data later to improve strategy
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| report_id | string | 是 | 报告唯一标识 |
-| feature_changes | object | 是 | 功能变更汇总，须含total/p0_count/p1_count |
-| feature_changes.total | number | 是 | 变更总数，须≥0 |
-| advantage_changes | object | 是 | 优势变化，须含gaining/holding/losing |
-| response_strategy | array | 是 | 应对策略列表，每项须含id/competitor/feature/approach/priority |
-| response_strategy[].priority | string | 是 | 优先级，仅允许P0/P1/P2 |
+| report_id | string | Yes | Report unique identifier |
+| feature_changes | object | Yes | Feature change summary, must contain total/p0_count/p1_count |
+| feature_changes.total | number | Yes | Total change count, must be ≥0 |
+| advantage_changes | object | Yes | Advantage changes, must contain gaining/holding/losing |
+| response_strategy | array | Yes | Response strategy list, each item must contain id/competitor/feature/approach/priority |
+| response_strategy[].priority | string | Yes | Priority, only P0/P1/P2 allowed |
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游来源 | 变更类型 | 影响范围 | 响应动作 |
+| Upstream Source | Change Type | Impact Scope | Response Action |
 |----------|----------|----------|----------|
-| 竞品监控系统 | 竞品数据格式变更 | 功能变更解析和分类 | 适配新格式，更新变更类型分类 |
-| 产品数据平台 | 自身功能列表变更 | 优势对比矩阵 | 更新对比基准，重新评估优劣势 |
-| 行业报告 | 市场数据更新 | 行业趋势和策略建议 | 更新趋势分析，调整策略优先级 |
+| Competitor monitoring system | Competitor data format change | Feature change parsing and classification | Adapt to new format, update change type classification |
+| Product data platform | Self feature list change | Advantage comparison matrix | Update comparison baseline, re-evaluate advantages/disadvantages |
+| Industry report | Market data update | Industry trends and strategy recommendations | Update trend analysis, adjust strategy priority |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 下游消费者 | 通知条件 | 通知方式 | 通知内容 |
+| Downstream Consumer | Notification Condition | Notification Method | Notification Content |
 |------------|----------|----------|----------|
-| competitor-monitoring-report | 竞品追踪数据更新 | 写入输出文件 | 功能变更和优势变化 |
-| diagnosis-orchestrator | 竞品追踪完成 | 输出文件更新 | 追踪完成状态和关键发现 |
-| iteration-backlog-grooming | P0级别竞品变更 | 写入输出文件 | 紧急应对策略和优先级 |
+| competitor-monitoring-report | Competitor tracking data updated | Write to output file | Feature changes and advantage changes |
+| diagnosis-orchestrator | Competitor tracking completed | Output file updated | Tracking completion status and key findings |
+| iteration-backlog-grooming | P0-level competitor change | Write to output file | Emergency response strategy and priority |

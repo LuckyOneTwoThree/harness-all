@@ -4,120 +4,127 @@ name: refactor
 default_mode: deep
 ---
 
-# 工作流 C：重构
+# Workflow C: Refactoring
 
-> 适用场景：改善现有代码结构，不改变外部行为
-> 核心模式：brainstorming 确认边界 → LOOP（tdd 守护 + verify 不回归）→ code-review
+> Applicable scenario: Improve existing code structure without changing external behavior
+> Core mode: brainstorming to confirm boundaries → LOOP (tdd safety net + verify no regression) → code-review
 
-## 与新功能/Bug 修复的差异
+## Differences from New Feature / Bug Fix
 
-| 维度 | 新功能 | Bug 修复 | 重构 |
+| Dimension | New Feature | Bug Fix | Refactoring |
 |------|--------|---------|------|
-| 前置 | brainstorming（需求探索） | systematic-debugging（根因分析） | brainstorming（确认重构边界） |
-| TDD 起点 | 从 AC 写新测试 | 从复现 Bug 写测试 | **从现有测试建立守护网** |
-| verify 重点 | AC 满足 | 复现通过 + 不回归 | **全量测试不回归 + 复杂度下降** |
-| LOOP 上限 | 5 次 | 3 次 | 3 次（refactor 类型） |
+| Prerequisite | brainstorming (requirements exploration) | systematic-debugging (root cause analysis) | brainstorming (confirm refactoring boundaries) |
+| TDD starting point | Write new tests from AC | Write tests from bug reproduction | **Build a safety net from existing tests** |
+| verify focus | AC satisfied | Reproduction passes + no regression | **Full test suite no regression + complexity reduction** |
+| LOOP cap | 5 | 3 | 3 (refactor type) |
 
-## 流程
+## Process
 
 ```
 ┌─────────────────┐
-│ session-start   │  加载上下文，确认重构目标
+│ session-start   │  Load context, confirm refactoring goals
 └────────┬────────┘
          ▼
 ┌─────────────────┐
-│ brainstorming   │  ★ 硬门：重构边界要清晰
-│                 │  - 重构什么？为什么？
-│                 │  - 不改变什么行为？（边界）
-│                 │  - 成功标准：测试不回归 + 复杂度下降
+│ brainstorming   │  ★ Hard gate: refactoring boundaries must be clear
+│                 │  - Refactor what? Why?
+│                 │  - What behavior not to change? (boundaries)
+│                 │  - Success criteria: tests don't regress + complexity drops
 └────────┬────────┘
-         │ 通过
+         │ Passed
          ▼
 ┌─────────────────┐
-│ writing-plans   │  任务拆解
-│                 │  - 每步要小（2-5 分钟）
-│                 │  - 每步后跑全量测试
-│                 │  - 输出 spec.md（含"不改变行为"边界）
+│ writing-plans   │  Task breakdown
+│                 │  - Each step should be small (2-5 minutes)
+│                 │  - Run the full test suite after each step
+│                 │  - Output spec.md (with "no behavior change" boundaries)
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│              LOOP 循环重构               │
+│              LOOP iterative refactoring │
 │  ┌─────────────────────────────────┐    │
-│  │ 前置：建立测试守护网             │    │
-│  │  - 跑全量测试，确认当前全绿      │    │
-│  │  - 如测试不全，调用 test-coverage│    │
-│  │    skill 补测试再重构            │    │
+│  │ Pre-step: build test safety net │    │
+│  │  - Run full test suite, confirm │    │
+│  │    currently all green          │    │
+│  │  - If tests are incomplete,     │    │
+│  │    call test-coverage skill to  │    │
+│  │    add tests before refactoring │    │
 │  └──────────┬──────────────────────┘    │
 │             ▼                            │
 │  ┌─────────────────────────────────┐    │
-│  │ executing-plans (调度器)        │    │
-│  │  按任务序列推进，每任务 checkpoint│    │
+│  │ executing-plans (scheduler)     │    │
+│  │  Advance per task sequence,     │    │
+│  │  checkpoint per task            │    │
 │  └──────────┬──────────────────────┘    │
 │             ▼                            │
 │  ┌─────────────────────────────────┐    │
 │  │ test-driven-development (ACT)   │    │
-│  │  - 改结构，不改行为              │    │
-│  │  - 每次改动后立即跑测试          │    │
+│  │  - Change structure, not        │    │
+│  │    behavior                     │    │
+│  │  - Run tests immediately after  │    │
+│  │    each change                  │    │
 │  └──────────┬──────────────────────┘    │
 │             ▼                            │
 │  ┌─────────────────────────────────┐    │
 │  │ verify (VERIFY)                 │    │
-│  │  - 全量测试不回归（强制）        │    │
-│  │  - 复杂度指标下降（熵检查）      │    │
-│  │  - 行为等价性确认                │    │
+│  │  - Full test suite no regression│    │
+│  │    (mandatory)                  │    │
+│  │  - Complexity metrics down      │    │
+│  │    (entropy check)              │    │
+│  │  - Behavior equivalence confirm │    │
 │  └──────────┬──────────────────────┘    │
 │             │                            │
-│             ├── 通过 → 跳出 LOOP ────────┼──→
+│             ├── Pass → exit LOOP ────────┼──→
 │             │                            │
-│             └── 失败                     │
+│             └── Fail                     │
 │                   │                      │
 │                   ▼                      │
 │  ┌─────────────────────────────────┐    │
 │  │ systematic-debugging            │    │
-│  │  - 回退改动，重新分析            │    │
+│  │  - Roll back changes, re-analyze│    │
 │  └──────────┬──────────────────────┘    │
 │             │                            │
-│             └── 回到 tdd ────────────────┘
+│             └── Back to tdd ─────────────┘
 │                                          │
-│  迭代上限：3 次（refactor 类型）         │
-│  超限 → 请求人类介入                     │
+│  Iteration cap: 3 (refactor type)       │
+│  Exceeded → request human intervention  │
 └─────────────────────────────────────────┘
          │
          ▼
 ┌─────────────────────┐
-│ requesting-code-review │  审查重构质量
-│                       │  - 结构是否改善
-│                       │  - 行为是否保持
-│                       │  - 可读性是否提升
+│ requesting-code-review │  Review refactoring quality
+│                       │  - Did structure improve
+│                       │  - Was behavior preserved
+│                       │  - Was readability improved
 └──────────┬────────────┘
-           │ 通过
+           │ Passed
            ▼
 ┌─────────────────┐
-│ session-end     │  归档 + baseline + 更新 FEATURES.md
+│ session-end     │  Archive + baseline + update FEATURES.md
 └─────────────────┘
 ```
 
-## 关键检查点
+## Key Checkpoints
 
-- [ ] 重构边界清晰吗？（改什么、不改什么行为）
-- [ ] 重构前全量测试是绿的吗？（不是绿的不许动手）
-- [ ] 测试守护网够吗？（核心路径都有测试覆盖）
-- [ ] 每次结构改动后都跑测试了吗？
-- [ ] 重构后复杂度下降了吗？（熵检查）
-- [ ] 没有顺手加新功能吧？（重构 ≠ 加功能）
+- [ ] Are the refactoring boundaries clear? (What to change, what behavior not to change)
+- [ ] Was the full test suite green before refactoring? (Don't start if not green)
+- [ ] Is the test safety net sufficient? (Core paths have test coverage)
+- [ ] Did you run tests after every structural change?
+- [ ] Did complexity drop after refactoring? (Entropy check)
+- [ ] Didn't sneak in new features, right? (Refactoring ≠ adding features)
 
-## 失败处理
+## Failure Handling
 
-| 失败点 | 处理方式 |
+| Failure Point | Handling |
 |--------|---------|
-| 重构前测试不是全绿 | 先补测试或修 Bug，不许在红的基础上重构 |
-| 重构后测试回归 | 立即回退改动，重新分析 |
-| 重构引入新功能 | 立即停止，把新功能拆到新 spec.md |
-| LOOP 迭代超 3 次 | 重构方向可能错了，请求人类介入 |
+| Tests not all green before refactoring | Add tests or fix bugs first; don't refactor on top of red |
+| Test regression after refactoring | Immediately roll back changes and re-analyze |
+| Refactoring introduces new features | Stop immediately; split new features into a new spec.md |
+| LOOP iterations exceed 3 | Refactoring direction may be wrong; request human intervention |
 
-## 重构安全原则
+## Refactoring Safety Principles
 
-1. **小步快走**：每次只改一处，改完立即跑测试
-2. **保持测试绿**：任何时刻测试都应该是绿的，红了立即回退
-3. **不加功能**：重构期间不许加新功能，发现需要加的记到 TODO，重构完再开新 spec
-4. **行为等价**：外部可观察行为不变（API 签名、输出、副作用）
+1. **Small steps, fast feedback**: Change one thing at a time; run tests immediately after each change
+2. **Keep tests green**: Tests should be green at all times; roll back immediately if red
+3. **No new features**: Don't add new features during refactoring; if you find one is needed, record it as a TODO and open a new spec after refactoring
+4. **Behavior equivalence**: External observable behavior unchanged (API signatures, outputs, side effects)

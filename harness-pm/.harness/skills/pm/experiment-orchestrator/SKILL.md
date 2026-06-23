@@ -1,17 +1,17 @@
 ---
 name: experiment-orchestrator
-description: 当需要设计或执行A/B测试实验时使用。实验验证指挥官，调度experiment-design/execution。关键词：A/B测试、实验设计、统计显著性、实验执行、效果验证、AB测试、对照实验。
+description: Used when designing or executing A/B test experiments. Experiment validation orchestrator, dispatches experiment-design/execution. Keywords: A/B testing, experiment design, statistical significance, experiment execution, effect validation, AB testing, controlled experiment.
 metadata:
-  module: "产品度量运营"
-  sub-module: "实验验证"
+  module: "Product Metrics & Operations"
+  sub-module: "Experiment Validation"
   type: "orchestrator"
   version: "8.0"
-  domain_tags: ["通用"]
+  domain_tags: ["General"]
   trigger_examples:
-    - "设计一个A/B测试"
-    - "验证一下方案效果"
-    - "跑一下对照实验"
-    - "分析实验结果"
+    - "Design an A/B test"
+    - "Validate the solution effect"
+    - "Run a controlled experiment"
+    - "Analyze experiment results"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -22,23 +22,23 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 实验设计指挥官
+# Experiment Design Orchestrator
 
-## 核心原则
+## Core Principles
 
-**实验是学习的最快方式**
+**Experiments are the fastest way to learn**
 
-每一个实验都是一次有控制的探索，目标不是证明假设正确，而是以最快速度获得可靠的学习。实验的价值在于学习速度，而非实验数量。
+Every experiment is a controlled exploration. The goal is not to prove the hypothesis correct, but to obtain reliable learning at the fastest speed. The value of experiments lies in learning velocity, not in the number of experiments.
 
-## 编排理念
+## Orchestration Philosophy
 
-1. **设计→执行两阶段缺一不可**：没有设计的执行是盲目的，执行阶段包含结果分析和报告生成
-2. **人类审核是实验的必要卡口**：实验方案和实验报告都必须经人类审核，执行过程可自动化
-3. **护栏指标一票否决**：无论主指标多正向，护栏指标突破即暂停
+1. **Design→Execution two phases are both indispensable**: Execution without design is blind; the execution phase includes result analysis and report generation
+2. **Human review is a necessary gate for experiments**: Both experiment plans and experiment reports must go through human review; the execution process can be automated
+3. **Guardrail metrics have veto power**: No matter how positive the primary metric is, a guardrail metric breach means pause
 
-## 编排协议
+## Orchestration Protocol
 
-遵循 [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) 编排协议。
+Follows the [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) orchestration protocol.
 
 ## Pipeline
 
@@ -52,114 +52,114 @@ post_pipeline:
 
 stages:
   - id: phase-1
-    name: "实验设计"
+    name: "Experiment Design"
     depends_on: []
     skills: [experiment-design]
     gate:
-      condition: "实验设计经人类审核确认"
-      fail_action: "阻止实验上线，修改后重新审核"
+      condition: "Experiment design confirmed by human review"
+      fail_action: "Block experiment launch, revise and re-review"
 
   - id: phase-2
-    name: "实验执行"
+    name: "Experiment Execution"
     depends_on: [phase-1]
     skills: [experiment-execution]
     gate:
-      condition: "样本量充足且统计检验完成、实验报告经人类审核确认"
-      fail_action: "延长实验周期或扩大流量"
+      condition: "Sufficient sample size and statistical testing complete, experiment report confirmed by human review"
+      fail_action: "Extend experiment duration or increase traffic"
 ```
 
-## 阶段执行计划
+## Stage Execution Plan
 
-#### 调用 experiment-design
+#### Call experiment-design
 
 ```
 Skill: experiment-design
-输入:
-  hypothesis: 用户提供（假设陈述）
-  available_traffic: 用户提供（可用流量）
-  metrics_system: metrics-system → metrics.json（可选）
-  historical_data: analysis-funnel/analysis-retention（可选）
-输出: docs/metrics/experiment-report.md（“实验设计”章节）
-验证: 假设已结构化（If-Then-Because-For）；主指标与假设直接对应；护栏指标覆盖留存、收入、技术三个维度；样本量计算参数有据可依
-模式: 🤖→👤
+Inputs:
+  hypothesis: User-provided (hypothesis statement)
+  available_traffic: User-provided (available traffic)
+  metrics_system: metrics-system → metrics.json (optional)
+  historical_data: analysis-funnel/analysis-retention (optional)
+Output: docs/metrics/experiment-report.md ("Experiment Design" section)
+Validation: Hypothesis structured (If-Then-Because-For); primary metric directly corresponds to hypothesis; guardrail metrics cover retention, revenue, and technical dimensions; sample size calculation parameters are justified
+Mode: 🤖→👤
 ```
 
-#### 调用 experiment-execution
+#### Call experiment-execution
 
 ```
 Skill: experiment-execution
-输入:
-  experiment_design: docs/metrics/experiment-report.md（“实验设计”章节）
-  experiment_data: 用户提供
-  termination_conditions: docs/metrics/experiment-report.md（“实验设计”章节）
-  product_background: 用户提供（可选）
-输出: docs/metrics/experiment-report.md（“实验结果”章节）
-验证: 实验分组流量分配正确；护栏指标未触发告警；实验数据采集完整；统计显著性计算正确；统计结论与数据一致；行动建议与结论一致；护栏指标全覆盖；异质性效应已分析（至少3个分群维度）
-模式: 🤖→👤
+Inputs:
+  experiment_design: docs/metrics/experiment-report.md ("Experiment Design" section)
+  experiment_data: User-provided
+  termination_conditions: docs/metrics/experiment-report.md ("Experiment Design" section)
+  product_background: User-provided (optional)
+Output: docs/metrics/experiment-report.md ("Experiment Results" section)
+Validation: Experiment group traffic allocation correct; guardrail metrics did not trigger alerts; experiment data collection complete; statistical significance calculation correct; statistical conclusions consistent with data; action recommendations consistent with conclusions; guardrail metrics fully covered; heterogeneous effects analyzed (at least 3 segment dimensions)
+Mode: 🤖→👤
 ```
 
-### 阶段总结（post_pipeline）
+### Stage Summary (post_pipeline)
 
-所有子Skill执行完成后，必须生成阶段总结文档，写入 `output/phase-reports/experiment-orchestrator.json`，包含以下6项结构（均不可为空）：
+After all sub-skills complete execution, a stage summary document must be generated and written to `output/phase-reports/experiment-orchestrator.json`, containing the following 6 structures (none can be empty):
 
-1. **执行概览**：编排器名称与版本、执行时间、子Skill执行状态（成功/失败/降级）
-2. **关键发现**：每个子Skill的核心输出摘要（1-3条）、跨子Skill的交叉洞察
-3. **决策记录**：人类决策点及决策结果、AI自动决策及依据
-4. **产出清单**：所有输出文件路径及内容摘要、产出质量评估（是否通过验证）
-5. **风险与待办**：未通过验证的项、降级执行的项、建议后续跟进的事项
-6. **下游衔接**：本编排器产出可被哪些下游编排器消费、推荐的下一步编排器
+1. **Execution Overview**: Orchestrator name and version, execution time, sub-skill execution status (success/failure/degraded)
+2. **Key Findings**: Core output summary of each sub-skill (1-3 items), cross-sub-skill insights
+3. **Decision Record**: Human decision points and decision results, AI automatic decisions and rationale
+4. **Output Inventory**: All output file paths and content summaries, output quality assessment (whether validation passed)
+5. **Risks & TODOs**: Items that failed validation, items executed with degradation, recommended follow-up items
+6. **Downstream Handoff**: Which downstream orchestrators can consume this orchestrator's outputs, recommended next orchestrator
 
-| 参数 | 值 |
+| Parameter | Value |
 |------|-----|
-| 子Skill输出路径 | docs/metrics/ |
-| 总结输出路径 | output/phase-reports/experiment-orchestrator.json |
-| 审批记录路径 | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
+| Sub-skill output path | docs/metrics/ |
+| Summary output path | output/phase-reports/experiment-orchestrator.json |
+| Approval record path | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
 
-下游衔接:
-  primary: decision-orchestrator（实验完成，将实验结论转化为决策行动）
+Downstream handoff:
+  primary: decision-orchestrator (experiment complete, convert experiment conclusions into decision actions)
   alternatives:
     - target: release-orchestrator
-      reason: 实验结果显著，建议全量发布
-      condition: 实验结果统计显著（p<0.05）且业务意义达标时
+      reason: Experiment results significant, recommend full release
+      condition: When experiment results are statistically significant (p<0.05) and business significance is met
     - target: analysis-orchestrator
-      reason: 实验结果需更深入的数据分析
-      condition: 实验结果存在异常或需多维下钻时
+      reason: Experiment results need deeper data analysis
+      condition: When experiment results have anomalies or need multi-dimensional drill-down
   special_cases: []
 
-## 阶段卡口
+## Stage Gates
 
-| 卡口 | 条件 | 未通过处理 |
+| Gate | Condition | Non-pass Handling |
 |------|------|------------|
-| 实验方案人类已审核 | 实验设计经人类审核确认 | 阻止实验上线，修改后重新审核 |
-| 统计显著性已判断 | experiment-result输出文件已生成且非空 | 延长实验周期或扩大流量 |
-| 实验报告已审核 | 实验报告经人类审核确认 | 补充分析或修改结论 |
-| 阶段总结已生成 | output/phase-reports/experiment-orchestrator.json 已生成且6项结构均非空 | 补充缺失结构项后重新生成 |
+| Experiment plan human-reviewed | Experiment design confirmed by human review | Block experiment launch, revise and re-review |
+| Statistical significance judged | experiment-result output file generated and non-empty | Extend experiment duration or increase traffic |
+| Experiment report reviewed | Experiment report confirmed by human review | Supplement analysis or revise conclusions |
+| Stage summary generated | output/phase-reports/experiment-orchestrator.json generated and all 6 structures non-empty | Regenerate after supplementing missing structure items |
 
-## 人类决策点
+## Human Decision Points
 
-| 决策点 | 触发条件 | 决策内容 |
+| Decision Point | Trigger Condition | Decision Content |
 |--------|----------|----------|
-| 实验方案审核 | 实验设计完成 | 审核假设合理性、指标选择、分流方案 |
-| 全量/终止决策 | 实验结果分析完成 | 决定全量发布、终止实验或延长周期 |
-| 实验报告确认 | 实验报告生成完成 | 确认报告结论和行动建议 |
+| Experiment plan review | Experiment design complete | Review hypothesis rationality, metric selection, traffic split plan |
+| Full release/termination decision | Experiment result analysis complete | Decide full release, terminate experiment, or extend duration |
+| Experiment report confirmation | Experiment report generation complete | Confirm report conclusions and action recommendations |
 
-## 决策规则
+## Decision Rules
 
-| 条件 | Action |
+| Condition | Action |
 |------|--------|
-| 样本量达到100% | 立即触发结果分析 |
-| 统计显著（p < 0.05）且稳定 | 考虑提前终止 |
-| 护栏指标显著下降 | 触发告警，考虑终止 |
-| 新奇效应显著 | 延长实验周期 |
-| 实验组持续负向 | 考虑提前终止 |
+| Sample size reaches 100% | Immediately trigger result analysis |
+| Statistically significant (p < 0.05) and stable | Consider early termination |
+| Guardrail metrics significantly decline | Trigger alert, consider termination |
+| Novelty effect significant | Extend experiment duration |
+| Experiment group persistently negative | Consider early termination |
 
-## 异常处理
+## Exception Handling
 
-| 异常类型 | 处理策略 |
+| Exception Type | Handling Strategy |
 |----------|----------|
-| 实验设计人类审核未通过 | 阻止实验上线，返回设计阶段修改，不进入执行阶段 |
-| 护栏指标突破阈值 | 立即暂停实验执行，触发告警，提交人类决策是否终止实验 |
-| 实验数据采集异常 | 标记数据异常，暂停统计检验，提示人类检查数据管道 |
-| 实验报告人类审核未通过 | 返回执行阶段补充分析，不传递到下游 |
-| 多实验流量冲突 | 按优先级排队，低优先级实验暂停，标注"流量冲突" |
-| 阶段总结生成失败 | 基于已完成的子Skill输出生成部分总结，缺失项标注"数据缺失"，不阻塞编排完成 |
+| Experiment design fails human review | Block experiment launch, return to design phase for revision, do not enter execution phase |
+| Guardrail metric breaches threshold | Immediately pause experiment execution, trigger alert, submit human decision on whether to terminate experiment |
+| Experiment data collection anomaly | Flag data anomaly, pause statistical testing, prompt human to check data pipeline |
+| Experiment report fails human review | Return to execution phase to supplement analysis, do not pass to downstream |
+| Multiple experiments traffic conflict | Queue by priority, lower priority experiments pause, mark "traffic conflict" |
+| Stage summary generation fails | Generate partial summary based on completed sub-skill outputs, missing items marked "data missing", do not block orchestration completion |

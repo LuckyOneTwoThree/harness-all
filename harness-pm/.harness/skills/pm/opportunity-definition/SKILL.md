@@ -1,24 +1,24 @@
 ---
 name: opportunity-definition
-description: 当需要进行机会识别、机会评估或产品机会定义时使用。整合机会评分、问题陈述、HMW发散和机会简报。关键词：机会识别、机会评估、HMW、Problem Statement、机会简报、产品机会。
+description: Used when opportunity identification, opportunity assessment, or product opportunity definition is needed. Integrates opportunity scoring, problem statement, HMW divergence, and opportunity brief. Keywords: opportunity identification, opportunity assessment, HMW, Problem Statement, opportunity brief, product opportunity.
 metadata:
-  module: "产品探索与发现"
-  sub-module: "机会识别"
+  module: "Product Discovery"
+  sub-module: "Opportunity Identification"
   type: "pipeline"
   version: "3.0"
-  domain_tags: ["通用"]
+  domain_tags: ["General"]
   trigger_examples:
-    - "帮我评估一下这个产品机会"
-    - "识别一下有哪些产品机会"
-    - "定义一下我们要解决的问题"
-    - "生成机会简报"
-    - "这个机会值不值得追"
-    - "帮我换个角度思考问题"
+    - "Help me evaluate this product opportunity"
+    - "Identify what product opportunities exist"
+    - "Define the problem we need to solve"
+    - "Generate an opportunity brief"
+    - "Is this opportunity worth pursuing"
+    - "Help me think about the problem from a different angle"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "执行机会评分和Problem Statement生成，输出机会优先级列表和问题陈述"
-  deep_description: "额外包含HMW四维度发散、机会简报完整组装、关键假设风险分析、人类决策事项清单"
+  quick_description: "Execute opportunity scoring and Problem Statement generation, output opportunity priority list and problem statement"
+  deep_description: "Additionally includes HMW four-dimension divergence, full opportunity brief assembly, key assumption risk analysis, human decision items list"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -31,181 +31,181 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# Opportunity Definition — 机会识别与定义
+# Opportunity Definition — Opportunity Identification & Definition
 
-## 核心原则
+## Core Principles
 
-1. **好机会是定义出来的**——机会不是客观存在等待发现的，而是通过评分验证、Problem Statement定义、HMW重构逐步定义出来的
-2. **评分先于发散**——先评分确定机会优先级（scoring），再发散探索创新空间（hmw），顺序不可颠倒，否则HMW会发散到低价值方向
-3. **Problem Statement是锚点**——所有HMW和Brief都锚定在Problem Statement上，Problem Statement质量不通过则后续输出不可信
-4. **评分是建议不是决策**——AI输出为决策参考，最终优先级排序需人类综合判断；战略契合度维度必须人类判定
-5. **发散优于收敛**——HMW生成阶段追求数量与广度，筛选留给人类审核；四维度缺一不可
-6. **Brief是决策文档不是数据堆砌**——每个字段必须服务于决策判断，假设风险驱动下一步
+1. **Good opportunities are defined, not discovered** — Opportunities are not objectively existing things waiting to be found; they are progressively defined through scoring validation, Problem Statement definition, and HMW reframing
+2. **Scoring before divergence** — First score to determine opportunity priority (scoring), then diverge to explore innovation space (hmw); the order cannot be reversed, otherwise HMW will diverge in low-value directions
+3. **Problem Statement is the anchor** — All HMW and Brief anchor to the Problem Statement; if the Problem Statement quality check fails, subsequent outputs are not credible
+4. **Scoring is a recommendation, not a decision** — AI output is for decision reference; final priority ranking requires comprehensive human judgment; the strategic fit dimension must be judged by humans
+5. **Divergence over convergence** — The HMW generation phase pursues quantity and breadth; filtering is left to human review; all four dimensions are indispensable
+6. **Brief is a decision document, not data piling** — Every field must serve decision judgment; assumption risks drive the next step
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI 建议人类审批（机会评分阶段战略契合度维度 👤 由人类执行）
+🤖→👤 AI suggests, human approves (the strategic fit dimension in the opportunity scoring phase 👤 is executed by humans)
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 用户研究数据 | JSON | 是 | docs/discovery/user-research.md（追加“用户声音分析”章节） / docs/discovery/user-research.md（追加“用户行为分析”章节） | 用户痛点、行为数据、期望数据 |
-| 市场分析数据 | JSON | 是 | docs/discovery/market-analysis.md（“市场规模”章节） | SOM 估算值 |
-| 竞品分析数据 | JSON | 是 | docs/discovery/market-analysis.md（“竞品分析”章节） | 竞品能力与壁垒分析 |
-| 需求洞察数据 | JSON | ○ | docs/discovery/user-research.md（追加“用户画像”章节） / docs/discovery/insight.md | 用户画像、待办任务、需求分类 |
-| 技术团队评估 | object | ○ | 用户提供 | 现有技术栈可实现性评估 |
+| User research data | JSON | Yes | docs/discovery/user-research.md (append "User Voice Analysis" section) / docs/discovery/user-research.md (append "User Behavior Analysis" section) | User pain points, behavior data, expectation data |
+| Market analysis data | JSON | Yes | docs/discovery/market-analysis.md ("Market Size" section) | SOM estimate |
+| Competitor analysis data | JSON | Yes | docs/discovery/market-analysis.md ("Competitive Analysis" section) | Competitor capabilities and moat analysis |
+| Requirement insight data | JSON | ○ | docs/discovery/user-research.md (append "User Persona" section) / docs/discovery/insight.md | User personas, jobs to be done, requirement classification |
+| Technical team assessment | object | ○ | User-provided | Feasibility assessment of existing tech stack |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 机会评分 [核心]
+### Step 1: Opportunity Scoring [Core]
 
-对产品机会进行多维度量化评分，确定优先级。
+Perform multi-dimensional quantitative scoring on product opportunities to determine priority.
 
-**评分函数**：总分 = Σ(维度得分 × 维度权重)
+**Scoring function**: Total score = Σ(dimension score × dimension weight)
 
-#### 维度1：问题真实性（权重 0.30）
+#### Dimension 1: Problem Validity (weight 0.30)
 
-| 得分 | 标准 |
+| Score | Criteria |
 |------|------|
-| 5 | 痛点提及率 > 10% 且行为数据印证 |
-| 4 | 痛点提及率 > 10% 但无行为数据印证 |
-| 3 | 痛点提及率 5%-10% 且行为数据印证 |
-| 2 | 痛点提及率 5%-10% 但无行为数据印证 |
-| 1 | 无直接数据，纯假设 |
+| 5 | Pain point mention rate > 10% and corroborated by behavior data |
+| 4 | Pain point mention rate > 10% but no behavior data corroboration |
+| 3 | Pain point mention rate 5%-10% and corroborated by behavior data |
+| 2 | Pain point mention rate 5%-10% but no behavior data corroboration |
+| 1 | No direct data, pure assumption |
 
-#### 维度2：市场规模（权重 0.25）
+#### Dimension 2: Market Size (weight 0.25)
 
-| 得分 | 标准 |
+| Score | Criteria |
 |------|------|
-| 5 | SOM > 1亿 |
-| 4 | SOM 5000万-1亿 |
-| 3 | SOM 1000万-5000万 |
-| 2 | SOM 500万-1000万 |
-| 1 | 无法估算 |
+| 5 | SOM > 100 million |
+| 4 | SOM 50 million - 100 million |
+| 3 | SOM 10 million - 50 million |
+| 2 | SOM 5 million - 10 million |
+| 1 | Cannot be estimated |
 
-#### 维度3：解决可行性（权重 0.20）
+#### Dimension 3: Solution Feasibility (weight 0.20)
 
-| 得分 | 标准 |
+| Score | Criteria |
 |------|------|
-| 5 | 现有技术栈可直接实现 |
-| 4 | 现有技术栈需少量扩展 |
-| 3 | 需引入新技术但团队有能力 |
-| 2 | 需引入新技术且团队需学习 |
-| 1 | 当前技术不可行 |
+| 5 | Directly implementable with existing tech stack |
+| 4 | Existing tech stack needs minor extension |
+| 3 | Need to introduce new technology but team has the capability |
+| 2 | Need to introduce new technology and team needs to learn |
+| 1 | Currently technically infeasible |
 
-#### 维度4：战略契合度（权重 0.15）👤 人类判定
+#### Dimension 4: Strategic Fit (weight 0.15) 👤 Human judgment
 
-| 得分 | 标准 |
+| Score | Criteria |
 |------|------|
-| 5 | 核心战略方向，高度契合 |
-| 4 | 重要战略方向，较好契合 |
-| 3 | 相关战略方向，部分契合 |
-| 2 | 边缘战略方向，弱契合 |
-| 1 | 不在战略方向内 |
+| 5 | Core strategic direction, highly aligned |
+| 4 | Important strategic direction, well aligned |
+| 3 | Related strategic direction, partially aligned |
+| 2 | Marginal strategic direction, weakly aligned |
+| 1 | Not within strategic direction |
 
-> **注意**：AI 提供战略契合度分析建议，但最终得分必须由人类判定。AI 评分后此维度标记为 `needs_human: true`。
+> **Note**: AI provides strategic fit analysis recommendations, but the final score must be judged by humans. After AI scoring, this dimension is marked as `needs_human: true`.
 
-#### 维度5：竞争壁垒（权重 0.10）
+#### Dimension 5: Competitive Moat (weight 0.10)
 
-| 得分 | 标准 |
+| Score | Criteria |
 |------|------|
-| 5 | 竞品无此能力且短期难复制 |
-| 4 | 竞品无此能力但中期可复制 |
-| 3 | 竞品有部分能力但体验差 |
-| 2 | 竞品有较好能力但未主导 |
-| 1 | 竞品已领先 |
+| 5 | Competitors lack this capability and cannot replicate in the short term |
+| 4 | Competitors lack this capability but can replicate in the medium term |
+| 3 | Competitors have partial capability but poor experience |
+| 2 | Competitors have good capability but not dominant |
+| 1 | Competitors already leading |
 
-### Step 2: 问题陈述 [核心]
+### Step 2: Problem Statement [Core]
 
-基于评分结果和用户研究数据生成结构化 Problem Statement。
+Generate a structured Problem Statement based on scoring results and user research data.
 
-**结构化模板**：
+**Structured template**:
 
-> [目标用户群体] 在 [场景] 下，需要 [完成什么任务]，但当前面临 [核心痛点]，因为 [现有方案的不足]，如果这个问题被解决，他们将 [预期收益]。
+> [Target user group] in [scenario], needs to [accomplish what task], but currently faces [core pain point], because [shortcomings of existing solutions], if this problem is solved, they will [expected benefit].
 
-**数据支撑要求**：每个关键要素必须附带数据证据。
+**Data support requirements**: Each key element must be accompanied by data evidence.
 
-#### 模板要素拆解
+#### Template Element Breakdown
 
-| 要素 | 说明 | 数据要求 |
+| Element | Description | Data requirements |
 |------|------|----------|
-| 目标用户群体 | 具体的用户群体描述，不能是"用户"泛称 | 需关联 persona 数据 |
-| 场景 | 用户所处的具体使用场景 | 需有行为数据或访谈数据支撑 |
-| 完成什么任务 | 用户需要达成的目标 | 需关联 JTBD 数据 |
-| 核心痛点 | 用户面临的主要困难 | 需有痛点提及率数据 |
-| 现有方案的不足 | 当前解决方案的缺陷 | 需有竞品分析或用户反馈数据 |
-| 预期收益 | 问题解决后的预期效果 | 需可量化或可验证 |
+| Target user group | Specific user group description, cannot be a generic "users" | Must link to persona data |
+| Scenario | Specific usage scenario the user is in | Must have behavior data or interview data support |
+| Accomplish what task | The goal the user needs to achieve | Must link to JTBD data |
+| Core pain point | The main difficulty the user faces | Must have pain point mention rate data |
+| Shortcomings of existing solutions | Deficiencies of current solutions | Must have competitor analysis or user feedback data |
+| Expected benefit | Expected effect after the problem is solved | Must be quantifiable or verifiable |
 
-#### 质量检查（自动执行，不通过则修复重试，最多3次）
+#### Quality Checks (auto-executed, repair and retry if not passed, max 3 times)
 
-| 检查项 | 通过条件 | 修复策略 |
+| Check item | Pass condition | Repair strategy |
 |--------|----------|----------|
-| 是否指定了具体用户群体 | 用户群体描述具体，非泛称 | 从 persona 数据中提取具体用户群体描述替换 |
-| 是否指定了具体场景 | 场景描述具体且可观察 | 从行为数据中提取高频场景替换 |
-| 是否描述了现有方案不足 | 明确指出1个或多个具体不足 | 从竞品分析和用户反馈中提取具体不足 |
-| 是否可验证 | 预期收益可量化或可通过实验验证 | 将模糊收益替换为可量化指标 |
-| 是否避免了解决方案预设 | 问题描述不包含任何具体解决方案 | 移除方案描述，聚焦问题本身 |
+| Whether a specific user group is specified | User group description is specific, not generic | Extract specific user group description from persona data to replace |
+| Whether a specific scenario is specified | Scenario description is specific and observable | Extract high-frequency scenarios from behavior data to replace |
+| Whether shortcomings of existing solutions are described | Clearly point out 1 or more specific shortcomings | Extract specific shortcomings from competitor analysis and user feedback |
+| Whether verifiable | Expected benefit is quantifiable or verifiable through experiments | Replace vague benefits with quantifiable metrics |
+| Whether solution preset is avoided | Problem description does not contain any specific solution | Remove solution descriptions, focus on the problem itself |
 
-### Step 3: HMW发散 [条件]
+### Step 3: HMW Divergence [Conditional]
 
-基于 Problem Statement 和用户研究数据，从4个维度生成 HMW 陈述，每个维度2-3个：
+Based on the Problem Statement and user research data, generate HMW statements from 4 dimensions, 2-3 per dimension:
 
-#### 维度1：消除障碍
+#### Dimension 1: Eliminate Barriers
 
-**模板**："我们如何消除/减少[用户在XX场景下的XX障碍]？"
+**Template**: "How might we eliminate/reduce [user's XX barrier in XX scenario]?"
 
-- 聚焦用户当前面临的具体阻碍
-- 障碍需有用户研究数据支撑
-- 避免直接跳入解决方案
+- Focus on specific obstacles users currently face
+- Barriers must be supported by user research data
+- Avoid jumping directly to solutions
 
-#### 维度2：提升体验
+#### Dimension 2: Enhance Experience
 
-**模板**："我们如何让[XX体验]变得更[简单/快速/愉悦]？"
+**Template**: "How might we make [XX experience] more [simple/fast/delightful]?"
 
-- 聚焦已有但体验不佳的环节
-- 体验改善方向需有行为数据印证
-- 量化改善目标
+- Focus on existing but poorly experienced stages
+- Experience improvement directions must be corroborated by behavior data
+- Quantify improvement goals
 
-#### 维度3：创造新价值
+#### Dimension 3: Create New Value
 
-**模板**："我们如何帮助[XX用户]实现[他们尚未表达的XX期望]？"
+**Template**: "How might we help [XX users] achieve [their unexpressed XX expectation]?"
 
-- 挖掘用户未明确表达但行为数据暗示的需求
-- 基于用户研究中的隐性模式
+- Uncover needs that users have not explicitly expressed but behavior data suggests
+- Based on implicit patterns in user research
 
-#### 维度4：重新定义
+#### Dimension 4: Redefine
 
-**模板**："如果我们重新思考[XX流程]，会怎样？"
+**Template**: "What if we rethink [XX process]?"
 
-- 挑战现有流程的基本假设
-- 借鉴跨行业创新模式
-- 鼓励突破性思维
+- Challenge basic assumptions of existing processes
+- Draw inspiration from cross-industry innovation models
+- Encourage breakthrough thinking
 
-### Step 4: 机会简报 [条件]
+### Step 4: Opportunity Brief [Conditional]
 
-将前序所有产出组装为完整的机会简报。
+Assemble all preceding outputs into a complete opportunity brief.
 
-#### 结构定义
+#### Structure Definition
 
-| 字段 | 来源 | 说明 |
+| Field | Source | Description |
 |------|------|------|
-| title | 自动生成 | 格式：[目标用户群体] - [核心痛点摘要] |
-| problem_statement | Step 2 输出 | 直接引用 Problem Statement 文本 |
-| evidence_summary | 多源汇总 | 用户研究证据、市场分析证据、竞争格局证据 |
-| opportunity_score | Step 1 输出 | 加权总分与各维度得分 |
-| hmw_statements | Step 3 输出 | HMW 陈述列表，标注创新空间评分 |
-| key_assumptions | 推断生成 | 关键假设列表，含类型/可验证性/风险等级 |
-| recommended_next_step | 基于评分与假设分析 | 推荐的下一步行动 |
-| human_decisions_needed | 推断生成 | 需人类决策的事项列表 |
+| title | Auto-generated | Format: [Target user group] - [Core pain point summary] |
+| problem_statement | Step 2 output | Directly quote Problem Statement text |
+| evidence_summary | Multi-source aggregation | User research evidence, market analysis evidence, competitive landscape evidence |
+| opportunity_score | Step 1 output | Weighted total score and per-dimension scores |
+| hmw_statements | Step 3 output | HMW statement list, annotated with innovation space score |
+| key_assumptions | Inferred | Key assumption list, including type/testability/risk level |
+| recommended_next_step | Based on scoring and assumption analysis | Recommended next action |
+| human_decisions_needed | Inferred | List of items requiring human decision |
 
-## 输出
+## Output
 
-输出路径：`docs/discovery/opportunity.md`
+Output path: `docs/discovery/opportunity.md`
 
-输出文件：opportunity-definition.json + opportunity-definition.md
+Output files: opportunity-definition.json + opportunity-definition.md
 
-### 输出Schema
+### Output Schema
 
 ```json
 {
@@ -216,26 +216,26 @@ writes:
       "type": "object",
       "required": ["opportunities", "metadata"],
       "properties": {
-        "opportunities": {"type": "array", "description": "机会评分列表，详见输出校验规则→scoring校验"},
-        "metadata": {"type": "object", "description": "评分元数据，含awaiting_human_input"}
+        "opportunities": {"type": "array", "description": "Opportunity scoring list, see output validation rules → scoring validation"},
+        "metadata": {"type": "object", "description": "Scoring metadata, including awaiting_human_input"}
       }
     },
     "problem_statement": {
       "type": "object",
       "required": ["problem_statement", "data_support", "template_elements", "quality_check"],
       "properties": {
-        "problem_statement": {"type": "string", "description": "完整Problem Statement文本"},
-        "data_support": {"type": "object", "description": "数据支撑，详见输出校验规则→problem_statement校验"},
-        "template_elements": {"type": "object", "description": "模板6要素"},
-        "quality_check": {"type": "object", "description": "5项质量检查结果"}
+        "problem_statement": {"type": "string", "description": "Complete Problem Statement text"},
+        "data_support": {"type": "object", "description": "Data support, see output validation rules → problem_statement validation"},
+        "template_elements": {"type": "object", "description": "Template 6 elements"},
+        "quality_check": {"type": "object", "description": "5 quality check results"}
       }
     },
     "hmw": {
       "type": "object",
       "required": ["hmw_statements", "dimension_coverage"],
       "properties": {
-        "hmw_statements": {"type": "array", "description": "HMW陈述列表，详见输出校验规则→hmw校验"},
-        "dimension_coverage": {"type": "object", "description": "4维度覆盖统计"}
+        "hmw_statements": {"type": "array", "description": "HMW statement list, see output validation rules → hmw validation"},
+        "dimension_coverage": {"type": "object", "description": "4-dimension coverage statistics"}
       }
     },
     "brief": {
@@ -243,102 +243,102 @@ writes:
       "required": ["title", "problem_statement", "evidence_summary", "opportunity_score", "hmw_statements", "key_assumptions", "recommended_next_step", "human_decisions_needed"],
       "properties": {
         "title": {"type": "string"},
-        "evidence_summary": {"type": "object", "description": "3类证据摘要，详见输出校验规则→brief校验"},
-        "key_assumptions": {"type": "array", "description": "关键假设列表，详见输出校验规则→brief校验"},
-        "human_decisions_needed": {"type": "array", "description": "人类决策事项列表"}
+        "evidence_summary": {"type": "object", "description": "3 types of evidence summary, see output validation rules → brief validation"},
+        "key_assumptions": {"type": "array", "description": "Key assumption list, see output validation rules → brief validation"},
+        "human_decisions_needed": {"type": "array", "description": "Human decision items list"}
       }
     },
-    "metadata": {"type": "object", "description": "元数据，含版本、时间戳和来源文件"}
+    "metadata": {"type": "object", "description": "Metadata, including version, timestamp, and source files"}
   }
 }
 ```
 
-### 输出校验规则
+### Output Validation Rules
 
-#### scoring 校验
+#### scoring validation
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field path | Type | Required | Description |
 |----------|------|------|------|
-| `scoring.opportunities` | array | 是 | 机会评分列表，不可为空数组 |
-| `scoring.opportunities[].name` | string | 是 | 机会名称，不可为空字符串 |
-| `scoring.opportunities[].scores.{dimension}.score` | number\|null | 是 | 维度得分1-5，待人类判定时必须为null |
-| `scoring.opportunities[].scores.{dimension}.weight` | number | 是 | 维度权重，5个维度权重之和必须等于1.00 |
-| `scoring.opportunities[].scores.{dimension}.evidence` | string | 是 | 评分依据，不可为空字符串 |
-| `scoring.opportunities[].scores.{dimension}.needs_human` | boolean | 是 | 是否需要人类判定，strategic_fit维度必须为true |
-| `scoring.opportunities[].weighted_total` | number\|null | 是 | 加权总分，任一维度score为null时必须为null |
-| `scoring.metadata.awaiting_human_input` | boolean | 是 | 是否有待人类输入，strategic_fit未评分时必须为true |
+| `scoring.opportunities` | array | Yes | Opportunity scoring list, cannot be an empty array |
+| `scoring.opportunities[].name` | string | Yes | Opportunity name, cannot be an empty string |
+| `scoring.opportunities[].scores.{dimension}.score` | number\|null | Yes | Dimension score 1-5, must be null when pending human judgment |
+| `scoring.opportunities[].scores.{dimension}.weight` | number | Yes | Dimension weight, the sum of 5 dimension weights must equal 1.00 |
+| `scoring.opportunities[].scores.{dimension}.evidence` | string | Yes | Scoring basis, cannot be an empty string |
+| `scoring.opportunities[].scores.{dimension}.needs_human` | boolean | Yes | Whether human judgment is needed, strategic_fit dimension must be true |
+| `scoring.opportunities[].weighted_total` | number\|null | Yes | Weighted total score, must be null when any dimension score is null |
+| `scoring.metadata.awaiting_human_input` | boolean | Yes | Whether there is pending human input, must be true when strategic_fit is not scored |
 
-#### problem_statement 校验
+#### problem_statement validation
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field path | Type | Required | Description |
 |----------|------|------|------|
-| `problem_statement.problem_statement` | string | 是 | 完整的Problem Statement文本，不可为空且不可包含具体解决方案 |
-| `problem_statement.data_support.pain_point_frequency` | string | 是 | 痛点提及率，不可为空 |
-| `problem_statement.data_support.behavioral_evidence` | string | 是 | 行为数据印证，不可为空 |
-| `problem_statement.data_support.confidence` | number | 是 | 置信度0-1，低于0.5时需升级人类审核 |
-| `problem_statement.template_elements.target_user` | string | 是 | 目标用户群体，不可使用泛称 |
-| `problem_statement.template_elements.scenario` | string | 是 | 具体场景，不可为模糊描述 |
-| `problem_statement.template_elements.task` | string | 是 | 用户需完成的任务，不可为空 |
-| `problem_statement.template_elements.core_pain` | string | 是 | 核心痛点，不可为空 |
-| `problem_statement.template_elements.current_gap` | string | 是 | 现有方案不足，需指出1个或多个具体不足 |
-| `problem_statement.template_elements.expected_benefit` | string | 是 | 预期收益，需可量化或可验证 |
-| `problem_statement.quality_check.all_passed` | boolean | 是 | 5项质量检查是否全部通过 |
-| `problem_statement.quality_check.retry_count` | number | 是 | 重试次数，最大值为3 |
+| `problem_statement.problem_statement` | string | Yes | Complete Problem Statement text, cannot be empty and cannot contain specific solutions |
+| `problem_statement.data_support.pain_point_frequency` | string | Yes | Pain point mention rate, cannot be empty |
+| `problem_statement.data_support.behavioral_evidence` | string | Yes | Behavior data corroboration, cannot be empty |
+| `problem_statement.data_support.confidence` | number | Yes | Confidence 0-1, escalate to human review when below 0.5 |
+| `problem_statement.template_elements.target_user` | string | Yes | Target user group, cannot use generic terms |
+| `problem_statement.template_elements.scenario` | string | Yes | Specific scenario, cannot be a vague description |
+| `problem_statement.template_elements.task` | string | Yes | Task the user needs to complete, cannot be empty |
+| `problem_statement.template_elements.core_pain` | string | Yes | Core pain point, cannot be empty |
+| `problem_statement.template_elements.current_gap` | string | Yes | Shortcomings of existing solutions, must point out 1 or more specific shortcomings |
+| `problem_statement.template_elements.expected_benefit` | string | Yes | Expected benefit, must be quantifiable or verifiable |
+| `problem_statement.quality_check.all_passed` | boolean | Yes | Whether all 5 quality checks passed |
+| `problem_statement.quality_check.retry_count` | number | Yes | Retry count, max value is 3 |
 
-#### hmw 校验
+#### hmw validation
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field path | Type | Required | Description |
 |----------|------|------|------|
-| `hmw.hmw_statements` | array | 是 | HMW陈述列表，数量必须在8-12范围内 |
-| `hmw.hmw_statements[].id` | string | 是 | HMW唯一标识，格式为hmw-NNN |
-| `hmw.hmw_statements[].statement` | string | 是 | HMW陈述文本，不可为空且不可包含具体解决方案 |
-| `hmw.hmw_statements[].dimension` | string | 是 | 所属维度，必须为eliminate_barriers/enhance_experience/create_value/redefine之一 |
-| `hmw.hmw_statements[].problem_ref` | string | 是 | 关联的Problem Statement字段引用，不可为空 |
-| `hmw.hmw_statements[].data_source` | string | 是 | 数据来源引用，不可为空 |
-| `hmw.hmw_statements[].innovation_space` | number | 是 | 创新空间评分1-5，≥4时需人类重点审核 |
-| `hmw.hmw_statements[].confidence` | number | 是 | 置信度0-1 |
-| `hmw.dimension_coverage` | object | 是 | 4个维度均必须出现且值≥1 |
-| `hmw.dimension_coverage.eliminate_barriers` | number | 是 | 消除障碍维度HMW数量，≥2 |
-| `hmw.dimension_coverage.enhance_experience` | number | 是 | 提升体验维度HMW数量，≥2 |
-| `hmw.dimension_coverage.create_value` | number | 是 | 创造新价值维度HMW数量，≥2 |
-| `hmw.dimension_coverage.redefine` | number | 是 | 重新定义维度HMW数量，≥2 |
+| `hmw.hmw_statements` | array | Yes | HMW statement list, count must be in the 8-12 range |
+| `hmw.hmw_statements[].id` | string | Yes | HMW unique identifier, format hmw-NNN |
+| `hmw.hmw_statements[].statement` | string | Yes | HMW statement text, cannot be empty and cannot contain specific solutions |
+| `hmw.hmw_statements[].dimension` | string | Yes | Associated dimension, must be one of eliminate_barriers/enhance_experience/create_value/redefine |
+| `hmw.hmw_statements[].problem_ref` | string | Yes | Linked Problem Statement field reference, cannot be empty |
+| `hmw.hmw_statements[].data_source` | string | Yes | Data source reference, cannot be empty |
+| `hmw.hmw_statements[].innovation_space` | number | Yes | Innovation space score 1-5, ≥4 requires key human review |
+| `hmw.hmw_statements[].confidence` | number | Yes | Confidence 0-1 |
+| `hmw.dimension_coverage` | object | Yes | All 4 dimensions must appear with value ≥1 |
+| `hmw.dimension_coverage.eliminate_barriers` | number | Yes | Eliminate barriers dimension HMW count, ≥2 |
+| `hmw.dimension_coverage.enhance_experience` | number | Yes | Enhance experience dimension HMW count, ≥2 |
+| `hmw.dimension_coverage.create_value` | number | Yes | Create new value dimension HMW count, ≥2 |
+| `hmw.dimension_coverage.redefine` | number | Yes | Redefine dimension HMW count, ≥2 |
 
-#### brief 校验
+#### brief validation
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field path | Type | Required | Description |
 |----------|------|------|------|
-| `brief.title` | string | 是 | 机会简报标题，格式为[目标用户群体]-[核心痛点摘要] |
-| `brief.problem_statement` | string | 是 | 结构化问题陈述，不可为空 |
-| `brief.evidence_summary.user_research` | object | 是 | 用户研究证据，需包含痛点频率和行为印证 |
-| `brief.evidence_summary.market_analysis` | object | 是 | 市场分析证据，需包含SOM估算 |
-| `brief.evidence_summary.competitive_landscape` | object | 是 | 竞争格局证据，需包含市场空白分析 |
-| `brief.opportunity_score.weighted_total` | number | 是 | 加权总分，不可为null（需人类已完成战略契合度评分） |
-| `brief.hmw_statements` | array | 是 | HMW陈述列表，不可为空数组 |
-| `brief.key_assumptions` | array | 是 | 关键假设列表，不可为空数组 |
-| `brief.key_assumptions[].assumption` | string | 是 | 假设描述，不可为空 |
-| `brief.key_assumptions[].type` | string | 是 | 假设类型，必须为desirability/viability/feasibility/usability之一 |
-| `brief.key_assumptions[].testability` | string | 是 | 可验证性描述，不可为空 |
-| `brief.key_assumptions[].risk_if_wrong` | string | 是 | 风险等级，必须为高/中/低之一 |
-| `brief.recommended_next_step` | string | 是 | 推荐下一步，必须基于评分和假设风险分析 |
-| `brief.human_decisions_needed` | array | 是 | 人类决策事项列表，高风险假设必须有对应决策项 |
-| `brief.human_decisions_needed[].item` | string | 是 | 决策事项，不可为空 |
-| `brief.human_decisions_needed[].context` | string | 是 | 决策上下文，不可为空 |
-| `brief.human_decisions_needed[].urgency` | string | 是 | 紧急程度，必须为高/中/低之一 |
+| `brief.title` | string | Yes | Opportunity brief title, format [Target user group]-[Core pain point summary] |
+| `brief.problem_statement` | string | Yes | Structured problem statement, cannot be empty |
+| `brief.evidence_summary.user_research` | object | Yes | User research evidence, must include pain point frequency and behavior corroboration |
+| `brief.evidence_summary.market_analysis` | object | Yes | Market analysis evidence, must include SOM estimate |
+| `brief.evidence_summary.competitive_landscape` | object | Yes | Competitive landscape evidence, must include market gap analysis |
+| `brief.opportunity_score.weighted_total` | number | Yes | Weighted total score, cannot be null (requires human to have completed strategic fit scoring) |
+| `brief.hmw_statements` | array | Yes | HMW statement list, cannot be an empty array |
+| `brief.key_assumptions` | array | Yes | Key assumption list, cannot be an empty array |
+| `brief.key_assumptions[].assumption` | string | Yes | Assumption description, cannot be empty |
+| `brief.key_assumptions[].type` | string | Yes | Assumption type, must be one of desirability/viability/feasibility/usability |
+| `brief.key_assumptions[].testability` | string | Yes | Testability description, cannot be empty |
+| `brief.key_assumptions[].risk_if_wrong` | string | Yes | Risk level, must be one of high/medium/low |
+| `brief.recommended_next_step` | string | Yes | Recommended next step, must be based on scoring and assumption risk analysis |
+| `brief.human_decisions_needed` | array | Yes | Human decision items list, high-risk assumptions must have a corresponding decision item |
+| `brief.human_decisions_needed[].item` | string | Yes | Decision item, cannot be empty |
+| `brief.human_decisions_needed[].context` | string | Yes | Decision context, cannot be empty |
+| `brief.human_decisions_needed[].urgency` | string | Yes | Urgency, must be one of high/medium/low |
 
-### Output JSON 示例
+### Output JSON Example
 
 ```json
 {
   "scoring": {
     "opportunities": [
       {
-        "name": "多渠道数据核对自动化",
+        "name": "Multi-channel data reconciliation automation",
         "scores": {
-          "problem_validity": { "score": 4, "weight": 0.30, "evidence": "痛点提及率12%，行为数据显示用户反复尝试解决", "needs_human": false },
-          "market_size": { "score": 3, "weight": 0.25, "evidence": "SOM估算约3000万", "needs_human": false },
-          "feasibility": { "score": 4, "weight": 0.20, "evidence": "现有技术栈需少量扩展", "needs_human": false },
-          "strategic_fit": { "score": null, "weight": 0.15, "evidence": "AI分析：该机会与核心战略方向高度相关，建议评分4-5", "needs_human": true },
-          "competitive_moat": { "score": 3, "weight": 0.10, "evidence": "竞品有部分能力但体验差", "needs_human": false }
+          "problem_validity": { "score": 4, "weight": 0.30, "evidence": "Pain point mention rate 12%, behavior data shows users repeatedly trying to solve", "needs_human": false },
+          "market_size": { "score": 3, "weight": 0.25, "evidence": "SOM estimate about 30 million", "needs_human": false },
+          "feasibility": { "score": 4, "weight": 0.20, "evidence": "Existing tech stack needs minor extension", "needs_human": false },
+          "strategic_fit": { "score": null, "weight": 0.15, "evidence": "AI analysis: This opportunity is highly relevant to core strategic direction, recommend score 4-5", "needs_human": true },
+          "competitive_moat": { "score": 3, "weight": 0.10, "evidence": "Competitors have partial capability but poor experience", "needs_human": false }
         },
         "weighted_total": null,
         "provisional_rank": null
@@ -351,26 +351,26 @@ writes:
     }
   },
   "problem_statement": {
-    "problem_statement": "月活超过1000的SaaS产品运营人员，在月底结算高峰期，需要快速核对多渠道数据一致性，但当前面临手动比对耗时且易错的核心痛点，因为现有工具仅支持单渠道数据导出且缺乏自动校验能力，如果这个问题被解决，他们将把数据核对时间从平均4小时缩短至30分钟以内。",
+    "problem_statement": "SaaS product operations staff with over 1000 MAU, during the month-end settlement peak, need to quickly verify multi-channel data consistency, but currently face the core pain point of manual comparison being time-consuming and error-prone, because existing tools only support single-channel data export and lack automatic verification capability. If this problem is solved, they will reduce data reconciliation time from an average of 4 hours to under 30 minutes.",
     "data_support": {
       "pain_point_frequency": "12.3%",
-      "behavioral_evidence": "78%的用户在月底会反复导出数据并手动比对",
+      "behavioral_evidence": "78% of users repeatedly export data and manually compare at month-end",
       "confidence": 0.88
     },
     "template_elements": {
-      "target_user": "月活超过1000的SaaS产品运营人员",
-      "scenario": "月底结算高峰期",
-      "task": "快速核对多渠道数据一致性",
-      "core_pain": "手动比对耗时且易错",
-      "current_gap": "现有工具仅支持单渠道数据导出且缺乏自动校验能力",
-      "expected_benefit": "数据核对时间从平均4小时缩短至30分钟以内"
+      "target_user": "SaaS product operations staff with over 1000 MAU",
+      "scenario": "Month-end settlement peak",
+      "task": "Quickly verify multi-channel data consistency",
+      "core_pain": "Manual comparison is time-consuming and error-prone",
+      "current_gap": "Existing tools only support single-channel data export and lack automatic verification capability",
+      "expected_benefit": "Data reconciliation time reduced from an average of 4 hours to under 30 minutes"
     },
     "quality_check": {
-      "specific_user_group": { "passed": true, "detail": "指定了'月活超过1000的SaaS产品运营人员'" },
-      "specific_scenario": { "passed": true, "detail": "指定了'月底结算高峰期'" },
-      "current_solution_gap": { "passed": true, "detail": "描述了'仅支持单渠道数据导出且缺乏自动校验能力'" },
-      "verifiable": { "passed": true, "detail": "预期收益可量化：4小时→30分钟" },
-      "no_solution_preset": { "passed": true, "detail": "问题描述未包含具体解决方案" },
+      "specific_user_group": { "passed": true, "detail": "Specified 'SaaS product operations staff with over 1000 MAU'" },
+      "specific_scenario": { "passed": true, "detail": "Specified 'Month-end settlement peak'" },
+      "current_solution_gap": { "passed": true, "detail": "Described 'only support single-channel data export and lack automatic verification capability'" },
+      "verifiable": { "passed": true, "detail": "Expected benefit is quantifiable: 4 hours → 30 minutes" },
+      "no_solution_preset": { "passed": true, "detail": "Problem description does not contain specific solutions" },
       "all_passed": true,
       "retry_count": 0
     }
@@ -379,7 +379,7 @@ writes:
     "hmw_statements": [
       {
         "id": "hmw-001",
-        "statement": "我们如何消除新用户在首次配置场景下的认知负担障碍？",
+        "statement": "How might we eliminate the cognitive burden barrier for new users in the first-time configuration scenario?",
         "dimension": "eliminate_barriers",
         "problem_ref": "problem_statement.core_pain",
         "data_source": "voice-analysis.json::pain_point_frequency=12%",
@@ -388,7 +388,7 @@ writes:
       },
       {
         "id": "hmw-002",
-        "statement": "我们如何让报表生成体验变得更快速？",
+        "statement": "How might we make the report generation experience faster?",
         "dimension": "enhance_experience",
         "problem_ref": "problem_statement.current_gap",
         "data_source": "behavior-analysis.json::avg_report_time=10min",
@@ -408,26 +408,26 @@ writes:
     }
   },
   "brief": {
-    "title": "SaaS运营人员 - 多渠道数据核对耗时易错",
-    "problem_statement": "月活超过1000的SaaS产品运营人员，在月底结算高峰期，需要快速核对多渠道数据一致性，但当前面临手动比对耗时且易错的核心痛点，因为现有工具仅支持单渠道数据导出且缺乏自动校验能力，如果这个问题被解决，他们将把数据核对时间从平均4小时缩短至30分钟以内。",
+    "title": "SaaS Operations Staff - Multi-channel data reconciliation time-consuming and error-prone",
+    "problem_statement": "SaaS product operations staff with over 1000 MAU, during the month-end settlement peak, need to quickly verify multi-channel data consistency, but currently face the core pain point of manual comparison being time-consuming and error-prone, because existing tools only support single-channel data export and lack automatic verification capability. If this problem is solved, they will reduce data reconciliation time from an average of 4 hours to under 30 minutes.",
     "evidence_summary": {
       "user_research": {
-        "pain_point_frequency": "12.3%用户提及此痛点",
-        "behavioral_evidence": "78%目标用户月底反复手动导出比对",
-        "persona_summary": "主要受影响群体为中型SaaS产品运营人员",
-        "core_jobs": "数据核对、报表生成、异常排查",
-        "need_type": "基本需求（Kano模型），缺失时强烈不满"
+        "pain_point_frequency": "12.3% of users mentioned this pain point",
+        "behavioral_evidence": "78% of target users repeatedly manually export and compare at month-end",
+        "persona_summary": "Mainly affected group is operations staff of mid-sized SaaS products",
+        "core_jobs": "Data reconciliation, report generation, anomaly investigation",
+        "need_type": "Basic need (Kano model), strong dissatisfaction when absent"
       },
       "market_analysis": {
-        "tam": "50亿",
-        "sam": "15亿",
-        "som": "1.2亿",
-        "growth_rate": "年增长率约25%"
+        "tam": "5 billion",
+        "sam": "1.5 billion",
+        "som": "120 million",
+        "growth_rate": "Annual growth rate about 25%"
       },
       "competitive_landscape": {
-        "competitor_capabilities": "主流竞品仅支持单渠道数据管理",
-        "market_gap": "多渠道数据自动核对能力缺失",
-        "barrier_analysis": "数据集成能力构成一定壁垒"
+        "competitor_capabilities": "Mainstream competitors only support single-channel data management",
+        "market_gap": "Multi-channel data automatic reconciliation capability missing",
+        "barrier_analysis": "Data integration capability constitutes a certain barrier"
       }
     },
     "opportunity_score": {
@@ -441,99 +441,99 @@ writes:
       }
     },
     "hmw_statements": [
-      { "id": "hmw-001", "statement": "我们如何消除新用户在首次配置场景下的认知负担障碍？", "innovation_space": 4 },
-      { "id": "hmw-002", "statement": "我们如何让报表生成体验变得更快速？", "innovation_space": 3 }
+      { "id": "hmw-001", "statement": "How might we eliminate the cognitive burden barrier for new users in the first-time configuration scenario?", "innovation_space": 4 },
+      { "id": "hmw-002", "statement": "How might we make the report generation experience faster?", "innovation_space": 3 }
     ],
     "key_assumptions": [
-      { "assumption": "目标用户愿意为自动核对功能付费", "type": "viability", "testability": "通过付费意愿调研或MVP定价测试验证", "risk_if_wrong": "高" },
-      { "assumption": "多渠道数据接口可统一标准化", "type": "feasibility", "testability": "通过技术预研验证3-5个主流渠道的数据接口", "risk_if_wrong": "高" }
+      { "assumption": "Target users are willing to pay for the automatic reconciliation feature", "type": "viability", "testability": "Validate through willingness-to-pay research or MVP pricing test", "risk_if_wrong": "high" },
+      { "assumption": "Multi-channel data interfaces can be unified and standardized", "type": "feasibility", "testability": "Validate through technical pre-research on 3-5 mainstream channel data interfaces", "risk_if_wrong": "high" }
     ],
-    "recommended_next_step": "建议进入解决方案探索阶段，优先验证高风险假设（付费意愿与数据接口标准化），可通过烟雾测试与技术预研并行推进。",
+    "recommended_next_step": "Recommend entering the solution exploration phase, prioritizing validation of high-risk assumptions (willingness to pay and data interface standardization), which can be advanced in parallel through smoke testing and technical pre-research.",
     "human_decisions_needed": [
-      { "item": "确认战略契合度评分", "context": "AI建议评分4，需人类确认是否与公司战略方向一致", "urgency": "高" },
-      { "item": "确认高风险假设的验证优先级", "context": "2个高风险假设需决定验证顺序与资源分配", "urgency": "高" }
+      { "item": "Confirm strategic fit score", "context": "AI recommends score 4, need human to confirm whether it aligns with company strategic direction", "urgency": "high" },
+      { "item": "Confirm validation priority for high-risk assumptions", "context": "2 high-risk assumptions need to decide validation order and resource allocation", "urgency": "high" }
     ]
   },
   "metadata": {
     "version": "3.0",
     "generated_at": "2026-05-14T21:00:00Z",
     "source_files": [
-      "docs/discovery/user-research.md（追加“用户声音分析”章节）
-      "docs/discovery/user-research.md（追加“用户行为分析”章节）
-      "docs/discovery/market-analysis.md（“市场规模”章节）
-      "docs/discovery/market-analysis.md（“竞品分析”章节）
+      "docs/discovery/user-research.md (append \"User Voice Analysis\" section)
+      "docs/discovery/user-research.md (append \"User Behavior Analysis\" section)
+      "docs/discovery/market-analysis.md (\"Market Size\" section)
+      "docs/discovery/market-analysis.md (\"Competitive Analysis\" section)
     ]
   }
 }
 ```
 
-## 决策规则
+## Decision Rules
 
-1. **战略契合度必须人类判定**：AI 仅提供分析建议，不自动评分；加权总分待人类判定后计算
-2. **Problem Statement质量检查不通过则自动修改重试**：根据未通过的检查项定向修复，最多重试3次，3次仍不通过升级人类
-3. **创新空间 ≥ 4 的 HMW 需人类重点审核**：这些陈述可能带来突破性创新，但也可能偏离核心问题
-4. **创新空间 < 3 的 HMW 可快速通过**：偏向渐进式改进，风险较低
-5. **每个维度至少保留1个 HMW**：确保机会探索的全面性
-6. **关键假设风险等级"高"的必须标注**：`risk_if_wrong` 为"高"的假设必须在 `human_decisions_needed` 中列出对应的决策项
-7. **推荐下一步需基于数据**：必须基于评分结果与假设风险分析，不能凭空建议
+1. **Strategic fit must be judged by humans**: AI only provides analysis recommendations, does not auto-score; weighted total score is calculated after human judgment
+2. **Problem Statement quality check failure triggers auto-repair retry**: Targeted repair based on failed check items, max 3 retries; if still not passed after 3 retries, escalate to human
+3. **HMW with innovation space ≥ 4 requires key human review**: These statements may bring breakthrough innovation, but may also deviate from the core problem
+4. **HMW with innovation space < 3 can be quickly passed**: Leans toward incremental improvement, lower risk
+5. **At least 1 HMW retained per dimension**: Ensure comprehensiveness of opportunity exploration
+6. **Key assumptions with risk level "high" must be annotated**: Assumptions with `risk_if_wrong` as "high" must have a corresponding decision item listed in `human_decisions_needed`
+7. **Recommended next step must be data-driven**: Must be based on scoring results and assumption risk analysis, cannot be baseless recommendations
 
-## 质量检查
+## Quality Checks
 
-| 检查项 | 通过条件 |
+| Check item | Pass condition |
 |--------|----------|
-| 机会评分完整（P0） | 5个维度均有 score 值或标记为 needs_human，战略契合度标记为 needs_human |
-| 评分依据完整（P0） | 每个维度的 evidence 字段非空 |
-| 权重一致性（P0） | 5个维度权重之和 = 1.00 |
-| Problem Statement 5项质量检查全部通过（P0） | `quality_check.all_passed === true` |
-| 数据支撑完整（P0） | pain_point_frequency、behavioral_evidence、confidence 均非空 |
-| HMW 4个维度都已覆盖（P1） | `dimension_coverage` 中4个维度均 ≥ 1 |
-| 每个 HMW 有数据支撑（P1） | 每个 HMW 的 `data_source` 非空 |
-| HMW 陈述避免解决方案预设（P1） | 陈述中不包含具体产品功能或技术方案描述 |
-| HMW 总数符合要求（P1） | `total_count` 在8-12范围内 |
-| 所有证据摘要已填充（P1） | `evidence_summary` 的3个子字段均有内容 |
-| 关键假设已列出可验证性（P2） | 每个 `key_assumptions` 的 `testability` 非空 |
-| 人类决策项已明确（P2） | `human_decisions_needed` 非空且每项包含 item/context/urgency |
-| 高风险假设有对应决策项（P2） | `risk_if_wrong` 为"高"的假设在 `human_decisions_needed` 中有对应项 |
+| Opportunity scoring complete (P0) | All 5 dimensions have a score value or marked as needs_human, strategic fit marked as needs_human |
+| Scoring basis complete (P0) | Each dimension's evidence field is non-empty |
+| Weight consistency (P0) | Sum of 5 dimension weights = 1.00 |
+| Problem Statement 5 quality checks all passed (P0) | `quality_check.all_passed === true` |
+| Data support complete (P0) | pain_point_frequency, behavioral_evidence, confidence are all non-empty |
+| HMW 4 dimensions all covered (P1) | All 4 dimensions in `dimension_coverage` are ≥ 1 |
+| Each HMW has data support (P1) | Each HMW's `data_source` is non-empty |
+| HMW statements avoid solution presets (P1) | Statements do not contain specific product feature or technical solution descriptions |
+| HMW total count meets requirement (P1) | `total_count` is in the 8-12 range |
+| All evidence summaries filled (P1) | All 3 sub-fields of `evidence_summary` have content |
+| Key assumptions list testability (P2) | Each `key_assumptions`'s `testability` is non-empty |
+| Human decision items are clear (P2) | `human_decisions_needed` is non-empty and each item contains item/context/urgency |
+| High-risk assumptions have corresponding decision items (P2) | Assumptions with `risk_if_wrong` as "high" have a corresponding item in `human_decisions_needed` |
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-当上游文件不存在时，本Skill仍可独立执行：
+When upstream files do not exist, this Skill can still execute independently:
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing upstream input | Degradation plan | Output impact | Data acquisition instructions |
 |---------------|---------|----------|------------|
-| 用户研究数据（voice-analysis / behavior-analysis） | 用户描述机会 → 基于描述评分和生成Problem Statement | `problem_validity.score` 降为默认值2，`data_support.pain_point_frequency` 为用户估算值，`confidence`<0.5 | 要求用户提供用户反馈文本和行为数据，或上传voice-analysis.json/behavior-analysis.json文件 |
-| 市场分析数据（tam-som） | 用户描述机会 → 市场规模维度基于用户估算评分 | `market_size.score` 基于用户估算，`evidence` 标注"缺乏市场数据" | 要求用户提供市场规模估算数据或上传tam-som.json文件 |
-| 竞品分析数据（competitor-analysis） | 用户描述机会 → 竞争壁垒维度基于用户描述评分 | `competitive_moat.score` 基于用户描述，`evidence` 标注"缺乏竞品数据" | 要求用户提供竞品信息或上传competitor-analysis.json文件 |
-| 需求洞察数据（persona / insight-analysis） | 基于用户描述直接生成 | `template_elements.target_user` 可能使用泛称，`quality_check.specific_user_group` 可能不通过 | 要求用户提供目标用户画像描述或上传persona.json/insight-analysis.json文件 |
-| 技术团队评估数据缺失 | 跳过技术可行性维度评分，标注"待技术评估" | `technical_feasibility.score` 使用默认值，可行性判断缺乏技术依据 | 要求用户提供技术团队能力评估和技术栈信息 |
-| 所有上游文件均缺失 | 提示用户先执行前序阶段，或基于用户口头描述的机会直接执行 | 多个维度使用默认值，`weighted_total` 可信度极低，`quality_check` 多项可能不通过，Brief决策价值大幅降低 | 要求用户提供机会描述、目标用户、市场估算和竞品信息 |
+| User research data (voice-analysis / behavior-analysis) | User describes opportunity → score and generate Problem Statement based on description | `problem_validity.score` defaults to 2, `data_support.pain_point_frequency` is a user estimate, `confidence` <0.5 | Ask user to provide user feedback text and behavior data, or upload voice-analysis.json/behavior-analysis.json files |
+| Market analysis data (tam-som) | User describes opportunity → market size dimension scored based on user estimate | `market_size.score` based on user estimate, `evidence` annotated "lacks market data" | Ask user to provide market size estimate data or upload tam-som.json file |
+| Competitor analysis data (competitor-analysis) | User describes opportunity → competitive moat dimension scored based on user description | `competitive_moat.score` based on user description, `evidence` annotated "lacks competitor data" | Ask user to provide competitor information or upload competitor-analysis.json file |
+| Requirement insight data (persona / insight-analysis) | Generate directly based on user description | `template_elements.target_user` may use generic terms, `quality_check.specific_user_group` may not pass | Ask user to provide target user persona description or upload persona.json/insight-analysis.json file |
+| Technical team assessment data missing | Skip technical feasibility dimension scoring, annotate "pending tech assessment" | `technical_feasibility.score` uses default value, feasibility judgment lacks technical basis | Ask user to provide technical team capability assessment and tech stack information |
+| All upstream files missing | Prompt user to execute preceding stages first, or execute directly based on user's verbally described opportunity | Multiple dimensions use default values, `weighted_total` credibility is very low, `quality_check` multiple items may not pass, Brief decision value significantly reduced | Ask user to provide opportunity description, target users, market estimate, and competitor information |
 
-## 数据获取说明
+## Data Acquisition Instructions
 
-本Skill需要用户研究、市场分析和竞品分析数据，请通过以下方式之一提供：
-  1. 直接描述机会、目标用户和核心痛点
-  2. 上传voice-analysis.json / tam-som.json / competitor-analysis.json等文件
-  3. 提供数据文件路径
-- AI不负责外部数据采集，仅负责分析
+This Skill requires user research, market analysis, and competitor analysis data. Please provide via one of the following methods:
+  1. Directly describe the opportunity, target users, and core pain points
+  2. Upload voice-analysis.json / tam-som.json / competitor-analysis.json and other files
+  3. Provide data file paths
+- AI is not responsible for external data collection, only for analysis
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游数据源 | 变更类型 | 影响维度 | 影响描述 | 响应策略 |
+| Upstream data source | Change type | Impact dimension | Impact description | Response strategy |
 |-----------|----------|----------|----------|----------|
-| voice-analysis.json | 痛点提及率更新 | scoring.problem_validity / problem_statement.data_support | 痛点频率变化影响评分和Problem Statement | 重新计算problem_validity得分，更新data_support和core_pain |
-| behavior-analysis.json | 行为模式数据更新 | scoring.problem_validity / hmw.enhance_experience | 行为数据变化影响评分和HMW | 重新评估行为印证，更新受影响HMW的data_source和confidence |
-| tam-som.json | SOM估算值调整 | scoring.market_size / brief.evidence_summary.market_analysis | SOM数值变化影响评分和Brief | 重新计算market_size得分，更新Brief市场分析证据 |
-| competitor-analysis.json | 竞品能力变更 | scoring.competitive_moat / brief.evidence_summary.competitive_landscape | 竞品变化影响评分和Brief | 重新计算competitive_moat得分，更新Brief竞争格局证据 |
-| persona.json | 用户画像调整 | problem_statement.template_elements.target_user | 用户群体定义变化 | 更新target_user，重新执行specific_user_group检查 |
-| insight-analysis.json | 洞察分析变更 | problem_statement.template_elements.task | 用户任务定义变化 | 更新task要素，重新执行质量检查 |
+| voice-analysis.json | Pain point mention rate update | scoring.problem_validity / problem_statement.data_support | Pain point frequency changes affect scoring and Problem Statement | Recalculate problem_validity score, update data_support and core_pain |
+| behavior-analysis.json | Behavior pattern data update | scoring.problem_validity / hmw.enhance_experience | Behavior data changes affect scoring and HMW | Re-evaluate behavior corroboration, update affected HMW's data_source and confidence |
+| tam-som.json | SOM estimate adjustment | scoring.market_size / brief.evidence_summary.market_analysis | SOM value changes affect scoring and Brief | Recalculate market_size score, update Brief market analysis evidence |
+| competitor-analysis.json | Competitor capability change | scoring.competitive_moat / brief.evidence_summary.competitive_landscape | Competitor changes affect scoring and Brief | Recalculate competitive_moat score, update Brief competitive landscape evidence |
+| persona.json | User persona adjustment | problem_statement.template_elements.target_user | User group definition changes | Update target_user, re-execute specific_user_group check |
+| insight-analysis.json | Insight analysis change | problem_statement.template_elements.task | User task definition changes | Update task element, re-execute quality checks |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 下游消费者 | 通知字段 | 通知时机 | 通知内容 |
+| Downstream consumer | Notification field | Notification timing | Notification content |
 |-----------|----------|----------|----------|
-| 决策层/利益相关方 | `brief.title` / `scoring.opportunities[].weighted_total` | Brief核心结论变更后 | 通知机会简报标题和评分变化，提示需重新审阅 |
-| 后续阶段（解决方案探索） | `brief.recommended_next_step` / `brief.key_assumptions` | 推荐行动或假设变更后 | 通知下一步行动调整及需验证的假设变化 |
+| Decision makers / stakeholders | `brief.title` / `scoring.opportunities[].weighted_total` | After Brief core conclusions change | Notify opportunity brief title and scoring changes, prompt need for re-review |
+| Subsequent phases (solution exploration) | `brief.recommended_next_step` / `brief.key_assumptions` | After recommended action or assumption changes | Notify next-step action adjustments and assumption changes to be validated |

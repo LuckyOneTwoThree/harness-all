@@ -1,33 +1,33 @@
-# 验证证据
+# Verification evidence
 
-> 来源：由 verify skill 产出。
-> 文件语义：覆盖写入（只保留最终成功的证据）。
+> Source: produced by the verify skill.
+> File semantics: overwrite write (only the final successful evidence is kept).
 
-## 时间
+## Time
 YYYY-MM-DD HH:MM
 
-## 1. 设计稿完整性
-<实际产出文件列表>
+## 1. Design spec completeness
+<actual output file list>
 
-## 2. 验收标准
-- AC-001: ✓ <如何满足>
-- AC-002: ✓ <如何满足>
+## 2. Acceptance criteria
+- AC-001: ✓ <how satisfied>
+- AC-002: ✓ <how satisfied>
 
-## 3. 宪法合规
-- [x] 设计系统优先
+## 3. Constitution compliance
+- [x] Design system first
 - [x] WCAG 2.1 AA
-- [x] 移动优先
-- [x] 可交付
+- [x] Mobile first
+- [x] Deliverable
 
-## 4. 可访问性检查
-<实际检查结果，列出每项的通过/失败>
+## 4. Accessibility check
+<actual check results, listing pass/fail for each item>
 
-## 5. 可交付性检查
-<实际检查结果：标注完整性/组件规格/交互规格/响应式规范/令牌导出>
+## 5. Deliverability check
+<actual check results: annotation completeness / component specs / interaction specs / responsive specs / token export>
 
-## 6. 安全扫描
-方式：Agent Grep 扫描
-<实际输出，列出扫描的模式和命中情况>
+## 6. Security scan
+Method: Agent Grep scan
+<actual output, listing scanned patterns and hits>
 
-## 7. 交接文档检查（如涉及）
-<实际检查结果或"非交付任务，跳过">
+## 7. Handoff document check (if applicable)
+<actual check results or "not a handoff task, skipped">

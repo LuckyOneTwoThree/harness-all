@@ -4,151 +4,178 @@ name: pivot
 default_mode: deep
 ---
 
-# 工作流 H：战略调整
+# Workflow H: Strategic Adjustment
 
-> 适用场景：产品转型、重新定位、新市场进入、重大战略方向调整
-> 核心模式：战略回溯 → 重新定位 → LOOP 验证 → 更新契约
-> 默认模式：deep（强制探索先行，每个模块前暂停对话）
+> Applicable scenario: Product transformation, repositioning, new market entry, major strategic direction adjustment
+> Core mode: Strategy retrospective → repositioning → LOOP validation → contract update
+> Default mode: deep (mandatory exploration first, pause dialog before each module)
 
-## 与其他工作流的差异
+## Differences from Other Workflows
 
-| 维度 | new-product | iteration | **pivot** |
+| Dimension | new-product | iteration | **pivot** |
 |------|-------------|-----------|-----------|
-| 目标 | 0→1 做新产品 | 功能级变更 | **战略级调整** |
-| 触发 | 新产品立项 | 明确变更需求 | **战略方向变化** |
-| 影响 | 全新产出 | 变更模块 PRD | **PRD+定位+OKR+路线图全更新** |
-| LOOP | 探索→设计 | 变更→设计 | **战略→定位→规划** |
+| Goal | 0→1 new product | Feature-level change | **Strategic-level adjustment** |
+| Trigger | New product initiation | Clear change requirement | **Strategic direction change** |
+| Impact | Brand new output | Changed module PRD | **PRD+positioning+OKR+roadmap all updated** |
+| LOOP | Exploration→design | Change→design | **Strategy→positioning→planning** |
 
-## 触发条件
+## Trigger Conditions
 
-- 业务环境重大变化（市场/竞争/政策）
-- 产品定位需要重新定义
-- 目标用户群体发生转移
-- 商业模式需要调整
-- North Star Metric 需要重新选择
-- 路线图需要重大修订
+- Major business environment changes (market/competition/policy)
+- Product positioning needs redefinition
+- Target user group shift
+- Business model needs adjustment
+- North Star Metric needs reselection
+- Roadmap needs major revision
 
-## 流程
+## Process
 
 ```
 ┌─────────────────┐
-│ session-start   │  加载上下文，确认战略调整原因
+│ session-start   │  Load context, confirm reason for strategic adjustment
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ ⏸ 探索对话 0：战略调整方向对齐            │
+│ ⏸ Exploration Dialog 0: Strategic      │
+│   adjustment direction alignment        │
 │                                         │
-│  最小问题集（必须全部回答后才继续）：     │
-│  1. 为什么要调整战略？触发因素是什么？    │
-│  2. 新方向是什么？和旧方向有什么不同？    │
-│  3. 你已经有哪些数据支撑这个调整？        │
-│  4. 有什么约束条件？                     │
+│  Minimum question set (must all be      │
+│  answered before continuing):           │
+│  1. Why adjust strategy? What are the   │
+│     trigger factors?                    │
+│  2. What is the new direction? How does │
+│     it differ from the old direction?   │
+│  3. What data do you have to support    │
+│     this adjustment?                    │
+│  4. What constraints exist?             │
 │                                         │
-│  ⚠️ 禁止：不问用户直接开始执行模块1      │
+│  ⚠️ Forbidden: starting module 1        │
+│  directly without asking user           │
 └────────┬────────────────────────────────┘
-         │ 用户已回答
+         │ User answered
          ▼
 ┌─────────────────────────────────────────┐
-│ 模块1：战略回溯（★ 探索硬门）             │
+│ Module 1: Strategy Retrospective        │
+│ (★ Exploration hard gate)               │
 │                                         │
 │  - user-research-orchestrator           │
-│    （重新验证用户需求，新Persona）        │
-│    👤 新 Persona 确认（人类决策点）       │
+│    (Re-validate user needs, new Persona)│
+│    👤 New Persona confirmation          │
+│      (Human Decision Point)             │
 │  - market-orchestrator                  │
-│    （重新评估市场，新TAM/SOM/竞品）       │
+│    (Re-evaluate market, new TAM/SOM/    │
+│     competitors)                        │
 │  - insight-analysis                     │
-│    （重新洞察需求，新JTBD）              │
+│    (Re-insight needs, new JTBD)         │
 │                                         │
-│  ★ 硬门检查：                            │
-│  - 战略调整原因是否充分？（数据支撑）     │
-│  - 新目标用户是否验证？                  │
-│  - 新市场机会是否成立？                  │
-│  👤 硬门结果审批（人类决策点）            │
+│  ★ Hard gate check:                     │
+│  - Is strategic adjustment reason       │
+│    sufficient? (Data-supported)         │
+│  - Are new target users validated?      │
+│  - Is new market opportunity viable?    │
+│  👤 Hard gate result approval           │
+│    (Human Decision Point)               │
 └────────┬────────────────────────────────┘
-         │ 通过
+         │ Pass
          ▼
 ┌─────────────────────────────────────────┐
-│ ⏸ 探索对话 1：战略回溯回顾               │
+│ ⏸ Exploration Dialog 1: Strategy       │
+│   retrospective review                  │
 │                                         │
-│  最小问题集：                            │
-│  1. 回溯发现符合你的预期吗？              │
-│  2. 新方向的数据支撑充分吗？              │
-│  3. 进入重新定位阶段，方向对吗？          │
+│  Minimum question set:                  │
+│  1. Do retrospective findings match     │
+│     your expectations?                  │
+│  2. Is data support for new direction   │
+│     sufficient?                         │
+│  3. Moving to repositioning phase, is   │
+│     the direction right?                │
 └────────┬────────────────────────────────┘
-         │ 用户已确认
+         │ User confirmed
          ▼
 ┌─────────────────────────────────────────┐
-│              LOOP 循环验证               │
+│              LOOP Validation            │
 │  ┌─────────────────────────────────┐    │
-│  │ 模块2：重新定位 (RESEARCH)       │    │
+│  │ Module 2: Repositioning         │    │
+│  │   (RESEARCH)                    │    │
 │  │  - business-orchestrator        │    │
-│  │    （新商业模式+价值匹配+定价）   │    │
+│  │    (New business model+value    │    │
+│  │     fit+pricing)                │    │
 │  │  - positioning-strategy         │    │
-│  │    （新定位陈述）                 │    │
-│  │  - planning-orchestrator         │    │
-│  │    （新OKR+North Star+路线图）   │    │
+│  │    (New positioning statement)  │    │
+│  │  - planning-orchestrator        │    │
+│  │    (New OKR+North Star+roadmap) │    │
 │  │  - stakeholder-analysis         │    │
-│  │    （新Stakeholder对齐）         │    │
+│  │    (New Stakeholder alignment)  │    │
 │  └──────────┬──────────────────────┘    │
 │             ▼                            │
 │  ┌─────────────────────────────────┐    │
 │  │ VALIDATE                        │    │
-│  │  - 战略一致性检查                │    │
-│  │  - 契约变更影响分析              │    │
-│  │  - 人类审批（战略方向）          │    │
-│  │    👤 战略方向确认（人类决策点）  │    │
-│  │  - Stakeholder 对齐确认         │    │
-│  │    👤 Stakeholder 对齐（人类决策点）│   │
+│  │  - Strategy consistency check   │    │
+│  │  - Contract change impact       │    │
+│  │    analysis                     │    │
+│  │  - Human approval (strategy     │    │
+│  │    direction)                   │    │
+│  │    👤 Strategy direction         │    │
+│  │      confirmation (Human        │    │
+│  │      Decision Point)            │    │
+│  │  - Stakeholder alignment        │    │
+│  │    confirmation                 │    │
+│  │    👤 Stakeholder alignment      │    │
+│  │      (Human Decision Point)     │    │
 │  └──────────┬──────────────────────┘    │
 │             │                            │
-│             ├── 通过 → 跳出 LOOP ────────┼──→
+│             ├── Pass → exit LOOP ────────┼──→
 │             │                            │
-│             └── 失败 → 回到 RESEARCH ────┘
+│             └── Fail → back to RESEARCH ─┘
 │                                          │
-│  迭代上限：5 次（pivot 类型）            │
+│  Iteration limit: 5 times (pivot type)  │
 └─────────────────────────────────────────┘
          │
          ▼
 ┌─────────────────────────────────────────┐
-│ 契约更新（★ 变更影响分析）               │
+│ Contract Update (★ change impact        │
+│   analysis)                             │
 │                                         │
 │  - change-impact-analysis               │
-│    （评估对现有PRD/指标/埋点的影响）      │
-│  - 更新 PRODUCT_STRATEGY.md             │
-│  - 更新 PRD.md（如定位变化影响功能）      │
-│  - 更新指标体系（如 North Star 变化）    │
+│    (Assess impact on existing PRD/      │
+│     metrics/tracking)                   │
+│  - Update PRODUCT_STRATEGY.md           │
+│  - Update PRD.md (if positioning change │
+│    affects features)                    │
+│  - Update metrics system (if North Star │
+│    changes)                             │
 │                                         │
-│  产出：docs/strategy/PRODUCT_STRATEGY.md │
-│        + docs/product/PRD.md              │
+│  Output: docs/strategy/PRODUCT_STRATEGY.md │
+│        + docs/product/PRD.md            │
 └────────┬────────────────────────────────┘
          ▼
 ┌─────────────────┐
-│ session-end     │  归档 + 更新 FEATURES.md
-│                 │  + 产出 docs/handoff/pm-to-solo.md（战略变更交接）
-│                 │  + 通知 harness 家族成员战略调整
+│ session-end     │  Archive + update FEATURES.md
+│                 │  + Output docs/handoff/pm-to-solo.md (strategic change handoff)
+│                 │  + Notify harness family members of strategic adjustment
 └─────────────────┘
 ```
 
-## 关键检查点
+## Key Checkpoints
 
-- [ ] 战略调整原因有数据支撑吗？（不是拍脑袋）
-- [ ] 新定位经过用户验证了吗？
-- [ ] 新商业模式可行吗？
-- [ ] Stakeholder 对齐了吗？
-- [ ] 变更影响分析完成了吗？（对现有PRD/指标/埋点的影响）
-- [ ] 人类审批战略方向了吗？
+- [ ] Strategic adjustment reason data-supported? (Not gut feeling)
+- [ ] New positioning validated by users?
+- [ ] New business model feasible?
+- [ ] Stakeholders aligned?
+- [ ] Change impact analysis complete? (Impact on existing PRD/metrics/tracking)
+- [ ] Human approved strategic direction?
 
-## 失败处理
+## Failure Handling
 
-| 失败点 | 处理方式 |
+| Failure point | Handling |
 |--------|---------|
-| 战略调整原因不充分 | 补充数据，不凭直觉转型 |
-| 新定位未通过验证 | 回到 LOOP 重新定位 |
-| Stakeholder 未对齐 | 召开对齐会议，不硬推 |
-| 变更影响过大 | 分阶段实施，降低风险 |
+| Strategic adjustment reason insufficient | Supplement data, don't pivot on intuition |
+| New positioning failed validation | Back to LOOP for repositioning |
+| Stakeholders not aligned | Hold alignment meeting, don't force push |
+| Change impact too large | Phase implementation, reduce risk |
 
-## 下一步
+## Next Steps
 
-- 战略调整后需重新设计产品 → 进入 **new-product** 工作流
-- 战略调整后需功能迭代 → 进入 **iteration** 工作流
-- 战略调整后需发布 → 进入 **launch** 工作流
+- Need product redesign after strategic adjustment → enter **new-product** workflow
+- Need feature iteration after strategic adjustment → enter **iteration** workflow
+- Need release after strategic adjustment → enter **launch** workflow

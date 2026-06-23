@@ -1,18 +1,20 @@
 #!/bin/bash
-# guard-bash.sh — 危险命令验证工具
-# 用法：bash guard-bash.sh "your_command"
+# guard-bash.sh — Dangerous command validation tool
+# Usage: bash guard-bash.sh "your_command"
 #
-# 定位（重要）：
-#   - 不是"自动拦截器"——Agent 通过终端执行 rm -rf / 时，本脚本无法自动跳出来拦截
-#   - 而是"主动验证工具"——Agent 在执行复杂 Bash 前，先跑本脚本，通过了再真跑
-#   - 真正有效的防护是 Docker 沙盒隔离
+# Positioning (important):
+#   - Not an "auto-interceptor" — when an Agent executes rm -rf / via the terminal,
+#     this script cannot automatically pop up to intercept it
+#   - Rather, it is a "proactive validation tool" — before executing complex Bash
+#     commands, the Agent runs this script first and only executes for real if it passes
+#   - Truly effective protection is Docker sandbox isolation
 #
-# Agent 使用方式：
-#   1. 执行复杂命令前，先跑 `bash .harness/hooks/guards/guard-bash.sh "cmd"`
-#   2. 脚本输出 OK → 可以执行
-#   3. 脚本输出 BLOCK → 不要执行，向用户说明
+# Agent usage:
+#   1. Before executing complex commands, run `bash .harness/hooks/guards/guard-bash.sh "cmd"` first
+#   2. If the script outputs OK → safe to execute
+#   3. If the script outputs BLOCK → do not execute, explain to the user
 
-# CRLF 防御：Windows 下 core.autocrlf 可能导致脚本含 \r，Git Bash 无法执行
+# CRLF defense: on Windows, core.autocrlf may cause scripts to contain \r, which Git Bash cannot execute
 if grep -qI $'\r' "$0" 2>/dev/null; then
   exec bash < <(tr -d '\r' < "$0")
 fi
@@ -20,14 +22,14 @@ fi
 set -e
 
 if [ $# -eq 0 ]; then
-  echo "用法: bash guard-bash.sh \"your_command\""
-  echo "示例: bash guard-bash.sh \"rm -rf node_modules\""
+  echo "Usage: bash guard-bash.sh \"your_command\""
+  echo "Example: bash guard-bash.sh \"rm -rf node_modules\""
   exit 1
 fi
 
 cmd="$1"
 
-# 禁止模式（直接 BLOCK）
+# Blocked patterns (direct BLOCK)
 BLOCK_PATTERNS=(
   'rm -rf /'
   'rm -rf ~'
@@ -44,37 +46,37 @@ BLOCK_PATTERNS=(
   '> /dev/sda'
   'git push --force.*origin/(main|master)'
   'DROP DATABASE'
-  'DROP TABLE.*;(?!.*WHERE)'  # 无 WHERE 的 DROP（简化判断）
+  'DROP TABLE.*;(?!.*WHERE)'  # DROP without WHERE (simplified check)
 )
 
-# 需确认模式（WARN，Agent 应询问用户）
+# Confirm-required patterns (WARN, Agent should ask the user)
 WARN_PATTERNS=(
   'git reset --hard'
   'git clean -fd'
   'npm publish'
   'pip install.*--user'
-  'rm -rf [^/]'              # rm -rf 相对路径
+  'rm -rf [^/]'              # rm -rf with relative path
   'kill -9'
   'pkill'
 )
 
 for pattern in "${BLOCK_PATTERNS[@]}"; do
   if echo "$cmd" | grep -qE "$pattern"; then
-    echo "BLOCK: 命令匹配禁止模式: $pattern"
-    echo "命令: $cmd"
-    echo "原因: 破坏性操作，违反 security.md"
+    echo "BLOCK: command matches blocked pattern: $pattern"
+    echo "Command: $cmd"
+    echo "Reason: destructive operation, violates security.md"
     exit 2
   fi
 done
 
 for pattern in "${WARN_PATTERNS[@]}"; do
   if echo "$cmd" | grep -qE "$pattern"; then
-    echo "WARN: 命令匹配需确认模式: $pattern"
-    echo "命令: $cmd"
-    echo "建议: 执行前向用户确认"
+    echo "WARN: command matches confirm-required pattern: $pattern"
+    echo "Command: $cmd"
+    echo "Suggestion: confirm with the user before executing"
     exit 1
   fi
 done
 
-echo "OK: 命令通过安全检查"
+echo "OK: command passed security check"
 exit 0

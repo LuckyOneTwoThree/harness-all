@@ -1,10 +1,10 @@
 ---
 name: kpi-tree
-description: 将北极星指标拆解为KPI Tree，产出可实验的输入指标
+description: Break down the North Star Metric into a KPI Tree, producing experimentable input metrics
 triggers:
-  - NSM定义后需要拆解时
-  - 增长战略制定Workflow
-  - 用户要求"拆解指标"
+  - When the NSM is defined and needs to be broken down
+  - Growth strategy formulation Workflow
+  - User asks to "break down metrics"
 reads:
   - docs/operations/GROWTH_STRATEGY.md
   - docs/handoff/pm-to-growth.md
@@ -15,69 +15,69 @@ quality_gates: []
 max_iterations: 2
 ---
 
-# KPI Tree — 指标拆解
+# KPI Tree — Metric Breakdown
 
-## 铁律
-- 每一层指标必须**可被实验影响**
-- 上下层必须有**因果而非仅相关**关系
-- 拆解到**可操作的叶子指标**（能直接设计实验的层级）
+## Iron Rules
+- Each layer's metrics must be **experimentable**
+- Upper and lower layers must have a **causal, not merely correlational**, relationship
+- Break down to **actionable leaf metrics** (the level where experiments can be directly designed)
 
-## 流程
+## Process
 
-1. **读取 NSM**
-   从 `docs/operations/GROWTH_STRATEGY.md` 读取已定义的北极星指标
+1. **Read the NSM**
+   From `docs/operations/GROWTH_STRATEGY.md`, read the defined North Star Metric
 
-2. **第一层拆解（公式拆解）**
-   用数学公式拆解 NSM：
+2. **First-layer breakdown (formula breakdown)**
+   Break down the NSM with a math formula:
    ```
    NSM = A × B × C
 
-   示例（Airbnb）:
-   预订夜数 = 活跃房东数 × 房东平均被订夜数
-            = (新增房东 + 存量房东×留存) × (被订率 × 平均被订天数)
+   Example (Airbnb):
+   Nights booked = Active hosts × Average nights booked per host
+                 = (New hosts + Existing hosts × retention) × (Booking rate × Average booked nights)
    ```
 
-3. **第二层拆解（漏斗拆解）**
-   对每个一级指标，按漏斗拆解：
+3. **Second-layer breakdown (funnel breakdown)**
+   For each first-layer metric, break down by funnel:
    ```
-   新增房东 = 访客 × 注册转化率 × 房东认证转化率
-   ```
-
-4. **第三层拆解（可实验指标）**
-   拆解到可直接设计实验的层级：
-   ```
-   注册转化率 = 落地页转化率 × 表单完成率 × 邮箱验证率
+   New hosts = Visitors × Sign-up conversion rate × Host verification conversion rate
    ```
 
-5. **标注可实验性**
-   对每个叶子指标评估：
-   - 可直接实验？（如"表单字段数"→可A/B测试）
-   - 可间接影响？（如"品牌认知"→需通过内容/SEO间接影响）
-   - 不可影响？（如"市场总量"→外部因素）
-
-6. **产出 KPI Tree**
+4. **Third-layer breakdown (experimentable metrics)**
+   Break down to the level where experiments can be directly designed:
    ```
-   NSM: [北极星指标]
-   ├── 一级指标 A: [指标] (当前值 → 目标值)
-   │   ├── 二级指标 A1: [指标]
-   │   │   ├── 叶子指标 A1.1: [可实验指标] ← 实验方向
-   │   │   └── 叶子指标 A1.2: [可实验指标]
-   │   └── 二级指标 A2: [指标]
-   └── 一级指标 B: [指标]
+   Sign-up conversion rate = Landing page conversion rate × Form completion rate × Email verification rate
+   ```
+
+5. **Annotate experimentability**
+   For each leaf metric, assess:
+   - Directly experimentable? (e.g., "form field count" → can A/B test)
+   - Indirectly influenceable? (e.g., "brand awareness" → needs to be influenced via content/SEO)
+   - Not influenceable? (e.g., "total market size" → external factor)
+
+6. **Produce KPI Tree**
+   ```
+   NSM: [North Star Metric]
+   ├── First-layer metric A: [metric] (current → target)
+   │   ├── Second-layer metric A1: [metric]
+   │   │   ├── Leaf metric A1.1: [experimentable metric] ← experiment direction
+   │   │   └── Leaf metric A1.2: [experimentable metric]
+   │   └── Second-layer metric A2: [metric]
+   └── First-layer metric B: [metric]
        └── ...
    ```
 
-7. **写入增长战略文档**
-   更新 `docs/operations/GROWTH_STRATEGY.md` 的"KPI Tree"章节
+7. **Write to growth strategy document**
+   Update the "KPI Tree" section of `docs/operations/GROWTH_STRATEGY.md`
 
-## 禁止事项
-- 不拆解到无法实验的层级就停止（拆解的目的就是指导实验）
-- 不用相关性代替因果性（相关不等于因果）
-- 不忽略外部因素（标注哪些是不可控的）
+## Prohibitions
+- Don't stop at a layer that can't be experimented on (the purpose of breakdown is to guide experiments)
+- Don't substitute correlation for causation (correlation ≠ causation)
+- Don't ignore external factors (annotate which are uncontrollable)
 
-## 与 LOOP 的关系
-本 skill 不在 LOOP 内执行，是**战略级**拆解。
+## Relationship to LOOP
+This skill does not run inside LOOP; it is a **strategic-level** breakdown.
 
-## 与 Workflow 的关系
-本 skill 是 **growth-strategy-workflow** 的第 2 步。
-产出供 hypothesis-generation 参考实验方向。
+## Relationship to Workflow
+This skill is step 2 of **growth-strategy-workflow**.
+Output is used by hypothesis-generation to reference experiment directions.

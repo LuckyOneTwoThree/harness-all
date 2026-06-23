@@ -1,12 +1,12 @@
 ---
 name: gitops-sync
-description: ArgoCD/Flux GitOps 同步管理，监控同步状态/检测漂移/管理 Application CRD
+description: ArgoCD/Flux GitOps sync management, monitoring sync status, detecting drift, and managing Application CRDs
 triggers:
-  - 通过 GitOps 部署时
-  - ArgoCD/Flux 同步异常时
-  - 需要创建/修改 Application CRD 时
-  - 检测到配置漂移时
-  - deployment-pipeline 生成 GitOps PR 后
+  - When deploying via GitOps
+  - When ArgoCD/Flux sync is abnormal
+  - When creating/modifying Application CRDs
+  - When configuration drift is detected
+  - After deployment-pipeline generates a GitOps PR
 reads:
   - docs/infrastructure/OPS_STRATEGY.md
   - rules/security.md
@@ -23,21 +23,21 @@ operation_tier: inspect
 requires_approval: false
 ---
 
-# GitOps Sync — ArgoCD/Flux 同步管理
+# GitOps Sync — ArgoCD/Flux Sync Management
 
-## 铁律
+## Ground Rules
 
-1. **Git 是唯一真理源** —— 集群状态必须向 Git 收敛，不直接改集群
-2. **Pull 优先于 Push** —— ArgoCD/Flux 拉取模式，不向集群推送凭据
-3. **同步策略明确** —— 自动同步 vs 手动同步需显式声明
-4. **漂移即告警** —— 检测到集群与 Git 不一致必须记录
-5. **回滚=Git revert** —— 不在集群层回滚，回滚 Git commit
+1. **Git is the single source of truth** — cluster state must converge to Git; do not modify the cluster directly
+2. **Pull over Push** — ArgoCD/Flux pull model; do not push credentials to the cluster
+3. **Explicit sync policy** — auto-sync vs. manual-sync must be declared explicitly
+4. **Drift means alert** — detected inconsistency between cluster and Git must be recorded
+5. **Rollback = Git revert** — do not roll back at the cluster layer; revert the Git commit
 
-## 流程
+## Process
 
-### 1. 管理 ArgoCD Application
+### 1. Manage ArgoCD Applications
 
-#### Application CRD 生成
+#### Application CRD Generation
 ```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -57,8 +57,8 @@ spec:
     namespace: production
   syncPolicy:
     automated:
-      prune: true           # 自动清理 Git 中删除的资源
-      selfHeal: true        # 自动修复漂移
+      prune: true           # auto-prune resources deleted in Git
+      selfHeal: true        # auto-fix drift
     syncOptions:
     - CreateNamespace=true
     - PruneLast=true
@@ -66,7 +66,7 @@ spec:
   revisionHistoryLimit: 10
 ```
 
-#### ApplicationSet（多环境管理）
+#### ApplicationSet (multi-environment management)
 ```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
@@ -98,50 +98,50 @@ spec:
           selfHeal: true
 ```
 
-### 2. 监控同步状态
+### 2. Monitor Sync Status
 
 ```bash
-# 查看所有 Application 同步状态
+# View sync status of all Applications
 argocd app list
 
-# 查看特定 Application
+# View a specific Application
 argocd app get payment-service-production
 
-# 查看同步历史
+# View sync history
 argocd app history payment-service-production
 
-# 手动触发同步（如需）
+# Manually trigger sync (if needed)
 argocd app sync payment-service-production
 ```
 
-**同步状态分类**：
-| 状态 | 含义 | 处理 |
+**Sync status categories**:
+| Status | Meaning | Action |
 |------|------|------|
-| Synced | 集群状态与 Git 一致 | 无需操作 |
-| OutOfSync | 集群与 Git 不一致 | 自动同步或手动触发 |
-| Syncing | 正在同步 | 等待完成 |
-| Failed | 同步失败 | 查看错误，修复后重试 |
-| Unknown | 无法获取状态 | 检查 ArgoCD 健康 |
+| Synced | Cluster state matches Git | No action needed |
+| OutOfSync | Cluster does not match Git | Auto-sync or manual trigger |
+| Syncing | Syncing in progress | Wait for completion |
+| Failed | Sync failed | Inspect errors, fix, and retry |
+| Unknown | Cannot get status | Check ArgoCD health |
 
-### 3. 漂移检测
+### 3. Drift Detection
 
 ```bash
-# 检测漂移
+# Detect drift
 argocd app diff payment-service-production
 
-# 输出示例
+# Example output
 # === deployment/payment-service ===
 # spec.template.spec.containers[0].image:
 #   Git: registry.example.com/payment-service:v1.2.3
 #   Live: registry.example.com/payment-service:v1.2.2
 ```
 
-**漂移处理**：
-- **selfHeal=true**：ArgoCD 自动修复漂移
-- **selfHeal=false**：Agent 报告漂移，人类决策
-- **频繁漂移**：可能有人手动改集群，需排查
+**Drift handling**:
+- **selfHeal=true**: ArgoCD auto-fixes drift
+- **selfHeal=false**: Agent reports drift, human decides
+- **Frequent drift**: someone may be modifying the cluster manually; investigate
 
-### 4. Flux 管理（如使用 Flux）
+### 4. Flux Management (if using Flux)
 
 ```yaml
 # Flux Kustomization
@@ -166,69 +166,69 @@ spec:
 ```
 
 ```bash
-# 查看 Flux 同步状态
+# View Flux sync status
 flux get kustomizations
 flux get sources git
 
-# 手动触发同步
+# Manually trigger sync
 flux reconcile kustomization payment-service
 ```
 
-### 5. GitOps PR 工作流
+### 5. GitOps PR Workflow
 
-Agent 生成 GitOps PR 的标准流程：
+Standard flow when the Agent generates a GitOps PR:
 
 ```
-1. 修改 GitOps 仓库的 Manifest/values
+1. Modify Manifest/values in the GitOps repo
 2. git commit -m "deploy: payment-service v1.2.3"
 3. gh pr create --title "Deploy payment-service v1.2.3" --body "..."
-4. 等待人类 review
-5. 人类 merge 后，ArgoCD/Flux 自动检测并同步
-6. Agent 监控同步状态
-7. 同步完成后触发 deployment-verify
+4. Wait for human review
+5. After human merge, ArgoCD/Flux auto-detects and syncs
+6. Agent monitors sync status
+7. After sync completes, trigger deployment-verify
 ```
 
-### 6. 回滚（Git revert）
+### 6. Rollback (Git revert)
 
 ```bash
-# 查看提交历史
+# View commit history
 git log --oneline -10
 
-# revert 部署提交
+# Revert the deployment commit
 git revert <commit-hash>
 git push
 
-# ArgoCD/Flux 自动检测 revert 并同步回旧版本
+# ArgoCD/Flux auto-detects the revert and syncs back to the old version
 ```
 
-### 7. 更新知识库
+### 7. Update Knowledge Base
 
-`memory/knowledge-base.md` 追加：
+Append to `memory/knowledge-base.md`:
 ```
-| Application | 环境 | 仓库 | 路径 | 同步策略 | 当前版本 | 最后同步 |
+| Application | Environment | Repo | Path | Sync Policy | Current Version | Last Sync |
 |------------|------|------|------|---------|---------|---------|
 | payment-production | production | gitops-repo | production/payment-service | auto+selfHeal | v1.2.3 | 2026-06-22 |
 ```
 
-## 禁止事项
+## Prohibitions
 
-- 不直接修改集群资源（kubectl apply/edit），必须通过 Git
-- 不在生产环境关闭 selfHeal（除非维护窗口）
-- 不删除 Application CRD 不加 finalizer（防止资源泄漏）
-- 不在 GitOps 仓库存储明文 Secret（用 Sealed Secrets / SOPS / External Secrets）
-- 不跳过 PR review 直接 push 到 main
+- Do not modify cluster resources directly (kubectl apply/edit); must go through Git
+- Do not disable selfHeal in production (unless during a maintenance window)
+- Do not delete an Application CRD without a finalizer (prevents resource leaks)
+- Do not store plaintext Secrets in the GitOps repo (use Sealed Secrets / SOPS / External Secrets)
+- Do not skip PR review and push directly to main
 
-## 与 LOOP 的关系
+## Relationship to LOOP
 
-**所属 LOOP 类型**：provision
+**LOOP type**: provision
 
-本 skill 在 deployment-pipeline 的 PROVISION 阶段执行：
-- PLAN：生成 Application CRD / Manifest
-- PROVISION：提交 GitOps PR → 人类 merge → ArgoCD 同步
-- VERIFY：检查同步状态 + deployment-verify
+This skill executes in the PROVISION stage of deployment-pipeline:
+- PLAN: generate Application CRD / Manifest
+- PROVISION: submit GitOps PR → human merge → ArgoCD sync
+- VERIFY: check sync status + deployment-verify
 
-## 与其他 skill 的关系
+## Relationship to Other Skills
 
-- **上游**：`kubernetes-manifest`（生成 YAML）、`helm-management`（生成 values）
-- **协作**：`deployment-verify`（同步后验证）
-- **下游**：`rollback`（通过 Git revert 回滚）
+- **Upstream**: `kubernetes-manifest` (generate YAML), `helm-management` (generate values)
+- **Collaboration**: `deployment-verify` (verify after sync)
+- **Downstream**: `rollback` (rollback via Git revert)

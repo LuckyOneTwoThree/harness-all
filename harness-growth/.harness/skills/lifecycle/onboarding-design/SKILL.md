@@ -1,10 +1,10 @@
 ---
 name: onboarding-design
-description: Onboarding流程设计，引导新用户在首日到达aha moment
+description: Onboarding flow design, guiding new users to reach the aha moment on day 1
 triggers:
-  - 新用户激活率低时
-  - 用户运营Workflow
-  - 用户要求"设计onboarding流程"
+  - When new user activation rate is low
+  - User operations Workflow
+  - User asks to "design an onboarding flow"
 reads:
   - docs/handoff/solo-to-growth.md
   - memory/knowledge-base.md
@@ -14,66 +14,66 @@ quality_gates: []
 max_iterations: 2
 ---
 
-# Onboarding Design — Onboarding 流程设计
+# Onboarding Design — Onboarding Flow Design
 
-## 铁律
-- Onboarding 的唯一目标是**引导用户到达 aha moment**
-- 每一步必须**减少摩擦**，不是增加步骤
-- 必须定义**激活指标**和**成功阈值**
+## Iron Rules
+- The sole goal of onboarding is to **guide users to the aha moment**
+- Each step must **reduce friction**, not add steps
+- Must define **activation metrics** and **success thresholds**
 
-## 流程
+## Process
 
-1. **识别 aha moment**
-   - 用户第一次感受到核心价值的时刻是什么？
-   - 如：Slack=首次在频道发消息，Airbnb=首次完成预订
-   - 如无定义，先调用 aha-moment-identification skill
+1. **Identify the aha moment**
+   - What is the moment when the user first feels the core value?
+   - E.g., Slack = first message in a channel, Airbnb = first completed booking
+   - If not defined, first call the aha-moment-identification skill
 
-2. **设计 Onboarding 路径**
+2. **Design the onboarding path**
    ```
-   注册 → [步骤1] → [步骤2] → ... → aha moment
+   Sign-up → [Step 1] → [Step 2] → ... → aha moment
 
-   原则:
-   - 步骤 ≤ 5 步（每多一步流失 +10-20%）
-   - 每步有明确目标
-   - 每步有进度指示
-   - 可跳过非必要步骤
-   ```
-
-3. **设计每步细节**
-   对每步定义：
-   ```
-   | 步骤 | 目标 | 用户动作 | 预期完成率 | 摩擦点 | 优化方向 |
-   |------|------|---------|-----------|--------|---------|
-   | 1.欢迎 | 设置预期 | 看介绍 | 95% | 无 | - |
-   | 2.创建空间 | 核心动作 | 输入名称 | 70% | 命名困难 | 提供模板 |
-   | 3.邀请成员 | 激活病毒 | 输入邮箱 | 40% | 怕打扰 | 强调价值 |
-   | 4.首次使用 | aha | 完成首任务 | 60% | 不知做什么 | 引导+模板 |
+   Principles:
+   - Steps ≤ 5 (each extra step adds 10-20% churn)
+   - Each step has a clear goal
+   - Each step has a progress indicator
+   - Non-essential steps can be skipped
    ```
 
-4. **设计激活指标**
+3. **Design each step's details**
+   For each step, define:
    ```
-   激活定义: 用户在首日完成 [核心动作]
-   激活阈值: [如"首日发消息 ≥ 1 条"]
-   当前激活率: [如 35%]
-   目标激活率: [如 50%]
+   | Step | Goal | User action | Expected completion rate | Friction point | Optimization direction |
+   |------|------|--------------|--------------------------|----------------|-------------------------|
+   | 1. Welcome | Set expectations | Read intro | 95% | None | - |
+   | 2. Create space | Core action | Enter name | 70% | Naming difficulty | Provide templates |
+   | 3. Invite members | Activate virality | Enter email | 40% | Fear of bothering | Emphasize value |
+   | 4. First use | aha | Complete first task | 60% | Don't know what to do | Guidance + templates |
    ```
 
-5. **设计触发机制**
-   - 用户卡在某步时如何触发？（邮件/push/弹窗）
-   - 触发时机？（如"注册后 24h 未完成步骤 3"）
-   - 触发内容？（针对性提醒，非通用推送）
+4. **Design activation metrics**
+   ```
+   Activation definition: User [completes core action] on day 1
+   Activation threshold: [e.g., "sends ≥ 1 message on day 1"]
+   Current activation rate: [e.g., 35%]
+   Target activation rate: [e.g., 50%]
+   ```
 
-6. **产出 Onboarding 方案**
-   写入 `docs/operations/onboarding-plan.md`
+5. **Design trigger mechanism**
+   - How to trigger when a user is stuck at a step? (email/push/modal)
+   - Trigger timing? (e.g., "24h after sign-up, step 3 not completed")
+   - Trigger content? (targeted reminder, not generic push)
 
-## 禁止事项
-- 不设计过多步骤（> 5 步流失率高）
-- 不强制完成所有步骤（允许跳过非必要步骤）
-- 不忽略 aha moment（onboarding 的目标就是到达 aha）
-- 不做通用 onboarding（不同分群应有不同路径）
+6. **Produce onboarding plan**
+   Write to `docs/operations/onboarding-plan.md`
 
-## 与 LOOP 的关系
-本 skill 在 LOOP(lifecycle) 的 **PLAN 阶段**执行。
+## Prohibitions
+- Don't design too many steps (> 5 steps leads to high churn)
+- Don't force completion of all steps (allow skipping non-essential steps)
+- Don't ignore the aha moment (the goal of onboarding is to reach aha)
+- Don't build a generic onboarding (different segments should have different paths)
 
-## 与 Workflow 的关系
-本 skill 是 **lifecycle-operations-workflow** 的第 2 步。
+## Relationship to LOOP
+This skill runs in the **PLAN phase** of LOOP(lifecycle).
+
+## Relationship to Workflow
+This skill is step 2 of **lifecycle-operations-workflow**.

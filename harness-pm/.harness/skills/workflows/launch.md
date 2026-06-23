@@ -4,98 +4,103 @@ name: launch
 default_mode: skip
 ---
 
-# 工作流 E：验收发布
+# Workflow E: Acceptance & Release
 
-> 适用场景：产品功能验收、版本发布、灰度上线
-> 核心模式：发版前置检查（硬门）→ 验收 → 发布说明 → 交接
+> Applicable scenario: Product feature acceptance, version release, gradual rollout
+> Core mode: Pre-release check (hard gate) → acceptance → release notes → handoff
 
-## 与其他工作流的差异
+## Differences from Other Workflows
 
-| 维度 | new-product | **launch** |
+| Dimension | new-product | **launch** |
 |------|-------------|------------|
-| 目标 | 做产品设计 | 验收发布 |
-| 前置 | 探索发现 | **产品设计已完成（PRD 已审批）** |
-| LOOP | research→validate | **无 LOOP（验证为主）** |
-| 产出 | PRD + 设计规范 | **验收报告 + 发布说明 + 交接文档** |
+| Goal | Product design | Acceptance & release |
+| Prerequisite | Exploration & discovery | **Product design complete (PRD approved)** |
+| LOOP | research→validate | **No LOOP (validation-focused)** |
+| Output | PRD + design spec | **Acceptance report + release notes + handoff document** |
 
-## 流程
+## Process
 
 ```
 ┌─────────────────┐
-│ session-start   │  加载上下文，确认发布范围
+│ session-start   │  Load context, confirm release scope
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ 发版前置检查（★ 硬门）                   │
+│ Pre-release check (★ hard gate)         │
 │                                         │
-│  - PRD 所有功能验收通过？                │
-│  - PRODUCT_STRATEGY 的成功指标达标？     │
-│  - 埋点方案已实施？                      │
-│  - 安全合规检查通过？                    │
-│  - constitution 合规？                   │
-│  - 工程反馈（solo-to-pm.md）已确认？     │
+│  - All PRD features accepted?           │
+│  - PRODUCT_STRATEGY success metrics met?│
+│  - Tracking plan implemented?           │
+│  - Security compliance check passed?    │
+│  - Constitution compliant?              │
+│  - Engineering feedback (solo-to-pm.md) │
+│    confirmed?                           │
 │                                         │
-│  ★ 任何一条不满足 → 不发布               │
+│  ★ Any item not met → no release        │
 │                                         │
-│  ★ 埋点未实施 → 调用 metrics-           │
-│    orchestrator 补充埋点方案后重检       │
+│  ★ Tracking not implemented → call      │
+│    metrics-orchestrator to supplement   │
+│    tracking plan, then re-check         │
 └────────┬────────────────────────────────┘
-         │ 通过
+         │ Pass
          ▼
 ┌─────────────────────────────────────────┐
-│ 模块7：验收与发布（通过 release-orchestrator）│
+│ Module 7: Acceptance & Release (via     │
+│   release-orchestrator)                 │
 │                                         │
 │  - release-orchestrator                 │
-│    （发布编排器，调度以下子 skill）       │
+│    (Release orchestrator, schedules the │
+│     following sub-skills)               │
 │    ├── quality-acceptance               │
-│    │   （质量验收：功能+性能+安全+体验）  │
+│    │   (Quality acceptance: feature+    │
+│    │    performance+security+experience)│
 │    ├── release-auto-checklist           │
-│    │   （发布检查清单）                   │
+│    │   (Release checklist)              │
 │    ├── release-gradual                  │
-│    │   （灰度发布计划）                   │
+│    │   (Gradual rollout plan)           │
 │    └── release-notes                    │
-│        （发布说明）                       │
+│        (Release notes)                  │
 │                                         │
-│  产出：docs/monitoring/release-notes.md  │
+│  Output: docs/monitoring/release-notes.md │
 │        + docs/monitoring/monitoring-config.md │
 └────────┬────────────────────────────────┘
          ▼
 ┌─────────────────┐
-│ session-end     │  归档 + 更新 FEATURES.md（状态改 launched）
-│                 │  + 记录发布信息到 progress.md
-│                 │  + 产出 docs/handoff/pm-to-solo.md（监控配置交接）
+│ session-end     │  Archive + update FEATURES.md (status → launched)
+│                 │  + Record release info to progress.md
+│                 │  + Output docs/handoff/pm-to-solo.md (monitoring config handoff)
 └─────────────────┘
 ```
 
-## 关键检查点
+## Key Checkpoints
 
-- [ ] PRD 所有功能验收通过了？（逐条对照 AC）
-- [ ] 成功指标达标了？（展示数据）
-- [ ] 埋点方案实施了？（事件可采集）
-- [ ] 安全合规检查通过了？
-- [ ] 发布说明写了？（Added/Fixed/Changed）
-- [ ] 灰度发布计划制定了？
-- [ ] 监控预警配置了？
+- [ ] All PRD features accepted? (Check AC item by item)
+- [ ] Success metrics met? (Show data)
+- [ ] Tracking plan implemented? (Events collectible)
+- [ ] Security compliance check passed?
+- [ ] Release notes written? (Added/Fixed/Changed)
+- [ ] Gradual rollout plan made?
+- [ ] Monitoring alerts configured?
 
-## 失败处理
+## Failure Handling
 
-| 失败点 | 处理方式 |
+| Failure point | Handling |
 |--------|---------|
-| 有功能未验收 | 不发布，先完成验收 |
-| 成功指标未达标 | 分析原因，决定是否发布 |
-| 安全合规未过 | 修复后发布，不许忽略 |
-| 埋点未实施 | 调用 metrics-orchestrator 补充埋点方案后重检 |
+| Feature not accepted | No release, complete acceptance first |
+| Success metrics not met | Analyze cause, decide whether to release |
+| Security compliance not passed | Fix before release, no ignoring |
+| Tracking not implemented | Call metrics-orchestrator to supplement tracking plan, then re-check |
 
-## 安全原则
+## Safety Principles
 
-1. **不自动发布**：发布需用户明确确认
-2. **灰度优先**：先灰度再全量，降低风险
-3. **监控必备**：发布前必须配置监控预警
-4. **回滚准备**：发布前必须准备回滚方案
+1. **No auto-release**: Release requires explicit user confirmation
+2. **Gradual first**: Gradual rollout before full release, reduce risk
+3. **Monitoring required**: Monitoring alerts must be configured before release
+4. **Rollback ready**: Rollback plan must be prepared before release
 
-## 下一步
+## Next Steps
 
-- 发布后需要增长 → 进入 **growth** 工作流
-- 发布后数据异常 → 进入 **diagnosis** 工作流
-- 发布后需要数据驱动优化 → 进入 **optimization** 工作流
-- 发布后 P0 级事故 → 进入 **incident-response** 工作流
+- Need growth after release → enter **growth** workflow
+- Data anomaly after release → enter **diagnosis** workflow
+- Need data-driven optimization after release → enter **optimization** workflow
+- P0 incident after release → enter **incident-response** workflow

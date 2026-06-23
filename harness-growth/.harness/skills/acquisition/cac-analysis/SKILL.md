@@ -1,11 +1,11 @@
 ---
 name: cac-analysis
-description: CAC计算与渠道对比，含LTV/CAC比/规模化通胀评估
+description: CAC calculation and channel comparison, including LTV/CAC ratio and scaling inflation assessment
 triggers:
-  - 需要计算获客成本时
-  - 获客投放后评估效果
-  - 增长回顾报告
-  - 用户要求"算一下CAC"
+  - When acquisition cost needs to be calculated
+  - Post-campaign performance evaluation
+  - Growth review reports
+  - User asks "calculate CAC"
 reads:
   - memory/knowledge-base.md
 writes:
@@ -15,79 +15,79 @@ quality_gates: []
 max_iterations: 1
 ---
 
-# CAC Analysis — CAC 计算与分析
+# CAC Analysis — CAC Calculation and Analysis
 
-## 铁律
-- CAC 必须包含**全部获客成本**（广告+人力+工具），不只看广告费
-- 必须按渠道**分开计算**——不同渠道 CAC 差异大
-- 必须评估**规模化后的 CAC 通胀**——小规模 CAC 低不代表规模化后也低
+## Iron Rules
+- CAC must include **all acquisition costs** (ads + labor + tools), not just ad spend
+- Must be calculated **separately by channel** — CAC varies significantly across channels
+- Must assess **CAC inflation at scale** — low CAC at small scale does not mean low CAC at scale
 
-## 流程
+## Process
 
-1. **收集成本数据**
+1. **Collect cost data**
    ```
-   | 成本项 | 金额 | 说明 |
-   |--------|------|------|
-   | 广告投放 | ¥10,000 | 各渠道广告费 |
-   | 内容生产 | ¥3,000 | 内容创作成本（分摊） |
-   | 工具费用 | ¥500 | 分析/投放工具 |
-   | 人力成本 | ¥5,000 | 运营人员时间（分摊） |
-   | 总成本 | ¥18,500 | |
+   | Cost Item | Amount | Notes |
+   |-----------|--------|-------|
+   | Ad spend | ¥10,000 | Ad spend across channels |
+   | Content production | ¥3,000 | Content creation cost (allocated) |
+   | Tooling | ¥500 | Analytics/paid media tools |
+   | Labor | ¥5,000 | Operator time (allocated) |
+   | Total cost | ¥18,500 | |
    ```
 
-2. **计算 CAC**
+2. **Calculate CAC**
    ```
-   CAC = 总获客成本 / 新增获客数
+   CAC = Total acquisition cost / New users acquired
 
-   示例:
-   总成本 = ¥18,500
-   新增用户 = 370
+   Example:
+   Total cost = ¥18,500
+   New users = 370
    CAC = ¥50
    ```
 
-3. **分渠道 CAC**
+3. **CAC by channel**
    ```
-   | 渠道 | 投放成本 | 获客数 | CAC | 转化率 |
-   |------|---------|--------|-----|--------|
+   | Channel | Spend | Acquired users | CAC | Conversion rate |
+   |---------|-------|----------------|-----|-----------------|
    | SEO | ¥3,000 | 200 | ¥15 | 5.0% |
-   | 付费搜索 | ¥8,000 | 100 | ¥80 | 3.0% |
-   | 社媒广告 | ¥5,000 | 50 | ¥100 | 1.5% |
-   | 邀请 | ¥2,500 | 20 | ¥125 | - |
+   | Paid search | ¥8,000 | 100 | ¥80 | 3.0% |
+   | Social ads | ¥5,000 | 50 | ¥100 | 1.5% |
+   | Referral | ¥2,500 | 20 | ¥125 | - |
    ```
 
-4. **LTV/CAC 比评估**
+4. **LTV/CAC ratio assessment**
    ```
-   LTV = ARPU × 平均生命周期
-   LTV/CAC ≥ 3 → 健康
-   LTV/CAC 1-3 → 需优化
-   LTV/CAC < 1 → 亏损
-   ```
-
-5. **规模化 CAC 通胀评估**
-   - 小规模测试时 CAC 低（精准定向）
-   - 规模化后 CAC 上升（受众扩展+竞争加剧）
-   - 评估：预算翻倍后 CAC 预期变化
-
-6. **渠道对比与优化建议**
-   ```
-   | 渠道 | CAC | LTV/CAC | 规模化通胀 | 建议 |
-   |------|-----|---------|-----------|------|
-   | SEO | ¥15 | 30.0 | 低 | 放大投入 |
-   | 付费搜索 | ¥80 | 5.6 | 中 | 维持+优化 |
-   | 社媒广告 | ¥100 | 4.5 | 高 | 暂缓扩量 |
+   LTV = ARPU × Average lifetime
+   LTV/CAC ≥ 3 → Healthy
+   LTV/CAC 1-3 → Needs optimization
+   LTV/CAC < 1 → Loss-making
    ```
 
-7. **产出 CAC 报告**
-   写入 `docs/operations/cac-report.md`
-   同步到 `memory/knowledge-base.md`
+5. **Scaling CAC inflation assessment**
+   - CAC is low at small-scale testing (precise targeting)
+   - CAC rises at scale (audience expansion + increased competition)
+   - Assessment: expected CAC change after doubling budget
 
-## 禁止事项
-- 不只算广告费不算人力/工具（低估真实 CAC）
-- 不忽略规模化通胀（小规模 CAC ≠ 规模化 CAC）
-- 不在 LTV/CAC < 3 时建议扩量（亏损风险）
+6. **Channel comparison and optimization recommendations**
+   ```
+   | Channel | CAC | LTV/CAC | Scaling inflation | Recommendation |
+   |---------|-----|---------|-------------------|----------------|
+   | SEO | ¥15 | 30.0 | Low | Scale up investment |
+   | Paid search | ¥80 | 5.6 | Medium | Maintain + optimize |
+   | Social ads | ¥100 | 4.5 | High | Hold off on scaling |
+   ```
 
-## 与 LOOP 的关系
-本 skill 不在 LOOP 内执行，是**分析工具**。
+7. **Produce CAC report**
+   Write to `docs/operations/cac-report.md`
+   Sync to `memory/knowledge-base.md`
 
-## 与 Workflow 的关系
-本 skill 是获客投放相关流程的组成部分，也是 growth-review-workflow 的数据来源。
+## Prohibitions
+- Don't count only ad spend and ignore labor/tools (understates true CAC)
+- Don't ignore scaling inflation (small-scale CAC ≠ scaled CAC)
+- Don't recommend scaling when LTV/CAC < 3 (loss risk)
+
+## Relationship to LOOP
+This skill does not run inside LOOP; it is an **analysis tool**.
+
+## Relationship to Workflow
+This skill is part of acquisition campaign workflows and a data source for growth-review-workflow.

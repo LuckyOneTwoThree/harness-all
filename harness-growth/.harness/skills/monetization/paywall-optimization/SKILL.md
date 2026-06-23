@@ -1,11 +1,11 @@
 ---
 name: paywall-optimization
-description: 付费墙设计与优化，含时机/话术/功能门控/A-B测试建议
+description: Paywall design and optimization, including timing / messaging / feature gating / A-B testing recommendations
 triggers:
-  - 付费转化率低需要优化时
-  - 新产品上线付费功能时
-  - 变现优化Workflow
-  - 用户要求"优化付费墙"
+  - When paid conversion rate is low and needs optimization
+  - When a new product launches paid features
+  - Monetization optimization Workflow
+  - User asks to "optimize the paywall"
 reads:
   - docs/operations/pricing-strategy.md
   - memory/knowledge-base.md
@@ -15,70 +15,70 @@ quality_gates: []
 max_iterations: 2
 ---
 
-# Paywall Optimization — 付费墙优化
+# Paywall Optimization — Paywall Optimization
 
-## 铁律
-- 付费墙时机必须在**用户感受到价值后**——太早弹出转化率极低
-- 付费墙话术必须**强调价值**不是功能列表
-- 必须有**免费替代路径**——硬付费墙会激怒用户
+## Iron Rules
+- Paywall timing must come **after the user feels value** — showing it too early yields very low conversion
+- Paywall messaging must **emphasize value**, not list features
+- Must have a **free alternative path** — a hard paywall will anger users
 
-## 流程
+## Process
 
-1. **确定付费墙时机**
-   | 时机类型 | 说明 | 转化率 | 适用 |
-   |---------|------|--------|------|
-   | 注册后立即 | 硬付费墙 | 低(1-3%) | 高价值/刚需 |
-   | 试用后 | N天免费试用 | 中(5-15%) | SaaS |
-   | 用量触发 | 免费额度用完 | 高(10-25%) | 工具/内容 |
-   | 功能触发 | 需要高级功能时 | 高(15-30%) | Freemium |
-   | 价值触发 | 体验到核心价值后 | 最高(20-40%) | 所有 |
+1. **Determine paywall timing**
+   | Timing type | Description | Conversion rate | Suited for |
+   |-------------|-------------|-----------------|------------|
+   | Right after sign-up | Hard paywall | Low (1-3%) | High-value / must-have |
+   | After trial | N-day free trial | Medium (5-15%) | SaaS |
+   | Usage-triggered | Free quota exhausted | High (10-25%) | Tools / content |
+   | Feature-triggered | When advanced features are needed | High (15-30%) | Freemium |
+   | Value-triggered | After experiencing core value | Highest (20-40%) | All |
 
-2. **付费墙话术设计**
+2. **Paywall messaging design**
    ```
-   ❌ 功能导向:
-   "升级专业版获得无限项目+高级报表+API访问+优先支持"
+   ❌ Feature-oriented:
+   "Upgrade to Pro for unlimited projects + advanced reports + API access + priority support"
 
-   ✅ 价值导向:
-   "你已经创建了 3 个项目——升级获得无限项目，让创意不受限"
-   ```
-
-3. **功能门控策略**
-   ```
-   | 功能 | 免费版 | 付费版 | 门控理由 |
-   |------|--------|--------|---------|
-   | 基础功能 | ✅ | ✅ | 获客+体验价值 |
-   | 高级功能 | ❌ | ✅ | 付费动力 |
-   | 协作功能 | 限制 | ✅ | 团队付费 |
-   | 数据导出 | ❌ | ✅ | 企业付费 |
-   | API | ❌ | ✅ | 开发者付费 |
+   ✅ Value-oriented:
+   "You've already created 3 projects — upgrade for unlimited projects and let your ideas run free"
    ```
 
-4. **付费墙 UI 设计**
-   - 清晰展示价格和档位
-   - 突出推荐档位（"最受欢迎"标记）
-   - 年付折扣锚点（"年付省 20%"）
-   - 信任元素（退款保证/取消自由/安全支付）
-   - 简化购买流程（1-2 步完成）
+3. **Feature gating strategy**
+   ```
+   | Feature | Free version | Paid version | Gating reason |
+   |---------|--------------|--------------|---------------|
+   | Basic features | ✅ | ✅ | Acquisition + experiencing value |
+   | Advanced features | ❌ | ✅ | Incentive to pay |
+   | Collaboration features | Limited | ✅ | Team monetization |
+   | Data export | ❌ | ✅ | Enterprise monetization |
+   | API | ❌ | ✅ | Developer monetization |
+   ```
 
-5. **A/B 测试建议**
-   | 测试项 | 变体A | 变体B | 假设 |
-   |--------|-------|-------|------|
-   | 时机 | 试用7天后 | 用量触发 | 用量触发转化更高 |
-   | 话术 | 功能列表 | 价值描述 | 价值导向转化更高 |
-   | 价格 | 月付¥99 | 年付¥799(省33%) | 年付提升ARPU |
-   | 门控 | 功能门控 | 用量门控 | 功能门控转化更高 |
+4. **Paywall UI design**
+   - Clearly display price and tiers
+   - Highlight the recommended tier ("Most popular" badge)
+   - Annual discount anchor ("Save 20% on annual")
+   - Trust elements (refund guarantee / cancel anytime / secure payment)
+   - Simplify the purchase flow (1-2 steps)
 
-6. **产出付费墙方案**
-   写入 `docs/operations/paywall-spec.md`
+5. **A/B testing recommendations**
+   | Test item | Variant A | Variant B | Hypothesis |
+   |-----------|-----------|-----------|------------|
+   | Timing | After 7-day trial | Usage-triggered | Usage-triggered converts higher |
+   | Messaging | Feature list | Value description | Value-oriented converts higher |
+   | Price | Monthly ¥99 | Annual ¥799 (save 33%) | Annual lifts ARPU |
+   | Gating | Feature gating | Usage gating | Feature gating converts higher |
 
-## 禁止事项
-- 不在用户未体验价值前弹付费墙（转化极低+损害体验）
-- 不做硬付费墙（无免费路径=用户直接离开）
-- 不用功能列表做话术（用户买价值不是买功能）
-- 不忽略年付选项（年付提升 ARPU 和留存）
+6. **Produce paywall spec**
+   Write to `docs/operations/paywall-spec.md`
 
-## 与 LOOP 的关系
-本 skill 在 LOOP(monetization) 的 **EXPERIMENT 阶段**执行。
+## Prohibitions
+- Don't show the paywall before the user has experienced value (very low conversion + hurts experience)
+- Don't build a hard paywall (no free path = users leave immediately)
+- Don't use feature lists as messaging (users buy value, not features)
+- Don't ignore the annual option (annual lifts ARPU and retention)
 
-## 与 Workflow 的关系
-本 skill 是变现优化相关流程的第 2 步。
+## Relationship to LOOP
+This skill runs in the **EXPERIMENT phase** of LOOP(monetization).
+
+## Relationship to Workflow
+This skill is step 2 of monetization optimization workflows.

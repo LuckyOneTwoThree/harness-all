@@ -1,10 +1,10 @@
 ---
 name: cohort-analysis
-description: 同期群分析，含Cohort留存矩阵/横向纵向对比/趋势判断
+description: Cohort analysis, including cohort retention matrix, horizontal/vertical comparison, and trend identification
 triggers:
-  - 需要分析留存时
-  - 增长回顾报告Workflow
-  - 用户要求"做Cohort分析"
+  - When retention needs to be analyzed
+  - Growth review report Workflow
+  - User asks to "run a Cohort analysis"
 reads:
   - docs/handoff/solo-to-growth.md
   - memory/knowledge-base.md
@@ -14,69 +14,69 @@ quality_gates: []
 max_iterations: 1
 ---
 
-# Cohort Analysis — 同期群分析
+# Cohort Analysis — Cohort Analysis
 
-## 铁律
-- Cohort 必须按**注册时间**分组——不同时间注册的用户行为不同
-- 必须同时做**横向（同期群衰减）和纵向（同期群对比）**分析
-- 留存数据必须基于**核心行为**，不是登录
+## Iron Rules
+- Cohorts must be grouped by **sign-up time** — users who sign up at different times behave differently
+- Must perform both **horizontal (cohort decay) and vertical (cohort comparison)** analysis
+- Retention data must be based on **core actions**, not logins
 
-## 流程
+## Process
 
-1. **定义 Cohort 分组**
-   - 按注册周/月分组
-   - 每组追踪 N 周/N 月的留存
-   - 示例：5月第1周注册的用户，追踪 W0-W8 的留存
+1. **Define cohort grouping**
+   - Group by sign-up week/month
+   - Track retention for N weeks/N months per group
+   - Example: users who signed up in week 1 of May, track W0-W8 retention
 
-2. **构建 Cohort 留存矩阵**
+2. **Build cohort retention matrix**
    ```
-   | 注册周 | W0 | W1 | W2 | W3 | W4 | W5 | W6 | W7 | W8 |
-   |--------|-----|-----|-----|-----|-----|-----|-----|-----|-----|
-   | 5月W1 | 100% | 45% | 32% | 28% | 25% | 23% | 22% | 21% | 20% |
-   | 5月W2 | 100% | 48% | 35% | 30% | 27% | 25% | 24% | 23% | - |
-   | 5月W3 | 100% | 52% | 38% | 33% | 30% | 28% | - | - | - |
-   | 5月W4 | 100% | 55% | 40% | 35% | 32% | - | - | - | - |
-   | 6月W1 | 100% | 58% | 42% | - | - | - | - | - | - |
+   | Sign-up week | W0 | W1 | W2 | W3 | W4 | W5 | W6 | W7 | W8 |
+   |--------------|-----|-----|-----|-----|-----|-----|-----|-----|-----|
+   | May W1 | 100% | 45% | 32% | 28% | 25% | 23% | 22% | 21% | 20% |
+   | May W2 | 100% | 48% | 35% | 30% | 27% | 25% | 24% | 23% | - |
+   | May W3 | 100% | 52% | 38% | 33% | 30% | 28% | - | - | - |
+   | May W4 | 100% | 55% | 40% | 35% | 32% | - | - | - | - |
+   | Jun W1 | 100% | 58% | 42% | - | - | - | - | - | - |
    ```
 
-3. **横向分析（同期群衰减）**
-   对每个 Cohort 分析留存曲线形状：
-   - **L 型曲线**：快速下降后趋于水平（健康）
-   - **对数曲线**：缓慢持续下降（中等）
-   - **直线下降**：持续流失无水平（漏水桶）
-   - **微笑曲线**：先降后升（罕见，产品改进导致回流）
+3. **Horizontal analysis (cohort decay)**
+   For each cohort, analyze the retention curve shape:
+   - **L-shaped curve**: rapid decline then flattens (healthy)
+   - **Logarithmic curve**: slow continuous decline (medium)
+   - **Linear decline**: continuous churn without flattening (leaky bucket)
+   - **Smile curve**: declines then rises (rare; product improvements cause re-engagement)
 
-4. **纵向分析（同期群对比）**
-   - 新 Cohort 留存 > 老 Cohort？→ 产品在改善
-   - 新 Cohort 留存 < 老 Cohort？→ 产品在退化或获客质量下降
-   - 对比同一 W 的不同 Cohort：W1 留存 45%→48%→52%→55%→58%（持续改善）
+4. **Vertical analysis (cohort comparison)**
+   - New cohort retention > old cohort? → Product is improving
+   - New cohort retention < old cohort? → Product is degrading or acquisition quality is dropping
+   - Compare different cohorts at the same W: W1 retention 45%→48%→52%→55%→58% (continuous improvement)
 
-5. **趋势判断**
-   - 留存水平线位置：趋于 20%（5月W1）vs 趋于 25%（5月W4）→ 改善
-   - 达到水平线的速度：W4 趋于水平 vs W6 趋于水平 → 加快
-   - 首周留存：45%→58% → onboarding 改善
+5. **Trend identification**
+   - Retention plateau position: trending to 20% (May W1) vs trending to 25% (May W4) → improvement
+   - Speed to reach plateau: W4 flattens vs W6 flattens → accelerating
+   - First-week retention: 45%→58% → onboarding improvement
 
-6. **分群 Cohort（可选）**
-   按用户分群做 Cohort：
-   - 新用户 vs 老用户
-   - 付费用户 vs 免费用户
-   - 不同渠道来源
+6. **Segmented cohorts (optional)**
+   Build cohorts by user segment:
+   - New users vs existing users
+   - Paid users vs free users
+   - Different channel sources
 
-7. **产出 Cohort 报告**
-   写入 `docs/operations/cohort-analysis.md`，含：
-   - Cohort 留存矩阵
-   - 横向/纵向分析结论
-   - 趋势判断
-   - 优化建议
+7. **Produce cohort report**
+   Write to `docs/operations/cohort-analysis.md`, including:
+   - Cohort retention matrix
+   - Horizontal/vertical analysis conclusions
+   - Trend identification
+   - Optimization recommendations
 
-## 禁止事项
-- 不用登录定义留存（登录≠使用，用核心行为）
-- 不只看横向不看纵向（纵向才能判断趋势）
-- 不忽略留存曲线形状（形状比数值更重要）
-- 不在 Cohort 样本 < 100 时下结论（样本不足）
+## Prohibitions
+- Don't define retention by login (login ≠ usage; use core actions)
+- Don't look only horizontally and skip vertical (vertical is needed to identify trends)
+- Don't ignore retention curve shape (shape matters more than absolute values)
+- Don't draw conclusions when cohort sample < 100 (insufficient sample)
 
-## 与 LOOP 的关系
-本 skill 不在 LOOP 内执行，是**分析工具**。
+## Relationship to LOOP
+This skill does not run inside LOOP; it is an **analysis tool**.
 
-## 与 Workflow 的关系
-本 skill 是 **growth-review-workflow** 的组成部分，也是 retention-analysis 的数据来源。
+## Relationship to Workflow
+This skill is part of **growth-review-workflow** and a data source for retention-analysis.

@@ -1,18 +1,18 @@
 ---
 name: analysis-orchestrator
-description: 当需要进行数据异常检测、漏斗分析或留存分析时使用。数据分析指挥官，调度analysis-anomaly/funnel/retention/data-analysis-report。关键词：数据分析、异常检测、漏斗分析、留存分析、Aha Moment、看数据、数据不好、数据洞察。
+description: Use when data anomaly detection, funnel analysis, or retention analysis is needed. Data Analysis Orchestrator dispatches analysis-anomaly/funnel/retention/data-analysis-report. Keywords: data analysis, anomaly detection, funnel analysis, retention analysis, Aha Moment, look at data, data is bad, data insights.
 metadata:
-  module: "产品度量运营"
-  sub-module: "数据分析"
+  module: "Product Metrics Operations"
+  sub-module: "Data Analysis"
   type: "orchestrator"
   version: "7.1"
-  domain_tags: ["通用"]
+  domain_tags: ["General"]
   trigger_examples:
-    - "帮我分析一下数据"
-    - "数据有异常，排查一下"
-    - "做一下漏斗分析"
-    - "分析一下用户留存"
-    - "数据不好，找找原因"
+    - "Help me analyze the data"
+    - "There's a data anomaly, investigate it"
+    - "Do a funnel analysis"
+    - "Analyze user retention"
+    - "Data is bad, find the cause"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -23,23 +23,23 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 数据分析指挥官
+# Data Analysis Orchestrator
 
-## 核心原则
+## Core Principles
 
-**用数据减少决策中的猜测**
+**Use data to reduce guesswork in decisions**
 
-数据分析的价值不在于产出报告，而在于将不确定性转化为可量度的风险，将直觉判断转化为证据支撑的决策。
+The value of data analysis lies not in producing reports, but in converting uncertainty into quantifiable risk, and intuitive judgment into evidence-backed decisions.
 
-## 编排理念
+## Orchestration Philosophy
 
-1. **检测先行，分析跟进，报告收口**：异常检测7×24运行，漏斗和留存按需触发，报告整合收口
-2. **每个分析结果必须可行动**：没有行动建议的分析结果不传递到下游
-3. **异常即阻断，其他按序执行**：P0异常立即阻断当前流程，其他阶段按序执行
+1. **Detection first, analysis follows, report closes**: Anomaly detection runs 24/7, funnel and retention triggered on demand, report integrates and closes
+2. **Every analysis result must be actionable**: Analysis results without action recommendations are not passed downstream
+3. **Anomaly blocks, others execute in sequence**: P0 anomaly immediately blocks current flow, other stages execute in sequence
 
-## 编排协议
+## Orchestration Protocol
 
-遵循 [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) 编排协议。
+Follows the [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) orchestration protocol.
 
 ## Pipeline
 
@@ -53,159 +53,159 @@ post_pipeline:
 
 stages:
   - id: phase-1
-    name: "异常检测"
+    name: "Anomaly Detection"
     depends_on: []
     skills: [analysis-anomaly]
     gate:
-      condition: "异常检测Pipeline持续运行，无中断"
-      fail_action: "立即修复检测Pipeline，启动备用监控"
+      condition: "Anomaly detection pipeline runs continuously without interruption"
+      fail_action: "Immediately fix detection pipeline, start backup monitoring"
 
   - id: phase-2
-    name: "漏斗分析"
+    name: "Funnel Analysis"
     parallel_with: [phase-3]
     skills: [analysis-funnel]
     gate:
-      condition: "核心业务漏斗已定义且数据完整"
-      fail_action: "补充漏斗定义，确保核心路径覆盖"
+      condition: "Core business funnel defined and data complete"
+      fail_action: "Supplement funnel definition, ensure core path coverage"
 
   - id: phase-3
-    name: "留存分析"
+    name: "Retention Analysis"
     parallel_with: [phase-2]
     skills: [analysis-retention]
     gate:
-      condition: "至少产出1个Aha Moment候选行为"
-      fail_action: "扩大行为搜索范围或延长分析周期"
+      condition: "At least 1 Aha Moment candidate behavior produced"
+      fail_action: "Expand behavior search scope or extend analysis period"
 
   - id: phase-4
-    name: "数据分析报告"
+    name: "Data Analysis Report"
     depends_on: [phase-1, phase-2, phase-3]
     skills: [data-analysis-report]
     gate:
-      condition: "报告执行摘要完整，至少3条行动建议"
-      fail_action: "补充分析或标注建议补充数据"
+      condition: "Report executive summary complete, at least 3 action recommendations"
+      fail_action: "Supplement analysis or mark recommendations for data supplementation"
 ```
 
-## 阶段执行计划
+## Stage Execution Plan
 
-#### 调用 analysis-anomaly
+#### Call analysis-anomaly
 
 ```
 Skill: analysis-anomaly
-输入:
+Inputs:
   metrics_system: metrics-system → metric_system.json
-  real_time_data: 用户提供（从数据平台导出的实时指标快照）
-  alert_rules: 用户提供
-  event_calendar: 用户提供（可选）
-输出: docs/metrics/data-analysis-report.md（“异常分析”章节）
-验证: 异常检测覆盖所有关键指标；异常等级分类正确（P0/P1/P2）；根因分析有数据支撑；建议措施可操作
-模式: 🤖
+  real_time_data: User-provided (real-time metric snapshot exported from data platform)
+  alert_rules: User-provided
+  event_calendar: User-provided (optional)
+Output: docs/metrics/data-analysis-report.md ("Anomaly Analysis" section)
+Validation: Anomaly detection covers all key metrics; anomaly severity classified correctly (P0/P1/P2); root cause analysis supported by data; recommended actions are actionable
+Mode: 🤖
 ```
 
-#### 调用 analysis-funnel
+#### Call analysis-funnel
 
 ```
 Skill: analysis-funnel
-输入:
-  funnel_definition: 用户提供
-  event_data: 用户提供
-  segment_config: 用户提供（可选）
-  comparison_period: 用户提供（可选）
-输出: docs/metrics/data-analysis-report.md（“漏斗分析”章节）
-验证: 漏斗步骤定义完整、无遗漏；转化率计算基于全量数据；流失节点识别附带原因假设；多维下钻覆盖至少3个维度
-模式: 🤖
+Inputs:
+  funnel_definition: User-provided
+  event_data: User-provided
+  segment_config: User-provided (optional)
+  comparison_period: User-provided (optional)
+Output: docs/metrics/data-analysis-report.md ("Funnel Analysis" section)
+Validation: Funnel step definition complete, no omissions; conversion rate calculated based on full data; drop-off node identification includes cause hypotheses; multi-dimensional drill-down covers at least 3 dimensions
+Mode: 🤖
 ```
 
-#### 调用 analysis-retention
+#### Call analysis-retention
 
 ```
 Skill: analysis-retention
-输入:
-  user_behavior_data: 用户提供
-  segment_definition: 用户提供（可选）
-  cohort_config: 用户提供（可选）
-  baseline_date: 用户提供（可选）
-输出: docs/metrics/data-analysis-report.md（“留存分析”章节）
-验证: 留存计算基于全量用户而非抽样；Cohort分析覆盖时间、渠道、行为三个维度；Aha Moment候选通过显著性检验；流失预警模型准确率>70%
-模式: 🤖
+Inputs:
+  user_behavior_data: User-provided
+  segment_definition: User-provided (optional)
+  cohort_config: User-provided (optional)
+  baseline_date: User-provided (optional)
+Output: docs/metrics/data-analysis-report.md ("Retention Analysis" section)
+Validation: Retention calculated based on full users rather than sampling; Cohort analysis covers time, channel, and behavior dimensions; Aha Moment candidates pass significance testing; churn warning model accuracy > 70%
+Mode: 🤖
 ```
 
-#### 调用 data-analysis-report
+#### Call data-analysis-report
 
 ```
 Skill: data-analysis-report
-输入:
-  funnel_analysis: docs/metrics/data-analysis-report.md（“漏斗分析”章节）
-  retention_analysis: docs/metrics/data-analysis-report.md（“留存分析”章节）
-  anomaly_detection: docs/metrics/data-analysis-report.md（“异常分析”章节）
-  decision_dace: decision-dace → decision_insight.json（可选）
-  metrics_system: metrics-system → metric_system.json（可选）
-  analysis_time_range: 用户提供
-  product_info: 用户提供（可选）
-输出: docs/metrics/data-analysis-report.md（汇总覆盖）
-验证: 执行摘要包含3条关键发现+Top1建议；核心指标仪表盘完整；漏斗分析包含最大流失点和提升机会；留存分析包含生命周期阶段；每条洞察有数据事实+业务含义；行动建议至少3条，每条有优先级和验证方式；数据口径和局限性已说明
-模式: 🤖→👤
+Inputs:
+  funnel_analysis: docs/metrics/data-analysis-report.md ("Funnel Analysis" section)
+  retention_analysis: docs/metrics/data-analysis-report.md ("Retention Analysis" section)
+  anomaly_detection: docs/metrics/data-analysis-report.md ("Anomaly Analysis" section)
+  decision_dace: decision-dace → decision_insight.json (optional)
+  metrics_system: metrics-system → metric_system.json (optional)
+  analysis_time_range: User-provided
+  product_info: User-provided (optional)
+Output: docs/metrics/data-analysis-report.md (consolidated coverage)
+Validation: Executive summary contains 3 key findings + Top 1 recommendation; core metric dashboard complete; funnel analysis includes biggest drop-off point and improvement opportunity; retention analysis includes lifecycle stages; each insight has data facts + business implications; at least 3 action recommendations, each with priority and validation method; data definitions and limitations explained
+Mode: 🤖→👤
 ```
 
-### 阶段总结（post_pipeline）
+### Stage Summary (post_pipeline)
 
-所有子Skill执行完成后，必须生成阶段总结文档，写入 `output/phase-reports/analysis-orchestrator.json`，包含以下6项结构（均不可为空）：
+After all sub-skills finish executing, a stage summary document must be generated and written to `output/phase-reports/analysis-orchestrator.json`, containing the following 6 structures (none may be empty):
 
-1. **执行概览**：编排器名称与版本、执行时间、子Skill执行状态（成功/失败/降级）
-2. **关键发现**：每个子Skill的核心输出摘要（1-3条）、跨子Skill的交叉洞察
-3. **决策记录**：人类决策点及决策结果、AI自动决策及依据
-4. **产出清单**：所有输出文件路径及内容摘要、产出质量评估（是否通过验证）
-5. **风险与待办**：未通过验证的项、降级执行的项、建议后续跟进的事项
-6. **下游衔接**：本编排器产出可被哪些下游编排器消费、推荐的下一步编排器
+1. **Execution Overview**: Orchestrator name and version, execution time, sub-skill execution status (success/failure/degraded)
+2. **Key Findings**: Core output summary of each sub-skill (1-3 items), cross-sub-skill insights
+3. **Decision Records**: Human decision points and decision results, AI automated decisions and rationale
+4. **Artifact Inventory**: All output file paths and content summaries, artifact quality assessment (whether validation passed)
+5. **Risks & TODOs**: Items that failed validation, items executed in degraded mode, recommended follow-up items
+6. **Downstream Handoff**: Which downstream orchestrators can consume this orchestrator's outputs, recommended next orchestrator
 
-| 参数 | 值 |
+| Parameter | Value |
 |------|-----|
-| 子Skill输出路径 | docs/metrics/ |
-| 总结输出路径 | output/phase-reports/analysis-orchestrator.json |
-| 审批记录路径 | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
+| Sub-skill output path | docs/metrics/ |
+| Summary output path | output/phase-reports/analysis-orchestrator.json |
+| Approval record path | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
 
-下游衔接:
-  primary: decision-orchestrator（数据分析完成，将分析洞察转化为可执行决策）
+Downstream handoff:
+  primary: decision-orchestrator (data analysis complete, convert analysis insights into actionable decisions)
   alternatives:
     - target: experiment-orchestrator
-      reason: 分析发现需A/B测试验证的假设
-      condition: 数据分析发现因果关系不确定，需实验验证时
+      reason: Analysis found hypotheses requiring A/B testing validation
+      condition: When data analysis finds causal relationships uncertain and experimental validation needed
     - target: iteration-orchestrator
-      reason: 分析结论直接影响迭代优先级
-      condition: 数据分析产出明确的迭代方向建议时
+      reason: Analysis conclusions directly affect iteration priority
+      condition: When data analysis produces clear iteration direction recommendations
   special_cases: []
 
-## 阶段卡口
+## Stage Gates
 
-| 卡口 | 条件 | 未通过处理 |
+| Gate | Condition | Action if Not Met |
 |------|------|------------|
-| 异常检测7×24运行 | 异常检测Pipeline持续运行，无中断 | 立即修复检测Pipeline，启动备用监控 |
-| 漏斗核心路径覆盖 | 核心业务漏斗已定义且数据完整 | 补充漏斗定义，确保核心路径覆盖 |
-| 留存Aha Moment候选已识别 | analysis-retention输出文件已生成且非空 | 扩大行为搜索范围或延长分析周期 |
-| 数据洞察报告已生成 | 数据洞察报告文件已生成且非空 | 补充分析或标注"建议补充数据" |
-| 阶段总结已生成 | output/phase-reports/analysis-orchestrator.json 已生成且6项结构均非空 | 补充缺失结构项后重新生成 |
+| Anomaly detection 24/7 running | Anomaly detection pipeline runs continuously without interruption | Immediately fix detection pipeline, start backup monitoring |
+| Funnel core path coverage | Core business funnel defined and data complete | Supplement funnel definition, ensure core path coverage |
+| Retention Aha Moment candidate identified | analysis-retention output file generated and non-empty | Expand behavior search scope or extend analysis period |
+| Data insight report generated | Data insight report file generated and non-empty | Supplement analysis or mark "recommend data supplementation" |
+| Stage summary generated | output/phase-reports/analysis-orchestrator.json generated and all 6 structures non-empty | Regenerate after supplementing missing structure items |
 
-## 人类决策点
+## Human Decision Points
 
-| 决策点 | 触发条件 | 决策内容 |
+| Decision Point | Trigger Condition | Decision Content |
 |--------|----------|----------|
-| P0异常即时确认 | P0级异常检测触发 | 确认异常真实性，决定响应策略 |
+| P0 anomaly immediate confirmation | P0-level anomaly detection triggered | Confirm anomaly authenticity, decide response strategy |
 
-## 决策规则
+## Decision Rules
 
-| 条件 | Action |
+| Condition | Action |
 |------|--------|
-| P0异常 | 即时推送 + 电话告警 |
-| P1异常 | 2小时内Slack/企微通知 |
-| P2异常 | 每日汇总报告 |
-| P3波动 | 仅记录，不告警 |
+| P0 anomaly | Instant push + phone alert |
+| P1 anomaly | Slack/WeCom notification within 2 hours |
+| P2 anomaly | Daily summary report |
+| P3 fluctuation | Record only, no alert |
 
-## 异常处理
+## Exception Handling
 
-| 异常类型 | 处理策略 |
+| Exception Type | Handling Strategy |
 |----------|----------|
-| 子Skill输出校验失败 | 暂停下游阶段执行，输出校验失败报告，提示人类修正后重试当前阶段 |
-| P0异常检测触发 | 立即中断当前阶段，优先处理P0异常，处理完成后恢复原流程 |
-| 上游数据源不可用 | 按子Skill降级策略执行，记录降级信息，在最终输出中标注降级影响范围 |
-| 分析结果无行动建议 | 阻断传递到下游，要求当前子Skill补充行动建议 |
-| 人类决策超时未响应 | 暂停流程，保留当前阶段状态，支持人类恢复后从断点继续 |
-| 阶段总结生成失败 | 基于已完成的子Skill输出生成部分总结，缺失项标注"数据缺失"，不阻塞编排完成 |
+| Sub-skill output validation failed | Pause downstream stage execution, output validation failure report, prompt human to fix and retry current stage |
+| P0 anomaly detection triggered | Immediately interrupt current stage, prioritize P0 anomaly handling, resume original flow after handling complete |
+| Upstream data source unavailable | Execute per sub-skill degradation strategy, record degradation info, mark degradation impact scope in final output |
+| Analysis result without action recommendations | Block passing to downstream, require current sub-skill to supplement action recommendations |
+| Human decision timeout without response | Pause flow, preserve current stage state, support resuming from breakpoint after human returns |
+| Stage summary generation failed | Generate partial summary based on completed sub-skill outputs, missing items marked "data missing", does not block orchestration completion |

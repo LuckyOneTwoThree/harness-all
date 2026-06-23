@@ -1,24 +1,24 @@
 ---
 name: quality-acceptance
-description: 当需要生成验收执行计划并生成签收报告时使用。验收执行计划生成+签收报告生成，基于Given-When-Then格式的验收标准生成验收执行计划（P0/P1失败阻断上线），整合验收执行计划、验收标准、遗留问题和签收确认，产出可签收的验收报告。🤖 AI生成计划+AI建议人类审批。关键词：验收执行计划、验收测试、Given-When-Then、质量门禁、上线检查、验收报告、签收报告、UAT报告、验收确认。
+description: Used when generating acceptance execution plans and sign-off reports. Acceptance execution plan generation + sign-off report generation, generates acceptance execution plans based on Given-When-Then format acceptance criteria (P0/P1 failures block release), integrates acceptance execution plan, acceptance criteria, open issues and sign-off confirmation, produces a signable acceptance report. 🤖 AI generates plan + AI suggests human approval. Keywords: acceptance execution plan, acceptance testing, Given-When-Then, quality gate, release check, acceptance report, sign-off report, UAT report, acceptance confirmation.
 metadata:
-  module: "产品监控与迭代"
-  sub-module: "质量保障"
+  module: "Product Monitoring & Iteration"
+  sub-module: "Quality Assurance"
   type: "pipeline"
   version: "3.1"
-  domain_tags: ["互联网", "通用"]
+  domain_tags: ["Internet", "General"]
   trigger_examples:
-    - "自动跑一下验收测试"
-    - "帮我执行验收检查"
-    - "看看能不能过质量门禁"
-    - "生成验收报告"
-    - "版本要验收了，帮我出报告"
-    - "整理一下验收结果"
+    - "Run the acceptance tests automatically"
+    - "Help me execute the acceptance checks"
+    - "Check if it can pass the quality gate"
+    - "Generate the acceptance report"
+    - "Version is going to acceptance, help me produce the report"
+    - "Organize the acceptance results"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "仅输出P0验收结果"
-  deep_description: "完整报告 + 回归测试矩阵 + 性能基线对比 + 安全审计清单"
+  quick_description: "Only output P0 acceptance results"
+  deep_description: "Full report + regression test matrix + performance baseline comparison + security audit checklist"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -30,82 +30,82 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 验收执行计划生成与签收报告生成
+# Acceptance Execution Plan Generation & Sign-off Report Generation
 
-## 核心原则
+## Core Principles
 
-1. **触发器驱动**：由Story完成和构建成功事件自动触发验收，而非等待人工发起
-2. **验收计划生成**：验收标准自动解析，测试环境配置建议生成，执行指令和判定规则自动生成
-3. **持续部署**：验收通过即具备发布条件，P0/P1失败立即阻断
-4. **实时复盘**：验收结果即时生成，失败用例即时分析根因
-5. **标准前置**：验收标准必须在测试前定义，不能测完再定
-6. **数据说话**：通过/不通过由数据决定，不由人决定
-7. **遗留可追踪**：未通过项必须有处理方案和追踪编号
-8. **签收可审计**：签收记录可追溯，责任可界定
+1. **Trigger-driven**: Acceptance is automatically triggered by Story completion and build success events, rather than waiting for manual initiation
+2. **Acceptance plan generation**: Acceptance criteria auto-parsing, test environment configuration recommendations generated, execution instructions and decision rules auto-generated
+3. **Continuous deployment**: Passing acceptance means ready for release, P0/P1 failures block immediately
+4. **Real-time retrospective**: Acceptance results generated in real time, failed cases analyzed for root cause immediately
+5. **Standards first**: Acceptance criteria must be defined before testing, not after testing is complete
+6. **Data speaks**: Pass/fail is decided by data, not by people
+7. **Traceable open issues**: Failed items must have a handling plan and tracking number
+8. **Auditable sign-off**: Sign-off records are traceable, responsibility is clearly defined
 
-## 交互模式
+## Interaction Mode
 
-🤖 **AI生成计划**（Step 1）→ 👤 **AI建议人类审批**（Step 2）
+🤖 **AI generates plan** (Step 1) → 👤 **AI suggests human approval** (Step 2)
 
-触发条件：
-- Story开发完成事件
-- 代码合入主干事件
-- 构建成功事件
-- 手动触发（验收负责人请求）
+Trigger conditions:
+- Story development completion event
+- Code merged to main branch event
+- Build success event
+- Manual trigger (acceptance owner request)
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| Story验收标准 | JSON | 是 | PRD | Given-When-Then格式 |
-| 测试用例 | JSON数组 | 是 | PRD | PRD验收标准推导的测试用例 |
-| 测试环境配置 | JSON | 是 | 测试系统 | 环境参数和Mock配置建议 |
-| 构建产物 | 文件/引用 | 是 | CI/CD | 待验收的构建版本 |
-| 测试结果 | JSON | ○ | CI/CD | 自动化测试执行结果 |
-| SRS文档 | Markdown | ○ | docs/product/PRD.md | 需求规格（含验收标准，已由 design-prd 覆盖） |
-| 版本号 | string | 是 | 用户提供 | 验收的版本号 |
-| 验收范围 | string | 是 | 用户提供 | 本次验收的功能范围 |
-| 验收方 | string | ○ | 用户提供 | 验收负责人/团队 |
-| 后端审查报告 | JSON | ○ | docs/handoff/solo-to-pm.md（来自 harness-solo） | 后端架构审查结果 |
-| API覆盖报告 | JSON | ○ | docs/handoff/solo-to-pm.md（来自 harness-solo） | PRD/前端对齐覆盖报告 |
+| Story acceptance criteria | JSON | Yes | PRD | Given-When-Then format |
+| Test cases | JSON array | Yes | PRD | Test cases derived from PRD acceptance criteria |
+| Test environment config | JSON | Yes | Test system | Environment parameters and Mock configuration recommendations |
+| Build artifact | File/Reference | Yes | CI/CD | Build version to be accepted |
+| Test results | JSON | ○ | CI/CD | Automated test execution results |
+| SRS document | Markdown | ○ | docs/product/PRD.md | Requirement specification (contains acceptance criteria, already covered by design-prd) |
+| Version number | string | Yes | User-provided | Version number for acceptance |
+| Acceptance scope | string | Yes | User-provided | Functional scope of this acceptance |
+| Acceptance party | string | ○ | User-provided | Acceptance owner/team |
+| Backend review report | JSON | ○ | docs/handoff/solo-to-pm.md (from harness-solo) | Backend architecture review results |
+| API coverage report | JSON | ○ | docs/handoff/solo-to-pm.md (from harness-solo) | PRD/frontend alignment coverage report |
 
-### Story验收标准结构示例
+### Story Acceptance Criteria Structure Example
 
 ```json
 {
   "story_id": "story_001",
-  "title": "手机号验证码登录",
+  "title": "Phone verification code login",
   "build_ref": "build_2024_0125_001",
   "version": "v2.1.0",
   "acceptance_criteria": [
     {
       "id": "AC-001",
       "format": "given_when_then",
-      "content": "Given 用户在登录页面\nWhen 用户输入有效手机号13800138000\nAnd 点击获取验证码按钮\nThen 系统发送6位数字验证码到该手机号\nAnd 页面显示发送成功提示",
+      "content": "Given the user is on the login page\nWhen the user enters a valid phone number 13800138000\nAnd clicks the get verification code button\nThen the system sends a 6-digit verification code to that phone number\nAnd the page displays a success message",
       "automatable": true,
       "priority": "P0"
     }
-    // ... 同结构可扩展
+    // ... same structure can be extended
   ]
 }
 ```
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 验收执行计划生成 [核心]
+### Step 1: Acceptance Execution Plan Generation [Core]
 
-#### 1.1 验收标准解析 [核心]
+#### 1.1 Acceptance Criteria Parsing [Core]
 
-**GWT格式标准化**：
+**GWT format standardization**:
 
-| GWT组件 | 解析结果 | 用途 |
+| GWT Component | Parse Result | Usage |
 |---------|----------|------|
-| Given | 前置条件数组 | Setup步骤 |
-| When | 操作步骤数组 | 执行步骤 |
-| And | 追加到上一个When | 连续操作 |
-| Then | 预期结果数组 | 断言验证 |
+| Given | Precondition array | Setup steps |
+| When | Action steps array | Execution steps |
+| And | Append to previous When | Continuous actions |
+| Then | Expected result array | Assertion verification |
 
-**解析输出**：
+**Parse output**:
 
 ```json
 {
@@ -113,17 +113,17 @@ writes:
     {
       "ac_id": "AC-001",
       "setup": [
-        "打开登录页面",
-        "确认页面已加载完成"
+        "Open the login page",
+        "Confirm the page has finished loading"
       ],
       "actions": [
-        "输入手机号: 13800138000",
-        "点击获取验证码按钮"
+        "Enter phone number: 13800138000",
+        "Click the get verification code button"
       ],
       "assertions": [
-        "验证短信发送API被调用",
-        "验证返回成功响应",
-        "验证页面显示发送成功提示"
+        "Verify the SMS sending API is called",
+        "Verify a success response is returned",
+        "Verify the page displays a success message"
       ],
       "priority": "P0",
       "automatable": true
@@ -132,31 +132,31 @@ writes:
 }
 ```
 
-#### 1.2 测试策略选择 [核心]
+#### 1.2 Test Strategy Selection [Core]
 
-**策略类型**：
+**Strategy types**:
 
-| 策略 | 适用场景 | 执行指令生成方式 |
+| Strategy | Applicable Scenario | Execution Instruction Generation Method |
 |------|----------|------------------|
-| E2E自动化 | 完整用户流程 | Selenium/Cypress执行指令生成 |
-| API自动化 | 纯后端功能 | RestAssured/Postman执行指令生成 |
-| 单元测试 | 独立函数逻辑 | Jest/JUnit执行指令生成 |
-| 集成测试 | 模块间交互 | 混合策略执行指令生成 |
+| E2E automation | Complete user flows | Selenium/Cypress execution instruction generation |
+| API automation | Pure backend functionality | RestAssured/Postman execution instruction generation |
+| Unit testing | Independent function logic | Jest/JUnit execution instruction generation |
+| Integration testing | Inter-module interaction | Hybrid strategy execution instruction generation |
 
-**策略选择规则**：
+**Strategy selection rules**:
 
 ```json
 {
   "strategy_selection": {
     "AC-001": {
       "selected_strategy": "api_automation",
-      "reason": "验收点为API调用和响应",
+      "reason": "Acceptance point is API call and response",
       "test_framework": "rest_assured",
       "script_location": "tests/api/test_login.py::test_send_verification_code"
     },
     "AC-002": {
       "selected_strategy": "e2e_automation",
-      "reason": "包含页面跳转等UI验证",
+      "reason": "Includes UI verification such as page navigation",
       "test_framework": "cypress",
       "script_location": "tests/e2e/test_login.py::test_verify_code_login"
     }
@@ -164,7 +164,7 @@ writes:
 }
 ```
 
-#### 1.3 测试数据准备 [条件]
+#### 1.3 Test Data Preparation [Conditional]
 
 ```json
 {
@@ -184,20 +184,20 @@ writes:
 }
 ```
 
-#### 1.4 测试环境配置建议 [条件]
+#### 1.4 Test Environment Configuration Recommendations [Conditional]
 
-**环境就绪检查**：
+**Environment readiness check**:
 
-| 检查项 | 检查内容 | 超时时间 |
+| Check Item | Check Content | Timeout |
 |--------|----------|----------|
-| 应用服务 | 服务启动且健康检查通过 | 60s |
-| 数据库 | 数据库连接正常，数据就绪 | 30s |
-| 缓存服务 | Redis连接正常 | 15s |
-| 消息队列 | MQ连接正常 | 15s |
-| 第三方Mock | Mock服务可用 | 30s |
-| 测试账号 | 测试数据准备完成 | 20s |
+| Application service | Service started and health check passed | 60s |
+| Database | Database connection normal, data ready | 30s |
+| Cache service | Redis connection normal | 15s |
+| Message queue | MQ connection normal | 15s |
+| Third-party Mock | Mock service available | 30s |
+| Test account | Test data preparation complete | 20s |
 
-**环境隔离配置**：
+**Environment isolation configuration**:
 
 ```json
 {
@@ -210,7 +210,7 @@ writes:
 }
 ```
 
-**Mock服务配置建议**：
+**Mock service configuration recommendations**:
 
 ```json
 {
@@ -229,9 +229,9 @@ writes:
 }
 ```
 
-#### 1.5 执行指令生成 [核心]
+#### 1.5 Execution Instruction Generation [Core]
 
-**执行计划生成**：
+**Execution plan generation**:
 
 ```json
 {
@@ -242,16 +242,16 @@ writes:
         "group_id": "group_1",
         "criteria": ["AC-001", "AC-002"],
         "execution_mode": "sequential",
-        "reason": "存在依赖关系（AC-002依赖AC-001的数据）"
+        "reason": "Dependency exists (AC-002 depends on AC-001 data)"
       }
-      // ... 同结构可扩展
+      // ... same structure can be extended
     ],
     "estimated_duration_minutes": 25
   }
 }
 ```
 
-**执行引擎配置建议**：
+**Execution engine configuration recommendations**:
 
 ```json
 {
@@ -278,9 +278,9 @@ writes:
 }
 ```
 
-#### 1.6 判定规则生成 [核心]
+#### 1.6 Decision Rule Generation [Core]
 
-**结果聚合**：
+**Result aggregation**:
 
 ```json
 {
@@ -303,16 +303,16 @@ writes:
 }
 ```
 
-**门禁判定**：
+**Gate decision**:
 
-| 条件 | 判定结果 | 处理方式 |
+| Condition | Decision Result | Handling |
 |------|----------|----------|
-| P0有失败 | **阻断** | 阻止上线，发送告警 |
-| P1失败数 > 2 | **阻断** | 阻止上线，要求修复 |
-| 自动化率 < 90% | **阻断** | 阻止上线，增加自动化 |
-| P2失败数 > 5 | **警告** | 允许上线，需承诺修复 |
+| P0 has failures | **Block** | Block release, send alert |
+| P1 failures > 2 | **Block** | Block release, require fix |
+| Automation rate < 90% | **Block** | Block release, increase automation |
+| P2 failures > 5 | **Warning** | Allow release, commitment to fix required |
 
-**门禁输出**：
+**Gate output**:
 
 ```json
 {
@@ -323,31 +323,31 @@ writes:
       {
         "ac_id": "AC-002",
         "priority": "P0",
-        "failure_reason": "登录成功后未跳转首页"
+        "failure_reason": "Did not navigate to home page after successful login"
       }
     ],
     "release_allowed": false,
     "next_actions": [
-      "修复AC-002对应缺陷",
-      "重新执行验收"
+      "Fix the defect corresponding to AC-002",
+      "Re-run acceptance"
     ]
   }
 }
 ```
 
-#### 1.7 失败分析规则生成 [深度]
+#### 1.7 Failure Analysis Rule Generation [Deep]
 
-**失败分类**：
+**Failure classification**:
 
-| 失败类型 | 特征 | 处理策略 |
+| Failure Type | Characteristics | Handling Strategy |
 |----------|------|----------|
-| 代码缺陷 | 功能未按预期工作 | 提交Bug，要求修复 |
-| 环境问题 | 环境配置或数据问题 | 修复环境，重新执行 |
-| 测试问题 | 测试脚本自身缺陷 | 修复测试脚本 |
-| 数据问题 | 测试数据不准确 | 更新测试数据 |
-| 需求变更 | 需求与实现不同步 | 确认是否更新需求 |
+| Code defect | Functionality not working as expected | Submit bug, require fix |
+| Environment issue | Environment configuration or data issue | Fix environment, re-execute |
+| Test issue | Test script itself has defects | Fix test script |
+| Data issue | Test data is inaccurate | Update test data |
+| Requirement change | Requirements and implementation out of sync | Confirm whether to update requirements |
 
-**分类输出**：
+**Classification output**:
 
 ```json
 {
@@ -356,13 +356,13 @@ writes:
       "ac_id": "AC-002",
       "failure_type": "code_defect",
       "evidence": {
-        "expected": "页面跳转到首页",
-        "actual": "页面停留在登录页",
+        "expected": "Page navigates to home page",
+        "actual": "Page stays on login page",
         "error_message": "Navigation timeout after 30000ms",
         "screenshots": ["screenshots/ac002_failure_1.png"],
         "logs": ["logs/browser_console.log"]
       },
-      "root_cause_hypothesis": "登录成功后前端路由跳转逻辑未正确执行",
+      "root_cause_hypothesis": "Frontend routing logic not executed correctly after successful login",
       "likely_location": "frontend/router/index.ts",
       "confidence": 0.85
     }
@@ -370,7 +370,7 @@ writes:
 }
 ```
 
-**修复建议生成**：
+**Fix suggestion generation**:
 
 ```json
 {
@@ -380,14 +380,14 @@ writes:
       "fix_type": "code_fix",
       "location": "frontend/pages/login.vue",
       "line_range": "45-60",
-      "suggestion": "在登录成功回调中添加router.push('/home')调用",
-      "verification_plan": "重新执行AC-002验收测试"
+      "suggestion": "Add router.push('/home') call in the login success callback",
+      "verification_plan": "Re-run AC-002 acceptance test"
     }
   ]
 }
 ```
 
-**回归风险评估**：
+**Regression risk assessment**:
 
 ```json
 {
@@ -395,303 +395,303 @@ writes:
     "scope": "limited",
     "affected_stories": ["story_002", "story_003"],
     "risk_level": "medium",
-    "reason": "登录模块修改可能影响用户注册流程",
+    "reason": "Login module changes may affect user registration flow",
     "recommendations": [
-      "建议执行story_002和story_003的回归测试",
-      "建议执行登录相关E2E测试套件"
+      "Recommend running regression tests for story_002 and story_003",
+      "Recommend running login-related E2E test suite"
     ]
   }
 }
 ```
 
-### Step 2: 签收报告生成 [核心]
+### Step 2: Sign-off Report Generation [Core]
 
-#### 2.1 验收标准提取 [核心]
+#### 2.1 Acceptance Criteria Extraction [Core]
 
-从 PRD 和验收标准数据中提取验收标准：
+Extract acceptance criteria from PRD and acceptance criteria data:
 
-**验收标准分类**：
+**Acceptance criteria classification**:
 
-| 类别 | 说明 | 通过条件 |
+| Category | Description | Pass Condition |
 |------|------|---------|
-| 功能验收 | 核心功能是否按需求实现 | 全部Must需求通过 |
-| 性能验收 | 性能指标是否达标 | 关键指标达标率100% |
-| 安全验收 | 安全要求是否满足 | 无高危/严重漏洞 |
-| 兼容性验收 | 目标平台是否兼容 | 全部目标平台通过 |
-| 用户体验验收 | 核心流程是否顺畅 | 无P0级体验问题 |
+| Functional acceptance | Whether core functionality is implemented per requirements | All Must requirements pass |
+| Performance acceptance | Whether performance metrics meet targets | Key metric pass rate 100% |
+| Security acceptance | Whether security requirements are met | No high/critical vulnerabilities |
+| Compatibility acceptance | Whether target platforms are compatible | All target platforms pass |
+| User experience acceptance | Whether core flows are smooth | No P0-level experience issues |
 
-**每条验收标准**：
+**Each acceptance criterion**:
 
-| 编号 | 标准描述 | 来源（PRD编号） | 优先级 | 验证方法 |
+| ID | Standard Description | Source (PRD ID) | Priority | Verification Method |
 |------|---------|---------------|--------|---------|
-| AC-001 | 用户可在3步内完成注册 | FR-AUTH-001 | Must | 功能测试 |
-| AC-002 | 页面首屏加载<2s | NFR-PERF-001 | Must | 性能测试 |
+| AC-001 | User can complete registration in 3 steps | FR-AUTH-001 | Must | Functional testing |
+| AC-002 | Page first screen load < 2s | NFR-PERF-001 | Must | Performance testing |
 
-#### 2.2 测试结果整合 [核心]
+#### 2.2 Test Result Integration [Core]
 
-整合测试结果，映射到验收标准：
+Integrate test results, map to acceptance criteria:
 
-**测试结果汇总**：
+**Test result summary**:
 
-| 验收标准 | 测试用例数 | 通过 | 失败 | 阻塞 | 通过率 | 状态 |
+| Acceptance Criterion | Test Case Count | Passed | Failed | Blocked | Pass Rate | Status |
 |----------|-----------|------|------|------|--------|------|
 | AC-001 | 5 | 5 | 0 | 0 | 100% | ✅ |
 | AC-002 | 3 | 2 | 1 | 0 | 67% | ❌ |
 
-**整体统计**：
+**Overall statistics**:
 
-| 指标 | 数值 |
+| Metric | Value |
 |------|------|
-| 总测试用例数 | |
-| 通过数 | |
-| 失败数 | |
-| 阻塞数 | |
-| 跳过数 | |
-| 总通过率 | |
-| Must需求通过率 | |
+| Total test case count | |
+| Passed count | |
+| Failed count | |
+| Blocked count | |
+| Skipped count | |
+| Overall pass rate | |
+| Must requirement pass rate | |
 
-#### 2.3 缺陷分析 [条件]
+#### 2.3 Defect Analysis [Conditional]
 
-对失败和阻塞的测试用例进行缺陷分析：
+Perform defect analysis on failed and blocked test cases:
 
-**缺陷清单**：
+**Defect list**:
 
-| 缺陷编号 | 关联验收标准 | 严重程度 | 描述 | 复现步骤 | 状态 | 责任人 |
+| Defect ID | Related Acceptance Criterion | Severity | Description | Reproduction Steps | Status | Owner |
 |----------|------------|---------|------|---------|------|--------|
-| BUG-001 | AC-002 | 严重 | 首屏加载超时 | 1.打开首页 2.等待 | 待修复 | |
+| BUG-001 | AC-002 | Critical | First screen load timeout | 1.Open home page 2.Wait | Pending fix | |
 
-**严重程度定义**：
+**Severity definition**:
 
-| 等级 | 定义 | 验收影响 |
+| Level | Definition | Acceptance Impact |
 |------|------|---------|
-| 致命 | 系统崩溃/数据丢失 | 阻塞验收 |
-| 严重 | 核心功能不可用 | 阻塞验收 |
-| 一般 | 功能受限但有替代方案 | 可带病验收 |
-| 轻微 | 体验问题 | 可带病验收 |
-| 建议 | 优化建议 | 不影响验收 |
+| Fatal | System crash/data loss | Blocks acceptance |
+| Critical | Core functionality unavailable | Blocks acceptance |
+| General | Functionality limited but workaround available | Can accept with known issues |
+| Minor | Experience issue | Can accept with known issues |
+| Suggestion | Optimization suggestion | Does not affect acceptance |
 
-#### 2.4 遗留问题评估 [条件]
+#### 2.4 Open Issue Assessment [Conditional]
 
-**遗留问题清单**：
+**Open issue list**:
 
-| 编号 | 描述 | 严重程度 | 影响范围 | 处理方案 | 预计修复时间 | 风险评估 |
+| ID | Description | Severity | Impact Scope | Handling Plan | Estimated Fix Time | Risk Assessment |
 |------|------|---------|---------|---------|------------|---------|
-| | | | | 修复/规避/接受 | | |
+| | | | | Fix/Mitigate/Accept | | |
 
-**遗留问题验收影响判断**：
+**Open issue acceptance impact judgment**:
 
-| 条件 | 验收建议 |
+| Condition | Acceptance Recommendation |
 |------|---------|
-| 有致命/严重缺陷未修复 | ❌ 不建议通过验收 |
-| 仅有一般/轻微缺陷 | ✅ 建议有条件通过，遗留问题列入下版本 |
-| 无遗留问题 | ✅ 建议通过验收 |
+| Unfixed fatal/critical defects exist | ❌ Not recommended to pass acceptance |
+| Only general/minor defects | ✅ Recommend conditional pass, open issues listed for next version |
+| No open issues | ✅ Recommend pass acceptance |
 
-#### 2.5 验收结论 [核心]
+#### 2.5 Acceptance Conclusion [Core]
 
-**验收结论模板**：
+**Acceptance conclusion template**:
 
 ```
-验收结论：✅ 通过 / ⚠️ 有条件通过 / ❌ 不通过
+Acceptance Conclusion: ✅ Pass / ⚠️ Conditional Pass / ❌ Fail
 
-验收范围：{版本号} {功能范围}
-验收日期：{日期}
-验收方：{验收方}
+Acceptance Scope: {version number} {functional scope}
+Acceptance Date: {date}
+Acceptance Party: {acceptance party}
 
-通过项：{N}项（占比{X}%）
-未通过项：{N}项（占比{X}%）
-Must需求通过率：{X}%
+Passed Items: {N} items ({X}%)
+Failed Items: {N} items ({X}%)
+Must Requirement Pass Rate: {X}%
 
-遗留问题：{N}个
-- 致命/严重：{N}个
-- 一般/轻微：{N}个
+Open Issues: {N}
+- Fatal/Critical: {N}
+- General/Minor: {N}
 
-验收建议：
-{具体建议}
+Acceptance Recommendation:
+{specific recommendation}
 ```
 
-**签收确认**：
+**Sign-off confirmation**:
 
-| 角色 | 姓名 | 签收意见 | 签名 | 日期 |
+| Role | Name | Sign-off Opinion | Signature | Date |
 |------|------|---------|------|------|
-| 产品负责人 | | 同意/不同意/有条件同意 | | |
-| 技术负责人 | | 同意/不同意/有条件同意 | | |
-| 测试负责人 | | 同意/不同意/有条件同意 | | |
-| 业务方代表 | | 同意/不同意/有条件同意 | | |
+| Product Owner | | Approve/Reject/Conditional Approve | | |
+| Tech Lead | | Approve/Reject/Conditional Approve | | |
+| QA Lead | | Approve/Reject/Conditional Approve | | |
+| Business Representative | | Approve/Reject/Conditional Approve | | |
 
-#### 2.6 文档组装 [条件]
+#### 2.6 Document Assembly [Conditional]
 
-**报告结构**：
+**Report structure**:
 
 ```
-# {产品名} v{版本号} 验收测试报告
+# {Product Name} v{Version} Acceptance Test Report
 
-## 1. 验收概述
-### 1.1 验收范围
-### 1.2 验收标准
-### 1.3 验收环境
+## 1. Acceptance Overview
+### 1.1 Acceptance Scope
+### 1.2 Acceptance Criteria
+### 1.3 Acceptance Environment
 
-## 2. 验收执行计划
-### 2.1 验收标准解析
-### 2.2 测试环境配置建议
-### 2.3 执行指令与判定规则
-### 2.4 门禁判定
+## 2. Acceptance Execution Plan
+### 2.1 Acceptance Criteria Parsing
+### 2.2 Test Environment Configuration Recommendations
+### 2.3 Execution Instructions and Decision Rules
+### 2.4 Gate Decision
 
-## 3. 测试结果汇总
-### 3.1 整体统计
-### 3.2 验收标准逐项结果
-### 3.3 测试覆盖率
+## 3. Test Result Summary
+### 3.1 Overall Statistics
+### 3.2 Acceptance Criteria Item-by-Item Results
+### 3.3 Test Coverage
 
-## 4. 缺陷分析
-### 4.1 缺陷统计
-### 4.2 缺陷清单
-### 4.3 缺陷趋势
+## 4. Defect Analysis
+### 4.1 Defect Statistics
+### 4.2 Defect List
+### 4.3 Defect Trends
 
-## 5. 遗留问题
-### 5.1 遗留问题清单
-### 5.2 遗留问题风险评估
-### 5.3 处理计划
+## 5. Open Issues
+### 5.1 Open Issue List
+### 5.2 Open Issue Risk Assessment
+### 5.3 Handling Plan
 
-## 6. 验收结论
-### 6.1 结论
-### 6.2 遗留问题处理方案
-### 6.3 签收确认
+## 6. Acceptance Conclusion
+### 6.1 Conclusion
+### 6.2 Open Issue Handling Plan
+### 6.3 Sign-off Confirmation
 
-## 附录
-- 测试用例明细
-- 测试环境配置
-- 验收标准完整清单
-- 失败用例分析详情
+## Appendix
+- Test case details
+- Test environment configuration
+- Complete acceptance criteria list
+- Failed case analysis details
 ```
 
-## 输出
+## Output
 
-**存储路径**：`docs/monitoring/release-notes.md（“验收报告”章节）`
+**Storage path**: `docs/monitoring/release-notes.md ("Acceptance Report" section)`
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | P0验收结果 | 核心结论 + 最小可行产物，仅输出P0用例通过/失败结果和门禁判定 |
-| standard | 完整验收报告（当前默认） | 完整产物，包含Step 1-2全部输出 |
-| deep | 完整报告 + 扩展分析 | 完整产物 + 回归测试矩阵 + 性能基线对比 + 安全审计清单 + 决策记录 + 风险评估 |
+| quick | P0 acceptance results | Core conclusion + minimum viable artifact, only outputs P0 case pass/fail results and gate decision |
+| standard | Full acceptance report (current default) | Full artifact, includes all Step 1-2 outputs |
+| deep | Full report + extended analysis | Full artifact + regression test matrix + performance baseline comparison + security audit checklist + decision record + risk assessment |
 
-**输出文件**：
+**Output files**:
 
-| 文件 | 格式 | 说明 |
+| File | Format | Description |
 |------|------|------|
-| acceptance-report.md | Markdown | 完整验收测试报告（含验收执行计划和签收确认） |
-| acceptance-report.json | JSON | 结构化数据 |
+| acceptance-report.md | Markdown | Complete acceptance test report (includes acceptance execution plan and sign-off confirmation) |
+| acceptance-report.json | JSON | Structured data |
 
-## 输出 Schema
+## Output Schema
 
-完整 Schema 和校验规则见 [Reference/schema.md](./Reference/schema.md)
+Full schema and validation rules see [Reference/schema.md](./Reference/schema.md)
 
-## 上游变更响应
+## Upstream Change Response
 
-当上游输入发生变更时，本Skill的响应策略：
+When upstream inputs change, this Skill's response strategy:
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| 验收标准变更 | 检查项和方法 | 重新生成受影响的检查项，保留已通过的历史记录 |
-| 测试用例变更 | 自动验收检查项 | 更新关联的验收检查项，标记需人类确认 |
-| PRD需求变更 | 验收覆盖度 | 重新评估验收覆盖度，标记需人类确认 |
-| 代码变更 | 验收执行计划 | 重新生成受影响的验收执行计划 |
-| 安全需求变更 | 安全验收项 | 更新安全验收项，重新评估安全风险 |
+| Acceptance criteria change | Check items and methods | Regenerate affected check items, retain passed historical records |
+| Test case change | Automated acceptance check items | Update related acceptance check items, mark for human confirmation |
+| PRD requirement change | Acceptance coverage | Re-assess acceptance coverage, mark for human confirmation |
+| Code change | Acceptance execution plan | Regenerate affected acceptance execution plan |
+| Security requirement change | Security acceptance items | Update security acceptance items, re-assess security risk |
 
-当验收结果自身变更时，对下游的通知机制：
+When acceptance results themselves change, the downstream notification mechanism:
 
-| 验收变更类型 | 通知范围 | 通知方式 |
+| Acceptance Change Type | Notification Scope | Notification Method |
 |-------------|----------|----------|
-| 门禁结果变更 | release-orchestrator | 标记门禁变更，触发发布决策更新 |
-| P0/P1检查失败 | change-impact-analysis | 标记失败项，触发影响评估 |
-| 需人工验证项 | release-orchestrator | 标记待验证项，触发人工验收流程 |
-| P0/P1失败 | release-orchestrator | 标记阻断项，阻止发布流程 |
-| 签收状态变更 | release-orchestrator | 标记签收状态，触发发布决策 |
+| Gate result change | release-orchestrator | Mark gate change, trigger release decision update |
+| P0/P1 check failure | change-impact-analysis | Mark failed items, trigger impact assessment |
+| Manual verification items needed | release-orchestrator | Mark pending verification items, trigger manual acceptance flow |
+| P0/P1 failure | release-orchestrator | Mark blocking items, block release flow |
+| Sign-off status change | release-orchestrator | Mark sign-off status, trigger release decision |
 
 ---
 
-## 决策规则
+## Decision Rules
 
-### 上线阻断规则
+### Release Blocking Rules
 
-| 条件 | 决策 |
+| Condition | Decision |
 |------|------|
-| 存在P0失败 | **立即阻断**，发送紧急告警 |
-| 存在P1失败 > 2个 | **立即阻断**，要求修复 |
-| 自动化执行率 < 90% | **阻断**，要求提高自动化率 |
-| 环境配置建议缺失 | **阻断**，排查环境配置 |
-| Must需求通过率<100% | 验收结论为"不通过" |
-| 有致命/严重缺陷未修复 | 验收结论为"不通过" |
-| 一般缺陷>5个 | 建议修复后重新验收 |
+| P0 failure exists | **Block immediately**, send urgent alert |
+| P1 failures > 2 | **Block immediately**, require fix |
+| Automation execution rate < 90% | **Block**, require increased automation rate |
+| Environment configuration recommendation missing | **Block**, investigate environment configuration |
+| Must requirement pass rate < 100% | Acceptance conclusion is "Fail" |
+| Unfixed fatal/critical defects exist | Acceptance conclusion is "Fail" |
+| General defects > 5 | Recommend re-acceptance after fix |
 
-### 通过条件
+### Pass Conditions
 
-| 条件 | 要求 |
+| Condition | Requirement |
 |------|------|
-| P0用例 | 100%通过 |
-| P1用例 | ≤ 2个失败 |
-| P2用例 | ≤ 5个失败 |
-| 自动化率 | ≥ 90% |
+| P0 cases | 100% pass |
+| P1 cases | ≤ 2 failures |
+| P2 cases | ≤ 5 failures |
+| Automation rate | ≥ 90% |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-| 检查项 | 标准 | 未达标处理 |
+| Check Item | Standard | Non-compliance Handling |
 |--------|------|------------|
-| P0用例通过率 | 100% | 阻断 |
+| P0 case pass rate | 100% | Block |
 
-- [ ] 所有P0用例执行指令已生成
-- [ ] P0用例通过率100%
+- [ ] All P0 case execution instructions generated
+- [ ] P0 case pass rate 100%
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-| 检查项 | 标准 | 未达标处理 |
+| Check Item | Standard | Non-compliance Handling |
 |--------|------|------------|
-| 自动化执行率 | ≥ 90% | 阻断 |
-| 测试环境配置 | 所有配置建议项已输出 | 阻断 |
-| 失败分析完整性 | 包含根因和建议 | 告警 |
+| Automation execution rate | ≥ 90% | Block |
+| Test environment configuration | All configuration recommendation items output | Block |
+| Failure analysis completeness | Includes root cause and recommendations | Alert |
 
-- [ ] 自动化执行率达标
-- [ ] 失败用例分析规则已生成
-- [ ] 失败用例已有修复建议
-- [ ] 环境配置建议已输出
-- [ ] 验收标准逐项有结果
-- [ ] Must需求通过率已计算
-- [ ] 缺陷按严重程度分类
-- [ ] 遗留问题有处理方案
-- [ ] 验收结论明确（通过/有条件通过/不通过）
-- [ ] 签收确认表已包含
+- [ ] Automation execution rate meets standard
+- [ ] Failed case analysis rules generated
+- [ ] Failed cases have fix suggestions
+- [ ] Environment configuration recommendations output
+- [ ] Acceptance criteria have item-by-item results
+- [ ] Must requirement pass rate calculated
+- [ ] Defects classified by severity
+- [ ] Open issues have handling plans
+- [ ] Acceptance conclusion clear (pass/conditional pass/fail)
+- [ ] Sign-off confirmation table included
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 回归测试矩阵已生成（受影响模块、回归用例覆盖、风险等级标注）
-- [ ] 性能基线对比已完成（关键指标与上一版本基线对比、性能退化检测）
-- [ ] 安全审计清单已输出（安全验收项、漏洞扫描结果、合规性检查）
+- [ ] Regression test matrix generated (affected modules, regression case coverage, risk level annotation)
+- [ ] Performance baseline comparison completed (key metrics compared with previous version baseline, performance degradation detection)
+- [ ] Security audit checklist output (security acceptance items, vulnerability scan results, compliance check)
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失范围 | 降级方案 | 输出影响 |
+| Missing Scope | Degradation Plan | Output Impact |
 |----------|----------|----------|
-| 验收标准缺失 | 用户提供Given-When-Then验收标准 → 生成验收检查清单 | 验收标准需人工编写 |
-| 测试环境缺失 | 生成验收检查清单和执行指令，环境配置标注待填写 | 仅输出检查清单和执行指令，环境配置标注待填写 |
-| 验收标准 + 测试环境均缺失 | 用户提供Given-When-Then验收标准 → 生成验收检查清单 | 输出验收检查清单，环境配置标注"待配置" |
-| 测试结果缺失 | 基于验收标准生成待填报告模板 | 无法自动判断通过/不通过 |
-| SRS缺失（已由 design-prd 覆盖） | 验收标准由用户提供 | 需人工定义验收标准 |
-| 验收方缺失 | 若用户未提供验收方，提示用户提供或跳过该输入相关步骤 | 签收确认表标注"待指定验收方" |
-| 后端审查报告缺失 | 仅基于功能验收标准验收 | 可能遗漏后端架构质量问题 |
-| API覆盖报告缺失 | 仅基于PRD验收标准验收 | 可能遗漏API覆盖不完整问题 |
+| Acceptance criteria missing | User provides Given-When-Then acceptance criteria → generate acceptance checklist | Acceptance criteria need manual writing |
+| Test environment missing | Generate acceptance checklist and execution instructions, environment configuration marked as to-be-filled | Only outputs checklist and execution instructions, environment configuration marked as to-be-filled |
+| Acceptance criteria + test environment both missing | User provides Given-When-Then acceptance criteria → generate acceptance checklist | Outputs acceptance checklist, environment configuration marked as "to be configured" |
+| Test results missing | Generate to-be-filled report template based on acceptance criteria | Cannot auto-determine pass/fail |
+| SRS missing (already covered by design-prd) | Acceptance criteria provided by user | Need to manually define acceptance criteria |
+| Acceptance party missing | If user does not provide acceptance party, prompt user to provide or skip related steps | Sign-off confirmation table marked as "acceptance party to be designated" |
+| Backend review report missing | Accept based only on functional acceptance criteria | May miss backend architecture quality issues |
+| API coverage report missing | Accept based only on PRD acceptance criteria | May miss incomplete API coverage issues |
 
-### 数据获取说明
+### Data Acquisition Instructions
 
-当上游文件缺失时，需用户提供以下信息以支撑降级生成：
-- **Given-When-Then验收标准**：每个验收条件的Given/When/Then描述
-- **测试环境信息**（可选）：测试环境地址、账号等配置
-- **构建版本**（可选）：待验收的构建版本号
+When upstream files are missing, the following information is needed from the user to support degradation generation:
+- **Given-When-Then acceptance criteria**: Given/When/Then description for each acceptance condition
+- **Test environment information** (optional): Test environment address, accounts and other configuration
+- **Build version** (optional): Build version number to be accepted
 
-## 执行日志
+## Execution Log
 
 ```json
 {
@@ -703,7 +703,7 @@ Must需求通过率：{X}%
   "completed_at": "ISO8601",
   "steps": [
     {"step": "criteria_parsing", "status": "completed", "duration_ms": 200}
-    // ... 同结构可扩展
+    // ... same structure can be extended
   ],
   "gate_decision": {
     "passed": false,

@@ -4,47 +4,48 @@ name: disaster-recovery-workflow
 default_mode: skip
 ---
 
-# Workflow: 容灾演练（Disaster Recovery Workflow）
+# Workflow: Disaster Recovery Workflow
 
-> 所属 LOOP 类型：recovery
-> 触发场景：定期容灾演练、容灾预案验证、备份恢复测试
-> 编排 Skill：backup-management → recovery-drill → [验证] → [报告]
+> LOOP type: recovery
+> Trigger scenarios: Periodic disaster recovery drill, DR plan validation, backup recovery test
+> Orchestration Skill: backup-management → recovery-drill → [validation] → [report]
 
-## 流程图
+## Flowchart
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│ 确定演练范围（服务/数据/场景）                            │
+│ Determine drill scope (services/data/scenarios)         │
 └───────────────────────────┬─────────────────────────────┘
                             ▼
           ┌─────────────────────────────────┐
-          │ backup-management                │  确认备份可用
-          │                                   │  验证备份完整性[质量门]
+          │ backup-management                │  Confirm backup available
+          │                                   │  Validate backup integrity [Quality Gate]
           └─────────────────┬───────────────┘
                             ▼
           ┌─────────────────────────────────┐
-          │ recovery-drill                   │  在隔离环境执行恢复
-          │                                   │  记录 RTO/RPO
-          │                                   │  验证数据完整性[质量门]
+          │ recovery-drill                   │  Execute recovery in isolated environment
+          │                                   │  Record RTO/RPO
+          │                                   │  Validate data integrity [Quality Gate]
           └─────────────────┬───────────────┘
                             ▼
           ┌─────────────────────────────────┐
-          │ 生成演练报告                      │
-          │ 改进建议 + 预案更新               │
+          │ Generate drill report            │
+          │ Improvement suggestions + plan   │
+          │ update                           │
           └─────────────────────────────────┘
 ```
 
-## 质量门控
+## Quality Gates
 
-| 门控点 | 检查内容 | 不通过处理 |
+| Gate | Checks | On Failure |
 |--------|---------|-----------|
-| 备份验证 | 备份状态 Completed + 无错误 | 重新备份 |
-| 恢复验证 | RTO/RPO 达标 + 数据完整 | 分析瓶颈 + 优化 |
-| 服务验证 | 健康检查通过 + 冒烟测试通过 | 排查恢复问题 |
+| Backup validation | Backup status Completed + no errors | Re-backup |
+| Recovery validation | RTO/RPO meet target + data intact | Analyze bottleneck + optimize |
+| Service validation | Health check pass + smoke test pass | Troubleshoot recovery issues |
 
-## 使用方式
+## Usage
 
-对 Agent 说：
-- "执行容灾演练" → 触发本 workflow
-- "测试备份恢复" → 从 recovery-drill 开始
-- "验证容灾预案" → 从 disaster-recovery-plan 开始
+Tell the Agent:
+- "Run disaster recovery drill" → Trigger this workflow
+- "Test backup recovery" → Start from recovery-drill
+- "Validate DR plan" → Start from disaster-recovery-plan

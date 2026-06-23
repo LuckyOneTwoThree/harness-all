@@ -1,32 +1,32 @@
 ---
-name: skill-name                    # 必填，与目录名一致
-description: 一句话描述，用于 INDEX.md 引用  # 必填
-triggers:                           # 必填，什么时候用这个 skill
-  - 场景1
-  - 场景2
-reads:                              # 可选，依赖的文件（Agent 执行时自动拉取）
+name: skill-name                    # Required, must match the directory name
+description: One-sentence description, used for INDEX.md reference  # Required
+triggers:                           # Required, when to use this skill
+  - Scenario 1
+  - Scenario 2
+reads:                              # Optional, files this skill depends on (auto-fetched by the Agent at runtime)
   - rules/security.md
   - loops/LOOP.md
-writes:                             # 可选，产出的文件（帮助 Agent 理解副作用）
+writes:                             # Optional, files this skill produces (helps the Agent understand side effects)
   - loops/specs/<task>/state.yaml
-quality_gates: []                   # 可选，质量门禁规则列表
-max_iterations: 3                   # 可选，LOOP 最大迭代次数
+quality_gates: []                   # Optional, list of quality gate rules
+max_iterations: 3                   # Optional, max LOOP iterations
 ---
 
-# Skill 标题
+# Skill Title
 
-## 铁律 / 核心原则
-[不可违反的规则，放在最前面，避免 lost-in-the-middle]
+## Iron Rules / Core Principles
+[Non-negotiable rules, placed at the top to avoid lost-in-the-middle]
 
-## 流程
-1. 步骤1
-2. 步骤2
-3. 步骤3
+## Process
+1. Step 1
+2. Step 2
+3. Step 3
 
-## 禁止事项
-- 不做X
-- 不做Y
+## Prohibited
+- Do not do X
+- Do not do Y
 
-## 与 LOOP 的关系
-[对应 LOOP 的哪个阶段（PLAN/RESEARCH/VALIDATE），如何交互]
-[如果不在 LOOP 内，说明触发时机]
+## Relationship with LOOP
+[Which LOOP phase this corresponds to (PLAN/RESEARCH/VALIDATE), and how it interacts]
+[If not inside a LOOP, describe the trigger timing]

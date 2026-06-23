@@ -1,83 +1,83 @@
-# constitution.md — 项目宪法
+# constitution.md — Project Constitution
 
-> **角色说明**：本文件是 **harness-solo 框架仓库自身**的项目宪法。
-> 当用 install.sh 安装到新项目时，会从 `.harness/templates/constitution.md.template` 复制生成新项目的宪法，覆盖本文件。
-> 因此本文件约束的是"开发 harness-solo 框架本身"，不是"用 harness-solo 开发其他项目"。
+> **Role note**: This file is the project constitution for **the harness-solo framework repository itself**.
+> When installed into a new project via install.sh, it is copied from `.harness/templates/constitution.md.template` to generate the new project's constitution, overwriting this file.
+> Therefore, this file constrains "developing the harness-solo framework itself", not "using harness-solo to develop other projects".
 >
-> 与 AGENTS.md 的分工：AGENTS.md 是通用工作规则（所有项目相同），constitution.md 是项目特定约束。
-> 加载时机：AGENTS.md 之后，首次交互时读。
+> Division of labor with AGENTS.md: AGENTS.md contains general work rules (the same for all projects); constitution.md contains project-specific constraints.
+> Load timing: after AGENTS.md, read at first interaction.
 
-## 项目特定原则
+## Project-Specific Principles
 
-### 原则 1：零运行时依赖
+### Principle 1: Zero Runtime Dependencies
 
-harness-solo 是**纯文档/规则框架**，本身不引入任何运行时依赖。
-- 所有 `.harness/scripts/*.sh` 和 `.harness/hooks/*.sh` 仅作为可选兜底脚本
-- Agent 优先使用 IDE 工具完成等价操作，不依赖 bash
+harness-solo is a **pure documentation / rules framework** and introduces no runtime dependencies itself.
+- All `.harness/scripts/*.sh` and `.harness/hooks/*.sh` are optional fallback scripts only
+- The Agent prefers IDE tools to perform equivalent operations, without depending on bash
 
-**验证方式**：仓库根目录无 `package.json` / `requirements.txt` / `Cargo.toml` 等运行时依赖清单。
+**Verification**: No `package.json` / `requirements.txt` / `Cargo.toml` or other runtime dependency manifests exist at the repository root.
 
-### 原则 2：Agent 工具优先，不绑定 bash
+### Principle 2: Agent Tools First, Not Bound to bash
 
-框架所有流程必须能在无 bash 环境（如 Windows PowerShell）下工作。
-- SKILL.md 中的操作步骤必须给出"Agent 工具方式"（Read/Write/Glob/Grep/Edit 等）
-- `.sh` 脚本只能标注为"可选兜底"
+All framework processes must work in a bash-free environment (e.g., Windows PowerShell).
+- Operation steps in SKILL.md must provide an "Agent tool approach" (Read/Write/Glob/Grep/Edit, etc.)
+- `.sh` scripts may only be marked as "optional fallback"
 
-**验证方式**：任意 SKILL.md 流程不依赖 bash 特有语法完成核心任务。
+**Verification**: No SKILL.md process relies on bash-specific syntax to complete core tasks.
 
-### 原则 3：核心文件修改需用户确认
+### Principle 3: Core File Modifications Require User Confirmation
 
-以下文件变更必须由用户明确授权：
+The following file changes must be explicitly authorized by the user:
 - `AGENTS.md`
 - `SOUL.md`
 - `constitution.md`
 - `.harness/rules/security.md`
 - `.harness/rules/prompt-defense.md`
 
-**验证方式**：修改前通过 `AskUserQuestion` 或显式对话获得授权。
+**Verification**: Obtain authorization via `AskUserQuestion` or explicit dialog before modifying.
 
-### 原则 4：Skill 必须有完整 frontmatter
+### Principle 4: Skills Must Have Complete Frontmatter
 
-所有 `.harness/skills/*/*/SKILL.md` 必须包含：
-- `name:`（与目录名一致）
+All `.harness/skills/*/*/SKILL.md` must include:
+- `name:` (consistent with the directory name)
 - `description:`
 - `triggers:`
 - `reads:`
 - `writes:`
 
-**验证方式**：`skill-maintenance` 扫描无 frontmatter 缺失。
+**Verification**: `skill-maintenance` scans for missing frontmatter.
 
-### 原则 5：文档简洁，防止膨胀
+### Principle 5: Concise Documentation, Prevent Bloat
 
-- `AGENTS.md` 不超过 150 行
-- `SKILL.md` 不超过 300 行（超过时将 schema/示例/决策表提取到 `Reference/` 子目录，Reference/ 下不限）
-- `progress.md` 超过 200 行必须归档
+- `AGENTS.md` no more than 150 lines
+- `SKILL.md` no more than 300 lines (when exceeded, extract schemas / examples / decision tables into a `Reference/` subdirectory; Reference/ has no limit)
+- `progress.md` must be archived when it exceeds 200 lines
 
-**验证方式**：Agent 用 Read 工具统计行数 + `verify-harness.sh` 可选兜底 + `entropy-check.sh` 可选兜底。
+**Verification**: The Agent uses the Read tool to count lines + optional `verify-harness.sh` fallback + optional `entropy-check.sh` fallback.
 
-### 原则 6：探索先行不可绕过
+### Principle 6: Exploration First Cannot Be Bypassed
 
-`default_mode: deep` 的 workflow（如 new-feature / refactor），必须完成需求探索阶段（brainstorming 硬门）才能进入编码。
+Workflows with `default_mode: deep` (e.g., new-feature / refactor) must complete the requirements exploration phase (brainstorming hard gate) before entering coding.
 
-- `deep` 模式下，⏸ 探索对话点不可跳过，必须获得用户输入后才继续
-- `deep` 模式下，禁用 skill 降级策略，不允许跳过 brainstorming 硬门
-- 用户只能通过显式声明"切换到 skip 模式"来绕过，且 Agent 必须记录理由到 `state.yaml`
-- `skip` 模式有安全兜底：无需求文档时自动降级为 `standard`
+- In `deep` mode, ⏸ exploration dialog points cannot be skipped; user input must be received before continuing
+- In `deep` mode, skill downgrade strategies are disabled; skipping the brainstorming hard gate is not allowed
+- Users can only bypass this by explicitly stating "switch to skip mode", and the Agent must record the reason in `state.yaml`
+- `skip` mode has a safety fallback: automatically downgrades to `standard` when no requirement documents exist
 
-**验证方式**：workflow 执行前检查 `state.yaml` 的 `exploration_mode` 字段；`deep` 模式下未完成 brainstorming 则阻断 PLAN→ACT 流转。
+**Verification**: Before workflow execution, check the `exploration_mode` field in `state.yaml`; in `deep` mode, if brainstorming is not completed, block the PLAN→ACT transition.
 
-## 宪法检查点（PLAN 阶段必查）
+## Constitution Checkpoints (must check during PLAN phase)
 
-- [ ] 当前变更是否引入运行时依赖？
-- [ ] 当前流程是否能在无 bash 环境下完成？
-- [ ] 是否涉及核心文件修改？是否已获得用户授权？
-- [ ] 新增/修改的 skill 是否有完整 frontmatter？
-- [ ] 文档长度是否超过项目阈值？
-- [ ] 当前 workflow 的 exploration_mode 是否为 deep？若是，是否已完成 brainstorming 硬门？
+- [ ] Does the current change introduce runtime dependencies?
+- [ ] Can the current process be completed in a bash-free environment?
+- [ ] Does it involve core file modifications? Has user authorization been obtained?
+- [ ] Do new/modified skills have complete frontmatter?
+- [ ] Does the document length exceed the project threshold?
+- [ ] Is the current workflow's exploration_mode deep? If so, has the brainstorming hard gate been completed?
 
-## 修订记录
+## Revision History
 
-| 日期 | 修订内容 | 原因 |
+| Date | Revision | Reason |
 |------|---------|------|
-| 2026-06-21 | 初始版本 | 明确 harness-solo 自身约束 |
-| 2026-06-23 | 增加原则 6（探索先行不可绕过）+ AGENTS.md 行数限制 120→150 | 推广 exploration_mode 机制，控制 workflow 交互深度 |
+| 2026-06-21 | Initial version | Clarify harness-solo's own constraints |
+| 2026-06-23 | Add Principle 6 (Exploration first cannot be bypassed) + AGENTS.md line limit 120→150 | Promote the exploration_mode mechanism to control workflow interaction depth |

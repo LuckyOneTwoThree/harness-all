@@ -1,20 +1,20 @@
 ---
 name: planning-roadmap
-description: 当需要制定产品路线图、季度规划、版本规划、资源分配时使用。路线图自动规划。基于OKR和战略方向，规划Epic级别的产品路线图，进行Now/Next/Later分层和RICE评分排序。关键词：产品路线图、版本规划、RICE评分、季度规划、Epic规划、做什么功能、排期规划。
+description: Use when you need to create a product roadmap, quarterly plan, release plan, or allocate resources. Roadmap auto-planning. Based on OKRs and strategic direction, plan Epic-level product roadmaps, perform Now/Next/Later tiering and RICE scoring for prioritization. Keywords: product roadmap, release planning, RICE scoring, quarterly planning, Epic planning, what features to build, schedule planning.
 metadata:
-  module: "产品商业与战略"
-  sub-module: "战略规划与路线图"
+  module: "Product Business & Strategy"
+  sub-module: "Strategic Planning & Roadmap"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["SaaS", "通用"]
+  domain_tags: ["SaaS", "General"]
   trigger_examples:
-    - "帮我规划产品路线图"
-    - "下个版本做什么"
+    - "Help me plan the product roadmap"
+    - "What should the next release include"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出路线图和里程碑"
-  deep_description: "完整路线图 + 依赖关系分析 + 风险缓冲设计 + 多场景路线图"
+  quick_description: "Directly output the roadmap and milestones"
+  deep_description: "Full roadmap + dependency analysis + risk buffer design + multi-scenario roadmap"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -27,270 +27,270 @@ writes:
   - roadmap.json
 ---
 
-# 路线图自动规划
+# Roadmap Auto-Planning
 
-## 核心原则
+## Core Principles
 
-1. **战略主题驱动**——Epic必须从OKR和SWOT战略主题分解而来，不可凭空规划
-2. **RICE量化排序**——所有Epic使用RICE公式量化评分，排序有据可依
-3. **Now/Next/Later分层**——按优先级和时间维度三层层级规划，避免扁平化罗列
-4. **依赖风险显式**——每个Epic标注依赖项和风险，含缓解措施
+1. **Strategic theme driven** — Epics must be decomposed from OKRs and SWOT strategic themes, not planned in a vacuum
+2. **RICE quantitative prioritization** — All Epics use the RICE formula for quantitative scoring, prioritization is evidence-based
+3. **Now/Next/Later tiering** — Plan in three tiers by priority and time dimension, avoid flat listing
+4. **Explicit dependencies and risks** — Each Epic annotates dependencies and risks, including mitigation measures
 
-## 交互模式
-🤖→👤 AI建议人类审批
+## Interaction Mode
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| OKR目标与关键结果 | JSON | 是 | docs/strategy/OKR.md | Objective与Key Results |
-| SWOT战略方向 | JSON | 是 | docs/strategy/PRODUCT_STRATEGY.md（“战略分析”章节） | SO/ST/WO/WT战略方向 |
-| 需求优先级评分 | JSON | ○ | 由 design-prd 覆盖 | RICE评分结果 |
-| 资源约束条件 | JSON | ○ | 用户提供 | 团队容量、预算、时间约束 |
+| OKR objectives and Key Results | JSON | Yes | docs/strategy/OKR.md | Objectives and Key Results |
+| SWOT strategic direction | JSON | Yes | docs/strategy/PRODUCT_STRATEGY.md ("Strategic Analysis" section) | SO/ST/WO/WT strategic directions |
+| Requirement priority score | JSON | ○ | Overridden by design-prd | RICE scoring results |
+| Resource constraints | JSON | ○ | Provided by user | Team capacity, budget, time constraints |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 战略主题提取 [核心]
+### Step 1: Strategic Theme Extraction [Core]
 
-从OKR和SWOT中提取3-5个战略主题：
+Extract 3-5 strategic themes from OKRs and SWOT:
 
 ```
-主题 = 战略方向 + 业务目标 + 价值主张
+Theme = Strategic direction + Business objective + Value proposition
 ```
 
-每个战略主题包含：
-- 主题名称
-- 支撑的OKR
-- 战略意义
+Each strategic theme includes:
+- Theme name
+- Supported OKRs
+- Strategic significance
 
-### Step 2: Epic级别规划 [核心]
+### Step 2: Epic-Level Planning [Core]
 
-将战略主题分解为季度Epic：
+Decompose strategic themes into quarterly Epics:
 
 ```yaml
 epic:
-  name: "Epic名称"
+  name: "Epic name"
   quarter: "Q1 2024"
-  description: "Epic描述"
-  success_metric: "成功指标"
+  description: "Epic description"
+  success_metric: "Success metric"
   rice_score: 75
-  effort: "人月"
+  effort: "Person-months"
   dependencies:
-    - "依赖项1"
-    - "依赖项2"
+    - "Dependency 1"
+    - "Dependency 2"
   risks:
-    - risk: "风险描述"
+    - risk: "Risk description"
       likelihood: "high/medium/low"
-      mitigation: "缓解措施"
+      mitigation: "Mitigation measure"
   key_assumptions:
-    - "关键假设1"
-    - "关键假设2"
+    - "Key assumption 1"
+    - "Key assumption 2"
 ```
 
-### Step 3: Now/Next/Later分层 [核心]
+### Step 3: Now/Next/Later Tiering [Core]
 
-根据RICE评分和时间维度分层：
+Tier based on RICE score and time dimension:
 
-**Now (当前季度)**
-- 已确认的高优先级Epic
-- 必须完成的依赖项
-- 高信心度项目
+**Now (current quarter)**
+- Confirmed high-priority Epics
+- Must-complete dependencies
+- High-confidence items
 
-**Next (下一季度)**
-- 计划中但可调整的Epic
-- 依赖Now阶段结果
-- 中等优先级项目
+**Next (next quarter)**
+- Planned but adjustable Epics
+- Depend on Now phase results
+- Medium-priority items
 
-**Later (远期)**
-- 方向性规划
-- 需进一步验证的假设
-- 低优先级或探索性项目
+**Later (long-term)**
+- Directional planning
+- Assumptions requiring further validation
+- Low-priority or exploratory items
 
-### Step 4: RICE评分计算 [核心]
+### Step 4: RICE Score Calculation [Core]
 
-RICE公式：
+RICE formula:
 ```
 RICE Score = (Reach × Impact × Confidence) ÷ Effort
 ```
 
-评分标准：
-- **Reach (触达)**：影响的用户/客户数量
-- **Impact (影响)**：对目标的正面影响程度 (0.25-3)
-- **Confidence (信心)**：对数据和假设的信心度 (0.5-1)
-- **Effort (工作量)**：完成所需的人月数
+Scoring criteria:
+- **Reach**: Number of users/customers affected
+- **Impact**: Degree of positive impact on the objective (0.25-3)
+- **Confidence**: Confidence in data and assumptions (0.5-1)
+- **Effort**: Person-months required to complete
 
-### Step 5: 风险标注 [核心]
+### Step 5: Risk Annotation [Core]
 
-识别并标注风险：
-- 技术风险
-- 资源风险
-- 依赖风险
-- 市场风险
+Identify and annotate risks:
+- Technical risks
+- Resource risks
+- Dependency risks
+- Market risks
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 路线图和里程碑 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整路线图 + 依赖关系分析 + 风险缓冲设计 + 多场景路线图 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Roadmap and milestones | Core conclusions + minimum viable artifact |
+| standard | Full artifact (current default) | Complete artifact, including all Step outputs |
+| deep | Full roadmap + dependency analysis + risk buffer design + multi-scenario roadmap | Full artifact + extended analysis + deep reasoning |
 
-## 输出
+## Output
 
-**存储路径**：`docs/strategy/roadmap.md`
+**Storage path**: `docs/strategy/roadmap.md`
 
-**输出文件**：roadmap.json
+**Output file**: roadmap.json
 
-### 输出校验规则
+### Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| roadmap.strategic_themes | array | 是 | 3-5个战略主题 |
-| roadmap.strategic_themes[].theme | string | 是 | 主题名称 |
-| roadmap.strategic_themes[].okr_reference | string | 是 | 关联OKR |
-| roadmap.strategic_themes[].priority | number | 否 | 主题优先级排序 |
-| roadmap.quarterly_epics | array | 是 | 季度Epic列表 |
-| roadmap.quarterly_epics[].quarter | string | 是 | 季度标识 |
-| roadmap.quarterly_epics[].epics | array | 是 | Epic列表 |
-| roadmap.quarterly_epics[].epics[].name | string | 是 | Epic名称，不可为空 |
-| roadmap.quarterly_epics[].epics[].success_metric | string | 否 | 成功指标 |
-| roadmap.quarterly_epics[].epics[].rice_score | number | 是 | RICE评分 |
-| roadmap.quarterly_epics[].epics[].effort | number | 是 | 工作量（人月） |
-| roadmap.quarterly_epics[].epics[].dependencies | array | 否 | 依赖项列表 |
-| roadmap.quarterly_epics[].epics[].risks | array | 是 | 风险列表 |
-| roadmap.quarterly_epics[].epics[].risks[].risk | string | 是 | 风险描述 |
-| roadmap.quarterly_epics[].epics[].risks[].likelihood | string | 是 | 可能性，枚举：high/medium/low |
-| roadmap.quarterly_epics[].epics[].risks[].mitigation | string | 否 | 缓解措施 |
-| roadmap.now_next_later | object | 是 | 三层分层 |
-| roadmap.now_next_later.now | array | 是 | 当前季度Epic |
-| roadmap.now_next_later.now[].epic | string | 是 | Epic名称 |
-| roadmap.now_next_later.now[].quarter | string | 否 | 季度标识 |
-| roadmap.now_next_later.now[].rationale | string | 否 | 分层理由 |
-| roadmap.now_next_later.next | array | 是 | 下一季度Epic |
-| roadmap.now_next_later.next[].epic | string | 是 | Epic名称 |
-| roadmap.now_next_later.next[].quarter | string | 否 | 季度标识 |
-| roadmap.now_next_later.next[].rationale | string | 否 | 分层理由 |
-| roadmap.now_next_later.later | array | 是 | 远期Epic |
-| roadmap.now_next_later.later[].epic | string | 是 | Epic名称 |
-| roadmap.now_next_later.later[].quarter | string | 否 | 季度标识 |
-| roadmap.now_next_later.later[].rationale | string | 否 | 分层理由 |
+| roadmap.strategic_themes | array | Yes | 3-5 strategic themes |
+| roadmap.strategic_themes[].theme | string | Yes | Theme name |
+| roadmap.strategic_themes[].okr_reference | string | Yes | Linked OKR |
+| roadmap.strategic_themes[].priority | number | No | Theme priority order |
+| roadmap.quarterly_epics | array | Yes | Quarterly Epic list |
+| roadmap.quarterly_epics[].quarter | string | Yes | Quarter identifier |
+| roadmap.quarterly_epics[].epics | array | Yes | Epic list |
+| roadmap.quarterly_epics[].epics[].name | string | Yes | Epic name, cannot be empty |
+| roadmap.quarterly_epics[].epics[].success_metric | string | No | Success metric |
+| roadmap.quarterly_epics[].epics[].rice_score | number | Yes | RICE score |
+| roadmap.quarterly_epics[].epics[].effort | number | Yes | Effort (person-months) |
+| roadmap.quarterly_epics[].epics[].dependencies | array | No | Dependency list |
+| roadmap.quarterly_epics[].epics[].risks | array | Yes | Risk list |
+| roadmap.quarterly_epics[].epics[].risks[].risk | string | Yes | Risk description |
+| roadmap.quarterly_epics[].epics[].risks[].likelihood | string | Yes | Likelihood, enum: high/medium/low |
+| roadmap.quarterly_epics[].epics[].risks[].mitigation | string | No | Mitigation measure |
+| roadmap.now_next_later | object | Yes | Three-tier layering |
+| roadmap.now_next_later.now | array | Yes | Current quarter Epics |
+| roadmap.now_next_later.now[].epic | string | Yes | Epic name |
+| roadmap.now_next_later.now[].quarter | string | No | Quarter identifier |
+| roadmap.now_next_later.now[].rationale | string | No | Tiering rationale |
+| roadmap.now_next_later.next | array | Yes | Next quarter Epics |
+| roadmap.now_next_later.next[].epic | string | Yes | Epic name |
+| roadmap.now_next_later.next[].quarter | string | No | Quarter identifier |
+| roadmap.now_next_later.next[].rationale | string | No | Tiering rationale |
+| roadmap.now_next_later.later | array | Yes | Long-term Epics |
+| roadmap.now_next_later.later[].epic | string | Yes | Epic name |
+| roadmap.now_next_later.later[].quarter | string | No | Quarter identifier |
+| roadmap.now_next_later.later[].rationale | string | No | Tiering rationale |
 
 ```yaml
 roadmap:
   strategic_themes:
-    - theme: "用户增长"
-      okr_reference: "O1: 提升用户活跃度"
+    - theme: "User Growth"
+      okr_reference: "O1: Increase user engagement"
       priority: 1
-    - theme: "商业变现"
-      okr_reference: "O2: 优化单位经济"
+    - theme: "Monetization"
+      okr_reference: "O2: Optimize unit economics"
       priority: 2
   quarterly_epics:
     - quarter: "Q1 2024"
       epics:
-        - epic: "用户引导优化"
-          success_metric: "新用户激活率提升30%"
+        - epic: "Onboarding optimization"
+          success_metric: "New user activation rate increased by 30%"
           rice_score: 85
           effort: 3
-          dependencies: ["设计资源"]
+          dependencies: ["Design resources"]
           risks:
-            - risk: "技术实现复杂度"
+            - risk: "Technical implementation complexity"
               likelihood: "medium"
-              mitigation: "预留技术调研时间"
+              mitigation: "Reserve time for technical research"
           key_assumptions:
-            - "数据分析支持优化方向"
+            - "Data analysis supports optimization direction"
     - quarter: "Q2 2024"
       epics:
-        - epic: "社交功能开发"
-          success_metric: "用户互动率提升50%"
+        - epic: "Social feature development"
+          success_metric: "User interaction rate increased by 50%"
           rice_score: 72
           effort: 5
-          dependencies: ["后端API支持"]
+          dependencies: ["Backend API support"]
           risks:
-            - risk: "用户隐私合规"
+            - risk: "User privacy compliance"
               likelihood: "high"
-              mitigation: "法务提前介入"
+              mitigation: "Legal team involved early"
           key_assumptions:
-            - "功能上线后用户接受度高"
+            - "High user acceptance after feature launch"
   now_next_later:
     now:
-      - epic: "用户引导优化"
+      - epic: "Onboarding optimization"
         quarter: "Q1"
-        rationale: "高RICE分数，直接支撑OKR"
+        rationale: "High RICE score, directly supports OKR"
     next:
-      - epic: "社交功能开发"
+      - epic: "Social feature development"
         quarter: "Q2"
-        rationale: "依赖Q1数据验证，需进一步调研"
+        rationale: "Depends on Q1 data validation, needs further research"
     later:
-      - epic: "国际化扩展"
+      - epic: "International expansion"
         quarter: "Q3+"
-        rationale: "长期战略方向，需市场验证"
+        rationale: "Long-term strategic direction, needs market validation"
 ```
 
-## 决策规则
+## Decision Rules
 
-1. **RICE计算**：AI自动完成计算
-2. **优先级决策**：人类决策最终优先级
-3. **资源分配**：人类决策季度资源分配
-4. **分层调整**：人类可调整Now/Next/Later分层
+1. **RICE calculation**: AI completes the calculation automatically
+2. **Priority decision**: Human decides the final priority
+3. **Resource allocation**: Human decides quarterly resource allocation
+4. **Tiering adjustment**: Human can adjust Now/Next/Later tiering
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] Epic有明确的成功指标
-- [ ] 所有Epic有依赖关系标注
+- [ ] Epic has a clear success metric
+- [ ] All Epics have dependency annotations
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] Now/Next/Later分层已完成
-- [ ] RICE评分已计算
-- [ ] 风险已识别并有缓解措施
-- [ ] 资源估算合理
+- [ ] Now/Next/Later tiering completed
+- [ ] RICE score calculated
+- [ ] Risks identified with mitigation measures
+- [ ] Resource estimation is reasonable
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only required for deep)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep reasoning and roadmap generated)
+- [ ] Decision record complete (key decisions have rationale and alternatives)
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-当上游文件不存在时，本Skill仍可独立执行：
+When upstream files are missing, this Skill can still execute independently:
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Instructions |
 |---------------|---------|---------|------------|
-| okr.json | 用户提供目标列表 → 直接规划路线图 | 缺乏OKR结构化数据，战略主题与OKR对齐度不足 | 要求用户提供业务目标和关键结果或上传okr.json文件 |
-| strategic-analysis.json | 用户提供目标列表 → 直接规划路线图 | 缺乏战略分析数据，战略主题可能偏离战略方向 | 要求用户提供战略方向和优先级描述或上传strategic-analysis.json文件 |
-| 需求优先级数据（insight-analysis / design-prd） | 用户提供目标列表 → 直接规划路线图 | 缺乏需求优先级数据，RICE评分缺乏输入依据 | 要求用户提供功能需求列表和优先级排序或上传insight-analysis.json文件 |
-| okr.json + strategic-analysis.json + 需求优先级 | 用户提供目标列表 → 直接规划路线图 | 整体置信度降低，Epic排序缺乏数据锚定 | 要求用户提供业务目标、战略方向和功能优先级 |
-| 所有上游文件均缺失 | 提示用户先执行前序阶段，或基于用户提供的目标列表直接规划路线图 | 整体置信度显著降低，路线图仅为通用规划参考 | 要求用户提供业务目标、功能需求和优先级排序 |
-| 资源约束条件（用户提供） | 若用户未提供资源约束条件，提示用户提供或跳过该输入相关步骤 | 缺乏资源约束，Epic工作量估算可能不切实际 | 要求用户提供团队规模、技术栈和可用工期等资源约束信息 |
+| okr.json | User provides objective list → directly plan roadmap | Lacking OKR structured data, strategic themes' alignment with OKR is insufficient | Ask user to provide business objectives and Key Results or upload okr.json file |
+| strategic-analysis.json | User provides objective list → directly plan roadmap | Lacking strategic analysis data, strategic themes may deviate from strategic direction | Ask user to provide strategic direction and priority description or upload strategic-analysis.json file |
+| Requirement priority data (insight-analysis / design-prd) | User provides objective list → directly plan roadmap | Lacking requirement priority data, RICE scoring lacks input basis | Ask user to provide feature requirement list and priority ranking or upload insight-analysis.json file |
+| okr.json + strategic-analysis.json + requirement priority | User provides objective list → directly plan roadmap | Overall confidence reduced, Epic prioritization lacks data anchoring | Ask user to provide business objectives, strategic direction, and feature priorities |
+| All upstream files missing | Prompt user to execute prior phases first, or directly plan roadmap based on user-provided objective list | Overall confidence significantly reduced, roadmap is only a general planning reference | Ask user to provide business objectives, feature requirements, and priority ranking |
+| Resource constraints (user-provided) | If user does not provide resource constraints, prompt user to provide or skip steps related to this input | Lacking resource constraints, Epic effort estimation may be unrealistic | Ask user to provide resource constraint information such as team size, tech stack, and available timeline |
 
-## 数据获取说明
+## Data Acquisition Instructions
 
-本Skill需要OKR、战略分析和需求优先级数据，请通过以下方式之一提供：
-  1. 直接描述业务目标和功能优先级
-  2. 上传okr.json / strategic-analysis.json / insight-analysis.json文件
-  3. 提供数据文件路径
-- AI不负责外部数据采集，仅负责分析
+This Skill requires OKR, strategic analysis, and requirement priority data. Please provide via one of the following methods:
+  1. Directly describe business objectives and feature priorities
+  2. Upload okr.json / strategic-analysis.json / insight-analysis.json files
+  3. Provide the data file path
+- AI is not responsible for external data collection, only for analysis
 
 ---
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| okr.json OKR调整 | 战略主题和Epic规划 | 重新执行Step 1-2，更新战略主题和Epic |
-| strategic-analysis.json战略分析更新 | 战略主题方向 | 重新执行Step 1，更新战略主题 |
-| 需求优先级数据变更 | RICE评分和排序 | 重新执行Step 4，更新RICE评分和分层 |
+| okr.json OKR adjustment | Strategic themes and Epic planning | Re-execute Step 1-2, update strategic themes and Epics |
+| strategic-analysis.json strategic analysis update | Strategic theme direction | Re-execute Step 1, update strategic themes |
+| Requirement priority data change | RICE scoring and ranking | Re-execute Step 4, update RICE scores and tiering |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 变更类型 | 影响范围 | 通知方式 |
+| Change Type | Impact Scope | Notification Method |
 |----------|----------|----------|
-| 战略主题调整 | business-strategy-report、stakeholder-analysis | 输出文件版本号+变更摘要 |
-| Epic优先级变更 | business-strategy-report | 输出文件版本号+变更摘要 |
-| Now/Next/Later分层变更 | stakeholder-analysis | 输出文件版本号+变更摘要 |
+| Strategic theme adjustment | business-strategy-report, stakeholder-analysis | Output file version number + change summary |
+| Epic priority change | business-strategy-report | Output file version number + change summary |
+| Now/Next/Later tiering change | stakeholder-analysis | Output file version number + change summary |

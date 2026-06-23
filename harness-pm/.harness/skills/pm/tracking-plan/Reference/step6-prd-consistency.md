@@ -1,59 +1,59 @@
-<!-- 从 SKILL.md 提取的参考材料，按需查阅 -->
+<!-- Reference material extracted from SKILL.md, consult as needed -->
 
-# Step 6: PRD 埋点方案一致性校验
+# Step 6: PRD Tracking Plan Consistency Validation
 
-> 来源：SKILL.md「Step 6: PRD埋点方案一致性校验」中 6.1~6.4 全部内容
+> Source: All content from 6.1 to 6.4 in SKILL.md "Step 6: PRD Tracking Plan Consistency Validation"
 
-## 6.1 双向校验机制 [条件]
+## 6.1 Bidirectional Validation Mechanism [Conditional]
 
-**正向校验**：PRD功能 → 埋点覆盖
+**Forward validation**: PRD features → Tracking coverage
 
 ```
 FOR each functional_requirement in PRD:
-  1. 识别该功能对应的埋点
-  2. IF 埋点缺失 THEN 标记为未覆盖
-  3. 计算正向覆盖率
+  1. Identify the tracking corresponding to this feature
+  2. IF tracking is missing THEN mark as uncovered
+  3. Calculate the forward coverage rate
 ```
 
-**逆向校验**：埋点 → PRD功能
+**Backward validation**: Tracking → PRD features
 
 ```
 FOR each tracking_event:
-  1. 识别该埋点支持的功能分析
-  2. IF 功能不在PRD中 THEN 标记为额外埋点
-  3. 计算逆向覆盖率
+  1. Identify the feature analysis supported by this tracking
+  2. IF the feature is not in the PRD THEN mark as extra tracking
+  3. Calculate the backward coverage rate
 ```
 
 ---
 
-## 6.2 PRD特征提取 [条件]
+## 6.2 PRD Feature Extraction [Conditional]
 
-**特征类型**：
+**Feature types**:
 
-| 特征类型 | 识别关键词 | 埋点需求 |
+| Feature Type | Identification Keywords | Tracking Requirement |
 |---------|-----------|---------|
-| 页面 | 页面、模块、Tab | page_view + 页面属性 |
-| 按钮 | 点击、按下、触发 | button_click + 按钮属性 |
-| 表单 | 填写、输入、提交 | input + form_submit |
-| 列表 | 列表、浏览、翻页 | list_view + item_click |
-| 详情 | 详情、查看、内容 | detail_view + 详情属性 |
-| 流程 | 流程、步骤、完成 | flow_start + flow_complete |
-| 异常 | 失败、错误、超时 | error + 错误详情 |
+| Page | page, module, tab | page_view + page properties |
+| Button | click, press, trigger | button_click + button properties |
+| Form | fill, input, submit | input + form_submit |
+| List | list, browse, paginate | list_view + item_click |
+| Detail | detail, view, content | detail_view + detail properties |
+| Flow | flow, step, complete | flow_start + flow_complete |
+| Exception | failure, error, timeout | error + error details |
 
 ---
 
-## 6.3 一致性评分 [条件]
+## 6.3 Consistency Scoring [Conditional]
 
-**评分规则**：
+**Scoring rules**:
 
 ```python
 def calculate_prd_consistency_score():
-    forward_coverage = calculate_forward_coverage()  # PRD→埋点
-    backward_coverage = calculate_backward_coverage()  # 埋点→PRD
+    forward_coverage = calculate_forward_coverage()  # PRD → tracking
+    backward_coverage = calculate_backward_coverage()  # tracking → PRD
 
     consistency_score = (
-        0.6 * forward_coverage +  # 正向权重60%
-        0.4 * backward_coverage   # 逆向权重40%
+        0.6 * forward_coverage +  # Forward weight 60%
+        0.4 * backward_coverage   # Backward weight 40%
     )
 
     return {
@@ -66,18 +66,18 @@ def calculate_prd_consistency_score():
 
 ---
 
-## 6.4 持续校验机制 [深度]
+## 6.4 Continuous Validation Mechanism [Deep]
 
-**触发时机**：
+**Trigger timing**:
 
-| 触发类型 | 触发条件 | 校验内容 |
+| Trigger Type | Trigger Condition | Validation Content |
 |---------|---------|---------|
-| PRD变更触发 | PRD文档更新 | 新增功能是否已埋点 |
-| 埋点变更触发 | 埋点方案更新 | 变更是否影响PRD覆盖 |
-| 定期校验 | 每周/每月 | 全量一致性检查 |
-| 上线前校验 | 发布前 | 变更部分专项校验 |
+| PRD change trigger | PRD document updated | Whether new features are tracked |
+| Tracking change trigger | Tracking plan updated | Whether the change affects PRD coverage |
+| Periodic validation | Weekly/Monthly | Full consistency check |
+| Pre-release validation | Before release | Targeted validation of changed portions |
 
-**校验输出**：
+**Validation output**:
 
 ```json
 {
@@ -89,8 +89,8 @@ def calculate_prd_consistency_score():
     "discrepancies": [
       {
         "type": "uncovered_function",
-        "description": "商品分享功能未配置埋点",
-        "prd_reference": "PRD章节3.2",
+        "description": "Product sharing feature has no tracking configured",
+        "prd_reference": "PRD section 3.2",
         "severity": "high",
         "suggested_event": "product_share"
       }

@@ -2,9 +2,9 @@
 name: design-recommendation
 description: Generates data-driven design recommendations based on product type. Use when a new design system needs to be created. Use when product type is identified in DESIGN_BRIEF.md.
 triggers:
-  - 需要设计推荐
-  - 创建设计系统前
-  - DESIGN_BRIEF.md 已存在
+  - Design recommendation needed
+  - Before creating a design system
+  - DESIGN_BRIEF.md already exists
 reads:
   - docs/visual/DESIGN_BRIEF.md
   - .harness/data/design/reasoning.csv
@@ -21,106 +21,106 @@ writes:
 
 ## Overview
 
-根据产品类型推荐风格/配色/字体/落地页模式。数据驱动决策，不靠 LLM "发明"设计决策。
+Recommends style / color palette / font / landing page patterns based on product type. Data-driven decisions; do not rely on LLM to "invent" design decisions.
 
 ## When to Use
 
-- ✅ 需要设计推荐
-- ✅ 创建设计系统前（design-system skill 的前置）
-- ✅ DESIGN_BRIEF.md 已存在且产品类型已识别
-- ❌ NOT for 已有 RECOMMENDATION.md 且产品类型未变
+- ✅ Design recommendation needed
+- ✅ Before creating a design system (prerequisite for the design-system skill)
+- ✅ DESIGN_BRIEF.md exists and product type identified
+- ❌ NOT for cases where RECOMMENDATION.md already exists and product type is unchanged
 
 ## Process
 
-### 1. 读取产品类型
+### 1. Read Product Type
 
-从 `docs/visual/DESIGN_BRIEF.md` 读取 Product Type。
+Read Product Type from `docs/visual/DESIGN_BRIEF.md`.
 
-### 2. Grep 精确匹配 reasoning.csv
+### 2. Grep Exact Match in reasoning.csv
 
 ```
 Grep pattern="<Product Type>" path=".harness/data/design/reasoning.csv"
 ```
 
-解析命中行的字段：
+Parse fields of the matched line:
 - recommended_pattern
-- style_priority（用 `+` 分割成关键词列表）
+- style_priority (split on `+` into a keyword list)
 - color_mood
 - typography_mood
 - key_effects
 - anti_patterns
-- decision_rules（JSON，如 `{"if_luxury": "switch-to-minimal"}`）
+- decision_rules (JSON, e.g., `{"if_luxury": "switch-to-minimal"}`)
 - severity
 
-**Fallback**：若 reasoning.csv 未命中或文件为空，调用先验知识推理，但必须加警告：
+**Fallback**: If reasoning.csv has no match or is empty, invoke prior knowledge reasoning, but must add a warning:
 ```
 [WARNING: Using LLM Prior Knowledge due to empty/unmatched CSV]
 ```
 
-### 3. Grep 匹配 products.csv
+### 3. Grep Match in products.csv
 
 ```
 Grep pattern="<Product Type>" path=".harness/data/design/products.csv"
 ```
 
-解析：primary_style / secondary_styles / landing_pattern / color_palette_focus / key_considerations
+Parse: primary_style / secondary_styles / landing_pattern / color_palette_focus / key_considerations
 
-### 4. 多域检索
+### 4. Multi-domain Retrieval
 
-对 styles/colors/typography/landing 各跑一次 Grep：
+Run a Grep for each of styles/colors/typography/landing:
 
-- **styles.csv**：用 style_priority 关键词加权 Grep
-- **colors.csv**：用产品类型 Grep
-- **typography.csv**：用 typography_mood Grep
-- **landing.csv**：用 recommended_pattern Grep
+- **styles.csv**: Weighted Grep using style_priority keywords
+- **colors.csv**: Grep using product type
+- **typography.csv**: Grep using typography_mood
+- **landing.csv**: Grep using recommended_pattern
 
-### 5. Agent 推理
+### 5. Agent Reasoning
 
-把 5 域结果 + reasoning 规则 + decision_rules 喂给 LLM，承担"三级匹配"职责：
-1. 精确风格名匹配
-2. 关键词字段打分
-3. 默认首位
+Feed the 5-domain results + reasoning rules + decision_rules to the LLM, which performs the "three-level matching" duty:
+1. Exact style name match
+2. Keyword field scoring
+3. Default to first entry
 
-应用 decision_rules（如 `if_luxury: switch-to-minimal`）。
+Apply decision_rules (e.g., `if_luxury: switch-to-minimal`).
 
-### 6. 输出
+### 6. Output
 
-写入 `docs/design-system/RECOMMENDATION.md`。
+Write to `docs/design-system/RECOMMENDATION.md`.
 
-## RECOMMENDATION.md 输出格式
+## RECOMMENDATION.md Output Format
 
 ```markdown
 # Design Recommendation
 
 ## Product Type
-<识别结果>
+<Identification result>
 
 ## Recommended Pattern
-<落地页结构 + Section Order + CTA Placement>
+<Landing page structure + Section Order + CTA Placement>
 
 ## Recommended Style
-- 风格名：<从 styles.csv 匹配>
-- AI Prompt Keywords：<...>
-- CSS Keywords：<...>
-- Design System Variables：<...>
+- Style name: <Matched from styles.csv>
+- AI Prompt Keywords: <...>
+- CSS Keywords: <...>
+- Design System Variables: <...>
 
 ## Recommended Color Palette
-<17 列语义化 token：primary/on-primary/secondary/accent/...>
+<17-column semantic tokens: primary/on-primary/secondary/accent/...>
 
 ## Recommended Typography
-- 字体对：<从 typography.csv 匹配>
-- Google Fonts URL：<...>
-- CSS Import：<...>
-- Tailwind Config：<...>
+- Font pair: <Matched from typography.csv>
+- Google Fonts URL: <...>
+- CSS Import: <...>
+- Tailwind Config: <...>
 
 ## Key Effects
-<动效/阴影/圆角建议>
+<Motion / shadow / border radius recommendations>
 
 ## Anti-patterns
-<该产品类型应避免的设计>
+<Designs to avoid for this product type>
 
 ## Decision Rules
-<JSON 条件规则，供后续 skill 解析>
+<JSON conditional rules, parsed by downstream skills>
 
 ## Severity
 <CRITICAL/HIGH/MEDIUM>
@@ -128,29 +128,29 @@ Grep pattern="<Product Type>" path=".harness/data/design/products.csv"
 
 ## Common Rationalizations
 
-| 借口 | 现实 |
-|------|------|
-| "我凭经验推荐就行" | 数据驱动比经验更稳定，6 个产品类型有明确推荐 |
-| "推荐会限制创意" | 推荐是起点不是终点，用户可覆盖 |
-| "数据文件不全没法推荐" | 有 Fallback 机制，先验知识 + WARNING 标签 |
+| Excuse | Reality |
+|--------|---------|
+| "I'll just recommend based on experience" | Data-driven is more stable than experience; 6 product types have clear recommendations |
+| "Recommendations limit creativity" | Recommendations are a starting point, not an endpoint; users can override |
+| "Data files are incomplete, can't recommend" | There's a Fallback mechanism: prior knowledge + WARNING label |
 
 ## Red Flags
 
-- 跳过数据检索直接用先验知识
-- 未应用 decision_rules
-- 推荐结果未标注数据来源（CSV vs 先验知识）
+- Skipping data retrieval and going straight to prior knowledge
+- decision_rules not applied
+- Recommendation results not annotated with data source (CSV vs prior knowledge)
 
 ## Verification
 
-- [ ] reasoning.csv 已检索（证据：Grep 命令执行记录）
-- [ ] 5 域检索完成（证据：每个域有 Grep 记录）
-- [ ] decision_rules 已应用（证据：RECOMMENDATION.md 体现条件逻辑）
-- [ ] 若用先验知识有 WARNING 标签（证据：文件内容）
-- [ ] RECOMMENDATION.md 字段齐全（证据：文件内容）
+- [ ] reasoning.csv retrieved (evidence: Grep command execution record)
+- [ ] 5-domain retrieval completed (evidence: each domain has a Grep record)
+- [ ] decision_rules applied (evidence: RECOMMENDATION.md reflects conditional logic)
+- [ ] If prior knowledge used, WARNING label present (evidence: file content)
+- [ ] RECOMMENDATION.md fields complete (evidence: file content)
 
-## 与 LOOP 的关系
+## Relationship with LOOP
 
-- 不在 LOOP 内运行（在 LOOP 前的推荐阶段运行）
-- 产出的 RECOMMENDATION.md 供 design-system skill 读取作为基础
-- 产出的 Anti-patterns 供 design-lint skill 检查
-- 产出的 Decision Rules 供后续 skill 解析
+- Not run inside LOOP (runs in the pre-LOOP recommendation stage)
+- The RECOMMENDATION.md produced is consumed by the design-system skill as a baseline
+- The Anti-patterns produced are checked by the design-lint skill
+- The Decision Rules produced are parsed by downstream skills

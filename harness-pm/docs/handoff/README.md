@@ -1,46 +1,46 @@
-# 交接文档目录
+# Handoff Document Directory
 
-本目录存放 harness 家族框架之间的交接文档。
+This directory stores handoff documents between harness family frameworks.
 
-## 交接协议
+## Handoff Protocol
 
-每个交接文档遵循统一格式，让下游框架的 Agent 能快速理解上游产出。
+Each handoff document follows a unified format so that downstream framework Agents can quickly understand upstream outputs.
 
-## 文档命名规范
+## Document Naming Convention
 
 ```
-<源框架>-to-<目标框架>.md
+<source-framework>-to-<target-framework>.md
 ```
 
-例如：
-- `pm-to-solo.md` — harness-pm 交给 harness-solo（产品 → 工程）
-- `solo-to-pm.md` — harness-solo 交给 harness-pm（工程 → 产品，反馈）
-- `pm-to-design.md` — harness-pm 交给 harness-design（产品 → 设计）
-- `pm-to-growth.md` — harness-pm 交给 harness-growth（产品 → 增长）
-- `growth-to-pm.md` — harness-growth 交给 harness-pm（增长 → 产品，数据反馈）
+For example:
+- `pm-to-solo.md` — harness-pm hands off to harness-solo (Product → Engineering)
+- `solo-to-pm.md` — harness-solo hands off to harness-pm (Engineering → Product, feedback)
+- `pm-to-design.md` — harness-pm hands off to harness-design (Product → Design)
+- `pm-to-growth.md` — harness-pm hands off to harness-growth (Product → Growth)
+- `growth-to-pm.md` — harness-growth hands off to harness-pm (Growth → Product, data feedback)
 
-## 使用方式
+## Usage
 
-1. 上游框架在完成自己阶段后，按模板生成交接文档放入本目录
-2. 下游框架的 session-start skill 会自动检测并读取对应交接文档
-3. 也可手动放入（如从其他项目复制 PRD 过来）
+1. After completing its phase, the upstream framework generates a handoff document from the template and places it in this directory
+2. The downstream framework's session-start skill will auto-detect and read the corresponding handoff document
+3. You can also place files manually (e.g., copy a PRD from another project)
 
-## 模板
+## Templates
 
-- `handoff-template.md` — 通用交接模板
-- `pm-to-solo-template.md` — harness-pm → harness-solo 专用模板（含 PRD 路径 + AC-xxx + 功能优先级 + 埋点方案）
-- `pm-to-design-template.md` — harness-pm → harness-design 专用模板（含 PRD 路径 + AC-xxx + Persona + 风格关键词）
-- `pm-to-growth-template.md` — harness-pm → harness-growth 专用模板（含 OKR + 北极星指标 + 增长假设）
+- `handoff-template.md` — Generic handoff template
+- `pm-to-solo-template.md` — harness-pm → harness-solo dedicated template (includes PRD path + AC-xxx + feature priorities + tracking plan)
+- `pm-to-design-template.md` — harness-pm → harness-design dedicated template (includes PRD path + AC-xxx + Persona + style keywords)
+- `pm-to-growth-template.md` — harness-pm → harness-growth dedicated template (includes OKR + North Star metric + growth hypotheses)
 
-复制后按实际情况填写。
+Copy and fill in based on actual conditions.
 
-## harness-pm 的交接职责
+## harness-pm Handoff Responsibilities
 
-### 产出（pm 交给下游）
-- `pm-to-solo.md` — PRD + 设计规范 + 埋点方案 → 交给工程开发
-- `pm-to-design.md` — PRD + 定位陈述 → 交给 UI 设计
-- `pm-to-growth.md` — 指标体系 + 增长策略 → 交给运营增长
+### Produced (pm hands off to downstream)
+- `pm-to-solo.md` — PRD + design specs + tracking plan → handed off to engineering for development
+- `pm-to-design.md` — PRD + positioning statement → handed off to UI design
+- `pm-to-growth.md` — Metric system + growth strategy → handed off to growth operations
 
-### 消费（下游交给 pm）
-- `solo-to-pm.md` — 工程反馈（已实现功能/技术约束/未决问题）
-- `growth-to-pm.md` — 增长数据反馈（实验结果/用户反馈）
+### Consumed (downstream hands off to pm)
+- `solo-to-pm.md` — Engineering feedback (implemented features / technical constraints / open issues)
+- `growth-to-pm.md` — Growth data feedback (experiment results / user feedback)

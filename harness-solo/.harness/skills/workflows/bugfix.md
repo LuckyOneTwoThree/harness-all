@@ -4,94 +4,98 @@ name: bugfix
 default_mode: standard
 ---
 
-# 工作流 B：Bug 修复
+# Workflow B: Bug Fix
 
-> 适用场景：修复线上 Bug、测试失败、功能异常
-> 核心模式：systematic-debugging 找根因 → LOOP 循环修复 → code-review 审查
+> Applicable scenario: Fix production bugs, test failures, feature anomalies
+> Core mode: systematic-debugging to find root cause → LOOP iterative fix → code-review
 
-## 流程
+## Process
 
 ```
 ┌─────────────────┐
-│ session-start   │  加载上下文，确认 Bug 现象
+│ session-start   │  Load context, confirm bug symptoms
 └────────┬────────┘
          ▼
 ┌──────────────────────┐
-│ systematic-debugging │  ★ 根因分析
-│                      │  - 写复现测试
-│                      │  - 二分法定位
-│                      │  - 5 Why 找根因
-│                      │  - 记录到 knowledge-base.md
+│ systematic-debugging │  ★ Root cause analysis
+│                      │  - Write reproduction test
+│                      │  - Bisection to locate
+│                      │  - 5 Whys to find root cause
+│                      │  - Record to knowledge-base.md
 └────────┬─────────────┘
-         │ 找到根因
+         │ Root cause found
          ▼
 ┌─────────────────────────────────────────┐
-│              LOOP 循环修复               │
+│              LOOP iterative fix         │
 │  ┌─────────────────────────────────┐    │
 │  │ test-driven-development (ACT)   │    │
-│  │  复现测试已写好 → 修复根因       │    │
-│  │  红（复现）→ 绿（修复）→ 重构   │    │
+│  │  Reproduction test ready →      │    │
+│  │  fix root cause                 │    │
+│  │  Red (reproduce) → Green (fix)  │    │
+│  │  → Refactor                     │    │
 │  └──────────┬──────────────────────┘    │
 │             ▼                            │
 │  ┌─────────────────────────────────┐    │
 │  │ verify (VERIFY)                 │    │
-│  │  复现测试通过 + 全量测试不回归  │    │
+│  │  Reproduction test passes +     │    │
+│  │  full test suite no regression  │    │
 │  └──────────┬──────────────────────┘    │
 │             │                            │
-│             ├── 通过 → 跳出 LOOP ────────┼──→
+│             ├── Pass → exit LOOP ────────┼──→
 │             │                            │
-│             └── 失败                     │
+│             └── Fail                     │
 │                   │                      │
 │                   ▼                      │
 │  ┌─────────────────────────────────┐    │
 │  │ systematic-debugging            │    │
-│  │  重新分析根因（上次找错了）     │    │
+│  │  Re-analyze root cause          │    │
+│  │  (last attempt was wrong)       │    │
 │  └──────────┬──────────────────────┘    │
 │             │                            │
-│             └── 回到 tdd ────────────────┘
+│             └── Back to tdd ─────────────┘
 │                                          │
-│  迭代上限：3 次（bugfix 类型）           │
-│  超限 → 请求人类介入                     │
+│  Iteration cap: 3 (bugfix type)         │
+│  Exceeded → request human intervention  │
 └─────────────────────────────────────────┘
          │
          ▼
 ┌─────────────────────┐
-│ requesting-code-review │  审查修复质量
-│                       │  - 修复是否引入新问题
-│                       │  - 有没有同类问题需要一起修
+│ requesting-code-review │  Review fix quality
+│                       │  - Did the fix introduce new issues
+│                       │  - Are there similar issues to fix together
 └──────────┬────────────┘
-           │ 通过
+           │ Passed
            ▼
 ┌─────────────────┐
-│ session-end     │  归档 + baseline
+│ session-end     │  Archive + baseline
 └─────────────────┘
 ```
 
-## 与新功能开发的差异
+## Differences from New Feature Development
 
-| 维度 | 新功能 | Bug 修复 |
+| Dimension | New Feature | Bug Fix |
 |------|--------|---------|
-| 前置 | brainstorming（需求探索） | systematic-debugging（根因分析） |
-| LOOP 上限 | 5 次 | 3 次 |
-| tdd 起点 | 从验收标准写测试 | 从复现 Bug 写测试 |
-| verify 重点 | AC 满足 | 复现通过 + 不回归 |
-| code-review 重点 | 设计质量 | 修复是否彻底、有无同类问题 |
+| Prerequisite | brainstorming (requirements exploration) | systematic-debugging (root cause analysis) |
+| LOOP cap | 5 | 3 |
+| tdd starting point | Write tests from acceptance criteria | Write tests from bug reproduction |
+| verify focus | AC satisfied | Reproduction passes + no regression |
+| code-review focus | Design quality | Whether the fix is thorough, whether similar issues exist |
 
-## 关键检查点
+## Key Checkpoints
 
-- [ ] Bug 能稳定复现吗？（不能复现 = 还没理解）
-- [ ] 找的是根因还是症状？（5 Why 至少 3 次）
-- [ ] 复现测试写了吗？
-- [ ] 全量测试跑了吗？（确认不回归）
-- [ ] 同类问题检查了吗？（同样的根因可能在别处）
-- [ ] 教训记录到 knowledge-base.md 了吗？
-- [ ] 回归测试补了吗？（走 `test-coverage` skill 补同类问题的回归测试）
+- [ ] Can the bug be reliably reproduced? (Cannot reproduce = not yet understood)
+- [ ] Are you finding the root cause or just symptoms? (5 Whys at least 3 times)
+- [ ] Was the reproduction test written?
+- [ ] Was the full test suite run? (Confirm no regression)
+- [ ] Were similar issues checked? (The same root cause may exist elsewhere)
+- [ ] Was the lesson recorded in knowledge-base.md?
+- [ ] Were regression tests added? (Use the `test-coverage` skill to add regression tests for similar issues)
 
-## 失败处理
+## Failure Handling
 
-| 失败点 | 处理方式 |
+| Failure Point | Handling |
 |--------|---------|
-| 无法稳定复现 | 不许动手修，继续观察/加日志 |
-| LOOP 迭代超 3 次 | 根因找错了，请求人类介入 |
-| 修复引入新问题 | 回退，重新分析根因 |
-| 同类问题发现多处 | 一起修，不要修一个漏一个 |
+| Cannot reliably reproduce | Don't start fixing; keep observing / add logging |
+| LOOP iterations exceed 3 | Root cause was wrong; request human intervention |
+| Fix introduces new issues | Roll back and re-analyze root cause |
+| Multiple similar issues found | Fix them together; don't fix one and miss another |

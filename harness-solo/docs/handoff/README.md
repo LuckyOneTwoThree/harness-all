@@ -1,32 +1,32 @@
-# 交接文档目录
+# Handoff Document Directory
 
-本目录存放 harness 家族框架之间的交接文档。
+This directory stores handoff documents between harness family frameworks.
 
-## 交接协议
+## Handoff Protocol
 
-每个交接文档遵循统一格式，让下游框架的 Agent 能快速理解上游产出。
+Each handoff document follows a unified format so that downstream framework Agents can quickly understand upstream outputs.
 
-## 文档命名规范
+## Document Naming Convention
 
 ```
-<源框架>-to-<目标框架>.md
+<source-framework>-to-<target-framework>.md
 ```
 
-例如：
-- `pm-to-solo.md` — harness-pm 交给 harness-solo（产品 → 工程）
-- `solo-to-growth.md` — harness-solo 交给 harness-growth（工程 → 增长）
-- `design-to-solo.md` — harness-design 交给 harness-solo（设计 → 工程）
+For example:
+- `pm-to-solo.md` — harness-pm hands off to harness-solo (Product → Engineering)
+- `solo-to-growth.md` — harness-solo hands off to harness-growth (Engineering → Growth)
+- `design-to-solo.md` — harness-design hands off to harness-solo (Design → Engineering)
 
-## 使用方式
+## Usage
 
-1. 上游框架在完成自己阶段后，按模板生成交接文档放入本目录
-2. 下游框架的 brainstorming skill 会自动检测并读取对应交接文档
-3. 也可手动放入（如从其他项目复制 PRD 过来）
+1. After completing its phase, the upstream framework generates a handoff document from the template and places it in this directory
+2. The downstream framework's brainstorming skill will auto-detect and read the corresponding handoff document
+3. You can also place files manually (e.g., copy a PRD from another project)
 
-## 模板
+## Templates
 
-- `handoff-template.md` — 通用交接模板
-- `solo-to-growth-template.md` — harness-solo → harness-growth 专用模板（含已实现功能清单 + AC-xxx + 性能指标 + 埋点事件）
-- `solo-to-ops-template.md` — harness-solo → 运维专用模板（工程交付给运维：部署清单 + 配置项 + 监控告警 + 回滚预案）
+- `handoff-template.md` — Generic handoff template
+- `solo-to-growth-template.md` — harness-solo → harness-growth dedicated template (includes implemented features list + AC-xxx + performance metrics + tracking events)
+- `solo-to-ops-template.md` — harness-solo → ops dedicated template (engineering handoff to ops: deployment checklist + config items + monitoring alerts + rollback plan)
 
-复制后按实际情况填写。
+Copy and fill in based on actual conditions.

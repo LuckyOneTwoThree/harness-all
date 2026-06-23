@@ -1,24 +1,24 @@
-# 交接单：运维反馈给产品（Ops to PM）
+# Handoff: Ops Feedback to PM (Ops to PM)
 
-> **来自**：harness-ops (运维)
-> **发往**：harness-pm (产品/项目组)
-> **目的**：汇报线上服务稳定性、成本状态，或通报事故
+> **From**: harness-ops (Operations)
+> **To**: harness-pm (Product / Project team)
+> **Purpose**: Report online service stability, cost status, or notify of incidents
 
-## 1. 大盘可用性摘要（SLA Summary）
+## 1. SLA Summary
 
-- **统计周期**：`[YYYY-MM-DD 至 YYYY-MM-DD]`
-- **核心链路可用性**：`[例如：99.99%]`
-- **资源使用率与成本**：`[例如：本月云服务账单预估 $500，CPU 水位 40%]`
+- **Reporting period**: `[YYYY-MM-DD to YYYY-MM-DD]`
+- **Core path availability**: `[e.g., 99.99%]`
+- **Resource utilization and cost**: `[e.g., estimated cloud bill this month $500, CPU utilization 40%]`
 
-## 2. 事故与故障通报（Incidents）
+## 2. Incidents (Incidents)
 
-_如果没有发生 P0/P1 故障，此项填无_
+_If no P0/P1 incidents occurred, fill in "None"_
 
-- **故障描述**：`[发生了什么，例如：支付接口在周五晚宕机 15 分钟]`
-- **根本原因（Root Cause）**：`[为什么发生，例如：上游 API 变更导致反序列化失败]`
-- **修复措施与改进计划**：`[怎么解决的，以后怎么防范]`
+- **Incident description**: `[what happened, e.g., payment API was down for 15 minutes on Friday night]`
+- **Root Cause**: `[why it happened, e.g., upstream API change caused deserialization failure]`
+- **Remediation and improvement plan**: `[how it was resolved, how to prevent it in the future]`
 
-## 3. 运维对业务的建议（Ops Recommendations）
+## 3. Ops Recommendations to Business (Ops Recommendations)
 
-- `[例如：历史订单表查询极慢导致数据库 CPU 飙升，建议下个版本 PM 规划"数据冷热分离"需求]`
-- `[例如：当前系统存在单点故障风险，请求立项进行多可用区容灾重构]`
+- `[e.g., historical order table queries are extremely slow causing database CPU spikes; recommend PM plan a "hot-cold data separation" requirement in the next version]`
+- `[e.g., the current system has a single-point-of-failure risk; request a project to be initiated for multi-AZ disaster recovery refactoring]`

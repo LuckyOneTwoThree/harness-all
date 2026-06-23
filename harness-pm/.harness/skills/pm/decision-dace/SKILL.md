@@ -1,24 +1,24 @@
 ---
 name: decision-dace
-description: 当需要执行数据驱动决策闭环或将数据转化为可执行洞察时使用。DACE循环自动化，Define/Analyze由AI自动执行，Conclude由AI辅助人类决策，Execute由AI追踪执行效果。Analyze阶段融合洞察转化能力，将分析结果转化为故事化洞察、决策建议和决策边界标注。关键词：DACE循环、数据决策、决策闭环、数据驱动、决策框架、决策循环、数据分析闭环、用数据做决策、决策流程、怎么用数据推动行动、数据洞察、洞察转化、决策建议、故事化分析、数据故事、数据看不懂、把数据变成人话、数据说明了什么。
+description: Use when you need to execute a data-driven decision loop or transform data into actionable insights. DACE cycle automation, where Define/Analyze is automatically executed by AI, Conclude is AI-assisted human decision-making, and Execute is tracked by AI for execution effectiveness. The Analyze phase integrates insight transformation capabilities, transforming analysis results into narrative insights, decision recommendations, and decision boundary annotations. Keywords: DACE cycle, data decision, decision loop, data-driven, decision framework, decision cycle, data analysis loop, making decisions with data, decision process, how to use data to drive action, data insights, insight transformation, decision recommendations, narrative analysis, data story, can't understand data, turn data into human language, what the data says.
 metadata:
-  module: "产品度量运营"
-  sub-module: "决策闭环"
+  module: "Product Metrics & Operations"
+  sub-module: "Decision Loop"
   type: "pipeline"
   version: "2.0"
-  domain_tags: ["通用"]
+  domain_tags: ["General"]
   trigger_examples:
-    - "帮我用DACE方法做一个数据决策"
-    - "从数据到行动的完整闭环怎么做"
-    - "数据分析了但没人执行怎么办"
-    - "这些数据说明了什么，帮我解读一下"
-    - "把分析结果变成能讲的故事"
-    - "数据太干了，帮我转化成可执行的建议"
+    - "Help me make a data decision using the DACE method"
+    - "How to do a complete loop from data to action"
+    - "Data was analyzed but no one executes, what to do"
+    - "What does this data say, help me interpret it"
+    - "Turn analysis results into a tellable story"
+    - "The data is too dry, help me transform it into actionable recommendations"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "仅输出决策建议和关键依据"
-  deep_description: "完整分析 + 决策树 + 敏感性分析 + 反事实推理"
+  quick_description: "Only output decision recommendations and key rationale"
+  deep_description: "Complete analysis + decision tree + sensitivity analysis + counterfactual reasoning"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -32,234 +32,234 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# DACE循环自动化（含洞察转化）
+# DACE Cycle Automation (with Insight Transformation)
 
-## 核心原则
+## Core Principles
 
-1. **Define是方向，Analyze是证据**：没有明确目标的分析和没有证据支撑的决策同样危险
-2. **Conclude权在人类，Execute追踪在系统**：AI提供选项和边界，人类做最终决策，系统负责追踪执行效果
-3. **闭环才是完整**：DACE缺一不可，没有Execute的Conclude是空谈，没有Analyze的Conclude是赌博
-4. **数据是起点，洞察是终点，行动是目的**：没有行动方向的洞察只是数据展示
-5. **故事化而非术语化**：将"p=0.001"翻译为"99.9%可信度"，让决策者听懂才能行动
-6. **边界标注比推荐更重要**：明确哪些可自动执行、哪些需人类确认，比简单推荐更有价值
+1. **Define is direction, Analyze is evidence**: Analysis without clear goals and decisions without evidence support are equally dangerous
+2. **Conclude authority belongs to humans, Execute tracking belongs to the system**: AI provides options and boundaries, humans make final decisions, the system tracks execution effectiveness
+3. **A loop is complete**: DACE is indispensable; Conclude without Execute is empty talk, Conclude without Analyze is gambling
+4. **Data is the starting point, insight is the endpoint, action is the purpose**: Insights without action direction are just data display
+5. **Narrative over terminology**: Translate "p=0.001" into "99.9% confidence", so decision-makers can understand and act
+6. **Boundary annotation is more important than recommendation**: Clearly marking what can be auto-executed and what requires human confirmation is more valuable than simple recommendations
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Input
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| OKR数据 | object | 是 | 用户提供 | 目标与关键结果、基线值与目标值 |
-| KR进度 | object | 是 | docs/strategy/OKR.md | 各KR当前进度与偏差分析 |
-| 实验结果 | object | 是 | docs/metrics/experiment-report.md（"实验结果"章节） | A/B测试结果、异常检测数据 |
-| 分析结果-异常 | object | 是 | docs/metrics/data-analysis-report.md（"异常分析"章节） | anomaly报告 |
-| 分析结果-漏斗 | object | 是 | docs/metrics/data-analysis-report.md（"漏斗分析"章节） | funnel报告 |
-| 分析结果-留存 | object | 是 | docs/metrics/data-analysis-report.md（"留存分析"章节） | retention报告 |
-| 业务上下文 | object | ○ | 用户提供 | 产品阶段、团队目标 |
-| 历史洞察库 | object[] | ○ | docs/metrics/decision-report.md（"DACE决策"章节） | 避免重复 |
+| OKR Data | object | Yes | User-provided | Objectives and Key Results, baseline values and target values |
+| KR Progress | object | Yes | docs/strategy/OKR.md | Current progress and deviation analysis for each KR |
+| Experiment Results | object | Yes | docs/metrics/experiment-report.md ("Experiment Results" section) | A/B test results, anomaly detection data |
+| Analysis Results - Anomaly | object | Yes | docs/metrics/data-analysis-report.md ("Anomaly Analysis" section) | Anomaly report |
+| Analysis Results - Funnel | object | Yes | docs/metrics/data-analysis-report.md ("Funnel Analysis" section) | Funnel report |
+| Analysis Results - Retention | object | Yes | docs/metrics/data-analysis-report.md ("Retention Analysis" section) | Retention report |
+| Business Context | object | ○ | User-provided | Product stage, team goals |
+| Historical Insight Library | object[] | ○ | docs/metrics/decision-report.md ("DACE Decisions" section) | Avoid duplication |
 
-## 执行步骤
+## Execution Steps
 
-### DACE四阶段
+### DACE Four Phases
 
 ```
 ┌────────────────────────────────────────────────────────┐
-│                     DACE循环                            │
+│                     DACE Cycle                          │
 ├────────────────────────────────────────────────────────┤
 │                                                        │
 │   ┌─────────┐                                          │
-│   │  Define │  定义目标与成功指标                        │
+│   │  Define │  Define goals and success metrics        │
 │   └────┬────┘                                          │
 │        │                                                │
 │        ▼                                                │
 │   ┌─────────┐                                          │
-│   │ Analyze │  洞察生成：数据→故事→决策建议              │
+│   │ Analyze │  Insight generation: data→story→decision │
 │   └────┬────┘                                          │
 │        │                                                │
 │        ▼                                                │
 │   ┌─────────┐                                          │
-│   │Conclude │  得出结论与决策建议      ◀──────┐         │
-│   └────┬────┘                               │         │
-│        │                                    │         │
-│        ▼                                    │         │
-│   ┌─────────┐                               │         │
-│   │ Execute │  执行策略并追踪效果 ───────────┘         │
-│   └─────────┘       │                             │    │
-│        │            │                             │    │
-│        ▼            │                             │    │
-│   返回Analyze ◀─────┘                             │    │
+│   │Conclude │  Draw conclusions and decision recommendations  ◀──┐  │
+│   └────┬────┘                                          │  │
+│        │                                               │  │
+│        ▼                                               │  │
+│   ┌─────────┐                                          │  │
+│   │ Execute │  Execute strategy and track effectiveness ─┘  │
+│   └─────────┘       │                                    │  │
+│        │            │                                    │  │
+│        ▼            │                                    │  │
+│   Return to Analyze ◀─────┘                              │  │
 │                                                        │
 └────────────────────────────────────────────────────────┘
 ```
 
-### Step 1: Define（定义）🤖 [核心]
+### Step 1: Define 🤖 [Core]
 
-自动建立OKR追踪体系，定义目标与成功指标（primary/supporting/guardrail）。
+Automatically establish the OKR tracking system, define goals and success metrics (primary/supporting/guardrail).
 
-> 📋 详见 [Reference/step-define-conclude-execute.md](./Reference/step-define-conclude-execute.md)
+> 📋 See [Reference/step-define-conclude-execute.md](./Reference/step-define-conclude-execute.md) for details
 
-### Step 2: Analyze（洞察生成）🤖 [核心]
+### Step 2: Analyze (Insight Generation) 🤖 [Core]
 
-故事化洞察转化、决策建议、决策边界、置信度评估。融合原 decision-insight 的洞察转化能力，将分析结果转化为故事化洞察。
+Narrative insight transformation, decision recommendations, decision boundaries, confidence assessment. Integrates the insight transformation capability of the original decision-insight, transforming analysis results into narrative insights.
 
-#### 2.1 数据收集与分析 [核心]
+#### 2.1 Data Collection and Analysis [Core]
 
-自动收集和分析数据（metrics/experiments/events），执行异常检测、实验汇总、漏斗分析。
+Automatically collect and analyze data (metrics/experiments/events), perform anomaly detection, experiment summarization, and funnel analysis.
 
-> 📋 详见 [Reference/step-analyze.md](./Reference/step-analyze.md)
+> 📋 See [Reference/step-analyze.md](./Reference/step-analyze.md) for details
 
-#### 2.2 从数字到故事 [核心]
+#### 2.2 From Numbers to Stories [Core]
 
-将数据分析转化为业务叙事，使用业务语言而非数据术语。
+Transform data analysis into business narrative, using business language rather than data terminology.
 
-> 📋 详见 [Reference/step-analyze.md](./Reference/step-analyze.md)（含数据语言→业务语言映射表与叙事模板）
+> 📋 See [Reference/step-analyze.md](./Reference/step-analyze.md) (includes data language → business language mapping table and narrative templates)
 
-#### 2.3 决策建议生成 [条件]
+#### 2.3 Decision Recommendation Generation [Conditional]
 
-生成多个可执行的决策选项（含预期效果、风险、置信度、资源需求、时间线、前置条件）。
+Generate multiple actionable decision options (including expected effects, risks, confidence, resource requirements, timeline, prerequisites).
 
-> 📋 详见 [Reference/step-analyze.md](./Reference/step-analyze.md)
+> 📋 See [Reference/step-analyze.md](./Reference/step-analyze.md) for details
 
-#### 2.4 决策边界标注 [深度]
+#### 2.4 Decision Boundary Annotation [Deep]
 
-区分 data_decision / data_reference / human_decision，标注自动执行资格与人工监督要求。
+Distinguish data_decision / data_reference / human_decision, annotate auto-execution eligibility and human oversight requirements.
 
-> 📋 详见 [Reference/step-analyze.md](./Reference/step-analyze.md)
+> 📋 See [Reference/step-analyze.md](./Reference/step-analyze.md) for details
 
-#### 2.5 洞察汇总 [条件]
+#### 2.5 Insight Summary [Conditional]
 
-汇总已生成的洞察及其置信度与来源。
+Summarize generated insights and their confidence and sources.
 
-> 📋 详见 [Reference/step-analyze.md](./Reference/step-analyze.md)
+> 📋 See [Reference/step-analyze.md](./Reference/step-analyze.md) for details
 
-### Step 3: Conclude（决策选项）🤖→👤 [核心]
+### Step 3: Conclude (Decision Options) 🤖→👤 [Core]
 
-AI辅助人类决策：AI生成决策建议（含优先级、依据、预期结果、风险等级），人类做出最终决定。
+AI-assisted human decision-making: AI generates decision recommendations (including priority, rationale, expected results, risk level), humans make the final decision.
 
-> 📋 详见 [Reference/step-define-conclude-execute.md](./Reference/step-define-conclude-execute.md)
+> 📋 See [Reference/step-define-conclude-execute.md](./Reference/step-define-conclude-execute.md) for details
 
-### Step 4: Execute（执行追踪）🤖 [条件]
+### Step 4: Execute (Execution Tracking) 🤖 [Conditional]
 
-追踪执行效果，监控核心指标与护栏指标，设置监控告警阈值。
+Track execution effectiveness, monitor core metrics and guardrail metrics, set monitoring alert thresholds.
 
-> 📋 详见 [Reference/step-define-conclude-execute.md](./Reference/step-define-conclude-execute.md)
+> 📋 See [Reference/step-define-conclude-execute.md](./Reference/step-define-conclude-execute.md) for details
 
-## DACE状态追踪
+## DACE Status Tracking
 
-追踪当前阶段、阶段历史、洞察统计、行动统计、结果统计。
+Track current phase, phase history, insight statistics, action statistics, result statistics.
 
-> 📋 详见 [Reference/status-and-config.md](./Reference/status-and-config.md)
+> 📋 See [Reference/status-and-config.md](./Reference/status-and-config.md) for details
 
-## 自动触发机制
+## Auto-trigger Mechanism
 
-> 📋 详见 [Reference/status-and-config.md](./Reference/status-and-config.md)（含触发条件→DACE响应映射表）
+> 📋 See [Reference/status-and-config.md](./Reference/status-and-config.md) (includes trigger condition → DACE response mapping table)
 
-## OKR追踪配置
+## OKR Tracking Configuration
 
-> 📋 详见 [Reference/status-and-config.md](./Reference/status-and-config.md)（含更新频率与告警规则）
+> 📋 See [Reference/status-and-config.md](./Reference/status-and-config.md) (includes update frequency and alert rules)
 
-## 洞察类型处理
+## Insight Type Handling
 
-针对异常洞察、漏斗洞察等不同类型生成对应叙述与决策选项。
+Generate corresponding narratives and decision options for different insight types such as anomaly insights and funnel insights.
 
-> 📋 详见 [Reference/insight-types.md](./Reference/insight-types.md)
+> 📋 See [Reference/insight-types.md](./Reference/insight-types.md) for details
 
-## 输出
+## Output
 
-**存储路径**：`docs/metrics/decision-report.md（"DACE决策"章节）`
+**Storage path**: `docs/metrics/decision-report.md ("DACE Decisions" section)`
 
-### 输出深度分级
+### Output Depth Tiering
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 决策建议 + 关键依据 | 核心结论 + 最小可行产物，仅输出Define结论和Conclude推荐选项 |
-| standard | 完整决策分析（当前默认） | 完整产物，包含DACE四阶段全部输出 |
-| deep | 完整分析 + 扩展分析 | 完整产物 + 决策树 + 敏感性分析 + 反事实推理 + 决策记录 + 风险评估 |
+| quick | Decision recommendations + key rationale | Core conclusions + minimum viable output, only outputs Define conclusions and Conclude recommended options |
+| standard | Complete decision analysis (current default) | Complete output, including all four DACE phases |
+| deep | Complete analysis + extended analysis | Complete output + decision tree + sensitivity analysis + counterfactual reasoning + decision records + risk assessment |
 
-**输出文件**：dace_status.json、okr_tracking.json、action_log.json、dace_cycle_report.md、decision_insight.json、insight_library.json
+**Output files**: dace_status.json, okr_tracking.json, action_log.json, dace_cycle_report.md, decision_insight.json, insight_library.json
 
-> 📋 输出Schema、洞察输出示例、输出文件结构、输出校验规则详见 [Reference/output-schemas.md](./Reference/output-schemas.md)
+> 📋 For output schema, insight output examples, output file structure, and output validation rules, see [Reference/output-schemas.md](./Reference/output-schemas.md)
 
-## 输出校验规则
+## Output Validation Rules
 
-> 📋 详见 [Reference/output-schemas.md](./Reference/output-schemas.md)（含字段路径、类型、必填、说明校验表）
+> 📋 See [Reference/output-schemas.md](./Reference/output-schemas.md) (includes field path, type, required, description validation table)
 
-## 上游变更响应
+## Upstream Change Response
 
-当上游输入发生变更时按响应策略调整对应阶段；当DACE状态/洞察自身变更时按通知机制通知下游 decision-culture。
+When upstream inputs change, adjust the corresponding phase according to the response strategy; when DACE status/insights themselves change, notify downstream decision-culture according to the notification mechanism.
 
-> 📋 详见 [Reference/upstream-response.md](./Reference/upstream-response.md)（含上游变更响应策略表与下游通知机制表）
+> 📋 See [Reference/upstream-response.md](./Reference/upstream-response.md) (includes upstream change response strategy table and downstream notification mechanism table)
 
 ---
 
-## 决策规则
+## Decision Rules
 
-| 情况 | 处理方式 |
+| Situation | Handling |
 |------|----------|
-| KR进度落后>20% | 触发Conclude，生成决策建议 |
-| KR无法完成 | 升级+OKR调整建议 |
-| 实验结果统计显著 | 自动进入Conclude阶段 |
-| 护栏指标被突破 | 暂停Execute，回退至Analyze |
-| 洞察置信度≥0.8 + 护栏指标无下降 | 标记auto_execute_eligible，通知执行 |
-| 洞察置信度≥0.8 + 护栏指标存在不确定性 | 标记data_reference，需人类确认 |
-| 洞察置信度0.5-0.8 | 标记data_reference，需人类确认 |
-| 洞察置信度<0.5 | 标记human_decision，人类主导 |
-| 洞察涉及战略考量（影响≥3个OKR） | 标记human_decision，人类主导 |
-| ≥3个独立洞察指向同一结论 | 合并洞察，置信度提升0.15 |
-| 2个洞察指向同一结论 | 合并洞察，置信度提升0.1 |
-| 洞察涉及收入影响≥10% | 强制标记human_decision |
+| KR progress behind >20% | Trigger Conclude, generate decision recommendations |
+| KR cannot be completed | Escalation + OKR adjustment recommendations |
+| Experiment results statistically significant | Automatically enter Conclude phase |
+| Guardrail metrics breached | Pause Execute, revert to Analyze |
+| Insight confidence ≥0.8 + no decline in guardrail metrics | Mark auto_execute_eligible, notify execution |
+| Insight confidence ≥0.8 + uncertainty in guardrail metrics | Mark data_reference, requires human confirmation |
+| Insight confidence 0.5-0.8 | Mark data_reference, requires human confirmation |
+| Insight confidence <0.5 | Mark human_decision, human-led |
+| Insight involves strategic considerations (impact ≥3 OKRs) | Mark human_decision, human-led |
+| ≥3 independent insights point to the same conclusion | Merge insights, confidence +0.15 |
+| 2 insights point to the same conclusion | Merge insights, confidence +0.1 |
+| Insight involves revenue impact ≥10% | Force mark human_decision |
 
-## 质量检查
+## Quality Check
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Check (quick/standard/deep must all pass)
 
-- [ ] Define阶段目标可量化、有基线
-- [ ] Analyze阶段覆盖所有数据源
-- [ ] Conclude阶段提供至少2个决策选项
+- [ ] Define phase goals are quantifiable, with baselines
+- [ ] Analyze phase covers all data sources
+- [ ] Conclude phase provides at least 2 decision options
 
-### P1 检查（standard/deep 必须通过）
+### P1 Check (standard/deep must pass)
 
-- [ ] Execute阶段设置监控和回滚机制
-- [ ] 洞察叙述使用业务语言而非数据术语
-- [ ] 每个洞察至少提供2个决策选项
-- [ ] 推荐行动有明确的下一步和负责人
+- [ ] Execute phase sets monitoring and rollback mechanisms
+- [ ] Insight narrative uses business language rather than data terminology
+- [ ] Each insight provides at least 2 decision options
+- [ ] Recommended actions have clear next steps and owners
 
-### P2 检查（仅 deep 必须通过）
+### P2 Check (only deep must pass)
 
-- [ ] 决策边界标注正确（auto/reference/human）
-- [ ] 决策树已生成（各选项分支及概率评估）
-- [ ] 敏感性分析已完成（关键变量对决策结论的影响程度）
-- [ ] 反事实推理已完成（若选择其他选项的预期结果推演）
+- [ ] Decision boundary annotation is correct (auto/reference/human)
+- [ ] Decision tree generated (each option branch and probability assessment)
+- [ ] Sensitivity analysis completed (impact of key variables on decision conclusions)
+- [ ] Counterfactual reasoning completed (expected outcome inference if other options were chosen)
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失范围 | 降级方案 | 输出影响 |
+| Missing Scope | Degradation Plan | Output Impact |
 |----------|----------|----------|
-| OKR追踪缺失 | 用户提供当前指标数据 → 执行DACE分析 | Define阶段目标定义基于用户描述 |
-| 异常检测缺失 | 跳过Analyze阶段的异常触发，基于用户提供的指标数据执行 | 分析维度受限，可能遗漏未关注异常 |
-| OKR追踪 + 异常检测均缺失 | 用户提供当前指标数据 → 执行DACE分析 | 输出基于用户数据的DACE分析，Define和Analyze标注"待补充" |
-| 分析结果缺失 | 用户提供数据发现 → 转化为洞察 | 洞察基于用户描述，可能缺乏深度归因 |
-| 实验结果缺失 | 跳过实验相关洞察转化 | 实验洞察维度缺失 |
-| 分析结果 + 实验结果均缺失 | 用户提供数据发现 → 转化为洞察 | 输出基于用户描述的洞察，归因和决策边界标注"待补充" |
+| OKR tracking missing | User provides current metric data → Execute DACE analysis | Define phase goal definition based on user description |
+| Anomaly detection missing | Skip anomaly triggers in Analyze phase, execute based on user-provided metric data | Analysis dimensions limited, may miss unattended anomalies |
+| Both OKR tracking and anomaly detection missing | User provides current metric data → Execute DACE analysis | Output based on user data DACE analysis, Define and Analyze annotated "to be supplemented" |
+| Analysis results missing | User provides data findings → Transform into insights | Insights based on user description, may lack in-depth attribution |
+| Experiment results missing | Skip experiment-related insight transformation | Experiment insight dimension missing |
+| Both analysis results and experiment results missing | User provides data findings → Transform into insights | Output based on user description insights, attribution and decision boundaries annotated "to be supplemented" |
 
-### 数据获取说明
+### Data Acquisition Instructions
 
-当上游文件缺失时，需用户提供以下信息以支撑降级生成：
-- **当前指标数据**：关键指标的当前值、基线值和目标值
-- **业务目标**（可选）：当前阶段的业务优先级和决策需求
-- **已知问题**（可选）：已经发现的异常或待决策问题
-- **数据发现**（可选）：观察到的数据变化、趋势或异常
-- **期望决策方向**（可选）：希望洞察支持的决策类型
+When upstream files are missing, the user needs to provide the following information to support degraded generation:
+- **Current metric data**: Current values, baseline values, and target values for key metrics
+- **Business goals** (optional): Business priorities and decision needs for the current stage
+- **Known issues** (optional): Anomalies already discovered or issues pending decision
+- **Data findings** (optional): Observed data changes, trends, or anomalies
+- **Expected decision direction** (optional): Types of decisions that insights should support
 
-## 执行频率
+## Execution Frequency
 
-| Phase | 执行频率 | 触发方式 |
+| Phase | Execution Frequency | Trigger Method |
 |-------|---------|---------|
-| Define | 季度/OKR变更 | 自动 |
-| Analyze | 持续 | 定时+事件 |
-| Conclude | 按需 | 分析完成 |
-| Execute | 持续 | 决策批准 |
+| Define | Quarterly/OKR change | Automatic |
+| Analyze | Continuous | Scheduled + event |
+| Conclude | On demand | Analysis complete |
+| Execute | Continuous | Decision approved |

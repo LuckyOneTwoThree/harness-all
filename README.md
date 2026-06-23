@@ -2,10 +2,10 @@
 
 # 🪢 harness-all
 
-### 个人 AI 工作室 · 多 Agent 框架家族
+### Personal AI Studio · Multi-Agent Framework Family
 
-> **一套给 AI Agent 用的"独立优先、契约协作"框架家族**
-> 每个框架专精一个领域，独立工作；通过契约文档协作，形成完整闭环。
+> **A "Independence First, Contract Collaboration" framework family for AI Agents**
+> Each framework specializes in one domain and works independently; they collaborate via contract documents to form a complete closed loop.
 
 ---
 
@@ -18,545 +18,548 @@
 
 ---
 
-| 框架 | 职责 | Skill | Workflow | 状态 |
+| Framework | Responsibility | Skill | Workflow | Status |
 |:----:|------|:-----:|:--------:|:----:|
-| **harness-pm** | 战略 · 市场 · 产品 · PRD · 度量 | 86 | 10 | ✅ |
-| **harness-design** | UI · 视觉 · 交互 · 原型 · 设计系统 | 18 | 6 | ✅ |
-| **harness-solo** | 工程开发 · TDD · 调试 · 重构 · 验证 | 20 | 7 | ✅ |
-| **harness-growth** | 运营 · 内容 · SEO · 增长实验 | 40 | 6 | ✅ |
-| **harness-ops** | 运维 · 部署 · 监控 · 容灾 | 32 | 7 | ✅ |
+| **harness-pm** | Strategy · Market · Product · PRD · Metrics | 86 | 10 | ✅ |
+| **harness-design** | UI · Visual · Interaction · Prototype · Design System | 18 | 6 | ✅ |
+| **harness-solo** | Engineering · TDD · Debugging · Refactoring · Verification | 20 | 7 | ✅ |
+| **harness-growth** | Operations · Content · SEO · Growth Experiments | 40 | 6 | ✅ |
+| **harness-ops** | Ops · Deployment · Monitoring · Disaster Recovery | 32 | 7 | ✅ |
 
-**总计**：5 个框架 · 206 个 Skill · 36 个 Workflow · 11 份契约文档 · 25 种 LOOP 循环类型
+**Total**: 5 frameworks · 206 Skills · 36 Workflows · 11 contract documents · 25 LOOP loop types
 
 </div>
 
 ---
 
-## 📖 目录
+## 📖 Table of Contents
 
-- [🎯 设计哲学](#-设计哲学)
-- [💡 为什么需要框架](#-为什么需要框架)
-- [🏛️ 三层架构](#️-三层架构)
-- [👨‍👩‍👧‍👦 框架家族总览](#-框架家族总览)
-- [✨ 核心特性](#-核心特性)
-- [🚀 快速开始](#-快速开始)
-- [🔧 框架详解](#-框架详解)
-- [📜 契约协作模式](#-契约协作模式)
-- [⚙️ 统一基础层规范](#️-统一基础层规范)
-- [🔄 LOOP 循环引擎](#-loop-循环引擎)
-- [🛡️ 安全与合规](#️-安全与合规)
-- [🗺️ 演进路线](#️-演进路线)
-- [📚 文档导航](#-文档导航)
-- [🤝 贡献与许可](#-贡献与许可)
+- [🎯 Design Philosophy](#-design-philosophy)
+- [💡 Why a Framework Is Needed](#-why-a-framework-is-needed)
+- [🏛️ Three-Layer Architecture](#️-three-layer-architecture)
+- [👨‍👩‍👧‍👦 Framework Family Overview](#-framework-family-overview)
+- [✨ Core Features](#-core-features)
+- [🚀 Quick Start](#-quick-start)
+- [🔧 Framework Details](#-framework-details)
+- [📜 Contract Collaboration Mode](#-contract-collaboration-mode)
+- [⚙️ Unified Foundation Layer Specification](#️-unified-foundation-layer-specification)
+- [🔄 LOOP Loop Engine](#-loop-loop-engine)
+- [🛡️ Security and Compliance](#️-security-and-compliance)
+- [🗺️ Evolution Roadmap](#️-evolution-roadmap)
+- [📚 Documentation Navigation](#-documentation-navigation)
+- [🤝 Contribution and License](#-contribution-and-license)
 
 ---
 
-## 🎯 设计哲学
+## 🎯 Design Philosophy
 
-### 核心理念：独立优先，契约协作
+### Core Principle: Independence First, Contract Collaboration
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                                                             │
-│   独立工作 ──── 契约协作 ──── 多 Agent 编排                  │
-│   (当前阶段)    (当前阶段)     (未来演进，非目标)            │
+│   Independent Work ──── Contract Collaboration ──── Multi-Agent Orchestration │
+│   (Current stage)        (Current stage)            (Future evolution, non-goal) │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-**为什么独立而非统一**：
+**Why independent rather than unified**:
 
-| 维度 | 统一框架 | 独立框架（本方案） |
+| Dimension | Unified Framework | Independent Frameworks (This Approach) |
 |------|---------|-------------------|
-| 上下文成本 | 单 Agent 加载所有 skill，上下文爆炸 | 每个 Agent 只加载本领域 skill |
-| 记忆污染 | 产品/工程/设计/增长记忆混杂 | 各框架独立 memory，互不干扰 |
-| 调试隔离 | 一个领域的 bug 影响全局 | 框架间完全隔离 |
-| 工具适配 | 一套工具链适配所有场景 | 每个框架按需选工具 |
-| 项目归属 | 一个项目一个 Agent | 不同框架可挂到不同项目/工作目录 |
+| Context cost | Single Agent loads all skills, context explosion | Each Agent loads only its domain skills |
+| Memory pollution | Product/engineering/design/growth memories mixed | Each framework has independent memory, no interference |
+| Debug isolation | A bug in one domain affects everything | Frameworks are fully isolated |
+| Tool adaptation | One toolchain fits all scenarios | Each framework picks tools as needed |
+| Project ownership | One project, one Agent | Different frameworks can attach to different projects/working directories |
 
-**结论**：上下文爆炸和记忆污染是 AI Agent 协作的核心痛点，独立框架是当前最务实的选择。
+**Conclusion**: Context explosion and memory pollution are the core pain points of AI Agent collaboration. Independent frameworks are the most pragmatic choice today.
 
-### 四条铁律
+### Four Iron Rules
 
-1. **独立自洽** —— 每个框架必须能独立完成本领域工作，不依赖其他框架
-2. **契约协作** —— 框架间通过 `docs/handoff/` 下的契约文档传递需求
-3. **循环验证** —— 所有任务走 LOOP（plan→execute→verify），证据驱动
-4. **安全红线** —— 不可协商原则写入 constitution.md，Agent 必须遵守
+1. **Independent Self-Sufficiency** — Each framework must be able to independently complete its domain work without depending on other frameworks
+2. **Contract Collaboration** — Frameworks pass requirements via contract documents under `docs/handoff/`
+3. **Loop Verification** — All tasks go through LOOP (plan→execute→verify), evidence-driven
+4. **Security Red Lines** — Non-negotiable principles written into constitution.md; Agents must comply
 
 ---
 
-## 💡 为什么需要框架
+## 💡 Why a Framework Is Needed
 
-### 没有框架时，AI Agent 的真实困境
+### The Real Dilemma of AI Agents Without a Framework
 
-大多数人使用 AI Agent 的方式是：打开对话 → 描述需求 → 拿到结果 → 关闭对话。下次打开，一切从零开始。
+Most people use AI Agents like this: open a conversation → describe the requirement → get a result → close the conversation. Next time you open it, everything starts from zero.
 
 ```
-❌ 没有 framework 的日常
+❌ Daily life without a framework
 
-  第 1 次对话：  "帮我写个 PRD"           → Agent 不知道你的产品背景，从零问起
-  第 2 次对话：  "帮我设计这个页面"        → Agent 不知道 PRD 长什么样，从零问起
-  第 3 次对话：  "帮我实现这个功能"        → Agent 不知道设计稿长什么样，从零问起
-  第 4 次对话：  "帮我写个增长方案"        → Agent 不知道产品现状，从零问起
-  ...每次对话都是失忆的，每次都要重新建立上下文
+  1st conversation:  "Help me write a PRD"        → Agent doesn't know your product background, asks from scratch
+  2nd conversation:  "Help me design this page"   → Agent doesn't know what the PRD looks like, asks from scratch
+  3rd conversation:  "Help me implement this feature" → Agent doesn't know what the design looks like, asks from scratch
+  4th conversation:  "Help me write a growth plan" → Agent doesn't know the product status, asks from scratch
+  ...every conversation is amnesiac, every time you have to rebuild context
 ```
 
-**核心问题不是 Agent 不够聪明，而是没有持久的项目记忆和领域知识。**
+**The core problem is not that the Agent isn't smart enough, but that there is no persistent project memory and domain knowledge.**
 
-### 框架解决了什么
+### What the Framework Solves
 
-harness 框架的本质不是"更好的 prompt"，而是**为 AI Agent 构建持久化的项目知识体系**：
+The essence of the harness framework is not "a better prompt", but **building a persistent project knowledge system for AI Agents**:
 
-| 能力 | 没有 framework | 有 harness framework |
+| Capability | Without Framework | With harness Framework |
 |------|---------------|---------------------|
-| **项目知识库** | 每次对话从零解释项目背景 | `knowledge-base.md` 持续积累项目决策、技术选型、踩坑记录 |
-| **工作区记忆** | 关闭对话即失忆 | `progress.md` 跨会话保持进度，下次打开自动恢复 |
-| **领域专精** | 一个 Agent 什么都做，什么都不精 | 每个框架只聚焦一个领域，skill 精准匹配场景 |
-| **上下文效率** | 全量加载，token 浪费严重 | 按需加载 INDEX → SKILL.md，只读必要的 |
-| **协作可追溯** | 口头/聊天记录传递需求 | 契约文档（handoff）结构化传递，AC 编号跨框架对齐 |
-| **质量可验证** | "我觉得做完了" | LOOP 引擎 + 证据门禁，没有证据不声称完成 |
-| **安全有红线** | Agent 可能越权操作 | constitution.md 不可协商，security.md 统一禁止 |
-| **经验可复用** | 每个项目从零开始 | 模板 + 知识库 + skill 跨项目复用 |
+| **Project Knowledge Base** | Re-explain project background every conversation | `knowledge-base.md` continuously accumulates project decisions, tech choices, pitfalls |
+| **Workspace Memory** | Forgetting on conversation close | `progress.md` keeps progress across sessions, auto-restores next time |
+| **Domain Specialization** | One Agent does everything, none well | Each framework focuses on one domain, skills precisely match scenarios |
+| **Context Efficiency** | Full load, severe token waste | Load INDEX → SKILL.md on demand, only read what's necessary |
+| **Traceable Collaboration** | Verbal/chat records pass requirements | Contract documents (handoff) structured passing, AC numbering aligned cross-framework |
+| **Verifiable Quality** | "I think it's done" | LOOP engine + evidence gate, no claiming completion without evidence |
+| **Security Red Lines** | Agent may overreach | constitution.md non-negotiable, security.md unified prohibitions |
+| **Reusable Experience** | Start from zero every project | Templates + knowledge base + skills reusable across projects |
 
-### 三层知识体系
+### Three-Layer Knowledge System
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  🧠 项目知识库 (knowledge-base.md)                           │
+│  🧠 Project Knowledge Base (knowledge-base.md)               │
 │                                                             │
-│  持续积累的项目决策 · 技术选型 · 踩坑记录 · 最佳实践          │
-│  → Agent 每次启动自动读取，不需要你重复解释项目背景           │
-│  → 每次会话结束自动归档新知识，越用越懂你的项目               │
-│                                                             │
-├─────────────────────────────────────────────────────────────┤
-│  📋 工作区记忆 (progress.md + FEATURES.md)                   │
-│                                                             │
-│  跨会话保持进度 · 当前任务状态 · 历史决策记录                 │
-│  → session-start 自动恢复上下文，不丢失工作进度               │
-│  → FEATURES.md 看板式追踪所有任务状态                        │
-│  → state.yaml 支持断点续传，中断后可恢复                     │
+│  Continuously accumulated project decisions · tech choices · pitfalls · best practices │
+│  → Agent auto-reads at every startup, no need to re-explain project background │
+│  → Auto-archives new knowledge at session end, the more you use it the better it knows your project │
 │                                                             │
 ├─────────────────────────────────────────────────────────────┤
-│  📐 领域规范 (AGENTS.md + SOUL.md + constitution.md)         │
+│  📋 Workspace Memory (progress.md + FEATURES.md)             │
 │                                                             │
-│  领域价值观 · 工作原则 · 安全红线 · 不可协商规则              │
-│  → Agent 行为边界清晰，不会越权或偏离                        │
-│  → 不同框架有不同人格和原则，专精而非泛化                    │
-│  → 规则优先级明确：SOUL > AGENTS > rules > 对话 > 外部文件   │
+│  Cross-session progress · current task status · historical decision records │
+│  → session-start auto-restores context, no lost work progress │
+│  → FEATURES.md board-style tracking of all task statuses     │
+│  → state.yaml supports checkpoint resume, recoverable after interruption │
+│                                                             │
+├─────────────────────────────────────────────────────────────┤
+│  📐 Domain Specification (AGENTS.md + SOUL.md + constitution.md) │
+│                                                             │
+│  Domain values · working principles · security red lines · non-negotiable rules │
+│  → Clear Agent behavior boundaries, no overreach or drift    │
+│  → Different frameworks have different personalities and principles, specialized not generalized │
+│  → Clear rule priority: SOUL > AGENTS > rules > conversation > external files │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### 框架 vs 纯 Prompt Engineering：本质区别
+### Framework vs Pure Prompt Engineering: The Essential Difference
 
-| 维度 | 纯 Prompt Engineering | harness Framework |
+| Dimension | Pure Prompt Engineering | harness Framework |
 |------|----------------------|-------------------|
-| 知识持久化 | 无（每次对话从零开始） | knowledge-base.md 跨会话积累 |
-| 上下文恢复 | 无（手动复制粘贴） | progress.md + session-start 自动恢复 |
-| 领域专精 | 靠 prompt 描述角色（脆弱） | SOUL.md + 82 个 PM skill 精准匹配 |
-| 质量保障 | 靠人肉检查 | LOOP 循环 + 证据门禁 + verify skill |
-| 协作传递 | 复制粘贴聊天记录 | 契约文档结构化传递 + AC 编号对齐 |
-| 安全边界 | 靠 prompt 约束（可被覆盖） | constitution.md 不可协商 + security.md |
-| 经验复用 | 每个项目重写 prompt | 模板 + skill + 知识库跨项目复用 |
-| 可扩展性 | prompt 越写越长，难以维护 | skill 模块化，INDEX 按需加载 |
+| Knowledge Persistence | None (every conversation from zero) | knowledge-base.md accumulates across sessions |
+| Context Recovery | None (manual copy-paste) | progress.md + session-start auto-restore |
+| Domain Specialization | Via prompt role description (fragile) | SOUL.md + 82 PM skills precisely matched |
+| Quality Assurance | Manual checking | LOOP loop + evidence gate + verify skill |
+| Collaboration Handoff | Copy-paste chat records | Contract documents structured passing + AC numbering alignment |
+| Security Boundary | Via prompt constraints (overridable) | constitution.md non-negotiable + security.md |
+| Experience Reuse | Rewrite prompts every project | Templates + skills + knowledge base reusable across projects |
+| Extensibility | Prompts grow longer, hard to maintain | Skills modular, INDEX loads on demand |
 
-**一句话总结**：Prompt Engineering 是"教 Agent 做一件事"，Framework 是"让 Agent 拥有持久的项目记忆和领域专长，越用越强"。
+**One-line summary**: Prompt Engineering is "teach an Agent to do one thing"; Framework is "let an Agent have persistent project memory and domain expertise, getting stronger with use".
 
-### 真实使用场景对比
+### Real-World Scenario Comparison
 
-**场景：你要做一个新产品，从 0 到 1**
+**Scenario: You're building a new product, from 0 to 1**
 
 ```
-❌ 没有 framework：
+❌ Without a framework:
 
-  你：帮我写个 PRD
-  AI：好的，请告诉我你的产品是什么？目标用户是谁？...
-  你：（花 30 分钟解释背景）
-  AI：（产出 PRD）
-  你：帮我设计首页
-  AI：好的，请告诉我你的 PRD 内容是什么？...
-  你：（花 10 分钟重新解释）
-  ...每次切换领域都要重新建立上下文，知识无法沉淀
+  You: Help me write a PRD
+  AI: Sure, please tell me what your product is? Who are the target users?...
+  You: (spend 30 minutes explaining background)
+  AI: (produces PRD)
+  You: Help me design the homepage
+  AI: Sure, please tell me what your PRD content is?...
+  You: (spend 10 minutes re-explaining)
+  ...every domain switch requires rebuilding context, knowledge cannot accumulate
 
-✅ 有 harness framework：
+✅ With harness framework:
 
-  你：启动 harness-pm，开始新产品工作流
-  Agent：（自动读取 knowledge-base，了解项目背景）
-  Agent：（执行 new-product workflow，产出 PRD + 契约文档）
-  你：切换到 harness-design
-  Agent：（自动读取 pm-to-design.md，精准理解需求）
-  Agent：（产出设计稿 + component-map.json）
-  你：切换到 harness-solo
-  Agent：（自动读取 design-to-solo.md + component-map.json）
-  Agent：（精准实现代码，AC 编号对齐验证）
-  ...每个领域自动继承上游产出，知识持续沉淀
+  You: Start harness-pm, begin new-product workflow
+  Agent: (auto-reads knowledge-base, understands project background)
+  Agent: (executes new-product workflow, produces PRD + contract documents)
+  You: Switch to harness-design
+  Agent: (auto-reads pm-to-design.md, precisely understands requirements)
+  Agent: (produces design assets + component-map.json)
+  You: Switch to harness-solo
+  Agent: (auto-reads design-to-solo.md + component-map.json)
+  Agent: (precisely implements code, AC numbering aligned verification)
+  ...each domain auto-inherits upstream outputs, knowledge continuously accumulates
 ```
 
 ---
 
-## 🏛️ 三层架构
+## 🏛️ Three-Layer Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  编排层（未来，非当前目标）                                   │
-│  - 多 Agent 调度 / 共享事实源 / 跨框架 LOOP                  │
+│  Orchestration Layer (Future, not a current goal)            │
+│  - Multi-Agent scheduling / shared source of truth / cross-framework LOOP │
 └─────────────────────────────────────────────────────────────┘
-                          ↕ 契约文档
+                          ↕ Contract documents
 ┌─────────────────────────────────────────────────────────────┐
-│  框架层（当前重点）                                           │
+│  Framework Layer (Current focus)                             │
 │  harness-pm / harness-design / harness-solo                  │
 │  harness-growth / harness-ops                                │
-│  + 扩展框架（data/qa/security，按需建设）                    │
+│  + Extension frameworks (data/qa/security, built on demand)  │
 └─────────────────────────────────────────────────────────────┘
-                          ↕ 加载链
+                          ↕ Load chain
 ┌─────────────────────────────────────────────────────────────┐
-│  基础层（每个框架内部）                                       │
+│  Foundation Layer (inside each framework)                    │
 │  AGENTS.md / SOUL.md / constitution.md / LOOP.md / skills/  │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### 适用场景
+### Applicable Scenarios
 
-- **个人 AI 工作室**：一个人 + 多个 AI Agent，每个 Agent 专精一个领域
-- **小团队协作**：不同成员负责不同框架，通过契约文档对齐
-- **多项目并行**：每个框架可挂到不同项目目录，互不干扰
+- **Personal AI Studio**: One person + multiple AI Agents, each Agent specializes in one domain
+- **Small team collaboration**: Different members own different frameworks, aligned via contract documents
+- **Multi-project parallelism**: Each framework can attach to different project directories without interference
 
 ---
 
-## 👨‍👩‍👧‍👦 框架家族总览
+## 👨‍👩‍👧‍👦 Framework Family Overview
 
-### 框架分类与状态
+### Framework Classification and Status
 
-| 分类 | 框架 | 职责 | 状态 | Skill 数 |
+| Category | Framework | Responsibility | Status | Skill Count |
 |------|------|------|------|---------|
-| 核心 | **harness-pm** | 战略 · 市场 · 产品 · PRD · 度量 · 增长监控 | ✅ 已建设 | 86 skill（82 领域 + 4 meta）+ 10 workflow |
-| 核心 | **harness-design** | UI · 视觉 · 交互 · 原型 · 设计系统 | ✅ 已建设 | 18 skill（14 领域 + 4 meta）+ 6 workflow |
-| 核心 | **harness-solo** | 工程开发 · TDD · 调试 · 重构 · 验证 | ✅ 已建设 | 20 skill（16 领域 + 4 meta）+ 7 workflow |
-| 核心 | **harness-growth** | 运营 · 内容 · SEO · 增长实验 | ✅ 已建设 | 40 skill（36 领域 + 4 meta）+ 6 workflow |
-| 扩展 | **harness-ops** | 运维 · 部署 · 监控 · 容灾 | ✅ 已建设 | 32 skill（28 领域 + 4 meta）+ 7 workflow |
-| 扩展 | harness-data | 数据管道 · ETL · 指标生产 | 📋 P1 待建 | - |
-| 扩展 | harness-qa | 质量保障 · 自动化测试 · 性能测试 | ⚠️ P2 按需 | - |
-| 扩展 | harness-security | 安全审计 · 合规 · 渗透 | ⚠️ P3 按需 | - |
+| Core | **harness-pm** | Strategy · Market · Product · PRD · Metrics · Growth Monitoring | ✅ Built | 86 skills (82 domain + 4 meta) + 10 workflows |
+| Core | **harness-design** | UI · Visual · Interaction · Prototype · Design System | ✅ Built | 18 skills (14 domain + 4 meta) + 6 workflows |
+| Core | **harness-solo** | Engineering · TDD · Debugging · Refactoring · Verification | ✅ Built | 20 skills (16 domain + 4 meta) + 7 workflows |
+| Core | **harness-growth** | Operations · Content · SEO · Growth Experiments | ✅ Built | 40 skills (36 domain + 4 meta) + 6 workflows |
+| Extension | **harness-ops** | Ops · Deployment · Monitoring · Disaster Recovery | ✅ Built | 32 skills (28 domain + 4 meta) + 7 workflows |
+| Extension | harness-data | Data Pipeline · ETL · Metric Production | 📋 P1 To Build | - |
+| Extension | harness-qa | Quality Assurance · Automated Testing · Performance Testing | ⚠️ P2 On Demand | - |
+| Extension | harness-security | Security Audit · Compliance · Penetration Testing | ⚠️ P3 On Demand | - |
 
-### 框架职责边界（不重叠原则）
+### Framework Responsibility Boundaries (Non-overlap Principle)
 
 ```
 ┌─────────────┐  PRD + Persona + AC   ┌─────────────┐  design-to-solo.md   ┌─────────────┐
 │ harness-pm  │ ────────────────────> │harness-design│ ───────────────────> │ harness-solo│
-│ 做"对的事"  │                        │ 做"好看好用" │ + component-map     │ 做"写好代码"│
-│             │  PRD + AC + 埋点        │             │ + tokens.json       │             │
+│ "Do the     │                        │ "Make it     │ + component-map     │ "Write good │
+│  right      │                        │  look good   │ + tokens.json       │  code"      │
+│  thing"     │  PRD + AC + Tracking   │  and usable" │                     │             │
 │             │ ───────────────────────────────────────────────────────> │             │
 └─────────────┘                        └─────────────┘                     └─────────────┘
        │                                                                     │
-       │ 指标 + 增长策略                                                      │ 已实现功能 + 埋点
+       │ Metrics + Growth Strategy                                            │ Implemented Features + Tracking
        ▼                                                                     ▼
        └──────────────────> ┌─────────────┐ <──────────────────────────────┘
                             │harness-growth│
-                            │ 做"被用起来"│
+                            │ "Make it     │
+                            │  used"       │
                             └─────────────┘
                                    ▲
-                                   │ solo-to-ops.md（部署契约）
+                                   │ solo-to-ops.md (deployment contract)
                                    │
                             ┌─────────────┐
                             │ harness-ops │
-                            │ 做"护航交付"│
+                            │ "Escort and │
+                            │  deliver"   │
                             └─────────────┘
                                    │
-                                   │ ops-to-pm.md（SLA + 故障复盘）
+                                   │ ops-to-pm.md (SLA + incident post-mortem)
                                    ▼
-                            （反馈给 harness-pm）
+                            (feedback to harness-pm)
 ```
 
-**职责边界铁律**：
+**Responsibility boundary iron rules**:
 
-| 领域 | 归属 | 禁止越界 |
+| Domain | Owner | Boundary Violations Forbidden |
 |------|------|---------|
-| 产品需求（PRD/AC/Persona） | harness-pm | design 不定义 PRD，solo 不修改 PRD |
-| 视觉设计（配色/排版/组件） | harness-design | pm 不定义颜色，solo 不硬编码值 |
-| 交互设计（状态机/动画/手势） | harness-design | pm 不定义动画参数，solo 按规格实现 |
-| 工程实现（代码/测试/架构） | harness-solo | pm/design 不写代码 |
-| 增长运营（内容/SEO/实验） | harness-growth | pm 提供指标，growth 执行实验 |
-| 运维保障（发布/监控/容灾） | harness-ops | solo 不直接操作线上，需通过 ops 执行 IaC |
+| Product Requirements (PRD/AC/Persona) | harness-pm | design does not define PRD, solo does not modify PRD |
+| Visual Design (color/typography/components) | harness-design | pm does not pick colors, solo does not hardcode values |
+| Interaction Design (state machines/animations/gestures) | harness-design | pm does not define animation params, solo implements per spec |
+| Engineering Implementation (code/tests/architecture) | harness-solo | pm/design do not write code |
+| Growth Operations (content/SEO/experiments) | harness-growth | pm provides metrics, growth runs experiments |
+| Ops Assurance (release/monitoring/disaster recovery) | harness-ops | solo does not directly operate production, must go through ops IaC |
 
 ---
 
-## ✨ 核心特性
+## ✨ Core Features
 
-### 1. 独立框架 · 上下文隔离
+### 1. Independent Frameworks · Context Isolation
 
-每个框架是完全独立的目录，可以挂到不同的项目目录，由不同的 Agent 实例加载，有独立的 `.harness/` 配置、memory、progress。
+Each framework is a fully independent directory that can attach to different project directories, be loaded by different Agent instances, and have independent `.harness/` config, memory, progress.
 
-### 2. 契约协作 · 跨框架对齐
+### 2. Contract Collaboration · Cross-Framework Alignment
 
-通过 `docs/handoff/` 下的契约文档传递需求，支持多人 + 多 Agent 协作。AC 编号体系跨框架对齐（`AC-xxx` 工程 + `DAC-xxx` 设计流入工程）。
+Pass requirements via contract documents under `docs/handoff/`, supporting multi-person + multi-Agent collaboration. AC numbering system aligned cross-framework (`AC-xxx` engineering + `DAC-xxx` design flowing into engineering).
 
-### 3. LOOP 引擎 · 证据驱动
+### 3. LOOP Engine · Evidence-Driven
 
-所有框架统一的循环引擎，支持 state.yaml 断点续传、迭代上限保护、证据驱动原则。单 LOOP 硬熔断 10 次。
+Unified loop engine across all frameworks, supporting state.yaml checkpoint resume, iteration cap protection, evidence-driven principle. Single LOOP Hard Circuit Breaker at 10 iterations.
 
-### 4. 安全红线 · 不可协商
+### 4. Security Red Lines · Non-negotiable
 
-每个框架的 `constitution.md` 定义不可协商原则，`rules/security.md` 定义统一禁止项。ops 框架额外增加 Secret 严格隔离和 7 层纵深防御。
+Each framework's `constitution.md` defines non-negotiable principles; `rules/security.md` defines unified prohibitions. The ops framework additionally adds strict Secret isolation and 7-layer defense in depth.
 
-### 5. 跨平台兼容
+### 5. Cross-platform Compatible
 
-Agent 工具优先（Read/Write/Edit/Glob/Grep），bash 可选兜底。所有脚本有 bash 可用性检查，Windows 环境自动跳过。
+Agent tools first (Read/Write/Edit/Glob/Grep), bash optional fallback. All scripts have bash availability checks, auto-skip on Windows.
 
-### 6. 半自动化架构（harness-ops 专属）
+### 6. Semi-automated Architecture (harness-ops exclusive)
 
-Agent 建议 + 人类审批 + GitOps 执行。四类操作原语（inspect/propose/mutate-staging/mutate-prod）精确控制自动化边界。
+Agent proposes + human approves + GitOps executes. Four operation primitives (inspect/propose/mutate-staging/mutate-prod) precisely control the automation boundary.
 
 ---
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-### 1. 选择你需要的框架
+### 1. Choose the framework you need
 
 ```bash
-# 个人 AI 工作室全套（推荐）
+# Full personal AI studio (recommended)
 git clone <harness-all-repo>
 
-# 或只克隆单个框架
-git clone <harness-pm-repo>      # 产品管理
-git clone <harness-design-repo>  # UI 设计
-git clone <harness-solo-repo>    # 工程开发
-git clone <harness-growth-repo>  # 运营增长
-git clone <harness-ops-repo>     # 运维保障
+# Or clone only a single framework
+git clone <harness-pm-repo>      # Product Management
+git clone <harness-design-repo>  # UI Design
+git clone <harness-solo-repo>    # Engineering
+git clone <harness-growth-repo>  # Operations & Growth
+git clone <harness-ops-repo>     # Ops Assurance
 ```
 
-### 2. 安装到你的项目
+### 2. Install to your project
 
 ```bash
-# 进入你的项目目录
+# Enter your project directory
 cd my-project
 
-# 执行安装脚本（以 harness-solo 为例）
+# Run the install script (using harness-solo as an example)
 bash /path/to/harness-solo/install.sh
 
-# 安装脚本会：
-# 1. 检查依赖（git 必需，Node.js 按需）
-# 2. 创建 .harness/ 目录结构
-# 3. 复制 AGENTS.md / SOUL.md / constitution.md
-# 4. 初始化 memory/progress.md
-# 5. 创建 docs/handoff/ 目录
+# The install script will:
+# 1. Check dependencies (git required, Node.js on demand)
+# 2. Create the .harness/ directory structure
+# 3. Copy AGENTS.md / SOUL.md / constitution.md
+# 4. Initialize memory/progress.md
+# 5. Create the docs/handoff/ directory
 ```
 
-### 3. 启动 Agent
+### 3. Start the Agent
 
 ```
-# 在你的项目目录下启动 AI Agent（如 Trae IDE）
+# Start an AI Agent in your project directory (e.g., Trae IDE)
 
-# Agent 会按加载链自动读取：
-# 1. AGENTS.md（启动必读）
-# 2. SOUL.md + constitution.md（首次交互时）
-# 3. skills/INDEX.md（需要选 Skill 时）
-# 4. 对应 SKILL.md（执行任务时）
-# 5. memory/progress.md（session-start 时）
+# The Agent will auto-read via the load chain:
+# 1. AGENTS.md (mandatory read at startup)
+# 2. SOUL.md + constitution.md (on first interaction)
+# 3. skills/INDEX.md (when selecting a Skill)
+# 4. Corresponding SKILL.md (when executing tasks)
+# 5. memory/progress.md (at session-start)
 ```
 
-### 4. 多框架协作
+### 4. Multi-framework Collaboration
 
 ```bash
-# 场景：PM 产出 PRD → Design 出设计稿 → Solo 实现代码
+# Scenario: PM produces PRD → Design produces design assets → Solo implements code
 
-# 1. 在产品项目目录下用 harness-pm
+# 1. Use harness-pm in the product project directory
 cd product-project
-# Agent 产出：docs/handoff/pm-to-design.md + pm-to-solo.md
+# Agent produces: docs/handoff/pm-to-design.md + pm-to-solo.md
 
-# 2. 手动复制契约文档到设计项目
+# 2. Manually copy contract documents to the design project
 cp product-project/docs/handoff/pm-to-design.md design-project/docs/handoff/
 
-# 3. 在设计项目目录下用 harness-design
+# 3. Use harness-design in the design project directory
 cd design-project
-# Agent 消费 pm-to-design.md，产出：design-to-solo.md + component-map.json
+# Agent consumes pm-to-design.md, produces: design-to-solo.md + component-map.json
 
-# 4. 手动复制契约文档到工程项目
+# 4. Manually copy contract documents to the engineering project
 cp design-project/docs/handoff/design-to-solo.md engineering-project/docs/handoff/
 cp design-project/docs/handoff/component-map.json engineering-project/docs/handoff/
 
-# 5. 在工程项目目录下用 harness-solo
+# 5. Use harness-solo in the engineering project directory
 cd engineering-project
-# Agent 消费 pm-to-solo.md + design-to-solo.md + component-map.json，实现代码
+# Agent consumes pm-to-solo.md + design-to-solo.md + component-map.json, implements code
 ```
 
 ---
 
-## 🔧 框架详解
+## 🔧 Framework Details
 
-### harness-pm（产品管理框架）
+### harness-pm (Product Management Framework)
 
-> **定位**：做"对的事"——产品探索、市场分析、PRD 生成、度量运营
+> **Positioning**: "Do the right thing" — product exploration, market analysis, PRD generation, metrics operations
 
-**四原则**：
-1. Discovery First（探索先行）—— 不假设需求，用研究数据说话
-2. Contract-Driven（契约驱动）—— PRD 驱动设计，定位驱动品牌
-3. Data-Driven（数据决策）—— 用数据减少猜测，决策权在人类
-4. Closed-Loop（闭环迭代）—— 度量→监控→迭代→反馈
+**Four Principles**:
+1. Discovery First — Don't assume requirements; let research data speak
+2. Contract-Driven — PRD drives design, positioning drives brand
+3. Data-Driven — Use data to reduce guessing; decision authority stays with humans
+4. Closed-Loop — Metrics → Monitoring → Iteration → Feedback
 
-**Skill 体系**（86 skill = 82 领域 + 4 meta）：
-- 模块 1 探索发现（12）：user-research / market
-- 模块 2 商业战略（13）：business / planning
-- 模块 3 构思设计（9）：prd / validation
-- 模块 4 度量设计（4）：metrics
-- 模块 5 度量运营（11）：analysis / decision / experiment
-- 模块 6 增长运营（16）：growth / acquisition / activation / retention / revenue
-- 模块 7 监控迭代（17）：monitoring / diagnosis / iteration / release
+**Skill System** (86 skills = 82 domain + 4 meta):
+- Module 1 Discovery (12): user-research / market
+- Module 2 Business Strategy (13): business / planning
+- Module 3 Ideation & Design (9): prd / validation
+- Module 4 Metrics Design (4): metrics
+- Module 5 Metrics Operations (11): analysis / decision / experiment
+- Module 6 Growth Operations (16): growth / acquisition / activation / retention / revenue
+- Module 7 Monitoring & Iteration (17): monitoring / diagnosis / iteration / release
 
-**特色机制**：
-- **UI 指令越权门禁**：PRD 产出时强制拦截 PM 夹带具体视觉/交互形态
-- **orchestrator-pipeline 二层架构**：19 个 orchestrator 编排 63 个 pipeline skill
+**Signature Mechanisms**:
+- **UI Directive Overreach Gate**: Forcibly intercepts PM sneaking in specific visual/interaction forms at PRD output
+- **orchestrator-pipeline two-layer architecture**: 19 orchestrators orchestrate 63 pipeline skills
 
-**核心产出**：`docs/product/PRD.md` / `docs/strategy/PRODUCT_STRATEGY.md` / `docs/handoff/pm-to-{design,solo,growth}.md`
-
----
-
-### harness-design（UI 设计框架）
-
-> **定位**：做"好看好用"——视觉设计、交互设计、原型产出、设计规范
-
-**四原则**：
-1. User-Centered（以用户为中心）—— Persona 驱动，不假设审美
-2. System-First（系统优先）—— 先建设计系统再画页面
-3. Accessible by Design（可访问性内建）—— WCAG 2.1 AA 是硬约束
-4. Deliverable（可交付）—— 设计稿必须可被工程实现
-
-**Skill 体系**（18 skill = 14 设计 + 4 meta）：
-- 需求与推荐：design-brief / design-recommendation
-- 设计系统：design-system / design-system-import / design-system-refactor
-- 设计产出：visual-design / interaction-design / wireframe / component-design
-- 审查与验证：verify / design-lint / design-review / accessibility-audit
-- 交付：design-handoff-spec
-
-**特色机制**：
-- **Push-back 防越权抗旨**：设计 Agent 有权拒绝 PM 违规写死的 UI 指令并重写
-- **Anti AI-Slop**：禁用 Inter/紫渐变/统一圆角/Lorem ipsum，由 design-lint 机械检查
-- **Doubt-Driven 对抗式审查**：design-review 用 fresh-context 子 agent 做对抗式审查
-- **component-map.json**：显式映射层，机器可读的组件契约
-
-**核心产出**：`docs/design-system/DESIGN.md` / `docs/design-system/tokens.json` / `docs/handoff/design-to-solo.md` + `component-map.json`
+**Core Outputs**: `docs/product/PRD.md` / `docs/strategy/PRODUCT_STRATEGY.md` / `docs/handoff/pm-to-{design,solo,growth}.md`
 
 ---
 
-### harness-solo（工程开发框架）
+### harness-design (UI Design Framework)
 
-> **定位**：做"写好代码"——需求探索、TDD、调试、验证、代码审查
+> **Positioning**: "Make it look good and usable" — visual design, interaction design, prototype output, design specs
 
-**卡帕西四原则**：
-1. Think Before Coding（先思考后编码）—— 不代替用户做假设
-2. Simplicity First（简单优先）—— 不做 speculative 抽象
-3. Surgical Changes（手术刀式修改）—— 只改必须改的代码
-4. Goal-Driven Execution（目标驱动执行）—— 循环验证直到达成
+**Four Principles**:
+1. User-Centered — Persona-driven, no assumption of aesthetics
+2. System-First — Build the design system before drawing pages
+3. Accessible by Design — WCAG 2.1 AA is a hard constraint
+4. Deliverable — Design assets must be implementable by engineering
 
-**Skill 体系**（20 skill = 16 工程 + 4 meta）：
-- 需求与规划：brainstorming / writing-plans / executing-plans
-- 测试与调试：test-driven-development / test-coverage / systematic-debugging
-- 前端与性能：frontend-implementation / webapp-testing / performance-optimization
-- 迁移与依赖：migration / dependency-management
-- 验证与审查：verify / requesting-code-review / receiving-code-review
-- 文档与技能：writing-documentation / writing-skills
+**Skill System** (18 skills = 14 design + 4 meta):
+- Requirements & Recommendations: design-brief / design-recommendation
+- Design System: design-system / design-system-import / design-system-refactor
+- Design Output: visual-design / interaction-design / wireframe / component-design
+- Review & Verification: verify / design-lint / design-review / accessibility-audit
+- Handoff: design-handoff-spec
 
-**特色机制**：
-- **双源 AC 验证**：verify 同时检查工程 AC（`AC-xxx`）和设计 AC（`DAC-xxx`）
-- **component-map.json 消费契约**：frontend-implementation 读取组件映射作为单一事实源
-- **熵检查**：verify 检查文件增长率/LOC 增长率/依赖膨胀/TODO 积压
-- **git hooks**：pre-commit（secret/敏感文件/commit-msg 检查）+ pre-push
+**Signature Mechanisms**:
+- **Push-back anti-overreach**: Design Agent has the right to refuse and rewrite PM's hardcoded UI directives
+- **Anti AI-Slop**: Disable Inter/purple gradients/uniform border radius/Lorem ipsum, mechanically checked by design-lint
+- **Doubt-Driven adversarial review**: design-review uses a fresh-context sub-agent for adversarial review
+- **component-map.json**: Explicit mapping layer, machine-readable component contract
 
-**核心产出**：`docs/engineering/TECH_STACK.md` / `docs/handoff/solo-to-{growth,ops}.md` / `.harness/loops/specs/<feature>/spec.md`
-
----
-
-### harness-growth（运营增长框架）
-
-> **定位**：做"被用起来"——内容生产、SEO、用户运营、增长实验
-
-**四原则**：
-1. Experiment-Driven（实验驱动）—— 每个动作有假设有度量
-2. Content-First（内容优先）—— 质量 > 数量，不做内容农场
-3. Long-Term（长期主义）—— SEO 不做黑帽，不刷量
-4. Data-Loop（数据闭环）—— 每个实验有结论有行动
-
-**Skill 体系**（40 skill = 36 领域 + 4 meta）：
-- 模块 1 增长策略（5）：nsm-definition / kpi-tree / aarr-diagnosis / growth-loop-design / four-fits-assessment
-- 模块 2 增长实验（6）：hypothesis-generation / ice-scoring / experiment-design / sample-size-calc / experiment-analysis / experiment-conclusion
-- 模块 3 内容营销（5）：content-ideation / content-creation / content-review / content-distribution / content-performance
-- 模块 4 SEO 优化（5）：keyword-research / serp-analysis / onpage-optimization / technical-seo-audit / ranking-tracking
-- 模块 5 用户运营（5）：user-segmentation / onboarding-design / aha-moment-identification / retention-analysis / churn-rescue
-- 模块 6 获客投放（3）：channel-assessment / landing-page-optimization / cac-analysis
-- 模块 7 变现（3）：pricing-strategy / paywall-optimization / nrr-analysis
-- 模块 8 数据分析（3）：funnel-analysis / cohort-analysis / metric-anomaly-detection
-- 模块 9 增长审查（1）：growth-review
-
-**核心产出**：`docs/operations/GROWTH_STRATEGY.md` / `docs/content/` / `docs/seo/` / `docs/experiment/` / `docs/handoff/growth-to-pm.md`
+**Core Outputs**: `docs/design-system/DESIGN.md` / `docs/design-system/tokens.json` / `docs/handoff/design-to-solo.md` + `component-map.json`
 
 ---
 
-### harness-ops（运维与基础设施框架）
+### harness-solo (Engineering Framework)
 
-> **定位**：做"护航与交付"——基础设施即代码、自动化部署、监控告警、容灾与应急响应
+> **Positioning**: "Write good code" — requirements exploration, TDD, debugging, verification, code review
 
-**SRE 四原则**：
-1. Stability-First（稳定性第一）—— 不出故障是最高优指标
-2. Infrastructure as Code（基建即代码）—— 环境可版本控制、可一键重建
-3. Observability（无死角可观测）—— Logs / Metrics / Traces 缺一不可
-4. Automation（无情自动化）—— 消除重复性劳作（Toil）
+**Karpathy's Four Principles**:
+1. Think Before Coding — Don't make assumptions for the user
+2. Simplicity First — No speculative abstractions
+3. Surgical Changes — Only modify code that must be changed
+4. Goal-Driven Execution — Loop verification until achieved
 
-**Skill 体系**（32 skill = 28 领域 + 4 meta）：
-- 模块 1 部署交付（4）：deployment-pipeline / release-strategy / rollback / deployment-verify
-- 模块 2 基础设施（4）：infrastructure-as-code / kubernetes-manifest / helm-management / gitops-sync
-- 模块 3 监控可观测（4）：monitoring-setup / alerting-rules / log-analysis / dashboard-design
-- 模块 4 故障响应（4）：incident-detection / root-cause-analysis / incident-mitigation / post-mortem
-- 模块 5 安全合规（4）：secret-management / policy-as-code / security-scan / audit-review
-- 模块 6 容量成本（3）：resource-right-sizing / cost-analysis / capacity-planning
-- 模块 7 容灾备份（3）：backup-management / recovery-drill / disaster-recovery-plan
-- 模块 8 运维审查（2）：ops-review / sla-report
+**Skill System** (20 skills = 16 engineering + 4 meta):
+- Requirements & Planning: brainstorming / writing-plans / executing-plans
+- Testing & Debugging: test-driven-development / test-coverage / systematic-debugging
+- Frontend & Performance: frontend-implementation / webapp-testing / performance-optimization
+- Migration & Dependencies: migration / dependency-management
+- Verification & Review: verify / requesting-code-review / receiving-code-review
+- Documentation & Skills: writing-documentation / writing-skills
 
-**特色机制**：
-- **半自动化架构**：Agent 建议 + 人类审批 + GitOps 执行
-- **四类操作原语**（frontmatter `operation_tier` 字段）：
-  - `inspect` —— 只读巡检，Agent 全自动（13 个 skill）
-  - `propose` —— 生成 PR/提案，人类 review 后合并（12 个 skill）
-  - `mutate-staging` —— Staging 直接执行白名单操作（3 个 skill）
-  - `mutate-prod` —— 生产变更，**必须人类审批**
-- **GitOps PR 间接执行**：Agent 永远不直接操作生产集群
-- **Secret 严格隔离**：Agent 只操作 Secret 的引用，永远不接触明文值
-- **7 层纵深防御**：Dry-run / Canary / Approval gate / Rate limit / Rollback / Audit / Blast radius
-- **7 张知识库表**：故障库 / 根因库 / 部署记录库 / 监控配置库 / IaC 资产库 / 运维模式沉淀 / 踩坑记录
+**Signature Mechanisms**:
+- **Dual-source AC Verification**: verify checks both engineering ACs (`AC-xxx`) and design ACs (`DAC-xxx`)
+- **component-map.json consumption contract**: frontend-implementation reads component mapping as the single source of truth
+- **Entropy Check**: verify checks file growth rate / LOC growth rate / dependency bloat / TODO backlog
+- **git hooks**: pre-commit (secret/sensitive file/commit-msg check) + pre-push
 
-**核心产出**：`docs/deployment/` / `docs/monitoring/` / `docs/infrastructure/` / `docs/incident/` / `docs/handoff/ops-to-pm.md`
+**Core Outputs**: `docs/engineering/TECH_STACK.md` / `docs/handoff/solo-to-{growth,ops}.md` / `.harness/loops/specs/<feature>/spec.md`
 
 ---
 
-## 📜 契约协作模式
+### harness-growth (Operations & Growth Framework)
 
-### 契约文档体系
+> **Positioning**: "Make it used" — content production, SEO, user operations, growth experiments
 
-框架间通过 `docs/handoff/` 下的契约文档协作。每个文档有明确的**源框架**和**目标框架**。
+**Four Principles**:
+1. Experiment-Driven — Every action has a hypothesis and a metric
+2. Content-First — Quality > Quantity, no content farming
+3. Long-Term — No black-hat SEO, no fake traffic
+4. Data-Loop — Every experiment has a conclusion and an action
+
+**Skill System** (40 skills = 36 domain + 4 meta):
+- Module 1 Growth Strategy (5): nsm-definition / kpi-tree / aarr-diagnosis / growth-loop-design / four-fits-assessment
+- Module 2 Growth Experiments (6): hypothesis-generation / ice-scoring / experiment-design / sample-size-calc / experiment-analysis / experiment-conclusion
+- Module 3 Content Marketing (5): content-ideation / content-creation / content-review / content-distribution / content-performance
+- Module 4 SEO Optimization (5): keyword-research / serp-analysis / onpage-optimization / technical-seo-audit / ranking-tracking
+- Module 5 User Operations (5): user-segmentation / onboarding-design / aha-moment-identification / retention-analysis / churn-rescue
+- Module 6 Acquisition & Paid (3): channel-assessment / landing-page-optimization / cac-analysis
+- Module 7 Monetization (3): pricing-strategy / paywall-optimization / nrr-analysis
+- Module 8 Data Analysis (3): funnel-analysis / cohort-analysis / metric-anomaly-detection
+- Module 9 Growth Review (1): growth-review
+
+**Core Outputs**: `docs/operations/GROWTH_STRATEGY.md` / `docs/content/` / `docs/seo/` / `docs/experiment/` / `docs/handoff/growth-to-pm.md`
+
+---
+
+### harness-ops (Operations & Infrastructure Framework)
+
+> **Positioning**: "Escort and deliver" — Infrastructure as Code, automated deployment, monitoring & alerting, disaster recovery and incident response
+
+**SRE Four Principles**:
+1. Stability-First — No incidents is the highest-priority metric
+2. Infrastructure as Code — Environments are version-controlled and one-click rebuildable
+3. Observability — Logs / Metrics / Traces, none can be missing
+4. Automation — Eliminate toil relentlessly
+
+**Skill System** (32 skills = 28 domain + 4 meta):
+- Module 1 Deployment & Delivery (4): deployment-pipeline / release-strategy / rollback / deployment-verify
+- Module 2 Infrastructure (4): infrastructure-as-code / kubernetes-manifest / helm-management / gitops-sync
+- Module 3 Monitoring & Observability (4): monitoring-setup / alerting-rules / log-analysis / dashboard-design
+- Module 4 Incident Response (4): incident-detection / root-cause-analysis / incident-mitigation / post-mortem
+- Module 5 Security & Compliance (4): secret-management / policy-as-code / security-scan / audit-review
+- Module 6 Capacity & Cost (3): resource-right-sizing / cost-analysis / capacity-planning
+- Module 7 Disaster Recovery & Backup (3): backup-management / recovery-drill / disaster-recovery-plan
+- Module 8 Ops Review (2): ops-review / sla-report
+
+**Signature Mechanisms**:
+- **Semi-automated Architecture**: Agent proposes + human approves + GitOps executes
+- **Four Operation Primitives** (frontmatter `operation_tier` field):
+  - `inspect` — Read-only inspection, Agent fully automated (13 skills)
+  - `propose` — Generate PR/proposal, human reviews then merges (12 skills)
+  - `mutate-staging` — Directly execute whitelisted operations on Staging (3 skills)
+  - `mutate-prod` — Production change, **human approval mandatory**
+- **GitOps PR Indirect Execution**: Agent never directly operates production clusters
+- **Strict Secret Isolation**: Agent only operates on Secret references, never touches plaintext values
+- **7-Layer Defense in Depth**: Dry-run / Canary / Approval gate / Rate limit / Rollback / Audit / Blast radius
+- **7 Knowledge Base Tables**: Incident library / Root cause library / Deployment record library / Monitoring config library / IaC asset library / Ops pattern repository / Pitfall log
+
+**Core Outputs**: `docs/deployment/` / `docs/monitoring/` / `docs/infrastructure/` / `docs/incident/` / `docs/handoff/ops-to-pm.md`
+
+---
+
+## 📜 Contract Collaboration Mode
+
+### Contract Document System
+
+Frameworks collaborate via contract documents under `docs/handoff/`. Each document has a clear **source framework** and **target framework**.
 
 ```
 docs/handoff/
-├── README.md                    # 交接协议说明
-├── handoff-template.md          # 通用模板
+├── README.md                    # Handoff protocol description
+├── handoff-template.md          # Generic template
 │
-├── pm-to-design.md              # 契约：PM → Design（PRD + Persona + AC）
-├── pm-to-solo.md                # 契约：PM → Solo（PRD + AC + 埋点）
-├── pm-to-growth.md              # 契约：PM → Growth（指标 + 增长策略）
-├── design-to-solo.md            # 契约：Design → Solo（设计稿 + AC + 组件映射）
-├── design-to-pm.md              # 契约：Design → PM（设计反馈，按需）
-├── solo-to-growth.md            # 契约：Solo → Growth（已实现功能 + 埋点）
-├── solo-to-pm.md                # 契约：Solo → PM（工程反馈，按需）
-├── solo-to-ops.md               # 契约：Solo → Ops（部署契约）
-├── ops-to-pm.md                 # 契约：Ops → PM（SLA 报告 + 故障复盘）
-├── growth-to-pm.md              # 契约：Growth → PM（实验结果 + 数据反馈）
-└── component-map.json           # 契约：Design → Solo（显式映射层，机器可读）
+├── pm-to-design.md              # Contract: PM → Design (PRD + Persona + AC)
+├── pm-to-solo.md                # Contract: PM → Solo (PRD + AC + Tracking)
+├── pm-to-growth.md              # Contract: PM → Growth (Metrics + Growth Strategy)
+├── design-to-solo.md            # Contract: Design → Solo (Design assets + AC + Component Mapping)
+├── design-to-pm.md              # Contract: Design → PM (Design feedback, on demand)
+├── solo-to-growth.md            # Contract: Solo → Growth (Implemented features + Tracking)
+├── solo-to-pm.md                # Contract: Solo → PM (Engineering feedback, on demand)
+├── solo-to-ops.md               # Contract: Solo → Ops (Deployment contract)
+├── ops-to-pm.md                 # Contract: Ops → PM (SLA report + incident post-mortem)
+├── growth-to-pm.md              # Contract: Growth → PM (Experiment results + Data feedback)
+└── component-map.json           # Contract: Design → Solo (Explicit mapping layer, machine-readable)
 ```
 
-### 契约文档流转图
+### Contract Document Flow Diagram
 
 ```
 ┌─────────────┐  pm-to-design.md    ┌─────────────┐
 │ harness-pm  │ ──────────────────> │harness-design│
 │             │ <─────────────────  │             │
-│             │  design-to-pm(按需) │             │
+│             │  design-to-pm (on demand) │        │
 │             │                     └─────────────┘
 │             │                           │
 │             │                     design-to-solo.md
@@ -565,7 +568,7 @@ docs/handoff/
 │             │ ──────────────────> ┌─────────────┐
 │             │                     │ harness-solo│
 │             │ <─────────────────  │             │
-│             │  solo-to-pm(按需)   │             │
+│             │  solo-to-pm (on demand) │         │
 └─────────────┘                     └─────────────┘
         ▲                                 │
         │ growth-to-pm.md                 │ solo-to-growth.md
@@ -581,214 +584,214 @@ docs/handoff/
                                   └─────────────┘
 ```
 
-### 契约文档矩阵
+### Contract Document Matrix
 
-| 源 \ 目标 | harness-pm | harness-design | harness-solo | harness-growth | harness-ops |
+| Source \ Target | harness-pm | harness-design | harness-solo | harness-growth | harness-ops |
 |-----------|:---:|:---:|:---:|:---:|:---:|
 | harness-pm | - | pm-to-design.md | pm-to-solo.md | pm-to-growth.md | - |
-| harness-design | design-to-pm.md（按需） | - | design-to-solo.md + component-map.json | - | - |
-| harness-solo | solo-to-pm.md（按需） | - | - | solo-to-growth.md | solo-to-ops.md |
+| harness-design | design-to-pm.md (on demand) | - | design-to-solo.md + component-map.json | - | - |
+| harness-solo | solo-to-pm.md (on demand) | - | - | solo-to-growth.md | solo-to-ops.md |
 | harness-growth | growth-to-pm.md | - | - | - | - |
 | harness-ops | ops-to-pm.md | - | - | - | - |
 
-### AC 编号体系（跨框架对齐）
+### AC Numbering System (Cross-framework Alignment)
 
-| AC 类型 | 前缀 | 来源 | 消费方 | 示例 |
+| AC Type | Prefix | Source | Consumer | Example |
 |---------|------|------|--------|------|
-| 工程 AC | `AC-xxx` | harness-pm 的 PRD | harness-solo 的 spec.md | `AC-001: 用户可登录` |
-| 设计 AC（流入工程） | `DAC-xxx` | harness-design 的 design-to-solo.md | harness-solo 的 spec.md | `DAC-001: 375px 无溢出` |
+| Engineering AC | `AC-xxx` | harness-pm's PRD | harness-solo's spec.md | `AC-001: User can log in` |
+| Design AC (flowing into engineering) | `DAC-xxx` | harness-design's design-to-solo.md | harness-solo's spec.md | `DAC-001: 375px no overflow` |
 
-**防腐规则**：
-- harness-pm 的 PRD 产出 `AC-xxx`（受 UI 指令越权门禁拦截）
-- harness-design 的 design-brief 沿用 PRD 的 `AC-xxx` 编号，行使 Push-back 净化权
-- harness-solo 的 writing-plans 把设计 AC 转为 `DAC-xxx`（加 D 前缀区分来源）
-- harness-solo 的 verify 同时检查 `AC-xxx` 和 `DAC-xxx`
+**Anti-corruption rules**:
+- harness-pm's PRD produces `AC-xxx` (intercepted by UI Directive Overreach Gate)
+- harness-design's design-brief reuses PRD's `AC-xxx` numbering, exercises Push-back cleanup right
+- harness-solo's writing-plans converts design ACs to `DAC-xxx` (D prefix to distinguish source)
+- harness-solo's verify checks both `AC-xxx` and `DAC-xxx`
 
 ---
 
-## ⚙️ 统一基础层规范
+## ⚙️ Unified Foundation Layer Specification
 
-### 每个框架必须有的基础文件
+### Required Foundation Files for Each Framework
 
-| 文件 | 作用 | 强制 |
+| File | Purpose | Mandatory |
 |------|------|:---:|
-| `AGENTS.md` | 启动必读，核心规则 + 领域原则 | ✅ |
-| `SOUL.md` | Agent 人格 + 领域价值观 | ✅ |
-| `constitution.md` | 项目宪法（不可协商原则） | ✅ |
-| `install.sh` | 冷启动安装脚本 | ✅ |
-| `README.md` | 框架说明 | ✅ |
-| `.harness/loops/LOOP.md` | 循环引擎定义 | ✅ |
-| `.harness/skills/INDEX.md` | skill 索引 | ✅ |
-| `.harness/skills/meta/` | 4 个元 skill | ✅ |
-| `.harness/rules/security.md` | 安全红线 | ✅ |
-| `.harness/rules/prompt-defense.md` | prompt 注入防护 | ✅ |
-| `.harness/memory/progress.md` | 会话进度日志 | ✅ |
-| `.harness/memory/knowledge-base.md` | 跨会话知识库 | ✅ |
-| `.harness/FEATURES.md` | 动态任务状态看板 | ✅ |
-| `.harness/VERSION` | 框架版本 | ✅ |
-| `.harness/templates/SKILL.md.template` | skill 模板 | ✅ |
-| `docs/handoff/README.md` | 交接协议说明 | ✅ |
-| `docs/handoff/handoff-template.md` | 通用交接模板 | ✅ |
+| `AGENTS.md` | Mandatory read at startup, core rules + domain principles | ✅ |
+| `SOUL.md` | Agent personality + domain values | ✅ |
+| `constitution.md` | Project Constitution (Non-negotiable principles) | ✅ |
+| `install.sh` | Cold-start install script | ✅ |
+| `README.md` | Framework description | ✅ |
+| `.harness/loops/LOOP.md` | Loop engine definition | ✅ |
+| `.harness/skills/INDEX.md` | Skill index | ✅ |
+| `.harness/skills/meta/` | 4 meta skills | ✅ |
+| `.harness/rules/security.md` | Security red lines | ✅ |
+| `.harness/rules/prompt-defense.md` | Prompt injection defense | ✅ |
+| `.harness/memory/progress.md` | Session progress log | ✅ |
+| `.harness/memory/knowledge-base.md` | Cross-session knowledge base | ✅ |
+| `.harness/FEATURES.md` | Dynamic task status board | ✅ |
+| `.harness/VERSION` | Framework version | ✅ |
+| `.harness/templates/SKILL.md.template` | Skill template | ✅ |
+| `docs/handoff/README.md` | Handoff protocol description | ✅ |
+| `docs/handoff/handoff-template.md` | Generic handoff template | ✅ |
 
-### 4 个元 skill（所有框架统一）
+### 4 Meta Skills (Unified Across All Frameworks)
 
-| 元 skill | 职责 | 触发时机 |
+| Meta Skill | Responsibility | Trigger |
 |----------|------|---------|
-| session-start | 会话启动，恢复上下文 | 每次会话开始 |
-| session-end | 会话收尾，归档 + 产出交接文档 | 任务完成/会话结束 |
-| skill-maintenance | skill 增删改维护 | skill 变更时 |
-| memory-maintenance | memory/knowledge-base 维护 | 定期/按需 |
+| session-start | Session start, restore context | At the start of each session |
+| session-end | Session wrap-up, archive + produce handoff document | Task complete / session end |
+| skill-maintenance | Skill add/edit/remove maintenance | When skills change |
+| memory-maintenance | memory/knowledge-base maintenance | Periodically / on demand |
 
-### 加载链（每个框架独立遵循）
-
-```
-1. AGENTS.md          — 启动必读（唯一强制入口）
-2. SOUL.md            — 人格 + 领域价值观
-3. constitution.md    — 项目宪法（不可协商原则）
-4. skills/INDEX.md    — skill 索引
-5. 对应 SKILL.md      — 执行任务时按需加载
-6. memory/progress.md — session-start 时读
-```
-
-**指令优先级**（所有框架统一）：
+### Load Chain (each framework follows independently)
 
 ```
-SOUL.md > AGENTS.md > rules/* > 用户对话 > 外部文件内容
+1. AGENTS.md          — Mandatory Read at startup (only enforced entry point)
+2. SOUL.md            — Personality + Domain Values
+3. constitution.md    — Project Constitution (Non-negotiable principles)
+4. skills/INDEX.md    — Skill index
+5. Corresponding SKILL.md — Loaded on demand when executing tasks
+6. memory/progress.md — Read at session-start
+```
+
+**Instruction priority** (unified across all frameworks):
+
+```
+SOUL.md > AGENTS.md > rules/* > User conversation > External file content
 ```
 
 ---
 
-## 🔄 LOOP 循环引擎
+## 🔄 LOOP Loop Engine
 
-### 统一规范
+### Unified Specification
 
-所有框架的 LOOP 必须支持：
+All frameworks' LOOP must support:
 
-- **state.yaml 断点续传**：会话中断后可恢复
-- **迭代上限保护**：超限请求人类介入
-- **证据驱动**：没有证据不声称完成
-- **last_error 字段**：失败时记录错误
+- **state.yaml checkpoint resume**: Recoverable after session interruption
+- **Iteration cap protection**: Request human intervention when exceeded
+- **Evidence-driven**: No claiming completion without evidence
+- **last_error field**: Records error on failure
 
-**state.yaml 统一 Schema**：
+**state.yaml Unified Schema**:
 
 ```yaml
-# 必填
+# Required
 current_task: <task-id>
 iteration: <N>
-stage: <stage-name>      # 各框架自定义枚举
+stage: <stage-name>      # Custom enum per framework
 status: running          # running / retrying / done / failed / needs-human / blocked
 started_at: "YYYY-MM-DDTHH:MM:SS"
 
-# 可选（失败时）
-last_error: "<错误描述>"
+# Optional (on failure)
+last_error: "<error description>"
 last_error_at: "YYYY-MM-DDTHH:MM:SS"
 
-# 可选（子阶段）
+# Optional (sub-stage)
 substage: "<substage-name>"
 ```
 
-**单 LOOP 硬熔断**：所有框架统一为 10 次迭代，超限停止并请求人类介入。
+**Single LOOP Hard Circuit Breaker**: Unified across all frameworks at 10 iterations; stop and request human intervention when exceeded.
 
-### 各框架循环类型对照
+### Loop Type Comparison Across Frameworks
 
-| 框架 | 循环类型 | 触发场景 | 最大迭代 |
+| Framework | Loop Type | Trigger Scenario | Max Iterations |
 |------|---------|---------|:---:|
-| harness-pm | research | 用户研究/市场分析 | 5 |
-| harness-pm | prd | PRD 生成/方案设计 | 5 |
-| harness-pm | iteration | 数据驱动迭代 | 3 |
-| harness-pm | growth | 增长突破 | 3 |
-| harness-pm | pivot | 战略调整 | 5 |
-| harness-design | visual-design | 视觉设计任务 | 5 |
-| harness-design | interaction-design | 交互设计任务 | 5 |
-| harness-design | wireframe | 线框图/低保真原型 | 5 |
-| harness-design | component | 组件设计 | 5 |
-| harness-solo | feature | 新功能开发 | 5 |
-| harness-solo | bugfix | Bug 修复 | 3 |
-| harness-solo | optimize | 性能优化 | 3 |
-| harness-solo | refactor | 重构 | 3 |
-| harness-growth | content | 内容生产 | 3 |
-| harness-growth | seo | SEO 优化 | 5 |
-| harness-growth | experiment | 增长实验 | 3 |
-| harness-growth | optimization | 漏斗优化 | 3 |
-| harness-growth | monetization | 变现优化 | 3 |
-| harness-growth | lifecycle | 用户生命周期 | 5 |
-| harness-ops | provision | 基础设施部署 | 3 |
-| harness-ops | incident | 线上排障 | 5 |
-| harness-ops | optimization | 容量/成本优化 | 3 |
-| harness-ops | recovery | 容灾恢复 | 3 |
-| harness-ops | audit | 安全/合规审计 | 3 |
+| harness-pm | research | User research / market analysis | 5 |
+| harness-pm | prd | PRD generation / solution design | 5 |
+| harness-pm | iteration | Data-driven iteration | 3 |
+| harness-pm | growth | Growth breakthrough | 3 |
+| harness-pm | pivot | Strategic adjustment | 5 |
+| harness-design | visual-design | Visual design tasks | 5 |
+| harness-design | interaction-design | Interaction design tasks | 5 |
+| harness-design | wireframe | Wireframes / low-fidelity prototypes | 5 |
+| harness-design | component | Component design | 5 |
+| harness-solo | feature | New feature development | 5 |
+| harness-solo | bugfix | Bug fix | 3 |
+| harness-solo | optimize | Performance optimization | 3 |
+| harness-solo | refactor | Refactoring | 3 |
+| harness-growth | content | Content production | 3 |
+| harness-growth | seo | SEO optimization | 5 |
+| harness-growth | experiment | Growth experiments | 3 |
+| harness-growth | optimization | Funnel optimization | 3 |
+| harness-growth | monetization | Monetization optimization | 3 |
+| harness-growth | lifecycle | User lifecycle | 5 |
+| harness-ops | provision | Infrastructure deployment | 3 |
+| harness-ops | incident | Production troubleshooting | 5 |
+| harness-ops | optimization | Capacity/cost optimization | 3 |
+| harness-ops | recovery | Disaster recovery | 3 |
+| harness-ops | audit | Security/compliance audit | 3 |
 
 ---
 
-## 🛡️ 安全与合规
+## 🛡️ Security and Compliance
 
-### 统一安全红线
+### Unified Security Red Lines
 
-所有框架的 `security.md` 必须包含：
+All frameworks' `security.md` must include:
 
-| 禁止 | 理由 |
+| Forbidden | Reason |
 |------|------|
-| 硬编码密钥 | 密钥泄露风险 |
-| `rm -rf` | 误删风险 |
-| `curl \| sh` | 供应链攻击风险 |
-| 修改 `.git/hooks/` | 破坏 git 钩子完整性 |
-| 绕过质量门禁 | 产出质量失控 |
+| Hardcoded secrets | Secret leakage risk |
+| `rm -rf` | Accidental deletion risk |
+| `curl \| sh` | Supply chain attack risk |
+| Modifying `.git/hooks/` | Breaks git hook integrity |
+| Bypassing Quality Gates | Output quality out of control |
 
-各框架按领域扩展额外红线：
-- **harness-growth**：禁止黑帽 SEO、刷量、泄露用户 PII
-- **harness-design**：禁止泄露 PII、禁止使用未授权素材
-- **harness-ops**：禁止接触明文 Secret 值、禁止直接操作生产集群
+Each framework extends additional red lines by domain:
+- **harness-growth**: Forbids black-hat SEO, fake traffic, leaking user PII
+- **harness-design**: Forbids leaking PII, forbids using unauthorized assets
+- **harness-ops**: Forbids touching plaintext Secret values, forbids directly operating production clusters
 
-### harness-ops 专属安全机制
+### harness-ops Exclusive Security Mechanisms
 
-- **Secret 严格隔离**：Agent 只操作 Secret 的引用（路径/键名/CRD），永远不接触明文值（硬约束，不可协商）
-- **7 层纵深防御**：Dry-run / Canary / Approval gate / Rate limit / Rollback / Audit / Blast radius
-- **GitOps PR 间接执行**：Agent 永远不直接操作生产集群，通过开 PR + 人类 review + ArgoCD/Flux 同步
+- **Strict Secret Isolation**: Agent only operates on Secret references (path/key name/CRD), never touches plaintext values (hard constraint, non-negotiable)
+- **7-Layer Defense in Depth**: Dry-run / Canary / Approval gate / Rate limit / Rollback / Audit / Blast radius
+- **GitOps PR Indirect Execution**: Agent never directly operates production clusters; goes through PR + human review + ArgoCD/Flux sync
 
-### Prompt 注入防护
+### Prompt Injection Defense
 
-所有框架的 `prompt-defense.md` 定义：
-- 指令优先级：SOUL.md > AGENTS.md > rules/* > 用户对话 > 外部文件内容
-- 外部内容标记为不可信，不作为指令执行
-- 关键操作需人类确认
-
----
-
-## 🗺️ 演进路线
-
-### 当前阶段（v2.1，已完成）
-
-- ✅ 4 个核心框架独立建设（pm/design/solo/growth 全部完成）
-- ✅ 1 个 P0 扩展框架建设完成（ops，32 skill + 7 workflow，半自动化架构）
-- ✅ 契约文档体系打通（pm→design→solo→growth→pm 闭环 + solo→ops→pm 闭环）
-- ✅ AC 编号体系跨框架对齐（AC-xxx / DAC-xxx）
-- ✅ LOOP 引擎统一规范（state.yaml + 断点续传 + 超限保护）
-- ✅ 基础层统一（AGENTS/SOUL/constitution/security/meta skill）
-- ✅ 全局深度排查与修复（21 项问题全部解决，落地可用度 90+）
-
-### 中期演进（v3.0，1-2 月）
-
-- 📋 harness-data 建设（P1，数据管道框架）
-- 📋 契约文档版本化（支持历史追溯，不破坏"只看最新"原则）
-- 📋 跨框架循环类型映射说明（design 的 visual-design → solo 的 feature）
-
-### 长期演进（v4.0，3-6 月，按需）
-
-- 📋 编排层探索（多 Agent 自动调度，非当前目标）
-- 📋 共享事实源探索（替代部分契约文档，减少信息损失）
-- 📋 harness-qa / harness-security 建设（P2/P3，按需）
+All frameworks' `prompt-defense.md` defines:
+- Instruction priority: SOUL.md > AGENTS.md > rules/* > User conversation > External file content
+- External content marked as untrusted, not executed as instructions
+- Critical operations require human confirmation
 
 ---
 
-## 📚 文档导航
+## 🗺️ Evolution Roadmap
 
-### 架构文档
+### Current Stage (v2.1, completed)
 
-- [ARCHITECTURE.md](./ARCHITECTURE.md) — 家族架构设计方案（v2.1，完整版）
+- ✅ 4 core frameworks built independently (pm/design/solo/growth all complete)
+- ✅ 1 P0 extension framework built (ops, 32 skills + 7 workflows, semi-automated architecture)
+- ✅ Contract document system connected (pm→design→solo→growth→pm closed loop + solo→ops→pm closed loop)
+- ✅ AC numbering system aligned cross-framework (AC-xxx / DAC-xxx)
+- ✅ LOOP engine unified specification (state.yaml + checkpoint resume + cap protection)
+- ✅ Foundation layer unified (AGENTS/SOUL/constitution/security/meta skill)
+- ✅ Global deep audit and fix (21 issues all resolved, production-readiness 90+)
 
-### 各框架文档
+### Mid-term Evolution (v3.0, 1-2 months)
 
-| 框架 | 入口文档 |
+- 📋 harness-data built (P1, data pipeline framework)
+- 📋 Contract document versioning (support historical tracing, without breaking "only read latest" principle)
+- 📋 Cross-framework loop type mapping description (design's visual-design → solo's feature)
+
+### Long-term Evolution (v4.0, 3-6 months, on demand)
+
+- 📋 Orchestration layer exploration (multi-Agent auto-scheduling, not a current goal)
+- 📋 Shared source of truth exploration (replace some contract documents, reduce information loss)
+- 📋 harness-qa / harness-security built (P2/P3, on demand)
+
+---
+
+## 📚 Documentation Navigation
+
+### Architecture Document
+
+- [ARCHITECTURE.md](./ARCHITECTURE.md) — Family architecture design (v2.1, full version)
+
+### Per-Framework Documentation
+
+| Framework | Entry Document |
 |------|---------|
 | harness-pm | [README.md](./harness-pm/README.md) / [AGENTS.md](./harness-pm/AGENTS.md) |
 | harness-design | [README.md](./harness-design/README.md) / [AGENTS.md](./harness-design/AGENTS.md) |
@@ -796,33 +799,33 @@ substage: "<substage-name>"
 | harness-growth | [README.md](./harness-growth/README.md) / [AGENTS.md](./harness-growth/AGENTS.md) |
 | harness-ops | [README.md](./harness-ops/README.md) / [AGENTS.md](./harness-ops/AGENTS.md) |
 
-### 各框架核心配置
+### Per-Framework Core Config
 
-| 框架 | SOUL.md | constitution.md | LOOP.md | INDEX.md |
+| Framework | SOUL.md | constitution.md | LOOP.md | INDEX.md |
 |------|---------|-----------------|---------|----------|
-| harness-pm | [链接](./harness-pm/SOUL.md) | [链接](./harness-pm/constitution.md) | [链接](./harness-pm/.harness/loops/LOOP.md) | [链接](./harness-pm/.harness/skills/INDEX.md) |
-| harness-design | [链接](./harness-design/SOUL.md) | [链接](./harness-design/constitution.md) | [链接](./harness-design/.harness/loops/LOOP.md) | [链接](./harness-design/.harness/skills/INDEX.md) |
-| harness-solo | [链接](./harness-solo/SOUL.md) | [链接](./harness-solo/constitution.md) | [链接](./harness-solo/.harness/loops/LOOP.md) | [链接](./harness-solo/.harness/skills/INDEX.md) |
-| harness-growth | [链接](./harness-growth/SOUL.md) | [链接](./harness-growth/constitution.md) | [链接](./harness-growth/.harness/loops/LOOP.md) | [链接](./harness-growth/.harness/skills/INDEX.md) |
-| harness-ops | [链接](./harness-ops/SOUL.md) | [链接](./harness-ops/constitution.md) | [链接](./harness-ops/.harness/loops/LOOP.md) | [链接](./harness-ops/.harness/skills/INDEX.md) |
+| harness-pm | [Link](./harness-pm/SOUL.md) | [Link](./harness-pm/constitution.md) | [Link](./harness-pm/.harness/loops/LOOP.md) | [Link](./harness-pm/.harness/skills/INDEX.md) |
+| harness-design | [Link](./harness-design/SOUL.md) | [Link](./harness-design/constitution.md) | [Link](./harness-design/.harness/loops/LOOP.md) | [Link](./harness-design/.harness/skills/INDEX.md) |
+| harness-solo | [Link](./harness-solo/SOUL.md) | [Link](./harness-solo/constitution.md) | [Link](./harness-solo/.harness/loops/LOOP.md) | [Link](./harness-solo/.harness/skills/INDEX.md) |
+| harness-growth | [Link](./harness-growth/SOUL.md) | [Link](./harness-growth/constitution.md) | [Link](./harness-growth/.harness/loops/LOOP.md) | [Link](./harness-growth/.harness/skills/INDEX.md) |
+| harness-ops | [Link](./harness-ops/SOUL.md) | [Link](./harness-ops/constitution.md) | [Link](./harness-ops/.harness/loops/LOOP.md) | [Link](./harness-ops/.harness/skills/INDEX.md) |
 
 ---
 
-## 🤝 贡献与许可
+## 🤝 Contribution and License
 
-### 贡献方式
+### How to Contribute
 
-1. 选择一个框架深入理解（建议从 harness-solo 开始，最简单）
-2. 阅读 [ARCHITECTURE.md](./ARCHITECTURE.md) 了解家族整体设计
-3. 阅读对应框架的 AGENTS.md 和 SOUL.md 理解领域价值观
-4. 按 SKILL.md.template 规范创建新 skill
-5. 通过 LOOP 引擎验证 skill 可靠性
+1. Pick a framework to understand deeply (recommend starting with harness-solo, the simplest)
+2. Read [ARCHITECTURE.md](./ARCHITECTURE.md) to understand the family's overall design
+3. Read the corresponding framework's AGENTS.md and SOUL.md to understand domain values
+4. Create new skills per the SKILL.md.template spec
+5. Validate skill reliability via the LOOP engine
 
-### 许可
+### License
 
-MIT License — 见各框架根目录的 LICENSE 文件。
+MIT License — see the LICENSE file in each framework's root directory.
 
-### 维护者
+### Maintainer
 
 [@LuckyOneTwoThree](https://github.com/LuckyOneTwoThree)
 
@@ -830,9 +833,9 @@ MIT License — 见各框架根目录的 LICENSE 文件。
 
 <div align="center">
 
-**harness-all** · 个人 AI 工作室 · 多 Agent 框架家族
+**harness-all** · Personal AI Studio · Multi-Agent Framework Family
 
-**独立优先 · 契约协作 · 循环验证 · 安全红线**
+**Independence First · Contract Collaboration · Loop Verification · Security Red Lines**
 
 v2.1 · 2026-06-22
 

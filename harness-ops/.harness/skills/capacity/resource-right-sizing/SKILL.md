@@ -1,12 +1,12 @@
 ---
 name: resource-right-sizing
-description: 资源右 sizing 建议，基于 Prometheus 数据分析 Pod 资源使用，推荐最优 requests/limits
+description: Resource right-sizing recommendations, analyzing Pod resource usage based on Prometheus data and recommending optimal requests/limits
 triggers:
-  - 定期资源优化时
-  - 成本优化需要右 sizing 时
-  - Pod 资源使用率持续偏低/偏高时
-  - 用户要求"优化资源"时
-  - optimization LOOP 触发时
+  - During periodic resource optimization
+  - When cost optimization requires right-sizing
+  - When Pod resource utilization is persistently low/high
+  - When the user requests "optimize resources"
+  - When the optimization LOOP triggers
 reads:
   - docs/infrastructure/OPS_STRATEGY.md
   - rules/security.md
@@ -22,56 +22,56 @@ operation_tier: inspect
 requires_approval: false
 ---
 
-# Resource Right Sizing — 资源右 sizing 建议
+# Resource Right Sizing — Resource Right-Sizing Recommendations
 
-## 铁律
+## Ground Rules
 
-1. **基于数据，不基于猜测** —— 至少 7 天的 Prometheus 数据
-2. **留有余量** —— 推荐值不超过实际使用的 80%（留 20% 余量）
-3. **不牺牲稳定性** —— 资源压缩不能导致 OOM/性能下降
-4. **分批调整** —— 不一次性大幅调整，逐步收敛
+1. **Data-driven, not guesswork** — at least 7 days of Prometheus data
+2. **Keep headroom** — recommended values must not exceed 80% of actual usage (keep 20% headroom)
+3. **Do not sacrifice stability** — resource compression must not cause OOM or performance degradation
+4. **Adjust in batches** — do not make large adjustments all at once, converge gradually
 
-## 流程
+## Process
 
-### 1. 收集资源使用数据
+### 1. Collect Resource Usage Data
 
-查询 Prometheus（至少 7 天）：
+Query Prometheus (at least 7 days):
 
 ```promql
-# CPU 使用率（按 Pod）
+# CPU utilization (by Pod)
 avg(rate(container_cpu_usage_seconds_total{pod=~"payment-service-.*"}[7d])) by (pod)
 
-# 内存使用率（按 Pod）
+# Memory utilization (by Pod)
 avg(container_memory_working_set_bytes{pod=~"payment-service-.*"}[7d] / container_spec_memory_limit_bytes{pod=~"payment-service-.*"}) by (pod)
 
-# CPU 峰值
+# CPU peak
 max(rate(container_cpu_usage_seconds_total{pod=~"payment-service-.*"}[7d])) by (pod)
 
-# 内存峰值
+# Memory peak
 max(container_memory_working_set_bytes{pod=~"payment-service-.*"}[7d]) by (pod)
 ```
 
-### 2. 分析资源使用模式
+### 2. Analyze Resource Usage Patterns
 
 ```
-## 资源使用分析
+## Resource Usage Analysis
 
-### payment-service（3 副本）
+### payment-service (3 replicas)
 
-| 指标 | 当前配置 | 平均使用 | 峰值使用 | 利用率 |
+| Metric | Current Config | Avg Usage | Peak Usage | Utilization |
 |------|---------|---------|---------|--------|
 | CPU requests | 200m | 50m | 120m | 25% |
 | CPU limits | 500m | - | - | - |
 | Memory requests | 256Mi | 180Mi | 220Mi | 70% |
 | Memory limits | 512Mi | - | - | - |
 
-### 分析
-- CPU 利用率偏低（25%），requests 可下调
-- 内存利用率合理（70%），保持不变
-- 峰值 CPU 120m，当前 limits 500m 过高
+### Analysis
+- CPU utilization is low (25%), requests can be lowered
+- Memory utilization is reasonable (70%), keep unchanged
+- Peak CPU is 120m, current limits of 500m is too high
 
-### 推荐
-| 指标 | 当前 | 推荐 | 节省 |
+### Recommendation
+| Metric | Current | Recommended | Savings |
 |------|------|------|------|
 | CPU requests | 200m | 100m | 50% |
 | CPU limits | 500m | 300m | 40% |
@@ -79,75 +79,75 @@ max(container_memory_working_set_bytes{pod=~"payment-service-.*"}[7d]) by (pod)
 | Memory limits | 512Mi | 512Mi | 0% |
 ```
 
-### 3. 生成右 sizing 建议
+### 3. Produce Right-Sizing Recommendations
 
 ```yaml
-# 推荐资源配置
+# Recommended resource configuration
 resources:
   requests:
-    cpu: 100m      # 原 200m，基于峰值 120m + 20% 余量
-    memory: 256Mi   # 保持不变
+    cpu: 100m      # was 200m, based on peak 120m + 20% headroom
+    memory: 256Mi   # keep unchanged
   limits:
-    cpu: 300m      # 原 500m，基于峰值 120m * 2.5
-    memory: 512Mi   # 保持不变
+    cpu: 300m      # was 500m, based on peak 120m * 2.5
+    memory: 512Mi   # keep unchanged
 ```
 
-### 4. 生成 GitOps PR
+### 4. Produce a GitOps PR
 
 ```
-## 右 sizing PR: payment-service
+## Right-Sizing PR: payment-service
 
-### 变更
+### Changes
 - CPU requests: 200m → 100m
 - CPU limits: 500m → 300m
 
-### 数据支撑
-- 7 天平均 CPU 使用: 50m
-- 7 天峰值 CPU 使用: 120m
-- 推荐依据: 峰值 * 1.2 余量 = 144m → 取整 150m
+### Data Backing
+- 7-day average CPU usage: 50m
+- 7-day peak CPU usage: 120m
+- Recommendation basis: peak * 1.2 headroom = 144m → round to 150m
 
-### 预期收益
-- 单 Pod 节省: 100m CPU
-- 3 副本总节省: 300m CPU
-- 集群可多调度: 1-2 个 Pod
+### Expected Benefits
+- Per-Pod savings: 100m CPU
+- 3 replicas total savings: 300m CPU
+- Cluster can schedule 1-2 more Pods
 
-### 风险
-- 低风险（基于 7 天数据，留有 20% 余量）
-- 如 CPU 飙升，HPA 会自动扩容
+### Risk
+- Low risk (based on 7-day data, with 20% headroom)
+- If CPU spikes, HPA will auto-scale
 ```
 
-### 5. 验证调整效果
+### 5. Verify Adjustment Effects
 
-调整后持续观察 7 天：
-- CPU 使用率是否上升（预期会上升，因 requests 降低）
-- 是否出现 CPU throttling
-- 是否影响性能指标（延迟/错误率）
-- HPA 是否正常触发
+Continuously observe for 7 days after adjustment:
+- Whether CPU utilization rises (expected to rise since requests are lowered)
+- Whether CPU throttling occurs
+- Whether performance metrics are affected (latency/error rate)
+- Whether HPA triggers normally
 
-### 6. 更新知识库
+### 6. Update Knowledge Base
 
-`memory/knowledge-base.md` 追加：
+Append to `memory/knowledge-base.md`:
 ```
-| 服务 | 资源类型 | 调整前 | 调整后 | 节省比例 | 数据周期 | 调整日期 |
+| Service | Resource Type | Before | After | Savings Ratio | Data Window | Adjustment Date |
 |------|---------|--------|--------|---------|---------|---------|
 | payment-service | CPU requests | 200m | 100m | 50% | 7d | 2026-06-22 |
 ```
 
-## 禁止事项
+## Prohibitions
 
-- 不基于不足 7 天的数据做推荐
-- 不将资源压缩到峰值以下（必须留余量）
-- 不一次性大幅调整（单次调整不超过 50%）
-- 不调整后不验证（必须持续观察）
+- Do not make recommendations based on less than 7 days of data
+- Do not compress resources below peak (must keep headroom)
+- Do not make large adjustments all at once (single adjustment must not exceed 50%)
+- Do not skip verification after adjustment (must observe continuously)
 
-## 与 LOOP 的关系
+## Relationship to LOOP
 
-**所属 LOOP 类型**：optimization
+**LOOP type**: optimization
 
 ```
 LOOP(optimization):
-  PLAN:       收集数据 → 分析使用模式 → 生成建议
-  PROVISION:  提交 GitOps PR → 调整资源配置
-  VERIFY:     观察 7 天 → 确认无负面影响
-  通过? DONE : 回滚调整 → 重新分析
+  PLAN:       Collect data → analyze usage patterns → produce recommendations
+  PROVISION:  Submit GitOps PR → adjust resource configuration
+  VERIFY:     Observe for 7 days → confirm no negative impact
+  Pass? DONE : Roll back adjustment → re-analyze
 ```

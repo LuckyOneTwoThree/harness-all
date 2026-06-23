@@ -1,10 +1,10 @@
 ---
 name: landing-page-optimization
-description: 落地页设计与优化，含价值主张/CTA/表单/A-B测试建议
+description: Landing page design and optimization, including value proposition/CTA/form/A-B testing recommendations
 triggers:
-  - 获客渠道确定后需要设计落地页
-  - 落地页转化率低需要优化时
-  - 用户要求"优化落地页"
+  - Need to design a landing page after acquisition channels are decided
+  - Landing page conversion rate is low and needs optimization
+  - User asks to "optimize landing page"
 reads:
   - docs/handoff/pm-to-growth.md
   - docs/handoff/solo-to-growth.md
@@ -14,88 +14,88 @@ quality_gates: []
 max_iterations: 2
 ---
 
-# Landing Page Optimization — 落地页优化
+# Landing Page Optimization — Landing Page Optimization
 
-## 铁律
-- 落地页必须与广告创意**信息一致**——广告承诺什么，落地页就给什么
-- 每个落地页只聚焦**一个 CTA**——多个 CTA 会分散注意力
-- 表单字段越少越好——每多一个字段转化率降 5-10%
+## Iron Rules
+- Landing page must be **message-matched** with the ad creative — deliver what the ad promises
+- Each landing page focuses on **one CTA** — multiple CTAs distract attention
+- Form fields should be as few as possible — each additional field drops conversion by 5-10%
 
-## 流程
+## Process
 
-1. **定义落地页目标**
-   - 主要转化目标：注册/试用/购买/下载/预约
-   - 次要目标：了解更多/订阅/分享
-   - 一页一主 CTA
+1. **Define landing page goal**
+   - Primary conversion goal: Sign-up / trial / purchase / download / booking
+   - Secondary goals: Learn more / subscribe / share
+   - One page, one primary CTA
 
-2. **价值主张设计**
+2. **Value proposition design**
    ```
-   标题（H1）: [核心价值，< 15 字]
-   副标题: [具体说明，< 30 字]
-   价值点1: [功能/好处]
-   价值点2: [功能/好处]
-   价值点3: [功能/好处]
-   社会证明: [用户数/评分/案例/Logo]
-   CTA: [行动号召]
+   Headline (H1): [Core value, < 15 chars]
+   Subheadline: [Specific description, < 30 chars]
+   Value point 1: [Feature/benefit]
+   Value point 2: [Feature/benefit]
+   Value point 3: [Feature/benefit]
+   Social proof: [User count / rating / case study / Logo]
+   CTA: [Call to action]
    ```
 
-3. **页面结构设计**
+3. **Page structure design**
    ```
-   Above the fold（首屏可见）:
-   - H1 标题 + 副标题
-   - 主 CTA
-   - 信任徽章/社会证明
+   Above the fold:
+   - H1 headline + subheadline
+   - Primary CTA
+   - Trust badges / social proof
 
    Below the fold:
-   - 功能详解（图文）
-   - 用户案例/评价
+   - Feature deep-dive (image + text)
+   - User case studies / testimonials
    - FAQ
-   - 再次 CTA
+   - Repeat CTA
    ```
 
-4. **表单优化**
-   | 字段数 | 转化率影响 | 适用场景 |
-   |--------|-----------|---------|
-   | 1-3 字段 | 基线 | 免费试用/注册 |
-   | 4-6 字段 | -10~20% | 付费试用/预约 |
-   | 7+ 字段 | -30%+ | B2B 线索/高端服务 |
+4. **Form optimization**
+   | Field count | Conversion impact | Suited scenario |
+   |-------------|-------------------|-----------------|
+   | 1-3 fields | Baseline | Free trial / sign-up |
+   | 4-6 fields | -10~20% | Paid trial / booking |
+   | 7+ fields | -30%+ | B2B leads / high-end services |
 
-   - 只留必要字段
-   - 使用智能默认值
-   - 支持社交账号登录（减少输入）
-   - 实时验证（减少提交失败）
+   - Keep only essential fields
+   - Use smart defaults
+   - Support social login (reduce typing)
+   - Real-time validation (reduce submission failures)
 
-5. **信任元素**
-   - 用户 Logo / 数字
-   - 评分 / 评价
-   - 安全认证 / 隐私承诺
-   - 退款保证 / 免费试用
+5. **Trust elements**
+   - User logos / numbers
+   - Ratings / reviews
+   - Security certifications / privacy commitments
+   - Refund guarantee / free trial
 
-6. **性能优化**
-   - 加载速度 < 3s（每多 1s 转化率 -7%）
-   - 移动端适配
-   - 图片压缩 + Lazy load
+6. **Performance optimization**
+   - Load time < 3s (each extra 1s drops conversion by 7%)
+   - Mobile responsiveness
+   - Image compression + lazy load
 
-7. **A/B 测试建议**
+7. **A/B testing recommendations**
    ```
-   | 测试项 | 变体A | 变体B | 假设 |
-   |--------|-------|-------|------|
-   | 标题 | 功能描述 | 价值描述 | 价值导向转化更高 |
-   | CTA | "注册" | "免费开始" | 利益导向 CTR 更高 |
-   | 表单 | 5字段 | 3字段 | 少字段转化更高 |
+   | Test item | Variant A | Variant B | Hypothesis |
+   |-----------|-----------|-----------|------------|
+   | Headline | Feature description | Value description | Value-oriented converts higher |
+   | CTA | "Sign up" | "Start free" | Benefit-oriented CTA higher CTR |
+   | Form | 5 fields | 3 fields | Fewer fields convert higher |
    ```
 
-8. **产出落地页方案**
-   写入 `docs/operations/landing-page-spec.md`
+8. **Produce landing page spec**
+   Write to `docs/operations/landing-page-spec.md`
 
-## 禁止事项
-- 不做广告与落地页不一致的页面（跳出率高）
-- 不放多个 CTA（分散注意力）
-- 不设计过长表单（除非 B2B 高价值线索）
-- 不忽略移动端（移动流量占比 50%+）
+## Prohibitions
+- Don't build pages where ad and landing page are inconsistent (high bounce rate)
+- Don't place multiple CTAs (distract attention)
+- Don't design overly long forms (unless B2B high-value leads)
+- Don't ignore mobile (mobile traffic is 50%+)
 
-## 与 LOOP 的关系
-本 skill 在 LOOP(optimization) 的 **EXPERIMENT 阶段**执行。
+## Relationship to LOOP
+This skill runs in the **EXPERIMENT phase** of LOOP(optimization).
 
-## 与 Workflow 的关系
-本 skill 是获客投放相关流程的组成部分。
+## Relationship to Workflow
+This skill is part of acquisition campaign workflows.

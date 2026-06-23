@@ -1,60 +1,60 @@
-# PRD生成器 输出Schema参考
+# PRD Generator Output Schema Reference
 
-> 本文档从 design-prd SKILL.md 拆分而来，包含PRD生成器的完整输出数据结构定义、质量报告格式和人类确认清单模板。
+> This document is split from design-prd SKILL.md, containing the complete output data structure definition, quality report format, and human review checklist template for the PRD generator.
 
-### 8.1 PRD文档输出
+### 8.1 PRD Document Output
 
-**格式**：Markdown
-**文件命名**：`PRD-{产品名}-{需求ID}-{版本}.md`
-**存储路径**：`docs/product/PRD.md`
-**输出文件**：prd.md
+**Format**: Markdown
+**File naming**: `PRD-{product_name}-{requirement_id}-{version}.md`
+**Storage path**: `docs/product/PRD.md`
+**Output file**: prd.md
 
-**输出模板**：
+**Output template**:
 ```markdown
-# {PRD标题}
+# {PRD Title}
 
-| 字段 | 值 |
+| Field | Value |
 |------|-----|
-| 文档ID | PRDS-{年月}-{序号} |
-| 版本 | v{主版本}.{次版本} |
-| 状态 | {状态} |
-| 作者 | {作者} |
-| 创建时间 | {时间} |
+| Document ID | PRDS-{YYYYMM}-{sequence} |
+| Version | v{major_version}.{minor_version} |
+| Status | {status} |
+| Author | {author} |
+| Created At | {timestamp} |
 
-## 目录
-1. [元信息](#1-元信息)
-2. [背景与目标](#2-背景与目标)
-3. [方案设计](#3-方案设计)
+## Table of Contents
+1. [Meta Information](#1-meta-information)
+2. [Background & Objectives](#2-background-objectives)
+3. [Solution Design](#3-solution-design)
 ...
 ```
 
-### 8.2 质量门禁检查报告
+### 8.2 Quality Gate Check Report
 
-**格式**：JSON
-**文件命名**：`{PRD-ID}_quality_report_{时间戳}.json`
+**Format**: JSON
+**File naming**: `{PRD-ID}_quality_report_{timestamp}.json`
 
-**输出校验规则**：
+**Output validation rules**:
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| prd_id | string | 是 | PRD唯一标识 |
-| level | enum(L,S,X) | 是 | PRD分级 |
-| metadata | object | 是 | 元信息 |
-| metadata.product_name | string | 是 | 产品名称 |
-| metadata.version | string | 是 | 版本号 |
-| metadata.created_at | string | 是 | 创建时间(ISO8601) |
-| sections | array | 是 | PRD章节列表 |
-| sections[].section_id | string | 是 | 章节标识 |
-| sections[].title | string | 是 | 章节标题 |
-| sections[].content | string | 是 | 章节内容 |
-| sections[].confidence | number | 是 | 章节置信度(0-1.0) |
-| functional_requirements | array | 是 | 功能需求列表 |
-| functional_requirements[].req_id | string | 是 | 需求标识 |
-| functional_requirements[].title | string | 是 | 需求标题 |
-| functional_requirements[].priority | enum(P0,P1,P2) | 是 | 优先级 |
-| quality_gates | array | 是 | 质量门禁 |
+| prd_id | string | Yes | PRD unique identifier |
+| level | enum(L,S,X) | Yes | PRD tier |
+| metadata | object | Yes | Meta information |
+| metadata.product_name | string | Yes | Product name |
+| metadata.version | string | Yes | Version number |
+| metadata.created_at | string | Yes | Creation time (ISO8601) |
+| sections | array | Yes | PRD section list |
+| sections[].section_id | string | Yes | Section identifier |
+| sections[].title | string | Yes | Section title |
+| sections[].content | string | Yes | Section content |
+| sections[].confidence | number | Yes | Section confidence (0-1.0) |
+| functional_requirements | array | Yes | Functional requirements list |
+| functional_requirements[].req_id | string | Yes | Requirement identifier |
+| functional_requirements[].title | string | Yes | Requirement title |
+| functional_requirements[].priority | enum(P0,P1,P2) | Yes | Priority |
+| quality_gates | array | Yes | Quality gates |
 
-**报告结构**：
+**Report structure**:
 ```json
 {
   "prd_id": "string",
@@ -100,40 +100,40 @@
 }
 ```
 
-### 8.3 需人类确认清单
+### 8.3 Human Review Required Checklist
 
-**格式**：Markdown
-**文件命名**：`{PRD-ID}_human_review_required.md`
+**Format**: Markdown
+**File naming**: `{PRD-ID}_human_review_required.md`
 
-**输出内容**：
+**Output content**:
 ```markdown
-# 需人类确认清单
+# Human Review Required Checklist
 
-生成时间：{时间}
-PRD版本：v{版本}
+Generated at: {timestamp}
+PRD version: v{version}
 
-## 歧义澄清问题
+## Ambiguity Clarification Questions
 
-| # | 位置 | 问题 | 选项 |
+| # | Location | Question | Options |
 |---|------|------|------|
-| 1 | Section.X.X | 问题描述 | A/B/C |
+| 1 | Section.X.X | Question description | A/B/C |
 
-## 优先级仲裁请求
+## Priority Arbitration Requests
 
-| # | 冲突描述 | 涉及方 | 建议 |
+| # | Conflict Description | Parties Involved | Recommendation |
 |---|----------|--------|------|
 | 1 | | | |
 
-## 上游数据补充请求
+## Upstream Data Supplement Requests
 
-| # | 字段 | 重要性 | 补充指导 |
+| # | Field | Importance | Supplement Guidance |
 |---|------|--------|----------|
 | 1 | | | |
 ```
 
-### 8.4 prd.json 完整 Schema
+### 8.4 prd.json Complete Schema
 
-prd.json 是 PRD 的机器可消费版本，供 Backend/UI 下游 Skill 编程式消费，确保功能点、页面、实体、用户流程等核心信息可被自动解析和对齐。包含 7 个顶层数组：features、pages、entities、user_flows、non_functional_requirements、tracking_plan、traceability。
+prd.json is the machine-consumable version of the PRD, provided for programmatic consumption by downstream Backend/UI Skills, ensuring that core information such as features, pages, entities, and user flows can be automatically parsed and aligned. It contains 7 top-level arrays: features, pages, entities, user_flows, non_functional_requirements, tracking_plan, traceability.
 
 ```json
 {

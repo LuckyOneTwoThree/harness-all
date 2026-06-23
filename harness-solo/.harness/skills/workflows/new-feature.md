@@ -4,91 +4,93 @@ name: new-feature
 default_mode: deep
 ---
 
-# 工作流 A：新功能开发
+# Workflow A: New Feature Development
 
-> 适用场景：开发新功能、添加新模块、实现新需求
-> 核心模式：brainstorming 硬门 → LOOP 循环验证 → code-review 最终审查
+> Applicable scenario: Develop new features, add new modules, implement new requirements
+> Core mode: brainstorming hard gate → LOOP iterative validation → code-review final review
 
-## 流程
+## Process
 
 ```
 ┌─────────────────┐
-│ session-start   │  加载上下文，确认任务范围
+│ session-start   │  Load context, confirm task scope
 └────────┬────────┘
          ▼
 ┌─────────────────┐
-│ brainstorming   │  ★ 硬门：需求不清不许过
-│                 │  - 结构化问答明确需求
-│                 │  - 宪法检查
-│                 │  - 输出验收标准
+│ brainstorming   │  ★ Hard gate: unclear requirements are not allowed through
+│                 │  - Structured Q&A to clarify requirements
+│                 │  - Constitution check
+│                 │  - Output acceptance criteria
 └────────┬────────┘
-         │ 通过
+         │ Passed
          ▼
 ┌─────────────────┐
-│ writing-plans   │  任务拆解
-│                 │  - 输出 spec.md
-│                 │  - 初始化 state.yaml
+│ writing-plans   │  Task breakdown
+│                 │  - Output spec.md
+│                 │  - Initialize state.yaml
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│              LOOP 循环验证               │
+│              LOOP iterative validation  │
 │  ┌─────────────────────────────────┐    │
-│  │ executing-plans (调度器)        │    │
-│  │  按任务序列推进，每任务 checkpoint│    │
+│  │ executing-plans (scheduler)     │    │
+│  │  Advance per task sequence,     │    │
+│  │  checkpoint per task            │    │
 │  └──────────┬──────────────────────┘    │
 │             ▼                            │
 │  ┌─────────────────────────────────┐    │
 │  │ test-driven-development (ACT)   │    │
-│  │  红 → 绿 → 重构                 │    │
+│  │  Red → Green → Refactor         │    │
 │  └──────────┬──────────────────────┘    │
 │             ▼                            │
 │  ┌─────────────────────────────────┐    │
 │  │ verify (VERIFY)                 │    │
-│  │  测试 + AC + 宪法 + 安全 + 熵   │    │
+│  │  Tests + AC + constitution +    │    │
+│  │  security + entropy             │    │
 │  └──────────┬──────────────────────┘    │
 │             │                            │
-│             ├── 通过 → 跳出 LOOP ────────┼──→
+│             ├── Pass → exit LOOP ────────┼──→
 │             │                            │
-│             └── 失败                     │
+│             └── Fail                     │
 │                   │                      │
 │                   ▼                      │
 │  ┌─────────────────────────────────┐    │
 │  │ systematic-debugging            │    │
-│  │  找根因                         │    │
+│  │  Find root cause                │    │
 │  └──────────┬──────────────────────┘    │
 │             │                            │
-│             └── 回到 tdd ────────────────┘
+│             └── Back to tdd ─────────────┘
 │                                          │
-│  迭代上限：5 次（feature 类型）          │
-│  超限 → 请求人类介入                     │
+│  Iteration cap: 5 (feature type)        │
+│  Exceeded → request human intervention  │
 └─────────────────────────────────────────┘
          │
          ▼
 ┌─────────────────────┐
-│ requesting-code-review │  最终审查
-│                       │  - 设计/实现/宪法/可维护性
+│ requesting-code-review │  Final review
+│                       │  - Design/implementation/constitution/maintainability
 └──────────┬────────────┘
-           │ 通过
+           │ Passed
            ▼
 ┌─────────────────┐
-│ session-end     │  归档 + baseline + 更新 FEATURES.md
+│ session-end     │  Archive + baseline + update FEATURES.md
 └─────────────────┘
 ```
 
-## 关键检查点
+## Key Checkpoints
 
-- [ ] brainstorming 硬门过了吗？（需求清晰、AC 可测试、宪法合规）
-- [ ] spec.md 写了吗？state.yaml 初始化了吗？
-- [ ] LOOP 每次迭代都更新了 state.yaml 和 iterations.log 吗？
-- [ ] verify 展示了实际输出吗？（不是"应该通过"）
-- [ ] code-review 通过了吗？
-- [ ] session-end 执行了归档步骤吗？（按 SKILL.md 步骤 4.1-4.2）
+- [ ] Did brainstorming pass the hard gate? (Clear requirements, testable AC, constitution-compliant)
+- [ ] Was spec.md written? Was state.yaml initialized?
+- [ ] Did each LOOP iteration update state.yaml and iterations.log?
+- [ ] Did verify show actual output? (Not "should pass")
+- [ ] Did code-review pass?
+- [ ] Did session-end execute the archive steps? (Per SKILL.md steps 4.1-4.2)
 
-## 失败处理
+## Failure Handling
 
-| 失败点 | 处理方式 |
+| Failure Point | Handling |
 |--------|---------|
-| brainstorming 硬门没过 | 停下来问用户，不许猜 |
-| LOOP 迭代超 5 次 | 请求人类介入，不硬撑 |
-| verify 安全扫描未过 | 修复后重新 verify，不许跳过 |
-| code-review 不通过 | 列出问题，回到 tdd 修复 |
+| brainstorming hard gate not passed | Stop and ask the user; no guessing allowed |
+| LOOP iterations exceed 5 | Request human intervention; don't push through |
+| verify security scan not passed | Fix and re-verify; no skipping allowed |
+| code-review not passed | List issues and go back to tdd to fix |

@@ -1,21 +1,21 @@
 ---
 name: design-prd
-description: 当需要生成标准化PRD文档时使用。PRD自动生成与管理，基于需求和创意方案生成标准化PRD文档，为后续IA、流程和原型设计提供输入。涵盖PRD-L/S/X三级分层、9节完整结构、4道质量门禁。关键词：PRD生成、产品需求文档、需求文档自动生成、PRD管理、写需求文档、产品文档。
+description: Use when you need to generate a standardized PRD document. PRD auto-generation and management, generating standardized PRD documents based on requirements and creative solutions, providing input for subsequent IA, flow, and prototype design. Covers PRD-L/S/X three-tier layering, 9-section complete structure, and 4 quality gates. Keywords: PRD generation, product requirements document, requirements document auto-generation, PRD management, writing requirements documents, product documentation.
 metadata:
-  module: "产品构思与设计"
-  sub-module: "产品设计与原型"
+  module: "Product Ideation & Design"
+  sub-module: "Product Design & Prototype"
   type: "pipeline"
   version: "3.3"
-  domain_tags: ["互联网", "软件", "通用"]
+  domain_tags: ["Internet", "Software", "General"]
   trigger_examples:
-    - "帮我写PRD文档"
-    - "生成产品需求文档"
-    - "需求文档怎么写"
+    - "Help me write a PRD document"
+    - "Generate a product requirements document"
+    - "How to write a requirements document"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "生成PRD-L级别文档，包含核心章节（背景目标、功能规格、验收标准）和基础质量检查"
-  deep_description: "生成PRD-X级别文档，额外包含上游冲突决策记录、自校正循环日志、开放问题管理、版本变更追溯链、降级方案影响评估"
+  quick_description: "Generate a PRD-L level document, including core sections (background & objectives, feature specs, acceptance criteria) and basic quality checks"
+  deep_description: "Generate a PRD-X level document, additionally including upstream conflict decision records, self-correction loop logs, open issue management, version change traceability chain, and degradation plan impact assessment"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -30,518 +30,518 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# PRD生成器
+# PRD Generator
 
-本Skill负责将上游阶段的产出（用户洞察、机会定义、创意发散）自动转化为符合质量标准的PRD文档，为后续产品设计（IA、流程、原型）提供结构化输入。需求收集、理解和优先级排序已内建于 design-prd 的 Step 1-3 中，无需单独的需求管理阶段。支持PRD-L/S/X三级分层，自动进行4道质量门禁检查，确保文档完整性、一致性、歧义消除和可追溯性。
+This Skill is responsible for automatically converting upstream phase outputs (user insights, opportunity definition, ideation) into PRD documents that meet quality standards, providing structured input for subsequent product design (IA, flow, prototype). Requirements collection, understanding, and prioritization are built into design-prd's Step 1-3, eliminating the need for a separate requirements management phase. Supports PRD-L/S/X three-tier layering, automatically performs 4 quality gate checks to ensure document completeness, consistency, ambiguity elimination, and traceability.
 
-## 核心原则
-1. 质量门禁不可绕过——4道门禁是PRD质量的底线，任何情况下不得跳过
-2. 分层匹配复杂度——PRD-L/S/X对应不同复杂度，避免过度或不足
-3. 追溯链必须贯通——每个功能点可追溯到上游输出和业务目标
-4. 人类决策权优先——AI判断置信度<0.7时强制人类确认，PM可覆盖AI分级
+## Core Principles
+1. Quality gates cannot be bypassed — The 4 gates are the bottom line of PRD quality, never skipped under any circumstances
+2. Tiering matches complexity — PRD-L/S/X correspond to different complexities, avoiding over- or under-engineering
+3. Traceability chain must be connected — Each feature point can be traced back to upstream outputs and business objectives
+4. Human decision authority takes precedence — When AI judgment confidence < 0.7, human confirmation is mandatory; PM can override AI tiering
 
-## 执行步骤
+## Execution Steps
 
-1. [核心] 确定PRD分层级别（L/S/X）——基于Effort估算和团队数量自动分级，PM可覆盖
-2. [核心] 按对应层级结构生成PRD文档——PRD-L使用简化模板，PRD-S使用完整9节结构，PRD-X使用增强版9节结构
-3. [核心] 执行4道质量门禁检查——完整性/一致性/歧义消除/可追溯性，不通过则自动修正
-4. [条件] 版本生命周期管理——创建→评审→定稿→变更，每次变更记录变更日志
-5. [条件] 上下游衔接——确保PRD可追溯到上游需求，下游设计可直接消费PRD输出
+1. [Core] Determine PRD tier level (L/S/X) — Automatically tier based on Effort estimation and team count; PM can override
+2. [Core] Generate PRD document according to the corresponding tier structure — PRD-L uses a simplified template, PRD-S uses the complete 9-section structure, PRD-X uses the enhanced 9-section structure
+3. [Core] Execute 4 quality gate checks — Completeness/Consistency/Ambiguity elimination/Traceability; auto-correct if failed
+4. [Conditional] Version lifecycle management — Create→Review→Finalize→Change; record change log for each change
+5. [Conditional] Upstream/downstream handoff — Ensure PRD is traceable to upstream requirements, downstream design can directly consume PRD output
 
-**关键产出要求**：
-- **entities[].fields 必须完整**：每个实体至少包含标识字段（id）、名称字段、状态字段和业务核心字段。字段粒度以"backend可直接用于ER模型设计"为准，不能只给实体名不给字段
-- **pages[].data_requirements 必须完整**：每个页面必须明确需要什么数据、数据操作类型（读/增/改/删）、关联哪个实体、需要哪些字段。这是UI页面生成和API设计的直接输入
-- **entities[].api_endpoints 为建议性**：PRD阶段定义的是业务操作需求（如"用户需要查看课程列表"），具体API路径由api-design-spec设计
+**Key Output Requirements**:
+- **entities[].fields must be complete**: Each entity must contain at least an identifier field (id), a name field, a status field, and business core fields. Field granularity should be at the "backend can directly use for ER model design" level; cannot only provide entity names without fields
+- **pages[].data_requirements must be complete**: Each page must explicitly specify what data is needed, data operation types (read/create/update/delete), which entity it relates to, and which fields are needed. This is the direct input for UI page generation and API design
+- **entities[].api_endpoints is advisory**: What PRD defines is business operation requirements (e.g., "users need to view the course list"); specific API paths are designed by api-design-spec
 
-详见下方各章节详细说明。
+See detailed descriptions in each section below.
 
-## 1. PRD分层体系
+## 1. PRD Tiering System
 
-### 1.1 分层定义
+### 1.1 Tier Definition
 
-| 层级 | 触发条件 | 文档规模 | 评审流程 | 决策权 |
+| Tier | Trigger Condition | Document Size | Review Process | Decision Authority |
 |------|----------|----------|----------|--------|
-| **PRD-L (Light)** | Effort < 2人天 | 200-500字 | PM自审 | PM单方面决策 |
-| **PRD-S (Standard)** | 2人天 ≤ Effort ≤ 20人天 | 1500-3000字 | 需求评审会 | 产品委员会决策 |
-| **PRD-X (eXtensive)** | Effort > 20人天 OR 跨3+团队 | 3000-8000字 | 多轮评审 | 跨部门评审+管理层审批 |
+| **PRD-L (Light)** | Effort < 2 person-days | 200-500 words | PM self-review | PM unilateral decision |
+| **PRD-S (Standard)** | 2 person-days ≤ Effort ≤ 20 person-days | 1500-3000 words | Requirements Review meeting | Product committee decision |
+| **PRD-X (eXtensive)** | Effort > 20 person-days OR cross 3+ teams | 3000-8000 words | Multi-round review | Cross-department review + management approval |
 
-### 1.2 自动分级规则
+### 1.2 Automatic Tiering Rules
 
 ```
-分级判定算法：
-1. 提取上游输出的Effort估算（单位：人天）
-2. 统计涉及团队数量（开发、设计、测试、运营等）
-3. 应用分层决策树：
-   IF Effort < 2 AND 团队数 ≤ 1 THEN PRD-L
-   ELSE IF Effort <= 20 AND 团队数 ≤ 3 THEN PRD-S
+Tiering decision algorithm:
+1. Extract Effort estimation from upstream output (unit: person-days)
+2. Count the number of teams involved (development, design, testing, operations, etc.)
+3. Apply the tiering decision tree:
+   IF Effort < 2 AND team count ≤ 1 THEN PRD-L
+   ELSE IF Effort <= 20 AND team count ≤ 3 THEN PRD-S
    ELSE PRD-X
 ```
 
-### 1.3 人类可覆盖AI判断
+### 1.3 Human Can Override AI Judgment
 
-- PM可手动指定分层级别，无需遵循自动判断
-- 覆盖时需在文档元信息中记录覆盖原因
-- 自动判断置信度 < 0.7时，强制要求人类确认
+- PM can manually specify the tier level without following the automatic judgment
+- When overriding, the override reason must be recorded in the document metadata
+- When automatic judgment confidence < 0.7, human confirmation is mandatory
 
-## 2. PRD-S完整9节结构
+## 2. PRD-S Complete 9-Section Structure
 
-以下为PRD-S（Standard）的标准结构，PRD-L和PRD-X在此基础上按比例调整。
+The following is the standard structure for PRD-S (Standard); PRD-L and PRD-X are adjusted proportionally on this basis.
 
-**完整结构定义**：详见 [Reference/prd-structure.md](Reference/prd-structure.md)
+**Complete structure definition**: See [Reference/prd-structure.md](Reference/prd-structure.md)
 
-### 结构概览
+### Structure Overview
 
-| Section | 名称 | 核心内容 |
+| Section | Name | Core Content |
 |---------|------|----------|
-| Section 1 | 元信息（Meta） | 文档ID、版本、状态、关联文档 |
-| Section 2 | 背景与目标（Why） | Problem Statement、目标与成功定义、目标用户与场景 |
-| Section 3 | 方案设计（What & How） | 方案概述、功能规格（MoSCoW）、用户故事（Given-When-Then）、交互逻辑、状态设计、数据模型、接口定义 |
-| Section 4 | 边界与约束 | 明确不做、技术约束、已知限制 |
-| Section 5 | 非功能需求（NFR） | 性能、可用性、安全、可观测性 |
-| Section 6 | 数据埋点方案 | 事件列表、埋点验证方案 |
-| Section 7 | 验收标准 | 功能验收、性能验收、安全验收 |
-| Section 8 | 发布与运营 | 灰度计划、Feature Flag、回滚预案、运营准备 |
-| Section 9 | 附录 | 术语表、变更记录、开放问题、关联文档索引 |
+| Section 1 | Meta Information | Document ID, version, status, related documents |
+| Section 2 | Background & Objectives (Why) | Problem Statement, objectives and success definition, target users and scenarios |
+| Section 3 | Solution Design (What & How) | Solution overview, feature specs (MoSCoW), user stories (Given-When-Then), interaction logic, state design, data model, interface definition |
+| Section 4 | Boundaries & Constraints | Explicitly out of scope, technical constraints, known limitations |
+| Section 5 | Non-Functional Requirements (NFR) | Performance, availability, security, observability |
+| Section 6 | Tracking Plan | Event list, tracking validation plan |
+| Section 7 | Acceptance Criteria | Functional acceptance, performance acceptance, security acceptance |
+| Section 8 | Release & Operations | Gradual rollout plan, Feature Flag, rollback plan, operations readiness |
+| Section 9 | Appendix | Glossary, change log, open issues, related document index |
 
-## 3. 质量门禁
+## 3. Quality Gates
 
-### 门禁1：完整性检查
+### Gate 1: Completeness Check
 
-**检查清单**：
-- [ ] 9节结构全部存在
-- [ ] 所有必填字段已填充
-- [ ] MoSCoW分级已标注
-- [ ] Given-When-Then验收标准已覆盖主流程
-- [ ] 状态设计覆盖5种特殊状态
-- [ ] 非功能需求包含4个维度
+**Checklist**:
+- [ ] All 9 sections exist
+- [ ] All required fields are filled
+- [ ] MoSCoW prioritization annotated
+- [ ] Given-When-Then acceptance criteria cover the main flow
+- [ ] State design covers 5 special states
+- [ ] Non-functional requirements include 4 dimensions
 
-**失败处理**：
-- 阻塞生成流程
-- 输出缺失项清单
-- 提示补充方向
+**Failure Handling**:
+- Block the generation process
+- Output missing items list
+- Provide guidance for supplementation
 
-### 门禁2：一致性检查
+### Gate 2: Consistency Check
 
-**检查规则**：
-- OKR目标 → 成功指标 一致性
-- 指标 → 功能需求 一致性
-- 功能需求 → 验收标准 一致性
-- 上下游引用是否存在
+**Check Rules**:
+- OKR objectives → success metrics consistency
+- Metrics → functional requirements consistency
+- Functional requirements → acceptance criteria consistency
+- Whether upstream/downstream references exist
 
-**追溯链**：
+**Traceability Chain**:
 ```
-战略目标 → OKR → 关键结果 → 主指标 → 功能需求 → 验收标准
+Strategic objectives → OKR → Key Results → Primary metrics → Functional requirements → Acceptance criteria
 ```
 
-**失败处理**：
-- 标识不一致位置
-- 提供修正建议
-- 记录为待确认项
+**Failure Handling**:
+- Identify inconsistent locations
+- Provide correction suggestions
+- Record as items pending confirmation
 
-### 门禁3：歧义检查
+### Gate 3: Ambiguity Check
 
-**自动检查项**：
-- 模糊量词检测（"快速"、"大量"、"偶尔"等）
-- 悬空引用检测（引用不存在的图表、字段、接口）
-- 逻辑矛盾检测：标注疑似矛盾项（如前置条件与结果矛盾、功能依赖循环），输出 suspected_contradictions 列表，标注 needs_human_review: true，不自动修正
-- UI指令越权检测：检测AC中是否包含具体的UI形态指示（如"左侧边栏"、"红色按钮"）。若发现，标注 needs_human_review: true 强制要求将其改为业务意图描述（如"提供一个高优先级入口"），绝不自动修正UI形态。
+**Automatic Check Items**:
+- Fuzzy quantifier detection ("fast", "large amount", "occasionally", etc.)
+- Dangling reference detection (references to non-existent charts, fields, interfaces)
+- Logical contradiction detection: Annotate suspected contradictions (e.g., preconditions contradicting results, circular feature dependencies), output suspected_contradictions list, tag needs_human_review: true, do not auto-correct
+- UI instruction overreach detection: Detect whether AC contains specific UI form instructions (e.g., "left sidebar", "red button"). If found, tag needs_human_review: true to force changing it to a business intent description (e.g., "provide a high-priority entry"), never auto-correct UI forms
 
-**人类复核项**：
-- 业务规则合理性
-- 用户场景真实性
-- 技术方案可行性
-- suspected_contradictions 中的疑似矛盾项
+**Human Review Items**:
+- Business rule reasonableness
+- User scenario authenticity
+- Technical solution feasibility
+- Suspected contradiction items in suspected_contradictions
 
-**失败处理**：
-- 自动修正可识别歧义（模糊量词、悬空引用）
-- 逻辑矛盾类问题不自动修正，输出 suspected_contradictions 列表并标注 needs_human_review: true
-- 标记需人类确认项
-- 生成歧义澄清问题清单
+**Failure Handling**:
+- Auto-correct identifiable ambiguities (fuzzy quantifiers, dangling references)
+- Logical contradiction issues are not auto-corrected; output suspected_contradictions list and tag needs_human_review: true
+- Mark items requiring human confirmation
+- Generate ambiguity clarification question list
 
-### 门禁4：可追溯性检查
+### Gate 4: Traceability Check
 
-**追溯要求**：
-- 每个功能点可追溯到上游输出
-- 每个验收标准可追溯到具体指标
-- 每个指标可追溯到业务目标
+**Traceability Requirements**:
+- Each feature point can be traced to upstream output
+- Each acceptance criterion can be traced to a specific metric
+- Each metric can be traced to a business objective
 
-**上游产物具体文件路径**：
+**Upstream Artifact Specific File Paths**:
 - insight_analysis: `docs/discovery/insight.md`
 - opportunity_definition: `docs/discovery/opportunity.md`
-- north_star_metric: `docs/strategy/PRODUCT_STRATEGY.md`（"North Star"章节）
+- north_star_metric: `docs/strategy/PRODUCT_STRATEGY.md` ("North Star" section)
 - okr_candidates: `docs/strategy/OKR.md`
 
-**失败处理**：
-- 生成追溯链断点报告
-- 提示缺失的追溯路径
-- 要求补充上游证据
+**Failure Handling**:
+- Generate traceability chain breakpoint report
+- Prompt missing traceability paths
+- Require supplementing upstream evidence
 
-## 4. 版本生命周期 [条件]
+## 4. Version Lifecycle [Conditional]
 
-### 4.1 版本状态机
+### 4.1 Version State Machine
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                                                             │
-│   v0.1 AI初稿  →  v0.2 PM精炼  →  v0.3 评审修改             │
+│   v0.1 AI draft  →  v0.2 PM refinement  →  v0.3 Review revision │
 │       ↓                ↓               ↓                    │
-│   自动生成         人工修订        评审反馈                  │
+│   Auto-generated    Manual revision    Review feedback       │
 │                                                             │
-│   v1.0 定稿  →  v1.x 开发变更  →  v2.0 上线更新             │
+│   v1.0 Finalized  →  v1.x Dev change  →  v2.0 Release update │
 │       ↓               ↓               ↓                    │
-│   评审通过       开发中调整      上线后复盘                  │
+│   Review passed    Adjusted during dev  Post-release retrospective │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### 4.2 版本定义
+### 4.2 Version Definition
 
-| 版本 | 触发条件 | 变更权限 | 评审要求 |
+| Version | Trigger Condition | Change Authority | Review Requirement |
 |------|----------|----------|----------|
-| v0.1 | AI自动生成 | AI | 无 |
-| v0.2 | PM首次修订 | PM | 无 |
-| v0.3 | 评审后修订 | PM+评审人 | 无 |
-| v1.0 | 评审通过定稿 | 变更委员会 | 完整评审 |
-| v1.x | 开发中变更 | 开发+PM | 变更评审 |
-| v2.0 | 上线后大版本更新 | PM | 复盘评审 |
+| v0.1 | AI auto-generated | AI | None |
+| v0.2 | PM first revision | PM | None |
+| v0.3 | Post-review revision | PM + reviewer | None |
+| v1.0 | Review passed and finalized | Change committee | Full review |
+| v1.x | Change during development | Dev + PM | Change review |
+| v2.0 | Major version update after release | PM | Retrospective review |
 
-### 4.3 状态流转
+### 4.3 State Transitions
 
-| 当前状态 | 流转动作 | 下一状态 | 触发条件 |
+| Current State | Transition Action | Next State | Trigger Condition |
 |----------|----------|----------|----------|
-| 草稿 | 提交评审 | 评审中 | 4道门禁全部通过 |
-| 评审中 | 评审通过 | 已定稿 | 评审委员会批准 |
-| 评审中 | 评审不通过 | 评审修改 | 存在阻塞项 |
-| 已定稿 | 触发变更 | 开发中变更 | 开发阶段发现需调整 |
-| 已上线 | 发布更新 | 已归档 | 新版本上线 |
+| Draft | Submit for review | In Review | All 4 gates passed |
+| In Review | Review passed | Finalized | Review committee approved |
+| In Review | Review not passed | Review Revision | Blocking items exist |
+| Finalized | Trigger change | Dev Change | Adjustment needed during development phase |
+| Released | Publish update | Archived | New version released |
 
-## 5. 执行决策逻辑 [条件]
+## 5. Execution Decision Logic [Conditional]
 
-### 5.1 生成顺序依赖图
+### 5.1 Generation Order Dependency Graph
 
-**拓扑排序规则**：
+**Topological Sort Rules**:
 ```
-生成优先级（从高到低）：
-1. 元信息（Section 1）- 无依赖
-2. 背景与目标（Section 2）- 依赖上游探索输出
-3. 方案设计（Section 3）- 依赖Section 2和设计输出
-4. 边界与约束（Section 4）- 依赖Section 3
-5. 非功能需求（Section 5）- 依赖Section 3
-6. 数据埋点（Section 6）- 依赖Section 3
-7. 验收标准（Section 7）- 依赖Section 2, 3
-8. 发布与运营（Section 8）- 依赖Section 7
-9. 附录（Section 9）- 依赖其他所有Section
+Generation priority (high to low):
+1. Meta information (Section 1) - no dependencies
+2. Background & objectives (Section 2) - depends on upstream exploration output
+3. Solution design (Section 3) - depends on Section 2 and design output
+4. Boundaries & constraints (Section 4) - depends on Section 3
+5. Non-functional requirements (Section 5) - depends on Section 3
+6. Tracking plan (Section 6) - depends on Section 3
+7. Acceptance criteria (Section 7) - depends on Section 2, 3
+8. Release & operations (Section 8) - depends on Section 7
+9. Appendix (Section 9) - depends on all other Sections
 ```
 
-### 5.2 上游冲突决策规则
+### 5.2 Upstream Conflict Decision Rules
 
-**冲突类型与处理策略**：
+**Conflict Types and Handling Strategies**:
 
-| 冲突类型 | 判定规则 | 处理策略 | 升级条件 |
+| Conflict Type | Decision Rule | Handling Strategy | Escalation Condition |
 |----------|----------|----------|----------|
-| **目标冲突** | 两个OKR方向相反 | 优先级仲裁 | 涉及KPI影响 > 10% |
-| **方案冲突** | 多方案指向不同实现 | 方案对比评分 | 涉及架构重大调整 |
-| **指标冲突** | 指标优化方向矛盾 | 护栏指标约束 | 护栏指标被突破 |
-| **优先级冲突** | 功能优先级排序矛盾 | MoSCoW重新分级 | MVP范围变化 > 30% |
+| **Objective conflict** | Two OKRs in opposite directions | Priority arbitration | KPI impact > 10% |
+| **Solution conflict** | Multiple solutions point to different implementations | Solution comparison scoring | Major architecture adjustment |
+| **Metric conflict** | Metric optimization directions contradict | Guardrail metric constraints | Guardrail metric breached |
+| **Priority conflict** | Feature priority ranking contradicts | MoSCoW re-prioritization | MVP scope change > 30% |
 
-**升级决策矩阵**：
+**Escalation Decision Matrix**:
 ```
-升级阈值：
-- 来源数 ≥ 2 且结论不一致
-- MVP范围变化 > 30%
-- 涉及安全合规问题
-- 涉及重大技术债务
+Escalation thresholds:
+- Number of sources ≥ 2 and conclusions inconsistent
+- MVP scope change > 30%
+- Involves security compliance issues
+- Involves major technical debt
 
-升级路径：
-1. 记录冲突详情
-2. 召集相关方会议
-3. 产出决策纪要
-4. 更新PRD
+Escalation path:
+1. Record conflict details
+2. Convene stakeholder meeting
+3. Produce decision minutes
+4. Update PRD
 ```
 
-### 5.3 上游数据不完整处理
+### 5.3 Upstream Data Incomplete Handling
 
-**缺失等级定义**：
+**Missing Level Definition**:
 
-| 等级 | 定义 | 处理方式 |
+| Level | Definition | Handling Method |
 |------|------|----------|
-| **L0** | 字段完整，但内容空洞 | AI补充描述，标注置信度低 |
-| **L1** | 部分字段缺失 | 使用模板填充，标记待确认 |
-| **L2** | 核心字段完全缺失 | 中断流程，强制要求补充 |
+| **L0** | Fields complete, but content is empty | AI supplements description, annotates low confidence |
+| **L1** | Some fields missing | Fill with template, mark as pending confirmation |
+| **L2** | Core fields completely missing | Interrupt process, force supplementation |
 
-**缺失处理流程**：
+**Missing Handling Flow**:
 ```
-检测缺失 → 判断等级 → 应用策略 → 输出结果
+Detect missing → Determine level → Apply strategy → Output result
 
-L0处理：
-1. 标注"AI补充，待确认"
-2. 提供置信度评分
-3. 生成确认问题清单
+L0 handling:
+1. Annotate "AI supplemented, pending confirmation"
+2. Provide confidence score
+3. Generate confirmation question list
 
-L1处理：
-1. 标注"待补充"
-2. 使用默认值或模板填充
-3. 阻塞相关下游生成
-4. 生成补充清单
+L1 handling:
+1. Annotate "Pending supplementation"
+2. Fill with default values or template
+3. Block related downstream generation
+4. Generate supplementation list
 
-L2处理：
-1. 标注"缺少核心输入"
-2. 输出中断报告
-3. 指定缺失字段
-4. 要求重新输入
-```
-
-### 5.4 自校正循环
-
-**触发条件**：
-- 门禁检查失败
-- 人类反馈修正
-- 上游数据更新
-
-**循环限制**：
-- 最大自校正轮次：2轮
-- 每轮超时时间：3分钟
-- 逻辑矛盾类问题不进入自校正循环，直接标注待人工复核
-- 超出限制后输出问题报告，人工介入
-
-**自校正流程**：
-```
-第N轮校正：
-1. 分析失败原因
-2. 生成修正方案
-3. 应用修正
-4. 重新执行门禁检查
-5. 若通过则结束，否则进入第N+1轮
+L2 handling:
+1. Annotate "Missing core input"
+2. Output interruption report
+3. Specify missing fields
+4. Require re-input
 ```
 
-## 6. 上下游衔接 [条件]
+### 5.4 Self-Correction Loop
 
-### 6.1 上游消费
+**Trigger Conditions**:
+- Gate check failure
+- Human feedback correction
+- Upstream data update
 
-| 阶段 | 输出物 | 消费方式 |
+**Loop Limits**:
+- Maximum self-correction rounds: 2
+- Per-round timeout: 3 minutes
+- Logical contradiction issues do not enter the self-correction loop; directly tag for manual review
+- After exceeding limits, output problem report, human intervention
+
+**Self-Correction Flow**:
+```
+Round N correction:
+1. Analyze failure cause
+2. Generate correction plan
+3. Apply correction
+4. Re-execute gate check
+5. If passed, end; otherwise enter round N+1
+```
+
+## 6. Upstream/Downstream Handoff [Conditional]
+
+### 6.1 Upstream Consumption
+
+| Phase | Output Artifact | Consumption Method |
 |------|--------|----------|
-| **洞察分析（insight-analysis）** | 用户洞察、痛点、行为模式 | 替代原 requirements-collection 输入，提取用户研究数据和需求收集 |
-| **机会定义（opportunity-definition）** | 机会列表、优先级排序、问题陈述 | 替代原 requirements-understanding/prioritization 输入，提供需求理解和优先级排序 |
-| **探索（Discovery）** | 用户洞察、问题陈述、需求池 | 提取Problem Statement、目标用户定义 |
-| **战略（Strategy）** | OKR、路线图、价值主张 | 对齐业务目标、优先级判断 |
-| **构思（Ideation）** | 解决方案、功能列表 | 引用方案设计、验收标准来源 |
-| **设计（Design）** | 原型、流程图、信息架构 | 引用交互逻辑、页面规格 |
-| **度量（Metrics）** | 指标体系、数据埋点方案 | 直接引用或补充完善 |
+| **Insight Analysis (insight-analysis)** | User insights, pain points, behavior patterns | Replaces the original requirements-collection input, extracts user research data and requirements collection |
+| **Opportunity Definition (opportunity-definition)** | Opportunity list, priority ranking, problem statement | Replaces the original requirements-understanding/prioritization input, provides requirements understanding and priority ranking |
+| **Discovery** | User insights, problem statement, backlog | Extract Problem Statement, target user definition |
+| **Strategy** | OKR, roadmap, value proposition | Align business objectives, priority judgment |
+| **Ideation** | Solutions, feature list | Reference solution design, acceptance criteria source |
+| **Design** | Prototypes, flow diagrams, information architecture | Reference interaction logic, page specs |
+| **Metrics** | Metric system, tracking plan | Direct reference or supplement |
 
-### 6.2 下游驱动
+### 6.2 Downstream Driving
 
-| 下游方 | 驱动内容 | 交付物 | 消费来源 |
+| Downstream Party | Driving Content | Deliverable | Consumption Source |
 |--------|----------|--------|----------|
-| **UI前端** | 交互逻辑、状态设计、页面规格、数据模型 | 组件意图描述 + 页面数据需求 | prd.json.pages[] + prd.json.user_flows[] |
-| **后端架构** | 功能规格、接口定义、数据实体、边界条件 | API契约输入 + 数据模型输入 | prd.json.features[] + prd.json.entities[] |
-| **开发** | 功能规格、接口定义、边界条件 | 技术设计文档 | prd.md + prd.json |
-| **设计** | 交互逻辑、状态设计、页面规格 | 设计规范文档 | prd.md + prd.json.pages[] |
-| **测试** | 验收标准、测试用例、环境要求 | 测试计划 | prd.json.features[].acceptance_criteria[] |
-| **运营** | 发布策略、运营准备、效果评估 | 运营方案 | prd.md |
-| **监控** | 可观测性要求、埋点方案 | 监控仪表盘 | prd.json.non_functional_requirements |
+| **UI/Frontend** | Interaction logic, state design, page specs, data model | Component intent description + page data requirements | prd.json.pages[] + prd.json.user_flows[] |
+| **Backend Architecture** | Feature specs, interface definition, data entities, boundary conditions | API contract input + data model input | prd.json.features[] + prd.json.entities[] |
+| **Development** | Feature specs, interface definition, boundary conditions | Technical design document | prd.md + prd.json |
+| **Design** | Interaction logic, state design, page specs | Design specification document | prd.md + prd.json.pages[] |
+| **Testing** | Acceptance criteria, test cases, environment requirements | Test plan | prd.json.features[].acceptance_criteria[] |
+| **Operations** | Release strategy, operations readiness, effectiveness evaluation | Operations plan | prd.md |
+| **Monitoring** | Observability requirements, tracking plan | Monitoring dashboard | prd.json.non_functional_requirements |
 
-### 6.3 数据流向图
+### 6.3 Data Flow Diagram
 
 ```
-[洞察分析产出] → [机会定义产出] → [创意发散产出]
+[Insight Analysis output] → [Opportunity Definition output] → [Ideation output]
         ↓              ↓                ↓
         └──────────────┴────────────────┘
                       ↓
-          PRD生成器（需求收集、理解、优先级排序已内建于 Step 1-3）
+          PRD Generator (requirements collection, understanding, prioritization built into Step 1-3)
                       ↓
         ┌─────────┼─────────┐
         ↓         ↓         ↓
-[IA设计]  [流程设计]  [原型设计]
+[IA Design]  [Flow Design]  [Prototype Design]
 ```
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| metadata | JSON/object | 是 | 系统生成 | 请求元信息 |
-| insight_analysis | Markdown | ○ | docs/discovery/insight.md | 用户洞察分析产出，替代原 requirements-collection 输入，提供用户研究数据和需求收集 |
-| opportunity_definition | Markdown | ○ | docs/discovery/opportunity.md | 机会定义产出，替代原 requirements-understanding/prioritization 输入，提供需求理解和优先级排序 |
-| exploration_outputs | Markdown | ○ | 上游探索阶段 docs/discovery/ | 用户洞察、问题陈述 |
-| strategy_outputs | Markdown | ○ | 上游战略阶段 docs/strategy/ | OKR、路线图 |
-| north_star_metric | Markdown | ○ | docs/strategy/PRODUCT_STRATEGY.md（"North Star"章节） | 北极星指标及驱动功能 |
-| okr_candidates | Markdown | ○ | docs/strategy/OKR.md | OKR候选及驱动功能 |
-| ideation_outputs | Markdown | ○ | docs/product/PRD.md（"创意方案"章节） | 解决方案、功能列表 |
-| design_outputs | JSON/object | ○ | 上游设计阶段 | 原型、用户流程 |
-| metrics_outputs | JSON/object | ○ | 上游度量阶段 | 指标体系、埋点方案 |
-| requirement | JSON/object | 是 | 用户提供 | 需求上下文及手动覆盖配置 |
+| metadata | JSON/object | Yes | System-generated | Request metadata |
+| insight_analysis | Markdown | ○ | docs/discovery/insight.md | User insight analysis output, replaces the original requirements-collection input, provides user research data and requirements collection |
+| opportunity_definition | Markdown | ○ | docs/discovery/opportunity.md | Opportunity definition output, replaces the original requirements-understanding/prioritization input, provides requirements understanding and priority ranking |
+| exploration_outputs | Markdown | ○ | Upstream discovery phase docs/discovery/ | User insights, problem statement |
+| strategy_outputs | Markdown | ○ | Upstream strategy phase docs/strategy/ | OKR, roadmap |
+| north_star_metric | Markdown | ○ | docs/strategy/PRODUCT_STRATEGY.md ("North Star" section) | North Star Metric and driving features |
+| okr_candidates | Markdown | ○ | docs/strategy/OKR.md | OKR candidates and driving features |
+| ideation_outputs | Markdown | ○ | docs/product/PRD.md ("Creative Solutions" section) | Solutions, feature list |
+| design_outputs | JSON/object | ○ | Upstream design phase | Prototypes, user flows |
+| metrics_outputs | JSON/object | ○ | Upstream metrics phase | Metric system, tracking plan |
+| requirement | JSON/object | Yes | Provided by user | Requirements context and manual override config |
 
-**完整输入数据结构与验证规则**：详见 [Reference/input-schema.md](Reference/input-schema.md)
+**Complete input data structure and validation rules**: See [Reference/input-schema.md](Reference/input-schema.md)
 
-## 输出
+## Output
 
-| 输出项 | 格式 | 路径 | 说明 |
+| Output Item | Format | Path | Description |
 |--------|------|------|------|
-| PRD文档 | Markdown | `docs/product/PRD.md` | 覆盖文件，包含完整PRD内容、质量门禁结果及需人类确认清单 |
+| PRD document | Markdown | `docs/product/PRD.md` | Overwrites the file, including complete PRD content, quality gate results, and items requiring human confirmation |
 
-**完整输出数据结构与模板**：详见 [Reference/output-schema.md](Reference/output-schema.md)
+**Complete output data structure and template**: See [Reference/output-schema.md](Reference/output-schema.md)
 
-### prd.json 结构
+### prd.json Structure
 
-prd.json 是 PRD 的机器可消费版本，供 Backend/UI 下游 Skill 编程式消费。
+prd.json is the machine-consumable version of the PRD, for programmatic consumption by Backend/UI downstream Skills.
 
-完整 prd.json Schema 见 [Reference/output-schema.md](Reference/output-schema.md)
+Complete prd.json Schema see [Reference/output-schema.md](Reference/output-schema.md)
 
-> 完整示例见 [Reference/examples.md](Reference/examples.md)
+> Complete example see [Reference/examples.md](Reference/examples.md)
 
-prd.json 包含 7 个顶层数组：features、pages、entities、user_flows、non_functional_requirements、tracking_plan、traceability。
+prd.json contains 7 top-level arrays: features, pages, entities, user_flows, non_functional_requirements, tracking_plan, traceability.
 
-### prd.json 与 prd.md 的关系
+### Relationship between prd.json and prd.md
 
-| 维度 | prd.md | prd.json |
+| Dimension | prd.md | prd.json |
 |------|--------|----------|
-| 消费者 | 人类（PM、设计师、开发） | 机器（Backend Skill、UI Skill） |
-| 内容 | 完整9节叙述+表格+图表 | 结构化核心数据（功能/页面/实体/流程） |
-| 生成顺序 | 先生成 prd.md | 从 prd.md 提取结构化数据生成 prd.json |
-| 一致性 | prd.json 必须与 prd.md 内容一致，冲突时以 prd.md 为准 | |
+| Consumer | Humans (PM, designers, developers) | Machines (Backend Skill, UI Skill) |
+| Content | Complete 9-section narrative + tables + charts | Structured core data (features/pages/entities/flows) |
+| Generation order | Generate prd.md first | Extract structured data from prd.md to generate prd.json |
+| Consistency | prd.json must be consistent with prd.md content; in case of conflict, prd.md prevails | |
 
-### 输出校验规则
+### Output Validation Rules
 
-- [ ] 9节结构完整：PRD-S完整9节结构全部存在
-- [ ] 追溯链贯通：从OKR到验收标准的追溯链完整
-- [ ] 门禁通过：4道质量门禁全部通过
-- [ ] 无歧义残留：无模糊量词和悬空引用
-- [ ] prd.json 完整性：features/pages/entities/user_flows 四个数组均非空
-- [ ] prd.json entities字段完整性：每个entity的fields数组非空且至少包含核心字段（id/名称/状态等），relationships数组非空
-- [ ] prd.json pages数据需求完整性：每个page的data_requirements数组非空，明确标注数据来源（api/local/cache）和所需字段
-- [ ] prd.json 引用一致性：feature.related_pages 中的 page_id 在 pages[] 中存在，feature.related_entities 中的 entity_id 在 entities[] 中存在
-- [ ] prd.json 追溯链完整：每个 feature 都有对应的 traceability 条目
-- [ ] prd.json 与 prd.md 一致：prd.json 中的功能点名称、优先级、验收标准与 prd.md 一致
-- [ ] prd.json tracking_plan 完整性：tracking_plan.events 非空，每个 event 的 properties 非空
-- [ ] prd.json NFR完整性：non_functional_requirements 的4个维度数组均非空
-- [ ] prd.json 功能驱动信息完整性：每个 P0/P1 功能的 driven_by 字段非空，明确关联到北极星指标或 OKR
-- [ ] prd.json 功能优先级与指标关联一致性：feature.priority 与 driven_by.expected_lift 正相关
+- [ ] 9-section structure complete: PRD-S complete 9-section structure all exist
+- [ ] Traceability chain connected: Traceability chain from OKR to acceptance criteria is complete
+- [ ] Gates passed: All 4 quality gates passed
+- [ ] No residual ambiguity: No fuzzy quantifiers and dangling references
+- [ ] prd.json completeness: features/pages/entities/user_flows four arrays are all non-empty
+- [ ] prd.json entities field completeness: Each entity's fields array is non-empty and contains at least core fields (id/name/status, etc.), relationships array is non-empty
+- [ ] prd.json pages data requirements completeness: Each page's data_requirements array is non-empty, clearly annotates data source (api/local/cache) and required fields
+- [ ] prd.json reference consistency: page_id in feature.related_pages exists in pages[], entity_id in feature.related_entities exists in entities[]
+- [ ] prd.json traceability chain complete: Each feature has a corresponding traceability entry
+- [ ] prd.json and prd.md consistency: Feature point names, priorities, and acceptance criteria in prd.json are consistent with prd.md
+- [ ] prd.json tracking_plan completeness: tracking_plan.events is non-empty, each event's properties is non-empty
+- [ ] prd.json NFR completeness: All 4 dimension arrays of non_functional_requirements are non-empty
+- [ ] prd.json feature driving information completeness: Each P0/P1 feature's driven_by field is non-empty, clearly linked to North Star Metric or OKR
+- [ ] prd.json feature priority and metric correlation consistency: feature.priority is positively correlated with driven_by.expected_lift
 
-## 决策规则（详细）
+## Decision Rules (Detailed)
 
-### 9.1 门禁通过规则
+### 9.1 Gate Pass Rules
 
-**硬性条件**：
-- 4道门禁必须全部通过
-- 任一门禁失败则阻塞进入开发阶段
+**Hard Conditions**:
+- All 4 gates must pass
+- Failure of any gate blocks entry into the development phase
 
-**门禁状态映射**：
-| 门禁状态 | 进入开发 | 定稿 | 发布 |
+**Gate Status Mapping**:
+| Gate Status | Enter Development | Finalize | Release |
 |----------|----------|------|------|
-| 全部通过 | ✓ | ✓ | ✓ |
-| 门禁1失败 | ✗ | ✗ | ✗ |
-| 门禁2失败 | ✗ | ✗ | ✗ |
-| 门禁3失败 | 需人类确认 | 需人类确认 | ✗ |
-| 门禁4失败 | 需补充 | 需补充 | ✗ |
+| All passed | ✓ | ✓ | ✓ |
+| Gate 1 failed | ✗ | ✗ | ✗ |
+| Gate 2 failed | ✗ | ✗ | ✗ |
+| Gate 3 failed | Human confirmation required | Human confirmation required | ✗ |
+| Gate 4 failed | Supplementation required | Supplementation required | ✗ |
 
-### 9.2 冲突升级规则
+### 9.2 Conflict Escalation Rules
 
-**必须升级的情况**：
-1. **来源冲突**：需求涉及 ≥ 2个上游来源，且结论不一致
-2. **范围剧变**：MVP范围变化 > 30%
-3. **安全合规**：涉及用户隐私、安全合规、金融监管等敏感领域
-4. **资源超限**：需求资源消耗超过原计划的50%
-5. **技术风险**：方案涉及技术架构重大调整
+**Situations Requiring Escalation**:
+1. **Source conflict**: Requirements involve ≥ 2 upstream sources, and conclusions are inconsistent
+2. **Scope change**: MVP scope change > 30%
+3. **Security compliance**: Involves user privacy, security compliance, financial regulation, and other sensitive areas
+4. **Resource overrun**: Requirement resource consumption exceeds 50% of the original plan
+5. **Technical risk**: Solution involves major technical architecture adjustment
 
-**升级流程**：
+**Escalation Process**:
 ```
-1. 识别升级触发条件
-2. 生成升级报告（冲突详情+各方立场+影响分析）
-3. 确定升级层级（PM/产品委员会/管理层）
-4. 召开决策会议
-5. 产出决策纪要
-6. 更新PRD
+1. Identify escalation trigger conditions
+2. Generate escalation report (conflict details + stakeholder positions + impact analysis)
+3. Determine escalation level (PM/Product committee/Management)
+4. Convene decision meeting
+5. Produce decision minutes
+6. Update PRD
 ```
 
-### 9.3 开放问题管理 [深度]
+### 9.3 Open Issue Management [Deep]
 
-**开放问题状态**：
-- **Open**：未解决
-- **In Progress**：处理中
-- **Resolved**：已解决
-- **Won't Fix**：明确不做
+**Open Issue Status**:
+- **Open**: Unresolved
+- **In Progress**: Being handled
+- **Resolved**: Resolved
+- **Won't Fix**: Explicitly not doing
 
-**定稿规则**：
-- 所有Open问题必须已解决或转为Won't Fix
-- 定稿时输出问题闭环报告
+**Finalization Rules**:
+- All Open issues must be Resolved or converted to Won't Fix
+- Output issue closure report at finalization
 
-## 质量检查（详细）
+## Quality Checks (Detailed)
 
-### 10.1 完整性标准（P0）
+### 10.1 Completeness Standards (P0)
 
-| 检查项 | 标准 | 检查方法 |
+| Check Item | Standard | Check Method |
 |--------|------|----------|
-| 结构完整性 | 9节全部存在 | 章节存在性扫描 |
-| 字段完整性 | 必填字段100%填充 | 字段非空检查 |
-| 验收覆盖 | 主流程+边界+异常全覆盖 | Given-When-Then覆盖率 |
-| 状态覆盖 | 5种状态全部定义 | 状态类型枚举匹配 |
+| Structure completeness | All 9 sections exist | Section existence scan |
+| Field completeness | Required fields 100% filled | Field non-empty check |
+| Acceptance coverage | Main flow + boundary + exception fully covered | Given-When-Then coverage rate |
+| State coverage | All 5 states defined | State type enum matching |
 
-### 10.2 一致性标准（P1）
+### 10.2 Consistency Standards (P1)
 
-| 检查项 | 标准 | 检查方法 |
+| Check Item | Standard | Check Method |
 |--------|------|----------|
-| 目标追溯链 | OKR→指标→功能→验收贯通 | 追溯链完整性检查 |
-| 优先级一致性 | MoSCoW在所有引用中一致 | 优先级交叉验证 |
-| 版本一致性 | 版本号与变更记录匹配 | 版本号一致性检查 |
+| Objective traceability chain | OKR→metric→feature→acceptance connected | Traceability chain completeness check |
+| Priority consistency | MoSCoW consistent across all references | Priority cross-validation |
+| Version consistency | Version number matches change log | Version number consistency check |
 
-### 10.3 歧义消除标准（P1）
+### 10.3 Ambiguity Elimination Standards (P1)
 
-| 检查项 | 标准 | 检查方法 |
+| Check Item | Standard | Check Method |
 |--------|------|----------|
-| 量词量化 | 无模糊量词（快速→<2s） | 量词正则匹配+替换 |
-| 悬空引用 | 所有引用指向存在目标 | 引用解析+存在性验证 |
-| 逻辑矛盾 | 无前置与结果矛盾 | 逻辑规则引擎检查 |
-| UI指令越权 | AC仅描述业务规则，不包含具体UI/颜色/控件形态 | UI形态术语检测，违规打 needs_human_review 标签 |
+| Quantifier quantification | No fuzzy quantifiers (fast→<2s) | Quantifier regex matching + replacement |
+| Dangling references | All references point to existing targets | Reference resolution + existence validation |
+| Logical contradictions | No precondition-result contradictions | Logic rule engine check |
+| UI instruction overreach | AC only describes business rules, does not include specific UI/color/control forms | UI form terminology detection, violations tagged with needs_human_review |
 
-### 10.4 可执行性标准（P2）
+### 10.4 Executability Standards (P2)
 
-| 检查项 | 标准 | 检查方法 |
+| Check Item | Standard | Check Method |
 |--------|------|----------|
-| 验收格式 | Given-When-Then格式正确 | 格式正则匹配 |
-| 判定明确 | Then结果可客观判定 | 判定条件可测试性检查 |
-| 覆盖完整 | Happy Path+边界+异常 | 覆盖率统计分析 |
+| Acceptance format | Given-When-Then format correct | Format regex matching |
+| Judgment clarity | Then result can be objectively judged | Judgment condition testability check |
+| Coverage completeness | Happy Path + boundary + exception | Coverage rate statistical analysis |
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失范围 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Scope | Degradation Plan | Output Impact | Data Acquisition Instructions |
 |----------|----------|----------|------------|
-| insight_analysis缺失 | 基于用户描述和opportunity_definition补充用户洞察，标注"洞察数据待补充" | Section 2用户需求部分简化，需求收集可能不够完整 | 要求用户提供用户洞察描述或上传insight-analysis.json文件 |
-| opportunity_definition缺失 | 基于用户描述和insight_analysis推断机会和优先级，标注"优先级待确认" | 需求理解和优先级排序可能不够精准 | 要求用户提供机会定义和优先级描述或上传opportunity-definition.json文件 |
-| insight_analysis + opportunity_definition均缺失 | 基于用户口头描述执行内建的需求收集、理解和优先级排序（Step 1-3），标注"需求管理数据为AI推断" | 需求管理全流程依赖AI推断，置信度降低 | 要求用户提供核心需求、目标用户和优先级排序 |
-| exploration_outputs缺失 | 背景与目标章节标注"待补充"，基于用户描述生成简化版 | Section 2内容简化 | 要求用户提供产品背景和目标描述或上传探索阶段输出文件 |
-| strategy_outputs缺失 | OKR对齐和优先级判断章节标注"待补充" | Section 2.2目标定义简化 | 要求用户提供战略目标和OKR或上传strategy阶段输出文件 |
-| ideation_outputs缺失 | 方案设计章节标注"待补充"，基于用户描述生成功能列表 | Section 3功能规格简化 | 要求用户提供功能方案描述或上传ideation阶段输出文件 |
-| design_outputs缺失 | 交互逻辑和状态设计标注"待补充" | Section 3.2交互逻辑简化 | 要求用户提供交互设计描述或上传design阶段输出文件 |
-| metrics_outputs缺失 | 数据埋点方案标注"待补充" | Section 6内容简化 | 要求用户提供核心指标和埋点需求或上传metrics阶段输出文件 |
-| 所有上游缺失 | 基于用户口头描述生成简化版PRD-L（200-500字），内建执行需求收集、理解和优先级排序 | 输出PRD-L级别文档 | 要求用户提供产品需求描述、核心功能和目标用户 |
+| insight_analysis missing | Supplement user insights based on user description and opportunity_definition, annotate "Insight data pending supplementation" | Section 2 user requirements section simplified, requirements collection may not be complete enough | Ask user to provide user insight descriptions or upload insight-analysis.json file |
+| opportunity_definition missing | Infer opportunities and priorities based on user description and insight_analysis, annotate "Priority pending confirmation" | Requirements understanding and priority ranking may not be precise enough | Ask user to provide opportunity definition and priority descriptions or upload opportunity-definition.json file |
+| Both insight_analysis and opportunity_definition missing | Execute built-in requirements collection, understanding, and prioritization based on user verbal description (Step 1-3), annotate "Requirements management data is AI-inferred" | Requirements management full process relies on AI inference, confidence reduced | Ask user to provide core requirements, target users, and priority ranking |
+| exploration_outputs missing | Background and objectives section annotated "Pending supplementation", generate simplified version based on user description | Section 2 content simplified | Ask user to provide product background and objective descriptions or upload discovery phase output files |
+| strategy_outputs missing | OKR alignment and priority judgment section annotated "Pending supplementation" | Section 2.2 objective definition simplified | Ask user to provide strategic objectives and OKR or upload strategy phase output files |
+| ideation_outputs missing | Solution design section annotated "Pending supplementation", generate feature list based on user description | Section 3 feature specs simplified | Ask user to provide feature solution descriptions or upload ideation phase output files |
+| design_outputs missing | Interaction logic and state design annotated "Pending supplementation" | Section 3.2 interaction logic simplified | Ask user to provide interaction design descriptions or upload design phase output files |
+| metrics_outputs missing | Tracking plan annotated "Pending supplementation" | Section 6 content simplified | Ask user to provide core metrics and tracking requirements or upload metrics phase output files |
+| All upstream missing | Generate simplified PRD-L (200-500 words) based on user verbal description, with built-in requirements collection, understanding, and prioritization | Output PRD-L level document | Ask user to provide product requirements description, core features, and target users |
 
-### 数据获取说明
+### Data Acquisition Instructions
 
-当上游文件缺失时，需用户提供以下信息以支撑降级生成：
-- **产品需求描述**：核心需求是什么，解决什么问题
-- **目标用户**：产品的目标用户群体是谁
-- **核心功能列表**：需要实现的主要功能点
+When upstream files are missing, the user needs to provide the following information to support degraded generation:
+- **Product requirements description**: What are the core requirements, what problem to solve
+- **Target users**: Who are the product's target user groups
+- **Core feature list**: The main feature points that need to be implemented
 
-## 上游变更响应
+## Upstream Change Response
 
-当上游输入发生变更时，本Skill的响应策略：
+When upstream inputs change, this Skill's response strategy:
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| 用户洞察新增/变更 | PRD中的用户需求章节 | 标注受影响的需求条目，建议人类确认是否更新PRD |
-| 商业模式变更 | PRD中的商业模式章节 | 标注受影响的商业逻辑，建议人类确认是否更新PRD |
-| OKR调整 | PRD中的目标与指标章节 | 标注受影响的指标定义，建议人类确认是否更新PRD |
+| User insight added/changed | User requirements section in PRD | Annotate affected requirement items, recommend human confirmation on whether to update PRD |
+| Business model change | Business model section in PRD | Annotate affected business logic, recommend human confirmation on whether to update PRD |
+| OKR adjustment | Objectives and metrics section in PRD | Annotate affected metric definitions, recommend human confirmation on whether to update PRD |
 
-当PRD自身变更时，对下游的通知机制：
+When the PRD itself changes, the notification mechanism for downstream:
 
-| PRD变更类型 | 通知范围 | 通知方式 |
+| PRD Change Type | Notification Scope | Notification Method |
 |-------------|----------|----------|
-| 功能点增删 | change-impact-analysis | 标记变更影响范围，触发变更影响分析 |
-| 优先级调整 | change-impact-analysis | 标记优先级变更，触发影响评估 |
-| 目标指标变更 | metrics-system、tracking-plan | 标记指标变更，触发度量体系更新 |
-| 商业逻辑变更 | business-model-canvas、business-strategy-report | 标记商业逻辑变更，触发战略文档更新 |
+| Feature point addition/removal | change-impact-analysis | Mark change impact scope, trigger change impact analysis |
+| Priority adjustment | change-impact-analysis | Mark priority change, trigger impact assessment |
+| Objective metric change | metrics-system, tracking-plan | Mark metric change, trigger measurement system update |
+| Business logic change | business-model-canvas, business-strategy-report | Mark business logic change, trigger strategy document update |

@@ -1,109 +1,109 @@
-# [项目名称] — 设计需求文档
+# [project name] — Design requirements document
 
-> 来源：由 harness-pm 产出（放入 docs/handoff/pm-to-design.md 后由 design-brief 提取），或设计师直接填写，或本框架 design-brief 写入。
-> 加载时机：design-brief / LOOP PLAN 阶段 / design-review / verify 读取。
-> 定位：立项时建立基线，需求变更时追加修订记录，不删除已确认需求。
-> 与 FEATURES.md 的分工：本文件是**需求定义**（立项时写，变更时追加修订记录），FEATURES.md 是**动态状态看板**（设计中更新，状态全归此处）。
-> 任务编号规则：D-xxx 在本文件立项时分配，FEATURES.md 同步引用，编号一旦分配不复用。
+> Source: produced by harness-pm (dropped into docs/handoff/pm-to-design.md and extracted by design-brief), or filled in directly by the designer, or written by this framework's design-brief.
+> Load timing: read by design-brief / LOOP PLAN phase / design-review / verify.
+> Positioning: establish the baseline at project initiation; append revision records when requirements change; do not delete confirmed requirements.
+> Division of labor with FEATURES.md: this file is the **requirements definition** (written at initiation, with revision records appended on change), FEATURES.md is the **dynamic status board** (updated during design; all status lives here).
+> Task numbering rule: D-xxx is assigned in this file at initiation and referenced in FEATURES.md; once assigned, numbers are not reused.
 
-## 项目概述
+## Project overview
 
-[一句话描述：解决什么设计问题、给谁用]
+[One sentence: what design problem to solve, for whom]
 
-## 背景与动机
+## Background and motivation
 
-[为什么要做这个设计？当前痛点是什么？]
+[Why do this design? What are the current pain points?]
 
-## 目标用户
+## Target users
 
-| 用户角色 | Persona | 典型场景 | 核心痛点 |
+| User role | Persona | Typical scenario | Core pain point |
 |---------|---------|---------|---------|
-| [角色1] | [Persona 描述] | [场景描述] | [痛点描述] |
-| [角色2] | [Persona 描述] | [场景描述] | [痛点描述] |
+| [role 1] | [Persona description] | [scenario description] | [pain point description] |
+| [role 2] | [Persona description] | [scenario description] | [pain point description] |
 
-## 设计需求
+## Design requirements
 
-| 编号 | 设计任务/组件 | 优先级 | 验收标准 |
+| Number | Design task / component | Priority | Acceptance criteria |
 |------|--------------|--------|---------|
-| D-001 | [设计任务名] | P0 | AC-001: [可验证的描述，如"按钮对比度 ≥ 4.5:1"] |
-| D-002 | [设计任务名] | P1 | AC-002: [可验证的描述] |
+| D-001 | [design task name] | P0 | AC-001: [verifiable description, e.g., "button contrast ≥ 4.5:1"] |
+| D-002 | [design task name] | P1 | AC-002: [verifiable description] |
 
-### 验收标准说明
+### Acceptance criteria notes
 
-验收标准必须**可验证**——不是"页面应该好看"，而是"对比度 ≥ 4.5:1"。
+Acceptance criteria must be **verifiable** — not "the page should look good", but "contrast ≥ 4.5:1".
 
-**AC 层级关系**：DESIGN_BRIEF.md 的 AC 是**项目级验收条件**（立项时定义），spec.md 的 AC 是**单任务细化验收条件**（LOOP PLAN 阶段产出），后者必须覆盖前者。
+**AC layering**: the ACs in DESIGN_BRIEF.md are **project-level acceptance conditions** (defined at initiation), while the ACs in spec.md are **single-task refined acceptance conditions** (produced in the LOOP PLAN phase); the latter must cover the former.
 
-好的 AC 示例：
-- AC-001: 按钮文字与背景对比度 ≥ 4.5:1（WCAG AA）
-- AC-002: 所有交互元素支持键盘 Tab 导航
-- AC-003: 移动端布局单列，桌面端三列
+Good AC examples:
+- AC-001: button text-to-background contrast ≥ 4.5:1 (WCAG AA)
+- AC-002: all interactive elements support keyboard Tab navigation
+- AC-003: mobile layout is single column, desktop is three columns
 
-坏的 AC 示例（禁止）：
-- "页面应该好看"（不可验证）
-- "用户体验好"（不可验证）
+Bad AC examples (forbidden):
+- "The page should look good" (not verifiable)
+- "Good user experience" (not verifiable)
 
-## 不做的事（边界）
+## Out of scope (boundaries)
 
-[明确排除的范围，避免蔓延]
+[Explicitly excluded scope to avoid creep]
 
-- 不做 [设计X]，因为 [原因]
-- 不支持 [场景Y]，因为 [原因]
+- No [design X], because [reason]
+- No support for [scenario Y], because [reason]
 
-## 设计约束
+## Design constraints
 
-[constitution.md 未覆盖的外部约束，如品牌要求、技术限制]
+[External constraints not covered by constitution.md, e.g., brand requirements, technical limitations]
 
-- [约束1，如：必须使用品牌色 #xxx]
-- [约束2，如：需支持 IE11（影响设计实现）]
+- [Constraint 1, e.g., must use brand color #xxx]
+- [Constraint 2, e.g., must support IE11 (affects design implementation)]
 
-> 注：宪法级约束（设计系统优先、WCAG 2.1 AA 等）写在 constitution.md，不在此重复。
+> Note: constitution-level constraints (design system first, WCAG 2.1 AA, etc.) are written in constitution.md and not repeated here.
 
-## 可访问性要求（非功能需求）
+## Accessibility requirements (non-functional requirements)
 
-[必须满足的可访问性约束，不满足视为缺陷]
+[Accessibility constraints that must be met; not meeting them is a defect]
 
-- WCAG 合规等级：[如 WCAG 2.1 AA]
-- 特殊需求：[如支持屏幕阅读器/高对比度模式]
+- WCAG compliance level: [e.g., WCAG 2.1 AA]
+- Special requirements: [e.g., support screen readers / high-contrast mode]
 
-## 成功指标（设计完成度衡量）
+## Success metrics (design completeness measure)
 
-[设计做完后，用什么指标衡量设计成功？达标即成功]
+[After the design is done, what metrics measure design success? Meeting the bar means success]
 
-- 指标1：[如：所有页面 WCAG 2.1 AA 合规]
-- 指标2：[如：设计系统覆盖率 100%]
-- 指标3：[如：设计稿可交付性检查通过]
+- Metric 1: [e.g., all pages WCAG 2.1 AA compliant]
+- Metric 2: [e.g., design system coverage 100%]
+- Metric 3: [e.g., design spec deliverability check passed]
 
-> 与"可访问性要求"的区别：可访问性要求是必须满足的约束（不满足=缺陷），成功指标是设计完成度的衡量标准（达标=成功）。
+> Difference from "accessibility requirements": accessibility requirements are constraints that must be met (not meeting = defect), while success metrics are the measure of design completeness (meeting = success).
 
-## 里程碑
+## Milestones
 
-[分阶段交付，每阶段有可验证的产出。状态追踪见 FEATURES.md，此处只定义阶段]
+[Phased delivery, each phase has verifiable output. Status tracking is in FEATURES.md; only phases are defined here]
 
-| 阶段 | 目标 | 产出 |
+| Phase | Goal | Output |
 |------|------|------|
-| M1 | 设计系统建立 | DESIGN_SYSTEM.md + 令牌 + 基础组件 |
-| M2 | 核心页面设计 | D-001, D-002 完成 |
-| M3 | 完整设计 + 交付 | 所有任务完成 + design-to-solo.md |
+| M1 | Design system established | DESIGN_SYSTEM.md + tokens + base components |
+| M2 | Core page design | D-001, D-002 complete |
+| M3 | Complete design + handoff | All tasks complete + design-to-solo.md |
 
-## 依赖与风险
+## Dependencies and risks
 
-[外部依赖、设计风险、应对措施]
+[External dependencies, design risks, mitigation measures]
 
-| 类型 | 描述 | 影响 | 应对 |
+| Type | Description | Impact | Response |
 |------|------|------|------|
-| 依赖 | [如：依赖品牌指南] | [高/中/低] | [措施] |
-| 风险 | [如：设计方向不确定] | [高/中/低] | [措施] |
+| Dependency | [e.g., depends on brand guidelines] | [high/medium/low] | [action] |
+| Risk | [e.g., design direction uncertain] | [high/medium/low] | [action] |
 
-## 未决事项
+## Open items
 
-[需要讨论或确认的问题]
+[Questions that need discussion or confirmation]
 
-- 待定 1: [问题描述]
-- 待定 2: [问题描述]
+- Open 1: [question description]
+- Open 2: [question description]
 
-## 修订记录
+## Revision history
 
-| 日期 | 修订内容 | 原因 |
+| Date | Revision | Reason |
 |------|---------|------|
-| YYYY-MM-DD | 初始版本 | 项目立项 |
+| YYYY-MM-DD | Initial version | Project initiation |

@@ -6,75 +6,75 @@ default_mode: skip
 
 # Workflow: setup
 
-> 项目初始化工作流 · 首次使用 harness-design 时执行
+> Project initialization workflow · Run when using harness-design for the first time
 
-## 适用场景
+## Applicable Scenarios
 
-- 首次在项目中使用 harness-design
-- 需要初始化设计系统
-- 项目无 DESIGN.md
+- Using harness-design in a project for the first time
+- Need to initialize the design system
+- Project has no DESIGN.md
 
-## 编排
+## Orchestration
 
 ```
 session-start
-  → design-brief（硬门）
-  → design-recommendation（数据驱动推荐）
-  → design-system（创建 DESIGN.md 10 段 + token）
+  → design-brief (hard gate)
+  → design-recommendation (data-driven recommendation)
+  → design-system (create DESIGN.md 10 sections + tokens)
   → session-end
 ```
 
-## 详细步骤
+## Detailed Steps
 
 ### 1. session-start
 
-读取 `memory/progress.md`，恢复上下文。
+Read `memory/progress.md` to restore context.
 
-### 2. design-brief（硬门）
+### 2. design-brief (hard gate)
 
 - Surface Assumptions
-- 产品类型识别
-- 需求 4 要素抽取
+- Product type identification
+- Extract the 4 elements of requirements
 - Vibe Translation
-- 审美方向选择
-- Reframe（产出 AC-xxx 列表）
-- Anti AI-Slop 字段
-- 输出 `docs/visual/DESIGN_BRIEF.md`（含 AC-xxx）
+- Aesthetic direction selection
+- Reframe (produce AC-xxx list)
+- Anti AI-Slop fields
+- Output `docs/visual/DESIGN_BRIEF.md` (with AC-xxx)
 
-**硬门**：DESIGN_BRIEF.md 未生成或不完整，不进入下一步。
+**Hard gate**: If DESIGN_BRIEF.md is not generated or is incomplete, do not proceed to the next step.
 
 ### 3. design-recommendation
 
-- 读取 DESIGN_BRIEF.md 的产品类型
+- Read the product type from DESIGN_BRIEF.md
 - Grep reasoning.csv + products.csv + styles.csv + colors.csv + typography.csv + landing.csv
-- 应用 decision_rules
-- 输出 `docs/design-system/RECOMMENDATION.md`
+- Apply decision_rules
+- Output `docs/design-system/RECOMMENDATION.md`
 
 ### 4. design-system
 
-- 读取 RECOMMENDATION.md 作为基础
-- 填充 DESIGN.md 10 段（含第 10 段 Semantic Vocabulary 固定模板）
-- 导出 tokens.json + tokens.css
-- 创建 pages/ 目录
+- Read RECOMMENDATION.md as the basis
+- Fill in the 10 sections of DESIGN.md (including the fixed template for section 10 Semantic Vocabulary)
+- Export tokens.json + tokens.css
+- Create the pages/ directory
 
 ### 5. session-end
 
-更新 `memory/progress.md`，归档会话。
+Update `memory/progress.md` and archive the session.
 
-## 产出物
+## Deliverables
 
-| 文件 | 说明 |
+| File | Description |
 |------|------|
-| docs/visual/DESIGN_BRIEF.md | 需求文档（含 AC-xxx） |
-| docs/design-system/RECOMMENDATION.md | 设计推荐 |
-| docs/design-system/DESIGN.md | 设计系统（10 段） |
-| docs/design-system/tokens.json | Token（W3C 格式） |
-| docs/design-system/tokens.css | Token（CSS） |
-| docs/design-system/pages/ | 页面级覆盖目录 |
+| docs/visual/DESIGN_BRIEF.md | Requirements document (with AC-xxx) |
+| docs/design-system/RECOMMENDATION.md | Design recommendation |
+| docs/design-system/DESIGN.md | Design system (10 sections) |
+| docs/design-system/tokens.json | Tokens (W3C format) |
+| docs/design-system/tokens.css | Tokens (CSS) |
+| docs/design-system/pages/ | Page-level override directory |
 
-## 退出条件
+## Exit Criteria
 
-- 所有产出物已生成
-- DESIGN_BRIEF.md 通过硬门
-- DESIGN.md 含 10 段
-- tokens.json 符合 W3C 格式
+- All deliverables generated
+- DESIGN_BRIEF.md passes the hard gate
+- DESIGN.md contains 10 sections
+- tokens.json conforms to W3C format

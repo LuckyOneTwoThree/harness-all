@@ -1,12 +1,12 @@
 ---
 name: deployment-verify
-description: 部署验证与健康检查，执行健康检查/冒烟测试/监控验证/日志检查四件套
+description: Deployment verification and health checks, running the four-part suite of health check, smoke test, metrics verification, and log inspection
 triggers:
-  - 部署完成后验证时
-  - 灰度发布每阶段健康门检查时
-  - 回滚后验证恢复时
-  - 用户要求"检查部署是否成功"时
-  - LOOP 的 VERIFY 阶段执行时
+  - When verifying after a deployment
+  - During health gate checks at each canary stage
+  - When verifying recovery after a rollback
+  - When the user requests "check if the deployment succeeded"
+  - During the VERIFY stage of a LOOP
 reads:
   - loops/specs/<task-name>/spec.md
   - docs/handoff/solo-to-ops.md
@@ -23,176 +23,176 @@ operation_tier: inspect
 requires_approval: false
 ---
 
-# Deployment Verify — 部署验证与健康检查
+# Deployment Verify — Deployment Verification and Health Check
 
-## 铁律
+## Ground Rules
 
-1. **没有证据不声称完成** —— 必须展示实际验证数据，不是"应该没问题"
-2. **四件套缺一不可** —— 健康检查 + 冒烟测试 + 监控验证 + 日志检查
-3. **护栏指标必须检查** —— 不只看主指标，还要确认无副作用
-4. **验证失败立即回滚** —— 不存侥幸心理"再等等看"
+1. **No claim of completion without evidence** — must show actual verification data, not "should be fine"
+2. **All four parts are mandatory** — health check + smoke test + metrics verification + log inspection
+3. **Guardrail metrics must be checked** — not only the main metrics, but also confirm no side effects
+4. **Roll back immediately on verification failure** — do not gamble on "wait and see"
 
-## 流程
+## Process
 
-### 1. 健康检查（Health Check）
+### 1. Health Check
 
-验证 Pod/服务是否正常运行：
+Verify that Pods/services are running normally:
 
 ```bash
-# K8s Pod 状态
+# K8s Pod status
 kubectl get pods -n <namespace> -l app=<app-name>
-# 期望：所有 Pod Running + Ready 1/1
+# Expected: all Pods Running + Ready 1/1
 
 # Readiness Probe
 kubectl describe pod <pod-name> | grep -A 5 Readiness
-# 期望：Ready 状态
+# Expected: Ready state
 
-# HTTP 健康端点
+# HTTP health endpoint
 curl -f http://<service>:<port>/health
-# 期望：HTTP 200 + 响应体正常
+# Expected: HTTP 200 + normal response body
 
-# 启动时间检查
+# Startup time check
 kubectl get pods -o custom-columns=NAME:.metadata.name,AGE:.metadata.creationTimestamp
-# 期望：新 Pod 已启动且稳定运行 > 30 秒
+# Expected: new Pods started and stable for > 30 seconds
 ```
 
-**失败判定**：
-- Pod 状态非 Running/Ready
+**Failure criteria**:
+- Pod status not Running/Ready
 - CrashLoopBackOff / ImagePullBackOff / OOMKilled
-- HTTP 健康端点非 200
-- 启动时间 < 30 秒（可能还在初始化）
+- HTTP health endpoint not 200
+- Startup time < 30 seconds (may still be initializing)
 
-### 2. 冒烟测试（Smoke Test）
+### 2. Smoke Test
 
-读取 `solo-to-ops.md` 的冒烟测试检查点，逐项执行：
-
-```
-## 冒烟测试清单（来自 solo-to-ops.md）
-- [ ] /health 端点返回 200
-- [ ] /ready 端点返回 200
-- [ ] 核心接口 [POST /api/orders] 返回 200
-- [ ] 数据库连接正常（查询 users 表 limit 1）
-- [ ] 缓存连接正常（Redis PING）
-- [ ] 消息队列连接正常（RabbitMQ queue.list）
-```
-
-**执行方式**：
-- Agent 通过 kubectl exec 或 curl 执行
-- 每项记录实际响应，标注 ✓/✗
-- 任一失败则整体失败
-
-### 3. 监控验证（Metrics Verification）
-
-检查部署后监控指标是否平稳：
+Read the smoke test checkpoints from `solo-to-ops.md` and execute each:
 
 ```
-## 监控指标检查（部署后 5-10 分钟）
-### 错误率
-- 部署前 5 分钟: [X%]
-- 部署后 5 分钟: [Y%]
-- 判定: Y ≤ X + 0.5% ✓ / Y > X + 1% ✗
-
-### 延迟
-- p50 部署前: [Xms] / 部署后: [Yms]
-- p95 部署前: [Xms] / 部署后: [Yms]
-- p99 部署前: [Xms] / 部署后: [Yms]
-- 判定: Y ≤ X * 1.2 ✓ / Y > X * 1.5 ✗
-
-### 吞吐量
-- 部署前: [X req/s]
-- 部署后: [Y req/s]
-- 判定: Y ≥ X * 0.9 ✓ / Y < X * 0.7 ✗
-
-### 资源使用
-- CPU: [X%] (阈值 80%)
-- Memory: [X%] (阈值 85%)
-- 判定: 低于阈值 ✓
+## Smoke Test Checklist (from solo-to-ops.md)
+- [ ] /health endpoint returns 200
+- [ ] /ready endpoint returns 200
+- [ ] Core API [POST /api/orders] returns 200
+- [ ] DB connection normal (query users table limit 1)
+- [ ] Cache connection normal (Redis PING)
+- [ ] Message queue connection normal (RabbitMQ queue.list)
 ```
 
-**数据来源**：Prometheus 查询（PromQL）/ Grafana Dashboard / 云厂商监控
+**Execution method**:
+- Agent executes via kubectl exec or curl
+- Record the actual response for each item, mark ✓/✗
+- Any failure means overall failure
 
-### 4. 日志检查（Log Inspection）
+### 3. Metrics Verification
 
-检查部署后日志是否有异常：
+Check whether monitoring metrics are stable after deployment:
 
 ```
-## 日志检查
-### 错误日志
+## Monitoring Metrics Check (5-10 minutes after deployment)
+### Error Rate
+- 5 min before deployment: [X%]
+- 5 min after deployment: [Y%]
+- Verdict: Y ≤ X + 0.5% ✓ / Y > X + 1% ✗
+
+### Latency
+- p50 before: [Xms] / after: [Yms]
+- p95 before: [Xms] / after: [Yms]
+- p99 before: [Xms] / after: [Yms]
+- Verdict: Y ≤ X * 1.2 ✓ / Y > X * 1.5 ✗
+
+### Throughput
+- Before: [X req/s]
+- After: [Y req/s]
+- Verdict: Y ≥ X * 0.9 ✓ / Y < X * 0.7 ✗
+
+### Resource Usage
+- CPU: [X%] (threshold 80%)
+- Memory: [X%] (threshold 85%)
+- Verdict: below threshold ✓
+```
+
+**Data source**: Prometheus queries (PromQL) / Grafana Dashboard / cloud provider monitoring
+
+### 4. Log Inspection
+
+Check whether logs show anomalies after deployment:
+
+```
+## Log Inspection
+### Error Logs
 kubectl logs -n <ns> -l app=<app> --since=10m | grep -E "ERROR|FATAL|Exception"
-# 期望：无新增 ERROR，或 ERROR 数量不高于部署前
+# Expected: no new ERRORs, or ERROR count no higher than before deployment
 
-### 警告日志
+### Warning Logs
 kubectl logs -n <ns> -l app=<app> --since=10m | grep -E "WARN"
-# 期望：无异常增长
+# Expected: no abnormal growth
 
-### 启动日志
+### Startup Logs
 kubectl logs -n <ns> -l app=<app> --since=10m | grep -E "Started|Ready|Listening"
-# 期望：看到正常启动日志
+# Expected: see normal startup logs
 ```
 
-### 5. 护栏指标检查
+### 5. Guardrail Metrics Check
 
-确认部署未影响其他服务：
-- 依赖本服务的下游服务无异常告警
-- 本服务依赖的上游服务无连接异常
-- 数据库连接池无泄漏
-- 消息队列无积压
+Confirm the deployment did not affect other services:
+- Downstream services depending on this service show no abnormal alerts
+- Upstream services this service depends on show no connection anomalies
+- No database connection pool leaks
+- No message queue backlog
 
-### 6. 生成验证报告
+### 6. Generate Verification Report
 
 ```
-## 部署验证报告
-- 任务: [task-name]
-- 版本: [v1.2.3]
-- 环境: [staging/production]
-- 验证时间: [ISO 8601]
+## Deployment Verification Report
+- Task: [task-name]
+- Version: [v1.2.3]
+- Environment: [staging/production]
+- Verification time: [ISO 8601]
 
-### 验证结果
-| 检查项 | 结果 | 详情 |
+### Verification Results
+| Check Item | Result | Details |
 |--------|------|------|
-| 健康检查 | ✓/✗ | [详情] |
-| 冒烟测试 | ✓/✗ | [通过数/总数] |
-| 监控验证 | ✓/✗ | [指标摘要] |
-| 日志检查 | ✓/✗ | [错误数] |
-| 护栏指标 | ✓/✗ | [详情] |
+| Health check | ✓/✗ | [details] |
+| Smoke test | ✓/✗ | [passed/total] |
+| Metrics verification | ✓/✗ | [metrics summary] |
+| Log inspection | ✓/✗ | [error count] |
+| Guardrail metrics | ✓/✗ | [details] |
 
-### 结论
-- 整体结果: [通过/失败]
-- 下一步: [DONE / 触发回滚 / 继续观察]
+### Conclusion
+- Overall result: [pass/fail]
+- Next step: [DONE / trigger rollback / continue observing]
 ```
 
-写入 `loops/specs/<task>/evidence.md`。
+Write to `loops/specs/<task>/evidence.md`.
 
-### 7. 更新状态
+### 7. Update Status
 
-- 验证通过：`state.yaml` status=done, stage=verify
-- 验证失败：`state.yaml` status=retrying, stage=verify, last_error=[详情]
-- 追加 `iterations.log`：记录本次验证结果
+- Verification passed: `state.yaml` status=done, stage=verify
+- Verification failed: `state.yaml` status=retrying, stage=verify, last_error=[details]
+- Append to `iterations.log`: record this verification result
 
-## 禁止事项
+## Prohibitions
 
-- 不跳过任何一项检查（四件套缺一不可）
-- 不用"看起来正常"代替实际数据
-- 不忽略护栏指标异常
-- 不在验证失败后继续推进灰度
-- 不篡改验证结果
+- Do not skip any check item (all four parts are mandatory)
+- Do not use "looks fine" as a substitute for actual data
+- Do not ignore guardrail metric anomalies
+- Do not continue canary rollout after verification failure
+- Do not tamper with verification results
 
-## 与 LOOP 的关系
+## Relationship to LOOP
 
-**所属 LOOP 类型**：provision（VERIFY 阶段）、incident（VERIFY 阶段）
+**LOOP type**: provision (VERIFY stage), incident (VERIFY stage)
 
-本 skill 是 LOOP 的 VERIFY 阶段核心执行者。
-- provision LOOP：部署后验证，失败触发 rollback
-- incident LOOP：故障恢复后验证，失败继续排障
+This skill is the core executor of the LOOP VERIFY stage.
+- provision LOOP: post-deployment verification; failure triggers rollback
+- incident LOOP: post-recovery verification; failure continues troubleshooting
 
-**stage 字段写入**：verify
+**stage field value**: verify
 
-## 声称"完成"的前置条件
+## Preconditions for Claiming "Done"
 
-- [ ] 健康检查通过（Pod Running/Ready, HTTP 200）
-- [ ] 冒烟测试全部通过
-- [ ] 监控指标平稳（错误率/延迟/吞吐）
-- [ ] 日志无异常 ERROR
-- [ ] 护栏指标无异常
-- [ ] 验证报告写入 evidence.md
-- [ ] state.yaml 更新
+- [ ] Health check passed (Pod Running/Ready, HTTP 200)
+- [ ] All smoke tests passed
+- [ ] Monitoring metrics stable (error rate / latency / throughput)
+- [ ] Logs show no abnormal ERRORs
+- [ ] Guardrail metrics show no anomalies
+- [ ] Verification report written to evidence.md
+- [ ] state.yaml updated

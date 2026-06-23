@@ -1,12 +1,12 @@
 ---
 name: post-mortem
-description: 故障复盘报告，总结时间线/根因/影响/改进项，沉淀到知识库避免重复
+description: Incident post-mortem report, summarizing timeline / root cause / impact / action items, and persisting to the knowledge base to prevent recurrence
 triggers:
-  - P0/P1 故障恢复后
-  - incident LOOP 完成后
-  - 用户要求"写复盘报告"时
-  - session-end 检测到有结题的 incident 时
-  - 定期回顾历史故障时
+  - After a P0/P1 incident is recovered
+  - After the incident LOOP completes
+  - When the user requests "write a post-mortem report"
+  - When session-end detects a closed incident
+  - During periodic reviews of historical incidents
 reads:
   - loops/specs/<incident-id>/spec.md
   - loops/specs/<incident-id>/evidence.md
@@ -23,165 +23,165 @@ operation_tier: inspect
 requires_approval: false
 ---
 
-# Post-Mortem — 故障复盘报告
+# Post-Mortem — Incident Post-Mortem Report
 
-## 铁律
+## Ground Rules
 
-1. **对事不对人** —— 复盘是为了改进，不是为了追责
-2. **不隐瞒失误** —— Agent 自身的判断失误也要如实记录
-3. **每个改进项必须有负责人和截止日期** —— 否则复盘无意义
-4. **沉淀到知识库** —— 复盘结论必须写入 knowledge-base.md
-5. **不报喜不报忧** —— 成功和失败都要分析
+1. **Focus on the issue, not the person** — post-mortem is for improvement, not for blame
+2. **Do not conceal mistakes** — the Agent's own judgment errors must also be recorded truthfully
+3. **Every action item must have an owner and a due date** — otherwise the post-mortem is meaningless
+4. **Persist to the knowledge base** — post-mortem conclusions must be written to knowledge-base.md
+5. **Report both successes and failures** — analyze both what worked and what didn't
 
-## 流程
+## Process
 
-### 1. 收集故障全貌
+### 1. Collect the Full Incident Picture
 
-读取所有相关文件：
-- `spec.md` — 故障规格
-- `evidence.md` — 根因分析报告
-- `iterations.log` — 完整处置时间线
-- `knowledge-base.md` — 历史类似故障
+Read all related files:
+- `spec.md` — incident spec
+- `evidence.md` — root cause analysis report
+- `iterations.log` — complete handling timeline
+- `knowledge-base.md` — historical similar incidents
 
-### 2. 梳理时间线
+### 2. Build the Timeline
 
 ```
-## 故障时间线
+## Incident Timeline
 
-| 时间 | 事件 | 来源 |
+| Time | Event | Source |
 |------|------|------|
-| 14:25:00 | 部署 v1.2.3 到 production | deployment-pipeline |
-| 14:30:00 | 错误率开始上升（5%→8%） | Prometheus |
-| 14:32:00 | Alertmanager 触发告警 | 告警系统 |
-| 14:33:00 | Agent 接收告警，创建 INC-xxx | incident-detection |
-| 14:35:00 | Agent 评估为 P0，通知人类 | incident-detection |
-| 14:37:00 | 人类确认，Agent 执行回滚 | incident-mitigation |
-| 14:40:00 | 回滚完成，错误率下降 | rollback |
-| 14:45:00 | 服务完全恢复 | deployment-verify |
-| 14:50:00 | 开始根因分析 | root-cause-analysis |
-| 15:10:00 | 根因定位：Migration 漏加索引 | root-cause-analysis |
+| 14:25:00 | Deployed v1.2.3 to production | deployment-pipeline |
+| 14:30:00 | Error rate started rising (5%→8%) | Prometheus |
+| 14:32:00 | Alertmanager triggered an alert | Alerting system |
+| 14:33:00 | Agent received alert, created INC-xxx | incident-detection |
+| 14:35:00 | Agent assessed as P0, notified humans | incident-detection |
+| 14:37:00 | Human confirmed, Agent executed rollback | incident-mitigation |
+| 14:40:00 | Rollback completed, error rate dropped | rollback |
+| 14:45:00 | Service fully recovered | deployment-verify |
+| 14:50:00 | Started root cause analysis | root-cause-analysis |
+| 15:10:00 | Root cause identified: Migration missing index | root-cause-analysis |
 ```
 
-### 3. 影响评估
+### 3. Impact Assessment
 
 ```
-## 影响评估
+## Impact Assessment
 
-### 业务影响
-- 持续时间: 15 分钟（14:30-14:45）
-- 影响用户: 约 3000 次支付请求失败
-- 直接损失: 约 ¥45,000（按客单价 ¥15 估算）
-- SLA 影响: 本月可用性从 99.95% 降至 99.92%
+### Business Impact
+- Duration: 15 minutes (14:30-14:45)
+- Affected users: about 3000 failed payment requests
+- Direct loss: about ¥45,000 (estimated at ¥15 average order value)
+- SLA impact: this month's availability dropped from 99.95% to 99.92%
 
-### 技术影响
-- 受影响服务: payment-service, order-service
-- 资源消耗: 故障期间 CPU 飙升至 95%
-- 数据影响: 无数据丢失/损坏
+### Technical Impact
+- Affected services: payment-service, order-service
+- Resource consumption: CPU spiked to 95% during the incident
+- Data impact: no data loss / corruption
 ```
 
-### 4. 根因总结
+### 4. Root Cause Summary
 
 ```
-## 根因分析
+## Root Cause Analysis
 
-### 直接原因
-支付接口调用数据库超时，连接池耗尽导致 500 错误。
+### Direct Cause
+The payment API timed out calling the database; the connection pool was exhausted, causing 500 errors.
 
-### 根本原因
-v1.2.3 的 DB Migration 新增了 `user_orders` 表但漏加索引，
-导致 `SELECT * FROM user_orders WHERE user_id = ?` 全表扫描，
-单查询耗时从 10ms 升至 2s，连接池在 30 秒内耗尽。
+### Root Cause
+The v1.2.3 DB Migration added the `user_orders` table but missed an index,
+causing `SELECT * FROM user_orders WHERE user_id = ?` to do a full table scan.
+A single query took 10ms → 2s, and the connection pool was exhausted within 30 seconds.
 
-### 5 Why 分析
-1. 为什么 500？→ 数据库连接超时
-2. 为什么连接超时？→ 连接池耗尽
-3. 为什么耗尽？→ 慢查询占用
-4. 为什么慢？→ 漏加索引
-5. 为什么漏加？→ Migration review 流程未检查索引
+### 5 Whys Analysis
+1. Why 500? → Database connection timeout
+2. Why connection timeout? → Connection pool exhausted
+3. Why exhausted? → Slow queries holding connections
+4. Why slow? → Missing index
+5. Why missing? → Migration review process did not check indexes
 ```
 
-### 5. 处置评估
+### 5. Handling Assessment
 
 ```
-## 处置评估
+## Handling Assessment
 
-### 做得好的
-- ✅ 告警及时（2 分钟内触发）
-- ✅ Agent 响应迅速（1 分钟内创建记录）
-- ✅ 回滚决策正确（止血有效）
-- ✅ 根因定位准确
+### What Went Well
+- ✅ Timely alerting (triggered within 2 minutes)
+- ✅ Fast Agent response (created record within 1 minute)
+- ✅ Correct rollback decision (effective stop-the-bleeding)
+- ✅ Accurate root cause identification
 
-### 待改进的
-- ❌ 部署前未发现 Migration 缺失索引
-- ❌ staging 环境未覆盖生产数据量级，未暴露慢查询
-- ❌ 从告警到回滚耗时 8 分钟，可优化至 5 分钟内
+### What Needs Improvement
+- ❌ Missing index in Migration was not detected before deployment
+- ❌ Staging environment did not cover production data volume, did not expose slow queries
+- ❌ From alert to rollback took 8 minutes, can be optimized to under 5 minutes
 ```
 
-### 6. 改进项清单
+### 6. Action Items List
 
 ```
-## 改进项
+## Action Items
 
-| 编号 | 改进项 | 类型 | 负责人 | 截止日期 | 优先级 |
+| ID | Action Item | Type | Owner | Due Date | Priority |
 |------|--------|------|--------|---------|--------|
-| IMP-001 | Migration review 增加索引检查清单 | 流程 | @backend-lead | 2026-07-01 | P0 |
-| IMP-002 | staging 环境增加生产数据量级测试 | 工具 | @ops | 2026-07-15 | P1 |
-| IMP-003 | 慢查询告警阈值从 1s 调整为 500ms | 监控 | @ops | 2026-06-25 | P1 |
-| IMP-004 | 自动回滚触发条件增加"连接池使用率>90%" | 自动化 | @ops | 2026-07-10 | P2 |
+| IMP-001 | Add index checklist to Migration review | Process | @backend-lead | 2026-07-01 | P0 |
+| IMP-002 | Add production-data-volume testing to staging | Tooling | @ops | 2026-07-15 | P1 |
+| IMP-003 | Lower slow-query alert threshold from 1s to 500ms | Monitoring | @ops | 2026-06-25 | P1 |
+| IMP-004 | Add "connection pool usage > 90%" to auto-rollback triggers | Automation | @ops | 2026-07-10 | P2 |
 ```
 
-### 7. 产出文档
+### 7. Produce Documents
 
-#### 7.1 复盘报告
-写入 `docs/incident/<incident-id>-post-mortem.md`，包含上述全部内容。
+#### 7.1 Post-Mortem Report
+Write to `docs/incident/<incident-id>-post-mortem.md`, including all the above content.
 
-#### 7.2 通知 PM（如需）
-如故障影响业务或需要产品侧改进，按 `ops-to-pm-template.md` 填写并追加到 `docs/handoff/ops-to-pm.md`：
-- 事故通报：故障摘要 + 影响
-- 改进计划：需要 PM 协调的事项
+#### 7.2 Notify PM (if needed)
+If the incident affects business or requires product-side improvements, fill in per `ops-to-pm-template.md` and append to `docs/handoff/ops-to-pm.md`:
+- Incident notification: incident summary + impact
+- Improvement plan: items needing PM coordination
 
-#### 7.3 更新知识库
+#### 7.3 Update Knowledge Base
 
-`memory/knowledge-base.md` 追加：
+Append to `memory/knowledge-base.md`:
 
-**故障库**：
+**Incident library**:
 ```
-| 故障ID | 等级 | 现象 | 根因 | 持续时间 | 影响 | 改进项 | 日期 |
+| Incident ID | Severity | Phenomenon | Root Cause | Duration | Impact | Action Items | Date |
 |--------|------|------|------|---------|------|--------|------|
-| INC-2026-06-22-payment-500 | P0 | 支付500错误 | Migration漏加索引 | 15分钟 | ¥45k损失 | 4项 | 2026-06-22 |
+| INC-2026-06-22-payment-500 | P0 | Payment 500 errors | Migration missing index | 15 minutes | ¥45k loss | 4 items | 2026-06-22 |
 ```
 
-**根因库**（如发现新模式）：
+**Root cause library** (if a new pattern is discovered):
 ```
-| 根因模式 | 适用场景 | 识别特征 | 处置方式 | 来源 |
+| Root Cause Pattern | Applicable Scenario | Identification Features | Handling | Source |
 |---------|---------|---------|---------|------|
-| Migration漏加索引 | 部署后慢查询激增 | 连接池耗尽+CPU飙升 | 回滚+补索引 | INC-2026-06-22 |
+| Migration missing index | Slow query surge after deployment | Connection pool exhausted + CPU spike | Rollback + add index | INC-2026-06-22 |
 ```
 
-**踩坑记录**（如有教训）：
+**Pitfall records** (if there are lessons learned):
 ```
-| 日期 | 问题 | 解决方案 | 相关文件 |
+| Date | Issue | Solution | Related File |
 |------|------|---------|---------|
-| 2026-06-22 | Migration review 未检查索引 | 增加索引检查清单 | docs/incident/INC-xxx-post-mortem.md |
+| 2026-06-22 | Migration review did not check indexes | Add index checklist | docs/incident/INC-xxx-post-mortem.md |
 ```
 
-## 禁止事项
+## Prohibitions
 
-- 不篡改时间线（如实记录）
-- 不隐瞒 Agent 自身失误
-- 不给出无负责人的改进项
-- 不跳过知识库沉淀
-- 不在复盘报告中包含用户 PII
+- Do not tamper with the timeline (record truthfully)
+- Do not conceal the Agent's own mistakes
+- Do not provide action items without owners
+- Do not skip knowledge base persistence
+- Do not include user PII in the post-mortem report
 
-## 与 LOOP 的关系
+## Relationship to LOOP
 
-**所属 LOOP 类型**：无（非循环，incident LOOP 完成后执行）
+**LOOP type**: none (not a loop; executes after the incident LOOP completes)
 
-本 skill 在 incident LOOP status=done 后触发，是会话级/故障级的归档动作。
-通常由 session-end 触发，或用户显式要求时执行。
+This skill triggers after the incident LOOP status=done, and is a session-level/incident-level archiving action.
+Usually triggered by session-end, or executed on explicit user request.
 
-## 与其他 skill 的关系
+## Relationship to Other Skills
 
-- **上游**：`root-cause-analysis`（根因报告）、`incident-mitigation`（止血记录）
-- **协作**：调用 `ops-review`（如需汇总到周期报告）
-- **下游**：产出 `ops-to-pm.md`（通知 PM）
+- **Upstream**: `root-cause-analysis` (root cause report), `incident-mitigation` (stop-the-bleeding record)
+- **Collaboration**: invokes `ops-review` (if needed to roll up into a periodic report)
+- **Downstream**: produces `ops-to-pm.md` (notify PM)

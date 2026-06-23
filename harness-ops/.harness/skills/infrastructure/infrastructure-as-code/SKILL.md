@@ -1,12 +1,12 @@
 ---
 name: infrastructure-as-code
-description: Terraform/Ansible IaC 管理，生成/plan/apply 基础设施代码，plan 可自动 apply 需人类确认
+description: Terraform/Ansible IaC management, generating / planning / applying infrastructure code; plan can be auto-run, apply requires human confirmation
 triggers:
-  - 需要创建/修改云资源时
-  - 需要执行 terraform plan/apply 时
-  - 基础设施漂移检测时
-  - 用户要求"配置新环境"时
-  - infrastructure-setup-workflow 触发时
+  - When cloud resources need to be created/modified
+  - When terraform plan/apply needs to be executed
+  - During infrastructure drift detection
+  - When the user requests "configure a new environment"
+  - When infrastructure-setup-workflow triggers
 reads:
   - docs/infrastructure/OPS_STRATEGY.md
   - docs/infrastructure/
@@ -25,35 +25,35 @@ operation_tier: propose
 requires_approval: true
 ---
 
-# Infrastructure as Code — Terraform/Ansible IaC 管理
+# Infrastructure as Code — Terraform/Ansible IaC Management
 
-## 铁律
+## Ground Rules
 
-1. **IaC 必须先行** —— 拒绝 ClickOps，所有资源必须通过代码声明
-2. **plan 可自动，apply 需确认** —— 生产环境 apply 必须人类审批
-3. **state 文件是核心资产** —— 远程 backend + 加密 + 版本控制
-4. **不硬编码凭据** —— 变量通过 tfvars/env 注入，不写明文
-5. **destroy 是高危操作** —— 必须人类双重确认 + 资源白名单
+1. **IaC must come first** — reject ClickOps; all resources must be declared via code
+2. **plan can be automatic, apply requires confirmation** — production apply must be approved by humans
+3. **state files are core assets** — remote backend + encryption + version control
+4. **Do not hardcode credentials** — inject variables via tfvars/env, no plaintext
+5. **destroy is high-risk** — requires human double confirmation + resource whitelist
 
-## 流程
+## Process
 
-### 1. 评估 IaC 需求
+### 1. Assess IaC Requirements
 
-读取 `OPS_STRATEGY.md` 了解架构拓扑和选型：
-- 云厂商：AWS / GCP / Azure / 阿里云 / 腾讯云
-- IaC 工具：Terraform / Pulumi / Crossplane
-- 配置管理：Ansible / SaltStack
+Read `OPS_STRATEGY.md` to understand the architecture topology and selections:
+- Cloud provider: AWS / GCP / Azure / Alibaba Cloud / Tencent Cloud
+- IaC tool: Terraform / Pulumi / Crossplane
+- Configuration management: Ansible / SaltStack
 
-确定本次任务范围：
-- 新建资源 / 修改现有资源 / 销毁资源
-- 影响环境：dev / staging / production
+Determine the scope of this task:
+- Create resources / modify existing resources / destroy resources
+- Affected environment: dev / staging / production
 
-### 2. 生成/修改 IaC 代码
+### 2. Generate/Modify IaC Code
 
-#### Terraform 结构
+#### Terraform Structure
 ```
 infrastructure/
-├── modules/                    # 可复用模块
+├── modules/                    # reusable modules
 │   ├── vpc/
 │   ├── eks/
 │   ├── rds/
@@ -63,67 +63,67 @@ infrastructure/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   ├── outputs.tf
-│   │   └── terraform.tfvars    # 不含敏感信息
+│   │   └── terraform.tfvars    # no sensitive info
 │   ├── staging/
 │   └── production/
 └── shared/
-    └── remote_state.tf         # S3 backend 配置
+    └── remote_state.tf         # S3 backend config
 ```
 
-#### 生成原则
-- 模块化：资源按职责分模块，不写大单体
-- 版本固定：provider 显式指定版本（`version = "~> 4.0"`）
-- 标签规范：所有资源打 `Environment` / `Project` / `ManagedBy` 标签
-- 最小权限：IAM 策略遵循最小权限原则
-- 加密默认：存储/传输默认加密
+#### Generation Principles
+- Modular: split resources by responsibility into modules; do not write giant monoliths
+- Version pinning: explicitly specify provider versions (`version = "~> 4.0"`)
+- Tagging standards: tag all resources with `Environment` / `Project` / `ManagedBy`
+- Least privilege: IAM policies follow the principle of least privilege
+- Encryption by default: storage/transit encrypted by default
 
-### 3. 执行 terraform plan（Agent 可自动）
+### 3. Execute terraform plan (Agent can auto-run)
 
 ```bash
-# 初始化
+# Initialize
 terraform init -backend-config=backend.hcl
 
-# 格式化与校验
+# Format and validate
 terraform fmt -check -diff
 terraform validate
 
-# 计划（dry-run）
+# Plan (dry-run)
 terraform plan -out=tfplan -input=false
 ```
 
-**Agent 解析 plan 输出**：
-- 识别创建/修改/销毁的资源
-- 评估影响面
-- 生成 plan 摘要供人类 review
+**Agent parses plan output**:
+- Identify resources to create/modify/destroy
+- Assess impact
+- Generate a plan summary for human review
 
 ```
-## Terraform Plan 摘要
-- 创建: 3 个资源（VPC, Subnet, IGW）
-- 修改: 1 个资源（EKS 集群添加节点组）
-- 销毁: 0 个资源
-- 影响面: 中（新增资源，不影响现有）
-- 预计耗时: 8 分钟
-- 风险评估: 低
+## Terraform Plan Summary
+- Create: 3 resources (VPC, Subnet, IGW)
+- Modify: 1 resource (EKS cluster adds a node group)
+- Destroy: 0 resources
+- Impact: medium (new resources, does not affect existing)
+- Estimated duration: 8 minutes
+- Risk assessment: low
 ```
 
-### 4. 执行 terraform apply（生产需人类确认）
+### 4. Execute terraform apply (production requires human confirmation)
 
-**Staging 环境**：
-- Agent 可直接执行 `terraform apply -auto-approve`
-- 执行后验证资源创建成功
+**Staging environment**:
+- Agent can directly execute `terraform apply -auto-approve`
+- Verify resource creation succeeded after execution
 
-**Production 环境**：
-- Agent 展示 plan 摘要
-- 通过 AskUserQuestion 请求人类确认
-- 人类确认后执行 `terraform apply`
-- 执行后验证
+**Production environment**:
+- Agent shows the plan summary
+- Use AskUserQuestion to request human confirmation
+- After human confirmation, execute `terraform apply`
+- Verify after execution
 
-**禁止操作**：
-- `terraform destroy`（任何环境都需人类双重确认）
-- `terraform force-unlock`（需人类确认）
-- 修改 state 文件（需人类确认）
+**Prohibited operations**:
+- `terraform destroy` (requires human double confirmation in any environment)
+- `terraform force-unlock` (requires human confirmation)
+- Modifying state files (requires human confirmation)
 
-### 5. Ansible 配置管理（如需）
+### 5. Ansible Configuration Management (if needed)
 
 ```yaml
 # inventory.yml
@@ -153,61 +153,61 @@ all:
     env: production
 ```
 
-**执行**：
-- `ansible-playbook -i inventory.yml playbook.yml --check`（dry-run）
-- `ansible-playbook -i inventory.yml playbook.yml`（实际执行）
+**Execution**:
+- `ansible-playbook -i inventory.yml playbook.yml --check` (dry-run)
+- `ansible-playbook -i inventory.yml playbook.yml` (actual execution)
 
-### 6. 漂移检测
+### 6. Drift Detection
 
-定期执行：
+Run periodically:
 ```bash
 terraform plan -detailed-exitcode
-# exit code 0: 无漂移
-# exit code 2: 有漂移（需处理）
+# exit code 0: no drift
+# exit code 2: drift exists (needs handling)
 ```
 
-发现漂移：
-- 分析漂移原因（手动修改 / 外部系统变更）
-- 决策：拉回 IaC / 更新 IaC 匹配实际
-- 记录到知识库
+When drift is found:
+- Analyze the cause (manual change / external system change)
+- Decide: pull back to IaC / update IaC to match reality
+- Record to the knowledge base
 
-### 7. 更新 IaC 资产库
+### 7. Update IaC Asset Library
 
-`memory/knowledge-base.md` 的 IaC 资产库追加：
+Append to the IaC asset library in `memory/knowledge-base.md`:
 ```
-| 资源ID | 类型 | 环境 | 模块路径 | 创建日期 | 最后修改 |
+| Resource ID | Type | Environment | Module Path | Created | Last Modified |
 |--------|------|------|---------|---------|---------|
 | vpc-xxx | AWS VPC | production | environments/prod/main.tf | 2026-06-22 | 2026-06-22 |
 ```
 
-## 禁止事项
+## Prohibitions
 
-- 不硬编码 AK/SK/密码到 .tf 文件
-- 不在生产环境执行 terraform destroy（除非人类双重确认）
-- 不使用 local state（必须远程 backend）
-- 不跳过 terraform plan 直接 apply
-- 不修改 .terraform/ 目录下的文件
-- 不在不了解影响面的情况下 apply
+- Do not hardcode AK/SK/passwords in .tf files
+- Do not run terraform destroy in production (unless human double confirmation)
+- Do not use local state (must use remote backend)
+- Do not skip terraform plan and apply directly
+- Do not modify files under the .terraform/ directory
+- Do not apply without understanding the impact
 
-## 与 LOOP 的关系
+## Relationship to LOOP
 
-**所属 LOOP 类型**：provision
+**LOOP type**: provision
 
 ```
 LOOP(provision):
-  PLAN:       评估需求 → 生成/修改 IaC 代码
-  PROVISION:  terraform plan → [人类确认] → terraform apply
-  VERIFY:     验证资源创建成功 + 标签正确 + 加密生效
-  通过? DONE : 分析原因 → 修复 IaC → 回到 PROVISION
+  PLAN:       Assess requirements → generate/modify IaC code
+  PROVISION:  terraform plan → [human confirmation] → terraform apply
+  VERIFY:     verify resource creation succeeded + tags correct + encryption effective
+  Pass? DONE : analyze cause → fix IaC → back to PROVISION
 ```
 
-## 操作分级
+## Operation Tiers
 
-| 操作 | staging | production |
+| Operation | staging | production |
 |------|---------|------------|
 | terraform fmt/validate | Agent | Agent |
 | terraform plan | Agent | Agent |
-| terraform apply | Agent | 人类确认后 |
-| terraform destroy | 人类确认 | 人类双重确认 |
+| terraform apply | Agent | After human confirmation |
+| terraform destroy | Human confirmation | Human double confirmation |
 | ansible --check | Agent | Agent |
-| ansible-playbook | Agent | 人类确认后 |
+| ansible-playbook | Agent | After human confirmation |

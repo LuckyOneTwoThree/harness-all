@@ -1,10 +1,10 @@
 ---
 name: writing-plans
-description: 任务拆解，输出可执行的 spec.md
+description: Task breakdown — output an executable spec.md
 triggers:
-  - brainstorming 通过后
-  - 多步骤任务开始前
-  - 进入 LOOP 的 PLAN 阶段时
+  - After brainstorming passes
+  - Before starting a multi-step task
+  - When entering the PLAN phase of LOOP
 reads:
   - loops/LOOP.md
   - constitution.md
@@ -18,66 +18,66 @@ writes:
   - loops/specs/<feature>/state.yaml
 ---
 
-# Writing Plans — 任务拆解
+# Writing Plans — Task Breakdown
 
-## 铁律
-**先写规格再写代码。** 规格不清就开干 = 返工的根源。
+## Iron Rule
+**Write the spec before writing code.** Starting work with an unclear spec = the root cause of rework.
 
-## 流程
+## Process
 
-1. **创建功能目录**
-   在 `.harness/loops/specs/` 下创建功能目录：
+1. **Create the feature directory**
+   Create a feature directory under `.harness/loops/specs/`:
    ```
    .harness/loops/specs/<NNN>-<feature-name>/
    ```
-   编号规则：NNN 为三位数字，按创建顺序递增（001, 002, ...）
-   **查询下一个编号**：用 Glob 扫描 `.harness/loops/specs/*` 目录，取最大编号 +1。
-   首次创建（目录为空）时从 001 开始。
+   Numbering rule: NNN is a three-digit number, incremented in creation order (001, 002, ...)
+   **Query the next number**: use Glob to scan the `.harness/loops/specs/*` directories and take the max number +1.
+   For the first creation (when the directory is empty), start from 001.
 
-2. **写 spec.md**
-   包含以下部分：
+2. **Write spec.md**
+   Include the following sections:
    ```markdown
-   # <功能名>
+   # <feature name>
 
-   ## 目标
-   [一句话目标，来自 brainstorming]
+   ## Goal
+   [One-sentence goal, from brainstorming]
 
-   ## 验收标准
+   ## Acceptance Criteria
 
-   ### 工程 AC（来自 pm-to-solo.md / brainstorming）
-   - AC-001: [可测试的描述]
-   - AC-002: [可测试的描述]
+   ### Engineering AC (from pm-to-solo.md / brainstorming)
+   - AC-001: [testable description]
+   - AC-002: [testable description]
 
-   ### 设计 AC（来自 design-to-solo.md，如涉及前端）
-   - DAC-001: [设计可测试描述，如"对比度 ≥4.5:1"]
-   - DAC-002: [设计可测试描述，如"375px 无溢出"]
+   ### Design AC (from design-to-solo.md, if frontend is involved)
+   - DAC-001: [testable design description, e.g. "contrast ≥4.5:1"]
+   - DAC-002: [testable design description, e.g. "no overflow at 375px"]
 
-   ## 任务拆解
-   - [ ] T1: [任务1，2-5分钟能完成]
-   - [ ] T2: [任务2]
-   - [ ] T3: [任务3]
+   ## Task Breakdown
+   - [ ] T1: [task 1, completable in 2-5 minutes]
+   - [ ] T2: [task 2]
+   - [ ] T3: [task 3]
 
-   ## 技术方案
-   [简要：改哪些文件、新增什么模块、关键设计决策]
+   ## Technical Solution
+   [Brief: which files to change, what modules to add, key design decisions]
 
-   ## 不做的事
-   [明确边界，避免范围蔓延]
+   ## Out of Scope
+   [Explicit boundaries to avoid scope creep]
    ```
 
-   **AC 来源说明**：
-   - 工程 AC（AC-xxx）：来自 PRD 或 brainstorming，描述功能行为
-   - 设计 AC（DAC-xxx）：来自 `docs/handoff/design-to-solo.md`，描述视觉/交互约束
-   - 如无 design-to-solo.md，跳过设计 AC 章节
-   - DAC 编号沿用 design-to-solo.md 的 AC-xxx 编号，加 D 前缀以区分来源
+   **AC source notes**:
+   - Engineering AC (AC-xxx): from the PRD or brainstorming; describes feature behavior
+   - Design AC (DAC-xxx): from `docs/handoff/design-to-solo.md`; describes visual/interaction constraints
+   - If there is no design-to-solo.md, skip the Design AC section
+   - DAC numbering follows the AC-xxx numbering in design-to-solo.md, with a D prefix to distinguish the source
 
-3. **任务粒度控制**
-   每个任务应该是：
-   - 2-5 分钟能完成（太大就继续拆）
-   - 可独立验证（完成后能跑测试确认）
-   - 有明确产出（代码/测试/配置）
+3. **Task Granularity Control**
+   Each task should be:
+   - Completable in 2-5 minutes (if too large, keep splitting)
+   - Independently verifiable (after completion, you can run a test to confirm)
+   - Have a clear deliverable (code/test/config)
 
-4. **初始化 state.yaml**
-   按 `loops/LOOP.md` 的 "state.yaml Schema" 章节定义的字段初始化：
+4. **Initialize state.yaml**
+   Initialize the fields defined in the "state.yaml Schema" section of `loops/LOOP.md`:
    ```yaml
    current_feature: <NNN>-<feature-name>
    iteration: 0
@@ -86,22 +86,22 @@ writes:
    last_error: ""
    started_at: "YYYY-MM-DDTHH:MM:SS"
    ```
-   字段含义和枚举值见 LOOP.md，本 SKILL.md 不重复定义。
+   For field meanings and enum values, see LOOP.md; this SKILL.md does not redefine them.
 
-5. **宪法复核**
-   检查任务拆解是否符合宪法：
-   - 每个新增依赖是否经过审批？
-   - 新增 API 是否有测试任务？
-   - schema 变更是否有迁移脚本任务？
+5. **Constitution Review**
+   Check that the task breakdown complies with the constitution:
+   - Has every new dependency been approved?
+   - Do new APIs have a test task?
+   - Do schema changes have a migration script task?
 
-## 禁止事项
-- 任务粒度过大（"实现用户系统"不是任务，是史诗）
-- 验收标准不可测试
-- 跳过 state.yaml 初始化（LOOP 无法断点续传）
-- spec.md 写完就不更新（执行中发现 spec 错了要回头改）
+## Prohibitions
+- Task granularity too large ("implement the user system" is not a task, it's an epic)
+- Acceptance criteria that are not testable
+- Skipping state.yaml initialization (LOOP cannot resume from a breakpoint)
+- Not updating spec.md after writing it (if you find the spec is wrong during execution, go back and fix it)
 
-## 与 LOOP 的关系
-本 skill 对应 LOOP 的 PLAN 阶段。
-- 输出 spec.md = PLAN 的产物
-- 初始化 state.yaml = LOOP 的起点
-- writing-plans → LOOP(tdd→verify) → 失败回到 writing-plans 重新规划
+## Relationship with LOOP
+This skill corresponds to the PLAN phase of LOOP.
+- Output spec.md = the deliverable of PLAN
+- Initialize state.yaml = the starting point of LOOP
+- writing-plans → LOOP(tdd→verify) → on failure, return to writing-plans to re-plan

@@ -1,18 +1,18 @@
 ---
 name: revenue-orchestrator
-description: 当需要优化付费转化或提升收入时使用。商业化指挥官，调度 revenue-funnel（付费漏斗分析）、revenue-nrr（NRR追踪预警）、revenue-upsell（升级转化），实现从付费漏斗分析到增购策略的闭环。关键词：商业化、付费漏斗、NRR、增购策略、收入优化、revenue-funnel、revenue-nrr、revenue-upsell、赚钱、变现、付费转化。
+description: Use when optimizing payment conversion or increasing revenue. Monetization Orchestrator dispatches revenue-funnel (payment funnel analysis), revenue-nrr (NRR tracking and early warning), and revenue-upsell (upgrade conversion), achieving a closed loop from payment funnel analysis to upsell strategy. Keywords: monetization, payment funnel, NRR, upsell strategy, revenue optimization, revenue-funnel, revenue-nrr, revenue-upsell, make money, monetization, payment conversion.
 metadata:
-  module: "产品增长与运营"
-  sub-module: "变现"
+  module: "Product Growth & Operations"
+  sub-module: "Monetization"
   type: "orchestrator"
   version: "7.0"
-  domain_tags: ["电商", "SaaS", "金融", "教育", "游戏", "通用"]
+  domain_tags: ["E-commerce", "SaaS", "Finance", "Education", "Gaming", "General"]
   trigger_examples:
-    - "优化付费转化率"
-    - "提升产品收入"
-    - "分析付费漏斗"
-    - "设计增购策略"
-    - "提升NRR"
+    - "Optimize payment conversion rate"
+    - "Increase product revenue"
+    - "Analyze the payment funnel"
+    - "Design upsell strategy"
+    - "Improve NRR"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -24,22 +24,22 @@ writes:
   - output/approvals/revenue-orchestrator/{stage-id}.approval.json
 ---
 
-# 商业化指挥官
+# Monetization Orchestrator
 
-## 核心原则
+## Core Principles
 
-**商业化是用户价值和商业价值的双赢**
+**Monetization is a win-win for user value and business value**
 
-好的商业化不是从用户身上榨取价值，而是为用户创造更多价值的同时获得合理回报。用户愿意付费是因为产品让他们的生活或工作变得更好，而非因为他们被设计成了付费陷阱。
+Good monetization is not extracting value from users, but creating more value for users while receiving reasonable returns. Users are willing to pay because the product makes their lives or work better, not because they were designed into payment traps.
 
-## 编排理念
+## Orchestration Philosophy
 
-1. **漏斗诊断定方向，NRR追踪看健康，升级转化抓机会**：三阶段从诊断到监控到行动，形成完整的商业化闭环
-2. **数据在漏斗→NRR→升级间递进流转**：前序阶段的输出直接驱动后序阶段的策略制定
+1. **Funnel diagnosis sets direction, NRR tracking monitors health, upgrade conversion captures opportunities**: Three stages from diagnosis to monitoring to action, forming a complete monetization closed loop
+2. **Data flows progressively through funnel → NRR → upgrade**: Outputs from earlier stages directly drive strategy formulation in later stages
 
-## 编排协议
+## Orchestration Protocol
 
-遵循 [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) 编排协议。
+Follows the [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) orchestration protocol.
 
 ## Pipeline
 
@@ -53,121 +53,121 @@ post_pipeline:
 
 stages:
   - id: phase-1
-    name: "NRR追踪"
+    name: "NRR Tracking"
     depends_on: []
     skills: [revenue-nrr]
     gate:
-      condition: "NRR计算和趋势追踪正常运行，流失预警和扩张机会已识别"
-      fail_action: "完善收入数据采集"
+      condition: "NRR calculation and trend tracking running normally, churn warnings and expansion opportunities identified"
+      fail_action: "Improve revenue data collection"
 
   - id: phase-2
-    name: "付费漏斗"
+    name: "Payment Funnel"
     depends_on: [phase-1]
     skills: [revenue-funnel]
     gate:
-      condition: "注册到付费全链路转化分析完成，瓶颈已识别"
-      fail_action: "补充漏斗步骤定义或数据"
+      condition: "Registration-to-payment full-link conversion analysis complete, bottlenecks identified"
+      fail_action: "Supplement funnel step definitions or data"
 
   - id: phase-3
-    name: "升级转化"
+    name: "Upgrade Conversion"
     depends_on: [phase-2]
     skills: [revenue-upsell]
     gate:
-      condition: "升级转化策略和个性化方案已生成"
-      fail_action: "优化升级信号识别或补充用户行为数据"
+      condition: "Upgrade conversion strategy and personalized plan generated"
+      fail_action: "Optimize upgrade signal identification or supplement user behavior data"
 ```
 
-## 阶段执行计划
+## Stage Execution Plan
 
-#### 调用 revenue-nrr
+#### Call revenue-nrr
 
 ```
 Skill: revenue-nrr
-输入:
-  revenue_data: 用户提供（收入数据）
-  user_account_data: 用户提供
-  user_behavior_data: 用户提供（可选）
-输出: docs/growth/growth-strategy.md（“NRR分析”章节）
-验证: NRR计算包含扩张、收缩、流失三部分；流失预警覆盖活跃度、功能、财务、组织4类信号；扩张机会识别有评分和推荐策略；分维度NRR计算覆盖用户分群和产品线
-模式: 🤖→👤
+Inputs:
+  revenue_data: User-provided (revenue data)
+  user_account_data: User-provided
+  user_behavior_data: User-provided (optional)
+Output: docs/growth/growth-strategy.md ("NRR Analysis" section)
+Validation: NRR calculation includes expansion, contraction, and churn components; churn warning covers activity, feature, financial, and organizational 4 signal types; expansion opportunity identification has scoring and recommendation strategy; multi-dimensional NRR calculation covers user segments and product lines
+Mode: 🤖→👤
 ```
 
-#### 调用 revenue-funnel
+#### Call revenue-funnel
 
 ```
 Skill: revenue-funnel
-输入:
-  payment_funnel_data: 用户提供（注册到付费全链路数据）
-  conversion_data: docs/growth/growth-strategy.md（“NRR分析”章节）
-  user_profile_data: 用户提供（可选）
-输出: docs/growth/growth-strategy.md（“收入漏斗”章节）
-验证: 付费漏斗覆盖注册到复购全链路；障碍识别区分定性和定量分析；优化建议按影响系数×实施难度排序；付费墙时机建议基于用户行为数据
-模式: 🤖→👤
+Inputs:
+  payment_funnel_data: User-provided (registration-to-payment full-link data)
+  conversion_data: docs/growth/growth-strategy.md ("NRR Analysis" section)
+  user_profile_data: User-provided (optional)
+Output: docs/growth/growth-strategy.md ("Revenue Funnel" section)
+Validation: Payment funnel covers the full link from registration to repurchase; barrier identification distinguishes qualitative and quantitative analysis; optimization suggestions ranked by impact coefficient × implementation difficulty; paywall timing suggestions based on user behavior data
+Mode: 🤖→👤
 ```
 
-#### 调用 revenue-upsell
+#### Call revenue-upsell
 
 ```
 Skill: revenue-upsell
-输入:
-  user_behavior_data: 用户提供
-  payment_history: docs/growth/growth-strategy.md（“NRR分析”章节）
-  product_usage_data: 用户提供（可选）
-输出: docs/growth/growth-strategy.md（“Upsell”章节）
-验证: 升级信号识别覆盖4类信号（用量/功能/行为/意向）；个性化内容包含用户名、用量、收益3个要素；A/B测试设计包含护栏指标；升级ROI计算包含触达成本
-模式: 🤖→👤
+Inputs:
+  user_behavior_data: User-provided
+  payment_history: docs/growth/growth-strategy.md ("NRR Analysis" section)
+  product_usage_data: User-provided (optional)
+Output: docs/growth/growth-strategy.md ("Upsell" section)
+Validation: Upgrade signal identification covers 4 signal types (usage/feature/behavior/intent); personalized content includes 3 elements: user name, usage, and benefits; A/B test design includes guardrail metrics; upgrade ROI calculation includes outreach cost
+Mode: 🤖→👤
 ```
 
-### 阶段总结（post_pipeline）
+### Stage Summary (post_pipeline)
 
-所有子Skill执行完成后，必须生成阶段总结文档，写入 `output/phase-reports/revenue-orchestrator.json`，包含以下6项结构（均不可为空）：
+After all sub-skills finish executing, a stage summary document must be generated and written to `output/phase-reports/revenue-orchestrator.json`, containing the following 6 structures (none may be empty):
 
-1. **执行概览**：编排器名称与版本、执行时间、子Skill执行状态（成功/失败/降级）
-2. **关键发现**：每个子Skill的核心输出摘要（1-3条）、跨子Skill的交叉洞察
-3. **决策记录**：人类决策点及决策结果、AI自动决策及依据
-4. **产出清单**：所有输出文件路径及内容摘要、产出质量评估（是否通过验证）
-5. **风险与待办**：未通过验证的项、降级执行的项、建议后续跟进的事项
-6. **下游衔接**：本编排器产出可被哪些下游编排器消费、推荐的下一步编排器
+1. **Execution Overview**: Orchestrator name and version, execution time, sub-skill execution status (success/failure/degraded)
+2. **Key Findings**: Core output summary of each sub-skill (1-3 items), cross-sub-skill insights
+3. **Decision Records**: Human decision points and decision results, AI automated decisions and rationale
+4. **Artifact Inventory**: All output file paths and content summaries, artifact quality assessment (whether validation passed)
+5. **Risks & TODOs**: Items that failed validation, items executed in degraded mode, recommended follow-up items
+6. **Downstream Handoff**: Which downstream orchestrators can consume this orchestrator's outputs, recommended next orchestrator
 
-| 参数 | 值 |
+| Parameter | Value |
 |------|-----|
-| 子Skill输出路径 | docs/growth/ |
-| 总结输出路径 | output/phase-reports/revenue-orchestrator.json |
-| 审批记录路径 | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
+| Sub-skill output path | docs/growth/ |
+| Summary output path | output/phase-reports/revenue-orchestrator.json |
+| Approval record path | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
 
-下游衔接:
-  primary: growth-orchestrator（商业化优化完成，回到增长诊断评估整体增长飞轮效果）
+Downstream handoff:
+  primary: growth-orchestrator (monetization optimization complete, return to growth diagnosis to assess overall growth flywheel effectiveness)
   alternatives:
     - target: experiment-orchestrator
-      reason: 商业化方案需A/B测试验证
-      condition: 定价或付费墙策略变更需量化验证时
+      reason: Monetization plan needs A/B test validation
+      condition: When pricing or paywall strategy changes require quantitative validation
     - target: metrics-orchestrator
-      reason: 商业化指标需补充度量设计
-      condition: 付费漏斗关键指标缺乏埋点支撑时
+      reason: Monetization metrics need supplemental measurement design
+      condition: When payment funnel key metrics lack tracking support
   special_cases: []
 
-## 阶段卡口
+## Stage Gates
 
-| 卡口 | 条件 | 未通过处理 |
+| Gate | Condition | Action if Not Met |
 |------|------|------------|
-| NRR追踪已建立 | revenue-nrr输出文件已生成且非空 | 完善收入数据采集 |
-| 付费漏斗分析完成 | revenue-funnel输出文件已生成且非空 | 补充漏斗步骤定义或数据 |
-| 升级转化策略已生成 | revenue-upsell输出文件已生成且非空 | 优化升级信号识别或补充用户行为数据 |
-| 阶段总结已生成 | output/phase-reports/revenue-orchestrator.json 已生成且6项结构均非空 | 补充缺失结构项后重新生成 |
+| NRR tracking established | revenue-nrr output file generated and non-empty | Improve revenue data collection |
+| Payment funnel analysis complete | revenue-funnel output file generated and non-empty | Supplement funnel step definitions or data |
+| Upgrade conversion strategy generated | revenue-upsell output file generated and non-empty | Optimize upgrade signal identification or supplement user behavior data |
+| Stage summary generated | output/phase-reports/revenue-orchestrator.json generated and all 6 structures non-empty | Regenerate after supplementing missing structure items |
 
-## 人类决策点
+## Human Decision Points
 
-| 决策点 | 触发条件 | 决策内容 |
+| Decision Point | Trigger Condition | Decision Content |
 |--------|----------|----------|
-| 定价策略确认 | 付费漏斗分析和NRR追踪完成 | 确认定价调整、升级方案和资源分配策略 |
+| Pricing strategy confirmation | Payment funnel analysis and NRR tracking complete | Confirm pricing adjustments, upgrade plans, and resource allocation strategy |
 
-## 异常处理
+## Exception Handling
 
-| 异常类型 | 处理策略 |
+| Exception Type | Handling Strategy |
 |----------|----------|
-| 付费漏斗数据严重缺失（无法构建完整漏斗） | 基于已有数据构建部分漏斗，缺失环节标注"待补充"，由人类确认是否继续 |
-| NRR计算异常（NRR<80%或>150%） | 标注数据异常警告，建议人工核实收入数据口径后重新计算 |
-| 升级信号识别无有效候选 | 放宽信号阈值重新搜索；仍无结果则基于产品功能推断升级场景，标注"待数据验证" |
-| 子Skill输出校验未通过 | 回退至当前阶段重新执行，最多重试1次；仍失败则标记异常并上报人类 |
-| 上下游数据格式不兼容 | 按下游子Skill输入Schema做字段映射和默认值填充，记录映射关系 |
-| 阶段总结生成失败 | 基于已完成的子Skill输出生成部分总结，缺失项标注"数据缺失"，不阻塞编排完成 |
+| Payment funnel data severely missing (cannot build complete funnel) | Build partial funnel based on available data, missing stages marked "pending supplement", human confirms whether to continue |
+| NRR calculation anomaly (NRR <80% or >150%) | Mark data anomaly warning, recommend manual verification of revenue data definition before recalculation |
+| No valid candidates for upgrade signal identification | Relax signal thresholds and re-search; if still no results, infer upgrade scenarios based on product features, marked "pending data validation" |
+| Sub-skill output validation failed | Fall back to current stage and re-execute, max 1 retry; if still fails, mark exception and escalate to human |
+| Upstream/downstream data format incompatible | Perform field mapping and default value filling per downstream sub-skill input Schema, record mapping relationship |
+| Stage summary generation failed | Generate partial summary based on completed sub-skill outputs, missing items marked "data missing", does not block orchestration completion |

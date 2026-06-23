@@ -1,34 +1,34 @@
-<!-- 从 SKILL.md 提取的参考材料，按需查阅 -->
+<!-- Reference material extracted from SKILL.md, consult as needed -->
 
-# Step 3: 相似度计算规则与去重输出
+# Step 3: Similarity Calculation Rules and Deduplication Output
 
-> 来源：SKILL.md「Step 3: 与现有埋点去重」中的相似度计算规则与去重结果输出
+> Source: Similarity calculation rules and deduplication result output in SKILL.md "Step 3: Deduplicate Against Existing Tracking"
 
-## 相似度计算规则
+## Similarity Calculation Rules
 
 ```
-相似度 = α × 命名相似度 + β × 触发时机相似度 + γ × 属性相似度
+Similarity = α × naming similarity + β × trigger timing similarity + γ × property similarity
 
-其中：
-  - 命名相似度：基于字符串匹配和语义分析
-  - 触发时机相似度：基于trigger描述的语义距离
-  - 属性相似度：基于共同属性的Jaccard系数
+Where:
+  - Naming similarity: Based on string matching and semantic analysis
+  - Trigger timing similarity: Based on the semantic distance of trigger descriptions
+  - Property similarity: Based on the Jaccard coefficient of common properties
 
-权重建议：
+Suggested weights:
   - α = 0.4
   - β = 0.3
   - γ = 0.3
 ```
 
-## 去重结果输出
+## Deduplication Result Output
 
 ```json
 {
   "deduplication_result": {
-    "new_events": [...],        // 新增埋点
-    "duplicate_events": [...],   // 重复埋点（可复用现有）
-    "similar_events": [...],     // 相似埋点（需人工确认）
-    "updated_events": [...]      // 现有埋点需更新属性
+    "new_events": [...],        // New tracking events
+    "duplicate_events": [...],   // Duplicate tracking events (can reuse existing)
+    "similar_events": [...],     // Similar tracking events (need manual confirmation)
+    "updated_events": [...]      // Existing tracking events that need property updates
   }
 }
 ```

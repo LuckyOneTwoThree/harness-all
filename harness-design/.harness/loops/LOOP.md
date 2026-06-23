@@ -1,284 +1,284 @@
-# LOOP.md — 循环引擎定义 + 验证协议
+# LOOP.md — Loop Engine Definition + Verification Protocol
 
-> 来源：ospec (plan→act→verify) 改造为设计循环 (plan→design→verify+lint)
-> 作用：替代线性 workflow，实现循环验证闭环
-> 合并了原 verification.md 的内容
+> Source: ospec (plan→act→verify) adapted to a design loop (plan→design→verify+lint)
+> Purpose: replaces linear workflows to implement a closed verification loop
+> Merges the original verification.md content
 
-## 核心循环
+## Core Loop
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│  PLAN（内联，无独立 skill）                          │
-│  - 读取 DESIGN_BRIEF.md 的 AC-xxx 列表              │
-│  - 宪法检查                                          │
-│  - 初始化 state.yaml + spec.md                      │
+│  PLAN (inline, no standalone skill)                 │
+│  - Read the AC-xxx list from DESIGN_BRIEF.md        │
+│  - Constitution check                               │
+│  - Initialize state.yaml + spec.md                  │
 └─────────────────────┬───────────────────────────────┘
                       ▼
 ┌─────────────────────────────────────────────────────┐
-│  LOOP（循环体内）                                    │
+│  LOOP (inside the loop body)                        │
 │  ┌─────────────┐                                    │
-│  │   DESIGN    │ ← 执行设计（调用设计 skill）       │
+│  │   DESIGN    │ ← Execute design (call design skill)│
 │  └──────┬──────┘                                    │
 │         ▼                                           │
 │  ┌─────────────┐                                    │
-│  │   VERIFY    │ ← verify skill：AC + 宪法 + 基础 a11y │
+│  │   VERIFY    │ ← verify skill: AC + constitution + basic a11y │
 │  └──────┬──────┘                                    │
 │         ▼                                           │
 │  ┌─────────────┐                                    │
-│  │    LINT     │ ← design-lint skill：机械规则（脚本执行） │
+│  │    LINT     │ ← design-lint skill: mechanical rules (script execution) │
 │  └──────┬──────┘                                    │
 │         │                                           │
-│         ├── 全部通过 → 退出 LOOP                     │
-│         ├── 可修复 → 回到 DESIGN（iteration +1）     │
-│         └── 超过 max iteration → 请求人类介入        │
+│         ├── All passed → exit LOOP                  │
+│         ├── Fixable → back to DESIGN (iteration +1) │
+│         └── Exceeds max iteration → request human intervention │
 └─────────────────────────────────────────────────────┘
                       ▼
 ┌─────────────────────────────────────────────────────┐
-│  LOOP 外门禁（最终审查，非循环）                     │
+│  Outside-LOOP Gate (final review, non-loop)         │
 │  ┌─────────────────┐                                │
 │  │ DESIGN-REVIEW   │ ← Five-Axis + Doubt-Driven     │
 │  └────────┬────────┘                                │
-│           ├── 通过 → 进入交付                        │
-│           └── 不通过 → 回到 LOOP（可修复）或 PLAN（需重新规划） │
+│           ├── Pass → enter handoff                  │
+│           └── Fail → back to LOOP (fixable) or PLAN (needs replanning) │
 │                      ▼                              │
 │  ┌─────────────────┐                                │
-│  │ ACCESSIBILITY   │ ← WCAG 2.1 AA 专项审查         │
+│  │ ACCESSIBILITY   │ ← WCAG 2.1 AA dedicated review │
 │  └────────┬────────┘                                │
-│           ├── 通过 → 进入交付                        │
-│           └── 不通过 → 回到 LOOP                     │
+│           ├── Pass → enter handoff                  │
+│           └── Fail → back to LOOP                   │
 └─────────────────────────────────────────────────────┘
 ```
 
-**关键边界**：
-- LOOP 内 = verify + design-lint（快速检查，每次迭代都跑）
-- LOOP 外 = design-review + accessibility-audit（深度审查，LOOP 退出后跑一次）
-- design-review 不在 LOOP 内，避免每次迭代都启动子 agent 做 Doubt-Driven 对抗审查
+**Key boundaries**:
+- Inside LOOP = verify + design-lint (fast checks, run on every iteration)
+- Outside LOOP = design-review + accessibility-audit (deep review, run once after LOOP exits)
+- design-review is not inside the LOOP, to avoid spawning a sub-agent for Doubt-Driven adversarial review on every iteration
 
-## 循环类型
+## Loop Types
 
-| 类型 | 触发场景 | 最大迭代 | 停止条件 |
-|------|---------|---------|---------|
-| **visual-design** | 视觉设计任务 | 5 | verify + lint 通过 + AC 满足 |
-| **interaction-design** | 交互设计任务 | 5 | verify + lint 通过 + AC 满足 |
-| **wireframe** | 线框图/低保真原型 | 5 | verify + lint 通过 + AC 满足 |
-| **component** | 组件设计（Button/Input/Card 等） | 5 | verify + lint 通过 + AC 满足 |
+| Type | Trigger Scenario | Max Iterations | Stop Condition |
+|------|------------------|----------------|----------------|
+| **visual-design** | Visual design tasks | 5 | verify + lint pass + AC satisfied |
+| **interaction-design** | Interaction design tasks | 5 | verify + lint pass + AC satisfied |
+| **wireframe** | Wireframe / low-fidelity prototype | 5 | verify + lint pass + AC satisfied |
+| **component** | Component design (Button/Input/Card, etc.) | 5 | verify + lint pass + AC satisfied |
 
-**移除说明**：
-- `prototype` 改为 `wireframe`，语义更准确（产出的是低保真线框图，不是可交互原型）
-- `redesign` 移除（redesign 是 workflow 场景，内部仍用 visual-design 循环）
+**Removal notes**:
+- `prototype` changed to `wireframe`, semantics more accurate (the output is low-fidelity wireframes, not interactive prototypes)
+- `redesign` removed (redesign is a workflow scenario; internally it still uses the visual-design loop)
 
-## 成本控制
+## Cost Control
 
-| 维度 | 限制 | 超限动作 |
-|------|------|---------|
-| 单个 LOOP 内迭代次数 | 10 | **硬熔断**：写入 `hard_limit_reached: true` 到 state.yaml，status 改为 `failed`，**禁止继续循环**，必须请求人类介入 |
+| Dimension | Limit | Over-limit Action |
+|-----------|-------|-------------------|
+| Iterations within a single LOOP | 10 | **Hard Circuit Breaker**: write `hard_limit_reached: true` to state.yaml, change status to `failed`, **prohibited from continuing the loop**, must request human intervention |
 
-**语义说明**：
-- "单个 LOOP" 指同一个循环类型（visual-design / interaction-design / wireframe / component）内的迭代次数
-- 不同循环类型是不同任务，计数独立（如 new-design 的 wireframe/visual/interaction 3 个 LOOP 各自计数）
-- workflow 内的 max 5 是建议上限，10 是硬性熔断阈值（5 < 10，留 5 次容错空间）
+**Semantic notes**:
+- "Single LOOP" refers to the iteration count within the same loop type (visual-design / interaction-design / wireframe / component)
+- Different loop types are different tasks, counted independently (e.g., new-design's wireframe/visual/interaction 3 LOOPs each count separately)
+- The max 5 within a workflow is a recommended upper bound; 10 is the hard circuit breaker threshold (5 < 10, leaving 5 iterations of tolerance)
 
-> **硬熔断执行规则（不可协商）**：
-> 1. Agent 在每次 VERIFY/LINT 阶段**必须**读取 `state.yaml` 的 `iteration` 字段
-> 1.5. **VERIFY 阶段必须强制读取 state.yaml 原始内容**：Agent 在每次 VERIFY 时，必须使用 Read 工具读取 `state.yaml` 的完整内容，获取真实的 iteration 值。**禁止从上下文记忆中引用 iteration 值**（防止幻觉状态下跳过熔断检查）。
-> 2. 当 Read 工具读取的 `iteration >= 10` 时（必须来自文件原始内容，不是记忆引用），Agent **必须**执行以下操作，不得跳过：
->    - 将 `status` 改为 `failed`
->    - 将 `hard_limit_reached` 写为 `true`
->    - 将 `last_error` 写为"迭代超限（iteration >= 10），硬熔断触发"
->    - 向用户报告熔断原因，请求人类介入
-> 3. 当 `hard_limit_reached: true` 时，Agent **禁止**继续执行当前任务的任何 LOOP 阶段
-> 4. 只有用户显式指示"重置熔断"后，Agent 才可将 `hard_limit_reached` 改为 `false` 并重置 `iteration`
+> **Hard Circuit Breaker Execution Rules (non-negotiable)**:
+> 1. The Agent **must** read the `iteration` field of `state.yaml` at every VERIFY/LINT stage
+> 1.5. **VERIFY stage must mandatorily read the raw state.yaml content**: At every VERIFY, the Agent must use the Read tool to read the full contents of `state.yaml` to obtain the real iteration value. **Referencing the iteration value from context memory is prohibited** (to prevent skipping circuit breaker checks in hallucination states).
+> 2. When the `iteration >= 10` read by the Read tool (must come from raw file content, not memory reference), the Agent **must** perform the following, without skipping:
+>    - Change `status` to `failed`
+>    - Write `hard_limit_reached` to `true`
+>    - Write `last_error` as "Iteration exceeded (iteration >= 10), hard circuit breaker triggered"
+>    - Report the circuit breaker reason to the user and request human intervention
+> 3. When `hard_limit_reached: true`, the Agent is **prohibited** from continuing any LOOP phase of the current task
+> 4. Only after the user explicitly instructs "reset circuit breaker" may the Agent change `hard_limit_reached` to `false` and reset `iteration`
 >
-> Token 限制由用户在 IDE 中自行监控，不纳入框架规则（Agent 没有 token 计数器）。
+> Token limits are monitored by the user in the IDE and are not part of framework rules (the Agent has no token counter).
 
-## Specs 持久化
+## Specs Persistence
 
-每次循环的 PLAN 阶段，将规格写入 `loops/specs/<task>/spec.md`。
+At the PLAN stage of each loop, write the spec to `loops/specs/<task>/spec.md`.
 
-## Evidence 追踪
+## Evidence Tracking
 
-每次 VERIFY/LINT 阶段的证据写入 `loops/specs/<task>/evidence.md`。
+Evidence from each VERIFY/LINT stage is written to `loops/specs/<task>/evidence.md`.
 
-**文件写入语义区分（重要，避免混淆）**：
+**File write semantics distinction (important, avoid confusion)**:
 
-| 文件 | 写入语义 | 原因 | 操作方式 |
-|------|---------|------|---------|
-| `spec.md` | 覆盖 | 只保留最终通过的规格 | Write 直接覆盖 |
-| `state.yaml` | 覆盖 | 只保留当前状态 | Write 直接覆盖 |
-| `evidence.md` | 覆盖 | 只保留最终成功的证据 | Write 直接覆盖 |
-| `iterations.log` | **追加** | 保留完整迭代历史 | Read+拼接+Write，或 `echo >>` |
-| `lint-report.md` | 覆盖 | 只保留最新 lint 报告 | Write 直接覆盖 |
+| File | Write Semantics | Reason | Operation |
+|------|-----------------|--------|-----------|
+| `spec.md` | Overwrite | Keep only the final passed spec | Write directly overwrites |
+| `state.yaml` | Overwrite | Keep only the current state | Write directly overwrites |
+| `evidence.md` | Overwrite | Keep only the final successful evidence | Write directly overwrites |
+| `iterations.log` | **Append** | Preserve complete iteration history | Read+concatenate+Write, or `echo >>` |
+| `lint-report.md` | Overwrite | Keep only the latest lint report | Write directly overwrites |
 
 ```
 loops/specs/001-login-page/
-├── spec.md          ← 设计规格（覆盖：最终通过版本）
-├── state.yaml       ← 循环状态（覆盖：当前状态）
-├── evidence.md      ← 验证证据（覆盖：最终成功）
-├── lint-report.md   ← Lint 报告（覆盖：最新一次）
-└── iterations.log   ← 迭代历史（append-only，完整轨迹）
+├── spec.md          ← Design spec (overwrite: final passed version)
+├── state.yaml       ← Loop state (overwrite: current state)
+├── evidence.md      ← Verification evidence (overwrite: final success)
+├── lint-report.md   ← Lint report (overwrite: latest run)
+└── iterations.log   ← Iteration history (append-only, full trajectory)
 ```
 
-iterations.log 示例：
+iterations.log example:
 ```
-[2026-06-20 14:30] iter=1 stage=design → verify FAILED: AC-002 未满足（缺少 hover 状态）
-[2026-06-20 14:35] iter=2 stage=design → lint FAILED: L001 硬编码 #3B82F6
+[2026-06-20 14:30] iter=1 stage=design → verify FAILED: AC-002 not satisfied (missing hover state)
+[2026-06-20 14:35] iter=2 stage=design → lint FAILED: L001 hardcoded #3B82F6
 [2026-06-20 14:40] iter=3 stage=verify+lint → PASSED
 ```
 
-为什么这样设计？
-  - spec.md / state.yaml / evidence.md 覆盖写入 → 只保留最新状态，不污染上下文
-  - iterations.log append-only → 保留完整迭代历史，debug 时能看到失败轨迹
-  - lint-report.md 覆盖 → 只关心最新一次 lint 结果
-  - 一个任务的所有产物在一个目录 → 内聚性好，不用跨目录找
+Why designed this way?
+  - spec.md / state.yaml / evidence.md overwrite → keep only the latest state, no context pollution
+  - iterations.log append-only → preserve complete iteration history, debug shows failure trajectory
+  - lint-report.md overwrite → only care about the latest lint result
+  - All artifacts of one task in one directory → good cohesion, no cross-directory lookup
 
-## 状态维护
+## State Maintenance
 
-**决策：Agent 读写维护 state.yaml（每任务一个文件，落盘）**
+**Decision: Agent reads/writes state.yaml (one file per task, persisted to disk)**
 
-`loops/specs/<task>/state.yaml` 由 design/verify/lint skill 在循环中主动读写：
-  - 记录当前迭代次数、上次失败原因、当前阶段
-  - 会话中断后可断点续传（读取 state.yaml 恢复上下文）
-  - verify/lint skill 反正要写 evidence，多写一行 state 成本可忽略
-  - 每任务一个文件，天然支持多设计任务并行
+`loops/specs/<task>/state.yaml` is actively read/written by design/verify/lint skills in the loop:
+  - Records current iteration count, last failure reason, current stage
+  - Supports checkpoint resume after session interruption (read state.yaml to restore context)
+  - verify/lint skills have to write evidence anyway; one extra state line has negligible cost
+  - One file per task, naturally supports parallel design tasks
 
-### state.yaml Schema（单一来源，各 SKILL.md 引用本节）
+### state.yaml Schema (single source, each SKILL.md references this section)
 
 ```yaml
-# 必填字段
-current_task: <NNN>-<task-name>           # 任务编号+名称，与目录名一致
-iteration: <int>                           # 当前迭代次数，从 0 开始，每次 DESIGN→VERIFY+LINT 循环 +1
-stage: <enum>                              # 当前阶段，枚举见下表
-status: <enum>                             # 任务状态，枚举见下表
-started_at: "<ISO 8601>"                   # 任务开始时间，如 "2026-06-20T14:30:00"
+# Required fields
+current_task: <NNN>-<task-name>           # Task number + name, consistent with directory name
+iteration: <int>                           # Current iteration count, starts from 0, +1 per DESIGN→VERIFY+LINT loop
+stage: <enum>                              # Current stage, see enum table below
+status: <enum>                             # Task status, see enum table below
+started_at: "<ISO 8601>"                   # Task start time, e.g., "2026-06-20T14:30:00"
 
-# 可选字段（失败时填写）
-last_error: "<错误描述>"                    # 最近一次失败原因，成功时清空为 ""
-last_error_at: "<ISO 8601>"                # 最近一次失败时间
+# Optional fields (filled on failure)
+last_error: "<error description>"          # Most recent failure reason; cleared to "" on success
+last_error_at: "<ISO 8601>"                # Most recent failure time
 
-# 可选字段（子阶段描述，用于多子阶段工作流）
-substage: "<子阶段描述>"                    # 如 "visual" / "interaction" / "wireframe" / "component"
+# Optional field (sub-stage description, for multi-sub-stage workflows)
+substage: "<sub-stage description>"        # e.g., "visual" / "interaction" / "wireframe" / "component"
 
-# 可选字段（探索模式，design 专属）
-exploration_mode: "<enum>"                 # deep / standard / skip，默认 standard，控制 workflow 交互深度
+# Optional field (exploration mode, design-specific)
+exploration_mode: "<enum>"                 # deep / standard / skip, default standard, controls workflow interaction depth
 
-# 可选字段（硬熔断标记）
-hard_limit_reached: <bool>                 # true 时禁止继续循环，默认 false，仅 iteration >= 10 时置 true
+# Optional field (hard circuit breaker flag)
+hard_limit_reached: <bool>                 # When true, continuing the loop is prohibited; default false; set true only when iteration >= 10
 ```
 
-**stage 枚举值**：
+**stage enum values**:
 
-| 值 | 含义 | 写入时机 |
-|----|------|---------|
-| `plan` | 规划阶段 | PLAN 内联初始化时 |
-| `design` | 设计阶段 | visual-design/interaction-design/wireframe/component-design 完成时 |
-| `verify` | 验证阶段 | verify skill 执行检查时 |
-| `lint` | Lint 阶段 | design-lint skill 执行检查时 |
-| `review` | 最终审查阶段（LOOP 外） | design-review 执行时 |
+| Value | Meaning | Write Timing |
+|-------|---------|--------------|
+| `plan` | Planning stage | When PLAN initializes inline |
+| `design` | Design stage | When visual-design/interaction-design/wireframe/component-design completes |
+| `verify` | Verification stage | When verify skill runs checks |
+| `lint` | Lint stage | When design-lint skill runs checks |
+| `review` | Final review stage (outside LOOP) | When design-review runs |
 
-**status 枚举值（全局统一规范）**：
+**status enum values (global unified spec)**:
 
-| 值 | 含义 | 写入时机 |
-|----|------|---------|
-| `running` | 任务正在执行中 | PLAN 初始化 / design 成功继续 |
-| `retrying` | 任务失败，正在进行重试或自动回滚 | design/verify/lint 失败后 |
-| `done` | 任务已成功验证并完成 | LOOP 退出 + design-review + accessibility-audit 通过 |
-| `failed` | 任务失败且重试耗尽 | 迭代超限（达到 max iteration 熔断阈值） |
-| `needs-human` | 需要人类干预（如：必须审批、自动修复失败） | 自动修复失败 / 遇到必须人类审批的操作 |
-| `blocked` | 任务被阻塞（如：等待上游产出物、等待环境权限） | 等待上游产出物 / 等待环境权限 / 依赖未就绪 |
+| Value | Meaning | Write Timing |
+|-------|---------|--------------|
+| `running` | Task is executing | PLAN init / design succeeds and continues |
+| `retrying` | Task failed, retrying or auto-rolling back | After design/verify/lint failure |
+| `done` | Task successfully verified and completed | LOOP exit + design-review + accessibility-audit pass |
+| `failed` | Task failed and retries exhausted | Iteration exceeded (hit max iteration circuit breaker threshold) |
+| `needs-human` | Human intervention needed (e.g., must approve, auto-fix failed) | Auto-fix failed / hit an operation requiring human approval |
+| `blocked` | Task blocked (e.g., waiting for upstream deliverables, waiting for environment permissions) | Waiting for upstream deliverables / waiting for environment permissions / dependencies not ready |
 
-**字段写入责任**：
+**Field write responsibility**:
 
-| 字段 | PLAN（内联） | design skill | verify/lint | design-review |
-|------|:---:|:---:|:---:|:---:|
-| current_task | 写（初始化） | 不改 | 不改 | 不改 |
-| iteration | 写（0） | 写（+1） | 不改 | 不改 |
-| stage | 写（plan） | 写（design） | 写（verify/lint） | 写（review） |
-| status | 写（running） | 写（running/retrying） | 写（retrying/done） | 写（done/retrying） |
-| exploration_mode | 写（workflow default_mode） | 不改 | 不改 | 不改 |
-| last_error | 写（""） | 写（失败时/成功清空） | 写（失败时/成功清空） | 写（失败时/成功清空） |
-| started_at | 写（初始化） | 不改 | 不改 | 不改 |
+| Field | PLAN (inline) | design skill | verify/lint | design-review |
+|-------|:---:|:---:|:---:|:---:|
+| current_task | Write (init) | No change | No change | No change |
+| iteration | Write (0) | Write (+1) | No change | No change |
+| stage | Write (plan) | Write (design) | Write (verify/lint) | Write (review) |
+| status | Write (running) | Write (running/retrying) | Write (retrying/done) | Write (done/retrying) |
+| exploration_mode | Write (workflow default_mode) | No change | No change | No change |
+| last_error | Write ("") | Write (on failure / cleared on success) | Write (on failure / cleared on success) | Write (on failure / cleared on success) |
+| started_at | Write (init) | No change | No change | No change |
 
-**示例**：
+**Example**:
 
 ```yaml
-# loops/specs/001-login-page/state.yaml 示例
+# loops/specs/001-login-page/state.yaml example
 current_task: 001-login-page
 iteration: 3
 stage: lint
 status: retrying
-last_error: "Lint L001: 硬编码 #3B82F6，应使用 token color.primary"
+last_error: "Lint L001: hardcoded #3B82F6, should use token color.primary"
 last_error_at: "2026-06-20T14:35:00"
 started_at: "2026-06-20T14:30:00"
 ```
 
-## 验证协议（原 verification.md 内容）
+## Verification Protocol (original verification.md content)
 
-### LOOP 内检查（VERIFY + LINT）
+### Inside-LOOP Checks (VERIFY + LINT)
 
-**VERIFY 阶段必做检查**（verify skill）：
+**VERIFY stage required checks** (verify skill):
 
-1. **设计完整性**：设计稿是否覆盖所有验收标准
-2. **验收标准**：逐条检查 spec.md 里的 AC-xxx 是否满足
-3. **宪法合规**：检查是否违反 constitution.md 的原则
-4. **基础可访问性**：对比度 + 键盘导航（快速检查，非全项）
-5. **可交付性检查**：标注/规格是否齐全
+1. **Design completeness**: Does the design draft cover all acceptance criteria
+2. **Acceptance criteria**: Check each AC-xxx in spec.md line by line for satisfaction
+3. **Constitution compliance**: Check for violations of constitution.md principles
+4. **Basic accessibility**: Contrast + keyboard navigation (quick check, not full)
+5. **Deliverability check**: Are annotations / specs complete
 
-**LINT 阶段必做检查**（design-lint skill）：
+**LINT stage required checks** (design-lint skill):
 
-1. **Token 一致性**：L001-L005（颜色/间距/圆角/字号/阴影必须来自 token）
-2. **组件一致性**：L006-L008（同语义组件 ≤3 种实现 / 变体合并 / 状态完整）
-3. **布局一致性**：L009-L010（对齐基线 / 栅格列数）
-4. **反 AI-slop**：L011-L015（禁用 Inter/紫渐变/统一圆角/Lorem ipsum）
+1. **Token consistency**: L001-L005 (color/spacing/radius/font-size/shadow must come from tokens)
+2. **Component consistency**: L006-L008 (same semantic component ≤3 implementations / variant merging / complete states)
+3. **Layout consistency**: L009-L010 (alignment baseline / grid column count)
+4. **Anti AI-slop**: L011-L015 (prohibit Inter/purple gradient/uniform radius/Lorem ipsum)
 
-**lint 失败处理**：design-lint 失败时，更新 state.yaml 的 `last_error` 字段，格式：`Lint L00X: <描述>`，复用现有字段，不新增 lint_status 字段。
+**Lint failure handling**: When design-lint fails, update the `last_error` field of state.yaml, format: `Lint L00X: <description>`, reusing the existing field; do not add a new lint_status field.
 
-### LOOP 外检查（最终门禁）
+### Outside-LOOP Checks (final gate)
 
-**DESIGN-REVIEW**（design-review skill）：
+**DESIGN-REVIEW** (design-review skill):
 
-1. **Five-Axis Review**：视觉层级 / 间距对齐 / 色彩对比 / 组件一致性 / 可访问性
-2. **Doubt-Driven 对抗式审查**：CLAIM → EXTRACT → DOUBT → RECONCILE → STOP
-   - Nit/FYI 级别：直接记录，不触发对抗辩论
-   - Critical 级别：才触发 fresh-context 子 agent 对抗
-3. **Severity Labeling**：Critical / 无前缀 / Nit / FYI
+1. **Five-Axis Review**: Visual hierarchy / spacing & alignment / color contrast / component consistency / accessibility
+2. **Doubt-Driven adversarial review**: CLAIM → EXTRACT → DOUBT → RECONCILE → STOP
+   - Nit/FYI level: record directly, no adversarial debate triggered
+   - Critical level: triggers fresh-context sub-agent adversarial review
+3. **Severity Labeling**: Critical / no prefix / Nit / FYI
 
-**ACCESSIBILITY-AUDIT**（accessibility-audit skill）：
+**ACCESSIBILITY-AUDIT** (accessibility-audit skill):
 
-1. WCAG 2.1 AA 全项检查（对比度 / 键盘 / 屏幕阅读器 / 响应式 / reduced-motion）
+1. WCAG 2.1 AA full check (contrast / keyboard / screen reader / responsive / reduced-motion)
 
-### 声称"完成"的前置条件
+### Preconditions for Claiming "Complete"
 
-Agent 在声称任务完成前，**必须**：
-- [ ] LOOP 内 verify 全部通过（AC-xxx 逐条 ✓）
-- [ ] LOOP 内 design-lint 全部通过（无 error 级违规）
-- [ ] LOOP 外 design-review 通过（Five-Axis + Doubt-Driven）
-- [ ] LOOP 外 accessibility-audit 通过（WCAG 2.1 AA）
-- [ ] 将证据写入 `loops/specs/<task>/evidence.md`
-- [ ] 更新 `loops/specs/<task>/state.yaml` 的 status 为 done
+Before claiming a task complete, the Agent **must**:
+- [ ] All inside-LOOP verify passed (each AC-xxx ✓)
+- [ ] All inside-LOOP design-lint passed (no error-level violations)
+- [ ] Outside-LOOP design-review passed (Five-Axis + Doubt-Driven)
+- [ ] Outside-LOOP accessibility-audit passed (WCAG 2.1 AA)
+- [ ] Write evidence to `loops/specs/<task>/evidence.md`
+- [ ] Update `loops/specs/<task>/state.yaml` status to done
 
-**没有证据不声称完成**——这是 AGENTS.md 核心规则。
+**No claiming completion without evidence** — this is a core rule of AGENTS.md.
 
-### 失败处理
+### Failure Handling
 
-**LOOP 内失败**（verify/lint）：
-1. 将失败信息写入 `state.yaml` 的 `last_error` 字段
-2. 追加一行到 `iterations.log`
-3. 分析失败原因：
-   - 可修复（对比度不足、lint 违规、缺少状态）→ 回到 DESIGN
-   - 需重新规划（需求理解错误、方向偏差）→ 回到 PLAN
-4. 迭代次数 +1，检查是否超过最大迭代
+**Inside-LOOP failure** (verify/lint):
+1. Write failure info to the `last_error` field of `state.yaml`
+2. Append a line to `iterations.log`
+3. Analyze the failure reason:
+   - Fixable (insufficient contrast, lint violation, missing state) → back to DESIGN
+   - Needs replanning (requirement misunderstanding, direction deviation) → back to PLAN
+4. Iteration count +1, check whether max iteration is exceeded
 
-**LOOP 外失败**（design-review/accessibility-audit）：
-1. 将失败信息写入 `state.yaml` 的 `last_error` 字段
-2. 分析失败原因：
-   - 可修复（视觉层级问题、对比度不达标）→ 回到 LOOP（重新 DESIGN）
-   - 需重新规划（方向偏差、需求理解错误）→ 回到 PLAN
-3. 不消耗迭代次数（LOOP 外失败不计数）
+**Outside-LOOP failure** (design-review/accessibility-audit):
+1. Write failure info to the `last_error` field of `state.yaml`
+2. Analyze the failure reason:
+   - Fixable (visual hierarchy issue, contrast not met) → back to LOOP (re-DESIGN)
+   - Needs replanning (direction deviation, requirement misunderstanding) → back to PLAN
+3. Does not consume iteration count (outside-LOOP failures are not counted)
 
-### 断点续传
+### Checkpoint Resume
 
-会话中断后恢复：
-1. 读取 `loops/specs/<task>/state.yaml` 获取当前阶段和迭代次数
-2. 读取 `iterations.log` 了解失败历史
-3. 从中断点继续，不从头开始
-4. 若 `stage` 为 `review`，说明 LOOP 已退出，应继续 LOOP 外门禁
+Resume after session interruption:
+1. Read `loops/specs/<task>/state.yaml` to get the current stage and iteration count
+2. Read `iterations.log` to understand failure history
+3. Continue from the interruption point; do not start from scratch
+4. If `stage` is `review`, the LOOP has exited; continue with the outside-LOOP gate

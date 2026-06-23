@@ -1,54 +1,54 @@
-<!-- 从 SKILL.md 提取的参考材料，按需查阅 -->
+<!-- Reference material extracted from SKILL.md, consult as needed -->
 
-# 洞察类型处理
+# Insight Type Handling
 
-## 异常洞察
+## Anomaly Insight
 
 ```yaml
 anomaly_insight:
   type: "anomaly"
 
   narrative: |
-    ## 异常检测洞察
+    ## Anomaly Detection Insight
 
-    今日发现：注册转化率从35%下降到32%。
-    异常开始时间：今日9:00。
-    影响用户数：约1.5万。
+    Today's finding: Registration conversion rate dropped from 35% to 32%.
+    Anomaly start time: Today 9:00.
+    Affected users: About 15,000.
 
-    最可能原因：v2.5.0版本中注册流程改动。
-    置信度：85%。
+    Most likely cause: Registration flow change in v2.5.0.
+    Confidence: 85%.
 
-    建议：立即检查新版本实现，准备回滚方案。
+    Recommendation: Immediately check the new version implementation, prepare a rollback plan.
 
   action_options:
-    - "立即回滚到上一版本"
-    - "紧急修复后发布热更新"
-    - "继续监控24小时"
+    - "Immediately roll back to the previous version"
+    - "Release hotfix after emergency fix"
+    - "Continue monitoring for 24 hours"
 
   decision_boundary:
     type: "data_decision"
     auto_execute_eligible: true
-    condition: "转化率继续下降超过5%"
+    condition: "Conversion rate continues to drop more than 5%"
 ```
 
-## 漏斗洞察
+## Funnel Insight
 
 ```yaml
 funnel_insight:
   type: "funnel_analysis"
 
   narrative: |
-    ## 购买转化漏斗洞察
+    ## Purchase Conversion Funnel Insight
 
-    漏斗整体转化率7.2%，较上周下降0.5个百分点。
+    Overall funnel conversion rate is 7.2%, down 0.5 percentage points from last week.
 
-    最大流失点：从浏览到加购，流失84%用户。
-    流失主要集中在：价格敏感用户、Android端用户。
+    Largest drop-off point: From browsing to add-to-cart, 84% of users are lost.
+    Drop-off is mainly concentrated among: price-sensitive users, Android users.
 
-    建议优化方向：价格展示策略、加购引导话术。
+    Recommended optimization directions: Price display strategy, add-to-cart guidance copy.
 
   action_options:
-    - "优化价格展示（显示折扣、对比）"
-    - "增强加购引导（浮层、提示）"
-    - "针对流失用户做调研"
+    - "Optimize price display (show discounts, comparisons)"
+    - "Enhance add-to-cart guidance (overlay, prompts)"
+    - "Conduct research with users who dropped off"
 ```

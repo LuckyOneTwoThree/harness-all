@@ -1,32 +1,32 @@
-# 验证证据
+# Verification evidence
 
-> 来源：由 verify skill 产出。
-> 文件语义：覆盖写入（只保留最终成功的证据）。
+> Source: produced by the verify skill.
+> File semantics: overwrite write (only the final successful evidence is kept).
 
-## 时间
+## Time
 YYYY-MM-DD HH:MM
 
-## 1. 测试结果
-$ <命令>
-<实际输出>
+## 1. Test results
+$ <command>
+<actual output>
 
-## 2. 验收标准
-- AC-001: ✓ <如何满足>
-- AC-002: ✓ <如何满足>
+## 2. Acceptance criteria
+- AC-001: ✓ <how satisfied>
+- AC-002: ✓ <how satisfied>
 
-## 3. 宪法合规
-- [x] 零新依赖
-- [x] API 有测试
-- [x] 迁移脚本
+## 3. Constitution compliance
+- [x] Zero new dependencies
+- [x] APIs have tests
+- [x] Migration scripts
 
-## 4. 安全扫描
-方式：Agent Grep 扫描 / 可选 bash security-check.sh
-<实际输出，列出扫描的模式和命中情况>
+## 4. Security scan
+Method: Agent Grep scan / optional bash security-check.sh
+<actual output, listing scanned patterns and hits>
 
-## 5. 熵检查
-方式：Agent Glob+Read 统计 / 可选 bash entropy-check.sh
-<实际输出或"跳过">
+## 5. Entropy check
+Method: Agent Glob+Read stats / optional bash entropy-check.sh
+<actual output or "skipped">
 
-## 6. 前端验证（如涉及）
-方式：调用 webapp-testing skill
-<实际输出或"无前端代码变更，跳过">
+## 6. Frontend verification (if applicable)
+Method: invoke webapp-testing skill
+<actual output or "no frontend code changes, skipped">

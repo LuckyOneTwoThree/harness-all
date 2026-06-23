@@ -1,11 +1,11 @@
 ---
 name: nrr-analysis
-description: NRR拆解与提升方案，含减churn+增购+Upsell分析
+description: NRR breakdown and improvement plan, including reduce churn + expansion + upsell analysis
 triggers:
-  - 需要分析净留存收入时
-  - 变现优化Workflow
-  - 增长回顾报告
-  - 用户要求"分析NRR"
+  - When net retention revenue needs to be analyzed
+  - Monetization optimization Workflow
+  - Growth review report
+  - User asks to "analyze NRR"
 reads:
   - memory/knowledge-base.md
 writes:
@@ -15,85 +15,85 @@ quality_gates: []
 max_iterations: 1
 ---
 
-# NRR Analysis — NRR 分析与提升
+# NRR Analysis — NRR Analysis and Improvement
 
-## 铁律
-- NRR 必须**拆解**到流失/降级/增购三因素——只看总数无法定位问题
-- NRR > 100% 是 SaaS 健康的标志——< 100% 说明收入在缩水
-- 提升方案必须**量化预期影响**——不能只说"减少流失"
+## Iron Rules
+- NRR must be **broken down** into three factors: churn / contraction / expansion — looking only at the total can't locate the problem
+- NRR > 100% is the hallmark of a healthy SaaS — < 100% means revenue is shrinking
+- Improvement plans must **quantify the expected impact** — can't just say "reduce churn"
 
-## 流程
+## Process
 
-1. **计算 NRR**
+1. **Calculate NRR**
    ```
-   NRR = (期初 ARR - 流失 ARR - 降级 ARR + 增购 ARR) / 期初 ARR × 100%
+   NRR = (Beginning ARR - Churned ARR - Contracted ARR + Expansion ARR) / Beginning ARR × 100%
 
-   示例:
-   期初 ARR: ¥1,000,000
-   流失 ARR: -¥80,000 (客户离开)
-   降级 ARR: -¥50,000 (客户降级)
-   增购 ARR: +¥200,000 (客户增购/Upsell)
+   Example:
+   Beginning ARR: ¥1,000,000
+   Churned ARR: -¥80,000 (customers leaving)
+   Contracted ARR: -¥50,000 (customers downgrading)
+   Expansion ARR: +¥200,000 (customer expansion / upsell)
    NRR = (1,000,000 - 80,000 - 50,000 + 200,000) / 1,000,000 = 107%
    ```
 
-2. **NRR 拆解分析**
+2. **NRR breakdown analysis**
    ```
-   | 因素 | 金额 | 占期初ARR | 行业基准 | 评估 |
-   |------|------|----------|---------|------|
-   | 流失(Churn) | -¥80K | -8% | <-5% | ⚠️ 偏高 |
-   | 降级(Contraction) | -¥50K | -5% | <-3% | ⚠️ 偏高 |
-   | 增购(Expansion) | +¥200K | +20% | >+15% | ✅ 优秀 |
-   | NRR | +7% | 107% | >100% | ✅ 达标 |
-   ```
-
-3. **流失分析（减 Churn）**
-   - 哪些客户流失了？（分群：大客户 vs 小客户）
-   - 流失原因？（产品/服务/价格/竞品）
-   - 流失前兆？（使用频次下降/负面反馈）
-   - 建议：[降低流失的具体措施]
-
-4. **降级分析（减 Contraction）**
-   - 哪些客户降级了？（从专业→基础）
-   - 降级原因？（功能用不上/价格敏感/预算缩减）
-   - 建议：[降低降级的具体措施]
-
-5. **增购分析（加 Expansion）**
-   - 哪些客户增购了？（从基础→专业/增加席位）
-   - 增购触发因素？（使用深度增加/团队扩大/新功能）
-   - 建议：[放大增购的具体措施]
-
-6. **NRR 提升方案**
-   ```
-   | 措施 | 类型 | 预期影响 | 优先级 |
-   |------|------|---------|--------|
-   | 流失预警+主动干预 | 减Churn | NRR +2% | P0 |
-   | 增购触发自动化 | 加Expansion | NRR +3% | P0 |
-   | 降级挽留话术 | 减Contraction | NRR +1% | P1 |
-   | 高价值客户成功 | 减Churn | NRR +1% | P1 |
+   | Factor | Amount | % of beginning ARR | Industry benchmark | Assessment |
+   |--------|--------|---------------------|--------------------|------------|
+   | Churn | -¥80K | -8% | <-5% | ⚠️ High |
+   | Contraction | -¥50K | -5% | <-3% | ⚠️ High |
+   | Expansion | +¥200K | +20% | >+15% | ✅ Excellent |
+   | NRR | +7% | 107% | >100% | ✅ Meets bar |
    ```
 
-7. **产出 NRR 报告**
-   写入 `docs/operations/nrr-report.md`
-   同步到 `memory/knowledge-base.md`
+3. **Churn analysis (reduce Churn)**
+   - Which customers churned? (segment: enterprise vs SMB)
+   - Churn reasons? (product / service / price / competitor)
+   - Pre-churn signals? (usage frequency drop / negative feedback)
+   - Recommendation: [specific measures to reduce churn]
 
-## NRR 行业基准
+4. **Contraction analysis (reduce Contraction)**
+   - Which customers downgraded? (from Pro → Basic)
+   - Downgrade reasons? (features unused / price-sensitive / budget cut)
+   - Recommendation: [specific measures to reduce contraction]
 
-| NRR 水平 | 评估 | 说明 |
-|---------|------|------|
-| > 130% | 优秀 | 顶级 SaaS（如 Snowflake） |
-| 110-130% | 良好 | 健康 SaaS |
-| 100-110% | 合格 | 维持不缩水 |
-| 90-100% | 警告 | 收入在缩水 |
-| < 90% | 危险 | 需紧急干预 |
+5. **Expansion analysis (add Expansion)**
+   - Which customers expanded? (from Basic → Pro / added seats)
+   - Expansion triggers? (deeper usage / team growth / new features)
+   - Recommendation: [specific measures to amplify expansion]
 
-## 禁止事项
-- 不只看 NRR 总数不拆解（无法定位问题）
-- 不忽略降级（降级也是收入流失）
-- 不只关注减流失不关注增购（增购是 NRR 提升的杠杆）
-- 不在无数据时估算 NRR
+6. **NRR improvement plan**
+   ```
+   | Measure | Type | Expected impact | Priority |
+   |---------|------|-----------------|----------|
+   | Churn early warning + proactive intervention | Reduce Churn | NRR +2% | P0 |
+   | Expansion trigger automation | Add Expansion | NRR +3% | P0 |
+   | Contraction retention messaging | Reduce Contraction | NRR +1% | P1 |
+   | High-value customer success | Reduce Churn | NRR +1% | P1 |
+   ```
 
-## 与 LOOP 的关系
-本 skill 在 LOOP(monetization) 的 **MEASURE 阶段**执行。
+7. **Produce NRR report**
+   Write to `docs/operations/nrr-report.md`
+   Sync to `memory/knowledge-base.md`
 
-## 与 Workflow 的关系
-本 skill 是变现优化相关流程的第 3 步，也是 growth-review-workflow 的数据来源。
+## NRR industry benchmarks
+
+| NRR level | Assessment | Notes |
+|-----------|------------|-------|
+| > 130% | Excellent | Top-tier SaaS (e.g., Snowflake) |
+| 110-130% | Good | Healthy SaaS |
+| 100-110% | Acceptable | Maintaining, not shrinking |
+| 90-100% | Warning | Revenue shrinking |
+| < 90% | Critical | Needs urgent intervention |
+
+## Prohibitions
+- Don't look only at the NRR total without breakdown (can't locate the problem)
+- Don't ignore contraction (contraction is also revenue loss)
+- Don't focus only on reducing churn and ignore expansion (expansion is the lever for NRR improvement)
+- Don't estimate NRR without data
+
+## Relationship to LOOP
+This skill runs in the **MEASURE phase** of LOOP(monetization).
+
+## Relationship to Workflow
+This skill is step 3 of monetization optimization workflows, and a data source for growth-review-workflow.

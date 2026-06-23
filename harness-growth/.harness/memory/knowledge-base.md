@@ -1,64 +1,64 @@
-# 项目知识库
+# Project knowledge base
 
-> 永久记忆，跨会话沉淀。重要发现写入本文件。
-> 与 progress.md 的分工：progress.md 是会话级临时日志，本文件是项目级长期知识。
-> 增长框架特有：实验结论必须写入本文件，避免重复实验。
-> 知识库是 Loop 复利学习的基础——每轮实验/内容/SEO 的结论沉淀于此，下一轮调用。
+> Permanent memory, accumulated across sessions. Important findings are written to this file.
+> Division of labor with progress.md: progress.md is a session-level temporary log; this file is project-level long-term knowledge.
+> Growth framework specific: experiment conclusions must be written to this file to avoid duplicate experiments.
+> The knowledge base is the foundation of Loop compound learning — the conclusions of each round of experiment / content / SEO settle here and are reused in the next round.
 
-## 1. 增长实验库（Experiment Repository）
+## 1. Growth experiment repository
 
-> 每个结题实验追加一行。由 experiment-conclusion skill 写入。
+> Append one row for each concluded experiment. Written by the experiment-conclusion skill.
 
-| 实验ID | 假设 | 主指标 | 结论 | 决策 | 可复用洞察 | 标签 | 日期 |
+| Experiment ID | Hypothesis | Primary metric | Conclusion | Decision | Reusable insight | Tags | Date |
 |--------|------|--------|------|------|-----------|------|------|
-| G-001 | [假设陈述] | [主指标名] | [有效/无效/不确定(p值)] | [全量/迭代/放弃] | [可复用的增长洞察] | [领域,人群,渠道] | YYYY-MM-DD |
+| G-001 | [hypothesis statement] | [primary metric name] | [effective/ineffective/inconclusive (p-value)] | [rollout/iterate/abandon] | [reusable growth insight] | [domain, audience, channel] | YYYY-MM-DD |
 
-## 2. 增长假设库（Hypothesis Library）
+## 2. Growth hypothesis library
 
-> 所有生成过的假设。由 hypothesis-generation 写入，experiment-conclusion 更新状态。
-> 避免重复已证伪的实验。
+> All generated hypotheses. Written by hypothesis-generation, status updated by experiment-conclusion.
+> Avoids repeating already-falsified experiments.
 
-| 假设ID | 假设陈述 | 来源 | 验证状态 | 关联实验 | 洞察 | 日期 |
+| Hypothesis ID | Hypothesis statement | Source | Verification status | Related experiment | Insight | Date |
 |--------|---------|------|---------|---------|------|------|
-| H-001 | [如果X，那么Y，因为Z] | [数据/反馈/方法论] | [待验证/已验证/已证伪] | [G-001] | [结论摘要] | YYYY-MM-DD |
+| H-001 | [if X, then Y, because Z] | [data/feedback/methodology] | [to verify/verified/falsified] | [G-001] | [conclusion summary] | YYYY-MM-DD |
 
-## 3. 内容效果库（Content Performance）
+## 3. Content performance
 
-> 每篇上线内容度量后追加一行。由 content-performance skill 写入。
+> Append one row after each published content is measured. Written by the content-performance skill.
 
-| 内容ID | 选题 | 渠道 | 流量 | 停留 | 转化 | 复用建议 | 标签 | 日期 |
+| Content ID | Topic | Channel | Traffic | Dwell time | Conversion | Reuse suggestion | Tags | Date |
 |--------|------|------|------|------|------|---------|------|------|
-| C-001 | [选题] | [博客/公众号/...] | [UV] | [平均停留时长] | [转化率] | [复用方向] | [主题] | YYYY-MM-DD |
+| C-001 | [topic] | [blog/official account/...] | [UV] | [avg dwell time] | [conversion rate] | [reuse direction] | [topic] | YYYY-MM-DD |
 
-## 4. SEO 资产库（SEO Assets）
+## 4. SEO assets
 
-> 关键词排名追踪记录。由 ranking-tracking skill 写入。
+> Keyword ranking tracking records. Written by the ranking-tracking skill.
 
-| 关键词 | 意图 | 排名 | 月搜索量 | 流量 | 内容路径 | 优化历史 | 日期 |
+| Keyword | Intent | Ranking | Monthly search volume | Traffic | Content path | Optimization history | Date |
 |--------|------|------|---------|------|---------|---------|------|
-| [关键词] | [信息/导航/交易] | [Top N] | [搜索量] | [UV/月] | [docs/seo/xxx.md] | [优化记录] | YYYY-MM-DD |
+| [keyword] | [informational/navigational/transactional] | [Top N] | [search volume] | [UV/month] | [docs/seo/xxx.md] | [optimization record] | YYYY-MM-DD |
 
-## 5. 用户分群库（Segment Library）
+## 5. Segment library
 
-> 已定义的用户分群。由 user-segmentation skill 写入。
-> 分群是一等公民，可被触达、实验、看板复用。
+> Defined user segments. Written by the user-segmentation skill.
+> Segments are first-class citizens, reusable for reach, experiments, and dashboards.
 
-| 分群ID | 定义 | 规模 | 留存 | LTV | 触达策略 | 效果 | 日期 |
+| Segment ID | Definition | Size | Retention | LTV | Reach strategy | Effect | Date |
 |--------|------|------|------|-----|---------|------|------|
-| S-001 | [分群规则] | [用户数] | [留存率] | [LTV] | [触达策略] | [效果] | YYYY-MM-DD |
+| S-001 | [segment rule] | [user count] | [retention rate] | [LTV] | [reach strategy] | [effect] | YYYY-MM-DD |
 
-## 6. 增长模式沉淀（Growth Patterns）
+## 6. Growth patterns
 
-> 从多次实验/内容/SEO 中提炼的可复用模式。
+> Reusable patterns distilled from multiple experiments / content / SEO.
 
-| 模式 | 适用场景 | 示例 | 来源 |
+| Pattern | Applicable scenario | Example | Source |
 |------|---------|------|------|
-| [模式名] | [什么时候用] | [数据/案例] | [实验ID/内容ID] |
+| [pattern name] | [when to use] | [data/case] | [experiment ID/content ID] |
 
-## 7. 踩坑记录（Pitfalls）
+## 7. Pitfalls
 
-> 失败教训，避免重复踩坑。
+> Failure lessons to avoid repeating pitfalls.
 
-| 日期 | 问题 | 解决方案 | 相关文件 |
+| Date | Problem | Solution | Related files |
 |------|------|---------|---------|
-| YYYY-MM-DD | [问题描述] | [怎么解决的] | [涉及文件路径] |
+| YYYY-MM-DD | [problem description] | [how it was solved] | [related file paths] |

@@ -1,12 +1,12 @@
 ---
 name: rollback
-description: 回滚操作与验证，支持镜像回退/配置回退/数据库回滚，确保业务快速恢复
+description: Rollback operations and verification, supporting image revert, config revert, and database rollback to ensure fast business recovery
 triggers:
-  - 部署后健康检查失败时
-  - 监控告警显示新版本异常时
-  - 用户要求"回滚到上一版本"时
-  - 灰度发布阶段健康门未通过时
-  - incident-response 触发紧急回滚时
+  - When post-deployment health check fails
+  - When monitoring alerts indicate the new version is abnormal
+  - When the user requests "roll back to the previous version"
+  - When a canary release stage fails the health gate
+  - When incident-response triggers an emergency rollback
 reads:
   - loops/specs/<task-name>/spec.md
   - loops/specs/<task-name>/state.yaml
@@ -26,132 +26,132 @@ operation_tier: mutate-staging
 requires_approval: true
 ---
 
-# Rollback — 回滚操作与验证
+# Rollback — Rollback Operations and Verification
 
-## 铁律
+## Ground Rules
 
-1. **回滚优先于根因** —— 业务异常时先回滚恢复，再分析根因
-2. **回滚必须可验证** —— 回滚后必须确认业务恢复，不是"回滚了就行"
-3. **数据库回滚需谨慎** —— 含 Schema 变更的回滚必须 DBA 确认，可能不可逆
-4. **回滚不等于失败** —— 回滚是正常的安全机制，必须记录但不应追责
+1. **Rollback before root cause** — when business is abnormal, roll back to recover first, then analyze the root cause
+2. **Rollback must be verifiable** — after rollback, must confirm business recovery, not just "rolled back, that's it"
+3. **Database rollback requires caution** — rollbacks with schema changes must be confirmed by DBA; may be irreversible
+4. **Rollback is not failure** — rollback is a normal safety mechanism; must be recorded but not blamed
 
-## 流程
+## Process
 
-### 1. 确认回滚决策
+### 1. Confirm the Rollback Decision
 
-回滚触发场景：
-- **自动触发**：deployment-verify 健康检查失败、灰度健康门未通过
-- **人工触发**：用户要求回滚、incident-response 决定回滚
-- **监控触发**：错误率飙升、延迟恶化、业务指标下降
+Rollback trigger scenarios:
+- **Automatic trigger**: deployment-verify health check failed, canary health gate not passed
+- **Manual trigger**: user requests rollback, incident-response decides to roll back
+- **Monitoring trigger**: error rate spike, latency degradation, business metric drop
 
-确认回滚范围：
+Confirm the rollback scope:
 ```
-## 回滚决策
-- 触发原因: [健康检查失败/告警/人工]
-- 回滚范围: [单个服务/多个服务/全量]
-- 当前版本: [镜像 Tag / Commit]
-- 目标版本: [上一稳定版本]
-- 数据库状态: [是否需要 SQL 回滚]
-- 影响评估: [回滚过程中业务影响]
+## Rollback Decision
+- Trigger reason: [health check failure / alert / manual]
+- Rollback scope: [single service / multiple services / full]
+- Current version: [image Tag / Commit]
+- Target version: [previous stable version]
+- Database state: [whether SQL rollback is needed]
+- Impact assessment: [business impact during rollback]
 ```
 
-### 2. 选择回滚策略
+### 2. Select Rollback Strategy
 
-#### 镜像回退（最常见）
-- 适用：代码变更导致的异常
-- 方式：修改 Deployment image tag 为上一版本
-- 时效：K8s 滚动更新，约 1-5 分钟
-- 生产环境：生成 GitOps PR，人类 merge 后同步
+#### Image Revert (most common)
+- Applicable: anomalies caused by code changes
+- Method: change the Deployment image tag to the previous version
+- Time: K8s rolling update, about 1-5 minutes
+- Production: generate a GitOps PR; sync after human merge
 
-#### 配置回退
-- 适用：ConfigMap/Secret 变更导致的异常
-- 方式：revert ConfigMap 到上一版本
-- 时效：秒级（Pod 重启后生效）
+#### Config Revert
+- Applicable: anomalies caused by ConfigMap/Secret changes
+- Method: revert ConfigMap to the previous version
+- Time: seconds (takes effect after Pod restart)
 
-#### 数据库回滚（高风险）
-- 适用：Migration 导致的数据问题
-- 前置条件：solo-to-ops.md 提供了 `db_revert_v*.sql`
-- 流程：
+#### Database Rollback (high risk)
+- Applicable: data issues caused by Migration
+- Precondition: solo-to-ops.md provides `db_revert_v*.sql`
+- Flow:
   ```
-  [人类 DBA 确认] → 执行回滚 SQL → 验证数据一致性 → 回滚镜像
+  [Human DBA confirmation] → execute rollback SQL → verify data consistency → roll back image
   ```
-- **警告**：不可逆的 Migration（如 DROP COLUMN）无法回滚，只能前进修复
+- **Warning**: irreversible Migrations (e.g., DROP COLUMN) cannot be rolled back; only forward-fix is possible
 
-#### 流量切回（蓝绿部署）
-- 适用：蓝绿部署模式
-- 方式：流量切回 Blue 环境
-- 时效：秒级
+#### Traffic Switchback (blue-green deployment)
+- Applicable: blue-green deployment mode
+- Method: switch traffic back to the Blue environment
+- Time: seconds
 
 #### GitOps Revert
-- 适用：通过 GitOps 部署的所有变更
-- 方式：`git revert <commit>` + merge
-- 优势：可追溯，自动触发 ArgoCD/Flux 同步
+- Applicable: all changes deployed via GitOps
+- Method: `git revert <commit>` + merge
+- Advantage: traceable, automatically triggers ArgoCD/Flux sync
 
-### 3. 执行回滚
+### 3. Execute Rollback
 
-**Staging 环境**：
-- Agent 直接执行回滚（kubectl set image / helm rollback）
-- 记录回滚操作到 iterations.log
+**Staging environment**:
+- Agent directly executes rollback (kubectl set image / helm rollback)
+- Record the rollback operation in iterations.log
 
-**Production 环境**：
-- Agent 生成 GitOps revert PR
-- 通过 AskUserQuestion 请求人类确认
-- 紧急情况：Agent 建议，人类口头确认后 Agent 执行 kubectl rollout undo
-- 记录回滚操作到 iterations.log
+**Production environment**:
+- Agent generates a GitOps revert PR
+- Use AskUserQuestion to request human confirmation
+- Emergency: Agent recommends, after human verbal confirmation Agent executes kubectl rollout undo
+- Record the rollback operation in iterations.log
 
-### 4. 验证回滚效果
+### 4. Verify Rollback Effect
 
-调用 `deployment-verify` skill：
-- 健康检查恢复 ✓
-- 错误率下降到正常水平 ✓
-- 业务指标恢复 ✓
-- 监控告警消除 ✓
+Invoke the `deployment-verify` skill:
+- Health check recovered ✓
+- Error rate dropped to normal levels ✓
+- Business metrics recovered ✓
+- Monitoring alerts cleared ✓
 
-### 5. 记录与归档
+### 5. Record and Archive
 
 ```
-## 回滚记录
-- 时间: [ISO 8601]
-- 任务: [task-name]
-- 触发原因: [详细描述]
-- 回滚策略: [镜像/配置/DB/流量]
-- 回滚前版本: [v1.2.3]
-- 回滚后版本: [v1.2.2]
-- 验证结果: [健康检查通过/业务指标恢复]
-- 耗时: [从决策到恢复的总时长]
-- 根因初判: [待分析 / 已定位]
+## Rollback Record
+- Time: [ISO 8601]
+- Task: [task-name]
+- Trigger reason: [detailed description]
+- Rollback strategy: [image / config / DB / traffic]
+- Pre-rollback version: [v1.2.3]
+- Post-rollback version: [v1.2.2]
+- Verification result: [health check passed / business metrics recovered]
+- Duration: [total time from decision to recovery]
+- Initial root cause assessment: [to be analyzed / identified]
 ```
 
-写入：
-- `loops/specs/<task>/evidence.md` — 回滚证据
-- `loops/specs/<task>/iterations.log` — 追加回滚记录
-- `docs/incident/<date>-rollback.md` — 如涉及生产故障
-- `memory/knowledge-base.md` — 故障库追加一行
+Write to:
+- `loops/specs/<task>/evidence.md` — rollback evidence
+- `loops/specs/<task>/iterations.log` — append rollback record
+- `docs/incident/<date>-rollback.md` — if a production incident is involved
+- `memory/knowledge-base.md` — append a row to the incident library
 
-## 禁止事项
+## Prohibitions
 
-- 不在未确认影响范围的情况下盲目回滚
-- 不跳过数据库回滚的 DBA 确认
-- 不回滚后不验证（必须确认业务恢复）
-- 不隐瞒回滚事件（必须记录并通知）
-- 不在回滚过程中同时修复 bug（先恢复，再修复）
+- Do not roll back blindly without confirming the impact scope
+- Do not skip DBA confirmation for database rollback
+- Do not skip verification after rollback (must confirm business recovery)
+- Do not conceal rollback events (must record and notify)
+- Do not fix bugs while rolling back (recover first, fix later)
 
-## 与 LOOP 的关系
+## Relationship to LOOP
 
-**所属 LOOP 类型**：provision（作为 VERIFY 失败后的 rollback 阶段）
+**LOOP type**: provision (as the rollback stage after VERIFY failure)
 
 ```
 LOOP(provision):
   PLAN → PROVISION → VERIFY
-    ↓ 失败
-  ROLLBACK → 验证回滚
-    ↓ 恢复
-  分析根因 → 可修复回 PROVISION / 需重新规划回 PLAN
+    ↓ fail
+  ROLLBACK → verify rollback
+    ↓ recovered
+  Analyze root cause → fixable back to PROVISION / re-plan back to PLAN
 ```
 
-**stage 字段写入**：rollback
+**stage field value**: rollback
 
-**状态写入**：
-- 回滚中：status=retrying, stage=rollback
-- 回滚成功：status=running（回到 PLAN 重新规划）或 status=done（如放弃本次发布）
-- 回滚失败：status=needs-human（请求人类介入）
+**Status values**:
+- Rolling back: status=retrying, stage=rollback
+- Rollback succeeded: status=running (back to PLAN to re-plan) or status=done (if this release is abandoned)
+- Rollback failed: status=needs-human (request human intervention)

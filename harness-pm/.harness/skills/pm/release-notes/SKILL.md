@@ -1,21 +1,21 @@
 ---
 name: release-notes
-description: 当需要为产品版本发布生成发布说明、更新日志或版本公告时使用。版本发布说明自动生成，基于变更记录和PRD差异，生成面向用户/客户的版本更新说明，支持多语言和多平台格式。关键词：版本发布说明、Release Notes、更新日志、版本更新、更新说明、发版说明、更新了啥。
+description: Used when generating release notes, changelogs, or version announcements for product version releases. Version release notes auto-generation, based on change logs and PRD diffs, generates user/customer-facing version update notes, supports multi-language and multi-platform formats. Keywords: version release notes, Release Notes, changelog, version update, update notes, release notes, what's new.
 metadata:
-  module: "产品监控与迭代"
-  sub-module: "发布上线"
+  module: "Product Monitoring & Iteration"
+  sub-module: "Release Launch"
   type: "pipeline"
   version: "2.0"
-  domain_tags: ["互联网", "通用"]
+  domain_tags: ["Internet", "General"]
   trigger_examples:
-    - "帮我写版本更新说明"
-    - "生成发版说明"
-    - "这版更新了啥，整理一下"
+    - "Help me write version update notes"
+    - "Generate release notes"
+    - "What's new in this version, organize it"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出发布说明和变更清单"
-  deep_description: "完整说明 + 变更影响分析 + 升级指南 + 回滚预案"
+  quick_description: "Directly output release notes and change list"
+  deep_description: "Full notes + change impact analysis + upgrade guide + rollback plan"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -27,223 +27,223 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 版本发布说明自动生成
+# Version Release Notes Auto-Generation
 
-## 核心原则
+## Core Principles
 
-1. **用户视角**——用户关心"对我有什么影响"，不是"代码改了什么"
-2. **分级呈现**——重要变更突出，次要变更不淹没
-3. **诚实透明**——已知问题不隐瞒，破坏性变更提前告知
-4. **行动导向**——用户需要做什么（升级/配置/注意）必须明确
+1. **User perspective**—users care about "what's the impact on me", not "what code changed"
+2. **Tiered presentation**—important changes highlighted, minor changes not buried
+3. **Honest and transparent**—known issues not hidden, breaking changes announced in advance
+4. **Action-oriented**—what users need to do (upgrade/configure/note) must be clear
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 需求变更记录 | Markdown/JSON | ○ | docs/monitoring/release-notes.md（“发布检查清单”章节） | 本版本的需求变更 |
-| PRD文档 | Markdown | ○ | docs/product/PRD.md | 产品需求参考 |
-| SRS文档 | Markdown | ○ | docs/product/PRD.md | 需求规格参考（已由 design-prd 覆盖） |
-| 版本号 | string | 是 | 用户提供 | 如 v2.3.0 |
-| 发布日期 | string | 是 | 用户提供 | 如 2025-03-15 |
-| 发布类型 | string | 是 | 用户提供 | major / minor / patch / hotfix |
-| 目标受众 | string | ○ | 用户提供 | 终端用户 / 企业客户 / 开发者 / 内部团队 |
+| Requirement change log | Markdown/JSON | ○ | docs/monitoring/release-notes.md ("Release Checklist" section) | Requirement changes for this version |
+| PRD document | Markdown | ○ | docs/product/PRD.md | Product requirement reference |
+| SRS document | Markdown | ○ | docs/product/PRD.md | Requirement specification reference (covered by design-prd) |
+| Version number | string | Yes | User-provided | e.g., v2.3.0 |
+| Release date | string | Yes | User-provided | e.g., 2025-03-15 |
+| Release type | string | Yes | User-provided | major / minor / patch / hotfix |
+| Target audience | string | ○ | User-provided | End users / Enterprise customers / Developers / Internal team |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 变更收集与分类 [核心]
+### Step 1: Change Collection & Classification [Core]
 
-收集本版本所有变更，按类型分类：
+Collect all changes for this version and classify by type:
 
-**变更分类体系**：
+**Change Classification System**:
 
-| 类别 | 图标 | 说明 | 示例 |
+| Category | Icon | Description | Example |
 |------|------|------|------|
-| 🆕 新功能 | ✨ | 新增的产品功能 | 新增社交分享功能 |
-| 🔄 改进 | 🔧 | 已有功能的优化 | 搜索速度提升3倍 |
-| 🐛 修复 | 🐛 | Bug修复 | 修复登录页面白屏问题 |
-| ⚠️ 破坏性变更 | 💥 | 需要用户适配的变更 | API v1下线，请迁移至v2 |
-| 🗑️ 下线 | 🗑️ | 功能/接口移除 | 移除旧版导出功能 |
-| 🔒 安全 | 🔒 | 安全相关修复 | 修复XSS漏洞 |
+| 🆕 New Features | ✨ | New product features | Added social sharing feature |
+| 🔄 Improvements | 🔧 | Optimizations to existing features | Search speed improved 3x |
+| 🐛 Fixes | 🐛 | Bug fixes | Fixed login page white screen issue |
+| ⚠️ Breaking Changes | 💥 | Changes requiring user adaptation | API v1 sunset, please migrate to v2 |
+| 🗑️ Deprecations | 🗑️ | Feature/API removal | Removed legacy export feature |
+| 🔒 Security | 🔒 | Security-related fixes | Fixed XSS vulnerability |
 
-**变更来源映射**：
+**Change Source Mapping**:
 
-| 变更来源 | 提取方式 |
+| Change Source | Extraction Method |
 |----------|---------|
-| requirements-change-log | 从变更记录提取已批准的需求变更 |
-| PRD差异 | 对比新旧PRD提取功能变更 |
-| 用户提供 | 用户直接描述的变更内容 |
+| requirements-change-log | Extract approved requirement changes from change log |
+| PRD diff | Compare old and new PRD to extract feature changes |
+| User-provided | Change content directly described by user |
 
-### Step 2: 用户影响评估 [核心]
+### Step 2: User Impact Assessment [Core]
 
-评估每个变更对用户的影响：
+Assess the impact of each change on users:
 
-**影响等级**：
+**Impact Levels**:
 
-| 等级 | 定义 | 发布说明中的位置 |
+| Level | Definition | Position in Release Notes |
 |------|------|----------------|
-| 🔴 高影响 | 改变用户核心工作流或需要用户操作 | 顶部"重要变更"区域 |
-| 🟡 中影响 | 改善体验但不强制操作 | 按类别列出 |
-| 🟢 低影响 | 用户无感知的优化 | 折叠区域 |
+| 🔴 High impact | Changes core user workflow or requires user action | Top "Important Changes" area |
+| 🟡 Medium impact | Improves experience but no mandatory action | Listed by category |
+| 🟢 Low impact | Optimizations users don't notice | Collapsed area |
 
-**用户行动项**：
+**User Action Items**:
 
-| 行动类型 | 说明 | 示例 |
+| Action Type | Description | Example |
 |----------|------|------|
-| 必须操作 | 不做会影响使用 | 请重新配置API密钥 |
-| 建议操作 | 做了体验更好 | 建议更新移动端至最新版 |
-| 无需操作 | 自动生效 | 性能优化已自动生效 |
+| Must do | Not doing affects usage | Please reconfigure API key |
+| Recommended | Doing improves experience | Recommend updating mobile to latest version |
+| No action needed | Takes effect automatically | Performance optimization auto-applied |
 
-### Step 3: 多格式生成 [核心]
+### Step 3: Multi-Format Generation [Core]
 
-根据目标受众生成不同风格的发布说明：
+Generate release notes in different styles based on target audience:
 
-**格式A：终端用户版**（简洁、情感化）
-
-```
-## ✨ 新功能
-- **社交分享**：一键分享到微信/微博，让好友也能用上好工具
-- **暗黑模式**：深夜工作更护眼，设置中一键切换
-
-## 🔧 改进
-- 搜索速度提升3倍，输入即出结果
-- 列表加载更流畅，告别卡顿
-
-## 🐛 修复
-- 修复偶尔登录失败的问题
-- 修复导出文件名乱码的问题
-```
-
-**格式B：企业客户版**（专业、结构化）
+**Format A: End User Version** (concise, emotional)
 
 ```
-## 新功能
-| 功能 | 说明 | 影响范围 |
+## ✨ New Features
+- **Social Sharing**: One-click share to WeChat/Weibo, let friends use the great tool too
+- **Dark Mode**: Easier on the eyes for late-night work, one-click switch in settings
+
+## 🔧 Improvements
+- Search speed improved 3x, results appear as you type
+- List loading smoother, no more lag
+
+## 🐛 Fixes
+- Fixed occasional login failure issue
+- Fixed garbled export filename issue
+```
+
+**Format B: Enterprise Customer Version** (professional, structured)
+
+```
+## New Features
+| Feature | Description | Impact Scope |
 |------|------|---------|
-| 社交分享 | 支持分享至企业微信/钉钉 | 全平台 |
-| 暗黑模式 | 系统级暗黑模式适配 | 桌面端 |
+| Social Sharing | Support sharing to Enterprise WeChat/DingTalk | All platforms |
+| Dark Mode | System-level dark mode adaptation | Desktop |
 
-## 改进
-| 改进项 | 优化内容 | 性能提升 |
+## Improvements
+| Improvement | Optimization | Performance Gain |
 |--------|---------|---------|
-| 搜索引擎 | 重构索引算法 | 响应时间-70% |
+| Search engine | Rebuilt indexing algorithm | Response time -70% |
 
-## 安全修复
-- CVE-2025-XXXX：修复XSS漏洞（高危）
-- 更新依赖库版本，修复已知安全漏洞
+## Security Fixes
+- CVE-2025-XXXX: Fixed XSS vulnerability (High)
+- Updated dependency library versions, fixed known security vulnerabilities
 
-## 破坏性变更
-- API v1将于2025-06-30下线，请迁移至API v2
-  迁移指南：[链接]
+## Breaking Changes
+- API v1 will be sunset on 2025-06-30, please migrate to API v2
+  Migration guide: [link]
 
-## 已知问题
-- Safari 14下偶现样式错位，下个版本修复
+## Known Issues
+- Occasional style misalignment in Safari 14, fixed in next version
 ```
 
-**格式C：开发者版**（技术、详细）
+**Format C: Developer Version** (technical, detailed)
 
 ```
 ## Breaking Changes
-- `POST /api/v1/users` → `POST /api/v2/users`（新增必填字段`tenant_id`）
-- 移除 `GET /api/v1/export`（使用 `GET /api/v2/export` 替代）
+- `POST /api/v1/users` → `POST /api/v2/users` (added required field `tenant_id`)
+- Removed `GET /api/v1/export` (use `GET /api/v2/export` instead)
 
 ## New APIs
-- `POST /api/v2/share` — 社交分享接口
-- `GET /api/v2/preferences/theme` — 主题偏好接口
+- `POST /api/v2/share` — Social sharing API
+- `GET /api/v2/preferences/theme` — Theme preference API
 
 ## Changelog
-- feat: 新增社交分享模块
-- perf: 搜索引擎索引重构，响应时间优化70%
-- fix: 修复登录Token过期后未自动刷新的问题
-- security: 修复XSS漏洞 CVE-2025-XXXX
+- feat: Added social sharing module
+- perf: Search engine index rebuild, response time optimized 70%
+- fix: Fixed issue where login token wasn't auto-refreshed after expiration
+- security: Fixed XSS vulnerability CVE-2025-XXXX
 ```
 
-### Step 4: 版本信息组装 [核心]
+### Step 4: Version Information Assembly [Core]
 
-**版本信息头**：
+**Version Information Header**:
 
 ```
-# {产品名} v{版本号} 发布说明
+# {Product Name} v{Version} Release Notes
 
-📅 发布日期：{日期}
-🏷️ 版本类型：{major/minor/patch/hotfix}
-🔗 升级指南：{链接}
-📋 完整变更日志：{链接}
+📅 Release Date: {Date}
+🏷️ Version Type: {major/minor/patch/hotfix}
+🔗 Upgrade Guide: {Link}
+📋 Full Changelog: {Link}
 ```
 
-**版本号语义说明**：
+**Version Number Semantics**:
 
-| 类型 | 语义 | 用户预期 |
+| Type | Semantics | User Expectation |
 |------|------|---------|
-| major | 重大更新，可能有破坏性变更 | 期待新体验，关注迁移成本 |
-| minor | 功能更新，向后兼容 | 期待新功能 |
-| patch | 问题修复，向后兼容 | 期待稳定性提升 |
-| hotfix | 紧急修复 | 期待问题解决 |
+| major | Major update, may have breaking changes | Expect new experience, watch migration cost |
+| minor | Feature update, backward compatible | Expect new features |
+| patch | Bug fixes, backward compatible | Expect stability improvements |
+| hotfix | Emergency fix | Expect issue resolution |
 
-### Step 5: 文档组装 [核心]
+### Step 5: Document Assembly [Core]
 
-**完整发布说明结构**：
+**Complete Release Notes Structure**:
 
 ```
-# {产品名} v{版本号} 发布说明
+# {Product Name} v{Version} Release Notes
 
-## ⚠️ 重要变更（如有破坏性变更或必须操作）
+## ⚠️ Important Changes (if breaking changes or mandatory actions)
 - ...
 
-## ✨ 新功能
-- **功能名**：描述（影响等级）
+## ✨ New Features
+- **Feature Name**: Description (impact level)
 - ...
 
-## 🔧 改进
-- 描述（影响等级）
+## 🔧 Improvements
+- Description (impact level)
 - ...
 
-## 🐛 修复
-- 描述
+## 🐛 Fixes
+- Description
 - ...
 
-## 🔒 安全修复（如有）
-- 描述
+## 🔒 Security Fixes (if any)
+- Description
 
-## 🗑️ 下线通知（如有）
-- 描述及替代方案
+## 🗑️ Deprecation Notices (if any)
+- Description and alternative
 
-## ⚠️ 已知问题（如有）
-- 描述及临时解决方案
+## ⚠️ Known Issues (if any)
+- Description and temporary workaround
 
-## 📋 升级指引（如需要）
-### 前置条件
-### 升级步骤
-### 回滚方案
+## 📋 Upgrade Guide (if needed)
+### Prerequisites
+### Upgrade Steps
+### Rollback Plan
 
-## 致谢（可选）
+## Acknowledgments (optional)
 ```
 
-### 输出深度分级
+### Output Depth Levels
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 发布说明和变更清单 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整说明 + 变更影响分析 + 升级指南 + 回滚预案 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Release notes and change list | Core conclusions + minimum viable deliverable |
+| standard | Full deliverable (current default) | Full deliverable, includes all Step outputs |
+| deep | Full notes + change impact analysis + upgrade guide + rollback plan | Full deliverable + extended analysis + in-depth derivation |
 
-## 输出
+## Output
 
-**存储路径**：`docs/monitoring/release-notes.md（“发布说明”章节，覆盖）`
+**Storage path**: `docs/monitoring/release-notes.md ("Release Notes" section, overwrite)`
 
-**输出文件**：
+**Output Files**:
 
-| 文件 | 格式 | 说明 |
+| File | Format | Description |
 |------|------|------|
-| release-notes-v{版本号}.md | Markdown | 完整发布说明（终端用户版） |
-| release-notes-v{版本号}-enterprise.md | Markdown | 企业客户版 |
-| release-notes-v{版本号}-developer.md | Markdown | 开发者版 |
-| release-notes-v{版本号}.json | JSON | 结构化数据 |
+| release-notes-v{version}.md | Markdown | Complete release notes (end user version) |
+| release-notes-v{version}-enterprise.md | Markdown | Enterprise customer version |
+| release-notes-v{version}-developer.md | Markdown | Developer version |
+| release-notes-v{version}.json | JSON | Structured data |
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
@@ -252,46 +252,46 @@ writes:
   "properties": {
     "release_notes": {
       "type": "object",
-      "description": "发布说明根对象",
+      "description": "Release notes root object",
       "required": ["version", "release_date", "highlights", "changes"],
       "properties": {
-        "version": {"type": "string", "description": "版本号"},
-        "release_date": {"type": "string", "description": "发布日期"},
+        "version": {"type": "string", "description": "Version number"},
+        "release_date": {"type": "string", "description": "Release date"},
         "highlights": {
           "type": "array",
-          "description": "核心亮点列表，至少1项",
+          "description": "Core highlights list, at least 1 item",
           "items": {
             "type": "object",
             "required": ["title", "description", "target_audience"],
             "properties": {
-              "title": {"type": "string", "description": "亮点标题"},
-              "description": {"type": "string", "description": "亮点描述"},
-              "target_audience": {"type": "string", "description": "目标受众"}
+              "title": {"type": "string", "description": "Highlight title"},
+              "description": {"type": "string", "description": "Highlight description"},
+              "target_audience": {"type": "string", "description": "Target audience"}
             }
           }
         },
         "changes": {
           "type": "object",
-          "description": "变更分类",
+          "description": "Change classification",
           "required": ["new_features", "improvements", "bug_fixes"],
           "properties": {
-            "new_features": {"type": "array", "description": "新功能列表"},
-            "improvements": {"type": "array", "description": "改进列表"},
-            "bug_fixes": {"type": "array", "description": "修复列表"},
-            "breaking_changes": {"type": "array", "description": "破坏性变更列表"},
-            "deprecations": {"type": "array", "description": "废弃功能列表"}
+            "new_features": {"type": "array", "description": "New features list"},
+            "improvements": {"type": "array", "description": "Improvements list"},
+            "bug_fixes": {"type": "array", "description": "Fixes list"},
+            "breaking_changes": {"type": "array", "description": "Breaking changes list"},
+            "deprecations": {"type": "array", "description": "Deprecated features list"}
           }
         },
-        "upgrade_guide": {"type": "object", "description": "升级指南，有breaking_changes时必填"},
-        "known_issues": {"type": "array", "description": "已知问题列表"},
-        "acknowledgments": {"type": "array", "description": "致谢列表"}
+        "upgrade_guide": {"type": "object", "description": "Upgrade guide, required when breaking_changes exist"},
+        "known_issues": {"type": "array", "description": "Known issues list"},
+        "acknowledgments": {"type": "array", "description": "Acknowledgments list"}
       }
     }
   }
 }
 ```
 
-**release-notes.json 结构**：
+**release-notes.json Structure**:
 
 ```json
 {
@@ -300,101 +300,101 @@ writes:
     "release_date": "2025-03-15",
     "highlights": [
       {
-        "title": "社交分享",
-        "description": "一键分享到微信/微博",
-        "target_audience": "终端用户"
+        "title": "Social Sharing",
+        "description": "One-click share to WeChat/Weibo",
+        "target_audience": "End users"
       }
     ],
     "changes": {
-      "new_features": [ { /* 见Step 1变更收集与分类 */ } ],
-      "improvements": [ { /* 见Step 1变更收集与分类 */ } ],
-      "bug_fixes": [ { /* 见Step 1变更收集与分类 */ } ],
-      "breaking_changes": [ { /* 见Step 1变更收集与分类 */ } ],
-      "deprecations": [ { /* 见Step 1变更收集与分类 */ } ]
+      "new_features": [ { /* See Step 1 Change Collection & Classification */ } ],
+      "improvements": [ { /* See Step 1 Change Collection & Classification */ } ],
+      "bug_fixes": [ { /* See Step 1 Change Collection & Classification */ } ],
+      "breaking_changes": [ { /* See Step 1 Change Collection & Classification */ } ],
+      "deprecations": [ { /* See Step 1 Change Collection & Classification */ } ]
     },
-    "upgrade_guide": { /* 见Step 5文档组装，有breaking_changes时必填 */ },
-    "known_issues": [ { /* 见Step 1变更收集与分类 */ } ],
-    "acknowledgments": [ { /* 见Step 5文档组装 */ } ]
+    "upgrade_guide": { /* See Step 5 Document Assembly, required when breaking_changes exist */ },
+    "known_issues": [ { /* See Step 1 Change Collection & Classification */ } ],
+    "acknowledgments": [ { /* See Step 5 Document Assembly */ } ]
   }
 }
 ```
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| release_notes | object | 是 | 发布说明根对象 |
-| release_notes.version | string | 是 | 版本号 |
-| release_notes.release_date | string | 是 | 发布日期 |
-| release_notes.highlights | array | 是 | 核心亮点列表，至少1项 |
-| release_notes.highlights[].title | string | 是 | 亮点标题 |
-| release_notes.highlights[].description | string | 是 | 亮点描述 |
-| release_notes.highlights[].target_audience | string | 是 | 目标受众 |
-| release_notes.changes | object | 是 | 变更分类 |
-| release_notes.changes.new_features | array | 是 | 新功能列表 |
-| release_notes.changes.improvements | array | 是 | 改进列表 |
-| release_notes.changes.bug_fixes | array | 是 | 修复列表 |
-| release_notes.changes.breaking_changes | array | 否 | 破坏性变更列表 |
-| release_notes.changes.deprecations | array | 否 | 废弃功能列表 |
-| release_notes.upgrade_guide | object | 条件必填 | 升级指南，有breaking_changes时必填 |
-| release_notes.known_issues | array | 否 | 已知问题列表 |
-| release_notes.acknowledgments | array | 否 | 致谢列表 |
+| release_notes | object | Yes | Release notes root object |
+| release_notes.version | string | Yes | Version number |
+| release_notes.release_date | string | Yes | Release date |
+| release_notes.highlights | array | Yes | Core highlights list, at least 1 item |
+| release_notes.highlights[].title | string | Yes | Highlight title |
+| release_notes.highlights[].description | string | Yes | Highlight description |
+| release_notes.highlights[].target_audience | string | Yes | Target audience |
+| release_notes.changes | object | Yes | Change classification |
+| release_notes.changes.new_features | array | Yes | New features list |
+| release_notes.changes.improvements | array | Yes | Improvements list |
+| release_notes.changes.bug_fixes | array | Yes | Fixes list |
+| release_notes.changes.breaking_changes | array | No | Breaking changes list |
+| release_notes.changes.deprecations | array | No | Deprecated features list |
+| release_notes.upgrade_guide | object | Conditionally required | Upgrade guide, required when breaking_changes exist |
+| release_notes.known_issues | array | No | Known issues list |
+| release_notes.acknowledgments | array | No | Acknowledgments list |
 
-## 上游变更响应
+## Upstream Change Response
 
-当上游输入发生变更时，本Skill的响应策略：
+When upstream inputs change, this Skill's response strategy:
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| PRD需求变更 | 新功能和改进描述 | 更新变更分类和描述，标记需人类确认 |
-| 灰度发布结果 | 已知问题和升级指南 | 更新已知问题列表，补充升级注意事项 |
-| 验收报告变更 | 变更分类和完整性 | 重新评估变更分类，确保所有变更已覆盖 |
-| 检查清单变更 | 发布说明完整性 | 更新发布说明，确保与检查清单一致 |
+| PRD requirement change | New features and improvement descriptions | Update change classification and descriptions, mark for human confirmation |
+| Canary release results | Known issues and upgrade guide | Update known issues list, supplement upgrade notes |
+| Acceptance report change | Change classification and completeness | Re-evaluate change classification, ensure all changes covered |
+| Checklist change | Release notes completeness | Update release notes, ensure consistency with checklist |
 
-当发布说明自身变更时，对下游的通知机制：
+When the release notes themselves change, the notification mechanism for downstream:
 
-| 说明变更类型 | 通知范围 | 通知方式 |
+| Notes Change Type | Notification Scope | Notification Method |
 |-------------|----------|----------|
-| 破坏性变更新增 | 全部下游 | 标记破坏性变更，触发影响评估 |
-| 已知问题新增 | agile-launch-review | 标记已知问题，触发复盘输入 |
-| 版本号变更 | release-gradual | 标记版本变更，触发灰度配置更新 |
+| New breaking change | All downstream | Mark breaking change, trigger impact assessment |
+| New known issue | agile-launch-review | Mark known issue, trigger retrospective input |
+| Version number change | release-gradual | Mark version change, trigger canary configuration update |
 
 ---
 
-## 决策规则
+## Decision Rules
 
-| 条件 | 决策 |
+| Condition | Decision |
 |------|------|
-| 有破坏性变更 | 必须在顶部"重要变更"区域突出显示 |
-| 有安全修复 | 必须包含安全修复章节，标注CVE编号 |
-| 变更条目>20 | 按影响等级排序，低影响折叠 |
-| hotfix类型 | 只列出修复项，不列新功能和改进 |
-| major版本 | 必须包含升级指引和回滚方案 |
+| Has breaking changes | Must highlight in top "Important Changes" area |
+| Has security fixes | Must include security fixes section, mark CVE number |
+| Change items > 20 | Sort by impact level, collapse low impact |
+| hotfix type | Only list fixes, no new features and improvements |
+| major version | Must include upgrade guide and rollback plan |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 版本号和日期正确
-- [ ] 变更按类别分类
+- [ ] Version number and date correct
+- [ ] Changes classified by category
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 破坏性变更已突出显示
-- [ ] 用户行动项已明确
-- [ ] 已知问题已列出
-- [ ] 多格式已生成（用户版/企业版/开发者版）
-- [ ] 无技术术语泄露到终端用户版
+- [ ] Breaking changes highlighted
+- [ ] User action items clear
+- [ ] Known issues listed
+- [ ] Multi-format generated (user/enterprise/developer versions)
+- [ ] No technical terminology leaked to end user version
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (must pass for deep only)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (in-depth derivation and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
-## 降级策略
+## Degradation Strategy
 
-| 缺失的上游输入 | 降级方案 | 输出影响 |
+| Missing Upstream Input | Degradation Plan | Output Impact |
 |---------------|---------|---------|
-| 变更记录缺失 | 基于用户提供变更描述生成 | 变更可能不完整 |
-| PRD缺失 | 无法自动提取功能变更 | 需人工补充功能描述 |
-| 目标受众未指定 | 默认生成终端用户版 | 可能需要补充其他版本 |
+| Change log missing | Generate based on user-provided change description | Changes may be incomplete |
+| PRD missing | Cannot auto-extract feature changes | Need manual feature description supplementation |
+| Target audience not specified | Default to end user version | May need to supplement other versions |

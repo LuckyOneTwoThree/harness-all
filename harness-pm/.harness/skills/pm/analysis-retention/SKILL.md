@@ -1,21 +1,21 @@
 ---
 name: analysis-retention
-description: 当需要分析用户粘性和流失风险时使用。留存自动分析，AI自动执行全量留存曲线、Cohort分析、Aha Moment搜索和流失预警。关键词：留存分析、Cohort分析、Aha Moment、流失预警、用户粘性、用户回不来、留存太差、用户什么时候走的。
+description: Use when analyzing user stickiness and churn risk. Retention Auto-Analysis, AI automatically executes full retention curve, Cohort analysis, Aha Moment search, and churn warning. Keywords: retention analysis, Cohort analysis, Aha Moment, churn warning, user stickiness, users not coming back, retention too poor, when users leave.
 metadata:
-  module: "产品度量运营"
-  sub-module: "数据分析"
+  module: "Product Metrics Operations"
+  sub-module: "Data Analysis"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["互联网", "SaaS", "通用"]
+  domain_tags: ["Internet", "SaaS", "General"]
   trigger_examples:
-    - "新用户7日留存只有15%，帮我分析一下"
-    - "用户什么时候开始流失的"
-    - "帮我找找Aha Moment"
+    - "New user 7-day retention is only 15%, help me analyze"
+    - "When do users start churning"
+    - "Help me find the Aha Moment"
   interaction_mode: "ai_auto"
 execution_depth:
   default: standard
-  quick_description: "直接输出留存分析和流失原因"
-  deep_description: "完整分析 + 留存曲线拟合 + 流失预测模型 + 留存优化路线图"
+  quick_description: "Directly output retention analysis and churn causes"
+  deep_description: "Full analysis + retention curve fitting + churn prediction model + retention optimization roadmap"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -25,107 +25,107 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 留存自动分析
+# Retention Auto-Analysis
 
-## 核心原则
+## Core Principles
 
-1. **留存是产品健康的终极指标**：获客决定天花板，留存决定地板
-2. **Aha Moment是增长的杠杆**：找到"啊哈时刻"并提升到达率，比泛化优化更高效
-3. **预警优于召回**：在用户流失前干预，远比流失后召回成本低、效果好
+1. **Retention is the ultimate metric of product health**: Acquisition determines the ceiling, retention determines the floor
+2. **Aha Moment is the lever of growth**: Finding the "aha moment" and improving reach rate is more efficient than generalized optimization
+3. **Warning beats recall**: Intervening before users churn is far less costly and more effective than recalling after churn
 
-## 交互模式
+## Interaction Mode
 
-🤖 AI自动执行（数据分析类）
+🤖 AI Auto-Execution (Data Analysis Type)
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 用户行为数据 | object | 是 | 用户提供 | 用户所有行为事件 |
-| 分群定义 | object | ○ | 用户提供 | 用户分群配置 |
-| Cohort配置 | object | ○ | 用户提供 | Cohort划分规则 |
-| 基准日期 | string | ○ | 用户提供 | 分析基准时间 |
+| User Behavior Data | object | Yes | User-provided | All user behavior events |
+| Segment Definition | object | ○ | User-provided | User segmentation configuration |
+| Cohort Config | object | ○ | User-provided | Cohort partition rules |
+| Baseline Date | string | ○ | User-provided | Analysis baseline time |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1：全量留存曲线 [核心]
+### Step 1: Full Retention Curve [Core]
 
 ```
-计算标准留存曲线
-├── 定义时间周期（日/周/月）
-├── 计算次日/D+7/D+30留存率
-├── 绘制留存曲线
-└── 识别曲线形态
+Calculate standard retention curve
+├── Define time period (day/week/month)
+├── Calculate D+1/D+7/D+30 retention rates
+├── Plot retention curve
+└── Identify curve shape
 ```
 
-### Step 2：留存曲线形态判断 [核心]
+### Step 2: Retention Curve Shape Judgment [Core]
 
-| 曲线形态 | 特征 | 含义 |
+| Curve Shape | Characteristics | Meaning |
 |---------|------|------|
-| 微笑型 | 初期下降后回升 | 用户习惯后持续使用 |
-| L型 | 初期大幅下降后平稳 | 产品仅满足一次性需求 |
-| 陡降型 | 快速持续下降 | 产品粘性不足 |
-| 平滑型 | 缓慢稳定下降 | 健康稳定的用户群 |
+| Smile | Declines initially then recovers | Users continue using after forming habit |
+| L-shape | Drops sharply initially then stabilizes | Product only meets one-time need |
+| Steep Decline | Rapid continuous decline | Insufficient product stickiness |
+| Smooth | Slow steady decline | Healthy stable user base |
 
-### Step 3：Cohort自动分析 [核心]
+### Step 3: Cohort Auto-Analysis [Core]
 
-按Cohort（同期群）分析留存变化：
-
-```
-Cohort划分
-├── 时间Cohort：按首次使用日期
-├── 渠道Cohort：按首次来源
-├── 行为Cohort：按首次行为类型
-└── 价值Cohort：按首日价值
-```
-
-### Step 4：Aha Moment自动搜索 [核心]
+Analyze retention changes by Cohort (same-period group):
 
 ```
-识别"啊哈时刻"
-├── 分析留存用户 vs 流失用户的早期行为差异
-├── 计算各行为与留存的相关系数
-├── 寻找临界点行为（如使用某功能X次）
-└── 验证假设
+Cohort partition
+├── Time Cohort: By first use date
+├── Channel Cohort: By first source
+├── Behavior Cohort: By first behavior type
+└── Value Cohort: By first-day value
 ```
 
-### Step 5：流失预警模型 [核心]
+### Step 4: Aha Moment Auto-Search [Core]
 
 ```
-流失风险评估
-├── 定义流失用户（连续N天未使用）
-├── 提取流失前的行为特征
-├── 构建流失预警模型
-└── 输出高风险用户列表
+Identify "aha moment"
+├── Analyze early behavior differences between retained vs churned users
+├── Calculate correlation coefficient of each behavior with retention
+├── Find threshold behaviors (e.g., using a feature X times)
+└── Validate hypothesis
 ```
 
-### 输出深度分级
+### Step 5: Churn Warning Model [Core]
 
-| 深度级别 | 输出范围 | 说明 |
+```
+Churn risk assessment
+├── Define churned user (inactive for N consecutive days)
+├── Extract behavior features before churn
+├── Build churn warning model
+└── Output high-risk user list
+```
+
+### Output Depth Tiers
+
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 留存分析和流失原因 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整分析 + 留存曲线拟合 + 流失预测模型 + 留存优化路线图 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Retention analysis and churn causes | Core conclusions + minimum viable artifact |
+| standard | Full artifact (current default) | Full artifact, including all Step outputs |
+| deep | Full analysis + retention curve fitting + churn prediction model + retention optimization roadmap | Full artifact + extended analysis + deep inference |
 
-## 输出
+## Output
 
-**存储路径**：`docs/metrics/data-analysis-report.md（“留存分析”章节）`
-**输出文件**：retention_analysis.json
+**Storage Path**: `docs/metrics/data-analysis-report.md ("Retention Analysis" section)`
+**Output File**: retention_analysis.json
 
-输出文件：retention_curve_{date}.png、cohort_heatmap_{date}.png、aha_moment_{date}.yaml、churn_risk_users_{date}.csv
+Output files: retention_curve_{date}.png, cohort_heatmap_{date}.png, aha_moment_{date}.yaml, churn_risk_users_{date}.csv
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["overall"],
   "properties": {
-    "overall": {"type": "object", "description": "整体留存数据，包含关键节点、曲线形态和历史对比"},
-    "cohort_trend": {"type": "object", "description": "Cohort趋势分析，包含月度队列和洞察"},
-    "aha_moment_candidates": {"type": "array", "description": "Aha Moment候选列表，包含行为、留存提升和统计显著性"},
-    "churn_prediction": {"type": "object", "description": "流失预测，包含高风险用户列表和预警模型"},
-    "lifecycle_stages": {"type": "array", "description": "生命周期阶段划分"}
+    "overall": {"type": "object", "description": "Overall retention data, including key nodes, curve shape, and historical comparison"},
+    "cohort_trend": {"type": "object", "description": "Cohort trend analysis, including monthly cohorts and insights"},
+    "aha_moment_candidates": {"type": "array", "description": "Aha Moment candidate list, including behavior, retention lift, and statistical significance"},
+    "churn_prediction": {"type": "object", "description": "Churn prediction, including high-risk user list and warning model"},
+    "lifecycle_stages": {"type": "array", "description": "Lifecycle stage partition"}
   }
 }
 ```
@@ -134,31 +134,31 @@ Cohort划分
 retention_analysis:
   analysis_time: "2024-01-15T10:00:00Z"
   
-  # 整体留存
+  # Overall retention
   overall:
-    # 关键留存节点
-    d1: 45.2  # 次日留存 45.2%
-    d7: 28.5  # 7日留存 28.5%
-    d30: 18.3  # 30日留存 18.3%
+    # Key retention nodes
+    d1: 45.2  # Day 1 retention 45.2%
+    d7: 28.5  # Day 7 retention 28.5%
+    d30: 18.3  # Day 30 retention 18.3%
     
-    # 曲线形态分析
+    # Curve shape analysis
     curve_shape:
       type: "smooth_decline"
-      description: "缓慢稳定下降，属于健康形态"
+      description: "Slow steady decline, healthy shape"
       d1_to_d7_drop: -37%
       d7_to_d30_drop: -36%
       assessment: "healthy"
     
-    # 历史对比
+    # Historical comparison
     vs_last_period:
       d1_change: +2.1
       d7_change: +1.5
       d30_change: +0.8
       trend: "improving"
   
-  # Cohort趋势
+  # Cohort trend
   cohort_trend:
-    summary: "近3个月Cohort留存持续改善"
+    summary: "Cohort retention has steadily improved over the past 3 months"
     
     monthly_cohorts:
       - cohort: "2023-12"
@@ -176,12 +176,12 @@ retention_analysis:
         d7: 25.5
         d30: 16.2
     
-    insight: "Cohort表现逐月改善，新用户质量提升"
+    insight: "Cohort performance improving month over month, new user quality improving"
   
-  # Aha Moment候选
+  # Aha Moment candidates
   aha_moment_candidates:
     - rank: 1
-      behavior: "首周完成3次UGC内容发布"
+      behavior: "Publish UGC content 3 times in first week"
       retention_lift:
         with_behavior: 68.5
         without_behavior: 22.3
@@ -189,10 +189,10 @@ retention_analysis:
       correlation: 0.82
       statistical_significance: 0.001
       recommendation: |
-        设计引导机制鼓励用户首周发布UGC内容
+        Design guidance mechanisms to encourage users to publish UGC content in first week
       
     - rank: 2
-      behavior: "首日添加5个好友"
+      behavior: "Add 5 friends on first day"
       retention_lift:
         with_behavior: 72.1
         without_behavior: 31.5
@@ -200,10 +200,10 @@ retention_analysis:
       correlation: 0.78
       statistical_significance: 0.002
       recommendation: |
-        优化好友推荐算法和添加好友流程
+        Optimize friend recommendation algorithm and add-friend flow
       
     - rank: 3
-      behavior: "首周参与3次社区活动"
+      behavior: "Participate in 3 community activities in first week"
       retention_lift:
         with_behavior: 65.3
         without_behavior: 25.8
@@ -211,13 +211,13 @@ retention_analysis:
       correlation: 0.75
       statistical_significance: 0.003
       recommendation: |
-        优化新用户活动引导
+        Optimize new user activity guidance
   
-  # 流失风险
+  # Churn risk
   churn_risk:
-    # 风险分布
+    # Risk distribution
     distribution:
-      high_risk: 12500  # 高风险用户数
+      high_risk: 12500  # High-risk user count
       medium_risk: 35000
       low_risk: 85000
       healthy: 180000
@@ -225,56 +225,56 @@ retention_analysis:
     high_risk_count: 12500
     high_risk_rate: 4.8
     
-    # 流失前兆行为
+    # Pre-churn behaviors
     pre_churn_behaviors:
-      - "连续3天未打开App"
-      - "互动频率下降50%"
-      - "核心功能使用减少"
-      - "反馈/投诉增加"
+      - "No app open for 3 consecutive days"
+      - "Interaction frequency dropped 50%"
+      - "Core feature usage decreased"
+      - "Feedback/complaints increased"
     
     recommended_intervention:
       high_risk:
-        - action: "Push召回"
-          trigger: "连续2天未打开"
-          template: "召回模板_v2"
-        - action: "专属优惠"
-          trigger: "高价值用户+连续3天未打开"
-          offer: "7天VIP体验"
-        - action: "客服回访"
-          trigger: "流失预警+曾有投诉"
-          channel: "人工电话"
+        - action: "Push recall"
+          trigger: "No open for 2 consecutive days"
+          template: "Recall template v2"
+        - action: "Exclusive offer"
+          trigger: "High-value user + no open for 3 consecutive days"
+          offer: "7-day VIP experience"
+        - action: "Customer service callback"
+          trigger: "Churn warning + had complaints"
+          channel: "Manual phone call"
           
       medium_risk:
-        - action: "个性化推荐优化"
-          description: "调整推荐算法，增加用户感兴趣内容"
-        - action: "功能提醒"
-          description: "推送用户可能感兴趣但未使用的功能"
+        - action: "Personalized recommendation optimization"
+          description: "Adjust recommendation algorithm, increase content users are interested in"
+        - action: "Feature reminder"
+          description: "Push features users may be interested in but haven't used"
   
-  # 详细数据链接
+  # Detailed data links
   reports:
-    retention_curve: "docs/metrics/data-analysis-report.md（“留存分析”章节）
-    cohort_heatmap: "docs/metrics/data-analysis-report.md（“留存分析”章节）
-    aha_analysis: "docs/metrics/data-analysis-report.md（“留存分析”章节）
-    churn_users: "docs/metrics/data-analysis-report.md（“留存分析”章节）
+    retention_curve: "docs/metrics/data-analysis-report.md (\"Retention Analysis\" section)"
+    cohort_heatmap: "docs/metrics/data-analysis-report.md (\"Retention Analysis\" section)"
+    aha_analysis: "docs/metrics/data-analysis-report.md (\"Retention Analysis\" section)"
+    churn_users: "docs/metrics/data-analysis-report.md (\"Retention Analysis\" section)"
 ```
 
-## Cohort分析示例
+## Cohort Analysis Example
 
 ```yaml
-# 时间Cohort分析
+# Time Cohort analysis
 time_cohort:
   table:
-    headers: ["Cohort", "用户数", "D1", "D7", "D30"]
+    headers: ["Cohort", "Users", "D1", "D7", "D30"]
     rows:
       - ["2024-01", 50000, 46.2, 29.5, 19.2]
       - ["2023-12", 48000, 45.8, 28.8, 18.5]
       - ["2023-11", 45000, 44.5, 27.5, 17.2]
   
   insight: |
-    Cohort D30留存从17.2%提升到19.2%，
-    同比增长11.6%，主要归因于Aha Moment优化
+    Cohort D30 retention improved from 17.2% to 19.2%,
+    a 11.6% year-over-year increase, mainly attributed to Aha Moment optimization
 
-# 渠道Cohort分析
+# Channel Cohort analysis
 channel_cohort:
   organic:
     d30: 22.5
@@ -287,166 +287,166 @@ channel_cohort:
     quality: "excellent"
 ```
 
-## Aha Moment发现逻辑
+## Aha Moment Discovery Logic
 
 ```
-Step 1: 数据准备
-├── 提取新用户首N天的行为
-├── 标记留存用户和流失用户
-└── 行为数据标准化
+Step 1: Data Preparation
+├── Extract new user behaviors for first N days
+├── Mark retained users and churned users
+└── Normalize behavior data
 
-Step 2: 特征分析
-├── 计算各行为的留存提升
-├── 寻找最优阈值（触发X次效果最佳）
-├── 相关性分析
-└── 显著性检验
+Step 2: Feature Analysis
+├── Calculate retention lift for each behavior
+├── Find optimal threshold (trigger X times for best effect)
+├── Correlation analysis
+└── Significance testing
 
-Step 3: 验证
-├── 分组验证（有无该行为的留存对比）
-├── 时间窗口验证（不同周期的Aha）
-└── 用户分群验证（是否适用于所有用户）
+Step 3: Validation
+├── Group validation (retention comparison with/without behavior)
+├── Time window validation (Aha for different periods)
+└── User segment validation (whether applicable to all users)
 ```
 
-## 流失预警配置
+## Churn Warning Configuration
 
 ```yaml
-# 流失预警配置
+# Churn warning configuration
 churn_prediction:
-  # 流失定义
+  # Churn definition
   churn_definition:
-    inactive_days: 7  # 连续7天未使用定义为流失
+    inactive_days: 7  # Defined as churn after 7 consecutive days of inactivity
   
-  # 预警信号
+  # Warning signals
   early_signals:
     - days: 2
       signals:
-        - "未打开App"
-        - "推送未点击"
+        - "No app open"
+        - "Push not clicked"
         
     - days: 4
       signals:
-        - "核心功能使用 < 30%"
-        - "DAU/MAU 下降 > 50%"
+        - "Core feature usage < 30%"
+        - "DAU/MAU decline > 50%"
         
     - days: 6
       signals:
-        - "几乎所有功能使用归零"
-        - "明显的流失意图行为"
+        - "Almost all feature usage dropped to zero"
+        - "Obvious churn-intent behaviors"
   
-  # 干预策略
+  # Intervention strategies
   interventions:
     high_value:
-      push_content: "个性化召回"
-      offer: "专属优惠/权益"
-      escalation: "人工客服"
+      push_content: "Personalized recall"
+      offer: "Exclusive offer/benefit"
+      escalation: "Manual customer service"
       
     medium_value:
-      push_content: "内容推荐"
-      offer: "功能引导"
+      push_content: "Content recommendation"
+      offer: "Feature guidance"
       
     low_value:
-      push_content: "通用召回"
+      push_content: "Generic recall"
 ```
 
-## 执行频率
+## Execution Frequency
 
-- **每日留存计算**：每日8:00更新
-- **Cohort周报**：每周一生成周度Cohort报告
-- **Aha Moment复盘**：每月重新分析
-- **流失预警**：实时计算
+- **Daily Retention Calculation**: Updated daily at 8:00
+- **Cohort Weekly Report**: Generates weekly Cohort report every Monday
+- **Aha Moment Review**: Re-analyzed monthly
+- **Churn Warning**: Calculated in real-time
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| retention_analysis | object | 是 | 留存分析根对象 |
-| retention_analysis.overall | object | 是 | 整体留存数据 |
-| retention_analysis.overall.d1 | number | 是 | 次日留存率 |
-| retention_analysis.overall.d7 | number | 是 | 7日留存率 |
-| retention_analysis.overall.d30 | number | 是 | 30日留存率 |
-| retention_analysis.overall.curve_shape | object | 是 | 曲线形态分析 |
-| retention_analysis.overall.curve_shape.type | string | 是 | 形态类型，枚举值：smile/L/steep_decline/smooth |
-| retention_analysis.cohort_trend | object | 是 | Cohort趋势分析 |
-| retention_analysis.aha_moment_candidates | array | 是 | Aha Moment候选列表，至少1个 |
-| retention_analysis.aha_moment_candidates[].rank | number | 是 | 排名 |
-| retention_analysis.aha_moment_candidates[].behavior | string | 是 | 行为描述 |
-| retention_analysis.aha_moment_candidates[].retention_lift | object | 是 | 留存提升数据 |
-| retention_analysis.aha_moment_candidates[].correlation | number | 是 | 相关系数 |
-| retention_analysis.churn_risk | object | 是 | 流失风险分析 |
-| retention_analysis.churn_risk.high_risk_count | number | 是 | 高风险用户数 |
-| retention_analysis.churn_risk.high_risk_rate | number | 是 | 高风险用户占比 |
+| retention_analysis | object | Yes | Retention analysis root object |
+| retention_analysis.overall | object | Yes | Overall retention data |
+| retention_analysis.overall.d1 | number | Yes | Day 1 retention rate |
+| retention_analysis.overall.d7 | number | Yes | Day 7 retention rate |
+| retention_analysis.overall.d30 | number | Yes | Day 30 retention rate |
+| retention_analysis.overall.curve_shape | object | Yes | Curve shape analysis |
+| retention_analysis.overall.curve_shape.type | string | Yes | Shape type, enum: smile/L/steep_decline/smooth |
+| retention_analysis.cohort_trend | object | Yes | Cohort trend analysis |
+| retention_analysis.aha_moment_candidates | array | Yes | Aha Moment candidate list, at least 1 |
+| retention_analysis.aha_moment_candidates[].rank | number | Yes | Rank |
+| retention_analysis.aha_moment_candidates[].behavior | string | Yes | Behavior description |
+| retention_analysis.aha_moment_candidates[].retention_lift | object | Yes | Retention lift data |
+| retention_analysis.aha_moment_candidates[].correlation | number | Yes | Correlation coefficient |
+| retention_analysis.churn_risk | object | Yes | Churn risk analysis |
+| retention_analysis.churn_risk.high_risk_count | number | Yes | High-risk user count |
+| retention_analysis.churn_risk.high_risk_rate | number | Yes | High-risk user percentage |
 
-## 上游变更响应
+## Upstream Change Response
 
-当上游输入发生变更时，本Skill的响应策略：
+When upstream inputs change, this skill's response strategy:
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| 用户行为数据更新 | 留存曲线和Cohort | 重新计算留存曲线，更新Cohort分析 |
-| 分群定义变更 | Cohort维度 | 更新分群配置，重新执行Cohort分析 |
-| 流失定义变更 | 流失预警模型 | 重新构建流失预警模型，更新高风险用户列表 |
-| 基准日期变更 | 留存计算基准 | 重新计算留存数据，更新趋势判断 |
+| User behavior data update | Retention curve and Cohort | Recalculate retention curve, update Cohort analysis |
+| Segment definition change | Cohort dimensions | Update segment config, re-execute Cohort analysis |
+| Churn definition change | Churn warning model | Rebuild churn warning model, update high-risk user list |
+| Baseline date change | Retention calculation baseline | Recalculate retention data, update trend judgment |
 
-当留存分析自身变更时，对下游的通知机制：
+When retention analysis itself changes, the notification mechanism to downstream:
 
-| 分析变更类型 | 通知范围 | 通知方式 |
+| Analysis Change Type | Notification Scope | Notification Method |
 |-------------|----------|----------|
-| D7留存下降>5% | decision-dace | 标记告警，触发洞察转化 |
-| Aha Moment候选变更 | data-analysis-report | 标记候选变更，触发报告更新 |
-| 流失风险等级变更 | decision-dace | 标记风险变更，触发DACE Analyze |
+| D7 retention decline > 5% | decision-dace | Mark alert, trigger insight conversion |
+| Aha Moment candidate change | data-analysis-report | Mark candidate change, trigger report update |
+| Churn risk level change | decision-dace | Mark risk change, trigger DACE Analyze |
 
 ---
 
-## 决策规则
+## Decision Rules
 
-| 情况 | 处理方式 |
+| Situation | Handling Method |
 |------|----------|
-| D7留存下降>5% | 触发流失预警，推送告警 |
-| 留存曲线呈陡降型 | 标记产品粘性不足，建议Aha优化 |
-| Aha Moment到达率<20% | 建议优化Onboarding引导 |
-| 高风险流失用户>5% | 触发干预策略推荐 |
+| D7 retention decline > 5% | Trigger churn warning, push alert |
+| Retention curve shows steep decline | Mark insufficient product stickiness, recommend Aha optimization |
+| Aha Moment reach rate < 20% | Recommend optimizing Onboarding guidance |
+| High-risk churn users > 5% | Trigger intervention strategy recommendation |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (quick/standard/deep must all pass)
 
-- [ ] 留存计算基于全量用户而非抽样
-- [ ] Cohort分析覆盖时间、渠道、行为三个维度
+- [ ] Retention calculated based on full users rather than sampling
+- [ ] Cohort analysis covers time, channel, and behavior dimensions
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (standard/deep must pass)
 
-- [ ] Aha Moment候选通过显著性检验
-- [ ] 流失预警模型准确率>70%
+- [ ] Aha Moment candidates pass significance testing
+- [ ] Churn warning model accuracy > 70%
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep inference and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失范围 | 降级方案 | 输出影响 |
+| Missing Scope | Degradation Plan | Output Impact |
 |----------|----------|----------|
-| 用户行为数据缺失 | 用户提供留存数据 → 直接分析 | 无法进行Aha Moment搜索和Cohort下钻 |
-| 分群定义缺失 | 对全量用户进行分析，不区分分群 | 无法进行分群对比分析 |
-| 用户行为数据 + 分群定义均缺失 | 用户提供留存数据 → 直接分析 | 输出基础留存分析，Cohort和Aha Moment标注"待补充" |
+| User behavior data missing | User provides retention data → direct analysis | Cannot perform Aha Moment search and Cohort drill-down |
+| Segment definition missing | Analyze all users without segment distinction | Cannot perform segment comparison analysis |
+| User behavior data + Segment definition both missing | User provides retention data → direct analysis | Output basic retention analysis, Cohort and Aha Moment marked "to be supplemented" |
 
-### 数据获取说明
+### Data Acquisition Instructions
 
-当上游文件缺失时，需用户提供以下信息以支撑降级生成：
-- **留存数据**：各周期（D1/D7/D30等）的留存率数据
-- **Cohort数据**（可选）：按时间分组的留存率矩阵
-- **关键行为列表**（可选）：可能与留存相关的用户行为
+When upstream files are missing, the user needs to provide the following information to support degraded generation:
+- **Retention Data**: Retention rate data for each period (D1/D7/D30, etc.)
+- **Cohort Data** (optional): Retention rate matrix grouped by time
+- **Key Behavior List** (optional): User behaviors that may be related to retention
 
-## 关键指标
+## Key Metrics
 
-| 指标 | 说明 | 健康标准 |
+| Metric | Description | Health Standard |
 |-----|------|---------|
-| 次日留存率 | D1留存 | > 40% 优秀 |
-| 7日留存率 | D7留存 | > 25% 良好 |
-| 30日留存率 | D30留存 | > 15% 可接受 |
-| 留存曲线形态 | 曲线趋势 | 微笑型/平滑型 |
-| Cohort改善率 | Cohort D30变化 | > 0% 表示改善 |
-| 流失预警准确率 | 预测准确度 | > 70% 可用 |
+| Day 1 retention rate | D1 retention | > 40% excellent |
+| Day 7 retention rate | D7 retention | > 25% good |
+| Day 30 retention rate | D30 retention | > 15% acceptable |
+| Retention curve shape | Curve trend | Smile/Smooth |
+| Cohort improvement rate | Cohort D30 change | > 0% indicates improvement |
+| Churn warning accuracy | Prediction accuracy | > 70% usable |

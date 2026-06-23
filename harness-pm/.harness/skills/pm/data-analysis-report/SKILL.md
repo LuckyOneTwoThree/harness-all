@@ -1,21 +1,21 @@
 ---
 name: data-analysis-report
-description: 当需要产出完整的数据分析报告时使用。数据洞察报告自动生成，整合漏斗分析、留存分析、异常检测和决策洞察数据，补充趋势解读和行动建议，输出结构化Markdown报告。关键词：数据分析报告、数据洞察报告、运营报告、数据报告、分析报告、出个数据报告、帮我写运营分析、总结下数据情况。
+description: Use when producing a complete data analysis report. Data Insight Report Auto-Generation integrates funnel analysis, retention analysis, anomaly detection, and decision insight data, supplements trend interpretation and action recommendations, and outputs a structured Markdown report. Keywords: data analysis report, data insight report, operations report, data report, analysis report, produce a data report, help write operations analysis, summarize data situation.
 metadata:
-  module: "产品度量运营"
-  sub-module: "数据分析"
+  module: "Product Metrics Operations"
+  sub-module: "Data Analysis"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["通用"]
+  domain_tags: ["General"]
   trigger_examples:
-    - "帮我出一份本月的数据分析报告"
-    - "把最近的数据情况汇总一下"
-    - "生成运营周报"
+    - "Help me produce this month's data analysis report"
+    - "Summarize the recent data situation"
+    - "Generate an operations weekly report"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出数据洞察和关键发现"
-  deep_description: "完整报告 + 多维交叉分析 + 预测模型 + 决策建议路线图"
+  quick_description: "Directly output data insights and key findings"
+  deep_description: "Full report + multi-dimensional cross-analysis + prediction model + decision recommendation roadmap"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -28,220 +28,220 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 数据洞察报告自动生成
+# Data Insight Report Auto-Generation
 
-## 核心原则
+## Core Principles
 
-1. **数据说话，洞察驱动**——数据是起点，洞察是终点，行动是目的
-2. **异常优先**——异常比常态更值得关注，异常是改进的信号
-3. **归因深挖**——不只说"是什么"，更要回答"为什么"
-4. **可执行结论**——每条洞察必须对应一个可执行的行动
+1. **Data speaks, insights drive** — Data is the starting point, insight is the endpoint, action is the purpose
+2. **Anomalies first** — Anomalies deserve more attention than normal states; anomalies are signals for improvement
+3. **Deep attribution** — Don't just say "what", also answer "why"
+4. **Actionable conclusions** — Every insight must correspond to an actionable action
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI Suggests, Human Approves
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 漏斗分析 | JSON | ○ | docs/metrics/data-analysis-report.md（“漏斗分析”章节） | 漏斗健康度、转化率、流失点 |
-| 留存分析 | JSON | ○ | docs/metrics/data-analysis-report.md（“留存分析”章节） | 留存曲线、流失预警、 cohorts |
-| 异常检测 | JSON | ○ | docs/metrics/data-analysis-report.md（“异常分析”章节） | 异常指标、归因、影响范围 |
-| 决策洞察 | JSON | ○ | docs/metrics/decision-report.md（“DACE决策”章节） | 数据驱动的决策建议 |
-| 度量体系 | JSON | ○ | docs/metrics/metrics-system.md | 指标定义和基线 |
-| 分析时间范围 | string | 是 | 用户提供 | 如"2025年Q1""最近30天" |
-| 产品/业务信息 | string | ○ | 用户提供 | 产品名称、核心业务指标 |
+| Funnel Analysis | JSON | ○ | docs/metrics/data-analysis-report.md ("Funnel Analysis" section) | Funnel health, conversion rate, drop-off points |
+| Retention Analysis | JSON | ○ | docs/metrics/data-analysis-report.md ("Retention Analysis" section) | Retention curve, churn warning, cohorts |
+| Anomaly Detection | JSON | ○ | docs/metrics/data-analysis-report.md ("Anomaly Analysis" section) | Anomalous metrics, attribution, impact scope |
+| Decision Insights | JSON | ○ | docs/metrics/decision-report.md ("DACE Decision" section) | Data-driven decision recommendations |
+| Metrics System | JSON | ○ | docs/metrics/metrics-system.md | Metric definitions and baselines |
+| Analysis Time Range | string | Yes | User-provided | e.g., "2025 Q1", "Last 30 days" |
+| Product/Business Info | string | ○ | User-provided | Product name, core business metrics |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 数据概览与核心指标 [核心]
+### Step 1: Data Overview and Core Metrics [Core]
 
-整合度量体系和分析数据，生成数据概览：
+Integrate metrics system and analysis data to generate a data overview:
 
-**核心指标仪表盘**：
+**Core Metrics Dashboard**:
 
-| 指标 | 当前值 | 环比变化 | 同比变化 | 趋势 | 状态 |
+| Metric | Current Value | Period-over-period | Year-over-year | Trend | Status |
 |------|--------|---------|---------|------|------|
-| 北极星指标 | | | | ↑↓→ | 🟢🟡🔴 |
-| 核心转化率 | | | | | |
-| 留存率(D7/D30) | | | | | |
+| North Star Metric | | | | ↑↓→ | 🟢🟡🔴 |
+| Core Conversion Rate | | | | | |
+| Retention Rate (D7/D30) | | | | | |
 | DAU/MAU | | | | | |
 | ARPU | | | | | |
 
-**数据质量声明**：
-- 数据覆盖范围
-- 数据完整性评估
-- 已知的数据偏差
+**Data Quality Statement**:
+- Data coverage scope
+- Data completeness assessment
+- Known data biases
 
-### Step 2: 漏斗健康度分析 [核心]
+### Step 2: Funnel Health Analysis [Core]
 
-整合漏斗数据，生成漏斗分析章节：
+Integrate funnel data to generate the funnel analysis section:
 
-**全链路漏斗**：
+**Full-Link Funnel**:
 ```
-曝光 → 点击 → 注册 → 激活 → 首次付费 → 复购
+Impression → Click → Register → Activate → First Payment → Repurchase
   ↓      ↓      ↓      ↓       ↓         ↓
  95%   45%   32%   68%    25%      40%
 ```
 
-**关键发现**：
-- 最大流失环节（流失率最高的步骤）
-- 最大提升空间（转化率提升对整体影响最大的步骤）
-- 环比变化最大的环节
-- 异常波动点
+**Key Findings**:
+- Biggest drop-off stage (step with highest drop-off rate)
+- Biggest improvement space (step where conversion rate improvement has the largest overall impact)
+- Stage with biggest period-over-period change
+- Anomaly fluctuation points
 
-**每个关键发现包含**：
-- 数据事实（精确数字）
-- 环比/同比对比
-- 可能原因（至少2个假设）
-- 验证建议
+**Each Key Finding Includes**:
+- Data facts (precise numbers)
+- Period-over-period/year-over-year comparison
+- Possible causes (at least 2 hypotheses)
+- Validation recommendations
 
-### Step 3: 留存与生命周期分析 [核心]
+### Step 3: Retention and Lifecycle Analysis [Core]
 
-整合留存数据，生成留存分析章节：
+Integrate retention data to generate the retention analysis section:
 
-**留存曲线描述**：
-- 次日/7日/30日留存率
-- 留存曲线形态（L型/下降型/稳定型）
-- cohorts对比（不同批次用户的留存差异）
+**Retention Curve Description**:
+- Day 1/Day 7/Day 30 retention rates
+- Retention curve shape (L-shape/declining/stable)
+- Cohorts comparison (retention differences across user batches)
 
-**生命周期阶段划分**：
+**Lifecycle Stage Partition**:
 
-| 阶段 | 定义 | 占比 | 特征 |
+| Stage | Definition | Proportion | Characteristics |
 |------|------|------|------|
-| 新手期 | 注册后0-3天 | | 高活跃、高流失风险 |
-| 成长期 | 4-14天 | | 功能探索、习惯形成 |
-| 成熟期 | 15-90天 | | 稳定使用、价值感知 |
-| 衰退期 | 90天+活跃下降 | | 使用频率降低 |
-| 流失期 | 连续N天未活跃 | | 需召回策略 |
+| New | 0-3 days after registration | | High activity, high churn risk |
+| Growing | 4-14 days | | Feature exploration, habit formation |
+| Mature | 15-90 days | | Stable usage, value perception |
+| Declining | 90+ days with declining activity | | Decreasing usage frequency |
+| Churned | Inactive for N consecutive days | | Needs recall strategy |
 
-**流失预警**：
-- 高风险用户特征
-- 流失前行为信号
-- 召回窗口期
+**Churn Warning**:
+- High-risk user characteristics
+- Pre-churn behavior signals
+- Recall window period
 
-### Step 4: 异常归因分析 [核心]
+### Step 4: Anomaly Attribution Analysis [Core]
 
-整合异常检测数据，生成异常分析章节：
+Integrate anomaly detection data to generate the anomaly analysis section:
 
-**异常事件清单**：
+**Anomaly Event List**:
 
-| 时间 | 指标 | 异常类型 | 偏离程度 | 影响范围 | 归因 | 置信度 |
+| Time | Metric | Anomaly Type | Deviation | Impact Scope | Attribution | Confidence |
 |------|------|---------|---------|---------|------|--------|
-| | | 突增/突降/趋势偏移 | ±X% | 用户量/收入 | 内因/外因 | 高/中/低 |
+| | | Spike/Drop/Trend shift | ±X% | Users/Revenue | Internal/External cause | High/Medium/Low |
 
-**归因分析框架**：
-- 内因：产品变更、技术故障、运营活动
-- 外因：市场变化、竞品动作、季节因素
-- 数据因：统计偏差、数据缺失、口径变更
+**Attribution Analysis Framework**:
+- Internal causes: Product changes, technical failures, operations activities
+- External causes: Market changes, competitor actions, seasonal factors
+- Data causes: Statistical bias, data missing, definition changes
 
-### Step 5: 洞察与行动建议 [核心]
+### Step 5: Insights and Action Recommendations [Core]
 
-整合所有分析数据，提炼洞察和行动建议：
+Integrate all analysis data to distill insights and action recommendations:
 
-**洞察提炼规则**：
-- 每条洞察 = 数据事实 + 业务含义 + 行动方向
-- 洞察按业务影响排序
+**Insight Distillation Rules**:
+- Each insight = data fact + business implication + action direction
+- Insights sorted by business impact
 
-**行动建议模板**：
+**Action Recommendation Template**:
 
-| 优先级 | 建议 | 目标指标 | 预期提升 | 实施难度 | 验证方式 |
+| Priority | Recommendation | Target Metric | Expected Lift | Implementation Difficulty | Validation Method |
 |--------|------|---------|---------|---------|---------|
-| P0 | | | | 低/中/高 | A/B测试/前后对比 |
+| P0 | | | | Low/Medium/High | A/B testing/Before-after comparison |
 | P1 | | | | | |
 | P2 | | | | | |
 
-**建议分类**：
-- 速赢（Quick Win）：低难度、高影响
-- 核心优化：中难度、高影响
-- 长期投入：高难度、高影响
-- 观察项：需更多数据验证
+**Recommendation Categories**:
+- Quick Win: Low difficulty, high impact
+- Core Optimization: Medium difficulty, high impact
+- Long-term Investment: High difficulty, high impact
+- Watchlist: Needs more data validation
 
-### Step 6: 报告组装 [核心]
+### Step 6: Report Assembly [Core]
 
-**报告结构**：
+**Report Structure**:
 
 ```
-# {产品名}数据分析报告（{时间范围}）
+# {Product Name} Data Analysis Report ({Time Range})
 
-## 执行摘要
-- 核心指标一览
-- 3条关键发现
-- Top1行动建议
+## Executive Summary
+- Core metrics overview
+- 3 key findings
+- Top 1 action recommendation
 
-## 1. 数据概览
-### 1.1 核心指标仪表盘
-### 1.2 数据质量声明
+## 1. Data Overview
+### 1.1 Core Metrics Dashboard
+### 1.2 Data Quality Statement
 
-## 2. 漏斗分析
-### 2.1 全链路漏斗
-### 2.2 关键流失点
-### 2.3 提升机会
+## 2. Funnel Analysis
+### 2.1 Full-Link Funnel
+### 2.2 Key Drop-off Points
+### 2.3 Improvement Opportunities
 
-## 3. 留存分析
-### 3.1 留存曲线
-### 3.2 生命周期阶段
-### 3.3 流失预警
+## 3. Retention Analysis
+### 3.1 Retention Curve
+### 3.2 Lifecycle Stages
+### 3.3 Churn Warning
 
-## 4. 异常分析
-### 4.1 异常事件清单
-### 4.2 归因分析
+## 4. Anomaly Analysis
+### 4.1 Anomaly Event List
+### 4.2 Attribution Analysis
 
-## 5. 洞察与行动建议
-### 5.1 核心洞察
-### 5.2 行动建议（按优先级）
+## 5. Insights and Action Recommendations
+### 5.1 Core Insights
+### 5.2 Action Recommendations (by priority)
 
-## 附录
-- 数据来源与口径
-- 指标定义
-- 统计方法说明
+## Appendix
+- Data sources and definitions
+- Metric definitions
+- Statistical method notes
 ```
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 数据洞察和关键发现 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整报告 + 多维交叉分析 + 预测模型 + 决策建议路线图 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Data insights and key findings | Core conclusions + minimum viable artifact |
+| standard | Full artifact (current default) | Full artifact, including all Step outputs |
+| deep | Full report + multi-dimensional cross-analysis + prediction model + decision recommendation roadmap | Full artifact + extended analysis + deep inference |
 
-## 输出
+## Output
 
-**存储路径**：`docs/metrics/data-analysis-report.md（汇总覆盖）`
+**Storage Path**: `docs/metrics/data-analysis-report.md (consolidated coverage)`
 
-**输出文件**：
+**Output Files**:
 
-| 文件 | 格式 | 说明 |
+| File | Format | Description |
 |------|------|------|
-| data-analysis-report.md | Markdown | 完整数据分析报告 |
-| data-analysis-report.json | JSON | 结构化数据（供下游Skill引用） |
+| data-analysis-report.md | Markdown | Complete data analysis report |
+| data-analysis-report.json | JSON | Structured data (for downstream skill reference) |
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["report_metadata", "executive_summary", "insights", "recommendations"],
   "properties": {
-    "report_metadata": {"type": "object", "description": "报告元数据，包含产品名、时间范围和数据来源"},
-    "executive_summary": {"type": "object", "description": "执行摘要，包含关键指标、发现和首要建议"},
-    "funnel_analysis": {"type": "object", "description": "漏斗分析，包含完整漏斗、最大流失和机会点"},
-    "retention_analysis": {"type": "object", "description": "留存分析，包含关键节点和生命周期阶段"},
-    "anomaly_analysis": {"type": "object", "description": "异常分析，包含事件和归因"},
-    "insights": {"type": "array", "description": "洞察列表，包含数据事实、业务含义和行动方向"},
-    "recommendations": {"type": "array", "description": "建议列表，包含优先级、预期提升和验证方式"}
+    "report_metadata": {"type": "object", "description": "Report metadata, including product name, time range, and data sources"},
+    "executive_summary": {"type": "object", "description": "Executive summary, including key metrics, findings, and top recommendation"},
+    "funnel_analysis": {"type": "object", "description": "Funnel analysis, including full funnel, biggest drop-off, and opportunity points"},
+    "retention_analysis": {"type": "object", "description": "Retention analysis, including key nodes and lifecycle stages"},
+    "anomaly_analysis": {"type": "object", "description": "Anomaly analysis, including events and attribution"},
+    "insights": {"type": "array", "description": "Insight list, including data facts, business implications, and action directions"},
+    "recommendations": {"type": "array", "description": "Recommendation list, including priority, expected lift, and validation method"}
   }
 }
 ```
 
-**data-analysis-report.json 结构**：
+**data-analysis-report.json Structure**:
 
 ```json
 {
   "report_metadata": {
-    "product": "产品名", "time_range": "分析时间范围",
-    "generated_at": "时间戳", "data_sources": [], "data_quality": ""
+    "product": "Product Name", "time_range": "Analysis time range",
+    "generated_at": "Timestamp", "data_sources": [], "data_quality": ""
   },
   "executive_summary": {
     "key_metrics": [], "key_findings": [], "top_recommendation": ""
@@ -256,104 +256,104 @@ writes:
   },
   "anomaly_analysis": { "events": [], "attributions": [] },
   "insights": [
-    { "id": "INS-001", "fact": "数据事实", "implication": "业务含义", "action_direction": "行动方向" }
-    // ... 同结构可扩展
+    { "id": "INS-001", "fact": "Data fact", "implication": "Business implication", "action_direction": "Action direction" }
+    // ... Same structure can be extended
   ],
   "recommendations": [
-    { "id": "REC-001", "description": "建议描述", "target_metric": "目标指标",
-      "expected_lift": "预期提升", "difficulty": "低/中/高",
-      "category": "速赢/核心优化/长期投入/观察项", "priority": "P0/P1/P2",
-      "validation_method": "验证方式" }
-    // ... 同结构可扩展
+    { "id": "REC-001", "description": "Recommendation description", "target_metric": "Target metric",
+      "expected_lift": "Expected lift", "difficulty": "Low/Medium/High",
+      "category": "Quick Win/Core Optimization/Long-term Investment/Watchlist", "priority": "P0/P1/P2",
+      "validation_method": "Validation method" }
+    // ... Same structure can be extended
   ]
 }
 ```
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| report_metadata | object | 是 | 报告元数据 |
-| report_metadata.product | string | 是 | 产品名称 |
-| report_metadata.time_range | string | 是 | 分析时间范围 |
-| report_metadata.data_sources | array | 是 | 数据来源列表 |
-| report_metadata.data_quality | string | 是 | 数据质量声明 |
-| executive_summary | object | 是 | 执行摘要 |
-| executive_summary.key_findings | array | 是 | 关键发现列表，至少3条 |
-| executive_summary.top_recommendation | string | 是 | 首要建议 |
-| funnel_analysis | object | 否 | 漏斗分析章节 |
-| retention_analysis | object | 否 | 留存分析章节 |
-| anomaly_analysis | object | 否 | 异常分析章节 |
-| insights | array | 是 | 洞察列表，至少1条 |
-| insights[].id | string | 是 | 洞察编号 |
-| insights[].fact | string | 是 | 数据事实 |
-| insights[].implication | string | 是 | 业务含义 |
-| insights[].action_direction | string | 是 | 行动方向 |
-| recommendations | array | 是 | 建议列表，至少3条 |
-| recommendations[].id | string | 是 | 建议编号 |
-| recommendations[].priority | string | 是 | 优先级，枚举值：P0/P1/P2 |
-| recommendations[].validation_method | string | 是 | 验证方式 |
+| report_metadata | object | Yes | Report metadata |
+| report_metadata.product | string | Yes | Product name |
+| report_metadata.time_range | string | Yes | Analysis time range |
+| report_metadata.data_sources | array | Yes | Data sources list |
+| report_metadata.data_quality | string | Yes | Data quality statement |
+| executive_summary | object | Yes | Executive summary |
+| executive_summary.key_findings | array | Yes | Key findings list, at least 3 |
+| executive_summary.top_recommendation | string | Yes | Top recommendation |
+| funnel_analysis | object | No | Funnel analysis section |
+| retention_analysis | object | No | Retention analysis section |
+| anomaly_analysis | object | No | Anomaly analysis section |
+| insights | array | Yes | Insight list, at least 1 |
+| insights[].id | string | Yes | Insight ID |
+| insights[].fact | string | Yes | Data fact |
+| insights[].implication | string | Yes | Business implication |
+| insights[].action_direction | string | Yes | Action direction |
+| recommendations | array | Yes | Recommendation list, at least 3 |
+| recommendations[].id | string | Yes | Recommendation ID |
+| recommendations[].priority | string | Yes | Priority, enum: P0/P1/P2 |
+| recommendations[].validation_method | string | Yes | Validation method |
 
-## 上游变更响应
+## Upstream Change Response
 
-当上游输入发生变更时，本Skill的响应策略：
+When upstream inputs change, this skill's response strategy:
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| 漏斗分析数据更新 | 漏斗分析章节 | 更新漏斗数据，重新评估流失点和提升机会 |
-| 留存分析数据更新 | 留存分析章节 | 更新留存数据，重新评估生命周期和流失预警 |
-| 异常检测数据更新 | 异常分析章节 | 更新异常事件和归因，重新评估洞察 |
-| 决策洞察更新 | 洞察和建议章节 | 更新洞察和建议，标记需人类确认 |
-| 度量体系变更 | 核心指标仪表盘 | 更新指标定义和基线，重新评估数据概览 |
+| Funnel analysis data update | Funnel analysis section | Update funnel data, re-evaluate drop-off points and improvement opportunities |
+| Retention analysis data update | Retention analysis section | Update retention data, re-evaluate lifecycle and churn warning |
+| Anomaly detection data update | Anomaly analysis section | Update anomaly events and attribution, re-evaluate insights |
+| Decision insight update | Insights and recommendations sections | Update insights and recommendations, mark for human confirmation |
+| Metrics system change | Core metrics dashboard | Update metric definitions and baselines, re-evaluate data overview |
 
-当分析报告自身变更时，对下游的通知机制：
+When analysis report itself changes, the notification mechanism to downstream:
 
-| 报告变更类型 | 通知范围 | 通知方式 |
+| Report Change Type | Notification Scope | Notification Method |
 |-------------|----------|----------|
-| P0建议新增 | decision-dace | 标记P0建议，触发DACE Conclude |
-| 关键发现变更 | decision-culture | 标记发现变更，触发报告推送 |
-| 数据质量声明变更 | 全部下游 | 标记质量变更，触发数据源检查 |
+| P0 recommendation added | decision-dace | Mark P0 recommendation, trigger DACE Conclude |
+| Key finding change | decision-culture | Mark finding change, trigger report push |
+| Data quality statement change | All downstream | Mark quality change, trigger data source check |
 
 ---
 
-## 决策规则
+## Decision Rules
 
-| 条件 | 决策 |
+| Condition | Decision |
 |------|------|
-| 仅有漏斗数据 | 聚焦漏斗分析，留存和异常章节标注"缺乏数据" |
-| 仅有留存数据 | 聚焦留存和生命周期，漏斗章节标注"缺乏数据" |
-| 无异常数据 | 跳过异常分析章节，标注"无异常检测数据" |
-| 所有分析数据均缺失 | 基于产品信息和AI知识生成框架性报告，标注"缺乏实证数据" |
-| 时间范围>1年 | 建议拆分为季度报告 |
+| Only funnel data available | Focus on funnel analysis, retention and anomaly sections marked "lacking data" |
+| Only retention data available | Focus on retention and lifecycle, funnel section marked "lacking data" |
+| No anomaly data | Skip anomaly analysis section, mark "no anomaly detection data" |
+| All analysis data missing | Generate framework report based on product info and AI knowledge, mark "lacking empirical data" |
+| Time range > 1 year | Recommend splitting into quarterly reports |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (quick/standard/deep must all pass)
 
-- [ ] 执行摘要包含3条关键发现+Top1建议
-- [ ] 核心指标仪表盘完整
+- [ ] Executive summary contains 3 key findings + Top 1 recommendation
+- [ ] Core metrics dashboard complete
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (standard/deep must pass)
 
-- [ ] 漏斗分析包含最大流失点和提升机会
-- [ ] 留存分析包含生命周期阶段
-- [ ] 每条洞察有数据事实+业务含义
-- [ ] 行动建议至少3条，每条有优先级和验证方式
-- [ ] 数据口径和局限性已说明
+- [ ] Funnel analysis includes biggest drop-off point and improvement opportunity
+- [ ] Retention analysis includes lifecycle stages
+- [ ] Each insight has data fact + business implication
+- [ ] At least 3 action recommendations, each with priority and validation method
+- [ ] Data definitions and limitations explained
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep inference and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
-## 降级策略
+## Degradation Strategy
 
-| 缺失的上游输入 | 降级方案 | 输出影响 |
+| Missing Upstream Input | Degradation Plan | Output Impact |
 |---------------|---------|---------|
-| funnel_analysis缺失 | 漏斗章节标注"缺乏漏斗数据" | 缺少转化分析 |
-| retention_analysis缺失 | 留存章节标注"缺乏留存数据" | 缺少生命周期分析 |
-| anomaly_analysis缺失 | 跳过异常分析章节 | 缺少异常归因 |
-| decision-dace缺失 | 行动建议基于数据分析推导 | 建议可能不够深入 |
-| metrics-system缺失 | 核心指标基于用户提供信息 | 指标定义可能不完整 |
-- 若用户未提供分析时间范围，提示用户提供或跳过该输入相关步骤
-- 若用户未提供产品/业务信息，提示用户提供或跳过该输入相关步骤
+| funnel_analysis missing | Funnel section marked "lacking funnel data" | Missing conversion analysis |
+| retention_analysis missing | Retention section marked "lacking retention data" | Missing lifecycle analysis |
+| anomaly_analysis missing | Skip anomaly analysis section | Missing anomaly attribution |
+| decision-dace missing | Action recommendations derived from data analysis | Recommendations may not be deep enough |
+| metrics-system missing | Core metrics based on user-provided info | Metric definitions may be incomplete |
+- If user does not provide analysis time range, prompt user to provide or skip steps related to this input
+- If user does not provide product/business info, prompt user to provide or skip steps related to this input

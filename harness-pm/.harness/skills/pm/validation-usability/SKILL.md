@@ -1,21 +1,21 @@
 ---
 name: validation-usability
-description: 当需要辅助可用性测试时使用。可用性测试辅助工具，在测试前、中、后各阶段提供AI辅助支持：测试前生成任务脚本和招募问卷，测试后整理数据并生成洞察报告。注意：实际测试执行必须由人类研究员主持。关键词：可用性测试、任务脚本、招募筛选、问题聚类、洞察提炼、用户体验测试、测试任务。本Skill消费 validation-experiment 的方法选择（当方法=可用性测试时），生成具体测试任务脚本、招募问卷、测试报告。
+description: Used when assistance is needed for usability testing. Usability testing assistance tool that provides AI-supported help across pre-test, during-test, and post-test phases: generates task scripts and recruitment surveys before testing, and organizes data and generates insight reports after testing. Note: Actual test execution must be led by a human researcher. Keywords: usability testing, task scripts, recruitment screening, problem clustering, insight extraction, user experience testing, test tasks. This Skill consumes the method selection from validation-experiment (when method=usability test), generating specific test task scripts, recruitment surveys, and test reports.
 metadata:
-  module: "产品构思与设计"
-  sub-module: "方案验证"
+  module: "Product Ideation & Design"
+  sub-module: "Solution Validation"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["互联网", "软件", "通用"]
+  domain_tags: ["Internet", "Software", "General"]
   trigger_examples:
-    - "怎么做可用性测试"
-    - "帮我设计测试任务"
-    - "用户体验测试怎么做"
+    - "How to conduct usability testing"
+    - "Help me design test tasks"
+    - "How to run user experience testing"
   interaction_mode: "human_ai_collaborate"
 execution_depth:
   default: standard
-  quick_description: "直接输出可用性问题和改进建议"
-  deep_description: "完整评估 + 可用性评分体系 + 优先级排序 + 改进路线图"
+  quick_description: "Directly output usability issues and improvement suggestions"
+  deep_description: "Full assessment + usability scoring system + priority ranking + improvement roadmap"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -29,54 +29,54 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 可用性测试辅助
+# Usability Testing Assistance
 
-## 核心原则
+## Core Principles
 
-1. **用户行为比用户意见更真实**——观察用户做了什么，而非听用户说了什么
-2. **5个用户发现85%的问题**——可用性测试不需要大样本，5-8人即可发现主要问题
-3. **严重程度决定修复优先级**——致命问题必须修复，次要问题可以排期
-4. **测试报告必须可行动**——每个发现必须对应一个改进建议，不可行动的发现是噪音
+1. **User behavior is more truthful than user opinions** — Observe what users do, not what they say
+2. **5 users find 85% of problems** — Usability testing doesn't need large samples; 5-8 people can uncover major issues
+3. **Severity determines fix priority** — Critical issues must be fixed; minor issues can be scheduled
+4. **Test reports must be actionable** — Every finding must map to an improvement suggestion; non-actionable findings are noise
 
-### 基本信息
+### Basic Information
 
-| 属性 | 值 |
+| Attribute | Value |
 |------|-----|
 | Pipeline ID | 13 |
-| 名称 | 可用性测试辅助 |
-| 执行模式 | 👤→🤖 人类执行，AI辅助 |
-| 输入 | 假设地图 + MVP功能 + 测试目标 |
+| Name | Usability Testing Assistance |
+| Execution Mode | 👤→🤖 Human executes, AI assists |
+| Input | Assumption map + MVP features + Test goals |
 
-## 交互模式
+## Interaction Mode
 
-👤→🤖 人类执行，AI辅助
+👤→🤖 Human executes, AI assists
 
-## 输入
+## Input
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 可用性测试计划 | object | 是 | docs/product/PRD.md（“假设图”章节） | 测试目标、假设地图、MVP功能 |
-| 测试参与者 | object | 是 | 用户提供 | 目标用户画像、招募筛选标准 |
-| 测试任务场景 | object | 是 | 用户提供或 harness-design 产出 | 待验证的可用性假设与任务脚本（如 harness-design 已产出原型，从 docs/handoff/design-to-solo.md 引用的原型路径读取） |
-| 实验方法选择 | object | ○ | docs/metrics/experiment-report.md（“实验设计”章节） | 当方法=可用性测试时，消费 validation-experiment 的方法选择和实验框架 |
+| Usability test plan | object | Yes | docs/product/PRD.md ("Assumption Map" section) | Test goals, assumption map, MVP features |
+| Test participants | object | Yes | User-provided | Target user personas, recruitment screening criteria |
+| Test task scenarios | object | Yes | User-provided or harness-design output | Usability hypotheses to validate and task scripts (if harness-design has produced prototypes, read prototype paths referenced in docs/handoff/design-to-solo.md) |
+| Experiment method selection | object | ○ | docs/metrics/experiment-report.md ("Experiment Design" section) | When method=usability test, consumes the method selection and experiment framework from validation-experiment |
 
-## 执行步骤
+## Execution Steps
 
-### ⚠️ 重要说明
+### ⚠️ Important Note
 
-可用性测试是唯一必须由**人类研究员主持执行**的环节。AI在此流程中提供辅助支持：
+Usability testing is the only phase that must be **led by a human researcher**. AI provides assistance in this workflow:
 
-| 阶段 | 执行者 | AI辅助内容 |
+| Phase | Executor | AI Assistance Content |
 |------|--------|------------|
-| 测试前 | 👤准备 | 生成任务脚本、招募问卷、观察记录表 |
-| 测试中 | 👤执行 | 人类研究员主持测试 |
-| 测试后 | 👤+🤖 | AI整理分析，人类审核确认 |
+| Pre-test | 👤 Preparation | Generate task scripts, recruitment surveys, observation record templates |
+| During test | 👤 Execution | Human researcher leads the test |
+| Post-test | 👤+🤖 | AI organizes and analyzes, human reviews and confirms |
 
-### 测试前 AI 辅助
+### Pre-test AI Assistance
 
-#### Step 1: 确定测试目标
+#### Step 1: Determine Test Goals
 
-根据假设地图确定可用性测试目标：
+Define usability test goals based on the assumption map:
 
 ```json
 {
@@ -84,39 +84,39 @@ writes:
     {
       "goal_id": "TG001",
       "related_assumption": "A001",
-      "goal_description": "验证用户能否顺利完成推荐内容浏览"
+      "goal_description": "Validate whether users can smoothly browse recommended content"
     }
   ]
 }
 ```
 
-#### Step 2: 生成任务脚本
+#### Step 2: Generate Task Scripts
 
-**规则**: 每个任务对应一个待验证的可用性假设
+**Rule**: Each task maps to a usability hypothesis to be validated
 
-> 🔗 **上游消费**：当 experiment_method 输入存在且 selected_method=usability_test 时，基于 experiment_framework（假设、指标、样本量、时长）设计具体测试任务脚本；否则基于假设地图和测试目标独立设计。
+> 🔗 **Upstream Consumption**: When experiment_method input exists and selected_method=usability_test, design specific test task scripts based on experiment_framework (hypotheses, metrics, sample size, duration); otherwise, design independently based on the assumption map and test goals.
 
 ```json
 {
   "task_script": [
     {
       "task_id": "T001",
-      "task_description": "在3秒内找到一条感兴趣的推荐内容",
+      "task_description": "Find an interesting piece of recommended content within 3 seconds",
       "related_assumption": "A002",
-      "success_criteria": "3秒内完成点击",
-      "hints": ["提示信息（如需要）"]
+      "success_criteria": "Click completed within 3 seconds",
+      "hints": ["Hint text (if needed)"]
     }
-    // ... 同结构可扩展
+    // ... same structure extensible
   ]
 }
 ```
 
-#### Step 3: 生成招募筛选问卷
+#### Step 3: Generate Recruitment Screening Survey
 
-**筛选标准**:
-- 目标用户画像匹配
-- 产品使用经验要求
-- 无利益冲突
+**Screening Criteria**:
+- Target user persona match
+- Product usage experience requirements
+- No conflict of interest
 
 ```json
 {
@@ -124,11 +124,11 @@ writes:
     "screening_questions": [
       {
         "question_id": "SQ001",
-        "question": "您是否使用过类似推荐功能的产品？",
-        "options": ["经常使用", "偶尔使用", "从未使用"],
-        "correct_answer": "经常使用|偶尔使用"
+        "question": "Have you used products with similar recommendation features?",
+        "options": ["Frequently", "Occasionally", "Never"],
+        "correct_answer": "Frequently|Occasionally"
       }
-      // ... 同结构可扩展
+      // ... same structure extensible
     ],
     "target_sample_size": 8,
     "oversample_ratio": 1.25
@@ -136,7 +136,7 @@ writes:
 }
 ```
 
-#### Step 4: 生成观察记录表模板
+#### Step 4: Generate Observation Record Template
 
 ```json
 {
@@ -146,23 +146,23 @@ writes:
     "tasks": [
       {
         "task_id": "T001",
-        "time_on_task": "秒",
+        "time_on_task": "seconds",
         "success": true/false,
-        "errors": ["错误描述"],
-        "observations": "观察记录",
-        "quotes": ["用户原话"]
+        "errors": ["Error description"],
+        "observations": "Observation notes",
+        "quotes": ["User verbatim quote"]
       }
     ],
-    "overall_notes": "整体观察"
+    "overall_notes": "Overall observations"
   }
 }
 ```
 
-### 测试后 AI 辅助
+### Post-test AI Assistance
 
-#### Step 5: 测试记录结构化整理
+#### Step 5: Structured Test Record Organization
 
-将原始测试记录转换为结构化数据：
+Convert raw test records into structured data:
 
 ```json
 {
@@ -183,24 +183,24 @@ writes:
 }
 ```
 
-#### Step 6: 问题自动聚类
+#### Step 6: Automatic Problem Clustering
 
-**聚类维度**:
+**Clustering Dimensions**:
 
-| 维度 | 说明 |
+| Dimension | Description |
 |------|------|
-| 严重程度 | 致命/严重/一般/轻微 |
-| 频率 | 高频/中频/低频 |
-| 影响环节 | 导航/操作/反馈/内容 |
+| Severity | Critical / Major / Moderate / Minor |
+| Frequency | High / Medium / Low |
+| Affected Stage | Navigation / Operation / Feedback / Content |
 
-**严重程度定义**:
+**Severity Definitions**:
 
-| 等级 | 定义 | 影响 |
+| Level | Definition | Impact |
 |------|------|------|
-| 致命 (P0) | 任务无法完成 | 导致用户放弃 |
-| 严重 (P1) | 任务需大量帮助 | 严重影响效率 |
-| 一般 (P2) | 任务有困难但完成 | 影响用户体验 |
-| 轻微 (P3) | 操作不便但可接受 | 优化项 |
+| Critical (P0) | Task cannot be completed | Causes user abandonment |
+| Major (P1) | Task requires significant assistance | Severely impacts efficiency |
+| Moderate (P2) | Task is difficult but completed | Affects user experience |
+| Minor (P3) | Operation is inconvenient but acceptable | Optimization item |
 
 ```json
 {
@@ -208,24 +208,24 @@ writes:
     {
       "cluster_id": "PC001",
       "severity": "P1",
-      "frequency": "3/8 用户",
-      "affected_element": "推荐列表",
-      "problem_description": "用户难以理解推荐内容的相关性",
-      "evidence": ["证据1", "证据2"]
+      "frequency": "3/8 users",
+      "affected_element": "Recommendation list",
+      "problem_description": "Users have difficulty understanding the relevance of recommended content",
+      "evidence": ["Evidence 1", "Evidence 2"]
     }
   ]
 }
 ```
 
-#### Step 7: 洞察提炼
+#### Step 7: Insight Extraction
 
-**三类洞察**:
+**Three Types of Insights**:
 
-| 类型 | 说明 | 示例 |
+| Type | Description | Example |
 |------|------|------|
-| 假设验证 | 假设是否被验证 | A001假设成立/不成立/部分成立 |
-| 设计修改 | 需要调整的设计点 | 推荐展示位置调整 |
-| 未预期发现 | 测试中发现的新问题/机会 | 发现新的用户场景 |
+| Hypothesis validation | Whether hypothesis is validated | A001 hypothesis confirmed/rejected/partially confirmed |
+| Design changes | Design points needing adjustment | Recommendation display position adjustment |
+| Unexpected findings | New problems/opportunities discovered during testing | Discovered new user scenario |
 
 ```json
 {
@@ -234,49 +234,49 @@ writes:
       "type": "assumption_validation",
       "assumption_id": "A001",
       "result": "confirmed|rejected|partial",
-      "evidence": "支持/反对的证据"
+      "evidence": "Supporting/contradicting evidence"
     }
-    // ... 同结构可扩展，type 可为 design_changes / unexpected_findings
+    // ... same structure extensible, type can be design_changes / unexpected_findings
   ]
 }
 ```
 
-#### Step 8: 生成改进建议
+#### Step 8: Generate Improvement Suggestions
 
-**优先级排序规则**:
+**Priority Ranking Rules**:
 
-1. P0问题 → 立即修复
-2. P1问题 → 高优先级
-3. P2问题 → 中优先级
-4. P3问题 → 低优先级
+1. P0 issues → Fix immediately
+2. P1 issues → High priority
+3. P2 issues → Medium priority
+4. P3 issues → Low priority
 
 ```json
 {
   "improvement_suggestions": [
     {
       "suggestion_id": "IS001",
-      "suggestion": "在推荐内容旁增加「为什么推荐」的解释文案",
+      "suggestion": "Add a \"Why recommended\" explanation next to recommended content",
       "priority": "P1",
       "problem_ref": "PC001",
-      "effort_estimate": "中",
-      "expected_impact": "高"
+      "effort_estimate": "Medium",
+      "expected_impact": "High"
     }
   ]
 }
 ```
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 可用性问题和改进建议 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整评估 + 可用性评分体系 + 优先级排序 + 改进路线图 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Usability issues and improvement suggestions | Core conclusions + minimum viable artifact |
+| standard | Full artifact (current default) | Full artifact, including all Step outputs |
+| deep | Full assessment + usability scoring system + priority ranking + improvement roadmap | Full artifact + extended analysis + deep reasoning |
 
-## 输出
+## Output
 
-**存储路径**：`docs/product/PRD.md（“可用性测试”章节）`
-**输出文件**：usability_report.json
+**Storage Path**: `docs/product/PRD.md ("Usability Testing" section)`
+**Output File**: usability_report.json
 
 ```json
 {
@@ -285,131 +285,131 @@ writes:
       "test_date": "2024-01-15",
       "participant_count": 8,
       "test_duration_minutes": 60,
-      "test_goals": ["验证学员能否快速找到适合的课程"]
+      "test_goals": ["Validate whether learners can quickly find suitable courses"]
     },
     "problems": [
       {
         "problem_id": "P001",
         "severity": "P1",
         "frequency": "3/8",
-        "affected_element": "课程推荐列表",
-        "description": "学员无法理解推荐课程与自身学习进度的关联",
-        "evidence": ["6/8学员表示不确定推荐依据"]
+        "affected_element": "Course recommendation list",
+        "description": "Learners cannot understand the connection between recommended courses and their learning progress",
+        "evidence": ["6/8 learners expressed uncertainty about the recommendation basis"]
       }
-      // ... 同结构可扩展
+      // ... same structure extensible
     ],
     "insights": [
       {
         "type": "assumption_validation",
         "assumption_id": "A001",
         "result": "confirmed",
-        "description": "假设A001部分成立"
+        "description": "Assumption A001 partially confirmed"
       }
-      // ... 同结构可扩展，type 可为 design_changes / unexpected_findings
+      // ... same structure extensible, type can be design_changes / unexpected_findings
     ],
     "improvement_suggestions": [
       {
-        "suggestion": "在课程推荐卡片增加推荐理由和学习进度匹配度展示",
+        "suggestion": "Add recommendation rationale and learning progress match display to course recommendation cards",
         "priority": "P1",
         "problem_ref": "P001",
-        "effort": "中",
-        "impact": "高"
+        "effort": "Medium",
+        "impact": "High"
       }
-      // ... 同结构可扩展
+      // ... same structure extensible
     ]
   }
 }
 ```
 
-**输出校验规则**：详见下方输出校验规则章节
+**Output Validation Rules**: See the Output Validation Rules section below
 
-## 决策规则
+## Decision Rules
 
-| 情况 | 处理方式 |
+| Situation | Handling |
 |------|----------|
-| P0问题（任务无法完成） | 立即修复，阻塞发布 |
-| 同一问题3/8以上用户遇到 | 标记为高频问题，优先处理 |
-| 假设被推翻 | 更新假设地图，调整设计方向 |
-| 测试参与者<5人 | 结果仅供参考，建议补充测试 |
+| P0 issue (task cannot be completed) | Fix immediately, block release |
+| Same issue encountered by 3/8+ users | Mark as high-frequency issue, prioritize |
+| Hypothesis overturned | Update assumption map, adjust design direction |
+| Fewer than 5 test participants | Results are for reference only; recommend additional testing |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 问题严重程度分级（P0/P1/P2/P3分级合理）
-- [ ] 洞察假设关联（洞察与假设地图有对应关系）
+- [ ] Problem severity grading (P0/P1/P2/P3 grading is reasonable)
+- [ ] Insight hypothesis linkage (insights correspond to the assumption map)
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 改进建议可执行（建议明确、可操作）
-- [ ] 数据完整性（测试数据完整无遗漏）
+- [ ] Improvement suggestions actionable (suggestions are clear and actionable)
+- [ ] Data completeness (test data is complete with no omissions)
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep reasoning and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Notes |
 |---------------|---------|---------|------------|
-| 原型数据缺失 | 用户提供设计描述，生成测试脚本 | 缺乏原型数据，测试任务可能不够精准 | 要求用户提供设计描述和页面截图或上传原型文件 |
-| 假设地图缺失 | 用户提供设计描述，生成测试脚本 | 缺乏假设地图数据，测试目标可能不够聚焦 | 要求用户提供关键假设列表或上传assumption-map文件 |
-| 原型+假设地图均缺失 | 用户提供设计描述，生成测试脚本 | 整体置信度降低，测试脚本可能不够完整 | 要求用户提供设计描述和关键假设 |
-| 所有上游文件均缺失 | 提示用户先执行前序阶段，或基于用户描述生成测试脚本 | 输出仅为基本测试框架 | 要求用户提供设计描述、核心功能和测试目标 |
+| Prototype data missing | User provides design description, generate test scripts | Lacks prototype data, test tasks may be less precise | Ask user to provide design description and page screenshots or upload prototype file |
+| Assumption map missing | User provides design description, generate test scripts | Lacks assumption map data, test goals may be less focused | Ask user to provide key hypothesis list or upload assumption-map file |
+| Both prototype and assumption map missing | User provides design description, generate test scripts | Overall confidence reduced, test scripts may be incomplete | Ask user to provide design description and key hypotheses |
+| All upstream files missing | Prompt user to run preceding stages first, or generate test scripts based on user description | Output is only a basic test framework | Ask user to provide design description, core features, and test goals |
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| usability_report | object | 是 | 可用性测试报告 |
-| usability_report.test_summary | object | 是 | 测试摘要 |
-| usability_report.test_summary.participant_count | integer | 是 | 参与者数量 |
-| usability_report.test_summary.test_goals | array | 是 | 测试目标列表 |
-| usability_report.problems | array | 是 | 问题列表 |
-| usability_report.problems[].problem_id | string | 是 | 问题唯一标识 |
-| usability_report.problems[].severity | string | 是 | 严重程度（P0/P1/P2/P3） |
-| usability_report.problems[].frequency | string | 是 | 出现频率 |
-| usability_report.problems[].affected_element | string | 是 | 受影响元素 |
-| usability_report.problems[].description | string | 是 | 问题描述 |
-| usability_report.insights | array | 是 | 洞察列表 |
-| usability_report.insights[].type | string | 是 | 洞察类型 |
-| usability_report.improvement_suggestions | array | 是 | 改进建议列表 |
-| usability_report.improvement_suggestions[].suggestion | string | 是 | 建议内容 |
-| usability_report.improvement_suggestions[].priority | string | 是 | 优先级 |
-| usability_report.improvement_suggestions[].problem_ref | string | 是 | 关联问题ID |
+| usability_report | object | Yes | Usability test report |
+| usability_report.test_summary | object | Yes | Test summary |
+| usability_report.test_summary.participant_count | integer | Yes | Number of participants |
+| usability_report.test_summary.test_goals | array | Yes | Test goals list |
+| usability_report.problems | array | Yes | Problems list |
+| usability_report.problems[].problem_id | string | Yes | Problem unique identifier |
+| usability_report.problems[].severity | string | Yes | Severity (P0/P1/P2/P3) |
+| usability_report.problems[].frequency | string | Yes | Occurrence frequency |
+| usability_report.problems[].affected_element | string | Yes | Affected element |
+| usability_report.problems[].description | string | Yes | Problem description |
+| usability_report.insights | array | Yes | Insights list |
+| usability_report.insights[].type | string | Yes | Insight type |
+| usability_report.improvement_suggestions | array | Yes | Improvement suggestions list |
+| usability_report.improvement_suggestions[].suggestion | string | Yes | Suggestion content |
+| usability_report.improvement_suggestions[].priority | string | Yes | Priority |
+| usability_report.improvement_suggestions[].problem_ref | string | Yes | Linked problem ID |
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响
+### Upstream Change Impact
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| 原型变更（页面/交互修改） | 测试任务、测试脚本 | 标注受影响的测试任务，建议人类确认是否更新测试脚本 |
-| 假设地图变更（假设增删/评分变更） | 测试目标、假设验证项 | 标注受影响的测试目标，建议人类确认是否调整测试重点 |
-| MVP范围变更 | 测试范围 | 标注受影响的测试范围，建议人类确认是否调整测试覆盖 |
+| Prototype change (page/interaction modification) | Test tasks, test scripts | Mark affected test tasks; recommend human confirm whether to update test scripts |
+| Assumption map change (hypothesis add/remove or score change) | Test goals, hypothesis validation items | Mark affected test goals; recommend human confirm whether to adjust test focus |
+| MVP scope change | Test scope | Mark affected test scope; recommend human confirm whether to adjust test coverage |
 
-### 下游通知机制
+### Downstream Notification Mechanism
 
-| 可用性测试报告变更类型 | 通知范围 | 通知方式 |
+| Usability Test Report Change Type | Notification Scope | Notification Method |
 |----------------------|----------|----------|
-| 问题发现增删 | harness-design（通过 docs/handoff/pm-to-design.md 反馈） | 标记问题变更，触发 harness-design 的原型和交互规范更新 |
-| 假设验证结果变更 | validation-assumption-map、validation-mvp | 标记验证结果变更，触发假设地图和MVP范围更新 |
-| 改进建议变更 | harness-design（通过 docs/handoff/pm-to-design.md 反馈） | 标记建议变更，触发 harness-design 的原型更新 |
+| Problem finding add/remove | harness-design (via docs/handoff/pm-to-design.md feedback) | Mark problem change, trigger harness-design prototype and interaction spec update |
+| Hypothesis validation result change | validation-assumption-map, validation-mvp | Mark validation result change, trigger assumption map and MVP scope update |
+| Improvement suggestion change | harness-design (via docs/handoff/pm-to-design.md feedback) | Mark suggestion change, trigger harness-design prototype update |
 
 ---
 
-## 使用示例
+## Usage Example
 
-**测试执行**: 人类研究员主持，8名用户参与
+**Test Execution**: Human researcher leads, 8 users participate
 
-**AI辅助输出**: 结构同上方输出 JSON，其中 `problems`/`insights`/`improvement_suggestions` 各数组按实际测试结果填充，字段含义与输出校验规则一致。
+**AI-Assisted Output**: Same structure as the output JSON above, where `problems`/`insights`/`improvement_suggestions` arrays are populated based on actual test results, with field meanings consistent with the output validation rules.
 
-### 完整示例：课程推荐功能可用性测试报告
+### Complete Example: Course Recommendation Feature Usability Test Report
 
-场景：对"课程推荐功能"进行 8 人可用性测试，验证学员能否快速找到适合的课程并理解推荐理由。以下为测试后 AI 整理产出的完整 `usability_report.json`。
+Scenario: Conducting an 8-person usability test on the "Course Recommendation Feature" to validate whether learners can quickly find suitable courses and understand the recommendation rationale. Below is the complete `usability_report.json` produced by AI post-test organization.
 
 ```json
 {
@@ -419,9 +419,9 @@ writes:
       "participant_count": 8,
       "test_duration_minutes": 75,
       "test_goals": [
-        "验证学员能否在推荐首页快速找到感兴趣的课程",
-        "验证学员能否理解推荐课程与自身学习进度的关联",
-        "验证学员能否顺利完成从推荐首页到课程详情页的跳转"
+        "Validate whether learners can quickly find courses of interest on the recommendation homepage",
+        "Validate whether learners can understand the connection between recommended courses and their learning progress",
+        "Validate whether learners can smoothly navigate from the recommendation homepage to the course detail page"
       ]
     },
     "problems": [
@@ -429,28 +429,28 @@ writes:
         "problem_id": "P001",
         "severity": "P1",
         "frequency": "5/8",
-        "affected_element": "课程推荐列表",
+        "affected_element": "Course recommendation list",
         "affected_users": 5,
         "task_id": "T001",
-        "description": "学员无法理解推荐课程与自身学习进度的关联，推荐理由展示不清晰，导致学员对推荐内容信任度低",
+        "description": "Learners cannot understand the connection between recommended courses and their learning progress; the recommendation rationale display is unclear, leading to low trust in recommended content",
         "evidence": [
-          "5/8学员在访谈中表示「不确定为什么推荐这门课」",
-          "3/8学员在推荐列表停留超过15秒仍未点击",
-          "学员P003原话：「这些课程看起来和我学的没什么关系」"
+          "5/8 learners stated in interviews that they were 'not sure why this course was recommended'",
+          "3/8 learners lingered on the recommendation list for over 15 seconds without clicking",
+          "Learner P003 verbatim: 'These courses don't seem related to what I'm studying'"
         ]
       },
       {
         "problem_id": "P002",
         "severity": "P2",
         "frequency": "3/8",
-        "affected_element": "推荐首页「不感兴趣」反馈入口",
+        "affected_element": "Recommendation homepage \"Not interested\" feedback entry",
         "affected_users": 3,
         "task_id": "T002",
-        "description": "「不感兴趣」反馈按钮位置隐蔽，学员难以发现，导致反馈功能使用率低",
+        "description": "The \"Not interested\" feedback button is hidden, making it hard for learners to discover, resulting in low usage of the feedback feature",
         "evidence": [
-          "3/8学员在任务完成后才注意到反馈按钮",
-          "2/8学员表示「以为那个图标是收藏」",
-          "眼动数据显示反馈按钮注视率仅25%"
+          "3/8 learners only noticed the feedback button after completing the task",
+          "2/8 learners said 'I thought that icon was for favoriting'",
+          "Eye-tracking data shows feedback button gaze rate of only 25%"
         ]
       }
     ],
@@ -459,60 +459,60 @@ writes:
         "type": "assumption_validation",
         "assumption_id": "A001",
         "result": "partial",
-        "description": "假设A001「学员能快速找到适合的课程」部分成立：学员能找到课程，但因推荐理由不清晰导致决策时间过长",
-        "insight_text": "推荐理由的可解释性比推荐准确性更影响学员的点击决策，学员需要明确知道「为什么推荐」才会产生信任",
-        "evidence": "5/8学员在看到推荐理由后点击率提升40%，但默认展示的推荐理由过于笼统（如「基于你的学习历史」）",
+        "description": "Assumption A001 'Learners can quickly find suitable courses' is partially confirmed: learners can find courses, but unclear recommendation rationale leads to overly long decision time",
+        "insight_text": "The explainability of recommendation rationale affects click decisions more than recommendation accuracy; learners need to clearly know 'why it was recommended' to build trust",
+        "evidence": "5/8 learners showed a 40% increase in click-through rate after seeing the recommendation rationale, but the default rationale was too generic (e.g., 'Based on your learning history')",
         "confidence": 0.85
       },
       {
         "type": "design_changes",
         "assumption_id": "A002",
         "result": "confirmed",
-        "description": "假设A002「学员希望看到学习路径推荐」成立，学员对结构化学习路径有明确需求",
-        "insight_text": "学员更倾向于按职业目标组织的学习路径，而非零散的单门课程推荐，路径推荐应作为推荐首页的核心模块",
-        "evidence": "6/8学员主动询问「有没有按方向的学习路径」，2/8学员表示愿意为路径推荐付费",
+        "description": "Assumption A002 'Learners want to see learning path recommendations' is confirmed; learners have a clear need for structured learning paths",
+        "insight_text": "Learners prefer learning paths organized by career goals over scattered individual course recommendations; path recommendations should be the core module of the recommendation homepage",
+        "evidence": "6/8 learners proactively asked 'Are there learning paths by direction?', and 2/8 learners expressed willingness to pay for path recommendations",
         "confidence": 0.9
       }
     ],
     "improvement_suggestions": [
       {
         "suggestion_id": "IS001",
-        "suggestion": "在课程推荐卡片显著位置增加具体推荐理由（如「因为你学完了《JS基础》，推荐进阶课程《React实战》」），替代笼统的「基于学习历史」",
+        "suggestion": "Add specific recommendation rationale in a prominent position on course recommendation cards (e.g., 'Because you completed JS Basics, we recommend the advanced course React in Practice'), replacing the generic 'Based on learning history'",
         "priority": "P1",
         "problem_ref": "P001",
-        "effort": "中",
-        "estimated_effort": "3人天",
-        "impact": "高"
+        "effort": "Medium",
+        "estimated_effort": "3 person-days",
+        "impact": "High"
       },
       {
         "suggestion_id": "IS002",
-        "suggestion": "将「不感兴趣」反馈按钮从卡片右下角移至卡片右上角，并增加文字标签和悬停提示，提升可发现性",
+        "suggestion": "Move the \"Not interested\" feedback button from the bottom-right corner to the top-right corner of the card, and add a text label and hover tooltip to improve discoverability",
         "priority": "P2",
         "problem_ref": "P002",
-        "effort": "低",
-        "estimated_effort": "1人天",
-        "impact": "中"
+        "effort": "Low",
+        "estimated_effort": "1 person-day",
+        "impact": "Medium"
       },
       {
         "suggestion_id": "IS003",
-        "suggestion": "在推荐首页顶部增加「学习路径」独立模块，按学员职业目标展示结构化路径，每条路径展示阶段进度",
+        "suggestion": "Add a standalone \"Learning Paths\" module at the top of the recommendation homepage, displaying structured paths organized by learner career goals, with stage progress shown for each path",
         "priority": "P1",
         "problem_ref": "P001",
-        "effort": "高",
-        "estimated_effort": "8人天",
-        "impact": "高"
+        "effort": "High",
+        "estimated_effort": "8 person-days",
+        "impact": "High"
       }
     ]
   }
 }
 ```
 
-### 示例说明
+### Example Notes
 
-| 字段类别 | 示例数量 | 关键字段 |
+| Field Category | Example Count | Key Fields |
 |----------|----------|----------|
-| problems | 2 | severity（P1/P2）、description、affected_users、task_id、evidence |
-| insights | 2 | insight_text、evidence、confidence（0.85/0.9）、type（assumption_validation/design_changes） |
-| improvement_suggestions | 3 | suggestion、priority（P1/P2）、estimated_effort（人天）、problem_ref |
+| problems | 2 | severity (P1/P2), description, affected_users, task_id, evidence |
+| insights | 2 | insight_text, evidence, confidence (0.85/0.9), type (assumption_validation/design_changes) |
+| improvement_suggestions | 3 | suggestion, priority (P1/P2), estimated_effort (person-days), problem_ref |
 
-**优先级处理**：P1 问题（P001）对应 2 条改进建议（IS001、IS003），其中 IS003 为高投入高收益项，建议排入下个迭代；P2 问题（P002）对应低投入建议（IS002），可快速修复。
+**Priority Handling**: P1 issue (P001) maps to 2 improvement suggestions (IS001, IS003), where IS003 is a high-effort high-impact item recommended for the next iteration; P2 issue (P002) maps to a low-effort suggestion (IS002) that can be quickly fixed.

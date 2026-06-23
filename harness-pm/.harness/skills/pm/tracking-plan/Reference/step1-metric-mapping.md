@@ -1,20 +1,20 @@
-<!-- 从 SKILL.md 提取的参考材料，按需查阅 -->
+<!-- Reference material extracted from SKILL.md, consult as needed -->
 
-# Step 1: 指标反推埋点映射表与输出
+# Step 1: Metric-Derived Tracking Mapping Table and Output
 
-> 来源：SKILL.md「Step 1: 从指标体系反推埋点需求」中的反推映射表与输出 schema
+> Source: Derivation mapping table and output schema in SKILL.md "Step 1: Derive Tracking Requirements from the Metric System"
 
-## 反推映射表
+## Derivation Mapping Table
 
-| 指标类型 | 所需行为数据 | 埋点事件示例 |
+| Metric Type | Required Behavior Data | Tracking Event Example |
 |---------|------------|-------------|
-| 转化率指标 | 页面/功能曝光+点击 | page_view + button_click |
-| 频次指标 | 行为发生次数 | feature_use |
-| 时长指标 | 行为开始+结束时间 | session_start + session_end |
-| 质量指标 | 行为结果+评价 | action_result + feedback |
-| 覆盖率指标 | 功能使用+未使用对比 | feature_use vs non_use |
+| Conversion rate metric | Page/feature exposure + click | page_view + button_click |
+| Frequency metric | Behavior occurrence count | feature_use |
+| Duration metric | Behavior start + end time | session_start + session_end |
+| Quality metric | Behavior result + rating | action_result + feedback |
+| Coverage rate metric | Feature used vs. unused comparison | feature_use vs non_use |
 
-## 输出
+## Output
 
 ```json
 {

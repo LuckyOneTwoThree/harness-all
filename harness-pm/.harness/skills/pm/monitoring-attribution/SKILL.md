@@ -1,22 +1,22 @@
 ---
 name: monitoring-attribution
-description: 当需要对监控异常进行归因分析时使用。异常归因分析工具，负责根因定位、影响范围评估和修复建议。关键词：异常归因、根因分析、影响评估、修复建议。
+description: Used when attribution analysis is needed for monitoring anomalies. Anomaly attribution analysis tool responsible for root cause localization, impact scope assessment, and remediation suggestions. Keywords: anomaly attribution, root cause analysis, impact assessment, remediation suggestions.
 metadata:
-  module: "产品监控与迭代"
-  sub-module: "监控预警"
+  module: "Product Monitoring & Iteration"
+  sub-module: "Monitoring & Alerting"
   type: "pipeline"
   version: "2.0"
-  domain_tags: ["互联网", "软件", "通用"]
+  domain_tags: ["Internet", "Software", "General"]
   interaction_mode: "ai_auto"
   trigger_examples:
-    - "告警根因分析"
-    - "异常归因定位"
-    - "指标下跌原因排查"
-    - "影响范围评估"
+    - "Alert root cause analysis"
+    - "Anomaly attribution localization"
+    - "Metric drop cause investigation"
+    - "Impact scope assessment"
 execution_depth:
   default: standard
-  quick_description: "仅输出根因摘要和即时修复动作"
-  deep_description: "完整归因 + 5Why深度链 + 影响面量化 + 长期修复方案 + 复盘建议"
+  quick_description: "Only output root cause summary and immediate remediation actions"
+  deep_description: "Full attribution + 5 Why deep chain + impact quantification + long-term fix plan + retrospective suggestions"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -29,60 +29,60 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 异常归因分析 🤖
+# Anomaly Attribution Analysis 🤖
 
-## 核心原则
+## Core Principles
 
-1. **告警归因是推理链不是猜测**：从确认真实性到定位范围到关联事件到生成归因，每一步都必须有证据支撑
-2. **关联分析是归因的关键**：孤立看告警必然误判，必须关联时间窗口内的其他事件
-3. **根因定位必须可追溯**：5 Why 追问链每一层都要有证据和数据支撑，不可跳步
-4. **影响评估要量化而非定性**：受影响用户数、损失金额、功能可用性必须给出可度量数值
-5. **修复建议要可执行**：每条建议必须包含具体操作步骤、命令和回滚方案
+1. **Alert attribution is a reasoning chain, not a guess**: From confirming authenticity to localizing scope to correlating events to generating attribution, every step must be supported by evidence
+2. **Correlation analysis is key to attribution**: Looking at alerts in isolation inevitably leads to misjudgment; other events within the time window must be correlated
+3. **Root cause localization must be traceable**: Every layer of the 5 Why questioning chain must be supported by evidence and data; no steps can be skipped
+4. **Impact assessment must be quantitative, not qualitative**: Affected user count, loss amount, and feature availability must provide measurable values
+5. **Remediation suggestions must be actionable**: Every suggestion must include specific operation steps, commands, and rollback plans
 
-## 基本信息
+## Basic Information
 
-- **Skill 类型**：pipeline
-- **所属模块**：产品监控与迭代 / 监控预警
-- **版本**：2.0
-- **交互模式**：🤖 AI自动执行（分析类）
-- **上游 Skill**：monitoring-alert-detection（异常检测输出告警事件、分类和关联分析）
-- **下游 Skill**：user-feedback-loop-report（反馈闭环报告消费归因结果和影响范围）、iteration-backlog-grooming（Backlog整理消费修复建议进行优先级调整）
+- **Skill type**: pipeline
+- **Module**: Product Monitoring & Iteration / Monitoring & Alerting
+- **Version**: 2.0
+- **Interaction mode**: 🤖 AI auto-execution (analysis type)
+- **Upstream Skill**: monitoring-alert-detection (anomaly detection outputs alert events, classification, and correlation analysis)
+- **Downstream Skills**: user-feedback-loop-report (feedback loop report consumes attribution results and impact scope), iteration-backlog-grooming (backlog grooming consumes remediation suggestions for priority adjustment)
 
-> **模块独立性说明**：本Skill已内聚完整的异常归因分析逻辑（根因定位、影响评估、修复建议），不再跨模块委托 pm-06 analysis-anomaly，消除跨模块依赖。
+> **Module Independence Note**: This Skill has cohesive, complete anomaly attribution analysis logic (root cause localization, impact assessment, remediation suggestions) and no longer delegates cross-module to pm-06 analysis-anomaly, eliminating cross-module dependencies.
 
-## 交互模式
+## Interaction Mode
 
-🤖 AI自动执行（分析类）
+🤖 AI auto-execution (analysis type)
 
-## 输入
+## Input
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 异常告警事件 | JSON | 是 | docs/monitoring/monitoring-config.md（“预警规则”章节） | 监控告警检测输出的告警事件清单，包含alert_id、timestamp、classification |
-| 告警分类 | object | 是 | docs/monitoring/monitoring-config.md（“预警规则”章节） | 告警层级、类别和置信度 |
-| 关联分析 | object | 是 | docs/monitoring/monitoring-config.md（“预警规则”章节） | 关联类型、相关告警和关联分数 |
-| 版本发布信息 | object | ○ | docs/monitoring/release-notes.md（“灰度计划”章节） | 近期发布记录，用于变更关联归因 |
-| 配置变更记录 | object | ○ | 用户提供 | 配置修改历史，用于配置变更归因 |
-| 流量变化数据 | object | ○ | 用户提供 | 流量趋势和异常波动，用于流量异常归因 |
-| 根因知识库 | object[] | ○ | docs/monitoring/monitoring-config.md（“预警规则”章节） | 历史问题-根因映射，用于案例匹配 |
-| 产品架构 | JSON/文件 | ○ | 用户提供 | 系统架构图、组件关系、依赖链路，用于依赖拓扑溯源 |
-| 指标体系 | JSON | ○ | docs/metrics/metrics-system.md | 业务指标定义，用于影响评估 |
+| Anomaly alert events | JSON | Yes | docs/monitoring/monitoring-config.md ("Alert Rules" section) | Alert event list output by monitoring alert detection, containing alert_id, timestamp, classification |
+| Alert classification | object | Yes | docs/monitoring/monitoring-config.md ("Alert Rules" section) | Alert layer, category, and confidence |
+| Correlation analysis | object | Yes | docs/monitoring/monitoring-config.md ("Alert Rules" section) | Correlation type, related alerts, and correlation score |
+| Release info | object | ○ | docs/monitoring/release-notes.md ("Canary Plan" section) | Recent release records, used for change correlation attribution |
+| Config change records | object | ○ | User-provided | Configuration modification history, used for config change attribution |
+| Traffic change data | object | ○ | User-provided | Traffic trends and anomaly fluctuations, used for traffic anomaly attribution |
+| Root cause knowledge base | object[] | ○ | docs/monitoring/monitoring-config.md ("Alert Rules" section) | Historical problem-root cause mappings, used for case matching |
+| Product architecture | JSON/file | ○ | User-provided | System architecture diagram, component relationships, dependency chains, used for dependency topology tracing |
+| Metrics system | JSON | ○ | docs/metrics/metrics-system.md | Business metric definitions, used for impact assessment |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 根因定位 [核心]
+### Step 1: Root Cause Localization [Core]
 
-**目标**：基于告警事件和关联分析，定位异常的根本原因，输出可追溯的推理链
+**Goal**: Based on alert events and correlation analysis, localize the root cause of the anomaly and output a traceable reasoning chain
 
-#### 1.1 告警真实性确认 [核心]
+#### 1.1 Alert Authenticity Confirmation [Core]
 
-**确认方法**：
-- 校验告警数据源是否正常上报（排除采集故障）
-- 校验阈值配置是否合理（排除误配置）
-- 校验指标计算逻辑是否正确（排除计算错误）
-- 交叉验证多数据源一致性
+**Confirmation Methods**:
+- Verify whether the alert data source is reporting normally (rule out collection failure)
+- Verify whether the threshold config is reasonable (rule out misconfiguration)
+- Verify whether the metric calculation logic is correct (rule out calculation errors)
+- Cross-validate consistency across multiple data sources
 
-**输出**：
+**Output**:
 
 ```yaml
 alert_validation:
@@ -92,101 +92,101 @@ alert_validation:
   validation_checks:
     - check: data_source_health
       passed: true | false
-      detail: "数据源正常上报，最近数据点 2026-06-15T10:04:00Z"
+      detail: "Data source reporting normally, latest data point 2026-06-15T10:04:00Z"
     - check: threshold_config
       passed: true | false
-      detail: "阈值配置符合SLA要求"
-  false_positive_reason: null | "采集Agent离线导致数据缺失触发误告警"
+      detail: "Threshold config meets SLA requirements"
+  false_positive_reason: null | "Collection agent offline caused data gap triggering false alert"
 ```
 
-#### 1.2 根因模式匹配 [核心]
+#### 1.2 Root Cause Pattern Matching [Core]
 
-**分析方法**：
-- 基于告警类型的常见根因模式匹配
-- 基于变更事件的时序分析（发布/配置变更后触发）
-- 基于依赖拓扑的向上溯源
-- 基于知识库的历史案例匹配
+**Analysis Methods**:
+- Common root cause pattern matching based on alert type
+- Time-series analysis based on change events (triggered after release/config change)
+- Upstream tracing based on dependency topology
+- Historical case matching based on knowledge base
 
-**根因模式库**：
+**Root Cause Pattern Library**:
 
-| 告警类别 | 常见根因模式 | 排查优先级 |
+| Alert Category | Common Root Cause Patterns | Investigation Priority |
 |----------|------------|-----------|
-| 资源饱和 | 容量不足/连接池耗尽/内存泄漏 | P0 |
-| 响应超时 | 依赖服务慢/网络抖动/锁竞争 | P0 |
-| 错误率上升 | 代码缺陷/配置错误/依赖故障 | P0 |
-| 业务指标下跌 | 转化链路断裂/支付通道故障/功能不可用 | P0 |
-| 流量异常 | 爬虫/刷量/营销活动/外部攻击 | P1 |
+| Resource saturation | Insufficient capacity/Connection pool exhaustion/Memory leak | P0 |
+| Response timeout | Slow dependency service/Network jitter/Lock contention | P0 |
+| Error rate increase | Code defect/Config error/Dependency failure | P0 |
+| Business metric drop | Conversion chain break/Payment channel failure/Feature unavailable | P0 |
+| Traffic anomaly | Crawler/Volume manipulation/Marketing campaign/External attack | P1 |
 
-**知识库匹配规则**：
-- 相似度 ≥ 0.85：直接输出历史解决方案，标注置信度
-- 相似度 0.6-0.85：输出历史解决方案，标注"需人工确认适用性"
-- 相似度 < 0.6 或无历史案例：进入 5 Why 逻辑推理
+**Knowledge Base Matching Rules**:
+- Similarity ≥ 0.85: Directly output historical solution, label confidence
+- Similarity 0.6-0.85: Output historical solution, label "applicability needs human confirmation"
+- Similarity < 0.6 or no historical cases: Proceed to 5 Why logical reasoning
 
-#### 1.3 5 Why 深度追问 [深度]
+#### 1.3 5 Why Deep Questioning [Deep]
 
-**分析方法**：逐层追问"为什么"，每层回答必须有证据支撑，直到触及根本原因
+**Analysis Method**: Ask "why" layer by layer; each layer's answer must be supported by evidence until the root cause is reached
 
-**5 Why 输出格式**：
+**5 Why Output Format**:
 
 ```yaml
 root_cause:
   why_chain:
-    - question: "为什么 订单服务响应超时？"
-      answer: "数据库连接池耗尽"
-      evidence: "连接池使用率100%，活跃连接数50/50"
-    - question: "为什么 数据库连接池耗尽？"
-      answer: "慢查询占用连接时间过长"
-      evidence: "慢查询日志显示3条SQL执行时间>5s，平均占用连接120s"
-    - question: "为什么 慢查询增多？"
-      answer: "新增的订单查询接口未加索引"
-      evidence: "EXPLAIN显示全表扫描，对应接口于2026-06-14上线"
-    # ... 同结构可扩展至3-5层
-  root_cause_summary: "新增订单查询接口未加索引导致慢查询，占用数据库连接池导致服务超时"
+    - question: "Why did the order service response time out?"
+      answer: "Database connection pool exhausted"
+      evidence: "Connection pool utilization 100%, active connections 50/50"
+    - question: "Why was the database connection pool exhausted?"
+      answer: "Slow queries held connections for too long"
+      evidence: "Slow query log shows 3 SQL statements with execution time >5s, average connection hold 120s"
+    - question: "Why did slow queries increase?"
+      answer: "The new order query interface was not indexed"
+      evidence: "EXPLAIN shows full table scan; the corresponding interface went live on 2026-06-14"
+    # ... same structure extensible to 3-5 layers
+  root_cause_summary: "The new order query interface lacked indexes, causing slow queries that exhausted the database connection pool and led to service timeout"
   root_cause_category: code_defect | resource_exhaustion | config_error | dependency_failure | traffic_anomaly
   confidence: 0.0-1.0
   evidence_list:
     - type: metric | log | trace | change_record
-      content: "连接池使用率监控数据"
-      source: "APM系统"
+      content: "Connection pool utilization monitoring data"
+      source: "APM system"
 ```
 
-#### 1.4 候选根因排序 [条件]
+#### 1.4 Candidate Root Cause Ranking [Conditional]
 
-**当存在多个候选根因时**：
+**When multiple candidate root causes exist**:
 
 ```yaml
 candidate_root_causes:
   - rank: 1
-    summary: "数据库连接池耗尽"
+    summary: "Database connection pool exhausted"
     confidence: 0.85
     evidence_count: 5
-    supporting_factors: ["连接池监控", "慢查询日志"]
+    supporting_factors: ["Connection pool monitoring", "Slow query log"]
   - rank: 2
-    summary: "网络抖动"
+    summary: "Network jitter"
     confidence: 0.45
     evidence_count: 2
-    supporting_factors: ["网络延迟波动"]
+    supporting_factors: ["Network latency fluctuation"]
   needs_human_investigation: true | false
-  investigation_hint: "Top2候选置信度接近，建议排查网络层"
+  investigation_hint: "Top 2 candidate confidence is close; recommend investigating the network layer"
 ```
 
-### Step 2: 影响评估 [核心]
+### Step 2: Impact Assessment [Core]
 
-**目标**：量化异常对用户、功能、业务和收入的影响范围
+**Goal**: Quantify the impact scope of the anomaly on users, features, business, and revenue
 
-#### 2.1 影响维度评估 [核心]
+#### 2.1 Impact Dimension Assessment [Core]
 
-**评估维度**：
+**Assessment Dimensions**:
 
-| 维度 | 指标 | 数据来源 |
+| Dimension | Metric | Data Source |
 |------|------|----------|
-| 用户影响 | 受影响用户数/比例 | 监控指标 + 用户行为日志 |
-| 功能影响 | 核心功能可用性 | 服务健康检查 + 业务指标 |
-| 业务影响 | 转化率/订单量损失 | 业务指标对比基线 |
-| 收入影响 | 预估 GMV 损失 | 业务数据 + 历史均值 |
-| 声誉影响 | 客诉数量/舆情 | 客服系统 + 舆情监控 |
+| User impact | Affected user count/percentage | Monitoring metrics + user behavior logs |
+| Feature impact | Core feature availability | Service health checks + business metrics |
+| Business impact | Conversion rate/Order volume loss | Business metrics vs. baseline |
+| Revenue impact | Estimated GMV loss | Business data + historical average |
+| Reputation impact | Complaint count/Sentiment | Customer service system + sentiment monitoring |
 
-**输出**：
+**Output**:
 
 ```yaml
 impact_scope:
@@ -195,7 +195,7 @@ impact_scope:
     count: 5000
     percentage: 15%
   affected_features:
-    - feature_name: 订单创建
+    - feature_name: Order Creation
       availability: 95%
       impact_duration: 30m
   business_metrics:
@@ -208,146 +208,146 @@ impact_scope:
     estimated_loss: 50000
     currency: CNY
     confidence: 80%
-    calculation_basis: "历史均值订单量 × 影响时长 × 客单价"
+    calculation_basis: "Historical average order volume × impact duration × average order value"
   reputation_impact:
     complaints: 12
     sentiment: negative
 ```
 
-#### 2.2 影响范围动态追踪 [条件]
+#### 2.2 Impact Scope Dynamic Tracking [Conditional]
 
-**当影响范围持续扩大时**：
+**When the impact scope continues to expand**:
 
 ```yaml
 impact_trend:
   trend: expanding | stable | shrinking
   growth_rate_per_10min: 20%
   auto_escalation_triggered: true | false
-  escalation_reason: "受影响用户增长≥20%/10分钟，自动升级severity"
+  escalation_reason: "Affected user growth ≥ 20%/10 minutes, auto-escalate severity"
 ```
 
-### Step 3: 修复建议 [核心]
+### Step 3: Remediation Suggestions [Core]
 
-**目标**：基于根因和影响，输出可执行的即时修复和长期改进方案
+**Goal**: Based on root cause and impact, output actionable immediate fixes and long-term improvement plans
 
-#### 3.1 即时修复行动 [核心]
+#### 3.1 Immediate Remediation Actions [Core]
 
-**建议类型**：
+**Suggestion Types**:
 
-| 根因类型 | 建议模板 | 执行时效 |
+| Root Cause Type | Suggestion Template | Execution Timing |
 |----------|----------|----------|
-| 资源不足 | 扩容/资源调整方案 | 立即 |
-| 代码问题 | 回滚/热修复方案 | 立即 |
-| 配置错误 | 配置修正步骤 | 立即 |
-| 依赖故障 | 切换/降级方案 | 立即 |
-| 流量异常 | 限流/熔断配置 | 立即 |
+| Insufficient resources | Scaling/Resource adjustment plan | Immediate |
+| Code issue | Rollback/Hotfix plan | Immediate |
+| Config error | Config correction steps | Immediate |
+| Dependency failure | Switch/Degradation plan | Immediate |
+| Traffic anomaly | Rate limiting/Circuit breaker config | Immediate |
 
-**输出**：
+**Output**:
 
 ```yaml
 remediation:
   immediate_actions:
-    - step: 扩容数据库连接池至100
-      command: kubectl scale deploy order-db --replicas=3 | 调整连接池配置
+    - step: Scale database connection pool to 100
+      command: kubectl scale deploy order-db --replicas=3 | Adjust connection pool config
       automated: true | false
       rollback_command: kubectl scale deploy order-db --replicas=1
-      expected_effect: "连接池使用率降至60%以下"
+      expected_effect: "Connection pool utilization drops below 60%"
       risk_level: low | medium | high
-    - step: 为订单查询接口添加索引
+    - step: Add index for order query interface
       command: "CREATE INDEX idx_order_query ON orders(user_id, created_at)"
       automated: false
       rollback_command: "DROP INDEX idx_order_query ON orders"
-      expected_effect: "查询执行时间从5s降至100ms"
+      expected_effect: "Query execution time drops from 5s to 100ms"
       risk_level: low
   estimated_resolution_time: 30
 ```
 
-#### 3.2 长期修复方案 [深度]
+#### 3.2 Long-term Fix Plan [Deep]
 
-**输出**：
+**Output**:
 
 ```yaml
 long_term_fixes:
-  - description: 优化连接池配置和慢查询监控
+  - description: Optimize connection pool config and slow query monitoring
     priority: P0 | P1 | P2 | P3
     effort: 8
     effort_unit: hours
-    owner: 待分配
+    owner: To be assigned
     preventive: true | false
     action_items:
-      - "建立慢查询自动告警机制，执行时间>1s自动通知"
-      - "代码评审增加SQL索引检查项"
-      - "连接池配置纳入容量规划"
+      - "Establish slow query auto-alert mechanism; auto-notify when execution time > 1s"
+      - "Add SQL index check item to code review"
+      - "Include connection pool config in capacity planning"
 ```
 
-#### 3.3 人工升级判断 [条件]
+#### 3.3 Human Escalation Decision [Conditional]
 
-**输出**：
+**Output**:
 
 ```yaml
 needs_human_escalation: true | false
-escalation_reason: "根因候选≥3个，需人工排查确认"
-escalation_target: "后端团队 / DBA / SRE"
+escalation_reason: "Root cause candidates ≥ 3, need manual investigation to confirm"
+escalation_target: "Backend team / DBA / SRE"
 escalation_payload:
   - alert_id: ALT-001
-  - top_candidates: ["数据库连接池耗尽", "网络抖动", "依赖服务慢"]
-  - evidence_summary: "详见归因报告"
+  - top_candidates: ["Database connection pool exhausted", "Network jitter", "Slow dependency service"]
+  - evidence_summary: "See attribution report for details"
 ```
 
-### Step 4: 复盘建议 [深度]
+### Step 4: Retrospective Suggestions [Deep]
 
-**目标**：P0异常恢复后，输出复盘流程和改进建议
+**Goal**: After P0 anomaly recovery, output retrospective process and improvement suggestions
 
-**输出**：
+**Output**:
 
 ```yaml
 postmortem_suggestion:
   triggered: true | false
-  trigger_condition: "P0异常恢复后自动触发"
-  deadline: "24小时内生成复盘报告"
+  trigger_condition: "Auto-triggered after P0 anomaly recovery"
+  deadline: "Generate retrospective report within 24 hours"
   review_scope:
-    - timeline_reconstruction: "异常发生→检测→响应→恢复的完整时间线"
-    - root_cause_analysis: "5 Why链条和证据复盘"
-    - response_assessment: "响应时效、决策质量、沟通效率"
-    - prevention_measures: "同类问题预防方案"
+    - timeline_reconstruction: "Complete timeline of anomaly occurrence → detection → response → recovery"
+    - root_cause_analysis: "5 Why chain and evidence review"
+    - response_assessment: "Response timeliness, decision quality, communication efficiency"
+    - prevention_measures: "Prevention plan for similar issues"
   action_items:
-    - description: "建立SQL变更自动化检查流水线"
+    - description: "Establish SQL change automated check pipeline"
       priority: P1
       deadline: 2026-07-01
 ```
 
-## 输出
+## Output
 
-**输出文件路径**：`docs/monitoring/monitoring-config.md（“归因模型”章节）`
+**Output File Path**: `docs/monitoring/monitoring-config.md ("Attribution Model" section)`
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 根因摘要 + 即时修复动作 | 核心结论 + 最小可行产物，仅输出根因摘要和即时修复步骤 |
-| standard | 完整归因分析（当前默认） | 完整产物，包含Step 1-3全部输出 |
-| deep | 完整归因 + 深度推演 + 复盘建议 | 完整产物 + 5Why深度链 + 长期修复方案 + 复盘流程 |
+| quick | Root cause summary + immediate remediation actions | Core conclusions + minimum viable artifact, only outputs root cause summary and immediate remediation steps |
+| standard | Full attribution analysis (current default) | Full artifact, including all Step 1-3 outputs |
+| deep | Full attribution + deep reasoning + retrospective suggestions | Full artifact + 5 Why deep chain + long-term fix plan + retrospective process |
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["alert_id", "root_cause", "impact_scope", "remediation"],
   "properties": {
-    "alert_id": {"type": "string", "description": "告警ID，关联monitoring-alert-detection输出"},
-    "timestamp": {"type": "string", "description": "归因分析时间"},
-    "alert_validation": {"type": "object", "description": "告警真实性确认，包含is_real/confidence/validation_checks"},
-    "root_cause": {"type": "object", "description": "根因分析，包含5Why链、摘要、类别和置信度"},
-    "candidate_root_causes": {"type": "array", "description": "候选根因排序列表，当根因不确定时输出"},
-    "impact_scope": {"type": "object", "description": "影响范围，包含级别、受影响用户、功能和业务指标"},
-    "impact_trend": {"type": "object", "description": "影响趋势，包含趋势方向和增长率"},
-    "remediation": {"type": "object", "description": "修复建议，包含即时行动列表和预估解决时间"},
-    "long_term_fixes": {"type": "array", "description": "长期修复方案列表"},
-    "needs_human_escalation": {"type": "boolean", "description": "是否需要人工升级"},
-    "postmortem_suggestion": {"type": "object", "description": "复盘建议，包含触发条件、范围和行动项"},
-    "report_id": {"type": "string", "description": "归因报告唯一标识"},
-    "generated_at": {"type": "string", "description": "生成时间"}
+    "alert_id": {"type": "string", "description": "Alert ID, linked to monitoring-alert-detection output"},
+    "timestamp": {"type": "string", "description": "Attribution analysis time"},
+    "alert_validation": {"type": "object", "description": "Alert authenticity confirmation, including is_real/confidence/validation_checks"},
+    "root_cause": {"type": "object", "description": "Root cause analysis, including 5 Why chain, summary, category, and confidence"},
+    "candidate_root_causes": {"type": "array", "description": "Candidate root cause ranking list, output when root cause is uncertain"},
+    "impact_scope": {"type": "object", "description": "Impact scope, including level, affected users, features, and business metrics"},
+    "impact_trend": {"type": "object", "description": "Impact trend, including trend direction and growth rate"},
+    "remediation": {"type": "object", "description": "Remediation suggestions, including immediate action list and estimated resolution time"},
+    "long_term_fixes": {"type": "array", "description": "Long-term fix plan list"},
+    "needs_human_escalation": {"type": "boolean", "description": "Whether human escalation is needed"},
+    "postmortem_suggestion": {"type": "object", "description": "Retrospective suggestions, including trigger condition, scope, and action items"},
+    "report_id": {"type": "string", "description": "Attribution report unique identifier"},
+    "generated_at": {"type": "string", "description": "Generation time"}
   }
 }
 ```
@@ -368,103 +368,103 @@ postmortem_suggestion:
         └── postmortem_report.md
 ```
 
-## 决策规则
+## Decision Rules
 
-| 场景 | 决策规则 |
+| Scenario | Decision Rule |
 |------|----------|
-| 告警真实性存疑（数据源异常） | 标记为疑似误报，暂停归因，通知人工确认 |
-| 根因不确定（候选原因≥3个） | 标记需人工排查，输出Top3候选原因及置信度 |
-| 知识库命中（相似度≥0.85） | 输出历史解决方案，标注置信度 |
-| 知识库命中（相似度0.6-0.85） | 输出历史解决方案，标注"需人工确认适用性" |
-| 无历史案例 | 输出5 Why追问链，等待反馈 |
-| 影响范围扩大（受影响用户增长≥20%/10分钟） | 自动升级severity 1级（最高P0），触发即时修复 |
-| 影响范围扩大（受影响用户增长5%-20%/10分钟） | 自动升级severity 1级 |
-| P0异常恢复后 | 自动触发复盘流程，24小时内生成复盘报告 |
-| 根因涉及代码缺陷 | 优先建议回滚，再建议热修复 |
-| 根因涉及配置错误 | 优先建议配置回滚，标注回滚命令 |
-| 根因涉及依赖故障 | 建议降级/熔断方案，标注影响范围 |
-| 根因涉及流量异常 | 建议限流/扩容方案，标注限流阈值 |
+| Alert authenticity in doubt (data source anomaly) | Mark as suspected false positive, pause attribution, notify human for confirmation |
+| Root cause uncertain (candidate causes ≥ 3) | Mark for manual investigation, output Top 3 candidate causes and confidence |
+| Knowledge base hit (similarity ≥ 0.85) | Output historical solution, label confidence |
+| Knowledge base hit (similarity 0.6-0.85) | Output historical solution, label "applicability needs human confirmation" |
+| No historical cases | Output 5 Why questioning chain, await feedback |
+| Impact scope expanding (affected user growth ≥ 20%/10 minutes) | Auto-escalate severity by 1 level (up to P0), trigger immediate remediation |
+| Impact scope expanding (affected user growth 5%-20%/10 minutes) | Auto-escalate severity by 1 level |
+| After P0 anomaly recovery | Auto-trigger retrospective process, generate retrospective report within 24 hours |
+| Root cause involves code defect | Prioritize rollback suggestion, then hotfix |
+| Root cause involves config error | Prioritize config rollback suggestion, label rollback command |
+| Root cause involves dependency failure | Suggest degradation/circuit breaker plan, label impact scope |
+| Root cause involves traffic anomaly | Suggest rate limiting/scaling plan, label rate limit threshold |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 每个告警事件都有根因分析结论
-- [ ] 根因分析有证据支撑（非纯猜测）
-- [ ] 影响范围已量化（受影响用户数、功能可用性）
+- [ ] Every alert event has a root cause analysis conclusion
+- [ ] Root cause analysis is supported by evidence (not pure speculation)
+- [ ] Impact scope is quantified (affected user count, feature availability)
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 修复建议可执行（每条建议有具体步骤和命令）
-- [ ] 即时修复行动有回滚方案
-- [ ] 影响评估覆盖5个维度（用户/功能/业务/收入/声誉）
-- [ ] 根因置信度已标注
+- [ ] Remediation suggestions are actionable (each suggestion has specific steps and commands)
+- [ ] Immediate remediation actions have rollback plans
+- [ ] Impact assessment covers 5 dimensions (users/features/business/revenue/reputation)
+- [ ] Root cause confidence is labeled
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 根因定位准确率 ≥ 80%
-- [ ] 5 Why 链条完整（3-5 层）
-- [ ] MTTR 降低目标达成
-- [ ] 长期修复方案有优先级和工时估算
-- [ ] 复盘建议已生成（P0异常场景）
+- [ ] Root cause localization accuracy ≥ 80%
+- [ ] 5 Why chain is complete (3-5 layers)
+- [ ] MTTR reduction target met
+- [ ] Long-term fix plan has priority and effort estimate
+- [ ] Retrospective suggestions generated (P0 anomaly scenarios)
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失的上游输入 | 降级方案 | 输出影响 |
+| Missing Upstream Input | Degradation Plan | Output Impact |
 |---------------|---------|---------|
-| 异常告警事件 | 请用户描述异常现象（症状/时间/服务/范围），基于描述进行归因 | 基于描述的归因，缺乏结构化告警数据 |
-| 告警分类 | AI自行根据异常现象推断分类，标注"分类待确认" | 分类为推断，置信度降低 |
-| 关联分析 | 跳过关联分析，在归因中标注"无法排除关联因素" | 孤立归因，可能误判 |
-| 版本发布信息 | 跳过变更关联归因，标注"无法排除变更因素" | 排除变更关联的归因结果 |
-| 配置变更记录 | 跳过配置变更关联，标注"无法排除配置变更因素" | 排除配置关联的归因结果 |
-| 流量变化数据 | 跳过流量分析维度，在影响评估中标注流量数据缺失 | 缺少流量维度的分析结果 |
-| 根因知识库 | 5 Why 分析完全依赖逻辑推理，无法提供历史参考方案 | 纯推理归因结果，无历史案例参考 |
-| 产品架构 | 跳过依赖拓扑溯源，标注"拓扑溯源不可用" | 根因分析缺少拓扑维度 |
-| 指标体系 | 影响评估使用用户提供的关键业务指标，标注"指标体系待补充" | 影响评估维度不完整 |
+| Anomaly alert events | Ask user to describe anomaly phenomena (symptoms/time/service/scope), attribute based on description | Attribution based on description, lacks structured alert data |
+| Alert classification | AI infers classification based on anomaly phenomena, label "classification pending confirmation" | Classification is inferred, confidence reduced |
+| Correlation analysis | Skip correlation analysis, label "cannot exclude correlation factors" in attribution | Isolated attribution, may misjudge |
+| Release info | Skip change correlation attribution, label "cannot exclude change factors" | Attribution results excluding change correlation |
+| Config change records | Skip config change correlation, label "cannot exclude config change factors" | Attribution results excluding config correlation |
+| Traffic change data | Skip traffic analysis dimension, label traffic data missing in impact assessment | Analysis results missing traffic dimension |
+| Root cause knowledge base | 5 Why analysis relies entirely on logical reasoning, cannot provide historical reference solutions | Pure reasoning attribution results, no historical case reference |
+| Product architecture | Skip dependency topology tracing, label "topology tracing unavailable" | Root cause analysis missing topology dimension |
+| Metrics system | Impact assessment uses user-provided key business metrics, label "metrics system pending supplementation" | Impact assessment dimensions incomplete |
 
-### 数据获取说明
+### Data Acquisition Notes
 
-当上游文件缺失时，通过以下方式获取必要数据：
+When upstream files are missing, obtain necessary data through the following methods:
 
-1. **异常告警事件缺失**：请用户描述异常现象，包括：症状表现、发生时间、受影响的服务/功能、影响范围（用户数/功能点），AI将基于描述进行归因分析
-2. **上下文数据缺失**（版本发布/配置变更/流量变化）：AI将在归因分析中明确标注无法排除的因素，建议人工排查这些维度
-3. **根因知识库缺失**：AI将完全依赖5 Why逻辑推理进行归因，输出中标注"无历史案例参考"，建议人工验证归因结论
-4. **产品架构缺失**：请用户提供服务组件清单或依赖关系，AI将基于有限信息进行拓扑溯源，标注溯源结果需人工确认
+1. **Anomaly alert events missing**: Ask user to describe anomaly phenomena, including: symptom manifestations, occurrence time, affected services/features, impact scope (user count/feature points); AI will perform attribution analysis based on the description
+2. **Context data missing** (release/config change/traffic change): AI will explicitly mark factors that cannot be excluded in attribution analysis, recommending manual investigation of these dimensions
+3. **Root cause knowledge base missing**: AI will rely entirely on 5 Why logical reasoning for attribution, label "no historical case reference" in output, and recommend human verification of attribution conclusions
+4. **Product architecture missing**: Ask user to provide service component list or dependency relationships; AI will perform topology tracing based on limited information, label tracing results for human confirmation
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| alert_id | string | 是 | 告警ID，须与monitoring-alert-detection输出一致 |
-| root_cause | object | 是 | 根因分析，须含5_whys和conclusion |
-| root_cause.5_whys | array | 是 | 5 Why链条，3-5层，每层须含question/answer/evidence |
-| root_cause.root_cause_summary | string | 是 | 根因摘要 |
-| root_cause.confidence | number | 是 | 置信度，0.0-1.0 |
-| impact_scope | object | 是 | 影响评估，须含affected_users/affected_features |
-| impact_scope.level | string | 是 | 影响级别，仅允许critical/major/minor/negligible |
-| remediation | object | 是 | 修复建议，须含immediate_actions/estimated_resolution_time |
-| remediation.immediate_actions | array | 是 | 即时行动列表，每项须含step/command/rollback_command |
-| needs_human_escalation | boolean | 是 | 是否需要人工升级 |
-| long_term_fixes | array | 否 | 长期修复方案，每项须含description/priority |
-| postmortem_suggestion | object | 否 | 复盘建议，须含triggered/action_items |
+| alert_id | string | Yes | Alert ID, must be consistent with monitoring-alert-detection output |
+| root_cause | object | Yes | Root cause analysis, must contain 5_whys and conclusion |
+| root_cause.5_whys | array | Yes | 5 Why chain, 3-5 layers, each layer must contain question/answer/evidence |
+| root_cause.root_cause_summary | string | Yes | Root cause summary |
+| root_cause.confidence | number | Yes | Confidence, 0.0-1.0 |
+| impact_scope | object | Yes | Impact assessment, must contain affected_users/affected_features |
+| impact_scope.level | string | Yes | Impact level, only critical/major/minor/negligible allowed |
+| remediation | object | Yes | Remediation suggestions, must contain immediate_actions/estimated_resolution_time |
+| remediation.immediate_actions | array | Yes | Immediate action list, each item must contain step/command/rollback_command |
+| needs_human_escalation | boolean | Yes | Whether human escalation is needed |
+| long_term_fixes | array | No | Long-term fix plan, each item must contain description/priority |
+| postmortem_suggestion | object | No | Retrospective suggestions, must contain triggered/action_items |
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游来源 | 变更类型 | 影响范围 | 响应动作 |
+| Upstream Source | Change Type | Impact Scope | Response Action |
 |----------|----------|----------|----------|
-| monitoring-alert-detection | 告警事件更新 | 根因分析输入 | 重新进行归因分析 |
-| monitoring-alert-detection | 告警分类变更 | 根因模式匹配 | 更新根因匹配模式 |
-| release-gradual | 版本发布记录更新 | 变更关联归因 | 更新关联事件和归因 |
-| 根因知识库 | 历史案例更新 | 根因匹配和建议 | 更新参考案例库 |
+| monitoring-alert-detection | Alert event update | Root cause analysis input | Re-perform attribution analysis |
+| monitoring-alert-detection | Alert classification change | Root cause pattern matching | Update root cause matching patterns |
+| release-gradual | Release record update | Change correlation attribution | Update correlation events and attribution |
+| Root cause knowledge base | Historical case update | Root cause matching and suggestions | Update reference case library |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 下游消费者 | 通知条件 | 通知方式 | 通知内容 |
+| Downstream Consumer | Notification Condition | Notification Method | Notification Content |
 |------------|----------|----------|----------|
-| monitoring-orchestrator | 归因分析完成 | 输出文件更新 | 归因完成状态和关键结论 |
-| user-feedback-loop-report | 异常影响范围确认 | 写入输出文件 | 异常事件和用户影响范围 |
-| iteration-backlog-grooming | P0异常触发修复 | 写入输出文件 | 根因和修复建议 |
+| monitoring-orchestrator | Attribution analysis complete | Output file update | Attribution completion status and key conclusions |
+| user-feedback-loop-report | Anomaly impact scope confirmed | Write to output file | Anomaly events and user impact scope |
+| iteration-backlog-grooming | P0 anomaly triggers remediation | Write to output file | Root cause and remediation suggestions |

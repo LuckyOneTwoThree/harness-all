@@ -1,12 +1,12 @@
 ---
 name: disaster-recovery-plan
-description: 容灾预案设计，定义 RTO/RPO 目标/多 AZ 策略/降级方案/异地容灾
+description: Disaster recovery plan design, defining RTO/RPO targets, multi-AZ strategy, degradation plans, and cross-region disaster recovery
 triggers:
-  - 制定容灾预案时
-  - OPS_STRATEGY.md 定义容灾策略时
-  - 业务增长需要提升容灾能力时
-  - 容灾演练规划时
-  - 用户要求"设计容灾方案"时
+  - When formulating a disaster recovery plan
+  - When OPS_STRATEGY.md defines disaster recovery strategy
+  - When business growth requires improved disaster recovery capabilities
+  - When planning disaster recovery drills
+  - When the user requests "design a disaster recovery plan"
 reads:
   - docs/infrastructure/OPS_STRATEGY.md
   - rules/security.md
@@ -22,47 +22,47 @@ operation_tier: propose
 requires_approval: false
 ---
 
-# Disaster Recovery Plan — 容灾预案设计
+# Disaster Recovery Plan — Disaster Recovery Plan Design
 
-## 铁律
+## Ground Rules
 
-1. **容灾有明确目标** —— RTO/RPO 必须量化
-2. **容灾分层** —— 核心服务高可用，非核心可降级
-3. **容灾可演练** —— 不能只写在纸上，必须可执行
-4. **容灾有成本意识** —— 不盲目追求最高级别
+1. **Disaster recovery has clear targets** — RTO/RPO must be quantified
+2. **Tiered disaster recovery** — core services are highly available; non-core services can be degraded
+3. **Disaster recovery is drillable** — cannot just be on paper; must be executable
+4. **Disaster recovery is cost-aware** — do not blindly pursue the highest tier
 
-## 流程
+## Process
 
-### 1. 定义服务分级
+### 1. Define Service Tiers
 
 ```
-## 服务分级
+## Service Tiers
 
-### Tier 0（核心，RTO<5min, RPO<1min）
-- payment-service（支付）
-- order-service（订单）
-- user-service（用户认证）
-- 容灾要求: 多 AZ + 异地热备 + 自动切换
+### Tier 0 (core, RTO<5min, RPO<1min)
+- payment-service (payment)
+- order-service (orders)
+- user-service (user authentication)
+- DR requirement: multi-AZ + cross-region hot standby + auto-failover
 
-### Tier 1（重要，RTO<30min, RPO<1h）
-- search-service（搜索）
-- recommendation-service（推荐）
-- 容灾要求: 多 AZ + 定期备份
+### Tier 1 (important, RTO<30min, RPO<1h)
+- search-service (search)
+- recommendation-service (recommendations)
+- DR requirement: multi-AZ + periodic backups
 
-### Tier 2（一般，RTO<4h, RPO<24h）
-- admin-service（后台管理）
-- report-service（报表）
-- 容灾要求: 单 AZ + 每日备份
+### Tier 2 (general, RTO<4h, RPO<24h)
+- admin-service (admin)
+- report-service (reports)
+- DR requirement: single-AZ + daily backups
 
-### Tier 3（非核心，RTO<24h, RPO<24h）
-- log-analytics（日志分析）
-- 容灾要求: 按需恢复
+### Tier 3 (non-core, RTO<24h, RPO<24h)
+- log-analytics (log analysis)
+- DR requirement: on-demand recovery
 ```
 
-### 2. 设计多 AZ 策略
+### 2. Design Multi-AZ Strategy
 
 ```yaml
-# 多 AZ 部署配置
+# Multi-AZ deployment config
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -89,50 +89,50 @@ spec:
               topologyKey: kubernetes.io/hostname
 ```
 
-### 3. 设计异地容灾（如需）
+### 3. Design Cross-Region Disaster Recovery (if needed)
 
 ```
-## 异地容灾架构
+## Cross-Region DR Architecture
 
-### 主集群（北京）
-- 运行所有服务
-- 数据库主库
-- 实时写入
+### Primary cluster (Beijing)
+- Runs all services
+- Database primary
+- Real-time writes
 
-### 备集群（上海）
-- 运行 Tier 0 服务（冷备/热备）
-- 数据库只读副本
-- 异步复制（延迟 < 1s）
+### Secondary cluster (Shanghai)
+- Runs Tier 0 services (cold/hot standby)
+- Database read replica
+- Asynchronous replication (lag < 1s)
 
-### 切换策略
-- 自动切换: 主库健康检查失败 + 备库健康
-- 手动切换: 主集群区域性故障
-- 切换时间: < 5 分钟（RTO）
-- 数据丢失: < 1 秒（RPO，异步复制延迟）
+### Failover Strategy
+- Auto-failover: primary health check fails + secondary healthy
+- Manual failover: primary regional outage
+- Failover time: < 5 minutes (RTO)
+- Data loss: < 1 second (RPO, async replication lag)
 ```
 
-### 4. 设计降级方案
+### 4. Design Degradation Plan
 
 ```yaml
-# 降级配置
+# Degradation config
 degradation:
   enabled: true
   levels:
-    # Level 1: 关闭非核心功能
+    # Level 1: disable non-core features
     - trigger: "CPU > 80%"
       actions:
         - disable_feature: recommendation
         - disable_feature: search
         - reduce_log_level: WARN
     
-    # Level 2: 只保留核心链路
+    # Level 2: keep only the core path
     - trigger: "CPU > 90% or ErrorRate > 5%"
       actions:
         - enable_rate_limit: 1000 req/s
         - disable_feature: admin
         - enable_cache_mode: aggressive
     
-    # Level 3: 紧急模式
+    # Level 3: emergency mode
     - trigger: "Service unavailable"
       actions:
         - enable_maintenance_page
@@ -140,83 +140,83 @@ degradation:
         - notify_oncall
 ```
 
-### 5. 设计数据备份策略
+### 5. Design Data Backup Strategy
 
 ```
-## 数据备份策略
+## Data Backup Strategy
 
-### 数据库
-| 类型 | 频率 | 保留期 | 存储 |
+### Database
+| Type | Frequency | Retention | Storage |
 |------|------|--------|------|
-| 全量备份 | 每天 | 30 天 | 跨区域 S3 |
-| 增量备份 | 每小时 | 7 天 | 同区域 S3 |
-| Binlog/WAL | 实时 | 24 小时 | 本地 + 远程 |
+| Full backup | Daily | 30 days | Cross-region S3 |
+| Incremental backup | Hourly | 7 days | Same-region S3 |
+| Binlog/WAL | Real-time | 24 hours | Local + remote |
 
-### 对象存储
-- 版本控制: 启用
-- 跨区域复制: 启用
-- 保留策略: 90 天
+### Object Storage
+- Versioning: enabled
+- Cross-region replication: enabled
+- Retention policy: 90 days
 
-### 配置数据
-- Git 仓库: 多副本（GitHub + 本地镜像）
-- Secret: Vault 多副本
+### Configuration Data
+- Git repo: multi-replica (GitHub + local mirror)
+- Secrets: Vault multi-replica
 ```
 
-### 6. 设计应急响应流程
+### 6. Design Emergency Response Process
 
 ```
-## 应急响应流程
+## Emergency Response Process
 
-### 1. 检测（< 1 min）
-- 监控告警触发
-- 用户反馈
-- 巡检发现
+### 1. Detection (< 1 min)
+- Monitoring alert triggered
+- User feedback
+- Patrol discovery
 
-### 2. 评估（< 5 min）
-- 故障等级判定（P0/P1/P2）
-- 影响范围评估
-- 决策: 降级 / 切换 / 恢复
+### 2. Assessment (< 5 min)
+- Incident severity classification (P0/P1/P2)
+- Impact scope assessment
+- Decision: degrade / failover / recover
 
-### 3. 响应（< RTO）
-- P0: 立即启动容灾切换
-- P1: 降级 + 排查
-- P2: 排查 + 修复
+### 3. Response (< RTO)
+- P0: immediately trigger DR failover
+- P1: degrade + troubleshoot
+- P2: troubleshoot + fix
 
-### 4. 恢复（< RTO）
-- 执行容灾切换/降级
-- 验证服务恢复
-- 通知相关方
+### 4. Recovery (< RTO)
+- Execute DR failover/degradation
+- Verify service recovery
+- Notify stakeholders
 
-### 5. 复盘（< 24h）
-- 根因分析
-- 改进措施
-- 更新预案
+### 5. Post-mortem (< 24h)
+- Root cause analysis
+- Improvement actions
+- Update the plan
 ```
 
-### 7. 生成容灾预案文档
+### 7. Produce the DR Plan Document
 
-写入 `docs/infrastructure/disaster-recovery-plan.md`，包含上述全部内容。
+Write to `docs/infrastructure/disaster-recovery-plan.md`, including all the above content.
 
-### 8. 更新知识库
+### 8. Update Knowledge Base
 
-`memory/knowledge-base.md` 追加：
+Append to `memory/knowledge-base.md`:
 ```
-| 预案版本 | 服务分级 | 最高RTO | 最高RPO | 多AZ | 异地容灾 | 最后演练 |
+| Plan Version | Service Tiers | Max RTO | Max RPO | Multi-AZ | Cross-Region DR | Last Drill |
 |---------|---------|---------|---------|------|---------|---------|
-| v1.0 | 4级 | 5min | 1min | ✓ | 规划中 | 待演练 |
+| v1.0 | 4 tiers | 5min | 1min | ✓ | Planned | Pending |
 ```
 
-## 禁止事项
+## Prohibitions
 
-- 不制定无法执行的容灾预案
-- 不为所有服务追求最高容灾级别（成本考虑）
-- 不跳过容灾演练
-- 不在预案中包含明文凭据
+- Do not formulate disaster recovery plans that cannot be executed
+- Do not pursue the highest DR tier for all services (cost considerations)
+- Do not skip disaster recovery drills
+- Do not include plaintext credentials in the plan
 
-## 与 LOOP 的关系
+## Relationship to LOOP
 
-**所属 LOOP 类型**：无（规划类 skill）
+**LOOP type**: none (planning skill)
 
-本 skill 产出容灾预案文档，供人类决策。
-执行容灾演练时由 recovery-drill skill 实施。
-实际容灾切换由 incident-response-workflow 触发。
+This skill produces a disaster recovery plan document for human decision-making.
+DR drills are executed by the recovery-drill skill.
+Actual DR failover is triggered by the incident-response-workflow.

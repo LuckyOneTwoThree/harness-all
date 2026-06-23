@@ -1,11 +1,11 @@
 ---
 name: growth-review
-description: 生成增长回顾报告（周会/月会/季度回顾），汇总指标/实验/洞察，产出growth-to-pm交接文档
+description: Generate a growth review report (weekly / monthly / quarterly), summarizing metrics / experiments / insights, and produce a growth-to-pm handoff document
 triggers:
-  - 周会/月会/季度回顾时
-  - session-end 检测到有结题实验时
-  - 用户要求"总结一下增长进展"
-  - 需要产出 growth-to-pm.md 交接文档时
+  - During weekly / monthly / quarterly reviews
+  - When session-end detects completed experiments
+  - User asks to "summarize growth progress"
+  - When a growth-to-pm.md handoff document is needed
 reads:
   - memory/knowledge-base.md
   - memory/progress.md
@@ -20,110 +20,110 @@ quality_gates: []
 max_iterations: 1
 ---
 
-# Growth Review — 增长回顾报告
+# Growth Review — Growth Review Report
 
-## 铁律
-- 报告必须基于**实际数据**，不是"感觉不错"
-- 必须同时报告**成功和失败**的实验——失败实验的洞察同样有价值
-- 必须给出**下一步建议**——回顾不是目的，行动才是
-- 产出 growth-to-pm.md 时必须按模板填写，字段完整
+## Iron Rules
+- The report must be based on **actual data**, not "feels good"
+- Must report both **successful and failed** experiments — failure experiment insights are equally valuable
+- Must give **next-step recommendations** — review is not the goal, action is
+- When producing growth-to-pm.md, must fill in the template with all fields complete
 
-## 流程
+## Process
 
-1. **收集数据**
-   - 读取 `memory/knowledge-base.md` 的实验库/假设库/内容效果库/SEO资产库
-   - 读取 `memory/progress.md` 了解本周期做了什么
-   - 扫描 `loops/specs/*/state.yaml` 找出本周期结题的实验
-   - 读取对应 `evidence.md` 获取实验数据
-   - 读取 `FEATURES.md` 了解整体实验/任务状态
+1. **Collect data**
+   - Read the experiment library / hypothesis library / content performance library / SEO asset library in `memory/knowledge-base.md`
+   - Read `memory/progress.md` to understand what was done this period
+   - Scan `loops/specs/*/state.yaml` to find experiments completed this period
+   - Read the corresponding `evidence.md` for experiment data
+   - Read `FEATURES.md` for overall experiment/task status
 
-2. **汇总核心指标**
-   按增长回顾报告标准结构组织：
+2. **Summarize core metrics**
+   Organize by the standard growth review report structure:
    ```
-   ## 核心指标看板
-   | 指标 | 上期值 | 本期值 | 变化 | 目标 | 达成? |
-   |------|--------|--------|------|------|-------|
-   | NSM(北极星) | ... | ... | ... | ... | ✓/✗ |
-   | 获客指标 | ... | ... | ... | ... | ... |
-   | 激活指标 | ... | ... | ... | ... | ... |
-   | 留存指标 | ... | ... | ... | ... | ... |
-   | 变现指标 | ... | ... | ... | ... | ... |
-   ```
-
-3. **实验回顾**
-   汇总本周期所有结题实验：
-   ```
-   ## 关键实验回顾
-
-   ### Top 3 成功实验
-   | 实验ID | 假设 | 结论 | 影响 | 决策 |
-   |--------|------|------|------|------|
-   | G-001 | ... | 有效(p=0.02) | 激活率+10% | 全量 |
-
-   ### Top 3 失败实验（及学习）
-   | 实验ID | 假设 | 结论 | 失败原因 | 可复用洞察 |
-   |--------|------|------|---------|-----------|
-   | G-003 | ... | 无效(p=0.45) | 假设的用户痛点不成立 | "用户不关心X，真正痛点是Y" |
+   ## Core Metrics Dashboard
+   | Metric | Previous | Current | Change | Target | Achieved? |
+   |--------|----------|---------|--------|--------|-----------|
+   | NSM (North Star) | ... | ... | ... | ... | ✓/✗ |
+   | Acquisition metric | ... | ... | ... | ... | ... |
+   | Activation metric | ... | ... | ... | ... | ... |
+   | Retention metric | ... | ... | ... | ... | ... |
+   | Monetization metric | ... | ... | ... | ... | ... |
    ```
 
-4. **分领域进展**
+3. **Experiment review**
+   Summarize all completed experiments this period:
    ```
-   ## 分领域进展
-   - 获客: [本周/月进展]
-   - 激活: [进展]
-   - 留存: [进展]
-   - 变现: [进展]
-   - 内容: [进展]
-   - SEO: [进展]
-   ```
+   ## Key Experiment Review
 
-5. **问题与风险**
-   ```
-   ## 问题与风险
-   | 风险 | 等级 | 影响 | 缓解措施 |
-   |------|------|------|---------|
-   | 获客成本上升 | 高 | CAC 接近 LTV/3 | 优化渠道组合 |
+   ### Top 3 Successful Experiments
+   | Experiment ID | Hypothesis | Conclusion | Impact | Decision |
+   |---------------|------------|------------|--------|----------|
+   | G-001 | ... | Effective (p=0.02) | Activation rate +10% | Full rollout |
+
+   ### Top 3 Failed Experiments (and learnings)
+   | Experiment ID | Hypothesis | Conclusion | Failure reason | Reusable insight |
+   |---------------|------------|------------|----------------|------------------|
+   | G-003 | ... | Ineffective (p=0.45) | Hypothesized user pain point doesn't hold | "Users don't care about X; the real pain point is Y" |
    ```
 
-6. **下一步计划**
+4. **Per-domain progress**
    ```
-   ## 下阶段计划
-   - 主题聚焦: [如"本月聚焦激活率优化"]
-   - 实验路线图: [下周期计划跑的实验]
-   - 资源需求: [需要工程/设计支持的事项]
+   ## Per-domain Progress
+   - Acquisition: [this week/month's progress]
+   - Activation: [progress]
+   - Retention: [progress]
+   - Monetization: [progress]
+   - Content: [progress]
+   - SEO: [progress]
    ```
 
-7. **产出 growth-to-pm.md**（满足条件时）
-   按 `docs/handoff/growth-to-pm-template.md` 模板填写：
-   - 阶段总结：本周期增长工作一句话概括
-   - 实验结果表：所有结题实验的结论
-   - 用户反馈：采集到的用户洞察
-   - 增长建议：基于数据的下一步建议
-   - 指标异动：异常波动及归因
+5. **Issues and risks**
+   ```
+   ## Issues and Risks
+   | Risk | Level | Impact | Mitigation |
+   |------|-------|--------|------------|
+   | Rising acquisition cost | High | CAC approaching LTV/3 | Optimize channel mix |
+   ```
 
-   **注意**：如 growth-to-pm.md 已存在，追加本周期内容，不覆盖历史
+6. **Next-step plan**
+   ```
+   ## Next-Period Plan
+   - Theme focus: [e.g., "This month focuses on activation rate optimization"]
+   - Experiment roadmap: [experiments planned for next period]
+   - Resource needs: [items needing engineering/design support]
+   ```
 
-8. **更新知识库**
-   - 将"可复用洞察"追加到 knowledge-base.md 的"增长模式沉淀"表
-   - 更新"增长假设库"中相关假设的状态
+7. **Produce growth-to-pm.md** (when conditions are met)
+   Fill in per the `docs/handoff/growth-to-pm-template.md` template:
+   - Period summary: one-line summary of this period's growth work
+   - Experiment results table: conclusions of all completed experiments
+   - User feedback: collected user insights
+   - Growth recommendations: data-based next-step recommendations
+   - Metric anomalies: abnormal fluctuations and attribution
 
-## 报告频率与结构对照
+   **Note**: If growth-to-pm.md already exists, append this period's content; do not overwrite history
 
-| 频率 | 报告结构 | 重点 |
-|------|---------|------|
-| 周报 | 指标+在跑实验进度+下周计划 | 快速同步，聚焦执行 |
-| 月报 | 指标+结题实验+分领域进展+下月主题 | 中期复盘，调整方向 |
-| 季报 | NSM进度+Loop健康度+路线图复盘+下季度战略 | 长期战略，目标对齐 |
+8. **Update knowledge base**
+   - Append "reusable insights" to the "growth pattern repository" table in knowledge-base.md
+   - Update the status of related hypotheses in the "growth hypothesis library"
 
-## 禁止事项
-- 不报喜不报忧（失败实验必须记录）
-- 不只列数据不给洞察（数据→洞察→行动才是完整闭环）
-- 不省略下一步计划（回顾的目的是指导行动）
-- 不在 growth-to-pm.md 中包含用户 PII（隐私合规）
+## Report frequency and structure mapping
 
-## 与 LOOP 的关系
-本 skill 不在 LOOP 内执行，是**会话级/周期级**的报告产出。
-通常由 session-end 触发，或用户显式要求时执行。
+| Frequency | Report structure | Focus |
+|-----------|------------------|-------|
+| Weekly | Metrics + running experiment progress + next-week plan | Quick sync, focus on execution |
+| Monthly | Metrics + completed experiments + per-domain progress + next-month theme | Mid-term retrospective, adjust direction |
+| Quarterly | NSM progress + Loop health + roadmap retrospective + next-quarter strategy | Long-term strategy, goal alignment |
 
-## 与 Workflow 的关系
-本 skill 是 **growth-review-workflow** 的核心步骤，编排 funnel-analysis / cohort-analysis / metric-anomaly-detection 的产出汇总成报告。
+## Prohibitions
+- Don't report only good news and hide bad (failed experiments must be recorded)
+- Don't just list data without insight (data → insight → action is the complete loop)
+- Don't omit the next-step plan (the purpose of review is to guide action)
+- Don't include user PII in growth-to-pm.md (privacy compliance)
+
+## Relationship to LOOP
+This skill does not run inside LOOP; it is a **session-level / period-level** report output.
+Usually triggered by session-end, or executed on explicit user request.
+
+## Relationship to Workflow
+This skill is the core step of **growth-review-workflow**, orchestrating the outputs of funnel-analysis / cohort-analysis / metric-anomaly-detection into a consolidated report.

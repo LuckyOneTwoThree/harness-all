@@ -1,12 +1,12 @@
 ---
 name: root-cause-analysis
-description: 根因分析，多源数据关联（日志/指标/链路/事件），识别故障根本原因
+description: Root cause analysis, correlating multi-source data (logs / metrics / traces / events) to identify the root cause of incidents
 triggers:
-  - 故障止血后需要定位根因时
-  - incident LOOP 的 DEBUG 阶段执行时
-  - 反复出现的间歇性问题需要深挖时
-  - 监控告警无法用已知模式解释时
-  - 用户要求"分析故障原因"时
+  - When root cause needs to be identified after incident stop-the-bleeding
+  - During the DEBUG stage of the incident LOOP
+  - When recurring intermittent issues need deep investigation
+  - When monitoring alerts cannot be explained by known patterns
+  - When the user requests "analyze the incident cause"
 reads:
   - loops/specs/<incident-id>/spec.md
   - loops/specs/<incident-id>/state.yaml
@@ -24,184 +24,184 @@ operation_tier: inspect
 requires_approval: false
 ---
 
-# Root Cause Analysis — 根因分析
+# Root Cause Analysis — Root Cause Analysis
 
-## 铁律
+## Ground Rules
 
-1. **基于证据，不基于猜测** —— 每个根因假设必须有数据支撑
-2. **多源关联，不单一维度** —— 日志+指标+链路+事件交叉验证
-3. **找根因，不找症状** —— "CPU 高"是症状，"死循环"是根因
-4. **5 Why 深挖** —— 不停留在第一层原因，连续追问
+1. **Evidence-based, not guesswork** — every root cause hypothesis must be backed by data
+2. **Multi-source correlation, not single-dimension** — cross-validate logs + metrics + traces + events
+3. **Find the root cause, not the symptom** — "high CPU" is a symptom, "infinite loop" is the root cause
+4. **5 Whys deep dive** — do not stop at the first layer, keep asking
 
-## 流程
+## Process
 
-### 1. 收集故障上下文
+### 1. Collect Incident Context
 
-读取 `spec.md` 和 `iterations.log`：
-- 故障现象：什么服务、什么错误、什么时间
-- 已尝试的处置：止血措施是否有效
-- 已有的假设：之前是否分析过
+Read `spec.md` and `iterations.log`:
+- Phenomenon: which service, which error, when
+- Handling already attempted: whether stop-the-bleeding was effective
+- Existing hypotheses: whether analysis was done before
 
-### 2. 多源数据采集
+### 2. Multi-Source Data Collection
 
-#### 2.1 日志分析
-调用 `log-analysis` skill：
-- 查询故障时间窗口的 ERROR/WARN 日志
-- 识别异常模式（堆栈、超时、连接拒绝）
-- 聚类相似错误（log pattern mining）
+#### 2.1 Log Analysis
+Invoke the `log-analysis` skill:
+- Query ERROR/WARN logs in the incident time window
+- Identify anomaly patterns (stack traces, timeouts, connection refused)
+- Cluster similar errors (log pattern mining)
 
-#### 2.2 指标分析
-查询 Prometheus（PromQL）：
+#### 2.2 Metrics Analysis
+Query Prometheus (PromQL):
 ```promql
-# 错误率
+# Error rate
 rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m])
 
-# 延迟分布
+# Latency distribution
 histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))
 
-# 资源使用
+# Resource usage
 rate(container_cpu_usage_seconds_total[5m])
 container_memory_usage_bytes / container_spec_memory_limit_bytes
 
-# 依赖服务
+# Dependency services
 rate(redis_command_duration_seconds_sum[5m])
 rate(mysql_query_duration_seconds_sum[5m])
 ```
 
-对比故障前后指标变化，定位异常时间点。
+Compare metrics before and after the incident to locate the anomaly time point.
 
-#### 2.3 链路追踪
-查询 Tempo/Jaeger：
-- 找到失败请求的 trace
-- 识别哪个 span 失败/超时
-- 查看完整调用链路
+#### 2.3 Distributed Tracing
+Query Tempo/Jaeger:
+- Find the trace of the failed request
+- Identify which span failed / timed out
+- View the full call chain
 
-#### 2.4 事件关联
-查询 K8s 事件：
+#### 2.4 Event Correlation
+Query K8s events:
 ```bash
 kubectl get events -n <namespace> --sort-by='.lastTimestamp'
-# 关注：OOMKilled, FailedScheduling, Unhealthy, BackOff
+# Focus on: OOMKilled, FailedScheduling, Unhealthy, BackOff
 ```
 
-查询部署历史：
-- 故障前是否有部署？
-- 是否有配置变更？
-- 是否有 DB Migration？
+Query deployment history:
+- Was there a deployment before the incident?
+- Was there a config change?
+- Was there a DB Migration?
 
-### 3. 生成根因假设
+### 3. Generate Root Cause Hypotheses
 
-基于多源数据，列出所有可能的根因：
-
-```
-## 根因假设清单
-
-### 假设 1: [描述]
-- 证据: [日志/指标/链路]
-- 置信度: [高/中/低]
-- 验证方式: [如何确认]
-
-### 假设 2: [描述]
-- 证据: [...]
-- 置信度: [...]
-- 验证方式: [...]
-
-### 假设 3: [描述]
-- 证据: [...]
-- 置信度: [...]
-- 验证方式: [...]
-```
-
-### 4. 5 Why 深挖
-
-对每个假设追问 5 层：
+Based on multi-source data, list all possible root causes:
 
 ```
-现象: 支付接口 500 错误率 8%
+## Root Cause Hypothesis List
 
-Why 1: 为什么 500？→ 数据库连接超时
-Why 2: 为什么连接超时？→ 连接池耗尽
-Why 3: 为什么连接池耗尽？→ 慢查询占用连接
-Why 4: 为什么慢查询？→ 缺失索引，全表扫描
-Why 5: 为什么缺失索引？→ Migration 漏加索引
+### Hypothesis 1: [description]
+- Evidence: [logs / metrics / traces]
+- Confidence: [high / medium / low]
+- Verification method: [how to confirm]
 
-根因: Migration 漏加索引导致慢查询，耗尽连接池
+### Hypothesis 2: [description]
+- Evidence: [...]
+- Confidence: [...]
+- Verification method: [...]
+
+### Hypothesis 3: [description]
+- Evidence: [...]
+- Confidence: [...]
+- Verification method: [...]
 ```
 
-### 5. 验证根因
+### 4. 5 Whys Deep Dive
 
-- **直接验证**：执行验证命令（如 EXPLAIN 慢查询）
-- **对比验证**：与正常时段对比指标差异
-- **排除验证**：排除其他假设
-
-### 6. 产出根因报告
+For each hypothesis, ask 5 layers:
 
 ```
-## 根因分析报告
+Phenomenon: Payment API 500 error rate 8%
 
-### 故障摘要
-- 故障 ID: [INC-xxx]
-- 等级: [P0/P1/P2]
-- 持续时间: [X 分钟]
-- 影响范围: [描述]
+Why 1: Why 500? → Database connection timeout
+Why 2: Why connection timeout? → Connection pool exhausted
+Why 3: Why connection pool exhausted? → Slow queries holding connections
+Why 4: Why slow queries? → Missing index, full table scan
+Why 5: Why missing index? → Migration missed the index
 
-### 根因
-- 直接原因: [症状层]
-- 根本原因: [根因层]
-- 置信度: [高/中/低]
-- 验证证据: [数据]
+Root cause: Migration missed the index, causing slow queries that exhausted the connection pool
+```
 
-### 时间线
-| 时间 | 事件 |
+### 5. Verify the Root Cause
+
+- **Direct verification**: execute verification commands (e.g., EXPLAIN on the slow query)
+- **Comparative verification**: compare metric differences with normal periods
+- **Elimination verification**: rule out other hypotheses
+
+### 6. Produce Root Cause Report
+
+```
+## Root Cause Analysis Report
+
+### Incident Summary
+- Incident ID: [INC-xxx]
+- Severity: [P0/P1/P2]
+- Duration: [X minutes]
+- Impact scope: [description]
+
+### Root Cause
+- Direct cause: [symptom layer]
+- Root cause: [root cause layer]
+- Confidence: [high / medium / low]
+- Verification evidence: [data]
+
+### Timeline
+| Time | Event |
 |------|------|
-| 14:30 | 错误率开始上升 |
-| 14:32 | 告警触发 |
-| 14:35 | Agent 介入诊断 |
-| 14:40 | 根因定位 |
-| 14:45 | 止血措施执行 |
-| 14:50 | 服务恢复 |
+| 14:30 | Error rate started rising |
+| 14:32 | Alert triggered |
+| 14:35 | Agent engaged for diagnosis |
+| 14:40 | Root cause identified |
+| 14:45 | Stop-the-bleeding executed |
+| 14:50 | Service recovered |
 
-### 5 Why 分析
-[完整链路]
+### 5 Whys Analysis
+[Full chain]
 
-### 建议修复
-- 短期: [止血措施，已完成]
-- 中期: [修复根因，如加索引]
-- 长期: [预防措施，如加 Migration 检查]
+### Recommended Fixes
+- Short-term: [stop-the-bleeding measures, completed]
+- Mid-term: [fix the root cause, e.g., add index]
+- Long-term: [preventive measures, e.g., add Migration check]
 ```
 
-写入 `evidence.md`。
+Write to `evidence.md`.
 
-### 7. 更新知识库
+### 7. Update Knowledge Base
 
-- `memory/knowledge-base.md` 故障库追加一行
-- `memory/knowledge-base.md` 根因库追加（如发现新模式）
-- `memory/knowledge-base.md` 踩坑记录追加（如有教训）
+- Append a row to the incident library in `memory/knowledge-base.md`
+- Append to the root cause library in `memory/knowledge-base.md` (if a new pattern is discovered)
+- Append to the pitfall records in `memory/knowledge-base.md` (if there are lessons learned)
 
-## 禁止事项
+## Prohibitions
 
-- 不在没有证据的情况下下结论
-- 不停留在症状层（"CPU 高"不是根因）
-- 不忽略多个假设（只找一个根因可能遗漏）
-- 不篡改时间线（必须如实记录）
-- 不隐瞒不确定项（置信度低的假设也要记录）
+- Do not draw conclusions without evidence
+- Do not stop at the symptom layer ("high CPU" is not a root cause)
+- Do not ignore multiple hypotheses (finding only one root cause may miss things)
+- Do not tamper with the timeline (must record truthfully)
+- Do not conceal uncertain items (low-confidence hypotheses must also be recorded)
 
-## 与 LOOP 的关系
+## Relationship to LOOP
 
-**所属 LOOP 类型**：incident（DEBUG 阶段）
+**LOOP type**: incident (DEBUG stage)
 
 ```
 LOOP(incident):
   PLAN(detect) → PROVISION(mitigate) → VERIFY
-    ↓ 未恢复或需根因
+    ↓ not recovered or root cause needed
   DEBUG(root-cause-analysis)
-    ↓ 找到根因
-  回到 PROVISION（针对性修复）
+    ↓ root cause found
+  Back to PROVISION (targeted fix)
 ```
 
-**stage 字段写入**：debug
+**stage field value**: debug
 
-## 与其他 skill 的关系
+## Relationship to Other Skills
 
-- **上游**：`incident-detection`（创建故障记录）、`incident-mitigation`（止血后）
-- **协作**：调用 `log-analysis`（日志）、查询 Prometheus/Grafana（指标）
-- **下游**：产出根因报告供 `post-mortem` 使用
+- **Upstream**: `incident-detection` (creates incident record), `incident-mitigation` (after stop-the-bleeding)
+- **Collaboration**: invokes `log-analysis` (logs), queries Prometheus/Grafana (metrics)
+- **Downstream**: produces root cause report for `post-mortem` to use

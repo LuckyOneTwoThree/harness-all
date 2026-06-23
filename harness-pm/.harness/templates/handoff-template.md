@@ -1,63 +1,63 @@
-# 交接：<源框架> → <目标框架>
+# Handoff: <source framework> → <target framework>
 
-> 生成时间：YYYY-MM-DD HH:MM
-> 源框架：<harness-pm / harness-solo / harness-design / ...>
-> 目标框架：<harness-solo / harness-growth / harness-design / ...>
+> Generated: YYYY-MM-DD HH:MM
+> Source framework: <harness-pm / harness-solo / harness-design / ...>
+> Target framework: <harness-solo / harness-growth / harness-design / ...>
 
-## 阶段总结
+## Phase summary
 
-<本阶段做了什么，一句话概括>
+<What this phase did, in one sentence>
 
-## 产出物清单
+## Output list
 
-| 产出物 | 路径 | 类型 | 说明 |
+| Output | Path | Type | Notes |
 |--------|------|------|------|
-| PRD | docs/product/PRD.md | Markdown | 产品需求文档，含功能列表和验收标准 |
-| 埋点方案 | docs/metrics/tracking-plan.md | Markdown | 事件埋点定义 |
+| PRD | docs/product/PRD.md | Markdown | Product requirements document, including feature list and acceptance criteria |
+| Tracking plan | docs/metrics/tracking-plan.md | Markdown | Event tracking definition |
 
-> 注：harness-pm 产出的是本交接文档（含 PRD 路径指引），不是直接写工程的 PROJECT.md。
-> 工程的 PROJECT.md 由 harness-solo 的 brainstorming skill 维护（从交接文档提取需求后写入）。
+> Note: harness-pm produces this handoff document (with PRD path pointers), not the engineering PROJECT.md directly.
+> The engineering PROJECT.md is maintained by harness-solo's brainstorming skill (written after extracting requirements from the handoff document).
 
-## 关键决策
+## Key decisions
 
-| 决策 | 理由 | 影响范围 |
+| Decision | Reason | Impact scope |
 |------|------|---------|
-| 选用方案 X | 用户调研支撑 + 技术可行 | 全项目 |
-| 不做功能 Y | 不在 MVP 范围 | 范围边界 |
+| Chose option X | Supported by user research + technically feasible | Whole project |
+| No feature Y | Not in MVP scope | Scope boundary |
 
-## 验收标准（AC）
+## Acceptance criteria (AC)
 
-下游框架实现时必须满足的可测试条件：
+Testable conditions that the downstream framework must satisfy when implementing:
 
-- [ ] AC-001: <可测试的描述>
-- [ ] AC-002: <可测试的描述>
-- [ ] AC-003: <可测试的描述>
+- [ ] AC-001: <testable description>
+- [ ] AC-002: <testable description>
+- [ ] AC-003: <testable description>
 
-## 未决事项
+## Open items
 
-需下游框架处理或与上游确认的问题：
+Questions that the downstream framework needs to handle or confirm with the upstream:
 
-- 待定 1: <问题描述>
-- 待定 2: <问题描述>
+- Open 1: <question description>
+- Open 2: <question description>
 
-## 建议下一步
+## Suggested next steps
 
-下游框架应优先处理：
+The downstream framework should prioritize:
 
-1. <任务 1>
-2. <任务 2>
-3. <任务 3>
+1. <task 1>
+2. <task 2>
+3. <task 3>
 
-## 风险提示
+## Risk notes
 
-| 风险 | 等级 | 缓解措施 |
+| Risk | Level | Mitigation |
 |------|------|---------|
-| 技术风险 X | 高/中/低 | <措施> |
-| 依赖风险 Y | 高/中/低 | <措施> |
+| Technical risk X | high/medium/low | <action> |
+| Dependency risk Y | high/medium/low | <action> |
 
 ---
 
-## 下游框架使用说明
+## Downstream framework usage notes
 
-下游框架的 session-start skill 会自动检测本文件并读取。
-如未自动识别，可手动指向本文件路径让 Agent 读取。
+The downstream framework's session-start skill will auto-detect this file and read it.
+If not auto-recognized, you can manually point to this file path for the Agent to read.

@@ -1,10 +1,10 @@
 ---
 name: funnel-analysis
-description: 漏斗分析，含转化率/瓶颈定位/分群差异/优化建议
+description: Funnel analysis, including conversion rate, bottleneck localization, segment differences, and optimization recommendations
 triggers:
-  - 需要分析转化漏斗时
-  - 增长回顾报告Workflow
-  - 用户要求"分析漏斗"
+  - When conversion funnel needs to be analyzed
+  - Growth review report Workflow
+  - User asks to "analyze the funnel"
 reads:
   - docs/handoff/solo-to-growth.md
   - memory/knowledge-base.md
@@ -14,78 +14,78 @@ quality_gates: []
 max_iterations: 1
 ---
 
-# Funnel Analysis — 漏斗分析
+# Funnel Analysis — Funnel Analysis
 
-## 铁律
-- 漏斗必须基于**实际事件数据**，不是"估算"
-- 必须定位**最大流失环节**——资源有限，聚焦最大瓶颈
-- 必须做**分群对比**——整体漏斗可能掩盖分群差异
+## Iron Rules
+- Funnels must be based on **actual event data**, not "estimates"
+- Must locate the **biggest churn step** — resources are limited, focus on the largest bottleneck
+- Must perform **segment comparison** — overall funnel may mask segment differences
 
-## 流程
+## Process
 
-1. **定义漏斗步骤**
-   基于产品核心转化路径定义：
+1. **Define funnel steps**
+   Define based on the product's core conversion path:
    ```
-   示例（注册转化漏斗）:
-   访问落地页 → 点击注册 → 填写表单 → 邮箱验证 → 完成注册 → 首次使用
+   Example (sign-up conversion funnel):
+   Visit landing page → Click sign-up → Fill form → Email verification → Complete sign-up → First use
 
-   示例（购买转化漏斗）:
-   浏览商品 → 加入购物车 → 开始结账 → 填写信息 → 完成支付
-   ```
-
-2. **计算各步骤转化率**
-   ```
-   | 步骤 | 用户数 | 转化率 | 累计转化率 | 流失数 | 流失率 |
-   |------|--------|--------|-----------|--------|--------|
-   | 访问落地页 | 10,000 | 100% | 100% | - | - |
-   | 点击注册 | 3,500 | 35% | 35% | 6,500 | 65% |
-   | 填写表单 | 2,800 | 80% | 28% | 700 | 20% |
-   | 邮箱验证 | 2,100 | 75% | 21% | 700 | 25% |
-   | 完成注册 | 2,000 | 95% | 20% | 100 | 5% |
-   | 首次使用 | 1,200 | 60% | 12% | 800 | 40% |
+   Example (purchase conversion funnel):
+   Browse product → Add to cart → Start checkout → Fill info → Complete payment
    ```
 
-3. **定位最大流失环节**
-   - 绝对流失最多：访问→点击注册（流失 6,500）
-   - 相对流失最多：邮箱验证→完成注册（流失 25%）
-   - 优先优化：绝对流失多的环节（影响最大）
-
-4. **分群对比**
+2. **Calculate conversion rate per step**
    ```
-   | 步骤 | 新用户 | 老用户 | 移动端 | 桌面端 |
-   |------|--------|--------|--------|--------|
-   | 访问 | 100% | 100% | 100% | 100% |
-   | 注册 | 28% | 45% | 22% | 35% |
-   | 激活 | 10% | 30% | 8% | 18% |
+   | Step | Users | Conversion rate | Cumulative conversion | Churned | Churn rate |
+   |------|-------|-----------------|----------------------|---------|------------|
+   | Visit landing page | 10,000 | 100% | 100% | - | - |
+   | Click sign-up | 3,500 | 35% | 35% | 6,500 | 65% |
+   | Fill form | 2,800 | 80% | 28% | 700 | 20% |
+   | Email verification | 2,100 | 75% | 21% | 700 | 25% |
+   | Complete sign-up | 2,000 | 95% | 20% | 100 | 5% |
+   | First use | 1,200 | 60% | 12% | 800 | 40% |
    ```
 
-5. **流失原因分析**
-   对最大流失环节分析原因：
-   - 技术问题（页面加载慢/bug）
-   - 设计问题（步骤多/表单长/CTA 不明显）
-   - 价值问题（用户没看到价值/不信任）
-   - 外部因素（竞品/预算/时机）
+3. **Locate the biggest churn step**
+   - Largest absolute churn: Visit → Click sign-up (6,500 churned)
+   - Largest relative churn: Email verification → Complete sign-up (25% churn)
+   - Prioritize: steps with the largest absolute churn (biggest impact)
 
-6. **产出优化建议**
+4. **Segment comparison**
    ```
-   | 优化环节 | 当前转化率 | 目标转化率 | 优化方向 | 预期影响 |
-   |---------|-----------|-----------|---------|---------|
-   | 访问→注册 | 35% | 45% | 优化落地页价值主张 | +1000 用户 |
-   | 邮箱验证 | 75% | 90% | 改为即时验证 | +300 用户 |
-   | 注册→激活 | 60% | 75% | 优化 onboarding | +300 用户 |
+   | Step | New users | Existing users | Mobile | Desktop |
+   |------|-----------|----------------|--------|---------|
+   | Visit | 100% | 100% | 100% | 100% |
+   | Sign-up | 28% | 45% | 22% | 35% |
+   | Activation | 10% | 30% | 8% | 18% |
    ```
 
-7. **写入报告**
-   写入 `docs/operations/funnel-analysis.md`
+5. **Churn cause analysis**
+   For the biggest churn step, analyze causes:
+   - Technical issues (slow page load / bug)
+   - Design issues (too many steps / long form / unclear CTA)
+   - Value issues (users don't see value / don't trust)
+   - External factors (competitors / budget / timing)
 
-## 禁止事项
-- 不在无数据时估算漏斗
-- 不只看整体不做分群对比
-- 不忽略最大流失环节
-- 不只报告数据不给优化建议
+6. **Produce optimization recommendations**
+   ```
+   | Step to optimize | Current conversion | Target conversion | Optimization direction | Expected impact |
+   |------------------|--------------------|--------------------|------------------------|-----------------|
+   | Visit → Sign-up | 35% | 45% | Optimize landing page value proposition | +1000 users |
+   | Email verification | 75% | 90% | Switch to instant verification | +300 users |
+   | Sign-up → Activation | 60% | 75% | Optimize onboarding | +300 users |
+   ```
 
-## 与 LOOP 的关系
-本 skill 不在 LOOP 内执行，是**分析工具**。
+7. **Write report**
+   Write to `docs/operations/funnel-analysis.md`
 
-## 与 Workflow 的关系
-本 skill 是 **growth-review-workflow** 的组成部分，也是 aarr-diagnosis 的数据来源。
+## Prohibitions
+- Don't estimate the funnel when there's no data
+- Don't look only at the overall funnel without segment comparison
+- Don't ignore the biggest churn step
+- Don't report data without optimization recommendations
+
+## Relationship to LOOP
+This skill does not run inside LOOP; it is an **analysis tool**.
+
+## Relationship to Workflow
+This skill is part of **growth-review-workflow** and a data source for aarr-diagnosis.

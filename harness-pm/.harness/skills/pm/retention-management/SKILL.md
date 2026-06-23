@@ -1,24 +1,24 @@
 ---
 name: retention-management
-description: 当需要降低流失率或提升用户参与度时使用。留存管理一体化Pipeline，先构建流失预警模型识别高风险用户自动化触发干预动作，再基于用户生命周期阶段进行分层生成运营策略和个性化触达内容。关键词：流失预警、流失干预、流失模型、用户挽留、用户分层、分层运营、生命周期运营、个性化触达、参与度提升、用户活跃、流失率高、怎么挽留、怎么区别对待、运营分群。
+description: Use when reducing churn rate or improving user engagement. Retention Management Integrated Pipeline first builds a churn prediction model to identify high-risk users and automatically trigger interventions, then segments users by lifecycle stage to generate operation strategies and personalized outreach content. Keywords: churn prediction, churn intervention, churn model, user retention, user segmentation, tiered operations, lifecycle operations, personalized outreach, engagement improvement, user activity, high churn rate, how to retain, differentiated operations, operation segmentation.
 metadata:
-  module: "产品增长与运营"
-  sub-module: "留存"
+  module: "Product Growth & Operations"
+  sub-module: "Retention"
   type: "pipeline"
   version: "3.0"
-  domain_tags: ["互联网", "SaaS", "通用"]
+  domain_tags: ["Internet", "SaaS", "General"]
   trigger_examples:
-    - "用户一直在流失怎么办"
-    - "怎么提前发现要走的用户"
-    - "流失率太高了怎么降"
-    - "不同用户怎么区别运营"
-    - "怎么提高用户活跃度"
-    - "用户分层怎么做"
+    - "Users keep churning, what should I do"
+    - "How to spot users about to leave early"
+    - "Churn rate is too high, how to reduce it"
+    - "How to run differentiated operations for different users"
+    - "How to improve user engagement"
+    - "How to do user segmentation"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "执行流失预警和基础干预策略推荐，输出高风险用户列表与干预建议"
-  deep_description: "完整分层运营策略 + 个性化触达内容 + 干预效果ROI追踪 + 流失模型优化建议 + 用户生命周期价值预测"
+  quick_description: "Execute churn prediction and basic intervention strategy recommendations, output high-risk user list and intervention suggestions"
+  deep_description: "Full tiered operation strategy + personalized outreach content + intervention ROI tracking + churn model optimization suggestions + user lifetime value prediction"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -30,154 +30,154 @@ writes:
   - retention-management.md
 ---
 
-# 留存管理一体化
+# Retention Management Integrated
 
-## 核心原则
+## Core Principles
 
-1. **预防优于挽留**：在用户流失信号出现时介入，远比流失后召回成本低、成功率高
-2. **干预必须匹配风险**：高风险用户需要高接触干预，低风险用户过度干预反而推走
-3. **ROI闭环验证**：每项干预策略必须追踪防流失ROI，无效策略及时淘汰
-4. **分层即策略**：用户分层的目的是差异化运营，分层标准必须直接关联运营动作
-5. **健康度是先行指标**：用户健康度下降先于行为流失，是最佳干预时机
-6. **触达频率与价值匹配**：高价值内容可以高频触达，低价值内容过度触达等于骚扰
+1. **Prevention beats recovery**: Intervening when churn signals appear is far cheaper and more successful than recalling after churn
+2. **Interventions must match risk**: High-risk users need high-touch interventions; over-intervention on low-risk users pushes them away
+3. **ROI closed-loop validation**: Every intervention strategy must track churn-prevention ROI; ineffective strategies are eliminated promptly
+4. **Segmentation is strategy**: The purpose of user segmentation is differentiated operations; segmentation criteria must directly link to operational actions
+5. **Health score is a leading indicator**: User health decline precedes behavioral churn; it's the best intervention window
+6. **Outreach frequency must match value**: High-value content can be sent at high frequency; over-sending low-value content equals harassment
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 用户行为数据 | JSON | 是 | 用户提供（从数据分析平台导出的活跃日志，字段：user_id, last_active_date, active_days_30d） | 活跃日志、功能使用、内容互动 |
-| 流失历史数据 | JSON | 是 | 用户提供（从数据分析平台导出的流失记录，字段：user_id, churn_date, churn_reason） | 已流失用户行为特征 |
-| 用户账户数据 | JSON | 是 | 用户提供（从用户系统导出的账户信息，字段：user_id, register_date, plan_type） | 基本信息、付费状态 |
-| 用户生命周期阶段 | object | ○ | 用户提供 | 注册时间、关键里程碑 |
+| User behavior data | JSON | Yes | User-provided (active logs exported from data analytics platform, fields: user_id, last_active_date, active_days_30d) | Activity logs, feature usage, content interaction |
+| Churn history data | JSON | Yes | User-provided (churn records exported from data analytics platform, fields: user_id, churn_date, churn_reason) | Behavioral characteristics of churned users |
+| User account data | JSON | Yes | User-provided (account info exported from user system, fields: user_id, register_date, plan_type) | Basic info, payment status |
+| User lifecycle stage | object | ○ | User-provided | Registration time, key milestones |
 
-## 流失定义
+## Churn Definition
 
-### 流失标准
-| 用户类型 | 流失定义 |
+### Churn Criteria
+| User Type | Churn Definition |
 |---------|---------|
-| 免费用户 | 连续30天无活跃行为 |
-| 付费用户 | 连续60天无活跃行为或取消订阅 |
-| 企业用户 | 连续90天无活跃或合同到期 |
+| Free users | No activity for 30 consecutive days |
+| Paid users | No activity for 60 consecutive days or subscription cancelled |
+| Enterprise users | No activity for 90 consecutive days or contract expired |
 
-### 流失类型
-- **主动流失**: 用户主动停止使用或取消订阅
-- **被动流失**: 用户不再活跃但未明确表示离开
-- **付费流失**: 付费用户降级或取消订阅
+### Churn Types
+- **Active churn**: User actively stops using or cancels subscription
+- **Passive churn**: User becomes inactive without explicitly leaving
+- **Paid churn**: Paid user downgrades or cancels subscription
 
-## 用户生命周期分层
+## User Lifecycle Segmentation
 
-### 分层定义
+### Segmentation Definition
 
-| 层级 | 时间标准 | 用户行为特征 | 核心需求 |
+| Tier | Time Criteria | User Behavior Characteristics | Core Needs |
 |------|---------|-------------|---------|
-| 新用户 | 0-30天 | 探索产品功能 | 快速上手、体验价值 |
-| 成长用户 | 30-90天 | 使用频率增加 | 深度使用、建立习惯 |
-| 成熟用户 | 90天+ | 稳定使用 | 持续价值、防止沉睡 |
-| 沉睡用户 | 连续7-30天无活跃 | 活跃度骤降 | 重新激活、价值唤回 |
-| 流失用户 | 连续30天+无活跃 | 无活跃行为 | 定向召回 |
+| New user | 0-30 days | Exploring product features | Quick onboarding, experience value |
+| Growing user | 30-90 days | Increasing usage frequency | Deep usage, habit formation |
+| Mature user | 90+ days | Stable usage | Continuous value, prevent dormancy |
+| Dormant user | 7-30 consecutive days inactive | Sudden activity drop | Reactivation, value recall |
+| Churned user | 30+ consecutive days inactive | No activity | Targeted recall |
 
-### 健康度评分
+### Health Score
 
-综合评估用户在生命周期中的健康状态：
+Comprehensively assess the user's health state across the lifecycle:
 
 ```
-健康度 = 0.3 × 活跃度 + 0.25 × 功能深度 + 0.25 × 付费意愿 + 0.2 × 社交参与
+Health Score = 0.3 × Activity + 0.25 × Feature Depth + 0.25 × Payment Willingness + 0.2 × Social Engagement
 ```
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 流失预警（from retention-churn） [核心]
+### Step 1: Churn Prediction (from retention-churn) [Core]
 
-构建流失预警模型，识别高风险用户，自动化触发干预动作。
+Build a churn prediction model, identify high-risk users, and automatically trigger interventions.
 
-#### 1.1 流失预警模型构建
+#### 1.1 Churn Prediction Model Construction
 
-##### 数据准备
-1. **标签数据**: 历史流失用户标记
-2. **特征工程**: 构建流失预测特征
-3. **数据划分**: 训练集/验证集/测试集
+##### Data Preparation
+1. **Label data**: Historical churned user labels
+2. **Feature engineering**: Build churn prediction features
+3. **Data split**: Training set / validation set / test set
 
-##### 流失信号特征
-| 特征类别 | 具体特征 |
+##### Churn Signal Features
+| Feature Category | Specific Features |
 |---------|---------|
-| 活跃度特征 | 访问频率、使用时长、功能使用数 |
-| 行为特征 | 核心功能使用、关键操作完成度 |
-| 参与度特征 | 内容互动、社交行为 |
-| 付费特征 | 付费状态、消费金额、付费周期 |
-| 反馈特征 | NPS评分、客服接触、支持工单 |
+| Activity features | Visit frequency, usage duration, feature usage count |
+| Behavioral features | Core feature usage, key operation completion |
+| Engagement features | Content interaction, social behavior |
+| Payment features | Payment status, spend amount, payment cycle |
+| Feedback features | NPS score, customer service contact, support tickets |
 
-##### 模型训练
-支持多种模型类型：
-- 逻辑回归（可解释性强）
-- XGBoost/LightGBM（精度高）
-- 深度学习模型（复杂模式识别）
-- 集成模型（稳定可靠）
+##### Model Training
+Supports multiple model types:
+- Logistic regression (high interpretability)
+- XGBoost/LightGBM (high accuracy)
+- Deep learning models (complex pattern recognition)
+- Ensemble models (stable and reliable)
 
-#### 1.2 高风险用户识别
+#### 1.2 High-Risk User Identification
 
-##### 风险分层
-| 风险等级 | 风险评分 | 定义 | 响应策略 |
+##### Risk Tiering
+| Risk Level | Risk Score | Definition | Response Strategy |
 |---------|---------|------|---------|
-| 高风险 | ≥0.7 | 极可能流失 | 即时干预 |
-| 中风险 | 0.4-0.7 | 流失可能性较高 | 重点关注 |
-| 低风险 | 0.2-0.4 | 有流失倾向 | 预防性干预 |
-| 稳定 | <0.2 | 正常用户 | 常规维护 |
+| High risk | ≥0.7 | Very likely to churn | Immediate intervention |
+| Medium risk | 0.4-0.7 | Higher churn likelihood | Focused attention |
+| Low risk | 0.2-0.4 | Churn tendency | Preventive intervention |
+| Stable | <0.2 | Normal user | Routine maintenance |
 
-##### 流失信号分析
-识别导致高风险的关键因素：
-- 活跃度下降信号
-- 功能使用减少信号
-- 负面反馈信号
-- 竞品使用信号
+##### Churn Signal Analysis
+Identify key factors leading to high risk:
+- Activity decline signals
+- Feature usage reduction signals
+- Negative feedback signals
+- Competitor usage signals
 
-#### 1.3 自动化干预触发
+#### 1.3 Automated Intervention Triggering
 
-##### 干预策略库
-| 风险等级 | 干预策略 | 触达渠道 | 响应时间 |
+##### Intervention Strategy Library
+| Risk Level | Intervention Strategy | Outreach Channel | Response Time |
 |---------|---------|---------|---------|
-| 高风险 | 专属客服介入、限时优惠 | 电话+短信+邮件 | 即时 |
-| 中风险 | 个性化价值推送、问卷调研 | 邮件+Push | 24小时内 |
-| 低风险 | 内容营销、版本更新通知 | Push+站内信 | 48小时内 |
+| High risk | Dedicated customer success, limited-time offer | Phone + SMS + Email | Immediate |
+| Medium risk | Personalized value push, survey | Email + Push | Within 24 hours |
+| Low risk | Content marketing, version update notification | Push + in-app message | Within 48 hours |
 
-##### 干预内容类型
-1. **价值唤回**: 展示产品新功能和使用场景
-2. **问题解决**: 针对已知问题提供解决方案
-3. **优惠激励**: 提供续费折扣或增值服务
-4. **人工关怀**: 客服主动联系了解需求
-5. **社交激活**: 邀请好友一起使用
+##### Intervention Content Types
+1. **Value recall**: Showcase new product features and use cases
+2. **Problem solving**: Provide solutions for known issues
+3. **Incentive offer**: Provide renewal discounts or value-added services
+4. **Human care**: Customer success proactive outreach to understand needs
+5. **Social activation**: Invite friends to use together
 
-##### 干预时机
-- 用户行为变化后即时触发
-- 预防性干预在风险累积前触发
-- 避免在用户忙碌时段触达
+##### Intervention Timing
+- Trigger immediately after user behavior change
+- Trigger preventive interventions before risk accumulates
+- Avoid outreach during user busy hours
 
-#### 1.4 干预效果追踪
+#### 1.4 Intervention Effectiveness Tracking
 
-##### 核心指标
-| 指标 | 说明 | 目标值 |
+##### Core Metrics
+| Metric | Description | Target Value |
 |------|------|--------|
-| 干预覆盖率 | 被干预高风险用户比例 | ≥80% |
-| 响应率 | 干预后用户有响应的比例 | ≥15% |
-| 防流失率 | 干预后未流失用户比例 | ≥10% |
-| ROI | 防流失收益/干预成本 | ≥3.0 |
+| Intervention coverage | Proportion of high-risk users intervened | ≥80% |
+| Response rate | Proportion of users responding after intervention | ≥15% |
+| Churn prevention rate | Proportion of users retained after intervention | ≥10% |
+| ROI | Churn-prevention revenue / intervention cost | ≥3.0 |
 
-##### 效果分析
-- 不同干预策略的效果对比
-- 不同用户群体的干预效果差异
-- 干预时机对效果的影响
-- 干预内容的优化方向
+##### Effectiveness Analysis
+- Effect comparison across intervention strategies
+- Intervention effect differences across user groups
+- Impact of intervention timing on effectiveness
+- Optimization directions for intervention content
 
-### Step 2: 分层运营（from retention-engagement） [条件]
+### Step 2: Tiered Operations (from retention-engagement) [Conditional]
 
-基于Step 1输出的流失预警结果，对用户进行生命周期分层，生成运营策略和个性化触达内容。
+Based on the churn prediction results output by Step 1, segment users by lifecycle, generate operation strategies and personalized outreach content.
 
-#### 2.1 用户分层
+#### 2.1 User Segmentation
 
-##### 分层规则引擎
+##### Segmentation Rule Engine
 ```yaml
 rules:
   - segment: "new_user"
@@ -196,112 +196,112 @@ rules:
     condition: "consecutive_inactive_days >= 30"
 ```
 
-##### 分层优先级
-沉睡用户和流失用户的识别优先级高于正常分层，确保及时触发防流失策略。
+##### Segmentation Priority
+Dormant and churned user identification takes priority over normal segmentation, ensuring timely triggering of churn-prevention strategies.
 
-#### 2.2 各层特征分析
+#### 2.2 Tier Characteristics Analysis
 
-##### 新用户分析
-- 激活路径分析
-- 早期行为聚类
-- 激活障碍识别
+##### New User Analysis
+- Activation path analysis
+- Early behavior clustering
+- Activation barrier identification
 
-##### 成长用户分析
-- 功能深度使用分析
-- 使用频率趋势
-- 价值感知评估
+##### Growing User Analysis
+- Feature depth usage analysis
+- Usage frequency trends
+- Value perception assessment
 
-##### 成熟用户分析
-- 功能使用稳定性
-- 付费转化潜力
-- 社交活跃度
+##### Mature User Analysis
+- Feature usage stability
+- Payment conversion potential
+- Social activity level
 
-##### 沉睡用户分析
-- 沉睡前最后行为
-- 沉睡触发因素
-- 潜在召回价值
+##### Dormant User Analysis
+- Last behavior before dormancy
+- Dormancy triggers
+- Potential recall value
 
-##### 流失用户分析
-- 流失时间分布
-- 流失原因推断
-- 召回价值评估
+##### Churned User Analysis
+- Churn time distribution
+- Churn reason inference
+- Recall value assessment
 
-#### 2.3 自动化运营策略生成
+#### 2.3 Automated Operation Strategy Generation
 
-##### 分层运营策略
+##### Tiered Operation Strategy
 
-| 用户层级 | 运营目标 | 核心策略 | 关键指标 |
+| User Tier | Operation Goal | Core Strategy | Key Metrics |
 |---------|---------|---------|---------|
-| 新用户 | 激活+留存 | 引导体验、习惯培养 | D7/D30留存率 |
-| 成长用户 | 深度使用 | 功能拓展、价值强化 | 功能使用数、使用时长 |
-| 成熟用户 | 持续活跃 | 防止沉睡、增值服务 | 月活跃率、NRR |
-| 沉睡用户 | 重新激活 | 价值唤回、问题解决 | 唤醒率、召回ROI |
-| 流失用户 | 定向召回 | 优惠激励、情感召回 | 召回率、召回用户LTV |
+| New user | Activation + retention | Guide experience, habit formation | D7/D30 retention rate |
+| Growing user | Deep usage | Feature expansion, value reinforcement | Feature usage count, usage duration |
+| Mature user | Continuous activity | Prevent dormancy, value-added services | Monthly active rate, NRR |
+| Dormant user | Reactivation | Value recall, problem solving | Wake-up rate, recall ROI |
+| Churned user | Targeted recall | Incentive offers, emotional recall | Recall rate, recalled user LTV |
 
-##### 策略触发规则
+##### Strategy Trigger Rules
 ```yaml
 trigger_rules:
   new_user:
-    - event: "注册完成"
-      action: "发送欢迎序列"
-    - event: "完成激活"
-      action: "发送进阶引导"
+    - event: "Registration complete"
+      action: "Send welcome sequence"
+    - event: "Activation complete"
+      action: "Send advanced guidance"
 
   growing_user:
-    - event: "功能使用达到阈值"
-      action: "推荐进阶功能"
-    - event: "使用频率下降"
-      action: "发送价值提醒"
+    - event: "Feature usage reaches threshold"
+      action: "Recommend advanced features"
+    - event: "Usage frequency drops"
+      action: "Send value reminder"
 
   mature_user:
-    - event: "连续3天不活跃"
-      action: "发送更新通知"
-    - event: "新功能上线"
-      action: "发送功能推荐"
+    - event: "Inactive for 3 consecutive days"
+      action: "Send update notification"
+    - event: "New feature released"
+      action: "Send feature recommendation"
 
   at_risk:
-    - event: "进入沉睡"
-      action: "触发唤回流程"
+    - event: "Enters dormancy"
+      action: "Trigger recall flow"
 
   churned:
-    - event: "流失30天"
-      action: "触发召回活动"
+    - event: "Churned for 30 days"
+      action: "Trigger recall campaign"
 ```
 
-#### 2.4 触达内容个性化
+#### 2.4 Outreach Content Personalization
 
-##### 内容类型矩阵
-| 用户层级 | 推送内容 | 内容风格 | 触达频率 |
+##### Content Type Matrix
+| User Tier | Push Content | Content Style | Outreach Frequency |
 |---------|---------|---------|---------|
-| 新用户 | 使用教程、功能介绍 | 友好引导 | 高 |
-| 成长用户 | 进阶技巧、案例分享 | 价值导向 | 中 |
-| 成熟用户 | 功能更新、会员权益 | 维护关怀 | 低 |
-| 沉睡用户 | 价值唤回、限时优惠 | 激励驱动 | 集中 |
-| 流失用户 | 召回活动、专属优惠 | 情感诉求 | 集中 |
+| New user | Tutorials, feature intros | Friendly guidance | High |
+| Growing user | Advanced tips, case studies | Value-oriented | Medium |
+| Mature user | Feature updates, member benefits | Maintenance care | Low |
+| Dormant user | Value recall, limited-time offers | Incentive-driven | Concentrated |
+| Churned user | Recall campaigns, exclusive offers | Emotional appeal | Concentrated |
 
-##### 个性化内容生成
-- 基于用户使用历史推荐相关内容
-- 基于用户偏好设置调整内容形式
-- 基于用户生命周期阶段调整内容主题
+##### Personalized Content Generation
+- Recommend relevant content based on user usage history
+- Adjust content format based on user preference settings
+- Adjust content theme based on user lifecycle stage
 
-## 输出
+## Output
 
-**存储路径**：`docs/growth/growth-strategy.md（“留存管理”章节）`
+**Storage path**: `docs/growth/growth-strategy.md ("Retention Management" section)`
 
-**输出文件**：retention-management.json、retention-management.md
+**Output files**: retention-management.json, retention-management.md
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["churn_prevention", "segments", "strategies"],
   "properties": {
-    "churn_prevention": {"type": "object", "description": "流失预警与干预结果，包含模型、风险用户和干预策略"},
-    "segments": {"type": "array", "description": "用户分层数据，包含层级名称、人数、特征和健康度"},
-    "segment_overview": {"type": "object", "description": "各层级概览，包含人数和平均健康度"},
-    "strategies": {"type": "array", "description": "分层运营策略列表，包含目标、行动和成功指标"},
-    "personalized_content": {"type": "array", "description": "个性化触达内容列表，包含内容类型、主题和渠道"}
+    "churn_prevention": {"type": "object", "description": "Churn prediction and intervention results, including model, risk users, and intervention strategies"},
+    "segments": {"type": "array", "description": "User segmentation data, including tier name, count, characteristics, and health score"},
+    "segment_overview": {"type": "object", "description": "Overview per tier, including count and average health score"},
+    "strategies": {"type": "array", "description": "List of tiered operation strategies, including goals, actions, and success metrics"},
+    "personalized_content": {"type": "array", "description": "List of personalized outreach content, including content type, theme, and channel"}
   }
 }
 ```
@@ -312,7 +312,7 @@ trigger_rules:
   "churn_prevention": {
     "risk_model": {
       "model_type": "XGBoost",
-      "features": ["使用频率", "功能广度", "付费状态"],
+      "features": ["Usage frequency", "Feature breadth", "Payment status"],
       "accuracy": 0.85,
       "precision": 0.78,
       "recall": 0.72
@@ -324,20 +324,20 @@ trigger_rules:
     },
     "high_risk_users": [
       {
-        "user_id": "用户ID",
+        "user_id": "User ID",
         "risk_score": 0.85,
         "risk_level": "high",
-        "primary_churn_signals": ["信号1", "信号2"],
-        "recommended_intervention": "干预策略"
+        "primary_churn_signals": ["Signal 1", "Signal 2"],
+        "recommended_intervention": "Intervention strategy"
       }
     ],
     "interventions": [
       {
         "intervention_id": "INT_001",
-        "trigger_condition": "风险评分 > 0.7",
+        "trigger_condition": "Risk score > 0.7",
         "intervention_type": "personalized_outreach",
         "channel": "email",
-        "content_theme": "价值唤回",
+        "content_theme": "Value recall",
         "expected_effectiveness": 0.25
       }
     ],
@@ -350,7 +350,7 @@ trigger_rules:
   },
   "segments": [
     {
-      "name": "新用户",
+      "name": "New user",
       "segment_id": "new_user",
       "count": 5000,
       "percentage": 0.15,
@@ -373,16 +373,16 @@ trigger_rules:
   "strategies": [
     {
       "segment": "new_user",
-      "objective": "促进激活和早期留存",
-      "key_actions": ["引导核心功能使用", "建立使用习惯"],
-      "success_metrics": ["D30留存率", "激活率"]
+      "objective": "Drive activation and early retention",
+      "key_actions": ["Guide core feature usage", "Build usage habits"],
+      "success_metrics": ["D30 retention rate", "Activation rate"]
     }
   ],
   "personalized_content": [
     {
       "segment": "new_user",
       "content_type": "onboarding_guidance",
-      "theme": "快速体验核心价值",
+      "theme": "Quickly experience core value",
       "channels": ["app_push", "email"],
       "frequency": "per_week"
     }
@@ -390,139 +390,139 @@ trigger_rules:
 }
 ```
 
-## 自动化运营日历
+## Automated Operation Calendar
 
 ```
-每周固定触达：
-- 周一：活跃用户周报
-- 周三：功能使用提醒（新用户）
-- 周五：活跃用户内容推送
+Weekly fixed outreach:
+- Monday: Active user weekly report
+- Wednesday: Feature usage reminder (new users)
+- Friday: Content push to active users
 
-事件触发触达：
-- 功能更新时：全员通知
-- 节日活动时：高价值用户专属
-- 用户里程碑：祝贺+激励
+Event-triggered outreach:
+- On feature update: Notify all users
+- On holiday events: Exclusive for high-value users
+- On user milestones: Congratulate + incentivize
 ```
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| churn_prevention | object | 是 | 流失预警与干预结果，须含risk_model/high_risk_users/interventions |
-| churn_prevention.risk_model | object | 是 | 预警模型，须含model_type/features/accuracy |
-| churn_prevention.risk_model.model_type | string | 是 | 模型类型 |
-| churn_prevention.risk_model.features | array | 是 | 模型特征列表 |
-| churn_prevention.risk_model.features[].feature_name | string | 是 | 特征名称 |
-| churn_prevention.risk_model.features[].importance | number | 否 | 特征重要性 |
-| churn_prevention.risk_model.accuracy | number | 是 | 模型准确率，须>0.75 |
-| churn_prevention.risk_thresholds | object | 是 | 风险阈值，须含high_risk/medium_risk/low_risk |
-| churn_prevention.high_risk_users | array | 是 | 高风险用户列表，每项须含user_id/risk_score/risk_level |
-| churn_prevention.high_risk_users[].user_id | string | 是 | 用户ID |
-| churn_prevention.high_risk_users[].risk_score | number | 是 | 风险评分，范围0-1 |
-| churn_prevention.high_risk_users[].risk_level | string | 是 | 风险等级，仅允许high/medium/low/stable |
-| churn_prevention.high_risk_users[].primary_churn_signals | string[] | 否 | 主要流失信号 |
-| churn_prevention.high_risk_users[].recommended_intervention | string | 否 | 推荐干预措施 |
-| churn_prevention.interventions | array | 是 | 干预策略列表，每项须含trigger_condition/intervention_type/channel |
-| churn_prevention.interventions[].trigger_condition | string | 是 | 触发条件 |
-| churn_prevention.interventions[].intervention_type | string | 是 | 干预类型，枚举：email/in_app/push/call |
-| churn_prevention.interventions[].channel | string | 是 | 触达渠道 |
-| churn_prevention.interventions[].content_theme | string | 否 | 内容主题 |
-| churn_prevention.tracking | object | 否 | 效果追踪，须含response_rate/churn_prevention_rate/roi |
-| segments | array | 是 | 用户分层数据，至少覆盖新/成长/成熟/沉睡/流失5层 |
-| segments[].segment_id | string | 是 | 分层标识，仅允许new_user/growing_user/mature_user/at_risk/churned |
-| segments[].count | number | 是 | 分层用户数，须≥0 |
-| segments[].health_score | number | 是 | 健康度评分，范围0-1 |
-| segments[].characteristics | object | 否 | 分群特征 |
-| segments[].characteristics.avg_tenure | string | 否 | 平均生命周期 |
-| segments[].characteristics.key_behaviors | string[] | 否 | 关键行为 |
-| strategies | array | 是 | 运营策略列表，至少5条（每层1条） |
-| strategies[].segment | string | 是 | 目标分层 |
-| strategies[].key_actions | string[] | 否 | 关键行动列表 |
-| strategies[].success_metrics | array | 是 | 成功指标列表，至少1个 |
-| personalized_content | array | 否 | 个性化内容列表 |
-| personalized_content[].content_type | string | 是 | 内容类型，枚举：email/in_app/push/sms |
-| personalized_content[].theme | string | 是 | 内容主题 |
-| personalized_content[].channels | string[] | 否 | 触达渠道列表 |
-| personalized_content[].frequency | string | 否 | 触达频率 |
+| churn_prevention | object | Yes | Churn prediction and intervention results, must include risk_model/high_risk_users/interventions |
+| churn_prevention.risk_model | object | Yes | Prediction model, must include model_type/features/accuracy |
+| churn_prevention.risk_model.model_type | string | Yes | Model type |
+| churn_prevention.risk_model.features | array | Yes | Model feature list |
+| churn_prevention.risk_model.features[].feature_name | string | Yes | Feature name |
+| churn_prevention.risk_model.features[].importance | number | No | Feature importance |
+| churn_prevention.risk_model.accuracy | number | Yes | Model accuracy, must be >0.75 |
+| churn_prevention.risk_thresholds | object | Yes | Risk thresholds, must include high_risk/medium_risk/low_risk |
+| churn_prevention.high_risk_users | array | Yes | High-risk user list, each item must include user_id/risk_score/risk_level |
+| churn_prevention.high_risk_users[].user_id | string | Yes | User ID |
+| churn_prevention.high_risk_users[].risk_score | number | Yes | Risk score, range 0-1 |
+| churn_prevention.high_risk_users[].risk_level | string | Yes | Risk level, only allows high/medium/low/stable |
+| churn_prevention.high_risk_users[].primary_churn_signals | string[] | No | Primary churn signals |
+| churn_prevention.high_risk_users[].recommended_intervention | string | No | Recommended intervention |
+| churn_prevention.interventions | array | Yes | Intervention strategy list, each item must include trigger_condition/intervention_type/channel |
+| churn_prevention.interventions[].trigger_condition | string | Yes | Trigger condition |
+| churn_prevention.interventions[].intervention_type | string | Yes | Intervention type, enum: email/in_app/push/call |
+| churn_prevention.interventions[].channel | string | Yes | Outreach channel |
+| churn_prevention.interventions[].content_theme | string | No | Content theme |
+| churn_prevention.tracking | object | No | Effectiveness tracking, must include response_rate/churn_prevention_rate/roi |
+| segments | array | Yes | User segmentation data, must cover at least new/growing/mature/dormant/churned 5 tiers |
+| segments[].segment_id | string | Yes | Segment identifier, only allows new_user/growing_user/mature_user/at_risk/churned |
+| segments[].count | number | Yes | Segment user count, must be ≥0 |
+| segments[].health_score | number | Yes | Health score, range 0-1 |
+| segments[].characteristics | object | No | Segment characteristics |
+| segments[].characteristics.avg_tenure | string | No | Average lifecycle |
+| segments[].characteristics.key_behaviors | string[] | No | Key behaviors |
+| strategies | array | Yes | Operation strategy list, at least 5 (1 per tier) |
+| strategies[].segment | string | Yes | Target segment |
+| strategies[].key_actions | string[] | No | Key action list |
+| strategies[].success_metrics | array | Yes | Success metric list, at least 1 |
+| personalized_content | array | No | Personalized content list |
+| personalized_content[].content_type | string | Yes | Content type, enum: email/in_app/push/sms |
+| personalized_content[].theme | string | Yes | Content theme |
+| personalized_content[].channels | string[] | No | Outreach channel list |
+| personalized_content[].frequency | string | No | Outreach frequency |
 
-## 决策规则
+## Decision Rules
 
-| 情况 | 处理方式 |
+| Situation | Action |
 |------|----------|
-| 风险评分≥0.7（高风险） | 即时干预，专属客服介入 |
-| 付费用户出现流失信号 | 优先处理，48小时内响应 |
-| 干预响应率<10% | 优化干预内容和渠道 |
-| 高价值用户流失预警 | 全渠道触达+人工关怀 |
-| 沉睡用户占比>15% | 触发批量唤回策略 |
-| 新用户D7留存<25% | 优化Onboarding和激活引导 |
-| 成熟用户健康度下降 | 触发防沉睡策略 |
-| 运营触达响应率<5% | 优化触达内容和渠道 |
+| Risk score ≥0.7 (high risk) | Immediate intervention, dedicated customer success engagement |
+| Paid user shows churn signals | Priority handling, respond within 48 hours |
+| Intervention response rate <10% | Optimize intervention content and channels |
+| High-value user churn warning | Full-channel outreach + human care |
+| Dormant user proportion >15% | Trigger batch recall strategy |
+| New user D7 retention <25% | Optimize Onboarding and activation guidance |
+| Mature user health score drops | Trigger anti-dormancy strategy |
+| Operation outreach response rate <5% | Optimize outreach content and channels |
 
-## 质量检查
+## Quality Checks
 
-- [ ] 流失定义区分免费/付费/企业用户（P0）
-- [ ] 预警模型准确率>75%（P0）
-- [ ] 干预策略与风险等级匹配（P1）
-- [ ] 干预效果追踪包含ROI计算（P2）
-- [ ] 用户分层覆盖完整生命周期（新/成长/成熟/沉睡/流失）（P1）
-- [ ] 健康度评分包含活跃度、功能深度、付费意愿、社交参与（P1）
-- [ ] 运营策略与用户层级匹配（P1）
-- [ ] 触达内容经过个性化处理（P2）
+- [ ] Churn definition distinguishes free/paid/enterprise users (P0)
+- [ ] Prediction model accuracy >75% (P0)
+- [ ] Intervention strategy matches risk level (P1)
+- [ ] Intervention effectiveness tracking includes ROI calculation (P2)
+- [ ] User segmentation covers full lifecycle (new/growing/mature/dormant/churned) (P1)
+- [ ] Health score includes activity, feature depth, payment willingness, social engagement (P1)
+- [ ] Operation strategy matches user tier (P1)
+- [ ] Outreach content is personalized (P2)
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Instructions |
 |----------|----------|----------|------------|
-| 用户行为数据缺失 | 用户提供用户活跃数据 → 分析流失特征 | 流失归因基于活跃数据推断，行为特征分析受限 | 要求用户提供用户活跃数据（各周期活跃用户数、流失用户数） |
-| 无行为数据 | 基于用户访谈推断，标注置信度≤0.3 | 流失特征基于访谈推断，置信度低，需人工验证 | 要求用户提供用户访谈记录和流失用户描述 |
-| 流失历史缺失 | 跳过流失趋势对比，仅基于当前数据分析 | 无法评估流失趋势变化 | 要求用户提供历史流失率和流失用户数趋势数据 |
-| 用户行为数据 + 流失历史均缺失 | 用户提供用户活跃数据 → 分析流失特征 | 输出基础流失分析，干预策略标注"待验证" | 要求用户提供用户活跃数据和流失定义标准 |
-| 生命周期阶段缺失 | 使用通用生命周期模型（新用户/活跃/沉睡/流失），标注"待确认" | 分层标准基于通用假设 | 要求用户提供用户生命周期阶段定义和分层标准 |
-| 用户行为数据 + 生命周期阶段均缺失 | 用户描述用户群体 → 生成分层策略 | 输出基于描述的分层策略，标注"待数据验证" | 要求用户提供用户群体描述和核心行为特征 |
-| 用户账户数据缺失 | 跳过账户级流失分析，仅基于汇总数据分析 | 无法识别高流失风险账户 | 要求用户提供用户账户列表、付费状态和活跃度数据 |
+| User behavior data missing | User provides user activity data → analyze churn characteristics | Churn attribution inferred from activity data, behavioral characteristic analysis limited | Require user to provide user activity data (active user count per period, churned user count) |
+| No behavior data | Infer based on user interviews, mark confidence ≤0.3 | Churn characteristics inferred from interviews, low confidence, requires manual verification | Require user to provide user interview records and churned user descriptions |
+| Churn history missing | Skip churn trend comparison, analyze only based on current data | Cannot assess churn trend changes | Require user to provide historical churn rate and churned user count trend data |
+| User behavior data + churn history both missing | User provides user activity data → analyze churn characteristics | Output basic churn analysis, intervention strategies marked "pending validation" | Require user to provide user activity data and churn definition criteria |
+| Lifecycle stage missing | Use generic lifecycle model (new/active/dormant/churned), marked "pending confirmation" | Segmentation criteria based on generic assumptions | Require user to provide user lifecycle stage definition and segmentation criteria |
+| User behavior data + lifecycle stage both missing | User describes user groups → generate segmentation strategy | Output segmentation strategy based on description, marked "pending data validation" | Require user to provide user group description and core behavioral characteristics |
+| User account data missing | Skip account-level churn analysis, analyze only based on aggregated data | Cannot identify high churn risk accounts | Require user to provide user account list, payment status, and activity data |
 
-### 数据获取说明
+### Data Acquisition Instructions
 
-当上游文件缺失时，需用户提供以下信息以支撑降级生成：
-- **用户活跃数据**：各周期活跃用户数、流失用户数
-- **流失定义**（可选）：产品对流失用户的定义标准
-- **高价值用户占比**（可选）：活跃用户中高价值用户的比例
-- **用户群体描述**：产品用户的主要类型和特征
-- **活跃度分布**（可选）：高活跃/中活跃/低活跃用户占比
-- **运营资源**（可选）：可用于用户运营的资源和渠道
+When upstream files are missing, the following information is needed from the user to support degraded generation:
+- **User activity data**: Active user count and churned user count per period
+- **Churn definition** (optional): The product's definition criteria for churned users
+- **High-value user proportion** (optional): Proportion of high-value users among active users
+- **User group description**: Main types and characteristics of product users
+- **Activity distribution** (optional): Proportion of high/medium/low activity users
+- **Operation resources** (optional): Resources and channels available for user operations
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游来源 | 变更类型 | 影响范围 | 响应动作 |
+| Upstream Source | Change Type | Impact Scope | Response Action |
 |----------|----------|----------|----------|
-| 数据分析平台-活跃日志 | 行为事件定义变更 | 流失信号特征和模型训练 | 更新特征工程，重新训练模型 |
-| 数据分析平台-流失记录 | 流失定义变更 | 流失标签和风险阈值 | 按新定义重新标记，调整阈值 |
-| 用户系统-账户信息 | 用户属性变更 | 风险分层和干预策略 | 更新用户特征，调整干预匹配 |
-| 用户提供-生命周期 | 里程碑定义变更 | 分层标准和策略触发 | 调整分层条件和触发规则 |
+| Data analytics platform - active logs | Behavioral event definition change | Churn signal features and model training | Update feature engineering, retrain model |
+| Data analytics platform - churn records | Churn definition change | Churn labels and risk thresholds | Re-label per new definition, adjust thresholds |
+| User system - account info | User attribute change | Risk tiering and intervention strategy | Update user characteristics, adjust intervention matching |
+| User-provided - lifecycle | Milestone definition change | Segmentation criteria and strategy triggers | Adjust segmentation conditions and trigger rules |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 下游消费者 | 通知条件 | 通知方式 | 通知内容 |
+| Downstream Consumer | Notification Condition | Notification Method | Notification Content |
 |------------|----------|----------|----------|
-| revenue-upsell | 高价值用户分层变更 | 写入输出文件 | 高价值用户列表和升级信号 |
-| retention-orchestrator | 流失预警与分层运营完成 | 输出文件更新 | 留存管理完成状态和关键结论 |
+| revenue-upsell | High-value user segmentation change | Write to output file | High-value user list and upgrade signals |
+| retention-orchestrator | Churn prediction and tiered operations complete | Output file updated | Retention management completion status and key conclusions |
 
-## 关键成功指标
+## Key Success Metrics
 
-| 指标 | 定义 | 目标值 |
+| Metric | Definition | Target Value |
 |------|------|--------|
-| 各层留存率 | 各层用户在下一周期的留存比例 | 逐层提升 |
-| 沉睡唤醒率 | 沉睡用户被唤醒的比例 | ≥15% |
-| 用户健康度均值 | 全量用户健康度平均分 | ≥0.7 |
-| 运营触达响应率 | 触达消息的打开/点击率 | ≥10% |
+| Retention rate per tier | Proportion of users in each tier retained in the next period | Improve tier by tier |
+| Dormant wake-up rate | Proportion of dormant users reactivated | ≥15% |
+| Average user health score | Average health score across all users | ≥0.7 |
+| Operation outreach response rate | Open/click rate of outreach messages | ≥10% |
 
-## 注意事项
+## Notes
 
-- 流失预警模型需要定期更新，适应产品变化和用户行为变化
-- 避免过度干预打扰用户，降低用户体验
-- 高价值用户的干预优先级和投入资源应更高
-- 建立干预反馈机制，持续优化干预策略
+- The churn prediction model needs regular updates to adapt to product changes and user behavior changes
+- Avoid over-intervention that disturbs users and degrades user experience
+- High-value user intervention priority and resource investment should be higher
+- Establish an intervention feedback mechanism to continuously optimize intervention strategies

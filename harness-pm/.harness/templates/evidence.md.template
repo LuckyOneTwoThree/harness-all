@@ -1,37 +1,37 @@
-# 验证证据
+# Verification evidence
 
-> 来源：由 verify skill 产出。
-> 文件语义：覆盖写入（只保留最终成功的证据）。
+> Source: produced by the verify skill.
+> File semantics: overwrite write (only the final successful evidence is kept).
 
-## 时间
+## Time
 YYYY-MM-DD HH:MM
 
-## 1. 产出检查
-[展示实际产出的文件，不是"应该生成了"]
+## 1. Output check
+[Show the actual output files, not "should have generated"]
 - output/pm-{module}/{skill-name}/xxx.json ✓
 - docs/{module}/xxx.md ✓
 
-## 2. 验收标准
-- AC-001: ✓ <如何满足，引用产出>
-- AC-002: ✓ <如何满足>
+## 2. Acceptance criteria
+- AC-001: ✓ <how satisfied, cite output>
+- AC-002: ✓ <how satisfied>
 
-## 3. 置信度检查
-| 产出项 | 置信度 | 是否阻断 | 人类确认 |
+## 3. Confidence check
+| Output item | Confidence | Blocks? | Human confirmation |
 |--------|--------|---------|---------|
-| [产出1] | 0.8 | 否 | 不需要 |
-| [产出2] | 0.5 | 否 | 需确认（已确认） |
-| [产出3] | 0.2 | 是 | 需确认（待确认） |
+| [output 1] | 0.8 | No | Not needed |
+| [output 2] | 0.5 | No | Needs confirmation (confirmed) |
+| [output 3] | 0.2 | Yes | Needs confirmation (pending) |
 
-## 4. 质量门禁（如涉及 PRD 等契约产出）
-- [x] 完整性门禁
-- [x] 一致性门禁
-- [x] 歧义消除门禁
-- [x] 可追溯性门禁
+## 4. Quality gates (if involving PRD and other contract outputs)
+- [x] Completeness gate
+- [x] Consistency gate
+- [x] Ambiguity elimination gate
+- [x] Traceability gate
 
-## 5. 宪法合规
-- [x] PRD 必须过门禁
-- [x] 关键决策人类审批
-- [x] 上线前有埋点方案
+## 5. Constitution compliance
+- [x] PRDs must pass gates
+- [x] Key decisions human-approved
+- [x] Tracking plan before launch
 
-## 6. 安全检查
-[PII 脱敏检查 / 敏感信息检查结果]
+## 6. Security check
+[PII desensitization check / sensitive information check results]

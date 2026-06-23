@@ -1,12 +1,12 @@
 #!/bin/bash
-# install.sh — harness-solo 冷启动安装脚本
+# install.sh — harness-solo cold-start install script
 #
-# 用法（两步安装，符合安全规则——不用 curl | bash）：
+# Usage (two-step install, follows security rules — no curl | bash):
 #   curl -o install.sh https://raw.githubusercontent.com/LuckyOneTwoThree/harness-solo/main/install.sh
-#   # 审查 install.sh 内容
+#   # Review install.sh contents
 #   bash install.sh
 #
-# 作用：克隆 .harness/ 模板到当前目录，初始化项目
+# Purpose: Clone the .harness/ template into the current directory and initialize the project
 
 set -e
 
@@ -14,126 +14,126 @@ REPO_URL="https://github.com/LuckyOneTwoThree/harness-solo.git"
 TEMPLATE_BRANCH="main"
 TEMP_DIR=".harness-solo-tmp-$$"
 
-echo "=== harness-solo 冷启动安装 ==="
+echo "=== harness-solo cold-start install ==="
 echo ""
 
-# 检查当前目录是否已有 .harness/
+# Check whether .harness/ already exists in the current directory
 if [ -d ".harness" ]; then
-  echo "BLOCK: 当前目录已存在 .harness/，似乎已初始化"
-  echo "如需重新安装，请先删除 .harness/ 或换目录"
+  echo "BLOCK: .harness/ already exists in the current directory; appears already initialized"
+  echo "To reinstall, please delete .harness/ first or switch to another directory"
   exit 1
 fi
 
-# 检查 git
+# Check git
 if ! command -v git >/dev/null 2>&1; then
-  echo "BLOCK: 未找到 git，请先安装 Git"
+  echo "BLOCK: git not found; please install Git first"
   exit 1
 fi
 
-# 检查 Node.js（前端工程/测试强依赖，WARN 不阻塞安装）
+# Check Node.js (hard dependency for frontend engineering/testing; WARN does not block install)
 if ! command -v node >/dev/null 2>&1; then
-  echo "WARN: 未找到 Node.js。前端工程实现、test-driven-development、webapp-testing 等 skill 强依赖 Node 环境。"
-  echo "      请后续安装 Node.js（建议 v18+）：https://nodejs.org/"
+  echo "WARN: Node.js not found. Skills such as frontend-implementation, test-driven-development, and webapp-testing hard-depend on Node."
+  echo "      Please install Node.js afterwards (v18+ recommended): https://nodejs.org/"
 fi
 
-# 浅克隆模板仓库到临时目录
-echo "→ 克隆模板仓库..."
+# Shallow-clone the template repository into a temporary directory
+echo "→ Cloning template repository..."
 git clone --depth 1 -b "$TEMPLATE_BRANCH" "$REPO_URL" "$TEMP_DIR" 2>/dev/null || {
-  echo "BLOCK: 克隆失败，检查网络或仓库地址: $REPO_URL"
+  echo "BLOCK: Clone failed; check network or repository URL: $REPO_URL"
   exit 1
 }
 
-# 复制 .harness/ 到当前目录
-echo "→ 复制 .harness/ 框架..."
+# Copy .harness/ to the current directory
+echo "→ Copying .harness/ framework..."
 cp -r "$TEMP_DIR/.harness" .harness
 
-# 复制 AGENTS.md 和 SOUL.md 模板（如果不存在）
+# Copy AGENTS.md and SOUL.md templates (if they don't exist)
 if [ ! -f "AGENTS.md" ]; then
   cp "$TEMP_DIR/.harness/templates/AGENTS.md.template" AGENTS.md
-  echo "  ✓ 创建 AGENTS.md（从模板，请填 [项目名称]）"
+  echo "  ✓ Created AGENTS.md (from template; please fill in [project name])"
 fi
 if [ ! -f "SOUL.md" ]; then
   cp "$TEMP_DIR/.harness/templates/SOUL.md.template" SOUL.md
-  echo "  ✓ 创建 SOUL.md（从模板，请填 [用户名] 和技术偏好）"
+  echo "  ✓ Created SOUL.md (from template; please fill in [username] and tech preferences)"
 fi
 if [ ! -f "constitution.md" ]; then
   cp "$TEMP_DIR/.harness/templates/constitution.md.template" constitution.md
-  echo "  ✓ 创建 constitution.md（从模板）"
+  echo "  ✓ Created constitution.md (from template)"
 fi
 
-# 创建 docs/ 目录结构（只创建工程框架需要的目录；设计/运营归 harness 家族其他成员）
-echo "→ 创建 docs/ 目录..."
+# Create the docs/ directory structure (only directories required by the engineering framework; design/ops belong to other harness family members)
+echo "→ Creating docs/ directory..."
 mkdir -p docs/product docs/engineering docs/acceptance docs/handoff docs/decisions
 
-# 从模板初始化 PROJECT.md 和 TECH_STACK.md（如不存在）
+# Initialize PROJECT.md and TECH_STACK.md from templates (if they don't exist)
 if [ ! -f "docs/product/PROJECT.md" ]; then
   cp "$TEMP_DIR/.harness/templates/PROJECT.md.template" docs/product/PROJECT.md
-  echo "  ✓ 初始化 docs/product/PROJECT.md（从模板，请填写产品需求）"
+  echo "  ✓ Initialized docs/product/PROJECT.md (from template; please fill in product requirements)"
 fi
 if [ ! -f "docs/engineering/TECH_STACK.md" ]; then
   cp "$TEMP_DIR/.harness/templates/TECH_STACK.md.template" docs/engineering/TECH_STACK.md
-  echo "  ✓ 初始化 docs/engineering/TECH_STACK.md（从模板，请填写技术栈）"
+  echo "  ✓ Initialized docs/engineering/TECH_STACK.md (from template; please fill in the tech stack)"
 fi
 
-# 复制交接文档模板（如果模板仓库有）
+# Copy handoff document templates (if the template repository has them)
 if [ -d "$TEMP_DIR/docs/handoff" ]; then
   cp -r "$TEMP_DIR/docs/handoff/." docs/handoff/ 2>/dev/null || true
-  echo "  ✓ 复制 docs/handoff/ 交接协议文档"
+  echo "  ✓ Copied docs/handoff/ handoff protocol documents"
 fi
 
-# 创建运行时目录（不提交，但运行时需要存在）
-echo "→ 创建运行时目录..."
+# Create runtime directories (not committed, but required at runtime)
+echo "→ Creating runtime directories..."
 mkdir -p .harness/memory/archives .harness/loops/specs
 
-# 从模板初始化 progress.md（如果不存在）
+# Initialize progress.md from template (if it doesn't exist)
 if [ ! -f ".harness/memory/progress.md" ]; then
   cp .harness/templates/progress.md.template .harness/memory/progress.md
-  echo "  ✓ 初始化 .harness/memory/progress.md"
+  echo "  ✓ Initialized .harness/memory/progress.md"
 fi
 
-# 清理临时目录（安全方式：校验路径前缀后使用 rm -r）
+# Clean up the temporary directory (safe approach: validate path prefix before using rm -r)
 if [ -n "$TEMP_DIR" ] && [ -d "$TEMP_DIR" ] && [[ "$TEMP_DIR" == .harness-solo-tmp-* ]]; then
     rm -r -- "$TEMP_DIR"
 else
-    echo "WARN: 临时目录清理失败或路径异常: $TEMP_DIR"
+    echo "WARN: Temporary directory cleanup failed or path is abnormal: $TEMP_DIR"
 fi
 
-# 设置脚本可执行权限（Unix only；Windows 无 chmod，hooks 由 Git Bash 自身处理）
+# Set script executable permissions (Unix only; Windows has no chmod; hooks handled by Git Bash itself)
 if command -v chmod >/dev/null 2>&1; then
   chmod +x .harness/hooks/guards/*.sh .harness/hooks/*.sh .harness/scripts/*.sh 2>/dev/null || true
-  echo "  ✓ 设置脚本可执行权限"
+  echo "  ✓ Set script executable permissions"
 else
-  echo "  · Windows 环境：跳过 chmod（hooks 需通过 Git Bash 执行）"
+  echo "  · Windows environment: skipping chmod (hooks must run via Git Bash)"
 fi
 
 echo ""
-echo "✓ 安装完成"
+echo "✓ Installation complete"
 echo ""
-echo "下一步："
-echo "  1. 编辑 constitution.md，填写项目特定原则"
-echo "  2. 编辑 SOUL.md 的 [用户名] 和技术偏好"
-echo "  3. 让 AI Agent 读取 AGENTS.md 开始工作"
+echo "Next steps:"
+echo "  1. Edit constitution.md to fill in project-specific principles"
+echo "  2. Edit [username] and tech preferences in SOUL.md"
+echo "  3. Have the AI Agent read AGENTS.md to start working"
 echo ""
-echo "提示：安装 git hooks（可选）："
-echo "  macOS/Linux："
+echo "Tips: Install git hooks (optional):"
+echo "  macOS/Linux:"
 echo "    ln -sf ../../.harness/hooks/pre-commit.sh .git/hooks/pre-commit"
 echo "    ln -sf ../../.harness/hooks/pre-push.sh .git/hooks/pre-push"
-echo "  Windows（Git Bash）："
+echo "  Windows (Git Bash):"
 echo "    cp .harness/hooks/pre-commit.sh .git/hooks/pre-commit"
 echo "    cp .harness/hooks/pre-push.sh .git/hooks/pre-push"
-echo "    # ⚠️ 必须转换换行符！否则 Git Bash 无法执行："
+echo "    # ⚠️ Must convert line endings! Otherwise Git Bash cannot execute:"
 echo "    sed -i 's/\r$//' .git/hooks/pre-commit .git/hooks/pre-push"
-echo "  Windows（PowerShell）："
+echo "  Windows (PowerShell):"
 echo "    Copy-Item .harness/hooks/pre-commit.sh .git/hooks/pre-commit -Force"
 echo "    Copy-Item .harness/hooks/pre-push.sh .git/hooks/pre-push -Force"
-echo "    # ⚠️ 必须转换换行符！否则 Git Bash 无法执行："
+echo "    # ⚠️ Must convert line endings! Otherwise Git Bash cannot execute:"
 echo "    (Get-Content .git/hooks/pre-commit) -join \"`n\" | Set-Content -NoNewline .git/hooks/pre-commit"
 echo "    (Get-Content .git/hooks/pre-push) -join \"`n\" | Set-Content -NoNewline .git/hooks/pre-push"
 echo ""
-echo "  ⚠️ Windows 注意：符号链接（ln -s）默认需要管理员权限，建议用 cp 替代"
-echo "  ⚠️ CRLF 风险：Windows 的 core.autocrlf=true 会让 .sh 文件变成 CRLF，"
-echo "     Git Bash 无法执行 CRLF 脚本（报错 /bin/bash^M: bad interpreter）"
-echo "     解决方案："
-echo "     1. 项目根目录的 .gitattributes 已强制 *.sh 使用 LF（推荐）"
-echo "     2. 复制后手动 sed -i 's/\\r$//' 转换（如上方命令）"
-echo "     3. hook 脚本内置 CRLF 自修复逻辑（兜底）"
+echo "  ⚠️ Windows note: symbolic links (ln -s) require admin privileges by default; cp is recommended instead"
+echo "  ⚠️ CRLF risk: Windows core.autocrlf=true will turn .sh files into CRLF,"
+echo "     and Git Bash cannot execute CRLF scripts (error: /bin/bash^M: bad interpreter)"
+echo "     Solutions:"
+echo "     1. The .gitattributes in the project root already forces *.sh to use LF (recommended)"
+echo "     2. After copying, manually run sed -i 's/\\r$//' to convert (as above)"
+echo "     3. Hook scripts have built-in CRLF self-repair logic (fallback)"

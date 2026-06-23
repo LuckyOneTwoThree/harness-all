@@ -1,53 +1,53 @@
-# FEATURES.md — 增长任务/实验状态看板
+# FEATURES.md — Growth task/experiment status board
 
-> 动态状态跟踪（运营中更新）。
-> 与 GROWTH_STRATEGY.md 的分工：GROWTH_STRATEGY.md 是静态定义（立项时写），本文件是动态状态（运营中更新）。
-> 更新触发点：measure skill 通过后，将对应实验状态改为 done。
+> Dynamic status tracking (updated during operations).
+> Division of labor with GROWTH_STRATEGY.md: GROWTH_STRATEGY.md is a static definition (written at project initiation), while this file is dynamic status (updated during operations).
+> Update trigger: after the measure skill passes, change the corresponding experiment status to done.
 
-## Skill 建设进度
+## Skill build progress
 
-| 模块 | 总数 | 已建 | 状态 |
+| Module | Total | Built | Status |
 |------|------|------|------|
-| 元（meta） | 4 | 4 | ✅ 完成 |
-| 模块1 增长策略 | 5 | 5 | ✅ 完成 |
-| 模块2 增长实验 | 6 | 6 | ✅ 完成 |
-| 模块3 内容营销 | 5 | 5 | ✅ 完成 |
-| 模块4 SEO优化 | 5 | 5 | ✅ 完成 |
-| 模块5 用户运营 | 5 | 5 | ✅ 完成 |
-| 模块6 获客投放 | 3 | 3 | ✅ 完成 |
-| 模块7 变现 | 3 | 3 | ✅ 完成 |
-| 模块8 数据分析 | 3 | 3 | ✅ 完成 |
-| 模块9 增长审查 | 1 | 1 | ✅ 完成 |
-| **合计** | **40** | **40** | ✅ 全部完成 |
+| Meta | 4 | 4 | ✅ Complete |
+| Module 1 Growth Strategy | 5 | 5 | ✅ Complete |
+| Module 2 Growth Experiments | 6 | 6 | ✅ Complete |
+| Module 3 Content Marketing | 5 | 5 | ✅ Complete |
+| Module 4 SEO Optimization | 5 | 5 | ✅ Complete |
+| Module 5 User Operations | 5 | 5 | ✅ Complete |
+| Module 6 Acquisition | 3 | 3 | ✅ Complete |
+| Module 7 Monetization | 3 | 3 | ✅ Complete |
+| Module 8 Data Analysis | 3 | 3 | ✅ Complete |
+| Module 9 Growth Review | 1 | 1 | ✅ Complete |
+| **Total** | **40** | **40** | ✅ All complete |
 
-## Workflow 建设进度
+## Workflow build progress
 
-| Workflow | 状态 |
+| Workflow | Status |
 |----------|------|
-| growth-experiment-workflow | ✅ 已建设 |
-| growth-review-workflow | ✅ 已建设 |
-| content-marketing-workflow | ✅ 已建设 |
-| seo-optimization-workflow | ✅ 已建设 |
-| lifecycle-operations-workflow | ✅ 已建设 |
-| growth-strategy-workflow | ✅ 已建设 |
+| growth-experiment-workflow | ✅ Built |
+| growth-review-workflow | ✅ Built |
+| content-marketing-workflow | ✅ Built |
+| seo-optimization-workflow | ✅ Built |
+| lifecycle-operations-workflow | ✅ Built |
+| growth-strategy-workflow | ✅ Built |
 
-## 实验/任务状态
+## Experiment/task status
 
-| 编号 | 实验/任务 | 优先级 | 状态 | 最后更新 | 说明 |
+| ID | Experiment/task | Priority | Status | Last updated | Note |
 |------|----------|--------|------|---------|------|
-| G-001 | [实验/任务名] | P1 | pending | | |
+| G-001 | [experiment/task name] | P1 | pending | | |
 
-## 状态定义
+## Status definitions
 
-- `pending` — 未开始
-- `in_progress` — 进行中（对应 loops/specs/ 有 state.yaml）
-- `review` — measure 通过，待增长审查
-- `done` — 完全完成（增长审查通过，结论已归档）
-- `blocked` — 被阻塞（说明原因）
+- `pending` — not started
+- `in_progress` — in progress (corresponding loops/specs/ has state.yaml)
+- `review` — measure passed, awaiting growth review
+- `done` — fully complete (growth review passed, conclusions archived)
+- `blocked` — blocked (explain the reason)
 
-## 更新规则
+## Update rules
 
-1. **开始实验**：状态改 `in_progress`，创建 `loops/specs/<experiment>/`
-2. **measure 通过**：状态改 `review`
-3. **增长审查通过**：状态改 `done`，结论写入 knowledge-base.md
-4. **session-end 批量更新**：扫描 `loops/specs/*/state.yaml` 中 status:done 的实验，批量同步到本文件
+1. **Start experiment**: change status to `in_progress`, create `loops/specs/<experiment>/`
+2. **measure passed**: change status to `review`
+3. **Growth review passed**: change status to `done`, write conclusions to knowledge-base.md
+4. **session-end batch update**: scan experiments with status:done in `loops/specs/*/state.yaml`, batch sync to this file

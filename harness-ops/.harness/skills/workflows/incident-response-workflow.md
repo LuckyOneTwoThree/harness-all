@@ -4,141 +4,143 @@ name: incident-response-workflow
 default_mode: skip
 ---
 
-# Workflow: 故障响应全流程（Incident Response Workflow）
+# Workflow: Incident Response Workflow
 
-> 所属 LOOP 类型：incident
-> 触发场景：收到告警、用户报告故障、监控异常、P0/P1 事故
-> 编排 Skill：incident-detection → incident-mitigation → deployment-verify → [未恢复] → root-cause-analysis → 回到 mitigation → [恢复] → post-mortem
+> LOOP type: incident
+> Trigger scenarios: Received alert, user reports incident, monitoring anomaly, P0/P1 incident
+> Orchestration Skill: incident-detection → incident-mitigation → deployment-verify → [not recovered] → root-cause-analysis → back to mitigation → [recovered] → post-mortem
 
-## 流程图
+## Flowchart
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│ 故障信号（告警/用户反馈/巡检异常）                        │
+│ Incident signal (alert/user feedback/patrol anomaly)    │
 └───────────────────────────┬─────────────────────────────┘
                             ▼
           ┌─────────────────────────────────┐
-          │ incident-detection               │  评估+分级+创建记录
-          │                                  │  查询历史知识库
+          │ incident-detection               │  Assess + classify + create record
+          │                                  │  Query historical knowledge base
           └─────────────────┬───────────────┘
                             │
                   ┌─────────┴─────────┐
                   │ P0/P1?             │
                   └─────────┬─────────┘
-                    ↓ 是    │    ↓ 否（P2/P3）
-                            │    记录+排期处理
+                    ↓ Yes   │    ↓ No (P2/P3)
+                            │    Record + schedule for handling
                             ▼
           ┌─────────────────────────────────┐
-          │ [通知人类]                       │  AskUserQuestion 紧急通知
+          │ [Notify human]                   │  AskUserQuestion urgent notification
           └─────────────────┬───────────────┘
                             ▼
           ┌─────────────────────────────────┐
-          │ incident-mitigation              │  止血（回滚/扩容/重启/降级）
-          │                                  │  白名单操作
+          │ incident-mitigation              │  Mitigation (rollback/scale/restart/degrade)
+          │                                  │  Allowlist operations
           └─────────────────┬───────────────┘
                             ▼
           ┌─────────────────────────────────┐
-          │ deployment-verify[止血验证]      │  确认服务恢复
-          └─────────────────┬───────────────┘
-                            │
-                  ┌─────────┴─────────┐
-                  │ 服务恢复?          │
-                  └─────────┬─────────┘
-                    ↓ 是    │    ↓ 否
-                            │    继续止血或升级
-                            ▼
-          ┌─────────────────────────────────┐
-          │ root-cause-analysis              │  多源数据关联
-          │                                  │  5 Why 深挖
-          │                                  │  产出根因报告
-          └─────────────────┬───────────────┘
-                            ▼
-          ┌─────────────────────────────────┐
-          │ [针对性修复]                     │  根据根因执行修复
-          │                                  │  可能触发新部署
-          └─────────────────┬───────────────┘
-                            ▼
-          ┌─────────────────────────────────┐
-          │ deployment-verify[最终验证]      │  确认彻底恢复
+          │ deployment-verify [mitigation    │  Confirm service recovery
+          │   validation]                    │
           └─────────────────┬───────────────┘
                             │
                   ┌─────────┴─────────┐
-                  │ 彻底恢复?          │
+                  │ Service recovered? │
                   └─────────┬─────────┘
-                    ↓ 是    │    ↓ 否
-                            │    回到 root-cause-analysis
+                    ↓ Yes   │    ↓ No
+                            │    Continue mitigation or escalate
                             ▼
           ┌─────────────────────────────────┐
-          │ post-mortem                      │  复盘报告
-          │                                  │  改进项清单
-          │                                  │  知识库沉淀
-          │                                  │  产出 ops-to-pm.md
+          │ root-cause-analysis              │  Multi-source data correlation
+          │                                  │  5 Why deep dive
+          │                                  │  Produce root cause report
+          └─────────────────┬───────────────┘
+                            ▼
+          ┌─────────────────────────────────┐
+          │ [Targeted fix]                   │  Execute fix based on root cause
+          │                                  │  May trigger new deployment
+          └─────────────────┬───────────────┘
+                            ▼
+          ┌─────────────────────────────────┐
+          │ deployment-verify [final         │  Confirm full recovery
+          │   validation]                    │
+          └─────────────────┬───────────────┘
+                            │
+                  ┌─────────┴─────────┐
+                  │ Fully recovered?   │
+                  └─────────┬─────────┘
+                    ↓ Yes   │    ↓ No
+                            │    Back to root-cause-analysis
+                            ▼
+          ┌─────────────────────────────────┐
+          │ post-mortem                      │  Post-mortem report
+          │                                  │  Improvement item list
+          │                                  │  Knowledge base consolidation
+          │                                  │  Produce ops-to-pm.md
           └─────────────────────────────────┘
 ```
 
-## 质量门控
+## Quality Gates
 
-| 门控点 | 检查内容 | 不通过处理 |
+| Gate | Checks | On Failure |
 |--------|---------|-----------|
-| 分级门 | 故障等级判定准确（P0/P1/P2/P3） | 拿不准按高等级处理 |
-| 止血验证 | 错误率下降+业务指标恢复 | 继续止血或升级处理 |
-| 根因验证 | 根因有证据支撑+5 Why 完整 | 继续深挖，不臆断 |
-| 最终验证 | 四件套全通过+护栏指标正常 | 回到根因分析 |
-| 复盘门 | 改进项有负责人+截止日期 | 补全后归档 |
+| Classification gate | Incident severity classified accurately (P0/P1/P2/P3) | When unsure, treat as higher severity |
+| Mitigation validation | Error rate decreased + business metrics recovered | Continue mitigation or escalate |
+| Root cause validation | Root cause supported by evidence + 5 Why complete | Continue deep dive, no speculation |
+| Final validation | All four checks pass + guardrail metrics normal | Back to root cause analysis |
+| Post-mortem gate | Improvement items have owners + due dates | Complete then archive |
 
-## 数据流
+## Data Flow
 
-| 阶段 | 产出 | 存储位置 |
+| Stage | Output | Storage Location |
 |------|------|---------|
-| incident-detection | 故障记录+分级 | spec.md + state.yaml |
-| incident-mitigation | 止血操作记录 | iterations.log + evidence.md |
-| deployment-verify | 验证报告 | evidence.md |
-| root-cause-analysis | 根因报告 | evidence.md |
-| post-mortem | 复盘报告+改进项 | docs/incident/ + knowledge-base.md + ops-to-pm.md |
+| incident-detection | Incident record + classification | spec.md + state.yaml |
+| incident-mitigation | Mitigation operation record | iterations.log + evidence.md |
+| deployment-verify | Validation report | evidence.md |
+| root-cause-analysis | Root cause report | evidence.md |
+| post-mortem | Post-mortem report + improvement items | docs/incident/ + knowledge-base.md + ops-to-pm.md |
 
-## 与 LOOP 的交互
+## Interaction with LOOP
 
 ```
 LOOP(incident):
-  PLAN(detect):     incident-detection → 分级 → 创建记录 → 查历史
-  PROVISION:        incident-mitigation → 止血（白名单操作）
-  VERIFY:           deployment-verify → 确认恢复
-    ↓ 未恢复
-  DEBUG:            root-cause-analysis → 多源关联 → 5 Why
-    ↓ 找到根因
-  回到 PROVISION（针对性修复）
-    ↓ 恢复
-  DONE → post-mortem（LOOP 外归档）
+  PLAN(detect):     incident-detection → classify → create record → query history
+  PROVISION:        incident-mitigation → mitigation (allowlist operations)
+  VERIFY:           deployment-verify → confirm recovery
+    ↓ Not recovered
+  DEBUG:            root-cause-analysis → multi-source correlation → 5 Why
+    ↓ Root cause found
+  Back to PROVISION (targeted fix)
+    ↓ Recovered
+  DONE → post-mortem (archive outside LOOP)
 ```
 
-**迭代上限**：5 次（incident 类型）
-**超限处理**：请求人类紧急介入
+**Iteration limit**: 5 (incident type)
+**Over-limit handling**: Request emergency human intervention
 
-## 响应时效要求
+## Response Time Requirements
 
-| 等级 | 检测 | 介入 | 止血 | 根因 | 复盘 |
+| Severity | Detection | Engagement | Mitigation | Root cause | Post-mortem |
 |------|------|------|------|------|------|
-| P0 | 即时 | 5 分钟 | 15 分钟 | 1 小时 | 24 小时 |
-| P1 | 即时 | 15 分钟 | 30 分钟 | 4 小时 | 3 天 |
-| P2 | 5 分钟 | 1 小时 | 4 小时 | 1 天 | 1 周 |
-| P3 | 巡检 | 排期 | 排期 | 排期 | 月度汇总 |
+| P0 | Immediate | 5 minutes | 15 minutes | 1 hour | 24 hours |
+| P1 | Immediate | 15 minutes | 30 minutes | 4 hours | 3 days |
+| P2 | 5 minutes | 1 hour | 4 hours | 1 day | 1 week |
+| P3 | Patrol | Scheduled | Scheduled | Scheduled | Monthly summary |
 
-## 操作白名单（止血阶段）
+## Operation Allowlist (Mitigation Phase)
 
-| 操作 | staging | production |
+| Operation | staging | production |
 |------|---------|------------|
-| 回滚（rollout undo） | Agent 自动 | 人类确认后执行 |
-| 扩容（scale） | Agent 自动 | 人类确认后执行 |
-| 重启 Pod | Agent 自动 | 人类确认后执行 |
-| 降级（ConfigMap） | Agent 自动 | GitOps PR |
-| 限流 | Agent 自动 | Agent 建议+人类确认 |
+| Rollback (rollout undo) | Agent auto | Execute after human confirmation |
+| Scale | Agent auto | Execute after human confirmation |
+| Restart Pod | Agent auto | Execute after human confirmation |
+| Degrade (ConfigMap) | Agent auto | GitOps PR |
+| Rate limit | Agent auto | Agent suggests + human confirms |
 
-**禁止操作**：delete namespace / drop table / terraform destroy / 修改 RBAC
+**Prohibited operations**: delete namespace / drop table / terraform destroy / modify RBAC
 
-## 使用方式
+## Usage
 
-对 Agent 说：
-- "线上支付 500 错误率飙升" → 触发本 workflow
-- "收到 Alertmanager 告警" → 从 incident-detection 开始
-- "服务恢复了，写复盘报告" → 从 post-mortem 开始
-- "这个故障的根因是什么" → 从 root-cause-analysis 开始
+Tell the Agent:
+- "Production payment 500 error rate spiking" → Trigger this workflow
+- "Received Alertmanager alert" → Start from incident-detection
+- "Service recovered, write post-mortem report" → Start from post-mortem
+- "What is the root cause of this incident" → Start from root-cause-analysis

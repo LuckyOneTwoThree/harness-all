@@ -1,18 +1,18 @@
-<!-- 从 SKILL.md 提取的参考材料，按需查阅 -->
+<!-- Reference material extracted from SKILL.md, consult as needed -->
 
-# 输出总 Schema 与 tracking_plan Schema
+# Overall Output Schema and tracking_plan Schema
 
-> 来源：SKILL.md「输出」章节中的输出 Schema 与 tracking_plan schema
+> Source: Output schema and tracking_plan schema in SKILL.md "Output" section
 
-## 输出 Schema
+## Output Schema
 
 ```json
 {
   "type": "object",
   "required": ["tracking_plan", "quality_check"],
   "properties": {
-    "tracking_plan": {"type": "array", "description": "埋点事件列表，包含事件定义、属性、触发条件等"},
-    "quality_check": {"type": "object", "description": "质量检查结果，包含命名合规性、属性完整性、路径覆盖率等"}
+    "tracking_plan": {"type": "array", "description": "Tracking event list, including event definitions, properties, trigger conditions, etc."},
+    "quality_check": {"type": "object", "description": "Quality check results, including naming compliance, property completeness, path coverage, etc."}
   }
 }
 ```

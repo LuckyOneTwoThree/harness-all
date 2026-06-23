@@ -1,37 +1,37 @@
-# Skills 索引
+# Skills Index
 
-> 纯索引，80 行内。需要选 Skill 时读。工作流编排见 `workflows/`。
-> 定位：harness-pm 是**产品管理框架**，PM 方法论 skill 在 `.harness/skills/pm/` 目录下（82 个）。
-> 工程开发见 harness 家族其他成员（通过 docs/handoff/ 交接）。
+> Pure index, under 80 lines. Read when selecting a Skill. For workflow orchestration, see `workflows/`.
+> Positioning: harness-pm is a **product management framework**; PM methodology skills are under `.harness/skills/pm/` (82 skills).
+> For engineering development, see other members of the harness family (handed off via docs/handoff/).
 
-## 元 skill（.harness/skills/meta/）
-- **session-start** — 会话启动，加载上下文恢复工作状态
-- **session-end** — 会话收尾，归档进度 + 写 baseline + 更新看板 + 产出交接文档
-- **skill-maintenance** — skill 健康检查
-- **memory-maintenance** — memory retention 清理
+## Meta Skills (.harness/skills/meta/)
+- **session-start** — Session startup; load context and restore working state
+- **session-end** — Session wrap-up; archive progress + write baseline + update the board + produce handoff documents
+- **skill-maintenance** — Skill health check
+- **memory-maintenance** — Memory retention cleanup
 
-## 工作流（.harness/skills/workflows/，10 个）
-> `default_mode`：deep=强制探索 / standard=模块边界暂停 / skip=直接执行（用户可随时切换）
-- **new-product** [deep] — 从 0 到 1 做新产品（模块1→2→3→4→7监控准备）
-- **pivot** [deep] — 战略调整（模块1→2，战略级变更）
-- **iteration** [standard] — 已有产品功能迭代（模块3→5→7，变更驱动）
-- **growth** [standard] — 增长突破（模块6→5实验→7发布）
-- **optimization** [standard] — 数据驱动优化（模块5→7→3，数据驱动）
-- **launch** [skip] — 验收发布（模块7，含埋点补充能力）
-- **diagnosis** [skip] — 产品诊断与下线（模块7，被动触发）
-- **setup** [skip] — 立项引导（install.sh 后引导填写 SOUL/constitution/PRODUCT_STRATEGY 骨架）
-- **incident-response** [skip] — 危机响应（模块7，P0事故紧急通道）
-- **health-check** [skip] — 定期健康检查（模块7，主动体检）
+## Workflows (.harness/skills/workflows/, 10 in total)
+> `default_mode`: deep = mandatory exploration / standard = pause at module boundaries / skip = direct execution (user can switch at any time)
+- **new-product** [deep] — Build a new product from 0 to 1 (modules 1→2→3→4→7 monitoring prep)
+- **pivot** [deep] — Strategic adjustment (modules 1→2, strategic-level change)
+- **iteration** [standard] — Iterate on an existing product feature (modules 3→5→7, change-driven)
+- **growth** [standard] — Growth breakthrough (modules 6→5 experiment→7 release)
+- **optimization** [standard] — Data-driven optimization (modules 5→7→3, data-driven)
+- **launch** [skip] — Acceptance and release (module 7, includes tracking backfill capability)
+- **diagnosis** [skip] — Product diagnosis and decommission (module 7, passively triggered)
+- **setup** [skip] — Project initiation guide (after install.sh, guide filling in the SOUL/constitution/PRODUCT_STRATEGY skeleton)
+- **incident-response** [skip] — Crisis response (module 7, P0 incident emergency channel)
+- **health-check** [skip] — Periodic health check (module 7, proactive checkup)
 
-## PM 方法论 skill（.harness/skills/pm/，82 个 = 19 orchestrator + 63 pipeline，7 个模块）
-- **模块1 探索发现**：10 pipeline + 2 orchestrator = 12（user-research / market，insight/opportunity 退化壳已删）
-- **模块2 商业战略**：11 pipeline + 2 orchestrator = 13（business / planning，positioning/stakeholder 退化壳已删）
-- **模块3 构思设计**：7 pipeline + 2 orchestrator = 9（prd / validation，ideation 退化壳已删，视觉交互已交 harness-design）
-- **模块4 度量设计**：3 pipeline + 1 orchestrator = 4（metrics-system / tracking-plan / dashboard）
-- **模块5 度量运营**：8 pipeline + 3 orchestrator = 11（analysis / decision / experiment）
-- **模块6 增长运营**：11 pipeline + 5 orchestrator = 16（growth / acquisition / activation / retention / revenue）
-- **模块7 监控迭代**：13 pipeline + 4 orchestrator = 17（monitoring / diagnosis / iteration / release）
+## PM Methodology Skills (.harness/skills/pm/, 82 in total = 19 orchestrator + 63 pipeline, 7 modules)
+- **Module 1 Discovery**: 10 pipeline + 2 orchestrator = 12 (user-research / market; insight/opportunity degraded shells have been removed)
+- **Module 2 Business Strategy**: 11 pipeline + 2 orchestrator = 13 (business / planning; positioning/stakeholder degraded shells have been removed)
+- **Module 3 Ideation & Design**: 7 pipeline + 2 orchestrator = 9 (prd / validation; ideation degraded shell has been removed; visual/interaction has been moved to harness-design)
+- **Module 4 Metrics Design**: 3 pipeline + 1 orchestrator = 4 (metrics-system / tracking-plan / dashboard)
+- **Module 5 Metrics Operations**: 8 pipeline + 3 orchestrator = 11 (analysis / decision / experiment)
+- **Module 6 Growth Operations**: 11 pipeline + 5 orchestrator = 16 (growth / acquisition / activation / retention / revenue)
+- **Module 7 Monitoring & Iteration**: 13 pipeline + 4 orchestrator = 17 (monitoring / diagnosis / iteration / release)
 
-> 详细 skill 清单见 `.harness/skills/pm/` 下各 skill 目录的 SKILL.md。
-> skill 按功能命名扁平化组织（如 `user-research-orchestrator/`、`design-prd/`），不再按模块分目录。
-> 视觉/交互/组件/原型等设计产出已迁移至 harness-design，PM 仅负责 PRD 和产品策略。
+> For the detailed skill list, see the SKILL.md in each skill directory under `.harness/skills/pm/`.
+> Skills are organized flat by function (e.g., `user-research-orchestrator/`, `design-prd/`), no longer grouped by module into directories.
+> Visual / interaction / component / prototype and other design outputs have been migrated to harness-design; PM is only responsible for PRD and product strategy.

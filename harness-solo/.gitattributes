@@ -1,17 +1,17 @@
-# .gitattributes — harness-solo 换行符策略
+# .gitattributes — harness-solo line ending policy
 #
-# 核心原则：所有 Shell 脚本（.sh）必须使用 LF 换行符
-# 原因：Git Bash (MINGW64) 无法执行 CRLF 脚本
-# 即使 Windows 开启 core.autocrlf=true，eol=lf 也会覆盖本地设置
+# Core principle: all shell scripts (.sh) must use LF line endings
+# Reason: Git Bash (MINGW64) cannot execute CRLF scripts
+# Even when Windows enables core.autocrlf=true, eol=lf overrides local settings
 
-# Shell 脚本 — 强制 LF
+# Shell scripts — force LF
 *.sh text eol=lf
 
-# Harness hooks — 强制 LF
+# Harness hooks — force LF
 .harness/hooks/* text eol=lf
 .harness/hooks/guards/* text eol=lf
 
-# 通用文本 — 自动规范化
+# General text — auto-normalize
 *.md text auto
 *.yaml text auto
 *.yml text auto
@@ -19,18 +19,18 @@
 *.toml text auto
 *.txt text auto
 
-# 代码文件 — 强制 LF
+# Code files — force LF
 *.js text eol=lf
 *.ts text eol=lf
 *.py text eol=lf
 *.css text eol=lf
 *.html text eol=lf
 
-# 配置文件 — 强制 LF
+# Config files — force LF
 .gitignore text eol=lf
 .gitattributes text eol=lf
 
-# 二进制文件
+# Binary files
 *.png binary
 *.jpg binary
 *.pdf binary

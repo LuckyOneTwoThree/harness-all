@@ -1,44 +1,44 @@
-<!-- 从 SKILL.md 提取的参考材料，按需查阅 -->
+<!-- Reference material extracted from SKILL.md, consult as needed -->
 
-# Step 2: PRD 功能/路径/交互示例表
+# Step 2: PRD Feature/Path/Interaction Example Table
 
-> 来源：SKILL.md「Step 2: 从PRD提取功能埋点需求」中的功能模块、用户路径、交互节点示例
+> Source: Feature module, user path, and interaction node examples in SKILL.md "Step 2: Extract Feature Tracking Requirements from the PRD"
 
-## 2.1 功能模块识别
+## 2.1 Feature Module Identification
 
 ```
-识别PRD中的功能模块 → 定义模块级埋点
+Identify feature modules in the PRD → Define module-level tracking
 ```
 
-**示例**：
+**Examples**:
 
-| PRD功能模块 | 埋点命名空间 | 埋点事件示例 |
+| PRD Feature Module | Tracking Namespace | Tracking Event Example |
 |-----------|------------|-------------|
-| 用户认证 | user_auth | login_success, logout, register_complete |
-| 商品浏览 | product_browse | product_view, product_list_view, search |
-| 购物车 | cart | add_to_cart, remove_from_cart, cart_view |
-| 订单流程 | order | checkout_start, payment_success, order_complete |
-| 用户中心 | user_center | profile_view, settings_view |
+| User authentication | user_auth | login_success, logout, register_complete |
+| Product browsing | product_browse | product_view, product_list_view, search |
+| Shopping cart | cart | add_to_cart, remove_from_cart, cart_view |
+| Order flow | order | checkout_start, payment_success, order_complete |
+| User center | user_center | profile_view, settings_view |
 
 ---
 
-## 2.2 核心用户路径提取
+## 2.2 Core User Path Extraction
 
 ```
-识别PRD描述的用户流程 → 定义路径埋点
+Identify user flows described in the PRD → Define path tracking
 ```
 
-**示例流程**（电商）：
+**Example flow** (E-commerce):
 
 ```
-注册/登录 → 首页浏览 → 商品搜索/分类 → 商品详情 → 加入购物车 → 结算支付 → 订单完成
+Register/Login → Homepage browsing → Product search/category → Product detail → Add to cart → Checkout payment → Order complete
 ```
 
-**路径埋点设计**：
+**Path tracking design**:
 
 ```json
 {
-  "user_journey": "注册→浏览→搜索→详情→加购→结算→支付→完成",
+  "user_journey": "Register→Browse→Search→Detail→Add to cart→Checkout→Payment→Complete",
   "touchpoints": [
     "register_success",
     "homepage_view",
@@ -56,18 +56,18 @@
 
 ---
 
-## 2.3 关键交互节点识别
+## 2.3 Key Interaction Node Identification
 
 ```
-识别PRD中的交互细节 → 定义交互埋点
+Identify interaction details in the PRD → Define interaction tracking
 ```
 
-**交互类型**：
+**Interaction types**:
 
-| 交互类型 | 触发时机 | 埋点属性 |
+| Interaction Type | Trigger Timing | Tracking Properties |
 |---------|---------|---------|
-| 按钮点击 | 点击动作发生时 | button_name, page_name, position |
-| 表单提交 | 表单提交成功时 | form_name, submit_result, error_type |
-| 滑动手势 | 滑动结束时 | swipe_direction, swipe_distance |
-| 输入行为 | 输入完成时 | input_field, input_length, input_type |
-| 切换操作 | 切换完成时 | switch_from, switch_to, switch_type |
+| Button click | When the click action occurs | button_name, page_name, position |
+| Form submission | When the form is successfully submitted | form_name, submit_result, error_type |
+| Swipe gesture | When the swipe ends | swipe_direction, swipe_distance |
+| Input behavior | When input is completed | input_field, input_length, input_type |
+| Switch operation | When the switch is completed | switch_from, switch_to, switch_type |

@@ -1,64 +1,64 @@
 # Common Rules for Professional UI
 
-> 通用工艺规则（品牌无关）· 被 visual-design / design-lint / design-review 引用
+> Generic craft rules (brand-agnostic) · referenced by visual-design / design-lint / design-review
 >
-> 来源：UI UX Pro Max 的 Common Rules for Professional UI
+> Source: UI UX Pro Max's Common Rules for Professional UI
 
-## 核心理念
+## Core philosophy
 
-"易被忽视但影响专业感"的规则。每条规则以 Standard / Avoid / Why It Matters 三栏呈现，便于 Agent 直接对照执行。
+"Easy to overlook but affects professionalism" rules. Each rule is presented in three columns: Standard / Avoid / Why It Matters, so the Agent can directly cross-check and execute.
 
 ## Icons & Visual Elements
 
 | Standard | Avoid | Why It Matters |
 |----------|-------|----------------|
-| 默认用 Phosphor 图标库 | 用 emoji 作结构图标 | emoji 渲染不一致，不专业 |
-| 矢量资源优先（SVG） | 位图图标 | 矢量可缩放无失真 |
-| 品牌 logo 用官方资产 | 手绘 logo | 品牌一致性 |
-| 图标尺寸 token 化（icon-sm/icon-md=24pt） | 硬编码尺寸 | 可维护性 |
-| 同层笔画粗细一致 | 混用粗细 | 视觉一致性 |
-| 填充/描边不混用 | 同一界面混用 | 视觉一致性 |
-| 触控区 ≥44pt | 小于 44pt | 可访问性 + 移动端可用性 |
-| 图标对齐基线 | 视觉对齐 | 排版专业度 |
-| 对比度 4.5:1 | 低于 4.5:1 | WCAG AA |
+| Default to Phosphor icon library | Using emoji as structural icons | emoji rendering is inconsistent and unprofessional |
+| Prefer vector assets (SVG) | Bitmap icons | Vectors scale without distortion |
+| Use official assets for brand logos | Hand-drawn logos | Brand consistency |
+| Tokenize icon sizes (icon-sm/icon-md=24pt) | Hardcoded sizes | Maintainability |
+| Consistent stroke weight at the same layer | Mixing weights | Visual consistency |
+| Do not mix fill/stroke | Mixing in the same interface | Visual consistency |
+| Touch target ≥44pt | Less than 44pt | Accessibility + mobile usability |
+| Icons align to baseline | Visual alignment | Typography professionalism |
+| Contrast 4.5:1 | Below 4.5:1 | WCAG AA |
 
 ## Interaction (App)
 
 | Standard | Avoid | Why It Matters |
 |----------|-------|----------------|
-| 点击反馈 80-150ms 内 | 超过 150ms | 感知性能 |
-| 微交互 150-300ms 原生缓动 | 自定义复杂缓动 | 平台一致性 |
-| 无障碍焦点序=视觉序 | 焦点序混乱 | 键盘用户体验 |
-| 禁用态用语义化 props | 仅改样式 | 可访问性 |
-| 触控 ≥44×44pt（iOS）/48×48dp（Android） | 小于标准 | 平台规范 |
-| 单区域单手势 | 多手势冲突 | 防误操作 |
-| 优先原生交互原语 | 自定义交互 | 平台一致性 |
+| Click feedback within 80-150ms | Over 150ms | Perceived performance |
+| Microinteractions 150-300ms native easing | Custom complex easing | Platform consistency |
+| Accessibility focus order = visual order | Chaotic focus order | Keyboard UX |
+| Disabled state uses semantic props | Style-only changes | Accessibility |
+| Touch ≥44×44pt (iOS) / 48×48dp (Android) | Below standard | Platform spec |
+| Single gesture per area | Multi-gesture conflict | Prevent misoperation |
+| Prefer native interaction primitives | Custom interactions | Platform consistency |
 
 ## Light/Dark Mode Contrast
 
 | Standard | Avoid | Why It Matters |
 |----------|-------|----------------|
-| 亮色表面清晰分离 | 表面混在一起 | 视觉层级 |
-| 正文对比度 ≥4.5:1 | 低于 4.5:1 | WCAG AA |
-| 暗色主文 ≥4.5:1 次文 ≥3:1 | 低于标准 | 暗色模式可读性 |
-| 分隔线双主题可见 | 单主题设计 | 跨主题可用性 |
-| 交互态双主题等价 | 仅亮态设计 | 跨主题一致性 |
-| 语义化 token 驱动 | 硬编码颜色 | 可维护性 |
-| modal scrim 40-60% 黑 | 透明 scrim | 焦点引导 |
+| Light surfaces clearly separated | Surfaces blending together | Visual hierarchy |
+| Body contrast ≥4.5:1 | Below 4.5:1 | WCAG AA |
+| Dark mode primary text ≥4.5:1, secondary ≥3:1 | Below standard | Dark mode readability |
+| Dividers visible in both themes | Single-theme design | Cross-theme usability |
+| Interaction states equivalent in both themes | Light-only design | Cross-theme consistency |
+| Semantic token driven | Hardcoded colors | Maintainability |
+| Modal scrim 40-60% black | Transparent scrim | Focus guidance |
 
 ## Layout & Spacing
 
 | Standard | Avoid | Why It Matters |
 |----------|-------|----------------|
-| 安全区合规（刘海/状态栏/手势条） | 内容被遮挡 | 移动端可用性 |
-| 系统栏留空 | 内容侵入系统栏 | 平台规范 |
-| 内容宽度按设备类一致 | 随意宽度 | 跨设备一致性 |
-| 4/8dp 间距节奏 | 任意间距 | 视觉节奏感 |
-| 12 栅格布局 | 任意栅格 | 工程可实现对齐 |
-| 移动优先设计 | 桌面优先 | 响应式基础 |
+| Safe area compliance (notch/status bar/gesture bar) | Content occluded | Mobile usability |
+| System bar padding | Content intruding on system bar | Platform spec |
+| Content width consistent by device class | Arbitrary widths | Cross-device consistency |
+| 4/8dp spacing rhythm | Arbitrary spacing | Visual rhythm |
+| 12-column grid layout | Arbitrary grid | Engineering alignment |
+| Mobile-first design | Desktop-first | Responsive foundation |
 
-## 检查时机
+## Check timing
 
-- **visual-design**：产出设计稿时对照三栏表
-- **design-lint**：L006-L010 规则检查布局一致性
-- **design-review**：Five-Axis Review 的"间距与对齐"轴检查
+- **visual-design**: cross-check the three-column table when producing design specs
+- **design-lint**: L006-L010 rules check layout consistency
+- **design-review**: Five-Axis Review's "spacing and alignment" axis check

@@ -1,21 +1,21 @@
 ---
 name: tracking-plan
-description: 当需要生成埋点方案时使用。埋点方案自动生成，包含从指标体系反推埋点需求、PRD功能埋点提取、埋点质量检查、PRD一致性校验。关键词：埋点方案、事件设计、属性设计、埋点规范、Tracking Plan、数据采集、加埋点、打点。
+description: Use when you need to generate a tracking plan. Tracking plan auto-generation, including deriving tracking requirements from the metric system, extracting tracking requirements from PRD features, tracking quality checks, and PRD consistency validation. Keywords: tracking plan, event design, property design, tracking specification, Tracking Plan, data collection, add tracking, instrument events.
 metadata:
-  module: "产品度量设计"
-  sub-module: "埋点方案"
+  module: "Product Metrics Design"
+  sub-module: "Tracking Plan"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["互联网", "电商", "通用"]
+  domain_tags: ["Internet", "E-commerce", "General"]
   trigger_examples:
-    - "这个功能需要加埋点"
-    - "帮我出一份打点方案"
-    - "整理一下需要采集哪些数据"
+    - "This feature needs tracking"
+    - "Help me produce a tracking plan"
+    - "Organize what data needs to be collected"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "仅输出核心事件列表和埋点清单"
-  deep_description: "完整方案 + 数据治理规范 + 隐私合规审计 + 长期演进路线"
+  quick_description: "Only output the core event list and tracking inventory"
+  deep_description: "Complete plan + data governance specification + privacy compliance audit + long-term evolution roadmap"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -27,303 +27,303 @@ writes:
   - tracking_plan.json
 ---
 
-# 埋点方案自动生成
+# Tracking Plan Auto-Generation
 
-## 核心原则
+## Core Principles
 
-1. **全量分析**：对所有可用数据进行系统性分析，不遗漏关键维度
-2. **实时感知**：指标体系设计支持实时监控和快速响应
-3. **自动归因**：异常波动自动归因到具体原因，减少人工排查
-4. **决策规则显式化**：每个告警和升级条件都有明确的量化规则
+1. **Comprehensive analysis**: Systematically analyze all available data without omitting key dimensions
+2. **Real-time awareness**: Metric system design supports real-time monitoring and rapid response
+3. **Automated attribution**: Automatically attribute anomalies to specific causes, reducing manual investigation
+4. **Explicit decision rules**: Every alert and escalation condition has clear quantitative rules
 
-## 交互模式
+## Interaction Mode
 
-**🤖→👤 AI建议，人类审批**
+**🤖→👤 AI suggests, human approves**
 
-本Pipeline由AI自动生成埋点方案，但关键决策点需要人类审批：
-- **必须审批**：埋点业务逻辑正确性
-- **必须审批**：隐私合规性
-- **建议审批**：埋点优先级调整
+This pipeline auto-generates the tracking plan, but key decision points require human approval:
+- **Must approve**: Tracking business logic correctness
+- **Must approve**: Privacy compliance
+- **Recommended to approve**: Tracking priority adjustments
 
-## 输入
+## Input
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| PRD | string/文件 | 是 | 用户提供 | PRD文档内容（含功能描述、用户流程、核心路径、业务规则） |
-| 指标体系 | JSON | 是 | docs/metrics/metrics-system.md | 北极星指标、L1/L2/行动指标 |
-| 现有埋点清单 | JSON数组 | ○ | 用户提供 | 已有埋点事件清单 |
+| PRD | string/file | Yes | User-provided | PRD document content (including feature descriptions, user flows, core paths, business rules) |
+| Metric System | JSON | Yes | docs/metrics/metrics-system.md | North Star Metric, L1/L2/action metrics |
+| Existing Tracking Inventory | JSON array | ○ | User-provided | Existing tracking event inventory |
 
-### PRD（必填）
+### PRD (Required)
 
-**PRD文档内容**，包含：
-- 产品功能描述
-- 用户流程说明
-- 核心路径定义
-- 业务规则说明
+**PRD document content**, including:
+- Product feature descriptions
+- User flow descriptions
+- Core path definitions
+- Business rule descriptions
 
-**格式支持**：
-- Markdown格式
-- Word文档
-- 结构化JSON
-- 原型图+说明
-
----
-
-### 指标体系（来自Pipeline 1）
-
-> 📋 输入 JSON schema 详见 [Reference/input-schemas.md](./Reference/input-schemas.md)
+**Supported formats**:
+- Markdown
+- Word document
+- Structured JSON
+- Wireframes + descriptions
 
 ---
 
-### 现有埋点清单（可选）
+### Metric System (from Pipeline 1)
 
-> 📋 输入 JSON schema 详见 [Reference/input-schemas.md](./Reference/input-schemas.md)
+> 📋 For input JSON schema, see [Reference/input-schemas.md](./Reference/input-schemas.md)
 
 ---
 
-## 执行步骤
+### Existing Tracking Inventory (Optional)
 
-### Step 1: 从指标体系反推埋点需求 [核心]
+> 📋 For input JSON schema, see [Reference/input-schemas.md](./Reference/input-schemas.md)
 
-**🤖 AI处理**
+---
 
-**处理逻辑**：
+## Execution Steps
+
+### Step 1: Derive Tracking Requirements from the Metric System [Core]
+
+**🤖 AI processing**
+
+**Processing logic**:
 
 ```
 FOR each metric in metric_system:
-  1. 分析指标计算所需的数据要素
-  2. 识别需要采集的用户行为
-  3. 定义对应的埋点事件
-  4. 列出必需的埋点属性
+  1. Analyze the data elements required for metric calculation
+  2. Identify the user behaviors that need to be collected
+  3. Define the corresponding tracking events
+  4. List the required tracking properties
 ```
 
-> 📋 反推映射表与输出 schema 详见 [Reference/step1-metric-mapping.md](./Reference/step1-metric-mapping.md)
+> 📋 For the derivation mapping table and output schema, see [Reference/step1-metric-mapping.md](./Reference/step1-metric-mapping.md)
 
 ---
 
-### Step 2: 从PRD提取功能埋点需求 [核心]
+### Step 2: Extract Feature Tracking Requirements from the PRD [Core]
 
-**🤖 AI处理**
+**🤖 AI processing**
 
-**处理逻辑**：
+**Processing logic**:
 
 ```
-1. 解析PRD文档结构
-2. 识别功能模块列表
-3. 提取核心用户路径
-4. 识别关键交互节点
-5. 定义功能埋点事件
+1. Parse the PRD document structure
+2. Identify the list of feature modules
+3. Extract core user paths
+4. Identify key interaction nodes
+5. Define feature tracking events
 ```
 
-> 📋 功能模块/路径/交互示例表详见 [Reference/step2-prd-extraction.md](./Reference/step2-prd-extraction.md)
+> 📋 For the feature module/path/interaction example table, see [Reference/step2-prd-extraction.md](./Reference/step2-prd-extraction.md)
 
 ---
 
-### Step 3: 与现有埋点去重 [条件]
+### Step 3: Deduplicate Against Existing Tracking [Conditional]
 
-**🤖 AI处理**
+**🤖 AI processing**
 
-**去重逻辑**：
+**Deduplication logic**:
 
 ```
 FOR each proposed_event:
-  1. 在现有埋点清单中查找相似事件
-  2. 计算相似度得分
-  3. IF 相似度 > 0.8 THEN 标记为重复
-  4. ELSE IF 相似度 > 0.5 THEN 标记为需人工确认
-  5. ELSE 标记为新增埋点
+  1. Search for similar events in the existing tracking inventory
+  2. Calculate the similarity score
+  3. IF similarity > 0.8 THEN mark as duplicate
+  4. ELSE IF similarity > 0.5 THEN mark as needing manual confirmation
+  5. ELSE mark as a new tracking event
 ```
 
-> 📋 相似度计算规则与去重输出详见 [Reference/step3-dedup-rules.md](./Reference/step3-dedup-rules.md)
+> 📋 For similarity calculation rules and deduplication output, see [Reference/step3-dedup-rules.md](./Reference/step3-dedup-rules.md)
 
 ---
 
-### Step 4: 埋点质量检查 [核心]
+### Step 4: Tracking Quality Check [Core]
 
-**🤖 AI处理**
+**🤖 AI processing**
 
-> 📋 4.1~4.5 全部质量检查规则与输出详见 [Reference/step4-quality-checks.md](./Reference/step4-quality-checks.md)
-
----
-
-### Step 5: 生成埋点文档 [核心]
-
-**🤖 AI处理**
-
-> 📋 文档结构 schema 详见 [Reference/step5-document-schema.md](./Reference/step5-document-schema.md)
+> 📋 For all quality check rules and outputs from 4.1 to 4.5, see [Reference/step4-quality-checks.md](./Reference/step4-quality-checks.md)
 
 ---
 
-### Step 6: PRD埋点方案一致性校验 [条件]
+### Step 5: Generate Tracking Document [Core]
 
-**🤖 AI处理**
+**🤖 AI processing**
 
-> 📋 6.1~6.4 一致性校验全部内容详见 [Reference/step6-prd-consistency.md](./Reference/step6-prd-consistency.md)
+> 📋 For the document structure schema, see [Reference/step5-document-schema.md](./Reference/step5-document-schema.md)
 
 ---
 
-## 输出
+### Step 6: PRD Tracking Plan Consistency Validation [Conditional]
 
-**存储路径**：`docs/metrics/tracking-plan.md`
+**🤖 AI processing**
 
-### 输出深度分级
+> 📋 For all consistency validation content from 6.1 to 6.4, see [Reference/step6-prd-consistency.md](./Reference/step6-prd-consistency.md)
 
-| 深度级别 | 输出范围 | 说明 |
+---
+
+## Output
+
+**Storage path**: `docs/metrics/tracking-plan.md`
+
+### Output Depth Tiers
+
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 核心事件列表 + 埋点清单 | 核心结论 + 最小可行产物，仅输出Step 1-2核心事件和埋点清单 |
-| standard | 完整埋点方案（当前默认） | 完整产物，包含Step 1-6全部输出 |
-| deep | 完整方案 + 扩展分析 | 完整产物 + 数据治理规范 + 隐私合规审计 + 长期演进路线 + 决策记录 + 风险评估 |
+| quick | Core event list + tracking inventory | Core conclusions + minimum viable artifact, only outputs Step 1-2 core events and tracking inventory |
+| standard | Complete tracking plan (current default) | Complete artifact, including all Step 1-6 outputs |
+| deep | Complete plan + extended analysis | Complete artifact + data governance specification + privacy compliance audit + long-term evolution roadmap + decision records + risk assessment |
 
-**输出文件**：`tracking_plan.json`
+**Output file**: `tracking_plan.json`
 
-> 📋 输出总 Schema 与 tracking_plan schema 详见 [Reference/output-schemas.md](./Reference/output-schemas.md)
+> 📋 For the overall output schema and tracking_plan schema, see [Reference/output-schemas.md](./Reference/output-schemas.md)
 
 ---
 
-## 输出校验规则
+## Output Validation Rules
 
-> 📋 输出字段校验规则表详见 [Reference/output-validation-rules.md](./Reference/output-validation-rules.md)
+> 📋 For the output field validation rules table, see [Reference/output-validation-rules.md](./Reference/output-validation-rules.md)
 
-## 上游变更响应
+## Upstream Change Response
 
-当上游输入发生变更时，本Skill的响应策略：
+When upstream inputs change, this Skill's response strategy:
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| 北极星指标变更 | 关联北极星的埋点事件 | 更新linked_metric指向，重新评估埋点优先级，标记需人类确认 |
-| L1/L2指标增删 | 对应指标反推的埋点事件 | 新增指标触发新增埋点推荐，删除指标标记关联埋点为"待评估" |
-| 行动指标变更 | 行动指标关联的埋点 | 更新行动指标关联埋点的优先级和分析目的 |
-| PRD功能变更 | 功能模块埋点和核心路径埋点 | 重新提取PRD功能埋点，执行去重和一致性校验，标记变更部分 |
-| 指标定义修改 | 关联埋点的属性设计 | 更新埋点属性以匹配新的计算逻辑，标记需人类确认 |
+| North Star Metric change | Tracking events linked to the North Star | Update linked_metric references, re-evaluate tracking priority, mark for human confirmation |
+| L1/L2 metric addition/removal | Tracking events derived from corresponding metrics | Added metrics trigger new tracking recommendations; removed metrics mark associated tracking as "pending review" |
+| Action metric change | Tracking associated with action metrics | Update priority and analysis purpose of tracking associated with action metrics |
+| PRD feature change | Feature module tracking and core path tracking | Re-extract PRD feature tracking, perform deduplication and consistency validation, mark changed portions |
+| Metric definition modification | Property design of associated tracking | Update tracking properties to match the new calculation logic, mark for human confirmation |
 
-当埋点方案自身变更时，对下游的通知机制：
+When the tracking plan itself changes, the notification mechanism for downstream:
 
-| 埋点变更类型 | 通知范围 | 通知方式 |
+| Tracking Change Type | Notification Scope | Notification Method |
 |-------------|----------|----------|
-| 埋点事件增删 | metrics-dashboard | 标记事件增删，触发Dashboard数据源更新 |
-| 埋点属性变更 | metrics-dashboard | 标记属性变更，触发Widget配置更新 |
-| 埋点优先级变更 | 开发团队 | 标记优先级变更，触发开发排期评估 |
-| 命名规范变更 | 全部下游 | 标记命名变更，触发全量命名校验 |
+| Tracking event addition/removal | metrics-dashboard | Mark event addition/removal, trigger Dashboard data source update |
+| Tracking property change | metrics-dashboard | Mark property change, trigger Widget configuration update |
+| Tracking priority change | Development team | Mark priority change, trigger development scheduling assessment |
+| Naming specification change | All downstream | Mark naming change, trigger full naming validation |
 
 ---
 
-## 决策规则
+## Decision Rules
 
-### 规则1：埋点方案需人类审核业务逻辑
+### Rule 1: Tracking Plan Requires Human Review of Business Logic
 
-**触发条件**：
-- 所有埋点方案生成完成后
-- 任何业务逻辑相关的埋点
+**Trigger conditions**:
+- After all tracking plans are generated
+- Any tracking related to business logic
 
-**审核要点**：
+**Review focus**:
 
-#### 业务逻辑正确性
-
-```
-1. 埋点触发时机是否符合业务预期
-2. 埋点属性是否准确反映业务语义
-3. 埋点与分析目的是否匹配
-4. 跨流程埋点逻辑是否一致
-```
-
-#### 特殊场景确认
+#### Business Logic Correctness
 
 ```
-1. 异步操作埋点时机
-2. 重试/失败场景埋点
-3. 边界条件埋点
-4. A/B测试相关埋点
+1. Whether the tracking trigger timing matches business expectations
+2. Whether tracking properties accurately reflect business semantics
+3. Whether tracking matches the analysis purpose
+4. Whether cross-flow tracking logic is consistent
+```
+
+#### Special Scenario Confirmation
+
+```
+1. Tracking timing for asynchronous operations
+2. Tracking for retry/failure scenarios
+3. Tracking for boundary conditions
+4. A/B test related tracking
 ```
 
 ---
 
-### 规则2：隐私合规性必须人类确认
+### Rule 2: Privacy Compliance Must Be Human-Confirmed
 
-**触发条件**：
-- 埋点涉及用户个人信息
-- 埋点涉及设备信息
-- 埋点涉及行为数据
+**Trigger conditions**:
+- Tracking involves user personal information
+- Tracking involves device information
+- Tracking involves behavioral data
 
-**审核清单**：
+**Review checklist**:
 
-| 审核项 | 说明 | 通过条件 |
+| Review Item | Description | Pass Condition |
 |-------|------|---------|
-| 个人信息标识 | 埋点是否采集PII | 脱敏或匿名化处理 |
-| 敏感信息 | 是否采集银行卡、密码等 | 明确禁止采集 |
-| 数据保留 | 数据保留期限 | 符合法规要求 |
-| 用户授权 | 是否获取用户同意 | 符合隐私政策 |
+| Personal information identifier | Whether tracking collects PII | Desensitized or anonymized |
+| Sensitive information | Whether collecting bank cards, passwords, etc. | Explicitly prohibited from collection |
+| Data retention | Data retention period | Compliant with regulatory requirements |
+| User consent | Whether user consent is obtained | Compliant with privacy policy |
 
 ---
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 所有事件名使用小写+下划线
-- [ ] 所有属性名使用小写+下划线
-- [ ] 核心用户路径覆盖≥90%
+- [ ] All event names use lowercase + underscores
+- [ ] All property names use lowercase + underscores
+- [ ] Core user path coverage ≥ 90%
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 无驼峰命名
-- [ ] 无特殊字符
-- [ ] 语义单元完整
-- [ ] 关键转化节点覆盖完整
-- [ ] 正向覆盖率≥90%（PRD→埋点）
-- [ ] 逆向覆盖率≥85%（埋点→PRD）
-- [ ] 综合一致性≥90%
+- [ ] No camelCase naming
+- [ ] No special characters
+- [ ] Complete semantic units
+- [ ] Key conversion node coverage complete
+- [ ] Forward coverage ≥ 90% (PRD → tracking)
+- [ ] Backward coverage ≥ 85% (tracking → PRD)
+- [ ] Overall consistency ≥ 90%
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 异常路径覆盖≥80%
-- [ ] 数据治理规范已输出（数据保留策略、数据质量规则、数据血缘追踪）
-- [ ] 隐私合规审计已完成（PII脱敏检查、敏感信息采集审查、用户授权合规验证）
-- [ ] 长期演进路线已生成（埋点版本管理、废弃事件迁移计划、新指标接入规范）
+- [ ] Exception path coverage ≥ 80%
+- [ ] Data governance specification output (data retention policy, data quality rules, data lineage tracking)
+- [ ] Privacy compliance audit completed (PII desensitization check, sensitive information collection review, user consent compliance verification)
+- [ ] Long-term evolution roadmap generated (tracking version management, deprecated event migration plan, new metric onboarding specification)
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失范围 | 降级方案 | 输出影响 |
+| Missing Scope | Degradation Plan | Output Impact |
 |----------|----------|----------|
-| PRD缺失 | 提示用户提供功能列表，基于功能列表生成基础埋点方案 | 无法提取用户流程和交互细节，埋点覆盖可能不完整 |
-| 指标体系缺失 | 跳过指标反推埋点步骤，仅基于PRD功能提取埋点需求 | 埋点与指标关联缺失，分析目的标注"待补充" |
-| 现有埋点清单缺失 | 跳过去重步骤，所有埋点标记为新增 | 可能产生冗余埋点，需后续人工去重 |
-| PRD + 指标体系 + 现有埋点清单均缺失 | 用户提供功能列表 → 基于功能生成基础埋点方案 | 输出基础埋点方案，标注"待补充"和"待确认" |
+| PRD missing | Prompt user to provide feature list, generate basic tracking plan based on feature list | Unable to extract user flows and interaction details, tracking coverage may be incomplete |
+| Metric system missing | Skip the metric-derived tracking step, only extract tracking requirements based on PRD features | Tracking-metric association missing, analysis purpose marked as "to be supplemented" |
+| Existing tracking inventory missing | Skip deduplication step, mark all tracking as new | May produce redundant tracking, requires subsequent manual deduplication |
+| PRD + metric system + existing tracking inventory all missing | User provides feature list → generate basic tracking plan based on features | Output basic tracking plan, marked as "to be supplemented" and "to be confirmed" |
 
-### 数据获取说明
+### Data Acquisition Instructions
 
-当上游文件缺失时，需用户提供以下信息以支撑降级生成：
-- **功能列表**：产品包含的核心功能模块和功能点
-- **核心用户路径**（可选）：用户使用产品的主要流程步骤
-- **关键交互节点**（可选）：需要追踪的用户交互行为
-
----
-
-## 升级路径
-
-### 升级触发条件
-
-当以下任一条件满足时，升级到人工处理：
-
-1. **PRD解析失败**
-   - PRD文档格式无法解析
-   - PRD内容与结构化要求差距过大
-
-2. **埋点冲突无法自动解决**
-   - 相似埋点>5个无法判断
-   - 命名冲突无法自动消解
-
-3. **隐私合规风险**
-   - 埋点涉及高敏感信息
-   - 合规边界不明确
+When upstream files are missing, the user needs to provide the following information to support degraded generation:
+- **Feature list**: Core feature modules and feature points included in the product
+- **Core user paths** (optional): Main process steps for users using the product
+- **Key interaction nodes** (optional): User interaction behaviors that need to be tracked
 
 ---
 
-### 升级输出
+## Escalation Path
 
-> 📋 升级输出 schema 详见 [Reference/escalation-schema.md](./Reference/escalation-schema.md)
+### Escalation Trigger Conditions
+
+When any of the following conditions is met, escalate to manual handling:
+
+1. **PRD parsing failure**
+   - PRD document format cannot be parsed
+   - PRD content deviates significantly from structured requirements
+
+2. **Tracking conflict cannot be auto-resolved**
+   - More than 5 similar tracking events cannot be determined
+   - Naming conflicts cannot be auto-resolved
+
+3. **Privacy compliance risk**
+   - Tracking involves highly sensitive information
+   - Compliance boundary unclear
+
+---
+
+### Escalation Output
+
+> 📋 For the escalation output schema, see [Reference/escalation-schema.md](./Reference/escalation-schema.md)
 
 ---

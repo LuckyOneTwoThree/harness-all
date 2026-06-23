@@ -1,39 +1,39 @@
-# Handoff 交接文档目录
+# Handoff Document Directory
 
-> 本目录存放 harness-ops 与 harness 家族其他成员之间的交接文档。
-> 交接协议：上游框架产出文档 → 人类投喂给下游框架 → 下游框架消费执行。
+> This directory stores handoff documents between harness-ops and other members of the harness family.
+> Handoff protocol: upstream framework produces document → human feeds it to downstream framework → downstream framework consumes and executes.
 
-## 交接文档清单
+## Handoff Document List
 
-### 接收的交接文档（来自上游）
+### Received handoff documents (from upstream)
 
-| 文档 | 来源 | 用途 |
+| Document | Source | Purpose |
 |------|------|------|
-| `solo-to-ops.md` | harness-solo | 工程交付物，包含镜像标签 + 环境变量清单 + 数据库迁移脚本 + 回滚方案 |
+| `solo-to-ops.md` | harness-solo | Engineering deliverables, including image tag + environment variable list + database migration scripts + rollback plan |
 
-### 产出的交接文档（发给下游）
+### Produced handoff documents (sent to downstream)
 
-| 文档 | 目标 | 用途 |
+| Document | Target | Purpose |
 |------|------|------|
-| `ops-to-pm.md` | harness-pm | SLA 报告 + 故障复盘（Post-mortem）+ 运维对业务的建议 |
+| `ops-to-pm.md` | harness-pm | SLA report + post-mortem + ops recommendations to business |
 
-## 模板
+## Templates
 
-| 模板 | 用途 |
+| Template | Purpose |
 |------|------|
-| `handoff-template.md` | 通用交接模板 |
-| `ops-to-pm-template.md` | 运维反馈给产品的专用模板 |
+| `handoff-template.md` | Generic handoff template |
+| `ops-to-pm-template.md` | Dedicated template for ops feedback to product |
 
-> 入站模板（solo-to-ops）由源框架 harness-solo 提供，不在本框架存放。
+> Inbound templates (solo-to-ops) are provided by the source framework harness-solo and are not stored in this framework.
 
-## 使用方式
+## Usage
 
-1. 上游框架按模板产出交接文档，放入本目录
-2. session-start 时自动扫描本目录，发现新交接文档会提醒用户
-3. 下游框架消费后，在 progress.md 记录"已消费 X 交接文档"
+1. The upstream framework produces a handoff document from the template and places it in this directory
+2. session-start automatically scans this directory and reminds the user when new handoff documents are found
+3. After the downstream framework consumes a document, it records "Consumed X handoff document" in progress.md
 
-## 命名规范
+## Naming Convention
 
-- 文件名固定（不带日期）：`<source>-to-<target>.md`
-- 下游只看最新状态，不保留历史版本
-- 如需历史追溯，查看 git log
+- Filename is fixed (no date): `<source>-to-<target>.md`
+- Downstream only looks at the latest state; historical versions are not retained
+- For historical tracing, check git log

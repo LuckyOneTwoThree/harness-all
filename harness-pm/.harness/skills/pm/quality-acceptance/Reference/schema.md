@@ -1,8 +1,8 @@
-# quality-acceptance 输出 Schema
+# quality-acceptance Output Schema
 
-> 本文档从 quality-acceptance SKILL.md 拆分而来，包含完整输出数据结构定义、最终输出结构和输出校验规则。
+> This document is split from the quality-acceptance SKILL.md and contains the complete output data structure definition, final output structure, and output validation rules.
 
-## 输出Schema
+## Output Schema
 
 ```json
 {
@@ -11,78 +11,78 @@
   "properties": {
     "auto_acceptance": {
       "type": "object",
-      "description": "自动验收根对象",
+      "description": "Automated acceptance root object",
       "required": ["execution_summary", "checks", "gate_result"],
       "properties": {
         "execution_summary": {
           "type": "object",
-          "description": "执行摘要",
+          "description": "Execution summary",
           "required": ["total_checks", "auto_passed", "auto_failed", "manual_required"],
           "properties": {
-            "total_checks": {"type": "number", "description": "检查项总数"},
-            "auto_passed": {"type": "number", "description": "自动通过数"},
-            "auto_failed": {"type": "number", "description": "自动失败数"},
-            "manual_required": {"type": "number", "description": "需人工验证数"}
+            "total_checks": {"type": "number", "description": "Total number of checks"},
+            "auto_passed": {"type": "number", "description": "Number of automated passes"},
+            "auto_failed": {"type": "number", "description": "Number of automated failures"},
+            "manual_required": {"type": "number", "description": "Number of checks requiring manual verification"}
           }
         },
         "checks": {
           "type": "array",
-          "description": "检查项列表",
+          "description": "List of checks",
           "items": {
             "type": "object",
             "required": ["id", "type", "method", "result", "confidence"],
             "properties": {
-              "id": {"type": "string", "description": "检查项编号"},
-              "type": {"type": "string", "description": "检查类型，枚举值：functional/performance/security/compatibility"},
-              "method": {"type": "string", "description": "验收方法，枚举值：automated/semi_auto/manual"},
-              "result": {"type": "string", "description": "结果，枚举值：pass/fail/pending"},
-              "evidence": {"type": "object", "description": "验收证据"},
-              "confidence": {"type": "number", "description": "置信度，0-1"}
+              "id": {"type": "string", "description": "Check ID"},
+              "type": {"type": "string", "description": "Check type, enum: functional/performance/security/compatibility"},
+              "method": {"type": "string", "description": "Acceptance method, enum: automated/semi_auto/manual"},
+              "result": {"type": "string", "description": "Result, enum: pass/fail/pending"},
+              "evidence": {"type": "object", "description": "Acceptance evidence"},
+              "confidence": {"type": "number", "description": "Confidence, 0-1"}
             }
           }
         },
-        "gate_result": {"type": "string", "description": "门禁结果，枚举值：pass/fail/conditional_pass"}
+        "gate_result": {"type": "string", "description": "Gate result, enum: pass/fail/conditional_pass"}
       }
     },
     "acceptance_report": {
       "type": "object",
-      "description": "验收报告根对象",
+      "description": "Acceptance report root object",
       "required": ["summary", "items", "risk_assessment", "sign_off"],
       "properties": {
         "summary": {
           "type": "object",
-          "description": "验收摘要",
+          "description": "Acceptance summary",
           "required": ["total_items", "passed", "failed", "blocked"],
           "properties": {
-            "total_items": {"type": "number", "description": "验收项总数"},
-            "passed": {"type": "number", "description": "通过项数"},
-            "failed": {"type": "number", "description": "失败项数"},
-            "blocked": {"type": "number", "description": "阻断项数"}
+            "total_items": {"type": "number", "description": "Total number of acceptance items"},
+            "passed": {"type": "number", "description": "Number of passed items"},
+            "failed": {"type": "number", "description": "Number of failed items"},
+            "blocked": {"type": "number", "description": "Number of blocked items"}
           }
         },
         "items": {
           "type": "array",
-          "description": "验收项列表",
+          "description": "List of acceptance items",
           "items": {
             "type": "object",
             "required": ["id", "category", "description", "result", "severity"],
             "properties": {
-              "id": {"type": "string", "description": "验收项编号"},
-              "category": {"type": "string", "description": "验收类别"},
-              "description": {"type": "string", "description": "验收描述"},
-              "result": {"type": "string", "description": "结果，枚举值：pass/fail/blocked/waived"},
-              "evidence": {"type": "string", "description": "证据链接"},
-              "severity": {"type": "string", "description": "严重级别，枚举值：P0/P1/P2/P3"}
+              "id": {"type": "string", "description": "Acceptance item ID"},
+              "category": {"type": "string", "description": "Acceptance category"},
+              "description": {"type": "string", "description": "Acceptance description"},
+              "result": {"type": "string", "description": "Result, enum: pass/fail/blocked/waived"},
+              "evidence": {"type": "string", "description": "Evidence link"},
+              "severity": {"type": "string", "description": "Severity level, enum: P0/P1/P2/P3"}
             }
           }
         },
-        "risk_assessment": {"type": "object", "description": "风险评估"},
+        "risk_assessment": {"type": "object", "description": "Risk assessment"},
         "sign_off": {
           "type": "object",
-          "description": "签收记录",
+          "description": "Sign-off record",
           "required": ["status"],
           "properties": {
-            "status": {"type": "string", "description": "签收状态，枚举值：pending/signed/rejected"}
+            "status": {"type": "string", "description": "Sign-off status, enum: pending/signed/rejected"}
           }
         }
       }
@@ -91,59 +91,59 @@
 }
 ```
 
-## 最终输出结构
+## Final Output Structure
 
 ```json
 {
   "auto_acceptance": {
-    "execution_summary": { /* 见输出校验规则 */ },
-    "checks": [ { /* 见Step 1.5执行指令生成 */ } ],
+    "execution_summary": { /* see Output Validation Rules */ },
+    "checks": [ { /* see Step 1.5 Execution Instruction Generation */ } ],
     "gate_result": "pass | fail | conditional_pass"
   },
   "acceptance_report": {
-    "summary": { /* 见输出校验规则 */ },
-    "items": [ { /* 见Step 2.2测试结果整合 */ } ],
-    "risk_assessment": { /* 见Step 2.4遗留问题评估 */ },
-    "sign_off": { /* 见Step 2.5验收结论 */ }
+    "summary": { /* see Output Validation Rules */ },
+    "items": [ { /* see Step 2.2 Test Result Integration */ } ],
+    "risk_assessment": { /* see Step 2.4 Residual Issue Assessment */ },
+    "sign_off": { /* see Step 2.5 Acceptance Conclusion */ }
   }
 }
 ```
 
-## 输出字段说明
+## Output Field Descriptions
 
-见输出Schema及输出校验规则。
+See Output Schema and Output Validation Rules.
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| auto_acceptance | object | 是 | 自动验收根对象 |
-| auto_acceptance.execution_summary | object | 是 | 执行摘要 |
-| auto_acceptance.execution_summary.total_checks | number | 是 | 检查项总数 |
-| auto_acceptance.execution_summary.auto_passed | number | 是 | 自动通过数 |
-| auto_acceptance.execution_summary.auto_failed | number | 是 | 自动失败数 |
-| auto_acceptance.execution_summary.manual_required | number | 是 | 需人工验证数 |
-| auto_acceptance.checks | array | 是 | 检查项列表 |
-| auto_acceptance.checks[].id | string | 是 | 检查项编号 |
-| auto_acceptance.checks[].type | string | 是 | 检查类型，枚举值：functional/performance/security/compatibility |
-| auto_acceptance.checks[].method | string | 是 | 验收方法，枚举值：automated/semi_auto/manual |
-| auto_acceptance.checks[].result | string | 是 | 结果，枚举值：pass/fail/pending |
-| auto_acceptance.checks[].evidence | object | 否 | 验收证据 |
-| auto_acceptance.checks[].confidence | number | 是 | 置信度，0-1 |
-| auto_acceptance.gate_result | string | 是 | 门禁结果，枚举值：pass/fail/conditional_pass |
-| acceptance_report | object | 是 | 验收报告根对象 |
-| acceptance_report.summary | object | 是 | 验收摘要 |
-| acceptance_report.summary.total_items | number | 是 | 验收项总数 |
-| acceptance_report.summary.passed | number | 是 | 通过项数 |
-| acceptance_report.summary.failed | number | 是 | 失败项数 |
-| acceptance_report.summary.blocked | number | 是 | 阻断项数 |
-| acceptance_report.items | array | 是 | 验收项列表 |
-| acceptance_report.items[].id | string | 是 | 验收项编号 |
-| acceptance_report.items[].category | string | 是 | 验收类别 |
-| acceptance_report.items[].description | string | 是 | 验收描述 |
-| acceptance_report.items[].result | string | 是 | 结果，枚举值：pass/fail/blocked/waived |
-| acceptance_report.items[].evidence | string | 否 | 证据链接 |
-| acceptance_report.items[].severity | string | 是 | 严重级别，枚举值：P0/P1/P2/P3 |
-| acceptance_report.risk_assessment | object | 是 | 风险评估 |
-| acceptance_report.sign_off | object | 是 | 签收记录 |
-| acceptance_report.sign_off.status | string | 是 | 签收状态，枚举值：pending/signed/rejected |
+| auto_acceptance | object | Yes | Automated acceptance root object |
+| auto_acceptance.execution_summary | object | Yes | Execution summary |
+| auto_acceptance.execution_summary.total_checks | number | Yes | Total number of checks |
+| auto_acceptance.execution_summary.auto_passed | number | Yes | Number of automated passes |
+| auto_acceptance.execution_summary.auto_failed | number | Yes | Number of automated failures |
+| auto_acceptance.execution_summary.manual_required | number | Yes | Number of checks requiring manual verification |
+| auto_acceptance.checks | array | Yes | List of checks |
+| auto_acceptance.checks[].id | string | Yes | Check ID |
+| auto_acceptance.checks[].type | string | Yes | Check type, enum: functional/performance/security/compatibility |
+| auto_acceptance.checks[].method | string | Yes | Acceptance method, enum: automated/semi_auto/manual |
+| auto_acceptance.checks[].result | string | Yes | Result, enum: pass/fail/pending |
+| auto_acceptance.checks[].evidence | object | No | Acceptance evidence |
+| auto_acceptance.checks[].confidence | number | Yes | Confidence, 0-1 |
+| auto_acceptance.gate_result | string | Yes | Gate result, enum: pass/fail/conditional_pass |
+| acceptance_report | object | Yes | Acceptance report root object |
+| acceptance_report.summary | object | Yes | Acceptance summary |
+| acceptance_report.summary.total_items | number | Yes | Total number of acceptance items |
+| acceptance_report.summary.passed | number | Yes | Number of passed items |
+| acceptance_report.summary.failed | number | Yes | Number of failed items |
+| acceptance_report.summary.blocked | number | Yes | Number of blocked items |
+| acceptance_report.items | array | Yes | List of acceptance items |
+| acceptance_report.items[].id | string | Yes | Acceptance item ID |
+| acceptance_report.items[].category | string | Yes | Acceptance category |
+| acceptance_report.items[].description | string | Yes | Acceptance description |
+| acceptance_report.items[].result | string | Yes | Result, enum: pass/fail/blocked/waived |
+| acceptance_report.items[].evidence | string | No | Evidence link |
+| acceptance_report.items[].severity | string | Yes | Severity level, enum: P0/P1/P2/P3 |
+| acceptance_report.risk_assessment | object | Yes | Risk assessment |
+| acceptance_report.sign_off | object | Yes | Sign-off record |
+| acceptance_report.sign_off.status | string | Yes | Sign-off status, enum: pending/signed/rejected |

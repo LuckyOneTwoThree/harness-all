@@ -1,48 +1,48 @@
-# <实验名>
+# <experiment name>
 
-> 来源：由 PLAN 阶段产出。
-> 加载时机：EXPERIMENT / MEASURE 读取。
-> 文件语义：覆盖写入（只保留最终通过的规格）。
+> Source: produced by the PLAN phase.
+> Load timing: read by EXPERIMENT / MEASURE.
+> File semantics: overwrite write (only the final passed spec is kept).
 
-## 目标
+## Goal
 
-[一句话目标，来自增长策略]
+[One-sentence goal, from the growth strategy]
 
-## 假设
+## Hypothesis
 
-[可证伪的假设：做 X 会让 Y 提升 Z%]
+[Falsifiable hypothesis: doing X will lift Y by Z%]
 
-## 度量指标
+## Metrics
 
-### 主要度量（判定成败）
-- [指标名]：[定义、计算方式、目标值]
+### Primary metric (judges success or failure)
+- [metric name]: [definition, calculation, target value]
 
-### 护栏度量（防止副作用）
-- [指标名]：[定义、阈值]
+### Guardrail metrics (prevents side effects)
+- [metric name]: [definition, threshold]
 
-## 验收标准
+## Acceptance criteria
 
-- AC-001: [可验证的描述，如"实验组转化率比对照组高 X%，p<0.05"]
-- AC-002: [可验证的描述]
-- AC-003: [可验证的描述]
+- AC-001: [verifiable description, e.g., "experiment group conversion rate is X% higher than control group, p<0.05"]
+- AC-002: [verifiable description]
+- AC-003: [verifiable description]
 
-## 实验设计
+## Experiment design
 
-- 样本：[样本量、分组方式]
-- 时长：[实验周期]
-- 分组：[对照组/实验组定义]
-- 触发条件：[用户如何进入实验]
+- Sample: [sample size, grouping method]
+- Duration: [experiment period]
+- Groups: [control group / experiment group definition]
+- Trigger condition: [how users enter the experiment]
 
-## 任务拆解
+## Task breakdown
 
-- [ ] T1: [任务1，2-5 分钟能完成]
-- [ ] T2: [任务2]
-- [ ] T3: [任务3]
+- [ ] T1: [task 1, completable in 2-5 minutes]
+- [ ] T2: [task 2]
+- [ ] T3: [task 3]
 
-## 技术方案
+## Technical plan
 
-[简要：改哪些内容/页面/配置，关键设计决策]
+[Briefly: which content / pages / configurations to change, key design decisions]
 
-## 不做的事
+## Out of scope
 
-[明确边界，避免范围蔓延]
+[Explicit boundaries to avoid scope creep]

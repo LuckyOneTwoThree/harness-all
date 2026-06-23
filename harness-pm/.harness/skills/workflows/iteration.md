@@ -4,114 +4,122 @@ name: iteration
 default_mode: standard
 ---
 
-# 工作流 B：已有产品功能迭代
+# Workflow B: Existing Product Feature Iteration
 
-> 适用场景：已有产品需要加功能/改需求/优化体验
-> 核心模式：变更影响分析 → LOOP 循环验证 → 交接工程
+> Applicable scenario: Existing product needs to add features/change requirements/optimize experience
+> Core mode: Change impact analysis → LOOP validation → Engineering handoff
 
-## 与 optimization 的边界（触发条件决策树）
+## Boundary with optimization (trigger condition decision tree)
 
 ```
-有明确变更需求（用户反馈/业务需求/功能缺失）？
-├── 是 → iteration（变更驱动）
-│   特征：已知要改什么，需要评估影响+设计变更方案
-└── 否 → 有数据但无明确方案？
-    ├── 是 → optimization（数据驱动）
-    │   特征：有数据发现问题，但不知怎么改，需要数据诊断+方案探索
-    └── 否 → 需要战略级调整？
-        └── 是 → pivot（战略调整）
+Have clear change requirements (user feedback/business needs/missing features)?
+├── Yes → iteration (change-driven)
+│   Characteristics: Know what to change, need to assess impact + design change solution
+└── No → Have data but no clear solution?
+    ├── Yes → optimization (data-driven)
+    │   Characteristics: Have data identifying problems, but don't know how to change, need data diagnosis + solution exploration
+    └── No → Need strategic-level adjustment?
+        └── Yes → pivot (strategic adjustment)
 ```
 
-| 维度 | iteration | optimization |
+| Dimension | iteration | optimization |
 |------|-----------|--------------|
-| 触发 | 明确变更需求 | 数据发现问题 |
-| 起点 | 变更影响分析 | 数据诊断 |
-| 设计 | 变更模块 PRD 更新 | 优化方案 PRD + 验证 |
-| LOOP | 数据诊断→方案设计 | 方案设计→验证 |
+| Trigger | Clear change requirement | Data-identified problem |
+| Starting point | Change impact analysis | Data diagnosis |
+| Design | Change module PRD update | Optimization solution PRD + validation |
+| LOOP | Data diagnosis→solution design | Solution design→validation |
 
-## 流程
+## Process
 
 ```
 ┌─────────────────┐
-│ session-start   │  加载上下文，确认迭代范围
+│ session-start   │  Load context, confirm iteration scope
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ 模块3：变更影响分析                      │
+│ Module 3: Change Impact Analysis        │
 │                                         │
-│  - prd-orchestrator（需求分析+变更）  │
+│  - prd-orchestrator (requirement        │
+│    analysis + change)                   │
 │  - change-impact-analysis               │
-│    （变更影响：受影响模块+风险+迁移）     │
+│    (Change impact: affected modules +   │
+│     risk + migration)                   │
 │                                         │
-│  ★ 硬门检查：                            │
-│  - 变更范围是否清晰？                    │
-│  - 影响评估是否完整？                    │
-│  - 用户是否确认变更？                    │
+│  ★ Hard gate check:                     │
+│  - Is change scope clear?               │
+│  - Is impact assessment complete?       │
+│  - Has user confirmed the change?       │
 └────────┬────────────────────────────────┘
-         │ 通过
+         │ Pass
          ▼
 ┌─────────────────────────────────────────┐
-│              LOOP 循环验证               │
+│              LOOP Validation            │
 │  ┌─────────────────────────────────┐    │
-│  │ 模块5：数据诊断 (RESEARCH)       │    │
+│  │ Module 5: Data Diagnosis        │    │
+│  │   (RESEARCH)                    │    │
 │  │  - analysis-orchestrator        │    │
-│  │    （数据分析：异常+漏斗+留存）   │    │
-│  │  - decision-orchestrator         │    │
-│  │    （决策闭环：DACE+文化）        │    │
+│  │    (Data analysis: anomalies+   │    │
+│  │     funnel+retention)           │    │
+│  │  - decision-orchestrator        │    │
+│  │    (Decision loop: DACE+culture)│    │
 │  └──────────┬──────────────────────┘    │
 │             ▼                            │
 │  ┌─────────────────────────────────┐    │
-│  │ 模块3：方案设计 (RESEARCH)       │    │
+│  │ Module 3: Solution Design       │    │
+│  │   (RESEARCH)                    │    │
 │  │  - prd-orchestrator             │    │
-│  │    （仅变更模块的 PRD 更新）      │    │
+│  │    (PRD update for changed      │    │
+│  │     modules only)               │    │
 │  └──────────┬──────────────────────┘    │
 │             ▼                            │
 │  ┌─────────────────────────────────┐    │
 │  │ VALIDATE                        │    │
-│  │  - 变更后 PRD 质量门禁           │    │
-│  │  - 数据支撑充分性                │    │
-│  │  - 人类审批                      │    │
+│  │  - Post-change PRD quality gate │    │
+│  │  - Data support sufficiency     │    │
+│  │  - Human approval               │    │
 │  └──────────┬──────────────────────┘    │
 │             │                            │
-│             ├── 通过 → 跳出 LOOP ────────┼──→
+│             ├── Pass → exit LOOP ────────┼──→
 │             │                            │
-│             └── 失败 → 回到 RESEARCH ────┘
+│             └── Fail → back to RESEARCH ─┘
 │                                          │
-│  迭代上限：3 次（iteration 类型）        │
+│  Iteration limit: 3 times (iteration type)│
 └─────────────────────────────────────────┘
          │
          ▼
 ┌─────────────────────────────────────────┐
-│ 模块7：迭代决策                          │
+│ Module 7: Iteration Decision            │
 │                                         │
 │  - iteration-orchestrator               │
-│    （Backlog 优化+迭代复盘）             │
-│  - 如需发布 → 进入 launch 工作流         │
+│    (Backlog optimization + iteration    │
+│     retrospective)                      │
+│  - If release needed → enter launch     │
+│    workflow                             │
 └────────┬────────────────────────────────┘
          ▼
 ┌─────────────────┐
-│ session-end     │  归档 + 更新 FEATURES.md
-│                 │  + 产出 docs/handoff/pm-to-solo.md（变更部分交接工程）
+│ session-end     │  Archive + update FEATURES.md
+│                 │  + Output docs/handoff/pm-to-solo.md (changed parts handoff to engineering)
 └─────────────────┘
 ```
 
-## 关键检查点
+## Key Checkpoints
 
-- [ ] 变更影响分析完成了吗？（受影响模块/风险/迁移路径）
-- [ ] 数据诊断有结论了吗？（基于数据分析，不是拍脑袋）
-- [ ] 变更后 PRD 通过质量门禁了吗？
-- [ ] 人类审批了吗？（方案选择/优先级）
+- [ ] Change impact analysis complete? (Affected modules/risks/migration paths)
+- [ ] Data diagnosis has conclusions? (Based on data analysis, not gut feeling)
+- [ ] Post-change PRD passed quality gate?
+- [ ] Human approved? (Solution selection/priority)
 
-## 失败处理
+## Failure Handling
 
-| 失败点 | 处理方式 |
+| Failure point | Handling |
 |--------|---------|
-| 变更范围不清 | 停下来问用户，明确边界 |
-| 数据不足 | 补充数据分析，不凭感觉迭代 |
-| LOOP 迭代超 3 次 | 请求人类介入 |
+| Change scope unclear | Stop and ask user, clarify boundaries |
+| Insufficient data | Supplement data analysis, don't iterate by feel |
+| LOOP iteration exceeds 3 times | Request human intervention |
 
-## 下一步
+## Next Steps
 
-- 变更需发布 → 进入 **launch** 工作流
-- 变更涉及战略调整 → 进入 **pivot** 工作流
-- 变更后需数据驱动优化 → 进入 **optimization** 工作流
+- Change needs release → enter **launch** workflow
+- Change involves strategic adjustment → enter **pivot** workflow
+- Change needs data-driven optimization → enter **optimization** workflow

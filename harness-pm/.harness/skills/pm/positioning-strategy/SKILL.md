@@ -1,24 +1,24 @@
 ---
 name: positioning-strategy
-description: 当需要制定产品定位、差异化策略或定位陈述时使用。整合定位陈述、价值曲线、差异化评估和排除策略。关键词：产品定位、定位策略、差异化、价值曲线、定位陈述。
+description: Used when developing product positioning, differentiation strategy, or positioning statements. Integrates positioning statement, value curve, differentiation assessment, and exclusion strategy. Keywords: product positioning, positioning strategy, differentiation, value curve, positioning statement.
 metadata:
-  module: "产品商业与战略"
-  sub-module: "产品定位与差异化"
+  module: "Product Business & Strategy"
+  sub-module: "Product Positioning & Differentiation"
   type: "pipeline"
   version: "3.0"
-  domain_tags: ["通用"]
+  domain_tags: ["General"]
   trigger_examples:
-    - "帮我确定产品定位"
-    - "写一个定位陈述"
-    - "分析一下差异化优势"
-    - "我们和竞品差在哪"
-    - "我们的差异化能持续吗"
-    - "哪些用户不是我们的目标"
+    - "Help me define product positioning"
+    - "Write a positioning statement"
+    - "Analyze our differentiation advantages"
+    - "Where do we differ from competitors"
+    - "Is our differentiation sustainable"
+    - "Which users are not our target"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出定位陈述和差异化策略"
-  deep_description: "完整策略 + 定位验证方案 + 差异化量化评估 + 定位演进路线"
+  quick_description: "Directly output positioning statement and differentiation strategy"
+  deep_description: "Complete strategy + positioning validation plan + differentiation quantitative assessment + positioning evolution roadmap"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -30,455 +30,455 @@ writes:
   - memory/progress.md
 ---
 
-# 产品定位策略制定
+# Product Positioning Strategy Development
 
-## 核心原则
+## Core Principles
 
-1. **公式化生成**——使用[目标用户]+[产品名]+[核心价值]+[差异化点]定位公式
-2. **3-5候选比较**——生成3-5个差异化定位陈述，差异化来源/用户粒度/竞品参照各不同
-3. **五项质量门**——specific/differentiated/exclusive/verifiable/concise五项检查全通过才可输出
-4. **不通过重试**——质量检查不通过自动重试最多3次，仍不通过升级人类
-5. **竞争要素用户驱动**——竞争要素从用户研究中提取，非AI主观设定
-6. **蓝海四动作框架**——Eliminate/Reduce/Raise/Create四动作必须全部识别
-7. **差异化强度量化**——通过面积法计算差异化强度0-1评分，<0.5触发警告
-8. **多方评分对比**——我方与每个主要竞品在同一要素上评分对比，差异可视化
-9. **五维度全覆盖**——功能/体验/场景/商业/生态5个维度缺一不可
-10. **追赶难度量化**——评分标准锚定竞品追赶时间（3月/6月/12月+），拒绝模糊判断
-11. **加权综合评分**——各维度加权计算综合差异化强度，权重可调但必须显式
-12. **最可持续推荐**——不仅评估当前差异，更要推荐最可持续的差异化来源
-13. **排他是战略选择**——排他不是能力不足而是聚焦，每条排他必须有战略理由
-14. **重叠度硬检查**——排他用户与核心用户重叠≥30%时拒绝排他建议
-15. **市场缩减预警**——排他后潜在市场缩减≥50%时强制人类审批
-16. **替代方案必提供**——为排除的用户群体提供替代建议，不可只排除不指引
+1. **Formulaic generation** — Use [target user]+[product name]+[core value]+[differentiation point] positioning formula
+2. **3-5 candidate comparison** — Generate 3-5 differentiated positioning statements, with different differentiation sources/user granularity/competitor references
+3. **Five-item quality gate** — All five checks (specific/differentiated/exclusive/verifiable/concise) must pass before output
+4. **Retry on failure** — Auto-retry up to 3 times if quality check fails; if still fails, escalate to human
+5. **User-driven competitive factors** — Competitive factors extracted from user research, not subjectively set by AI
+6. **Blue ocean four actions framework** — All four actions (Eliminate/Reduce/Raise/Create) must be identified
+7. **Differentiation strength quantification** — Calculate differentiation strength 0-1 score via area method, <0.5 triggers warning
+8. **Multi-party score comparison** — Compare our scores with each major competitor on the same factors, visualize differences
+9. **Five-dimension full coverage** — All 5 dimensions (feature/experience/scenario/business/ecosystem) are indispensable
+10. **Catch-up difficulty quantification** — Scoring criteria anchored to competitor catch-up time (3 months/6 months/12 months+), reject vague judgments
+11. **Weighted composite score** — Weighted calculation of composite differentiation strength across dimensions; weights are adjustable but must be explicit
+12. **Most sustainable recommendation** — Not only assess current differentiation, but also recommend the most sustainable differentiation source
+13. **Exclusion is a strategic choice** — Exclusion is not lack of capability but focus; each exclusion must have a strategic rationale
+14. **Overlap hard check** — Reject exclusion recommendation when excluded users overlap with core users ≥30%
+15. **Market reduction warning** — Mandatory human approval when potential market reduction ≥50% after exclusion
+16. **Alternative must be provided** — Provide alternative recommendations for excluded user groups; cannot exclude without guidance
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Input
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 价值主张匹配结果 | JSON | 是 | docs/strategy/business-strategy.md（“价值匹配”章节） | 价值主张匹配度评分 |
-| 竞品分析数据 | JSON | 是 | docs/discovery/market-analysis.md（“竞品分析”章节） | 竞品定位、差异化要素 |
-| 用户洞察 | JSON | 是 | user-research-user-modeling | 用户画像、核心需求 |
-| 价值主张 | JSON | ○ | docs/strategy/business-strategy.md（“商业模式画布”章节） | 价值主张、Pain Relievers、Gain Creators |
-| 自身能力评估 | JSON | ○ | 用户提供 | 技术壁垒、资源优势 |
+| Value Proposition Match Result | JSON | Yes | docs/strategy/business-strategy.md ("Value Match" section) | Value proposition match score |
+| Competitor Analysis Data | JSON | Yes | docs/discovery/market-analysis.md ("Competitor Analysis" section) | Competitor positioning, differentiation factors |
+| User Insights | JSON | Yes | user-research-user-modeling | User personas, core needs |
+| Value Proposition | JSON | Optional | docs/strategy/business-strategy.md ("Business Model Canvas" section) | Value proposition, Pain Relievers, Gain Creators |
+| Self-Capability Assessment | JSON | Optional | User-provided | Technical barriers, resource advantages |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 定位陈述 [核心]
+### Step 1: Positioning Statement [Core]
 
-#### 定位要素提取
-从输入数据中提取定位要素：
+#### Positioning Element Extraction
+Extract positioning elements from input data:
 
-1. **目标用户**：从用户画像中提取核心用户群体
-2. **核心价值**：从价值主张匹配中提取高匹配度价值
-3. **差异化点**：从竞品分析中提取差异化要素
-4. **品类定义**：定义产品所属品类
+1. **Target User**: Extract core user group from user personas
+2. **Core Value**: Extract high-match value from value proposition matching
+3. **Differentiation Point**: Extract differentiation factors from competitor analysis
+4. **Category Definition**: Define the product's category
 
-#### 定位陈述生成
-使用定位公式生成3-5个定位陈述：
+#### Positioning Statement Generation
+Use positioning formula to generate 3-5 positioning statements:
 
-**定位公式**：
+**Positioning Formula**:
 ```
-对于 [目标用户]，[产品名] 是一个 [品类定义]，
-它 [核心价值]，不同于 [竞品参照]，[差异化点]
+For [target user], [product name] is a [category definition],
+it [core value], unlike [competitor reference], [differentiation point]
 ```
 
-**生成策略**：
-1. **差异化来源变化**：功能差异/体验差异/场景差异
-2. **用户粒度变化**：宽泛用户群/精准用户群
-3. **竞品参照变化**：直接竞品/间接竞品/传统方案
+**Generation Strategy**:
+1. **Differentiation source variation**: Feature differentiation/experience differentiation/scenario differentiation
+2. **User granularity variation**: Broad user group/precise user group
+3. **Competitor reference variation**: Direct competitor/indirect competitor/traditional solution
 
-#### 质量门检查
-对每个定位陈述进行5项质量检查：
+#### Quality Gate Check
+Perform 5 quality checks on each positioning statement:
 
-| 检查项 | 标准 | 通过条件 |
+| Check Item | Standard | Pass Condition |
 |--------|------|----------|
-| Specific (具体性) | 目标用户和价值明确 | 用户群体可识别，价值可感知 |
-| Differentiated (差异化) | 与竞品有明确差异 | 差异点可验证 |
-| Exclusive (排他性) | 不是所有竞品都能说 | 至少1个竞品无法声称 |
-| Verifiable (可验证) | 可以被事实验证 | 有可量化的支撑证据 |
-| Concise (简洁性) | 一句话说清 | ≤30字核心表述 |
+| Specific | Target user and value are clear | User group is identifiable, value is perceivable |
+| Differentiated | Clear difference from competitors | Differentiation point is verifiable |
+| Exclusive | Not all competitors can claim this | At least 1 competitor cannot claim this |
+| Verifiable | Can be verified by facts | Has quantifiable supporting evidence |
+| Concise | Clear in one sentence | ≤30 words core expression |
 
-#### 推荐与排序
-基于质量门检查结果，推荐和排序定位陈述：
-- 全部通过的排在前面
-- 部分通过的标注改进建议
-- 未通过的标注淘汰原因
+#### Recommendation and Ranking
+Based on quality gate check results, recommend and rank positioning statements:
+- Statements passing all checks rank first
+- Statements partially passing are annotated with improvement suggestions
+- Statements not passing are annotated with elimination reasons
 
-### Step 2: 价值曲线分析 [核心]
+### Step 2: Value Curve Analysis [Core]
 
-#### 竞争要素提取
-从用户研究数据中提取5-8个竞争要素：
+#### Competitive Factor Extraction
+Extract 5-8 competitive factors from user research data:
 
-**提取逻辑**：
-1. 从用户关注要素中提取高频关键词
-2. 从价值主张中提取核心价值维度
-3. 从竞品分析中提取竞品竞争维度
-4. 合并和去重，形成5-8个竞争要素
+**Extraction Logic**:
+1. Extract high-frequency keywords from user-focused factors
+2. Extract core value dimensions from value proposition
+3. Extract competitor competitive dimensions from competitor analysis
+4. Merge and deduplicate to form 5-8 competitive factors
 
-**要素命名规范**：
-- 使用用户语言（非技术术语）
-- 每个要素可独立评分
-- 要素之间不重叠
+**Factor Naming Convention**:
+- Use user language (not technical terms)
+- Each factor can be scored independently
+- Factors do not overlap
 
-#### 竞品评分
-对每个竞品在竞争要素上进行1-5分评分：
+#### Competitor Scoring
+Score each competitor 1-5 on competitive factors:
 
-**评分标准**：
+**Scoring Standard**:
 ```
-5分：行业领先，显著优于竞品
-4分：优秀，优于多数竞品
-3分：行业平均水平
-2分：低于行业平均
-1分：明显不足
-```
-
-**评分依据**：
-- 功能完整性
-- 用户评价
-- 定价竞争力
-- 市场份额
-
-#### 我方评分
-对我方产品在竞争要素上进行1-5分评分：
-
-**评分原则**：
-- 基于现有能力客观评分
-- 不夸大、不低估
-- 标注评分依据
-
-#### 蓝海四动作识别
-基于价值曲线分析，识别蓝海策略的4个动作：
-
-**Eliminate（消除）**：哪些竞争要素可以完全消除？
-- 评分≤2的要素
-- 用户不关注的要素
-- 成本高但价值低的要素
-
-**Reduce（减少）**：哪些竞争要素可以降低标准？
-- 评分3-4但非核心的要素
-- 过度投资的要素
-- 用户关注度中等的要素
-
-**Raise（提升）**：哪些竞争要素需要提升？
-- 核心差异化要素
-- 用户高度关注但评分偏低的要素
-- 竞品普遍薄弱的要素
-
-**Create（创造）**：哪些新的竞争要素可以创造？
-- 用户未被满足的需求
-- 竞品尚未提供的价值
-- 创新性功能或体验
-
-#### 差异化强度计算
-通过面积法计算差异化强度：
-
-```
-差异化强度 = 我方曲线与竞品平均曲线的面积差 / 最大可能面积差
+5: Industry leading, significantly better than competitors
+4: Excellent, better than most competitors
+3: Industry average
+2: Below industry average
+1: Clearly insufficient
 ```
 
-- 强度 ≥ 0.7：强差异化
-- 强度 0.5-0.7：中等差异化
-- 强度 < 0.5：弱差异化（触发警告）
+**Scoring Basis**:
+- Feature completeness
+- User reviews
+- Pricing competitiveness
+- Market share
 
-### Step 3: 差异化评估 [核心]
+#### Our Scoring
+Score our product 1-5 on competitive factors:
 
-#### 功能差异评估
-评估产品功能的差异化程度：
+**Scoring Principles**:
+- Score objectively based on existing capabilities
+- No exaggeration, no underestimation
+- Annotate scoring basis
 
-| 评分 | 含义 | 说明 |
+#### Blue Ocean Four Actions Identification
+Based on value curve analysis, identify the 4 actions of blue ocean strategy:
+
+**Eliminate**: Which competitive factors can be completely eliminated?
+- Factors scored ≤2
+- Factors users don't care about
+- High-cost but low-value factors
+
+**Reduce**: Which competitive factors can have lowered standards?
+- Factors scored 3-4 but not core
+- Over-invested factors
+- Factors with medium user attention
+
+**Raise**: Which competitive factors need to be raised?
+- Core differentiation factors
+- Factors users highly care about but scored low
+- Factors where competitors are generally weak
+
+**Create**: Which new competitive factors can be created?
+- Unmet user needs
+- Value not yet provided by competitors
+- Innovative features or experiences
+
+#### Differentiation Strength Calculation
+Calculate differentiation strength via area method:
+
+```
+Differentiation Strength = Area difference between our curve and competitor average curve / Maximum possible area difference
+```
+
+- Strength ≥ 0.7: Strong differentiation
+- Strength 0.5-0.7: Medium differentiation
+- Strength < 0.5: Weak differentiation (triggers warning)
+
+### Step 3: Differentiation Assessment [Core]
+
+#### Feature Differentiation Assessment
+Assess the differentiation degree of product features:
+
+| Score | Meaning | Description |
 |------|------|------|
-| 5分 | 难以复制 | 竞品需要12个月以上追赶 |
-| 3分 | 中等难度 | 竞品需要3-6个月追赶 |
-| 1分 | 容易复制 | 竞品可在3个月内复制 |
+| 5 | Hard to replicate | Competitors need 12+ months to catch up |
+| 3 | Medium difficulty | Competitors need 3-6 months to catch up |
+| 1 | Easy to replicate | Competitors can replicate within 3 months |
 
-评估维度：
-- 核心功能独特性
-- 技术复杂度
-- 数据积累优势
+Assessment Dimensions:
+- Core feature uniqueness
+- Technical complexity
+- Data accumulation advantage
 
-#### 体验差异评估
-评估用户体验层面的差异化：
+#### Experience Differentiation Assessment
+Assess differentiation at the user experience level:
 
-| 评分 | 含义 | 说明 |
+| Score | Meaning | Description |
 |------|------|------|
-| 5分 | 难以追赶 | 用户习惯已形成，转换成本高 |
-| 3分 | 中等难度 | 需要持续投入才能保持 |
-| 1分 | 容易追赶 | 体验要素可快速复制 |
+| 5 | Hard to catch up | User habits formed, high switching cost |
+| 3 | Medium difficulty | Requires continuous investment to maintain |
+| 1 | Easy to catch up | Experience factors can be quickly replicated |
 
-评估维度：
-- 用户习惯培养程度
-- 界面/交互独特性
-- 使用流程效率
+Assessment Dimensions:
+- User habit cultivation degree
+- Interface/interaction uniqueness
+- Usage flow efficiency
 
-#### 场景差异评估
-评估垂直场景深耕程度：
+#### Scenario Differentiation Assessment
+Assess the depth of vertical scenario cultivation:
 
-| 评分 | 含义 | 说明 |
+| Score | Meaning | Description |
 |------|------|------|
-| 5分 | 深度场景 | 深度理解行业Know-How |
-| 3分 | 中度场景 | 覆盖主流场景 |
-| 1分 | 浅度场景 | 仅有通用功能 |
+| 5 | Deep scenario | Deep understanding of industry know-how |
+| 3 | Medium scenario | Covers mainstream scenarios |
+| 1 | Shallow scenario | Only general features |
 
-评估维度：
-- 场景覆盖深度
-- 行业专业知识
-- 场景解决方案完整性
+Assessment Dimensions:
+- Scenario coverage depth
+- Industry professional knowledge
+- Scenario solution completeness
 
-#### 商业差异评估
-评估商业模式独特性：
+#### Business Differentiation Assessment
+Assess business model uniqueness:
 
-| 评分 | 含义 | 说明 |
+| Score | Meaning | Description |
 |------|------|------|
-| 5分 | 独特模式 | 商业模式难以复制 |
-| 3分 | 可复制模式 | 模式可学习但有壁垒 |
-| 1分 | 同质模式 | 与行业普遍模式相同 |
+| 5 | Unique model | Business model is hard to replicate |
+| 3 | Replicable model | Model can be learned but has barriers |
+| 1 | Homogeneous model | Same as industry common model |
 
-评估维度：
-- 收入结构独特性
-- 成本结构优势
-- 商业模式护城河
+Assessment Dimensions:
+- Revenue structure uniqueness
+- Cost structure advantage
+- Business model moat
 
-#### 生态差异评估
-评估生态系统的差异化强度：
+#### Ecosystem Differentiation Assessment
+Assess ecosystem differentiation strength:
 
-| 评分 | 含义 | 说明 |
+| Score | Meaning | Description |
 |------|------|------|
-| 5分 | 强生态 | 多方参与，网络效应强 |
-| 3分 | 中生态 | 有一定合作伙伴 |
-| 1分 | 弱生态 | 单一产品 |
+| 5 | Strong ecosystem | Multi-party participation, strong network effects |
+| 3 | Medium ecosystem | Has some partners |
+| 1 | Weak ecosystem | Single product |
 
-评估维度：
-- 合作伙伴数量
-- 网络效应强度
-- 生态锁定能力
+Assessment Dimensions:
+- Number of partners
+- Network effect strength
+- Ecosystem lock-in ability
 
-#### 综合差异化强度计算
-加权计算综合差异化强度：
+#### Composite Differentiation Strength Calculation
+Weighted calculation of composite differentiation strength:
 ```
-综合差异化强度 = (功能差异×0.25 + 体验差异×0.20 + 场景差异×0.25 + 商业差异×0.15 + 生态差异×0.15) / 5
+Composite Differentiation Strength = (Feature differentiation×0.25 + Experience differentiation×0.20 + Scenario differentiation×0.25 + Business differentiation×0.15 + Ecosystem differentiation×0.15) / 5
 ```
 
-#### 最可持续差异化来源推荐
-基于5个维度评分，推荐最可持续的差异化来源：
-1. 识别评分最高的维度
-2. 分析可持续性理由
-3. 给出具体行动建议
+#### Most Sustainable Differentiation Source Recommendation
+Based on 5-dimension scores, recommend the most sustainable differentiation source:
+1. Identify the highest-scoring dimension
+2. Analyze sustainability rationale
+3. Provide specific action recommendations
 
-### Step 4: 排除策略 [核心]
+### Step 4: Exclusion Strategy [Core]
 
-#### AI分析 - 竞品覆盖扫描
-AI扫描竞品分析数据，识别：
-- 各竞品主要覆盖的用户群体
-- 竞品覆盖薄弱/放弃的用户群体
-- 潜在的差异化机会点
+#### AI Analysis - Competitor Coverage Scan
+AI scans competitor analysis data to identify:
+- User groups mainly covered by each competitor
+- User groups weakly covered/abandoned by competitors
+- Potential differentiation opportunity points
 
-#### AI建议 - 排他候选生成
-基于定位陈述，AI生成3-5个排他候选：
+#### AI Suggestion - Exclusion Candidate Generation
+Based on positioning statements, AI generates 3-5 exclusion candidates:
 
-**排他维度建议**：
-1. **用户特征维度**：按人口属性排除
-2. **使用场景维度**：按使用场景排除
-3. **需求强度维度**：按需求深度排除
-4. **付费能力维度**：按支付意愿排除
+**Exclusion Dimension Suggestions**:
+1. **User characteristic dimension**: Exclude by demographic attributes
+2. **Usage scenario dimension**: Exclude by usage scenario
+3. **Need intensity dimension**: Exclude by need depth
+4. **Payment ability dimension**: Exclude by willingness to pay
 
-#### 人类决策 - 最终排他陈述
-产品负责人基于AI分析建议，决定：
+#### Human Decision - Final Exclusion Statement
+Product owner decides based on AI analysis suggestions:
 
-**必须明确回答**：
-1. 我们明确不为哪些用户群体服务？
-2. 为什么不服务这些用户？（战略原因）
-3. 服务这些用户会有什么负面影响？
+**Must clearly answer**:
+1. Which user groups do we explicitly not serve?
+2. Why not serve these users? (Strategic reasons)
+3. What negative impacts would serving these users have?
 
-**决策原则**：
-- 排他是为了聚焦，不是简单的放弃
-- 每一条排他都应有明确的战略理由
-- 排他决策需要与长期产品愿景一致
+**Decision Principles**:
+- Exclusion is for focus, not simple abandonment
+- Each exclusion should have a clear strategic rationale
+- Exclusion decisions need to be consistent with long-term product vision
 
-### 输出深度分级
+### Output Depth Classification
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 定位陈述和差异化策略 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整策略 + 定位验证方案 + 差异化量化评估 + 定位演进路线 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Positioning statement and differentiation strategy | Core conclusions + minimum viable artifact |
+| standard | Complete artifact (current default) | Complete artifact, including all Step outputs |
+| deep | Complete strategy + positioning validation plan + differentiation quantitative assessment + positioning evolution roadmap | Complete artifact + extended analysis + deep simulation |
 
-## 输出
+## Output
 
-**存储路径**：`docs/strategy/positioning.md`
+**Storage Path**: `docs/strategy/positioning.md`
 
-**输出文件**：
+**Output Files**:
 
-| 文件 | 格式 | 说明 |
+| File | Format | Description |
 |------|------|------|
-| positioning-strategy.json | JSON | 结构化数据（包含statement + value_curve + differentiation + exclusion） |
-| positioning-strategy.md | Markdown | 完整定位策略报告 |
+| positioning-strategy.json | JSON | Structured data (including statement + value_curve + differentiation + exclusion) |
+| positioning-strategy.md | Markdown | Complete positioning strategy report |
 
-**positioning-strategy.json 输出Schema**：
+**positioning-strategy.json Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["positioning_statements", "value_curve", "differentiation_scores", "exclusion"],
   "properties": {
-    "positioning_statements": {"type": "array", "description": "3-5个定位陈述候选"},
-    "recommended_index": {"type": "number", "description": "推荐索引"},
-    "value_curve": {"type": "object", "description": "价值曲线数据，含竞争要素评分和蓝海动作"},
-    "differentiation_scores": {"type": "object", "description": "五维度差异化评分"},
-    "overall_differentiation_strength": {"type": "number", "description": "综合差异化强度0-1"},
-    "recommended_differentiation_source": {"type": "object", "description": "推荐最可持续差异化来源"},
-    "exclusion": {"type": "object", "description": "排他决策数据"}
+    "positioning_statements": {"type": "array", "description": "3-5 positioning statement candidates"},
+    "recommended_index": {"type": "number", "description": "Recommended index"},
+    "value_curve": {"type": "object", "description": "Value curve data, including competitive factor scores and blue ocean actions"},
+    "differentiation_scores": {"type": "object", "description": "Five-dimension differentiation scores"},
+    "overall_differentiation_strength": {"type": "number", "description": "Composite differentiation strength 0-1"},
+    "recommended_differentiation_source": {"type": "object", "description": "Recommended most sustainable differentiation source"},
+    "exclusion": {"type": "object", "description": "Exclusion decision data"}
   }
 }
 ```
 
-### 输出校验规则
+### Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| positioning_statements | array | 是 | 3-5个定位陈述候选 |
-| positioning_statements[].statement | string | 是 | 定位陈述全文 |
-| positioning_statements[].target_user | string | 是 | 目标用户 |
-| positioning_statements[].category | string | 是 | 品类定义 |
-| positioning_statements[].core_value | string | 是 | 核心价值 |
-| positioning_statements[].differentiation | string | 是 | 差异化点 |
-| positioning_statements[].competitor_reference | string | 是 | 竞品参照 |
-| positioning_statements[].quality_check.specific | boolean | 是 | 具体性检查 |
-| positioning_statements[].quality_check.differentiated | boolean | 是 | 差异化检查 |
-| positioning_statements[].quality_check.exclusive | boolean | 是 | 排他性检查 |
-| positioning_statements[].quality_check.verifiable | boolean | 是 | 可验证性检查 |
-| positioning_statements[].quality_check.concise | boolean | 是 | 简洁性检查 |
-| positioning_statements[].quality_check.all_passed | boolean | 是 | 全部通过标记 |
-| positioning_statements[].rank | number | 是 | 推荐排序 |
-| recommended_index | number | 是 | 推荐索引 |
-| value_curve.competitive_factors | array | 是 | 5-8个竞争要素 |
-| value_curve.competitive_factors[].factor | string | 是 | 要素名称 |
-| value_curve.competitive_factors[].our_score | number | 是 | 我方评分1-5 |
-| value_curve.competitive_factors[].competitor_scores | object | 是 | 各竞品评分 |
-| value_curve.blue_ocean_actions.eliminate | array | 是 | 消除动作列表 |
-| value_curve.blue_ocean_actions.reduce | array | 是 | 减少动作列表 |
-| value_curve.blue_ocean_actions.raise | array | 是 | 提升动作列表 |
-| value_curve.blue_ocean_actions.create | array | 是 | 创造动作列表 |
-| value_curve.differentiation_strength | number | 是 | 差异化强度0-1 |
-| value_curve.differentiation_warning | boolean | 是 | 差异化强度<0.5时为true |
-| differentiation_scores.feature | object | 是 | 功能差异评分，含score/description/sustainability |
-| differentiation_scores.experience | object | 是 | 体验差异评分 |
-| differentiation_scores.scenario | object | 是 | 场景差异评分 |
-| differentiation_scores.business | object | 是 | 商业差异评分 |
-| differentiation_scores.ecosystem | object | 是 | 生态差异评分 |
-| overall_differentiation_strength | number | 是 | 综合差异化强度0-1 |
-| recommended_differentiation_source.dimension | string | 是 | 推荐维度 |
-| recommended_differentiation_source.reason | string | 是 | 推荐理由 |
-| recommended_differentiation_source.action | string | 是 | 行动建议 |
-| exclusion.exclusion_statement | string | 是 | 排他陈述 |
-| exclusion.rationale | array | 是 | 排他理由列表 |
-| exclusion.rationale[].excluded_audience | string | 是 | 被排除用户群体 |
-| exclusion.rationale[].reason | string | 是 | 战略理由 |
-| exclusion.rationale[].alternative | string | 是 | 替代建议 |
-| exclusion.implications.revenue_impact | string | 是 | 营收影响 |
-| exclusion.implications.resource_optimization | string | 是 | 资源优化说明 |
-| exclusion.implications.brand_positioning | string | 是 | 品牌定位影响 |
-| exclusion.implications.risks | array | 是 | 潜在风险列表 |
-| exclusion.human_decision.decided_by | string | 是 | 决策人 |
-| exclusion.human_decision.decided_at | string | 是 | 决策时间 |
+| positioning_statements | array | Yes | 3-5 positioning statement candidates |
+| positioning_statements[].statement | string | Yes | Full positioning statement |
+| positioning_statements[].target_user | string | Yes | Target user |
+| positioning_statements[].category | string | Yes | Category definition |
+| positioning_statements[].core_value | string | Yes | Core value |
+| positioning_statements[].differentiation | string | Yes | Differentiation point |
+| positioning_statements[].competitor_reference | string | Yes | Competitor reference |
+| positioning_statements[].quality_check.specific | boolean | Yes | Specific check |
+| positioning_statements[].quality_check.differentiated | boolean | Yes | Differentiated check |
+| positioning_statements[].quality_check.exclusive | boolean | Yes | Exclusive check |
+| positioning_statements[].quality_check.verifiable | boolean | Yes | Verifiable check |
+| positioning_statements[].quality_check.concise | boolean | Yes | Concise check |
+| positioning_statements[].quality_check.all_passed | boolean | Yes | All passed flag |
+| positioning_statements[].rank | number | Yes | Recommendation rank |
+| recommended_index | number | Yes | Recommended index |
+| value_curve.competitive_factors | array | Yes | 5-8 competitive factors |
+| value_curve.competitive_factors[].factor | string | Yes | Factor name |
+| value_curve.competitive_factors[].our_score | number | Yes | Our score 1-5 |
+| value_curve.competitive_factors[].competitor_scores | object | Yes | Each competitor's scores |
+| value_curve.blue_ocean_actions.eliminate | array | Yes | Eliminate action list |
+| value_curve.blue_ocean_actions.reduce | array | Yes | Reduce action list |
+| value_curve.blue_ocean_actions.raise | array | Yes | Raise action list |
+| value_curve.blue_ocean_actions.create | array | Yes | Create action list |
+| value_curve.differentiation_strength | number | Yes | Differentiation strength 0-1 |
+| value_curve.differentiation_warning | boolean | Yes | True when differentiation strength <0.5 |
+| differentiation_scores.feature | object | Yes | Feature differentiation score, including score/description/sustainability |
+| differentiation_scores.experience | object | Yes | Experience differentiation score |
+| differentiation_scores.scenario | object | Yes | Scenario differentiation score |
+| differentiation_scores.business | object | Yes | Business differentiation score |
+| differentiation_scores.ecosystem | object | Yes | Ecosystem differentiation score |
+| overall_differentiation_strength | number | Yes | Composite differentiation strength 0-1 |
+| recommended_differentiation_source.dimension | string | Yes | Recommended dimension |
+| recommended_differentiation_source.reason | string | Yes | Recommendation reason |
+| recommended_differentiation_source.action | string | Yes | Action recommendation |
+| exclusion.exclusion_statement | string | Yes | Exclusion statement |
+| exclusion.rationale | array | Yes | Exclusion rationale list |
+| exclusion.rationale[].excluded_audience | string | Yes | Excluded user group |
+| exclusion.rationale[].reason | string | Yes | Strategic rationale |
+| exclusion.rationale[].alternative | string | Yes | Alternative recommendation |
+| exclusion.implications.revenue_impact | string | Yes | Revenue impact |
+| exclusion.implications.resource_optimization | string | Yes | Resource optimization description |
+| exclusion.implications.brand_positioning | string | Yes | Brand positioning impact |
+| exclusion.implications.risks | array | Yes | Potential risks list |
+| exclusion.human_decision.decided_by | string | Yes | Decision maker |
+| exclusion.human_decision.decided_at | string | Yes | Decision time |
 
-## 决策规则
+## Decision Rules
 
-| 条件 | 决策 |
+| Condition | Decision |
 |------|------|
-| 质量门5项全通过 | 定位陈述可输出 |
-| 质量门不通过 | 自动重试最多3次，仍不通过升级人类 |
-| 差异化强度<0.5 | 触发警告，建议调整策略 |
-| 蓝海动作 | 需人类审批确认 |
-| 竞争要素 | 需人类校准 |
-| 各维度评分 | 需人类校准主观维度 |
-| 综合推荐 | 需人类最终判断确认 |
-| 争议点 | 升级人类决策 |
-| 排他用户群体与核心用户重叠度≥30% | 拒绝排他建议，标记"排他范围与核心用户冲突" |
-| 排他用户群体与核心用户重叠度<30% | 生成排他建议，标记为"AI建议，需人类审批" |
-| 排他后潜在市场缩减≥50% | 标记高风险，强制人类审批 |
-| 排他后潜在市场缩减<50% | 正常流程，人类审批确认 |
-| 竞品已覆盖该排他用户群体 | 标记"竞品已覆盖，排他需差异化理由" |
-| 排他理由缺乏数据支撑（0个数据点） | 退回补充数据，不可提交审批 |
-| 排他理由有≥2个数据支撑 | 可提交人类审批 |
-| 争议决策（2个以上Stakeholder反对） | 升级为多方评审 |
+| Quality gate all 5 pass | Positioning statement can be output |
+| Quality gate not passed | Auto-retry up to 3 times; if still fails, escalate to human |
+| Differentiation strength <0.5 | Trigger warning, recommend strategy adjustment |
+| Blue ocean actions | Requires human approval |
+| Competitive factors | Requires human calibration |
+| Each dimension score | Requires human calibration of subjective dimensions |
+| Composite recommendation | Requires human final judgment |
+| Disputed points | Escalate to human decision |
+| Excluded user group overlap with core users ≥30% | Reject exclusion recommendation, mark "Exclusion scope conflicts with core users" |
+| Excluded user group overlap with core users <30% | Generate exclusion recommendation, mark as "AI suggestion, requires human approval" |
+| Potential market reduction ≥50% after exclusion | Mark high risk, mandatory human approval |
+| Potential market reduction <50% after exclusion | Normal process, human approval |
+| Competitor already covers this excluded user group | Mark "Competitor already covers, exclusion needs differentiation rationale" |
+| Exclusion rationale lacks data support (0 data points) | Return for data supplementation, cannot submit for approval |
+| Exclusion rationale has ≥2 data points | Can submit for human approval |
+| Disputed decision (2+ stakeholders object) | Escalate to multi-party review |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 3-5个定位陈述已生成
-- [ ] 每个陈述使用定位公式
+- [ ] 3-5 positioning statements generated
+- [ ] Each statement uses positioning formula
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 5项质量检查已完成
-- [ ] 推荐排序合理
-- [ ] 差异化来源多样化
-- [ ] 5-8个竞争要素已提取
-- [ ] 我方和竞品评分已完成
-- [ ] 蓝海四动作已识别
-- [ ] 差异化强度已计算
-- [ ] 评分依据已标注
-- [ ] 5个维度都已评估，无遗漏
-- [ ] 评分有数据支撑，避免主观偏见
-- [ ] 推荐理由与评分逻辑一致
-- [ ] 行动建议可转化为产品策略
-- [ ] 排他决策与产品愿景一致
-- [ ] 有清晰的排除理由
-- [ ] 排他陈述可向团队清晰传达
-- [ ] 为排除的用户提供替代建议
+- [ ] 5 quality checks completed
+- [ ] Recommendation ranking is reasonable
+- [ ] Differentiation sources are diverse
+- [ ] 5-8 competitive factors extracted
+- [ ] Our and competitor scoring completed
+- [ ] Blue ocean four actions identified
+- [ ] Differentiation strength calculated
+- [ ] Scoring basis annotated
+- [ ] All 5 dimensions assessed, no omissions
+- [ ] Scores have data support, avoid subjective bias
+- [ ] Recommendation rationale consistent with scoring logic
+- [ ] Action recommendations can be converted to product strategy
+- [ ] Exclusion decisions consistent with product vision
+- [ ] Clear exclusion rationale
+- [ ] Exclusion statement can be clearly communicated to team
+- [ ] Alternative recommendations provided for excluded users
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (must pass for deep only)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep simulation and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-当上游文件不存在时，本Skill仍可独立执行：
+When upstream files are missing, this skill can still execute independently:
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Notes |
 |---------------|---------|---------|------------|
-| evaluation_report.json（价值主张匹配） | 用户提供产品价值描述 → 生成定位陈述 | 缺乏价值匹配数据，核心价值可能不够精准 | 要求用户提供产品核心价值描述或上传evaluation_report.json文件 |
-| competitor-analysis.json（竞品分析） | 用户提供产品价值描述 → 生成定位陈述 | 缺乏竞品数据，差异化点和竞品参照缺乏依据 | 要求用户提供竞品名称、定位和差异化描述或上传competitor-analysis.json文件 |
-| evaluation_report.json + competitor-analysis.json | 用户提供产品价值描述 → 生成定位陈述 | 整体置信度降低，定位陈述缺乏数据锚定 | 要求用户提供产品价值描述和竞品差异化信息 |
-| 所有上游文件均缺失 | 提示用户先执行前序阶段，或基于用户提供的产品价值描述生成定位陈述 | 整体置信度显著降低，定位陈述仅为假设推断 | 要求用户提供产品价值、目标用户和竞品差异描述 |
-| 用户洞察数据 | 若用户洞察数据缺失，提示用户提供或跳过该输入相关步骤 | 目标用户定义可能不够精准 | 要求用户提供目标用户画像和核心需求描述 |
-| bmc.json | 用户提供竞品信息 → 绘制价值曲线 | 缺乏BMC数据，我方评分缺乏价值主张锚定 | 要求用户提供商业模式和价值主张描述或上传bmc.json文件 |
-| 自身能力评估（用户提供） | 若用户未提供自身能力评估，提示用户提供或跳过该输入相关步骤 | 功能和场景差异评估缺乏内部数据支撑 | 要求用户提供产品功能完整度和技术能力自评 |
+| evaluation_report.json (value proposition match) | User provides product value description → generate positioning statement | Lacks value match data, core value may not be precise enough | Request user to provide product core value description or upload evaluation_report.json file |
+| competitor-analysis.json (competitor analysis) | User provides product value description → generate positioning statement | Lacks competitor data, differentiation point and competitor reference lack basis | Request user to provide competitor name, positioning, and differentiation description or upload competitor-analysis.json file |
+| evaluation_report.json + competitor-analysis.json | User provides product value description → generate positioning statement | Overall confidence reduced, positioning statement lacks data anchoring | Request user to provide product value description and competitor differentiation info |
+| All upstream files missing | Prompt user to execute prior phases first, or generate positioning statement based on user-provided product value description | Overall confidence significantly reduced, positioning statement is only hypothetical inference | Request user to provide product value, target user, and competitor difference description |
+| User insights data | If user insights data is missing, prompt user to provide or skip steps related to this input | Target user definition may not be precise enough | Request user to provide target user persona and core need description |
+| bmc.json | User provides competitor info → draw value curve | Lacks BMC data, our score lacks value proposition anchoring | Request user to provide business model and value proposition description or upload bmc.json file |
+| Self-capability assessment (user-provided) | If user does not provide self-capability assessment, prompt user to provide or skip steps related to this input | Feature and scenario differentiation assessment lacks internal data support | Request user to provide product feature completeness and technical capability self-assessment |
 
-## 数据获取说明
+## Data Acquisition Notes
 
-本Skill需要价值主张匹配和竞品分析数据，请通过以下方式之一提供：
-  1. 直接描述产品价值、目标用户和竞品差异
-  2. 上传evaluation_report.json / competitor-analysis.json文件
-  3. 提供数据文件路径
-- AI不负责外部数据采集，仅负责分析
+This skill requires value proposition match and competitor analysis data. Please provide via one of the following methods:
+  1. Directly describe product value, target user, and competitor differences
+  2. Upload evaluation_report.json / competitor-analysis.json files
+  3. Provide data file path
+- AI is not responsible for external data collection, only for analysis
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| evaluation_report价值主张匹配变更 | 核心价值提取 | 重新执行Step 1，更新定位陈述 |
-| competitor-analysis竞品分析更新 | 差异化点和竞品参照 | 重新执行Step 1-2，更新差异化要素 |
-| persona用户画像更新 | 目标用户定义 | 重新执行Step 1，更新目标用户 |
-| competitor-analysis竞品数据更新 | 竞品评分和蓝海动作 | 重新执行Step 2，更新竞品评分 |
-| persona/voice-analysis用户洞察更新 | 竞争要素提取 | 重新执行Step 2，更新竞争要素 |
-| bmc.json价值主张变更 | 我方评分和蓝海动作 | 重新执行Step 2，更新我方评分 |
+| evaluation_report value proposition match change | Core value extraction | Re-execute Step 1, update positioning statement |
+| competitor-analysis competitor analysis update | Differentiation point and competitor reference | Re-execute Step 1-2, update differentiation factors |
+| persona user persona update | Target user definition | Re-execute Step 1, update target user |
+| competitor-analysis competitor data update | Competitor scores and blue ocean actions | Re-execute Step 2, update competitor scores |
+| persona/voice-analysis user insights update | Competitive factor extraction | Re-execute Step 2, update competitive factors |
+| bmc.json value proposition change | Our scores and blue ocean actions | Re-execute Step 2, update our scores |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 变更类型 | 影响范围 | 通知方式 |
+| Change Type | Impact Scope | Notification Method |
 |----------|----------|----------|
-| 定位陈述变更 | business-strategy-report、planning-roadmap | 输出文件版本号+变更摘要 |
-| 差异化评分变更 | business-strategy-report | 输出文件版本号+变更摘要 |
-| 排他决策变更 | business-strategy-report、business-pricing | 输出文件版本号+变更摘要 |
-| 市场缩减评估变更 | business-pricing | 输出文件版本号+变更摘要 |
+| Positioning statement change | business-strategy-report, planning-roadmap | Output file version number + change summary |
+| Differentiation score change | business-strategy-report | Output file version number + change summary |
+| Exclusion decision change | business-strategy-report, business-pricing | Output file version number + change summary |
+| Market reduction assessment change | business-pricing | Output file version number + change summary |

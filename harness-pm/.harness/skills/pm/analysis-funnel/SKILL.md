@@ -1,21 +1,21 @@
 ---
 name: analysis-funnel
-description: 当需要分析用户转化路径时使用。漏斗自动分析，AI自动执行全量漏斗计算、多维下钻、流失节点识别和趋势分析。关键词：漏斗分析、转化分析、流失节点、转化率、用户路径、用户在哪儿流失了、转化太低了、用户走不完流程。
+description: Use when analyzing user conversion paths. Funnel Auto-Analysis, AI automatically executes full funnel calculation, multi-dimensional drill-down, drop-off node identification, and trend analysis. Keywords: funnel analysis, conversion analysis, drop-off node, conversion rate, user path, where users drop off, conversion too low, users can't complete the flow.
 metadata:
-  module: "产品度量运营"
-  sub-module: "数据分析"
+  module: "Product Metrics Operations"
+  sub-module: "Data Analysis"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["电商", "互联网", "通用"]
+  domain_tags: ["E-commerce", "Internet", "General"]
   trigger_examples:
-    - "注册流程转化率太低了，帮我分析一下"
-    - "用户在哪个步骤流失最多"
-    - "支付转化漏斗帮我看看"
+    - "Registration flow conversion rate is too low, help me analyze"
+    - "At which step do users drop off the most"
+    - "Take a look at the payment conversion funnel"
   interaction_mode: "ai_auto"
 execution_depth:
   default: standard
-  quick_description: "直接输出漏斗分析和转化瓶颈"
-  deep_description: "完整分析 + 漏斗细分拆解 + 转化优化模拟 + 多维度归因分析"
+  quick_description: "Directly output funnel analysis and conversion bottlenecks"
+  deep_description: "Full analysis + funnel segment breakdown + conversion optimization simulation + multi-dimensional attribution analysis"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -25,103 +25,103 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 漏斗自动分析
+# Funnel Auto-Analysis
 
-## 核心原则
+## Core Principles
 
-1. **流失即机会**：每个流失节点都是优化的切入点，最大流失点 = 最大提升空间
-2. **下钻才能归因**：整体转化率只告诉你"有问题"，多维下钻才告诉你"问题在哪"
-3. **对比才有判断**：绝对值没有意义，环比同比对比才能判断趋势健康度
+1. **Drop-off equals opportunity**: Every drop-off node is an optimization entry point; the biggest drop-off point = biggest improvement space
+2. **Drill-down enables attribution**: Overall conversion rate only tells you "there's a problem"; multi-dimensional drill-down tells you "where the problem is"
+3. **Comparison enables judgment**: Absolute values are meaningless; period-over-period and year-over-year comparisons can judge trend health
 
-## 交互模式
+## Interaction Mode
 
-🤖 AI自动执行（数据分析类）
+🤖 AI Auto-Execution (Data Analysis Type)
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 漏斗定义 | object | 是 | 用户提供 | 漏斗的步骤定义和事件配置 |
-| 事件数据 | object | 是 | 用户提供 | 埋点事件数据 |
-| 分群配置 | object | ○ | 用户提供 | 可选的用户分群维度 |
-| 对比周期 | string | ○ | 用户提供 | 与哪段时间对比 |
+| Funnel Definition | object | Yes | User-provided | Step definitions and event configuration for the funnel |
+| Event Data | object | Yes | User-provided | Tracking event data |
+| Segment Config | object | ○ | User-provided | Optional user segmentation dimensions |
+| Comparison Period | string | ○ | User-provided | Which time period to compare against |
 
-## 支持的漏斗类型
+## Supported Funnel Types
 
-| 类型 | 示例 |
+| Type | Example |
 |-----|------|
-| 转化漏斗 | 浏览→点击→加购→下单→支付 |
-| 激活漏斗 | 注册→首次使用→完成新手引导 |
-| 付费漏斗 | 曝光→点击→详情→支付→复购 |
-| 搜索漏斗 | 搜索→结果页→详情页→加购 |
+| Conversion Funnel | Browse → Click → Add to Cart → Place Order → Pay |
+| Activation Funnel | Register → First Use → Complete Onboarding |
+| Payment Funnel | Impression → Click → Detail → Pay → Repurchase |
+| Search Funnel | Search → Results Page → Detail Page → Add to Cart |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1：全量漏斗计算 [核心]
+### Step 1: Full Funnel Calculation [Core]
 
 ```
-获取漏斗定义
-├── 查询每个步骤的事件数据
-├── 计算各步骤用户数
-├── 计算步骤间转化率
-└── 计算整体转化率
+Get funnel definition
+├── Query event data for each step
+├── Calculate user count per step
+├── Calculate step-to-step conversion rate
+└── Calculate overall conversion rate
 ```
 
-### Step 2：多维下钻 [核心]
+### Step 2: Multi-Dimensional Drill-Down [Core]
 
-对漏斗进行多维度拆分分析：
+Split and analyze the funnel across multiple dimensions:
 
-| 维度 | 拆分项 |
+| Dimension | Split Items |
 |-----|--------|
-| 平台 | iOS、Android、Web、小程序 |
-| 渠道 | 自然流量、付费渠道、分享来源 |
-| 用户类型 | 新用户/老用户、付费/免费、高价值/普通 |
-| 版本 | 按App版本分组 |
-| 地区 | 按国家/省份分组 |
-| 时间 | 按小时/天/周分组 |
+| Platform | iOS, Android, Web, Mini Program |
+| Channel | Organic traffic, paid channels, referral sources |
+| User Type | New/Returning users, Paid/Free, High-value/Regular |
+| Version | Grouped by App version |
+| Region | Grouped by country/province |
+| Time | Grouped by hour/day/week |
 
-### Step 3：最大流失节点识别 [核心]
+### Step 3: Biggest Drop-off Node Identification [Core]
 
 ```
-分析每个步骤的流失率
-├── 找出流失率最高的步骤
-├── 分析该步骤的流失用户特征
-├── 关联流失前的用户行为
-└── 识别流失原因假设
+Analyze drop-off rate for each step
+├── Find the step with the highest drop-off rate
+├── Analyze characteristics of dropped users at this step
+├── Correlate user behaviors before drop-off
+└── Identify drop-off cause hypotheses
 ```
 
-### Step 4：趋势分析 [核心]
+### Step 4: Trend Analysis [Core]
 
-- **时间趋势**：各步骤转化率的日/周/月变化
-- **对比分析**：与上一周期对比
-- **预测**：基于趋势预测未来表现
+- **Time Trend**: Daily/weekly/monthly changes in conversion rate per step
+- **Comparative Analysis**: Compare with previous period
+- **Forecast**: Predict future performance based on trends
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 漏斗分析和转化瓶颈 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整分析 + 漏斗细分拆解 + 转化优化模拟 + 多维度归因分析 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Funnel analysis and conversion bottlenecks | Core conclusions + minimum viable artifact |
+| standard | Full artifact (current default) | Full artifact, including all Step outputs |
+| deep | Full analysis + funnel segment breakdown + conversion optimization simulation + multi-dimensional attribution analysis | Full artifact + extended analysis + deep inference |
 
-## 输出
+## Output
 
-**存储路径**：`docs/metrics/data-analysis-report.md（“漏斗分析”章节）`
-**输出文件**：funnel_analysis.json
+**Storage Path**: `docs/metrics/data-analysis-report.md ("Funnel Analysis" section)`
+**Output File**: funnel_analysis.json
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["funnel_name", "steps", "overall_conversion"],
   "properties": {
-    "funnel_name": {"type": "string", "description": "漏斗名称"},
-    "date_range": {"type": "object", "description": "分析时间范围，包含起止日期"},
-    "steps": {"type": "array", "description": "漏斗步骤数据，包含事件名、计数和转化率"},
-    "overall_conversion": {"type": "number", "description": "整体转化率"},
-    "vs_last_period": {"type": "object", "description": "与上期对比，包含变化趋势和关键步骤"},
-    "critical_drop": {"type": "object", "description": "关键流失分析，包含维度拆解和潜在原因"}
+    "funnel_name": {"type": "string", "description": "Funnel name"},
+    "date_range": {"type": "object", "description": "Analysis time range, including start and end dates"},
+    "steps": {"type": "array", "description": "Funnel step data, including event name, count, and conversion rate"},
+    "overall_conversion": {"type": "number", "description": "Overall conversion rate"},
+    "vs_last_period": {"type": "object", "description": "Comparison with previous period, including change trend and key steps"},
+    "critical_drop": {"type": "object", "description": "Critical drop-off analysis, including dimension breakdown and potential causes"}
   }
 }
 ```
@@ -130,58 +130,58 @@ writes:
 funnel_analysis:
   analysis_time: "2024-01-15T10:00:00Z"
   
-  # 漏斗基本信息
-  funnel_name: "电商购买转化漏斗"
+  # Funnel basic info
+  funnel_name: "E-commerce Purchase Conversion Funnel"
   date_range:
     start: "2024-01-08"
     end: "2024-01-14"
   
-  # 漏斗步骤数据
+  # Funnel step data
   steps:
     - step: 1
-      name: "商品详情页浏览"
+      name: "Product Detail Page View"
       event: "product_view"
       count: 500000
-      conversion_from_previous: 100.0  # 第一步为100%
+      conversion_from_previous: 100.0  # First step is 100%
       
     - step: 2
-      name: "加入购物车"
+      name: "Add to Cart"
       event: "add_to_cart"
       count: 80000
       conversion_from_previous: 16.0
       dropoff_from_previous: 420000
       
     - step: 3
-      name: "发起结算"
+      name: "Start Checkout"
       event: "checkout_start"
       count: 50000
       conversion_from_previous: 62.5
       dropoff_from_previous: 30000
       
     - step: 4
-      name: "完成支付"
+      name: "Complete Payment"
       event: "purchase_complete"
       count: 35000
       conversion_from_previous: 70.0
       dropoff_from_previous: 15000
   
-  # 整体转化率
-  overall_conversion: 7.0  # 从第一步到最终支付
+  # Overall conversion rate
+  overall_conversion: 7.0  # From first step to final payment
   
-  # 与上期对比
+  # Comparison with previous period
   vs_last_period:
     change_pct: -5.2
     trend: "declining"
     significant_steps:
-      - step: 2  # 加购转化下降
+      - step: 2  # Add-to-cart conversion declined
         change: -8.3
-      - step: 3  # 结算转化下降
+      - step: 3  # Checkout conversion declined
         change: -3.1
   
-  # 关键流失分析
+  # Critical drop-off analysis
   critical_drop:
-    step: 1_to_2  # 从浏览到加购
-    dropoff_rate: 84.0  # 流失率
+    step: 1_to_2  # From browse to add-to-cart
+    dropoff_rate: 84.0  # Drop-off rate
     affected_users: 420000
     
     dimension_breakdown:
@@ -198,26 +198,26 @@ funnel_analysis:
         direct: 80.0
     
     potential_causes:
-      - "商品价格高于用户预期"
-      - "详情页信息不够吸引"
-      - "推荐算法不够精准"
+      - "Product price higher than user expectation"
+      - "Detail page information not attractive enough"
+      - "Recommendation algorithm not precise enough"
     
     optimization_suggestions:
-      - "优化商品定价策略"
-      - "改进详情页设计和内容"
-      - "优化推荐算法，提升相关性"
+      - "Optimize product pricing strategy"
+      - "Improve detail page design and content"
+      - "Optimize recommendation algorithm, improve relevance"
   
-  # 详细报告链接
+  # Detailed report links
   reports:
-    funnel_chart: "docs/metrics/data-analysis-report.md（“漏斗分析”章节）
-    trend_chart: "docs/metrics/data-analysis-report.md（“漏斗分析”章节）
-    dimension_data: "docs/metrics/data-analysis-report.md（“漏斗分析”章节）
+    funnel_chart: "docs/metrics/data-analysis-report.md (\"Funnel Analysis\" section)"
+    trend_chart: "docs/metrics/data-analysis-report.md (\"Funnel Analysis\" section)"
+    dimension_data: "docs/metrics/data-analysis-report.md (\"Funnel Analysis\" section)"
 ```
 
-## 多维下钻示例
+## Multi-Dimensional Drill-Down Example
 
 ```yaml
-# 平台维度分析
+# Platform dimension analysis
 platform_breakdown:
   ios:
     step1_count: 200000
@@ -237,148 +237,148 @@ platform_breakdown:
     conversion: 8.0
     vs_avg: +1.0
 
-# 用户类型维度分析
+# User type dimension analysis
 user_type_breakdown:
   new_users:
     conversion: 5.2
-    main_drop: "step_2_to_3"  # 结算环节流失大
+    main_drop: "step_2_to_3"  # Checkout stage has high drop-off
     
   returning_users:
     conversion: 9.8
-    main_drop: "step_1_to_2"  # 加购环节流失大
+    main_drop: "step_1_to_2"  # Add-to-cart stage has high drop-off
 ```
 
-## 漏斗定义配置
+## Funnel Definition Configuration
 
 ```yaml
-# 漏斗配置示例
+# Funnel configuration example
 funnel_definitions:
   - name: "purchase_conversion"
-    description: "电商购买转化漏斗"
+    description: "E-commerce Purchase Conversion Funnel"
     steps:
-      - name: "商品详情页浏览"
+      - name: "Product Detail Page View"
         event: "product_view"
         conditions:
           page_type: "product_detail"
           
-      - name: "加入购物车"
+      - name: "Add to Cart"
         event: "add_to_cart"
         
-      - name: "发起结算"
+      - name: "Start Checkout"
         event: "checkout_start"
         
-      - name: "完成支付"
+      - name: "Complete Payment"
         event: "purchase_complete"
         conditions:
           payment_status: "success"
     
-    conversion_window: 7d  # 7天内完成算转化
+    conversion_window: 7d  # Counts as conversion if completed within 7 days
     
     exclusion_events:
       - event: "refund_complete"
         window: 30d
 ```
 
-## 执行频率
+## Execution Frequency
 
-- **每日分析**：每日8:00执行
-- **按需分析**：手动触发针对特定漏斗的分析
-- **实时监控**：核心转化节点的实时监控
+- **Daily Analysis**: Executes daily at 8:00
+- **On-demand Analysis**: Manually triggered for specific funnel analysis
+- **Real-time Monitoring**: Real-time monitoring of core conversion nodes
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| funnel_analysis | object | 是 | 漏斗分析根对象 |
-| funnel_analysis.funnel_name | string | 是 | 漏斗名称 |
-| funnel_analysis.date_range | object | 是 | 分析时间范围 |
-| funnel_analysis.date_range.start | string | 是 | 开始日期 |
-| funnel_analysis.date_range.end | string | 是 | 结束日期 |
-| funnel_analysis.steps | array | 是 | 漏斗步骤数据，至少2步 |
-| funnel_analysis.steps[].step | number | 是 | 步骤序号 |
-| funnel_analysis.steps[].name | string | 是 | 步骤名称 |
-| funnel_analysis.steps[].event | string | 是 | 事件名称 |
-| funnel_analysis.steps[].count | number | 是 | 用户数 |
-| funnel_analysis.steps[].conversion_from_previous | number | 是 | 步骤间转化率 |
-| funnel_analysis.overall_conversion | number | 是 | 整体转化率 |
-| funnel_analysis.vs_last_period | object | 是 | 与上期对比 |
-| funnel_analysis.critical_drop | object | 是 | 关键流失分析 |
-| funnel_analysis.critical_drop.step | string | 是 | 流失步骤 |
-| funnel_analysis.critical_drop.dropoff_rate | number | 是 | 流失率 |
-| funnel_analysis.critical_drop.potential_causes | array | 是 | 潜在原因列表 |
+| funnel_analysis | object | Yes | Funnel analysis root object |
+| funnel_analysis.funnel_name | string | Yes | Funnel name |
+| funnel_analysis.date_range | object | Yes | Analysis time range |
+| funnel_analysis.date_range.start | string | Yes | Start date |
+| funnel_analysis.date_range.end | string | Yes | End date |
+| funnel_analysis.steps | array | Yes | Funnel step data, at least 2 steps |
+| funnel_analysis.steps[].step | number | Yes | Step number |
+| funnel_analysis.steps[].name | string | Yes | Step name |
+| funnel_analysis.steps[].event | string | Yes | Event name |
+| funnel_analysis.steps[].count | number | Yes | User count |
+| funnel_analysis.steps[].conversion_from_previous | number | Yes | Step-to-step conversion rate |
+| funnel_analysis.overall_conversion | number | Yes | Overall conversion rate |
+| funnel_analysis.vs_last_period | object | Yes | Comparison with previous period |
+| funnel_analysis.critical_drop | object | Yes | Critical drop-off analysis |
+| funnel_analysis.critical_drop.step | string | Yes | Drop-off step |
+| funnel_analysis.critical_drop.dropoff_rate | number | Yes | Drop-off rate |
+| funnel_analysis.critical_drop.potential_causes | array | Yes | Potential causes list |
 
-## 上游变更响应
+## Upstream Change Response
 
-当上游输入发生变更时，本Skill的响应策略：
+When upstream inputs change, this skill's response strategy:
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| 漏斗定义变更 | 步骤配置和转化计算 | 重新执行全量漏斗计算，标记变更步骤 |
-| 事件数据更新 | 转化率和流失分析 | 增量更新转化数据，重新评估流失节点 |
-| 分群配置变更 | 多维下钻维度 | 更新下钻维度，重新执行分群分析 |
-| 对比周期变更 | 环比同比对比 | 重新执行对比分析，更新趋势判断 |
+| Funnel definition change | Step configuration and conversion calculation | Re-execute full funnel calculation, mark changed steps |
+| Event data update | Conversion rate and drop-off analysis | Incrementally update conversion data, re-evaluate drop-off nodes |
+| Segment config change | Multi-dimensional drill-down dimensions | Update drill-down dimensions, re-execute segment analysis |
+| Comparison period change | Period-over-period/year-over-year comparison | Re-execute comparison analysis, update trend judgment |
 
-当漏斗分析自身变更时，对下游的通知机制：
+When funnel analysis itself changes, the notification mechanism to downstream:
 
-| 分析变更类型 | 通知范围 | 通知方式 |
+| Analysis Change Type | Notification Scope | Notification Method |
 |-------------|----------|----------|
-| 关键步骤转化率下降>10% | decision-dace | 标记告警，触发洞察转化 |
-| 流失节点变更 | data-analysis-report | 标记流失变更，触发报告更新 |
-| 整体转化率趋势变化 | decision-dace | 标记趋势变化，触发DACE Analyze |
+| Key step conversion rate decline > 10% | decision-dace | Mark alert, trigger insight conversion |
+| Drop-off node change | data-analysis-report | Mark drop-off change, trigger report update |
+| Overall conversion rate trend change | decision-dace | Mark trend change, trigger DACE Analyze |
 
 ---
 
-## 决策规则
+## Decision Rules
 
-| 情况 | 处理方式 |
+| Situation | Handling Method |
 |------|----------|
-| 关键步骤转化率下降>10% | 触发告警，标记为优先优化项 |
-| 整体转化率低于行业基准 | 生成全链路优化建议 |
-| 新用户转化率显著低于老用户 | 建议优化新用户引导流程 |
-| 多维度下钻发现显著差异 | 生成针对性优化方案 |
+| Key step conversion rate decline > 10% | Trigger alert, mark as priority optimization item |
+| Overall conversion rate below industry benchmark | Generate full-link optimization recommendations |
+| New user conversion rate significantly lower than returning users | Recommend optimizing new user onboarding flow |
+| Multi-dimensional drill-down finds significant differences | Generate targeted optimization plan |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (quick/standard/deep must all pass)
 
-- [ ] 漏斗步骤定义完整、无遗漏
-- [ ] 转化率计算基于全量数据
+- [ ] Funnel step definition complete, no omissions
+- [ ] Conversion rate calculated based on full data
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (standard/deep must pass)
 
-- [ ] 流失节点识别附带原因假设
-- [ ] 多维下钻覆盖至少3个维度
+- [ ] Drop-off node identification includes cause hypotheses
+- [ ] Multi-dimensional drill-down covers at least 3 dimensions
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep inference and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失范围 | 降级方案 | 输出影响 |
+| Missing Scope | Degradation Plan | Output Impact |
 |----------|----------|----------|
-| 漏斗定义缺失 | 提示用户提供漏斗步骤和各步数据，直接计算转化率 | 漏斗步骤基于用户描述，可能不完整 |
-| 事件数据缺失 | 用户提供漏斗步骤和各步数据 → 直接计算转化率 | 无法自动获取数据，依赖用户输入 |
-| 漏斗定义 + 事件数据均缺失 | 用户提供漏斗步骤和各步数据 → 直接计算转化率 | 输出基础转化率计算结果，多维下钻标注"待补充" |
+| Funnel definition missing | Prompt user to provide funnel steps and per-step data, directly calculate conversion rate | Funnel steps based on user description, may be incomplete |
+| Event data missing | User provides funnel steps and per-step data → directly calculate conversion rate | Cannot auto-fetch data, depends on user input |
+| Funnel definition + Event data both missing | User provides funnel steps and per-step data → directly calculate conversion rate | Output basic conversion rate calculation, multi-dimensional drill-down marked "to be supplemented" |
 
-- 若用户未提供分群配置，提示用户提供或跳过该输入相关步骤
-- 若用户未提供对比周期，提示用户提供或跳过该输入相关步骤
+- If user does not provide segment config, prompt user to provide or skip steps related to this input
+- If user does not provide comparison period, prompt user to provide or skip steps related to this input
 
-### 数据获取说明
+### Data Acquisition Instructions
 
-当上游文件缺失时，需用户提供以下信息以支撑降级生成：
-- **漏斗步骤**：转化漏斗的各步骤名称和顺序
-- **各步数据**：每个步骤的用户数或事件数
-- **对比周期**（可选）：需要对比的时间段
+When upstream files are missing, the user needs to provide the following information to support degraded generation:
+- **Funnel Steps**: Names and order of each step in the conversion funnel
+- **Per-step Data**: User count or event count for each step
+- **Comparison Period** (optional): Time period to compare against
 
-## 关键指标
+## Key Metrics
 
-| 指标 | 计算方式 | 健康范围 |
+| Metric | Calculation | Healthy Range |
 |-----|---------|---------|
-| 整体转化率 | 最终转化/进入用户 | 因业务而异 |
-| 步骤转化率 | 下一步/当前步 | 因步骤而异 |
-| 流失率 | 流失用户/上步用户 | < 50% 理想 |
-| 漏斗效率 | 实际转化/理论最优 | > 60% 良好 |
+| Overall conversion rate | Final conversion / Entered users | Varies by business |
+| Step conversion rate | Next step / Current step | Varies by step |
+| Drop-off rate | Dropped users / Previous step users | < 50% ideal |
+| Funnel efficiency | Actual conversion / Theoretical optimal | > 60% good |

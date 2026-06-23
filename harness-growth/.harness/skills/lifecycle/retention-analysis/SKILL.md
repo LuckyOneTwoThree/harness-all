@@ -1,11 +1,11 @@
 ---
 name: retention-analysis
-description: 留存曲线分析，含Cohort矩阵/天然周期/水平线判定/RBM评估
+description: Retention curve analysis, including Cohort matrix / natural cycle / plateau detection / RBM assessment
 triggers:
-  - 需要分析留存时
-  - 用户运营Workflow
-  - 增长回顾报告Workflow
-  - 用户要求"分析留存"
+  - When retention needs to be analyzed
+  - User operations Workflow
+  - Growth review report Workflow
+  - User asks to "analyze retention"
 reads:
   - docs/handoff/solo-to-growth.md
   - memory/knowledge-base.md
@@ -16,75 +16,75 @@ quality_gates: []
 max_iterations: 1
 ---
 
-# Retention Analysis — 留存曲线分析
+# Retention Analysis — Retention Curve Analysis
 
-## 铁律
-- 留存必须用 **Cohort 分析**——不能只看总 DAU/MAU
-- 必须判断留存曲线是否**趋于水平**——不趋于水平=漏水桶
-- RBM 原则：留存未达标前，不做大规模获客
+## Iron Rules
+- Retention must use **Cohort analysis** — can't just look at total DAU/MAU
+- Must determine whether the retention curve **plateaus** — no plateau = leaky bucket
+- RBM principle: before retention meets the bar, don't do large-scale acquisition
 
-## 流程
+## Process
 
-1. **确定天然使用周期**
-   | 产品类型 | 天然周期 | 说明 |
-   |---------|---------|------|
-   | 社交/新闻 | 日 | 每天用 |
-   | SaaS/工具 | 周 | 每周用 |
-   | 电商 | 月 | 每月买 |
-   | 旅行/房产 | 季/年 | 低频 |
+1. **Determine the natural usage cycle**
+   | Product type | Natural cycle | Notes |
+   |--------------|---------------|-------|
+   | Social/News | Daily | Used daily |
+   | SaaS/Tools | Weekly | Used weekly |
+   | E-commerce | Monthly | Buys monthly |
+   | Travel/Real estate | Quarterly/Yearly | Low frequency |
 
-2. **构建 Cohort 留存矩阵**
+2. **Build Cohort retention matrix**
    ```
-   | 注册周 | W0 | W1 | W2 | W3 | W4 | W5 | W6 |
-   |--------|-----|-----|-----|-----|-----|-----|-----|
-   | 5月1周 | 100% | 45% | 32% | 28% | 25% | 23% | 22% |
-   | 5月2周 | 100% | 48% | 35% | 30% | 27% | 25% | - |
-   | 5月3周 | 100% | 52% | 38% | 33% | 30% | - | - |
-   ```
-
-3. **横向分析（同期群衰减）**
-   - 留存曲线形状：L型（好）/ 对数曲线（中）/ 直线下降（差）
-   - 是否趋于水平？（某周后留存率不再显著下降）
-   - 水平线在什么位置？（> 20% 为健康，< 10% 为漏水桶）
-
-4. **纵向分析（同期群对比）**
-   - 新同期群比老同期群留存好还是差？
-   - 如新同期群留存更差：是获客质量下降？还是 onboarding 变差？
-   - 如新同期群留存更好：什么改变导致了改善？
-
-5. **RBM 评估**
-   ```
-   RBM 判定:
-   - 留存曲线趋于水平? [是/否]
-   - 水平线位置: [X%]
-   - 行业基准: [Y%]
-   - 评估: [达标/接近/不达标]
-   - 建议: [可获客 / 先修留存]
+   | Sign-up week | W0 | W1 | W2 | W3 | W4 | W5 | W6 |
+   |--------------|-----|-----|-----|-----|-----|-----|-----|
+   | May W1 | 100% | 45% | 32% | 28% | 25% | 23% | 22% |
+   | May W2 | 100% | 48% | 35% | 30% | 27% | 25% | - |
+   | May W3 | 100% | 52% | 38% | 33% | 30% | - | - |
    ```
 
-6. **Facebook 40-20-10 参考法则**（移动社交类）
-   - 次日留存 ≥ 40%
-   - 7 日留存 ≥ 20%
-   - 30 日留存 ≥ 10%
-   > 注意：不同品类差异大，仅作参考
+3. **Horizontal analysis (cohort decay)**
+   - Retention curve shape: L-shaped (good) / logarithmic (medium) / linear decline (poor)
+   - Does it plateau? (After some week, the retention rate no longer drops significantly)
+   - Where is the plateau? (> 20% is healthy, < 10% is a leaky bucket)
 
-7. **产出留存报告**
-   写入 `docs/operations/retention-analysis.md`，含：
-   - Cohort 留存矩阵
-   - 留存曲线图（文字描述趋势）
-   - 横向/纵向分析
-   - RBM 评估结论
-   - 优化建议
+4. **Vertical analysis (cohort comparison)**
+   - Do new cohorts retain better or worse than old cohorts?
+   - If new cohorts retain worse: is it acquisition quality dropping? Or onboarding getting worse?
+   - If new cohorts retain better: what change caused the improvement?
 
-## 禁止事项
-- 不只看总 DAU/MAU（掩盖了同期群差异）
-- 不忽略留存曲线形状（直线下降=漏水桶）
-- 不在留存不达标时建议大规模获客（RBM 原则）
-- 不忽略同期群对比（新同期群留存下降是危险信号）
+5. **RBM assessment**
+   ```
+   RBM determination:
+   - Does the retention curve plateau? [Yes/No]
+   - Plateau position: [X%]
+   - Industry benchmark: [Y%]
+   - Assessment: [Meets bar / Close / Below bar]
+   - Recommendation: [Can acquire / Fix retention first]
+   ```
 
-## 与 LOOP 的关系
-本 skill 在 LOOP(lifecycle) 的 **MEASURE 阶段**执行。
+6. **Facebook 40-20-10 reference rule** (for mobile social)
+   - Day-1 retention ≥ 40%
+   - Day-7 retention ≥ 20%
+   - Day-30 retention ≥ 10%
+   > Note: varies a lot across categories; for reference only
 
-## 与 Workflow 的关系
-本 skill 是 **lifecycle-operations-workflow** 的第 4 步。
-也是 **growth-review-workflow** 的组成部分。
+7. **Produce retention report**
+   Write to `docs/operations/retention-analysis.md`, including:
+   - Cohort retention matrix
+   - Retention curve chart (text description of trend)
+   - Horizontal/vertical analysis
+   - RBM assessment conclusion
+   - Optimization recommendations
+
+## Prohibitions
+- Don't look only at total DAU/MAU (masks cohort differences)
+- Don't ignore retention curve shape (linear decline = leaky bucket)
+- Don't recommend large-scale acquisition when retention is below bar (RBM principle)
+- Don't ignore cohort comparison (a drop in new cohort retention is a danger signal)
+
+## Relationship to LOOP
+This skill runs in the **MEASURE phase** of LOOP(lifecycle).
+
+## Relationship to Workflow
+This skill is step 4 of **lifecycle-operations-workflow**.
+It is also part of **growth-review-workflow**.

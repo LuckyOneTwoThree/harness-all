@@ -1,21 +1,21 @@
 ---
 name: activation-onboarding
-description: 当需要优化用户Onboarding流程时使用。Onboarding自动优化Pipeline，分析Onboarding数据和用户分群，自动生成个性化引导策略，设计A/B测试方案。关键词：Onboarding、新用户引导、引导优化、个性化引导、用户激活、新手引导、上手快、引导太长。
+description: Use when optimizing the user Onboarding flow. Onboarding Auto-Optimization Pipeline analyzes Onboarding data and user segments, automatically generates personalized guidance strategies, and designs A/B test plans. Keywords: Onboarding, new user guidance, guidance optimization, personalized guidance, user activation, onboarding tutorial, fast onboarding, guidance too long.
 metadata:
-  module: "产品增长与运营"
-  sub-module: "激活"
+  module: "Product Growth & Operations"
+  sub-module: "Activation"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["互联网", "SaaS", "通用"]
+  domain_tags: ["Internet", "SaaS", "General"]
   trigger_examples:
-    - "新用户引导流程太长了"
-    - "怎么让用户更快上手"
-    - "新手引导怎么做更好"
+    - "The new user onboarding flow is too long"
+    - "How can we get users up to speed faster"
+    - "How to improve the onboarding tutorial"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出Onboarding流程和激活策略"
-  deep_description: "完整策略 + 激活漏斗深度分析 + 个性化Onboarding设计 + A/B测试方案"
+  quick_description: "Directly output Onboarding flow and activation strategy"
+  deep_description: "Full strategy + activation funnel deep analysis + personalized Onboarding design + A/B test plan"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -27,158 +27,158 @@ writes:
   - onboarding_plan.json
 ---
 
-# Onboarding自动优化
+# Onboarding Auto-Optimization
 
-## 核心原则
+## Core Principles
 
-1. **Onboarding是价值递送不是功能导览**：每个引导步骤都必须让用户感受到价值，而非仅仅知道功能在哪
-2. **分群即分路**：不同用户分群需要不同的Onboarding路径，一条路径走不通所有人
-3. **Aha Moment是终点**：Onboarding的唯一目标是让用户到达Aha Moment，其他都是手段
+1. **Onboarding is value delivery, not feature tour**: Every guidance step must let users feel value, not just know where features are
+2. **Segmentation means separate paths**: Different user segments need different Onboarding paths; one path cannot fit all
+3. **Aha Moment is the destination**: The sole goal of Onboarding is to get users to the Aha Moment; everything else is a means
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| Onboarding数据 | object | 是 | 用户提供 | 完成率、流失率、用户反馈 |
-| Aha Moment数据 | object | 是 | docs/growth/growth-strategy.md（“Aha Moment”章节） | Aha Moment数据 |
-| 用户分群数据 | object | ○ | 用户提供 | 用户特征、行为特征 |
+| Onboarding data | object | Yes | User-provided | Completion rate, drop-off rate, user feedback |
+| Aha Moment data | object | Yes | docs/growth/growth-strategy.md ("Aha Moment" section) | Aha Moment data |
+| User segment data | object | ○ | User-provided | User characteristics, behavioral traits |
 
-## Onboarding阶段定义
+## Onboarding Stage Definition
 
-标准Onboarding流程包含以下阶段：
+The standard Onboarding flow includes the following stages:
 
 ```
-欢迎页 → 价值展示 → 账户设置 → 功能引导 → Aha Moment → 激活完成
+Welcome Page → Value Demonstration → Account Setup → Feature Guidance → Aha Moment → Activation Complete
 ```
 
-### 阶段1: 欢迎页
-- 品牌展示
-- 价值主张传达
-- 引导开始
+### Stage 1: Welcome Page
+- Brand presentation
+- Value proposition delivery
+- Onboarding kickoff
 
-### 阶段2: 价值展示
-- 核心功能演示
-- 用户案例展示
-- 价值承诺
+### Stage 2: Value Demonstration
+- Core feature demo
+- User case showcase
+- Value promise
 
-### 阶段3: 账户设置
-- 基本信息填写
-- 偏好设置
-- 个性化配置
+### Stage 3: Account Setup
+- Basic info collection
+- Preference settings
+- Personalization configuration
 
-### 阶段4: 功能引导
-- 核心功能介绍
-- 操作演示
-- 实践练习
+### Stage 4: Feature Guidance
+- Core feature introduction
+- Operation demo
+- Hands-on practice
 
-### 阶段5: Aha Moment
-- 引导完成核心价值行为
-- 确保用户感受到产品价值
+### Stage 5: Aha Moment
+- Guide users to complete the core value action
+- Ensure users feel the product's value
 
-### 阶段6: 激活完成
-- 庆祝激活成功
-- 展示后续价值路径
-- 提供帮助资源
+### Stage 6: Activation Complete
+- Celebrate activation success
+- Show the path to ongoing value
+- Provide help resources
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 当前Onboarding效果分析 [核心]
+### Step 1: Current Onboarding Effectiveness Analysis [Core]
 
-#### 整体效果评估
-- Onboarding完成率
-- 各阶段转化率
-- 完成时间分布
-- 用户满意度
+#### Overall Effectiveness Assessment
+- Onboarding completion rate
+- Conversion rate per stage
+- Completion time distribution
+- User satisfaction
 
-#### 流失分析
-- 最大流失节点识别
-- 流失原因推断
-- 流失用户特征分析
+#### Drop-off Analysis
+- Identify the biggest drop-off points
+- Infer drop-off reasons
+- Analyze dropped-off user characteristics
 
-#### 效果对比
-- 不同渠道用户的Onboarding差异
-- 不同用户分群的Onboarding差异
-- 与行业基准对比
+#### Effectiveness Comparison
+- Onboarding differences across channels
+- Onboarding differences across user segments
+- Comparison with industry benchmarks
 
-### Step 2: 分群Onboarding策略生成 [核心]
+### Step 2: Segment-based Onboarding Strategy Generation [Core]
 
-基于用户分群，设计差异化Onboarding策略：
+Based on user segments, design differentiated Onboarding strategies:
 
-#### 分群维度
-- 技术背景（技术/非技术）
-- 使用场景（B端/C端）
-- 行业类型
-- 注册来源
-- 用户规模
+#### Segmentation Dimensions
+- Technical background (technical/non-technical)
+- Use case (B2B/B2C)
+- Industry type
+- Registration source
+- User scale
 
-#### 策略设计原则
-| 用户类型 | 引导风格 | 引导内容 |
+#### Strategy Design Principles
+| User Type | Guidance Style | Guidance Content |
 |---------|---------|---------|
-| 技术型 | 简洁直接 | 快速上手，提供高级功能 |
-| 业务型 | 详细友好 | 逐步引导，强调价值 |
-| 企业型 | 专业全面 | 完整培训，强调协作 |
-| 个人型 | 轻量快速 | 最小步骤，立即体验 |
+| Technical | Concise & direct | Quick start, advanced features provided |
+| Business | Detailed & friendly | Step-by-step guidance, emphasize value |
+| Enterprise | Professional & comprehensive | Full training, emphasize collaboration |
+| Individual | Lightweight & fast | Minimal steps, immediate experience |
 
-### Step 3: 个性化引导内容生成 [核心]
+### Step 3: Personalized Guidance Content Generation [Core]
 
-基于分群策略，生成个性化引导内容：
+Based on segment strategies, generate personalized guidance content:
 
-#### 内容类型
-1. **渐进式引导** - 分步骤引导用户完成关键操作
-2. **上下文提示** - 在用户需要时展示帮助
-3. **视频演示** - 展示核心功能操作
-4. **交互教程** - 引导用户边学边做
-5. **奖励激励** - 完成引导获得奖励
+#### Content Types
+1. **Progressive guidance** - Step-by-step guidance for key operations
+2. **Contextual tooltips** - Show help when users need it
+3. **Video demos** - Demonstrate core feature operations
+4. **Interactive tutorials** - Guide users to learn by doing
+5. **Reward incentives** - Earn rewards for completing guidance
 
-#### 内容生成原则
-- 简洁明了，一眼看懂
-- 行动导向，强调下一步
-- 价值导向，强调收益
-- 进度感知，让用户知道还剩多少
+#### Content Generation Principles
+- Concise and clear, understandable at a glance
+- Action-oriented, emphasize the next step
+- Value-oriented, emphasize benefits
+- Progress-aware, let users know how much is left
 
-### Step 4: A/B测试设计 [核心]
+### Step 4: A/B Test Design [Core]
 
-为Onboarding优化设计A/B测试：
+Design A/B tests for Onboarding optimization:
 
-#### 测试类型
-1. **整体Onboarding改版** - 新旧Onboarding方案对比
-2. **单点优化测试** - 某个引导步骤的优化
-3. **分群差异化测试** - 不同用户群的不同引导方案
+#### Test Types
+1. **Overall Onboarding redesign** - Compare new vs. old Onboarding schemes
+2. **Single-point optimization test** - Optimize a specific guidance step
+3. **Segment differentiation test** - Different guidance schemes for different user groups
 
-#### 核心指标
-- **主要指标**: Onboarding完成率、激活率
-- **次要指标**: Onboarding时长、用户满意度
-- **护栏指标**: 后续留存率、付费转化率
+#### Core Metrics
+- **Primary metrics**: Onboarding completion rate, activation rate
+- **Secondary metrics**: Onboarding duration, user satisfaction
+- **Guardrail metrics**: Subsequent retention rate, paid conversion rate
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | Onboarding流程和激活策略 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整策略 + 激活漏斗深度分析 + 个性化Onboarding设计 + A/B测试方案 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Onboarding flow and activation strategy | Core conclusions + minimum viable artifact |
+| standard | Full artifact (current default) | Full artifact, including all Step outputs |
+| deep | Full strategy + activation funnel deep analysis + personalized Onboarding design + A/B test plan | Full artifact + extended analysis + deep reasoning |
 
-## 输出
+## Output
 
-**存储路径**：`docs/growth/growth-strategy.md（“Onboarding”章节）`
+**Storage path**: `docs/growth/growth-strategy.md ("Onboarding" section)`
 
-**输出文件**：onboarding_plan.json
+**Output file**: onboarding_plan.json
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["current_effectiveness", "segment_strategies"],
   "properties": {
-    "current_effectiveness": {"type": "object", "description": "当前Onboarding效果评估，包含完成率、流失点和平均完成时间"},
-    "segment_strategies": {"type": "array", "description": "分群Onboarding策略列表，包含分群特征和预期提升"},
-    "personalized_content": {"type": "array", "description": "个性化引导内容列表，包含内容类型和触发条件"},
-    "ab_tests": {"type": "array", "description": "A/B测试设计方案列表"}
+    "current_effectiveness": {"type": "object", "description": "Current Onboarding effectiveness assessment, including completion rate, drop-off points, and average completion time"},
+    "segment_strategies": {"type": "array", "description": "List of segment Onboarding strategies, including segment characteristics and expected lift"},
+    "personalized_content": {"type": "array", "description": "List of personalized guidance content, including content type and trigger conditions"},
+    "ab_tests": {"type": "array", "description": "List of A/B test design plans"}
   }
 }
 ```
@@ -201,153 +201,153 @@ writes:
   },
   "segment_strategies": [
     {
-      "segment": "新用户-技术背景",
+      "segment": "New user - technical background",
       "size": 5000,
-      "characteristics": ["有技术背景", "偏好自助探索"],
-      "strategy": "简化引导，提供高级功能入口",
-      "expected_improvement": "+20%激活率"
+      "characteristics": ["Has technical background", "Prefers self-service exploration"],
+      "strategy": "Simplify guidance, provide advanced feature entry",
+      "expected_improvement": "+20% activation rate"
     }
   ],
   "personalized_content": [
     {
-      "segment": "新用户-非技术背景",
+      "segment": "New user - non-technical background",
       "content_type": "step_by_step_guide",
-      "content": "分步引导教师完成课程创建、内容编辑和学员邀请的交互式教程",
-      "trigger": "注册后立即展示"
+      "content": "Interactive tutorial guiding teachers step by step through course creation, content editing, and student invitation",
+      "trigger": "Show immediately after registration"
     }
   ],
   "ab_tests": [
     {
       "test_id": "ONB_TEST_001",
-      "hypothesis": "分步骤引导 vs 自由探索",
-      "target_segment": "非技术背景用户",
+      "hypothesis": "Step-by-step guidance vs. free exploration",
+      "target_segment": "Non-technical users",
       "expected_lift": "15%"
     }
   ]
 }
 ```
 
-## A/B测试设计模板
+## A/B Test Design Template
 
 ```yaml
-test_id: "ONB_TEST_{序号}"
-name: "测试名称"
-hypothesis: "优化假设描述"
-target_segment: "目标用户群体"
+test_id: "ONB_TEST_{sequence}"
+name: "Test name"
+hypothesis: "Optimization hypothesis description"
+target_segment: "Target user group"
 variants:
   control:
-    name: "对照组"
-    description: "当前方案描述"
+    name: "Control group"
+    description: "Current scheme description"
   treatment:
-    name: "实验组"
-    description: "优化方案描述"
+    name: "Treatment group"
+    description: "Optimization scheme description"
 metrics:
-  primary: "主要指标定义"
-  secondary: ["次要指标列表"]
-  guardrail: ["护栏指标列表"]
+  primary: "Primary metric definition"
+  secondary: ["Secondary metric list"]
+  guardrail: ["Guardrail metric list"]
 design:
   min_sample_per_variant: 2000
   runtime_days: 14
   mde: 0.05
 success_criteria:
   - primary_metric_lift: ">=10%"
-  - guardrail_metrics: "无显著下降"
+  - guardrail_metrics: "No significant decline"
   - statistical_significance: 0.95
 ```
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| current_effectiveness | object | 是 | 当前效果评估，须含overall_completion_rate/drop_off_points |
-| current_effectiveness.overall_completion_rate | number | 是 | 整体完成率，范围0-1 |
-| current_effectiveness.stage_completion_rates | object | 否 | 各阶段完成率 |
-| current_effectiveness.drop_off_points | array | 是 | 流失点列表，每项须含stage/drop_off_rate |
-| current_effectiveness.drop_off_points[].stage | string | 是 | 流失阶段名称 |
-| current_effectiveness.drop_off_points[].drop_off_rate | number | 是 | 流失率，范围0-1 |
-| segment_strategies | array | 是 | 分群策略列表，至少1个分群策略 |
-| segment_strategies[].segment | string | 是 | 分群名称 |
-| segment_strategies[].size | number | 否 | 分群用户占比 |
-| segment_strategies[].characteristics | string[] | 否 | 分群特征描述 |
-| segment_strategies[].strategy | string | 是 | 策略描述 |
-| segment_strategies[].expected_improvement | string | 否 | 预期提升效果 |
-| personalized_content | array | 否 | 个性化内容列表，每项须含segment/content_type/content/trigger |
-| personalized_content[].segment | string | 是 | 目标分群 |
-| personalized_content[].content_type | string | 是 | 内容类型，枚举：step_by_step_guide/video/tooltip/checklist |
-| personalized_content[].content | string | 是 | 内容描述，不可为空 |
-| personalized_content[].trigger | string | 是 | 触发条件，不可为空 |
-| ab_tests | array | 否 | A/B测试列表，每项须含test_id/hypothesis |
-| ab_tests[].test_id | string | 是 | 测试ID，不可为空 |
-| ab_tests[].hypothesis | string | 是 | 测试假设，不可为空 |
-| ab_tests[].target_segment | string | 否 | 目标分群 |
-| ab_tests[].expected_lift | string | 否 | 预期提升 |
+| current_effectiveness | object | Yes | Current effectiveness assessment, must include overall_completion_rate/drop_off_points |
+| current_effectiveness.overall_completion_rate | number | Yes | Overall completion rate, range 0-1 |
+| current_effectiveness.stage_completion_rates | object | No | Completion rate per stage |
+| current_effectiveness.drop_off_points | array | Yes | Drop-off point list, each item must include stage/drop_off_rate |
+| current_effectiveness.drop_off_points[].stage | string | Yes | Drop-off stage name |
+| current_effectiveness.drop_off_points[].drop_off_rate | number | Yes | Drop-off rate, range 0-1 |
+| segment_strategies | array | Yes | Segment strategy list, at least 1 segment strategy |
+| segment_strategies[].segment | string | Yes | Segment name |
+| segment_strategies[].size | number | No | Segment user percentage |
+| segment_strategies[].characteristics | string[] | No | Segment characteristic description |
+| segment_strategies[].strategy | string | Yes | Strategy description |
+| segment_strategies[].expected_improvement | string | No | Expected improvement effect |
+| personalized_content | array | No | Personalized content list, each item must include segment/content_type/content/trigger |
+| personalized_content[].segment | string | Yes | Target segment |
+| personalized_content[].content_type | string | Yes | Content type, enum: step_by_step_guide/video/tooltip/checklist |
+| personalized_content[].content | string | Yes | Content description, cannot be empty |
+| personalized_content[].trigger | string | Yes | Trigger condition, cannot be empty |
+| ab_tests | array | No | A/B test list, each item must include test_id/hypothesis |
+| ab_tests[].test_id | string | Yes | Test ID, cannot be empty |
+| ab_tests[].hypothesis | string | Yes | Test hypothesis, cannot be empty |
+| ab_tests[].target_segment | string | No | Target segment |
+| ab_tests[].expected_lift | string | No | Expected lift |
 
-## 决策规则
+## Decision Rules
 
-| 情况 | 处理方式 |
+| Situation | Action |
 |------|----------|
-| Onboarding完成率<40% | 重新设计引导流程 |
-| 某阶段流失率>30% | 优化该阶段引导内容 |
-| 技术型用户完成率显著低于非技术型 | 提供自助探索路径 |
-| A/B测试主指标提升<5% | 调整测试假设或扩大样本 |
+| Onboarding completion rate <40% | Redesign the guidance flow |
+| Drop-off rate at a stage >30% | Optimize the guidance content for that stage |
+| Technical user completion rate significantly lower than non-technical | Provide a self-service exploration path |
+| A/B test primary metric lift <5% | Adjust test hypothesis or expand sample size |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] Onboarding阶段定义完整（欢迎→激活完成）
-- [ ] 流失分析覆盖各阶段和用户分群
+- [ ] Onboarding stage definition complete (Welcome → Activation Complete)
+- [ ] Drop-off analysis covers all stages and user segments
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 个性化引导与用户分群匹配
-- [ ] A/B测试包含护栏指标（后续留存、付费转化）
+- [ ] Personalized guidance matches user segments
+- [ ] A/B tests include guardrail metrics (subsequent retention, paid conversion)
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only required for deep)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep reasoning and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Instructions |
 |----------|----------|----------|------------|
-| Onboarding数据缺失 | 用户描述当前Onboarding流程 → 生成优化建议 | 优化建议基于定性描述而非数据驱动 | 要求用户提供当前Onboarding流程步骤和各步骤完成率数据 |
-| Aha Moment缺失 | 跳过Aha Moment引导优化，基于通用最佳实践 | Onboarding优化缺乏Aha Moment锚点 | 要求用户提供Aha Moment定义或上传activation-aha输出文件 |
-| Onboarding数据 + Aha Moment均缺失 | 用户描述当前Onboarding流程 → 生成优化建议 | 输出基于最佳实践的优化建议，标注"待数据验证" | 要求用户提供当前Onboarding流程描述和核心用户行为 |
-| 用户分群数据缺失 | 跳过分群Onboarding优化，仅输出通用引导方案 | 无法为不同用户群体定制差异化Onboarding | 要求用户提供用户分群标签和各群体特征数据 |
+| Onboarding data missing | User describes current Onboarding flow → generate optimization suggestions | Optimization suggestions based on qualitative description rather than data-driven | Require user to provide current Onboarding flow steps and completion rate per step |
+| Aha Moment missing | Skip Aha Moment guidance optimization, based on general best practices | Onboarding optimization lacks Aha Moment anchor | Require user to provide Aha Moment definition or upload activation-aha output file |
+| Onboarding data + Aha Moment both missing | User describes current Onboarding flow → generate optimization suggestions | Output optimization suggestions based on best practices, marked "pending data validation" | Require user to provide current Onboarding flow description and core user behaviors |
+| User segment data missing | Skip segment Onboarding optimization, only output general guidance plan | Cannot customize differentiated Onboarding for different user groups | Require user to provide user segment tags and characteristics per group |
 
-### 数据获取说明
+### Data Acquisition Instructions
 
-当上游文件缺失时，需用户提供以下信息以支撑降级生成：
-- **当前Onboarding流程**：新用户引导的步骤和内容
-- **完成率数据**（可选）：各引导步骤的完成率
-- **用户反馈**（可选）：新用户对引导流程的反馈
+When upstream files are missing, the following information is needed from the user to support degraded generation:
+- **Current Onboarding flow**: Steps and content of new user guidance
+- **Completion rate data** (optional): Completion rate per guidance step
+- **User feedback** (optional): New user feedback on the guidance flow
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游来源 | 变更类型 | 影响范围 | 响应动作 |
+| Upstream Source | Change Type | Impact Scope | Response Action |
 |----------|----------|----------|----------|
-| activation-aha | 主Aha Moment变更 | Onboarding终点和引导路径 | 重新设计引导路径指向新Aha |
-| activation-aha | 到达率数据更新 | 分群策略的预期提升 | 调整预期提升和优先级 |
-| 用户提供-Onboarding数据 | 数据口径变更 | 效果评估和流失分析 | 按新口径重新评估效果 |
+| activation-aha | Primary Aha Moment change | Onboarding endpoint and guidance path | Redesign guidance path to point to new Aha |
+| activation-aha | Reach rate data update | Expected lift of segment strategies | Adjust expected lift and priority |
+| User-provided - Onboarding data | Data definition change | Effectiveness assessment and drop-off analysis | Re-evaluate effectiveness per new definition |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 下游消费者 | 通知条件 | 通知方式 | 通知内容 |
+| Downstream Consumer | Notification Condition | Notification Method | Notification Content |
 |------------|----------|----------|----------|
-| retention-management | 激活率变更 | 写入输出文件 | 新用户激活率和Onboarding完成率 |
-| activation-orchestrator | Onboarding策略输出完成 | 输出文件更新 | Onboarding优化完成状态和关键结论 |
+| retention-management | Activation rate change | Write to output file | New user activation rate and Onboarding completion rate |
+| activation-orchestrator | Onboarding strategy output complete | Output file updated | Onboarding optimization completion status and key conclusions |
 
-## 关键成功指标
+## Key Success Metrics
 
-| 指标 | 当前值 | 目标值 |
+| Metric | Current Value | Target Value |
 |------|--------|--------|
-| Onboarding完成率 | 45% | ≥60% |
-| 激活率 | 35% | ≥50% |
-| 平均完成时间 | 12.5分钟 | ≤10分钟 |
-| 引导满意度 | 3.2 | ≥4.0 |
+| Onboarding completion rate | 45% | ≥60% |
+| Activation rate | 35% | ≥50% |
+| Average completion time | 12.5 minutes | ≤10 minutes |
+| Guidance satisfaction | 3.2 | ≥4.0 |

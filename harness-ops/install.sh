@@ -1,12 +1,12 @@
 #!/bin/bash
-# install.sh — harness-ops 冷启动安装脚本
+# install.sh — harness-ops cold-start install script
 #
-# 用法（两步安装，符合安全规则——不用 curl | bash）：
+# Usage (two-step install, follows security rules — no curl | bash):
 #   curl -o install.sh https://raw.githubusercontent.com/LuckyOneTwoThree/harness-ops/main/install.sh
-#   # 审查 install.sh 内容
+#   # Review install.sh contents
 #   bash install.sh
 #
-# 作用：克隆 .harness/ 模板到当前目录，初始化运维项目
+# Purpose: Clone the .harness/ template into the current directory and initialize the ops project
 
 set -e
 
@@ -14,113 +14,113 @@ REPO_URL="https://github.com/LuckyOneTwoThree/harness-ops.git"
 TEMPLATE_BRANCH="main"
 TEMP_DIR=".harness-ops-tmp-$$"
 
-echo "=== harness-ops 冷启动安装 ==="
+echo "=== harness-ops cold-start install ==="
 echo ""
 
-# 检查当前目录是否已有 .harness/
+# Check whether .harness/ already exists in the current directory
 if [ -d ".harness" ]; then
-  echo "BLOCK: 当前目录已存在 .harness/，似乎已初始化"
-  echo "如需重新安装，请先删除 .harness/ 或换目录"
+  echo "BLOCK: .harness/ already exists in the current directory; appears already initialized"
+  echo "To reinstall, please delete .harness/ first or switch to another directory"
   exit 1
 fi
 
-# 检查 git
+# Check git
 if ! command -v git >/dev/null 2>&1; then
-  echo "BLOCK: 未找到 git，请先安装 Git"
+  echo "BLOCK: git not found; please install Git first"
   exit 1
 fi
 
-# 运维工具链检查（WARN 不阻塞安装，按实际栈选用）
+# Ops toolchain check (WARN does not block install; choose based on actual stack)
 if ! command -v terraform >/dev/null 2>&1; then
-  echo "WARN: 未找到 terraform。IaC 相关 skill 强依赖 Terraform（建议 v1.5+）。"
-  echo "      如使用其他 IaC 工具（Pulumi/Ansible），可忽略此提示。"
+  echo "WARN: terraform not found. IaC-related skills hard-depend on Terraform (v1.5+ recommended)."
+  echo "      If using other IaC tools (Pulumi/Ansible), this notice can be ignored."
 fi
 if ! command -v kubectl >/dev/null 2>&1; then
-  echo "WARN: 未找到 kubectl。Kubernetes 部署相关 skill 需要 kubectl。"
+  echo "WARN: kubectl not found. Kubernetes deployment-related skills require kubectl."
 fi
 if ! command -v docker >/dev/null 2>&1; then
-  echo "WARN: 未找到 docker。容器化部署/镜像构建相关 skill 需要 Docker。"
+  echo "WARN: docker not found. Containerization deployment/image build-related skills require Docker."
 fi
 
-# 浅克隆模板仓库到临时目录
-echo "→ 克隆模板仓库..."
+# Shallow-clone the template repository into a temporary directory
+echo "→ Cloning template repository..."
 git clone --depth 1 -b "$TEMPLATE_BRANCH" "$REPO_URL" "$TEMP_DIR" 2>/dev/null || {
-  echo "BLOCK: 克隆失败，检查网络或仓库地址: $REPO_URL"
+  echo "BLOCK: Clone failed; check network or repository URL: $REPO_URL"
   exit 1
 }
 
-# 复制 .harness/ 到当前目录
-echo "→ 复制 .harness/ 框架..."
+# Copy .harness/ to the current directory
+echo "→ Copying .harness/ framework..."
 cp -r "$TEMP_DIR/.harness" .harness
 
-# 复制 AGENTS.md 和 SOUL.md 模板（如果不存在）
+# Copy AGENTS.md and SOUL.md templates (if they don't exist)
 if [ ! -f "AGENTS.md" ]; then
   cp "$TEMP_DIR/.harness/templates/AGENTS.md.template" AGENTS.md
-  echo "  ✓ 创建 AGENTS.md（从模板，请填 [项目名称]）"
+  echo "  ✓ Created AGENTS.md (from template; please fill in [project name])"
 fi
 if [ ! -f "SOUL.md" ]; then
   cp "$TEMP_DIR/.harness/templates/SOUL.md.template" SOUL.md
-  echo "  ✓ 创建 SOUL.md（从模板，请填 [运维负责人] 和技术偏好）"
+  echo "  ✓ Created SOUL.md (from template; please fill in [ops lead] and tech preferences)"
 fi
 if [ ! -f "constitution.md" ]; then
   cp "$TEMP_DIR/.harness/templates/constitution.md.template" constitution.md
-  echo "  ✓ 创建 constitution.md（从模板，填写项目级运维原则）"
+  echo "  ✓ Created constitution.md (from template; fill in project-level ops principles)"
 fi
 
-# 创建 docs/ 目录结构（运维四域 + 交接协议）
-echo "→ 创建 docs/ 目录..."
+# Create the docs/ directory structure (ops four domains + handoff protocol)
+echo "→ Creating docs/ directory..."
 mkdir -p docs/infrastructure docs/monitoring docs/incident docs/deployment docs/handoff
 
-# 从模板初始化 OPS_STRATEGY.md（运维战略总纲，如不存在）
+# Initialize OPS_STRATEGY.md from template (ops strategy overview; if it doesn't exist)
 if [ ! -f "docs/infrastructure/OPS_STRATEGY.md" ]; then
   cp "$TEMP_DIR/.harness/templates/OPS_STRATEGY.md.template" docs/infrastructure/OPS_STRATEGY.md
-  echo "  ✓ 初始化 docs/infrastructure/OPS_STRATEGY.md（从模板，请填写架构拓扑/部署规范/监控矩阵/容灾预案）"
+  echo "  ✓ Initialized docs/infrastructure/OPS_STRATEGY.md (from template; please fill in architecture topology / deployment specs / monitoring matrix / disaster recovery plan)"
 fi
 
-# 复制交接文档模板（如果模板仓库有）
+# Copy handoff document templates (if the template repository has them)
 if [ -d "$TEMP_DIR/docs/handoff" ]; then
   cp -r "$TEMP_DIR/docs/handoff/." docs/handoff/ 2>/dev/null || true
-  echo "  ✓ 复制 docs/handoff/ 交接协议文档（solo-to-ops / ops-to-pm）"
+  echo "  ✓ Copied docs/handoff/ handoff protocol documents (solo-to-ops / ops-to-pm)"
 fi
 
-# 创建运行时目录（不提交，但运行时需要存在）
-echo "→ 创建运行时目录..."
+# Create runtime directories (not committed, but required at runtime)
+echo "→ Creating runtime directories..."
 mkdir -p .harness/memory/archives .harness/loops/specs
 
-# 从模板初始化 progress.md（如果不存在）
+# Initialize progress.md from template (if it doesn't exist)
 if [ ! -f ".harness/memory/progress.md" ]; then
   cp .harness/templates/progress.md.template .harness/memory/progress.md
-  echo "  ✓ 初始化 .harness/memory/progress.md"
+  echo "  ✓ Initialized .harness/memory/progress.md"
 fi
 
-# 清理临时目录（安全方式：校验路径前缀后使用 rm -r）
+# Clean up the temporary directory (safe approach: validate path prefix before using rm -r)
 if [ -n "$TEMP_DIR" ] && [ -d "$TEMP_DIR" ] && [[ "$TEMP_DIR" == .harness-ops-tmp-* ]]; then
     rm -r -- "$TEMP_DIR"
 else
-    echo "WARN: 临时目录清理失败或路径异常: $TEMP_DIR"
+    echo "WARN: Temporary directory cleanup failed or path is abnormal: $TEMP_DIR"
 fi
 
-# 设置脚本可执行权限（Unix only；Windows 无 chmod）
+# Set script executable permissions (Unix only; Windows has no chmod)
 if command -v chmod >/dev/null 2>&1; then
   chmod +x .harness/scripts/*.sh 2>/dev/null || true
-  echo "  ✓ 设置脚本可执行权限"
+  echo "  ✓ Set script executable permissions"
 else
-  echo "  ⚠ Windows 环境，跳过 chmod（脚本仍可运行）"
+  echo "  ⚠ Windows environment: skipping chmod (scripts still work)"
 fi
 
 echo ""
-echo "✓ 安装完成"
+echo "✓ Installation complete"
 echo ""
-echo "下一步："
-echo "  1. 编辑 constitution.md，填写项目级运维原则（破坏性变更保护/监控先行等）"
-echo "  2. 编辑 SOUL.md 的 [运维负责人] 和技术偏好"
-echo "  3. 编辑 docs/infrastructure/OPS_STRATEGY.md，填写架构拓扑/部署规范/监控矩阵/容灾预案"
-echo "  4. 让 AI Agent 读取 AGENTS.md 开始工作"
+echo "Next steps:"
+echo "  1. Edit constitution.md to fill in project-level ops principles (destructive change protection / monitoring first, etc.)"
+echo "  2. Edit [ops lead] and tech preferences in SOUL.md"
+echo "  3. Edit docs/infrastructure/OPS_STRATEGY.md to fill in architecture topology / deployment specs / monitoring matrix / disaster recovery plan"
+echo "  4. Have the AI Agent read AGENTS.md to start working"
 echo ""
-echo "⚠️ Windows CRLF 指引："
-echo "  Windows 环境下 core.autocrlf=true 会导致 .sh 脚本变成 CRLF，"
-echo "  Git Bash 执行 CRLF 脚本会报错 /bin/bash^M: bad interpreter"
-echo "  解决方案："
-echo "    1. git config core.autocrlf false（关闭自动转换）"
-echo "    2. 或在项目根目录添加 .gitattributes 强制 *.sh 使用 LF（推荐）"
+echo "⚠️ Windows CRLF guidance:"
+echo "  On Windows, core.autocrlf=true will turn .sh scripts into CRLF,"
+echo "  and Git Bash will fail on CRLF scripts with /bin/bash^M: bad interpreter"
+echo "  Solutions:"
+echo "    1. git config core.autocrlf false (disable auto-conversion)"
+echo "    2. Or add a .gitattributes in the project root to force *.sh to use LF (recommended)"
 echo ""

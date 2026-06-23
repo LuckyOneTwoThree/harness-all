@@ -1,12 +1,12 @@
 ---
 name: ops-review
-description: 运维回顾报告，汇总 SLA/故障/部署/成本，产出 ops-to-pm.md 交接文档
+description: Ops review report, aggregating SLA/incidents/deployments/costs, producing the ops-to-pm.md handoff document
 triggers:
-  - 周会/月会/季度回顾时
-  - session-end 检测到有结题的 incident 时
-  - 用户要求"总结运维进展"时
-  - 需要产出 ops-to-pm.md 时
-  - ops-review-workflow 触发时
+  - During weekly/monthly/quarterly reviews
+  - When session-end detects closed incidents
+  - When the user requests "summarize ops progress"
+  - When ops-to-pm.md needs to be produced
+  - When ops-review-workflow triggers
 reads:
   - memory/knowledge-base.md
   - memory/progress.md
@@ -23,165 +23,165 @@ operation_tier: inspect
 requires_approval: false
 ---
 
-# Ops Review — 运维回顾报告
+# Ops Review — Ops Review Report
 
-## 铁律
+## Ground Rules
 
-1. **报告基于实际数据** —— 不是"感觉稳定"
-2. **同时报告成功和失败** —— 故障必须如实记录
-3. **给出下一步建议** —— 回顾不是目的，改进才是
-4. **产出 ops-to-pm.md 按模板** —— 字段完整
+1. **Reports are based on actual data** — not "feels stable"
+2. **Report both successes and failures** — incidents must be recorded truthfully
+3. **Provide next-step recommendations** — review is not the goal, improvement is
+4. **Produce ops-to-pm.md per the template** — fields must be complete
 
-## 流程
+## Process
 
-### 1. 收集数据
+### 1. Collect Data
 
-- 读取 `memory/knowledge-base.md` 的故障库/部署记录库/IaC资产库
-- 读取 `memory/progress.md` 了解本周期工作
-- 扫描 `loops/specs/*/state.yaml` 找本周期结题的任务
-- 读取 `FEATURES.md` 了解整体状态
+- Read the incident library / deployment record library / IaC asset library from `memory/knowledge-base.md`
+- Read `memory/progress.md` to understand this period's work
+- Scan `loops/specs/*/state.yaml` for tasks closed in this period
+- Read `FEATURES.md` to understand overall status
 
-### 2. 汇总核心指标
+### 2. Aggregate Core Metrics
 
 ```
-## 运维核心指标看板
+## Ops Core Metrics Dashboard
 
-### SLA 可用性
-| 服务 | 上月SLA | 本月SLA | 目标 | 达成? |
+### SLA Availability
+| Service | Last Month SLA | This Month SLA | Target | Met? |
 |------|---------|---------|------|-------|
 | payment-service | 99.95% | 99.92% | 99.9% | ✓ |
 | order-service | 99.98% | 99.99% | 99.9% | ✓ |
 | user-service | 99.99% | 99.85% | 99.9% | ✗ |
 
-### 部署统计
-| 指标 | 上月 | 本月 | 变化 |
+### Deployment Statistics
+| Metric | Last Month | This Month | Change |
 |------|------|------|------|
-| 部署次数 | 23 | 28 | +22% |
-| 部署成功率 | 91% | 96% | +5% |
-| 平均部署耗时 | 18min | 12min | -33% |
-| 回滚次数 | 3 | 1 | -67% |
+| Deployments | 23 | 28 | +22% |
+| Deployment success rate | 91% | 96% | +5% |
+| Average deployment duration | 18min | 12min | -33% |
+| Rollbacks | 3 | 1 | -67% |
 
-### 故障统计
-| 等级 | 上月 | 本月 | MTTR |
+### Incident Statistics
+| Severity | Last Month | This Month | MTTR |
 |------|------|------|------|
 | P0 | 1 | 0 | - |
 | P1 | 2 | 1 | 25min |
 | P2 | 5 | 3 | 45min |
 
-### 资源使用
-| 指标 | 上月 | 本月 | 变化 |
+### Resource Utilization
+| Metric | Last Month | This Month | Change |
 |------|------|------|------|
-| 集群CPU使用率 | 65% | 72% | +7% |
-| 集群内存使用率 | 70% | 75% | +5% |
-| 月度成本 | ¥43,000 | ¥45,678 | +6% |
+| Cluster CPU utilization | 65% | 72% | +7% |
+| Cluster memory utilization | 70% | 75% | +5% |
+| Monthly cost | ¥43,000 | ¥45,678 | +6% |
 ```
 
-### 3. 故障回顾
+### 3. Incident Review
 
 ```
-## 关键故障回顾
+## Key Incident Review
 
-### P0 故障（如有）
-无
+### P0 Incidents (if any)
+None
 
-### P1 故障
-| 故障ID | 现象 | 根因 | MTTR | 改进项 |
+### P1 Incidents
+| Incident ID | Symptom | Root Cause | MTTR | Improvement |
 |--------|------|------|------|--------|
-| INC-2026-06-15 | user-service延迟飙升 | Redis连接池耗尽 | 25min | 扩容连接池+加监控 |
+| INC-2026-06-15 | user-service latency spike | Redis connection pool exhausted | 25min | Scale connection pool + add monitoring |
 
-### P2 故障
+### P2 Incidents
 [...]
 ```
 
-### 4. 部署回顾
+### 4. Deployment Review
 
 ```
-## 部署回顾
+## Deployment Review
 
-### 成功部署
-- payment-service v1.2.3: 灰度发布，无异常
-- order-service v2.0.0: 蓝绿部署，切换顺利
+### Successful Deployments
+- payment-service v1.2.3: canary release, no anomalies
+- order-service v2.0.0: blue-green deployment, smooth cutover
 
-### 失败部署
-- user-service v1.5.0: staging 验证失败（OOM），已回滚
-  - 原因: 内存限制设置过低
-  - 改进: 调整资源限制后重新部署
+### Failed Deployments
+- user-service v1.5.0: staging verification failed (OOM), rolled back
+  - Cause: memory limit set too low
+  - Improvement: adjusted resource limits and redeployed
 ```
 
-### 5. 成本分析
+### 5. Cost Analysis
 
 ```
-## 成本分析
+## Cost Analysis
 
-### 本月成本: ¥45,678（+6%）
-- 增长原因: 新增 2 个节点（容量规划）
-- 优化措施: 已识别 ¥4,300 优化空间（见 cost-analysis 报告）
+### This Month's Cost: ¥45,678 (+6%)
+- Growth driver: added 2 nodes (capacity planning)
+- Optimization: identified ¥4,300 in optimization opportunities (see cost-analysis report)
 
-### 成本趋势
-[图表]
+### Cost Trend
+[chart]
 ```
 
-### 6. 改进项进展
+### 6. Improvement Item Progress
 
 ```
-## 改进项进展
+## Improvement Item Progress
 
-### 上月改进项
-| 改进项 | 状态 | 说明 |
+### Last Month's Improvement Items
+| Improvement Item | Status | Notes |
 |--------|------|------|
-| Migration review 增加索引检查 | ✅ 完成 | 已落地为 Kyverno 策略 |
-| staging 增加生产数据量级测试 | 🚧 进行中 | 预计 7/15 完成 |
-| 慢查询告警阈值调整 | ✅ 完成 | 已从 1s 调整为 500ms |
+| Add index check to migration review | ✅ Done | Landed as a Kyverno policy |
+| Add production-scale data testing in staging | 🚧 In Progress | Expected to complete 7/15 |
+| Adjust slow query alert threshold | ✅ Done | Adjusted from 1s to 500ms |
 
-### 本月新增改进项
-| 改进项 | 负责人 | 截止日期 |
+### New Improvement Items This Month
+| Improvement Item | Owner | Due Date |
 |--------|--------|---------|
-| Redis 连接池扩容 | @ops | 2026-07-01 |
-| 容灾演练 | @ops | 2026-07-30 |
+| Scale Redis connection pool | @ops | 2026-07-01 |
+| Disaster recovery drill | @ops | 2026-07-30 |
 ```
 
-### 7. 下阶段计划
+### 7. Next Phase Plan
 
 ```
-## 下阶段计划
+## Next Phase Plan
 
-### 主题: 容灾能力提升
-- 执行首次全集群恢复演练
-- 完成异地容灾方案设计
-- user-service SLA 提升到 99.95%
+### Theme: Improve Disaster Recovery Capabilities
+- Execute the first full-cluster recovery drill
+- Complete the cross-region DR design
+- Raise user-service SLA to 99.95%
 
-### 预算需求
-- 容灾演练: 额外 ¥5,000（测试环境资源）
-- 异地容灾: 预估月增 ¥8,000（备集群）
+### Budget Requirements
+- DR drill: additional ¥5,000 (test environment resources)
+- Cross-region DR: estimated monthly increase of ¥8,000 (backup cluster)
 ```
 
-### 8. 产出 ops-to-pm.md
+### 8. Produce ops-to-pm.md
 
-按 `ops-to-pm-template.md` 模板填写：
-- 大盘可用性摘要：本月整体 SLA + 各服务达成情况
-- 事故与故障通报：P0/P1 故障及复盘
-- 运维对业务的建议：如"user-service SLA 未达标，建议下个迭代优先优化"
+Fill in per the `ops-to-pm-template.md` template:
+- Overall availability summary: this month's overall SLA + each service's achievement status
+- Incidents and outage notifications: P0/P1 incidents and post-mortems
+- Ops recommendations for the business: e.g., "user-service SLA not met, recommend prioritizing optimization in the next iteration"
 
-**注意**：如 ops-to-pm.md 已存在，追加本周期内容，不覆盖历史。
+**Note**: If ops-to-pm.md already exists, append this period's content; do not overwrite history.
 
-### 9. 更新知识库
+### 9. Update the Knowledge Base
 
-- 故障库追加本月新故障
-- 运维模式沉淀追加可复用模式
-- 踩坑记录追加教训
+- Append this month's new incidents to the incident library
+- Append reusable patterns to the ops patterns library
+- Append lessons learned to the pitfall records
 
-## 禁止事项
+## Prohibitions
 
-- 不报喜不报忧（故障必须记录）
-- 不只列数据不给洞察
-- 不省略下阶段计划
-- 不在 ops-to-pm.md 中包含用户 PII
-- 不篡改 SLA 数据
+- Do not report only good news and hide bad news (incidents must be recorded)
+- Do not list data without providing insights
+- Do not omit the next phase plan
+- Do not include user PII in ops-to-pm.md
+- Do not tamper with SLA data
 
-## 与 LOOP 的关系
+## Relationship to LOOP
 
-**所属 LOOP 类型**：无（会话级/周期级报告）
+**LOOP type**: none (session-level / periodic report)
 
-本 skill 不在 LOOP 内执行，是周期性报告产出。
-通常由 session-end 触发，或用户显式要求时执行。
-是 ops-review-workflow 的核心步骤。
+This skill does not run inside a LOOP; it produces periodic reports.
+Usually triggered by session-end, or executed on explicit user request.
+It is the core step of ops-review-workflow.

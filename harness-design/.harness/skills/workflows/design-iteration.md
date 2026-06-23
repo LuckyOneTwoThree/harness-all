@@ -6,146 +6,146 @@ default_mode: standard
 
 # Workflow: design-iteration
 
-> 设计迭代工作流 · 已有设计的修改
+> Design iteration workflow · Modifications to existing designs
 
-## 适用场景
+## Applicable Scenarios
 
-- 修改已有设计
-- 用户反馈后的迭代
-- 设计优化
+- Modifying an existing design
+- Iterating after user feedback
+- Design optimization
 
-## 编排
+## Orchestration
 
 ```
 session-start
-  → Chesterton's Fence 分析（理解原设计）
-  → PLAN（内联，初始化 LOOP state）
-  → LOOP(visual-design → verify → design-lint)        [visual-design, max 5]（必跑）
-  → LOOP(interaction-design → verify → design-lint)   [interaction-design, max 5]（条件性）
-  → design-review（LOOP 外门禁）
-  → accessibility-audit（LOOP 外门禁）
+  → Chesterton's Fence analysis (understand the original design)
+  → PLAN (inline, initialize LOOP state)
+  → LOOP(visual-design → verify → design-lint)        [visual-design, max 5] (always runs)
+  → LOOP(interaction-design → verify → design-lint)   [interaction-design, max 5] (conditional)
+  → design-review (gate outside LOOP)
+  → accessibility-audit (gate outside LOOP)
   → session-end
 ```
 
-**interaction-design LOOP 触发条件**（满足任一即跑）：
-- AC-xxx 中含交互相关验收标准（状态/动效/键盘导航/触控目标）
-- 修改涉及交互组件（Button/Input/Modal/Dropdown/Toast 等）
-- 修改涉及动效参数（时长/缓动/状态转换）
+**interaction-design LOOP trigger conditions** (run if any is met):
+- AC-xxx contains interaction-related acceptance criteria (states/motion/keyboard navigation/touch targets)
+- The change involves interactive components (Button/Input/Modal/Dropdown/Toast, etc.)
+- The change involves motion parameters (duration/easing/state transitions)
 
-若 AC 仅涉及视觉（配色/间距/字体/布局），跳过 interaction-design LOOP。
+If the AC only involves visuals (color/spacing/typography/layout), skip the interaction-design LOOP.
 
-## 详细步骤
+## Detailed Steps
 
 ### 1. session-start
 
-读取 `memory/progress.md`，恢复上下文。
+Read `memory/progress.md` to restore context.
 
-### 2. Chesterton's Fence 分析
+### 2. Chesterton's Fence analysis
 
-**改前先理解原设计**（来自 addyosmani code-simplification）：
+**Understand the original design before changing it** (from addyosmani code-simplification):
 
-回答以下问题，答不出就没准备好改：
-- 原设计为何这样？（设计意图）
-- 调用关系？（被哪些页面引用）
-- 边界？（与哪些组件交互）
-- 为何这样设计？（性能？平台约束？历史原因？）
+Answer the following questions; if you can't answer them, you're not ready to change:
+- Why is the original design this way? (design intent)
+- Call relationships? (referenced by which pages)
+- Boundaries? (interacts with which components)
+- Why was it designed this way? (performance? platform constraints? historical reasons?)
 
-输出 `loops/specs/<task>/context-analysis.md`：
+Output `loops/specs/<task>/context-analysis.md`:
 
 ```markdown
 # Context Analysis (Chesterton's Fence)
 
-## 原设计意图
+## Original Design Intent
 <...>
 
-## 调用关系
-- 被引用于：<页面列表>
-- 依赖：<组件列表>
+## Call Relationships
+- Referenced by: <page list>
+- Depends on: <component list>
 
-## 边界
-- 与 <组件> 交互
-- 受 <约束> 限制
+## Boundaries
+- Interacts with <component>
+- Constrained by <constraint>
 
-## 为何这样设计
-- <原因1>
-- <原因2>
+## Why Designed This Way
+- <reason 1>
+- <reason 2>
 
-## 修改范围
-- 只动：<...>
-- 不动：<...>
+## Modification Scope
+- Only touch: <...>
+- Do not touch: <...>
 
 ## NOTICED BUT NOT TOUCHING
-- <发现但不在本次任务范围的无关问题>
-- <要建任务吗？>
+- <unrelated issues found but outside this task's scope>
+- <Should we create a task?>
 ```
 
-### 3. PLAN（内联，无独立 skill）
+### 3. PLAN (inline, no standalone skill)
 
-- 基于 Chesterton's Fence 分析定义迭代目标 + AC-xxx
-- 宪法检查
-- 初始化 `loops/specs/<task>/state.yaml`（stage=plan, iteration=0, status=running）
-- 写入 `loops/specs/<task>/spec.md`（含 AC 列表）
+- Define iteration goals + AC-xxx based on the Chesterton's Fence analysis
+- Constitution check
+- Initialize `loops/specs/<task>/state.yaml` (stage=plan, iteration=0, status=running)
+- Write `loops/specs/<task>/spec.md` (with AC list)
 
-### 4. LOOP: visual-design（max 5）
+### 4. LOOP: visual-design (max 5)
 
 ```
 visual-design → verify → design-lint
   ↑                          |
-  └──── 失败回到 visual-design ┘
+  └──── on failure, back to visual-design ┘
 ```
 
-- **Scope Discipline**：只动任务要求的，发现无关问题用 "NOTICED BUT NOT TOUCHING" 列表记录
-- verify/design-lint 失败 → 回到 visual-design，iteration +1
-- 超过 5 次迭代 → 请求人类介入
+- **Scope Discipline**: Only touch what the task requires; record unrelated issues in the "NOTICED BUT NOT TOUCHING" list
+- verify/design-lint failure → back to visual-design, iteration +1
+- More than 5 iterations → request human intervention
 
-### 5. LOOP: interaction-design（max 5，条件性）
+### 5. LOOP: interaction-design (max 5, conditional)
 
-**触发条件**：见编排章节的"interaction-design LOOP 触发条件"。若不触发则跳过本步。
+**Trigger conditions**: See "interaction-design LOOP trigger conditions" in the Orchestration section. If not triggered, skip this step.
 
 ```
 interaction-design → verify → design-lint
   ↑                          |
-  └──── 失败回到 interaction-design ┘
+  └──── on failure, back to interaction-design ┘
 ```
 
-- 基于已迭代的视觉设计，更新组件状态/动效参数
-- verify/design-lint 失败 → 回到 interaction-design，iteration +1
+- Based on the iterated visual design, update component states/motion parameters
+- verify/design-lint failure → back to interaction-design, iteration +1
 
-### 6. design-review（LOOP 外门禁）
+### 6. design-review (gate outside LOOP)
 
 - Five-Axis Review
-- Doubt-Driven（仅 Critical 触发对抗辩论）
-- 对比 before/after
-- 输出 `loops/specs/<task>/evidence.md`
-- 不通过 → 回到 LOOP（可修复）或 PLAN（需重新规划）
+- Doubt-Driven (only Critical triggers adversarial debate)
+- Compare before/after
+- Output `loops/specs/<task>/evidence.md`
+- Not passed → back to LOOP (fixable) or PLAN (needs re-planning)
 
-### 7. accessibility-audit（LOOP 外门禁）
+### 7. accessibility-audit (gate outside LOOP)
 
-- WCAG 2.1 AA 全项检查
-- 不通过 → 回到 LOOP
+- WCAG 2.1 AA full check
+- Not passed → back to LOOP
 
 ### 8. session-end
 
-更新 `memory/progress.md`，归档会话。
+Update `memory/progress.md` and archive the session.
 
-## 产出物
+## Deliverables
 
-| 文件 | 说明 |
+| File | Description |
 |------|------|
-| loops/specs/<task>/context-analysis.md | Chesterton's Fence 分析 |
-| loops/specs/<task>/spec.md | 迭代规格（含 AC-xxx） |
-| docs/visual/<page>.md | 更新后的视觉设计 |
-| docs/interaction/<page>.md | 更新后的交互设计（若触发 interaction LOOP） |
-| loops/specs/<task>/state.yaml | 循环状态 |
-| loops/specs/<task>/evidence.md | 验证证据 |
-| loops/specs/<task>/iterations.log | 迭代历史 |
-| loops/specs/<task>/lint-report.md | Lint 报告 |
+| loops/specs/<task>/context-analysis.md | Chesterton's Fence analysis |
+| loops/specs/<task>/spec.md | Iteration spec (with AC-xxx) |
+| docs/visual/<page>.md | Updated visual design |
+| docs/interaction/<page>.md | Updated interaction design (if interaction LOOP triggered) |
+| loops/specs/<task>/state.yaml | Loop state |
+| loops/specs/<task>/evidence.md | Validation evidence |
+| loops/specs/<task>/iterations.log | Iteration history |
+| loops/specs/<task>/lint-report.md | Lint report |
 
-## 退出条件
+## Exit Criteria
 
-- Chesterton's Fence 分析完成
-- LOOP 通过（verify + lint）
-- design-review 通过
-- accessibility-audit 通过
-- before/after 对比已记录
+- Chesterton's Fence analysis complete
+- LOOP passed (verify + lint)
+- design-review passed
+- accessibility-audit passed
+- before/after comparison recorded
 - state.yaml status=done

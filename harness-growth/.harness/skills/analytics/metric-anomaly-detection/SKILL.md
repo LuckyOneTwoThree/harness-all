@@ -1,10 +1,10 @@
 ---
 name: metric-anomaly-detection
-description: 指标异常检测与归因，含波动检测/根因分析/影响面评估
+description: Metric anomaly detection and attribution, including fluctuation detection, root cause analysis, and impact assessment
 triggers:
-  - 指标异常波动时
-  - 增长回顾报告Workflow
-  - 用户要求"分析指标异常"
+  - When metrics show abnormal fluctuation
+  - Growth review report Workflow
+  - User asks to "analyze metric anomaly"
 reads:
   - memory/knowledge-base.md
   - loops/specs/*/state.yaml
@@ -15,91 +15,91 @@ quality_gates: []
 max_iterations: 1
 ---
 
-# Metric Anomaly Detection — 指标异常检测
+# Metric Anomaly Detection — Metric Anomaly Detection
 
-## 铁律
-- 异常必须基于**统计阈值**（±2σ或±3σ），不是"感觉不正常"
-- 必须做**根因分析**——不只是"指标降了"，要找出为什么
-- 必须评估**影响面**——影响多少用户/多少收入
+## Iron Rules
+- Anomalies must be based on **statistical thresholds** (±2σ or ±3σ), not "feels off"
+- Must perform **root cause analysis** — not just "metric dropped", find out why
+- Must assess **impact scope** — how many users / how much revenue affected
 
-## 流程
+## Process
 
-1. **定义正常基线**
-   - 计算指标过去 30 天的均值和标准差
-   - 定义异常阈值：均值 ± 2σ（95% 置信区间外为异常）
-   - 考虑周期性（工作日 vs 周末、季节性）
+1. **Define normal baseline**
+   - Calculate mean and standard deviation of the metric over the past 30 days
+   - Define anomaly threshold: mean ± 2σ (outside the 95% confidence interval is anomalous)
+   - Account for cyclicality (weekday vs weekend, seasonality)
 
-2. **异常检测**
+2. **Anomaly detection**
    ```
-   | 指标 | 基线 | 当前值 | 偏离 | 异常? |
-   |------|------|--------|------|-------|
-   | DAU | 5000±500 | 3500 | -3σ | ✅ 异常下降 |
-   | 转化率 | 5.2%±0.5% | 3.1% | -4.2σ | ✅ 异常下降 |
-   | 留存率 | 35%±3% | 34% | -0.3σ | ❌ 正常波动 |
-   ```
-
-3. **根因分析**
-   对每个异常指标，按以下维度排查：
-
-   ### 技术因素
-   - 是否有服务宕机/错误率上升？
-   - 是否有页面加载变慢？
-   - 是否有功能 bug？
-   - 是否有部署变更？
-
-   ### 产品因素
-   - 是否有功能下线/改版？
-   - 是否有 onboarding 流程变更？
-   - 是否有付费墙调整？
-
-   ### 外部因素
-   - 是否有竞品动作（降价/新品）？
-   - 是否有行业事件（政策/新闻）？
-   - 是否有季节性（节假日/学期）？
-   - 是否有流量来源变化（SEO 排名/广告预算）？
-
-   ### 数据因素
-   - 是否有埋点丢失/变更？
-   - 是否有数据管道延迟？
-   - 是否有统计口径变更？
-
-4. **影响面评估**
-   ```
-   | 异常指标 | 影响范围 | 影响用户数 | 影响收入 | 持续时间 |
-   |---------|---------|-----------|---------|---------|
-   | DAU 下降 | 全站 | -1500 | -¥3000/天 | 3 天 |
-   | 转化率下降 | 注册流程 | -200 转化 | -¥5000/天 | 2 天 |
+   | Metric | Baseline | Current | Deviation | Anomaly? |
+   |--------|----------|---------|-----------|----------|
+   | DAU | 5000±500 | 3500 | -3σ | ✅ Abnormal drop |
+   | Conversion rate | 5.2%±0.5% | 3.1% | -4.2σ | ✅ Abnormal drop |
+   | Retention rate | 35%±3% | 34% | -0.3σ | ❌ Normal fluctuation |
    ```
 
-5. **归因结论**
+3. **Root cause analysis**
+   For each anomalous metric, investigate along these dimensions:
+
+   ### Technical factors
+   - Any service downtime / error rate increase?
+   - Any page load slowdown?
+   - Any feature bug?
+   - Any deployment change?
+
+   ### Product factors
+   - Any feature sunset / redesign?
+   - Any onboarding flow change?
+   - Any paywall adjustment?
+
+   ### External factors
+   - Any competitor action (price cut / new product)?
+   - Any industry event (policy / news)?
+   - Any seasonality (holiday / school term)?
+   - Any traffic source change (SEO ranking / ad budget)?
+
+   ### Data factors
+   - Any tracking event loss / change?
+   - Any data pipeline delay?
+   - Any metric definition change?
+
+4. **Impact assessment**
    ```
-   异常: [指标] [下降/上升] [X%]
-   根因: [最可能的原因 + 置信度]
-   影响: [用户数/收入/时长]
-   建议: [修复/观察/忽略]
+   | Anomalous metric | Impact scope | Affected users | Affected revenue | Duration |
+   |------------------|--------------|----------------|------------------|----------|
+   | DAU drop | Whole site | -1500 | -¥3000/day | 3 days |
+   | Conversion drop | Sign-up flow | -200 conversions | -¥5000/day | 2 days |
    ```
 
-6. **产出异常报告**
-   写入 `docs/operations/anomaly-report.md`
-   重大异常同步到 `memory/knowledge-base.md` 的"踩坑记录"
+5. **Attribution conclusion**
+   ```
+   Anomaly: [metric] [dropped/rose] [X%]
+   Root cause: [most likely cause + confidence]
+   Impact: [users / revenue / duration]
+   Recommendation: [fix / observe / ignore]
+   ```
 
-## 异常优先级
+6. **Produce anomaly report**
+   Write to `docs/operations/anomaly-report.md`
+   Sync major anomalies to the "lessons learned" section of `memory/knowledge-base.md`
 
-| 优先级 | 定义 | 响应时间 |
-|--------|------|---------|
-| P0 | 核心指标异常（DAU/收入/转化） | 立即 |
-| P1 | 二级指标异常（留存/激活） | 24h 内 |
-| P2 | 三级指标异常（页面 PV/点击） | 观察即可 |
+## Anomaly priority
 
-## 禁止事项
-- 不用"感觉不正常"判断异常（用统计阈值）
-- 不只报告异常不归因（"指标降了"不是结论）
-- 不忽略数据因素（埋点丢失会让指标"假降"）
-- 不在未确认根因时盲目修复（可能修错）
+| Priority | Definition | Response time |
+|----------|------------|---------------|
+| P0 | Core metric anomaly (DAU / revenue / conversion) | Immediately |
+| P1 | Secondary metric anomaly (retention / activation) | Within 24h |
+| P2 | Tertiary metric anomaly (page PV / clicks) | Observe only |
 
-## 与 LOOP 的关系
-本 skill 不在 LOOP 内执行，是**监控工具**。
-异常检测可能触发 LOOP(experiment) 来验证修复方案。
+## Prohibitions
+- Don't judge anomalies by "feels off" (use statistical thresholds)
+- Don't report anomalies without attribution ("metric dropped" is not a conclusion)
+- Don't ignore data factors (tracking loss can cause "fake drops")
+- Don't blindly fix without confirming root cause (might fix the wrong thing)
 
-## 与 Workflow 的关系
-本 skill 是 **growth-review-workflow** 的组成部分。
+## Relationship to LOOP
+This skill does not run inside LOOP; it is a **monitoring tool**.
+Anomaly detection may trigger LOOP(experiment) to validate a fix.
+
+## Relationship to Workflow
+This skill is part of **growth-review-workflow**.

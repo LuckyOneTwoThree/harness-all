@@ -4,53 +4,54 @@ name: monitoring-deployment-workflow
 default_mode: standard
 ---
 
-# Workflow: 监控体系部署（Monitoring Deployment Workflow）
+# Workflow: Monitoring Deployment Workflow
 
-> 所属 LOOP 类型：provision
-> 触发场景：新服务上线需要配置监控、监控体系缺失需要搭建
-> 编排 Skill：monitoring-setup → alerting-rules → dashboard-design → deployment-verify
+> LOOP type: provision
+> Trigger scenarios: New service launch requiring monitoring configuration, monitoring system missing needs setup
+> Orchestration Skill: monitoring-setup → alerting-rules → dashboard-design → deployment-verify
 
-## 流程图
+## Flowchart
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│ 评估监控需求（读取 OPS_STRATEGY.md 监控告警矩阵）         │
+│ Assess monitoring requirements (read OPS_STRATEGY.md    │
+│ monitoring alerting matrix)                             │
 └───────────────────────────┬─────────────────────────────┘
                             ▼
           ┌─────────────────────────────────┐
-          │ monitoring-setup                 │  部署采集器+存储+可视化
+          │ monitoring-setup                 │  Deploy collector + storage + visualization
           │                                   │  Prometheus/Loki/Tempo/Grafana
           └─────────────────┬───────────────┘
                             ▼
           ┌─────────────────────────────────┐
-          │ alerting-rules                   │  生成告警规则
-          │                                   │  配置 Alertmanager 路由
-          │                                   │  定义抑制规则[质量门]
+          │ alerting-rules                   │  Generate alerting rules
+          │                                   │  Configure Alertmanager routing
+          │                                   │  Define inhibition rules [Quality Gate]
           └─────────────────┬───────────────┘
                             ▼
           ┌─────────────────────────────────┐
-          │ dashboard-design                 │  生成 Grafana Dashboard
-          │                                   │  黄金信号四件套
-          │                                   │  SLO 阈值线[质量门]
+          │ dashboard-design                 │  Generate Grafana Dashboard
+          │                                   │  Four golden signals
+          │                                   │  SLO threshold line [Quality Gate]
           └─────────────────┬───────────────┘
                             ▼
           ┌─────────────────────────────────┐
-          │ deployment-verify                 │  验证采集+查询+告警+可视化
+          │ deployment-verify                 │  Verify collection + query + alerting + visualization
           └─────────────────────────────────┘
 ```
 
-## 质量门控
+## Quality Gates
 
-| 门控点 | 检查内容 | 不通过处理 |
+| Gate | Checks | On Failure |
 |--------|---------|-----------|
-| 监控部署后 | Prometheus targets up + 日志可查 + 链路可追踪 | 修复采集配置 |
-| 告警规则生成后 | 每个告警有 runbook + 有严重度 + 有路由 | 补全告警元数据 |
-| Dashboard 生成后 | 黄金信号齐全 + SLO 阈值线标注 | 补全 Dashboard |
-| 最终验证 | 模拟告警可触发 + Dashboard 可访问 | 修复并重验 |
+| After monitoring deployment | Prometheus targets up + logs queryable + traces trackable | Fix collection config |
+| After alerting rules generation | Each alert has runbook + severity + routing | Supplement alert metadata |
+| After Dashboard generation | Golden signals complete + SLO threshold line marked | Supplement Dashboard |
+| Final validation | Simulated alert can trigger + Dashboard accessible | Fix and re-validate |
 
-## 使用方式
+## Usage
 
-对 Agent 说：
-- "为新服务配置监控" → 触发本 workflow
-- "部署 Prometheus + Grafana" → 从 monitoring-setup 开始
-- "配置告警规则" → 从 alerting-rules 开始
+Tell the Agent:
+- "Configure monitoring for new service" → Trigger this workflow
+- "Deploy Prometheus + Grafana" → Start from monitoring-setup
+- "Configure alerting rules" → Start from alerting-rules

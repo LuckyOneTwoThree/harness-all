@@ -1,21 +1,21 @@
 ---
 name: user-research-interview-assist
-description: 当需要设计用户访谈脚本、执行访谈后提取洞察、跨访谈聚类分析时使用。访谈辅助Pipeline。关键词：用户访谈、访谈脚本、访谈洞察、半结构化访谈、定性研究辅助、访谈提纲、访谈整理、跟用户聊什么。
+description: Used when designing user interview scripts, extracting insights after interviews, or conducting cross-interview clustering analysis. Interview Assist Pipeline. Keywords: user interview, interview script, interview insights, semi-structured interview, qualitative research assist, interview outline, interview synthesis, what to talk about with users.
 metadata:
-  module: "产品探索与发现"
-  sub-module: "用户研究"
+  module: "Product Discovery"
+  sub-module: "User Research"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["通用"]
+  domain_tags: ["General"]
   trigger_examples:
-    - "帮我准备访谈提纲"
-    - "访谈后怎么整理洞察"
-    - "用户访谈怎么做"
+    - "Help me prepare an interview outline"
+    - "How to synthesize insights after an interview"
+    - "How to conduct a user interview"
   interaction_mode: "human_ai_collaborate"
 execution_depth:
   default: standard
-  quick_description: "直接输出访谈提纲和关键问题"
-  deep_description: "完整辅助 + 访谈策略设计 + 追问逻辑树 + 数据分析框架"
+  quick_description: "Directly output interview outline and key questions"
+  deep_description: "Complete assist + interview strategy design + follow-up logic tree + data analysis framework"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -25,36 +25,36 @@ writes:
   - memory/progress.md
 ---
 
-# 访谈辅助
+# Interview Assist
 
-## 核心原则
+## Core Principles
 
-1. **人类主导AI辅助**——访谈执行由人类主导，AI负责脚本设计、转录分析和洞察提取，不可替代人类判断
-2. **脚本服务于目标不是目标本身**——访谈脚本是验证假设的工具，人类可基于现场判断偏离脚本追问，灵活性优先于完整性
-3. **追问比主问题更有价值**——主问题打开话题，追问挖掘深度，脚本必须包含追问策略和探针提示
-4. **访谈是验证不是探索**——访谈目标来自已有数据发现的假设，每场访谈必须回答"验证了什么/推翻了什么"
+1. **Human-led, AI-assisted** — Interview execution is human-led; AI is responsible for script design, transcription analysis, and insight extraction, and cannot replace human judgment
+2. **Scripts serve objectives, not themselves** — The interview script is a tool for validating hypotheses; humans can deviate from the script to follow up based on on-site judgment; flexibility takes priority over completeness
+3. **Follow-ups are more valuable than main questions** — Main questions open the topic, follow-ups dig deeper; scripts must include follow-up strategies and probe hints
+4. **Interviews are for validation, not exploration** — Interview objectives come from hypotheses discovered in existing data; each interview must answer "what was validated / what was refuted"
 
-## 交互模式
+## Interaction Mode
 
-👤→🤖 **人类AI协作** — 人类主导访谈执行，AI负责脚本设计、转录分析和洞察提取
+👤→🤖 **Human-AI Collaboration** — Human leads interview execution, AI is responsible for script design, transcription analysis, and insight extraction
 
 ---
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| persona.json | JSON | ○ | docs/discovery/user-research.md（追加“用户画像”章节） | 用户画像数据，用于定向访谈对象和脚本设计 |
-| research_objectives | object | 是 | 用户提供 | 研究目标，定义本次访谈要验证的假设和探索的方向 |
-| interview_config | object | 是 | 用户提供 | 访谈配置（目标人数、时长、形式、录音可用性） |
-| voice-analysis.json | JSON | ○ | docs/discovery/user-research.md（追加“用户声音分析”章节） | 用户声音分析数据 |
-| behavior-analysis.json | JSON | ○ | docs/discovery/user-research.md（追加“用户行为分析”章节） | 行为分析数据 |
+| persona.json | JSON | ○ | docs/discovery/user-research.md (append "User Persona" section) | User persona data, used for targeting interview subjects and script design |
+| research_objectives | object | Yes | User provided | Research objectives, defining hypotheses to validate and directions to explore in this interview |
+| interview_config | object | Yes | User provided | Interview config (target count, duration, format, recording availability) |
+| voice-analysis.json | JSON | ○ | docs/discovery/user-research.md (append "User Voice Analysis" section) | User voice analysis data |
+| behavior-analysis.json | JSON | ○ | docs/discovery/user-research.md (append "User Behavior Analysis" section) | Behavior analysis data |
 
-### 输入格式
+### Input Format
 
 ```json
 {
-  "persona_path": "docs/discovery/user-research.md（追加“用户画像”章节）
+  "persona_path": "docs/discovery/user-research.md (append \"User Persona\" section)
   "research_objectives": {
     "primary_questions": ["string"],
     "hypotheses_to_validate": ["string"],
@@ -67,160 +67,160 @@ writes:
     "recording_available": "boolean"
   },
   "existing_analysis": {
-    "voice_analysis_path": "docs/discovery/user-research.md（追加“用户声音分析”章节）
-    "behavior_analysis_path": "docs/discovery/user-research.md（追加“用户行为分析”章节）
+    "voice_analysis_path": "docs/discovery/user-research.md (append \"User Voice Analysis\" section)
+    "behavior_analysis_path": "docs/discovery/user-research.md (append \"User Behavior Analysis\" section)
   }
 }
 ```
 
-**输入依赖**：
-- `persona.json`（如已生成）：用于定向访谈对象和脚本设计
-- 研究目标（人类输入）：定义本次访谈要验证的假设和探索的方向
-- voice-analysis.json / behavior-analysis.json：提供待验证的数据发现
+**Input Dependencies**:
+- `persona.json` (if generated): Used for targeting interview subjects and script design
+- Research objectives (human input): Define hypotheses to validate and directions to explore in this interview
+- voice-analysis.json / behavior-analysis.json: Provide data findings to be validated
 
 ---
 
-## 执行步骤
+## Execution Steps
 
-### 阶段一：访谈前准备（AI生成，人类确认）
+### Phase 1: Pre-Interview Preparation (AI generates, human confirms)
 
-#### Step 1：生成目标清单
+#### Step 1: Generate Objective List
 
-- 基于研究目标和已有数据分析结果，生成访谈目标清单
-- 每个目标标注：
-  - 来源假设（来自哪个数据发现或推断）
-  - 验证方式（直接提问 / 行为观察 / 投射技术）
-  - 优先级（必须验证 / 建议验证 / 可选探索）
-- 识别已有数据中的矛盾点，列为重点验证目标
-- 输出：访谈目标清单
+- Based on research objectives and existing data analysis results, generate an interview objective list
+- Each objective annotated with:
+  - Source hypothesis (from which data finding or inference)
+  - Validation method (direct questioning / behavior observation / projective technique)
+  - Priority (must validate / should validate / optional explore)
+- Identify contradictions in existing data, list as priority validation objectives
+- Output: Interview objective list
 
-#### Step 2：生成半结构化访谈脚本
+#### Step 2: Generate Semi-Structured Interview Script
 
-- 基于目标清单生成半结构化脚本，包含：
-  - **开场**：破冰问题，建立信任
-  - **核心模块**：按目标优先级排列的问题组
-  - **每个问题**：
-    - 主问题（开放式）
-    - 追问策略（2-3个方向性追问）
-    - 探针提示（当用户回答模糊时的引导方向）
-    - 对应目标（该问题验证哪个假设）
-  - **收尾**：开放性问题，让用户补充
-- 脚本设计原则：
-  - 先行为后态度（先问做了什么，再问怎么想）
-  - 先具体后抽象（先问具体场景，再问一般观点）
-  - 避免引导性问题
-- 输出：interview-script.json
+- Based on the objective list, generate a semi-structured script, including:
+  - **Opening**: Icebreaker questions, build trust
+  - **Core Modules**: Question groups arranged by objective priority
+  - **Each Question**:
+    - Main question (open-ended)
+    - Follow-up strategy (2-3 directional follow-ups)
+    - Probe hints (guidance directions when user answers are vague)
+    - Corresponding objective (which hypothesis this question validates)
+  - **Closing**: Open-ended question, let user supplement
+- Script design principles:
+  - Behavior before attitude (ask what they did first, then what they think)
+  - Specific before abstract (ask about specific scenarios first, then general opinions)
+  - Avoid leading questions
+- Output: interview-script.json
 
-#### Step 3：推荐访谈对象
+#### Step 3: Recommend Interview Subjects
 
-- 基于Persona推荐访谈对象特征：
-  - 优先覆盖不同Persona类型
-  - 优先选择数据中有矛盾行为的用户
-  - 优先选择voice-analysis中高频痛点的反馈者
-- 推荐人数：目标Persona数 × 3-5人
-- 输出：推荐访谈对象列表
+- Based on Persona, recommend interview subject characteristics:
+  - Prioritize covering different Persona types
+  - Prioritize users with contradictory behaviors in the data
+  - Prioritize feedback providers of high-frequency pains in voice-analysis
+- Recommended count: Number of target Personas × 3-5 people
+- Output: Recommended interview subject list
 
-### 阶段二：访谈执行（人类主导）
+### Phase 2: Interview Execution (Human-led)
 
-- 人类按脚本执行访谈
-- AI不参与实时访谈过程
-- 人类可偏离脚本追问（鼓励基于现场判断的追问）
-- 建议录音（需征得受访者同意）
+- Human executes interview according to script
+- AI does not participate in real-time interview process
+- Human can deviate from script to follow up (follow-ups based on on-site judgment are encouraged)
+- Recording recommended (with respondent consent)
 
-### 阶段三：访谈后分析（AI辅助）
+### Phase 3: Post-Interview Analysis (AI-assisted)
 
-#### Step 4：转录与结构化
+#### Step 4: Transcription and Structuring
 
-- 如有录音，AI辅助转录
-- 将访谈内容按主题结构化整理
-- 标注关键引用（原声）
-- 输出：结构化访谈记录
+- If recording is available, AI assists with transcription
+- Structure interview content by theme
+- Annotate key quotes (verbatim)
+- Output: Structured interview record
 
-#### Step 5：关键洞察提取
+#### Step 5: Key Insight Extraction
 
-- 从每场访谈中提取关键洞察：
-  - **验证的假设**：哪些假设被访谈数据支持
-  - **推翻的假设**：哪些假设被访谈数据否定
-  - **新发现**：访谈中出现的未预期发现
-  - **用户原声**：支撑每个洞察的代表性引用
-- 每个洞察标注置信度
-- 区分：直接陈述（用户明确说） vs 推断（从行为描述推断）
-- 输出：洞察列表
+- Extract key insights from each interview:
+  - **Validated hypotheses**: Which hypotheses are supported by interview data
+  - **Refuted hypotheses**: Which hypotheses are negated by interview data
+  - **New discoveries**: Unexpected findings that emerged during interviews
+  - **User quotes**: Representative quotes supporting each insight
+- Annotate each insight with confidence
+- Distinguish: Direct statement (user explicitly said) vs inference (inferred from behavior description)
+- Output: Insight list
 
-#### Step 6：跨访谈聚类
+#### Step 6: Cross-Interview Clustering
 
-- 将多场访谈的洞察进行跨访谈聚类
-- 识别跨访谈的共同模式（多个受访者独立提及）
-- 识别独特但有价值的洞察（仅一人提及但深度高）
-- 评估每个聚类的饱和度（是否需要更多访谈）
-- 输出：跨访谈洞察聚类
+- Cluster insights across multiple interviews
+- Identify cross-interview common patterns (independently mentioned by multiple respondents)
+- Identify unique but valuable insights (only one person mentioned but high depth)
+- Assess saturation of each cluster (whether more interviews are needed)
+- Output: Cross-interview insight clusters
 
-#### Step 7：更新Persona
+#### Step 7: Update Persona
 
-- 基于访谈发现更新Persona：
-  - 补充或修正Persona特征
-  - 提升低置信度字段的置信度（如访谈验证了推断）
-  - 降低被推翻假设的置信度
-  - 新增访谈中发现的新特征
-- 标注更新来源：`interview-validated` / `interview-revised` / `interview-discovered`
-- 输出：更新后的persona.json
+- Update Persona based on interview findings:
+  - Supplement or correct Persona features
+  - Increase confidence in low-confidence fields (if interview validated inferences)
+  - Decrease confidence in refuted hypotheses
+  - Add new features discovered in interviews
+- Annotate update source: `interview-validated` / `interview-revised` / `interview-discovered`
+- Output: Updated persona.json
 
 ---
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 访谈提纲和关键问题 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整辅助 + 访谈策略设计 + 追问逻辑树 + 数据分析框架 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Interview outline and key questions | Core conclusions + minimum viable deliverable |
+| standard | Complete deliverable (current default) | Complete deliverable, including all Step outputs |
+| deep | Complete assist + interview strategy design + follow-up logic tree + data analysis framework | Complete deliverable + extended analysis + in-depth reasoning |
 
-## 输出
+## Output
 
 ### interview-script.json
 
-输出文件：`docs/discovery/user-research.md（追加“访谈脚本记录”章节）`
+Output file: `docs/discovery/user-research.md (append "Interview Script Record" section)`
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["script_id", "research_objectives", "core_modules"],
   "properties": {
-    "script_id": {"type": "string", "description": "访谈脚本唯一标识"},
-    "research_objectives": {"type": "array", "description": "研究目标列表"},
-    "target_personas": {"type": "array", "description": "目标Persona类型列表"},
-    "opening": {"type": "object", "description": "开场模块，含破冰问题和背景设定"},
-    "core_modules": {"type": "array", "description": "核心问题模块列表"},
-    "closing": {"type": "object", "description": "收尾模块"},
-    "recommended_participants": {"type": "array", "description": "推荐访谈对象列表"}
+    "script_id": {"type": "string", "description": "Unique interview script identifier"},
+    "research_objectives": {"type": "array", "description": "Research objective list"},
+    "target_personas": {"type": "array", "description": "Target Persona type list"},
+    "opening": {"type": "object", "description": "Opening module, includes icebreaker questions and context setting"},
+    "core_modules": {"type": "array", "description": "Core question module list"},
+    "closing": {"type": "object", "description": "Closing module"},
+    "recommended_participants": {"type": "array", "description": "Recommended interview subject list"}
   }
 }
 ```
 
-**输出校验规则**：
+**Output Validation Rules**:
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| script_id | string | 是 | 脚本唯一标识 |
-| research_objectives | string[] | 是 | 研究目标列表，不可为空 |
-| target_personas | string[] | 否 | 目标Persona类型列表 |
-| opening.icebreaker_questions | string[] | 是 | 破冰问题列表 |
-| opening.context_setting | string | 是 | 背景设定描述 |
-| core_modules | array | 是 | 核心问题模块列表，不可为空 |
-| core_modules[].module_name | string | 是 | 模块名称 |
-| core_modules[].objective | string | 是 | 模块目标 |
-| core_modules[].hypothesis_to_validate | string | 是 | 待验证假设 |
-| core_modules[].priority | string | 是 | 优先级枚举：must_validate/should_validate/optional |
-| core_modules[].questions | array | 是 | 问题列表，每个核心问题≥2个追问方向 |
-| core_modules[].questions[].main_question | string | 是 | 主问题（开放式） |
-| core_modules[].questions[].follow_up_strategies | string[] | 是 | 追问策略，≥2个方向 |
-| core_modules[].questions[].probes | string[] | 是 | 探针提示 |
-| closing.open_ended_question | string | 是 | 收尾开放性问题 |
-| recommended_participants | array | 否 | 推荐访谈对象列表 |
-| recommended_participants[].persona_type | string | 是 | Persona类型 |
-| recommended_participants[].priority | string | 是 | 优先级枚举：high/medium/low |
+| script_id | string | Yes | Unique script identifier |
+| research_objectives | string[] | Yes | Research objective list, cannot be empty |
+| target_personas | string[] | No | Target Persona type list |
+| opening.icebreaker_questions | string[] | Yes | Icebreaker question list |
+| opening.context_setting | string | Yes | Context setting description |
+| core_modules | array | Yes | Core question module list, cannot be empty |
+| core_modules[].module_name | string | Yes | Module name |
+| core_modules[].objective | string | Yes | Module objective |
+| core_modules[].hypothesis_to_validate | string | Yes | Hypothesis to validate |
+| core_modules[].priority | string | Yes | Priority enum: must_validate/should_validate/optional |
+| core_modules[].questions | array | Yes | Question list, each core question ≥2 follow-up directions |
+| core_modules[].questions[].main_question | string | Yes | Main question (open-ended) |
+| core_modules[].questions[].follow_up_strategies | string[] | Yes | Follow-up strategies, ≥2 directions |
+| core_modules[].questions[].probes | string[] | Yes | Probe hints |
+| closing.open_ended_question | string | Yes | Closing open-ended question |
+| recommended_participants | array | No | Recommended interview subject list |
+| recommended_participants[].persona_type | string | Yes | Persona type |
+| recommended_participants[].priority | string | Yes | Priority enum: high/medium/low |
 
 ```json
 {
@@ -265,48 +265,48 @@ writes:
 
 ### interview-insights.json
 
-输出文件：`docs/discovery/user-research.md（追加“访谈脚本记录”章节）`
+Output file: `docs/discovery/user-research.md (append "Interview Script Record" section)`
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["interviews_conducted", "validated_hypotheses", "new_discoveries", "metadata"],
   "properties": {
-    "interviews_conducted": {"type": "number", "description": "已执行访谈数量"},
-    "validated_hypotheses": {"type": "array", "description": "已验证的假设列表"},
-    "refuted_hypotheses": {"type": "array", "description": "被推翻的假设列表"},
-    "new_discoveries": {"type": "array", "description": "新发现列表"},
-    "cross_interview_patterns": {"type": "array", "description": "跨访谈共同模式列表"},
-    "persona_updates": {"type": "array", "description": "Persona更新列表"},
-    "data_cross_validation": {"type": "object", "description": "与已有数据的交叉验证结果"},
-    "metadata": {"type": "object", "description": "分析元数据，含时间戳和整体置信度"}
+    "interviews_conducted": {"type": "number", "description": "Number of interviews conducted"},
+    "validated_hypotheses": {"type": "array", "description": "List of validated hypotheses"},
+    "refuted_hypotheses": {"type": "array", "description": "List of refuted hypotheses"},
+    "new_discoveries": {"type": "array", "description": "List of new discoveries"},
+    "cross_interview_patterns": {"type": "array", "description": "List of cross-interview common patterns"},
+    "persona_updates": {"type": "array", "description": "List of Persona updates"},
+    "data_cross_validation": {"type": "object", "description": "Cross-validation results with existing data"},
+    "metadata": {"type": "object", "description": "Analysis metadata, including timestamp and overall confidence"}
   }
 }
 ```
 
-**输出校验规则**：
+**Output Validation Rules**:
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| interviews_conducted | number | 是 | 已执行访谈数量，须≥1 |
-| validated_hypotheses | array | 是 | 已验证假设列表，每项须含hypothesis、supporting_evidence、supporting_quotes、interview_count、confidence |
-| validated_hypotheses[].confidence | number | 是 | 验证置信度，0-1 |
-| refuted_hypotheses | array | 是 | 被推翻假设列表，每项须含hypothesis、refuting_evidence、refuting_quotes、interview_count、confidence |
-| refuted_hypotheses[].confidence | number | 是 | 推翻置信度，0-1 |
-| new_discoveries | array | 是 | 新发现列表，每项须含discovery、evidence、quotes、interview_count、confidence、needs_further_validation |
-| new_discoveries[].needs_further_validation | boolean | 是 | 是否需要进一步验证 |
-| new_discoveries[].confidence | number | 是 | 发现置信度，0-1 |
-| cross_interview_patterns | array | 否 | 跨访谈模式列表，每项须含pattern、frequency、interview_ids、confidence、saturation_level |
-| cross_interview_patterns[].saturation_level | string | 是 | 饱和度枚举：saturated/near_saturated/needs_more |
-| persona_updates | array | 否 | Persona更新列表，每项须含persona_id、updates |
-| persona_updates[].updates[].update_type | string | 是 | 更新类型枚举：interview-validated/interview-revised/interview-discovered |
-| data_cross_validation | object | 否 | 交叉验证结果，须含consistent_with_voice_analysis、consistent_with_behavior_analysis、contradictions_found |
-| metadata.analysis_timestamp | string | 是 | 分析时间戳 |
-| metadata.total_interviews | number | 是 | 访谈总数 |
-| metadata.total_insights | number | 是 | 洞察总数 |
-| metadata.confidence_overall | number | 是 | 整体置信度，0-1 |
+| interviews_conducted | number | Yes | Number of interviews conducted, must be ≥1 |
+| validated_hypotheses | array | Yes | Validated hypothesis list, each item must include hypothesis, supporting_evidence, supporting_quotes, interview_count, confidence |
+| validated_hypotheses[].confidence | number | Yes | Validation confidence, 0-1 |
+| refuted_hypotheses | array | Yes | Refuted hypothesis list, each item must include hypothesis, refuting_evidence, refuting_quotes, interview_count, confidence |
+| refuted_hypotheses[].confidence | number | Yes | Refutation confidence, 0-1 |
+| new_discoveries | array | Yes | New discovery list, each item must include discovery, evidence, quotes, interview_count, confidence, needs_further_validation |
+| new_discoveries[].needs_further_validation | boolean | Yes | Whether further validation is needed |
+| new_discoveries[].confidence | number | Yes | Discovery confidence, 0-1 |
+| cross_interview_patterns | array | No | Cross-interview pattern list, each item must include pattern, frequency, interview_ids, confidence, saturation_level |
+| cross_interview_patterns[].saturation_level | string | Yes | Saturation enum: saturated/near_saturated/needs_more |
+| persona_updates | array | No | Persona update list, each item must include persona_id, updates |
+| persona_updates[].updates[].update_type | string | Yes | Update type enum: interview-validated/interview-revised/interview-discovered |
+| data_cross_validation | object | No | Cross-validation results, must include consistent_with_voice_analysis, consistent_with_behavior_analysis, contradictions_found |
+| metadata.analysis_timestamp | string | Yes | Analysis timestamp |
+| metadata.total_interviews | number | Yes | Total interviews |
+| metadata.total_insights | number | Yes | Total insights |
+| metadata.confidence_overall | number | Yes | Overall confidence, 0-1 |
 
 ```json
 {
@@ -386,76 +386,76 @@ writes:
 
 ---
 
-## 决策规则
+## Decision Rules
 
-| 条件 | 动作 |
+| Condition | Action |
 |------|------|
-| 推断需求置信度 < 0.5 | 标记"需人类验证"，不直接更新Persona |
-| 访谈发现与已有数据矛盾 | 记录矛盾，标记"需仲裁"，列出双方证据 |
-| 跨访谈聚类饱和度不足 | 建议增加访谈数量，标注"需补充验证" |
-| 新发现仅1人提及 | 标记"孤立发现"，置信度上限0.4，建议验证 |
-| 访谈脚本偏离原目标 | 人类决策是否调整研究目标 |
+| Inferred need confidence < 0.5 | Flag "needs human validation", do not directly update Persona |
+| Interview findings contradict existing data | Record contradiction, flag "needs arbitration", list evidence from both sides |
+| Cross-interview clustering saturation insufficient | Recommend increasing interview count, flag "needs supplementary validation" |
+| New discovery mentioned by only 1 person | Flag "isolated finding", confidence ceiling 0.4, recommend validation |
+| Interview script deviates from original objective | Human decides whether to adjust research objectives |
 
 ---
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 脚本包含追问策略（每个核心问题 ≥ 2个追问方向）
-- [ ] 洞察与已有数据做了印证/矛盾分析（每个洞察有cross_validation记录）
+- [ ] Script includes follow-up strategies (each core question ≥ 2 follow-up directions)
+- [ ] Insights cross-validated/contradicted with existing data (each insight has cross_validation record)
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 访谈对象覆盖主要Persona（每个高优先级Persona ≥ 3人）
-- [ ] 每个洞察有原声支撑（每个洞察 ≥ 1条引用）
-- [ ] 所有输出标注置信度（100%）
-- [ ] 非引导性问题检查（核心问题无引导性表述）
+- [ ] Interview subjects cover major Personas (each high-priority Persona ≥ 3 people)
+- [ ] Each insight has quote support (each insight ≥ 1 quote)
+- [ ] All outputs annotated with confidence (100%)
+- [ ] Non-leading question check (core questions have no leading phrasing)
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (must pass for deep only)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (in-depth reasoning and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-当上游文件不存在时，本Skill仍可独立执行：
+When upstream files do not exist, this Skill can still execute independently:
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Instructions |
 |---------------|---------|---------|------------|
-| persona.json | 用户提供研究目标和用户描述 → 基于描述生成访谈脚本，标注"缺乏Persona数据定向" | target_personas为空，recommended_participants基于推断，访谈对象定向精度降低 | 要求用户提供目标用户画像描述或上传persona.json文件 |
-| voice-analysis.json / behavior-analysis.json | 基于用户提供的研究目标直接生成脚本，标注"缺乏数据验证假设" | hypothesis_to_validate基于用户描述而非数据发现，data_cross_validation缺失 | 要求用户提供用户反馈文本和行为数据，或上传对应json文件 |
-| 所有上游文件均缺失 | 提示用户先执行前序阶段，或基于用户口头描述的研究目标生成轻量版访谈脚本 | 脚本为纯探索性设计，验证性假设缺失，整体置信度降低 | 要求用户提供研究目标、假设和目标用户特征描述 |
-| 若用户未提供research_objectives | 提示用户提供研究目标，否则无法设计定向访谈脚本 | 无法生成interview-script.json，流程中断 | 要求用户提供研究目标（如"了解用户付费决策因素"） |
-| 若用户未提供interview_config | 提示用户提供访谈配置，否则使用默认配置（目标人数：5，时长：45分钟，形式：视频，录音可用） | 使用默认配置，访谈安排可能不符合实际条件 | 要求用户提供目标访谈人数、时长、形式等配置信息 |
+| persona.json | User provides research objectives and user description → generate interview script based on description, flag "lacks Persona data targeting" | target_personas empty, recommended_participants based on inference, interview subject targeting precision reduced | Require user to provide target user persona description or upload persona.json file |
+| voice-analysis.json / behavior-analysis.json | Generate script directly based on user-provided research objectives, flag "lacks data validation hypotheses" | hypothesis_to_validate based on user description rather than data findings, data_cross_validation missing | Require user to provide user feedback text and behavior data, or upload corresponding json files |
+| All upstream files missing | Prompt user to execute prior stages first, or generate lightweight interview script based on user's verbally described research objectives | Script is purely exploratory design, validation hypotheses missing, overall confidence reduced | Require user to provide research objectives, hypotheses, and target user feature descriptions |
+| If user does not provide research_objectives | Prompt user to provide research objectives, otherwise cannot design targeted interview script | Cannot generate interview-script.json, process interrupted | Require user to provide research objectives (e.g. "understand user payment decision factors") |
+| If user does not provide interview_config | Prompt user to provide interview config, otherwise use default config (target count: 5, duration: 45 minutes, format: video, recording available) | Uses default config, interview arrangement may not match actual conditions | Require user to provide target interview count, duration, format, and other config info |
 
-## 数据获取说明
+## Data Acquisition Instructions
 
-本Skill需要Persona和用户研究数据，请通过以下方式之一提供：
-  1. 直接描述研究目标、假设和目标用户特征
-  2. 上传persona.json / voice-analysis.json / behavior-analysis.json文件
-  3. 提供数据文件路径
-- AI不负责外部数据采集，仅负责分析
+This Skill requires Persona and user research data. Please provide via one of the following methods:
+  1. Directly describe research objectives, hypotheses, and target user features
+  2. Upload persona.json / voice-analysis.json / behavior-analysis.json files
+  3. Provide data file paths
+- AI is not responsible for external data collection, only analysis
 
 ---
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响
+### Upstream Change Impact
 
-| 上游Skill | 变更类型 | 影响范围 | 响应动作 |
+| Upstream Skill | Change Type | Impact Scope | Response Action |
 |-----------|---------|---------|---------|
-| user-research-user-modeling | persona.json结构变更 | Persona字段映射变化 | 检查输入字段映射，适配新结构，不兼容时标记"上游数据格式异常" |
-| user-research-user-modeling | persona.json内容更新 | Persona特征、痛点、JTBD变化 | 重新生成访谈脚本和推荐对象，标注"基于更新Persona重建" |
-| user-research-voice-analysis | voice-analysis.json结构变更 | 痛点、主题数据格式变化 | 检查输入字段映射，适配新结构，不兼容时标记"上游数据格式异常" |
-| user-research-voice-analysis | voice-analysis.json内容更新 | 痛点等级、情感分布变化 | 更新待验证假设清单，标注"基于更新数据调整假设" |
-| user-research-behavior-analysis | behavior-analysis.json结构变更 | 行为分群、Aha Moment数据格式变化 | 检查输入字段映射，适配新结构，不兼容时标记"上游数据格式异常" |
-| user-research-behavior-analysis | behavior-analysis.json内容更新 | 漏斗、路径、异常检测结果变化 | 更新待验证假设清单，标注"基于更新数据调整假设" |
+| user-research-user-modeling | persona.json structure change | Persona field mapping changes | Check input field mapping, adapt to new structure, flag "upstream data format exception" if incompatible |
+| user-research-user-modeling | persona.json content update | Persona features, pains, JTBD changes | Regenerate interview script and recommended subjects, flag "rebuilt based on updated Persona" |
+| user-research-voice-analysis | voice-analysis.json structure change | Pains, themes data format changes | Check input field mapping, adapt to new structure, flag "upstream data format exception" if incompatible |
+| user-research-voice-analysis | voice-analysis.json content update | Pain levels, sentiment distribution changes | Update hypotheses to validate list, flag "adjusted hypotheses based on updated data" |
+| user-research-behavior-analysis | behavior-analysis.json structure change | Behavior segments, Aha Moment data format changes | Check input field mapping, adapt to new structure, flag "upstream data format exception" if incompatible |
+| user-research-behavior-analysis | behavior-analysis.json content update | Funnel, paths, anomaly detection results changes | Update hypotheses to validate list, flag "adjusted hypotheses based on updated data" |
 
-### 下游通知机制
+### Downstream Notification Mechanism
 
-| 下游Skill | 通知触发条件 | 通知方式 | 通知内容 |
+| Downstream Skill | Notification Trigger Condition | Notification Method | Notification Content |
 |-----------|------------|---------|---------|
-| user-research-report | interview-insights.json更新完成 | 写入output文件 | 通知访谈洞察和Persona更新数据已就绪，可用于报告生成 |
+| user-research-report | interview-insights.json update complete | Write to output file | Notify that interview insights and Persona update data are ready for report generation |

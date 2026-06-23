@@ -1,9 +1,9 @@
 ---
 name: experiment-design
-description: 设计实验方案，含变量/对照/主指标/护栏指标/受众/分流比例
+description: Design experiment plans, including variables / control / primary metric / guardrail metrics / audience / split ratio
 triggers:
-  - 假设已通过ICE排序，需要设计实验方案时
-  - 增长实验Loop的PLAN阶段，ice-scoring之后
+  - When hypotheses have been ICE-ranked and an experiment plan needs to be designed
+  - PLAN phase of the growth experiment Loop, after ice-scoring
 reads:
   - loops/specs/<experiment>/spec.md
   - loops/LOOP.md
@@ -15,74 +15,74 @@ quality_gates: []
 max_iterations: 3
 ---
 
-# Experiment Design — 实验设计
+# Experiment Design — Experiment Design
 
-## 铁律
-- 每个实验必须有且只有一个**主指标**——多主指标会导致结论混乱
-- 必须设置**护栏指标**——防止实验副作用（如提升转化但损害留存）
-- 必须定义**证伪条件**——什么结果会推翻假设
-- 破坏性实验（可能降低核心指标）必须有人工兜底方案
+## Iron Rules
+- Each experiment must have exactly one **primary metric** — multiple primary metrics lead to confused conclusions
+- Must set **guardrail metrics** — to prevent experiment side effects (e.g., lifting conversion but hurting retention)
+- Must define **falsification conditions** — what results would overturn the hypothesis
+- Destructive experiments (that may lower core metrics) must have a manual fallback plan
 
-## 流程
+## Process
 
-1. **确认实验假设**
-   从 spec.md 读取 ICE 排序第一的假设，确认：
-   - 假设陈述（如果X，那么Y，因为Z）
-   - 主指标（假设要影响的指标）
-   - 护栏指标（需监控的副作用指标）
+1. **Confirm experiment hypothesis**
+   From spec.md, read the top-ranked hypothesis by ICE, confirm:
+   - Hypothesis statement (if X, then Y, because Z)
+   - Primary metric (the metric the hypothesis is intended to affect)
+   - Guardrail metrics (side-effect metrics to monitor)
 
-2. **设计变量与对照**
-   - **对照组（Control）**：当前版本（status quo）
-   - **实验组（Variant）**：应用假设的改动
-   - 明确改动内容：UI/逻辑/文案/流程/算法
-   - 如有多变量，拆为多个实验（避免混杂变量）
+2. **Design variables and control**
+   - **Control group**: current version (status quo)
+   - **Variant group**: apply the hypothesis change
+   - Specify the change: UI / logic / copy / flow / algorithm
+   - If there are multiple variables, split into multiple experiments (avoid confounding variables)
 
-3. **定义指标体系**
+3. **Define metric system**
    ```
-   主指标（Primary Metric）:
-     - 名称: [如"注册转化率"]
-     - 定义: [完成注册的用户数/访问注册页的用户数]
-     - 基线值: [当前值，如 35%]
-     - 目标值: [期望值，如 40%]
-     - 最小可检测效应(MDE): [如 3%]
+   Primary Metric:
+     - Name: [e.g., "sign-up conversion rate"]
+     - Definition: [users who completed sign-up / users who visited the sign-up page]
+     - Baseline value: [current value, e.g., 35%]
+     - Target value: [expected value, e.g., 40%]
+     - Minimum Detectable Effect (MDE): [e.g., 3%]
 
-   护栏指标（Guardrail Metrics）:
-     - [指标1]: [如"次日留存率"，阈值: 不低于基线-1%]
-     - [指标2]: [如"页面加载时间"，阈值: 不超过基线+200ms]
-     - [指标3]: [如"退订率"，阈值: 不超过基线+0.5%]
+   Guardrail Metrics:
+     - [Metric 1]: [e.g., "day-1 retention rate", threshold: not lower than baseline - 1%]
+     - [Metric 2]: [e.g., "page load time", threshold: not exceeding baseline + 200ms]
+     - [Metric 3]: [e.g., "unsubscribe rate", threshold: not exceeding baseline + 0.5%]
 
-   辅助指标（Secondary Metrics，可选）:
-     - [用于深度分析的分群指标]
-   ```
-
-4. **确定受众与分流**
-   - **受众定义**：实验影响哪些用户（全部/新用户/某分群）
-   - **分流比例**：对照组 50% / 实验组 50%（标准），或小流量先试（如 5%）
-   - **分层策略**：如需按用户分层（设备/地区/新老），声明分层维度
-   - **互斥规则**：与在跑实验是否互斥
-
-5. **调用 sample-size-calc**
-   基于主指标的基线值、MDE、显著性水平、统计功效，计算所需样本量和实验时长。
-   将计算结果写入 spec.md。
-
-6. **设计实验时间线**
-   ```
-   实验开始: [日期]
-   预计结束: [开始日期 + 实验时长]
-   最短运行周期: [如 7 天，避免周期性偏差]
-   决策检查点: [如达到样本量后第 3 天检查显著性]
+   Secondary Metrics (optional):
+     - [Segment metrics for deeper analysis]
    ```
 
-7. **设计兜底方案**（破坏性实验必填）
-   - 什么情况立即停止实验（如护栏指标触发红线）
-   - 实验失败后的回滚方案
-   - 实验期间的监控频率
+4. **Determine audience and split**
+   - **Audience definition**: which users the experiment affects (all / new users / a segment)
+   - **Split ratio**: control 50% / variant 50% (standard), or small-traffic pilot first (e.g., 5%)
+   - **Layering strategy**: if user layering is needed (device / region / new vs existing), declare the layering dimension
+   - **Mutual exclusion rules**: whether mutually exclusive with running experiments
 
-8. **写入 spec.md**
-   将完整实验方案写入 spec.md 的"实验设计"章节
+5. **Call sample-size-calc**
+   Based on the primary metric's baseline, MDE, significance level, and statistical power, calculate the required sample size and experiment duration.
+   Write the result to spec.md.
 
-9. **初始化 state.yaml**
-   创建 `loops/specs/<experiment>/state.yaml`：
+6. **Design experiment timeline**
+   ```
+   Experiment start: [date]
+   Expected end: [start date + experiment duration]
+   Minimum run period: [e.g., 7 days, to avoid cyclicality bias]
+   Decision checkpoint: [e.g., check significance 3 days after reaching sample size]
+   ```
+
+7. **Design fallback plan (required for destructive experiments)**
+   - Conditions to stop the experiment immediately (e.g., guardrail metric triggers red line)
+   - Rollback plan if the experiment fails
+   - Monitoring frequency during the experiment
+
+8. **Write to spec.md**
+   Write the full experiment plan to the "Experiment Design" section of spec.md
+
+9. **Initialize state.yaml**
+   Create `loops/specs/<experiment>/state.yaml`:
    ```yaml
    current_task: <NNN>-<experiment-name>
    iteration: 0
@@ -93,25 +93,25 @@ max_iterations: 3
    substage: "experiment-design"
    ```
 
-## 实验设计质量检查
+## Experiment design quality check
 
-- [ ] 主指标是否唯一且可量化？
-- [ ] 护栏指标是否覆盖主要副作用风险？
-- [ ] MDE 是否现实？（过小导致需要巨量样本，过大致使漏掉真实效应）
-- [ ] 分流是否随机且无偏？（避免 SRM）
-- [ ] 实验时长是否覆盖完整周期？（至少 7 天，避免周末/工作日偏差）
-- [ ] 破坏性实验是否有兜底方案？
+- [ ] Is the primary metric unique and quantifiable?
+- [ ] Do guardrail metrics cover the main side-effect risks?
+- [ ] Is the MDE realistic? (Too small requires huge sample; too large misses real effects)
+- [ ] Is the split random and unbiased? (Avoid SRM)
+- [ ] Does the experiment duration cover a full cycle? (At least 7 days, to avoid weekend/weekday bias)
+- [ ] Does the destructive experiment have a fallback plan?
 
-## 禁止事项
-- 不设计多主指标实验（结论会混乱）
-- 不省略护栏指标（可能放大数据副作用）
-- 不设计过短的实验（少于 7 天，周期性偏差大）
-- 不设计无兜底的破坏性实验（风险不可控）
+## Prohibitions
+- Don't design experiments with multiple primary metrics (conclusions will be confused)
+- Don't omit guardrail metrics (may amplify data side effects)
+- Don't design overly short experiments (less than 7 days, high cyclicality bias)
+- Don't design destructive experiments without a fallback (uncontrollable risk)
 
-## 与 LOOP 的关系
-本 skill 在 LOOP 的 **PLAN 阶段**执行，是 PLAN 的最后一步。
+## Relationship to LOOP
+This skill runs in the **PLAN phase** of LOOP; it is the last step of PLAN.
 PLAN(hypothesis-generation → ice-scoring → experiment-design) → EXPERIMENT → MEASURE
 
-## 与 Workflow 的关系
-本 skill 是 **growth-experiment-workflow** 的第 3 步。
-完成后进入 EXPERIMENT 阶段（实验执行，通常由工程/外部完成）。
+## Relationship to Workflow
+This skill is step 3 of **growth-experiment-workflow**.
+After completion, enters the EXPERIMENT phase (experiment execution, usually done by engineering / external).

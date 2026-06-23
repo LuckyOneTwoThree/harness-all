@@ -1,21 +1,21 @@
 ---
 name: validation-assumption-map
-description: 当需要提取和评估产品假设时使用。假设地图自动生成工具，根据方案设计和PRD，自动提取价值假设、可行性假设、可用性假设、增长假设，并进行风险评估和验证方法推荐。关键词：假设提取、风险评估、假设地图、验证方法、假设梳理、风险假设。
+description: Used when extracting and evaluating product hypotheses. Assumption map auto-generation tool, based on solution design and PRD, automatically extracts value hypotheses, feasibility hypotheses, usability hypotheses, growth hypotheses, and performs risk assessment and validation method recommendation. Keywords: hypothesis extraction, risk assessment, assumption map, validation method, hypothesis mapping, risk hypothesis.
 metadata:
-  module: "产品构思与设计"
-  sub-module: "方案验证"
+  module: "Product Ideation & Design"
+  sub-module: "Solution Validation"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["互联网", "软件", "通用"]
+  domain_tags: ["Internet", "Software", "General"]
   trigger_examples:
-    - "产品有哪些假设没验证"
-    - "帮我梳理假设和风险"
-    - "哪些假设可能不成立"
+    - "What hypotheses does the product have that are unvalidated"
+    - "Help me map out hypotheses and risks"
+    - "Which hypotheses might not hold"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出核心假设和验证优先级"
-  deep_description: "完整假设地图 + 验证实验设计 + 风险量化评估 + 假设演进追踪"
+  quick_description: "Directly output core hypotheses and validation priority"
+  deep_description: "Full assumption map + validation experiment design + risk quantitative assessment + hypothesis evolution tracking"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -27,107 +27,107 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 假设地图自动生成
+# Assumption Map Auto-Generation
 
-## 核心原则
+## Core Principles
 
-1. **每个功能点背后都是假设**——没有经过验证的功能点就是赌注，假设地图是赌注清单
-2. **风险=影响×不确定性**——高影响+高不确定性的假设是最大风险，必须优先验证
-3. **验证方法与假设类型必须匹配**——价值假设用落地页测试，可用性假设用原型测试，不可错配
-4. **最大风险假设必须有验证计划**——识别风险而不规划验证，等于知道有雷却不排雷
+1. **Behind every feature point is a hypothesis**—an unvalidated feature point is a bet; the assumption map is the bet list
+2. **Risk = Impact × Uncertainty**—high impact + high uncertainty hypotheses are the biggest risk and must be validated first
+3. **Validation method must match hypothesis type**—value hypotheses use landing page tests, usability hypotheses use prototype tests; they cannot be mismatched
+4. **Maximum risk hypotheses must have a validation plan**—identifying risks without planning validation is like knowing there's a mine but not clearing it
 
-### 基本信息
+### Basic Information
 
-| 属性 | 值 |
+| Attribute | Value |
 |------|-----|
 | Pipeline ID | 10 |
-| 名称 | 假设地图自动生成 |
-| 执行模式 | 🤖→👤 AI建议人类审批 |
-| 输入 | 方案设计输出 + PRD |
+| Name | Assumption Map Auto-Generation |
+| Execution Mode | 🤖→👤 AI suggests, human approves |
+| Inputs | Solution design output + PRD |
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 方案设计输出 | JSON | 是 | 用户提供或 harness-design 产出 | 功能列表、用户旅程、交互设计说明（如 harness-design 已产出，从 docs/handoff/design-to-solo.md 引用的原型/用户流程路径读取） |
-| PRD | markdown | 是 | docs/product/PRD.md | 问题陈述、目标用户、核心价值主张 |
-| PRD结构化数据 | JSON | ○ | docs/product/PRD.md | PRD机器可消费版本，包含features[]，供假设提取对齐 |
+| Solution design output | JSON | Yes | User-provided or harness-design output | Feature list, user journey, interaction design description (if harness-design has produced output, read from prototype/user flow paths referenced in docs/handoff/design-to-solo.md) |
+| PRD | markdown | Yes | docs/product/PRD.md | Problem statement, target users, core value proposition |
+| PRD structured data | JSON | ○ | docs/product/PRD.md | Machine-consumable PRD version, contains features[], for hypothesis extraction alignment |
 
-### 输入格式
+### Input Format
 ```json
 {
   "solution_design": {
-    "features": ["功能1", "功能2", ...],
-    "user_journey": "用户旅程描述",
-    "interaction_design": "交互设计说明"
+    "features": ["Feature 1", "Feature 2", ...],
+    "user_journey": "User journey description",
+    "interaction_design": "Interaction design description"
   },
   "prd": {
-    "problem_statement": "问题陈述",
-    "target_users": "目标用户",
-    "core_value": "核心价值主张"
+    "problem_statement": "Problem statement",
+    "target_users": "Target users",
+    "core_value": "Core value proposition"
   }
 }
 ```
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 假设提取 [核心]
+### Step 1: Hypothesis Extraction [Core]
 
-对每个功能点，提取以下四类假设：
+For each feature point, extract the following four types of hypotheses:
 
-| 假设类型 | 定义 | 示例 |
+| Hypothesis Type | Definition | Example |
 |----------|------|------|
-| 价值假设 | 用户是否认可该功能价值 | 用户愿意为XX功能付费 |
-| 可行性假设 | 技术/资源是否支撑实现 | 我们能够实现XX功能 |
-| 可用性假设 | 用户是否能顺利使用 | 用户能理解XX的操作方式 |
-| 增长假设 | 该功能是否能驱动增长 | XX功能能带来用户留存提升 |
+| Value hypothesis | Whether users recognize the feature's value | Users are willing to pay for feature XX |
+| Feasibility hypothesis | Whether technology/resources support implementation | We can implement feature XX |
+| Usability hypothesis | Whether users can use it smoothly | Users can understand how to operate XX |
+| Growth hypothesis | Whether the feature can drive growth | Feature XX can bring user retention improvement |
 
-**规则**: 每个功能点 → 至少1个假设
+**Rule**: Each feature point → at least 1 hypothesis
 
-### Step 2: 假设风险评估 [核心]
+### Step 2: Hypothesis Risk Assessment [Core]
 
-对每个假设进行风险评估：
+Perform risk assessment for each hypothesis:
 
-| 维度 | 评分 | 说明 |
+| Dimension | Score | Description |
 |------|------|------|
-| 影响度 (Impact) | 1-5 | 假设不成立对产品的影响程度 |
-| 不确定性 (Uncertainty) | 1-5 | 假设成立概率的不确定程度 |
+| Impact | 1-5 | Degree of impact on the product if the hypothesis does not hold |
+| Uncertainty | 1-5 | Degree of uncertainty about the probability of the hypothesis holding |
 
-**风险分数计算**: `risk_score = impact × uncertainty`
+**Risk score calculation**: `risk_score = impact × uncertainty`
 
-| 风险等级 | 分数范围 | 标识 |
+| Risk Level | Score Range | Marker |
 |----------|----------|------|
-| 高风险 | 15-25 | is_max_risk = true |
-| 中风险 | 8-14 | is_max_risk = false |
-| 低风险 | 1-7 | is_max_risk = false |
+| High risk | 15-25 | is_max_risk = true |
+| Medium risk | 8-14 | is_max_risk = false |
+| Low risk | 1-7 | is_max_risk = false |
 
-### Step 3: 验证方法推荐 [核心]
+### Step 3: Validation Method Recommendation [Core]
 
-根据假设类型，推荐验证方法：
+Based on hypothesis type, recommend validation methods:
 
-| 假设类型 | 推荐验证方法 |
+| Hypothesis Type | Recommended Validation Methods |
 |----------|--------------|
-| 价值假设 | 落地页测试、预售MVP、用户访谈、付费意愿调研 |
-| 可行性假设 | 技术原型、成本估算、专家评审 |
-| 可用性假设 | 原型测试、可用性测试、任务完成率分析 |
-| 增长假设 | A/B测试、数据分析、用户行为追踪 |
+| Value hypothesis | Landing page test, pre-sale MVP, user interviews, willingness-to-pay research |
+| Feasibility hypothesis | Technical prototype, cost estimation, expert review |
+| Usability hypothesis | Prototype testing, usability testing, task completion rate analysis |
+| Growth hypothesis | A/B testing, data analysis, user behavior tracking |
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 核心假设和验证优先级 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整假设地图 + 验证实验设计 + 风险量化评估 + 假设演进追踪 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Core hypotheses and validation priority | Core conclusion + minimum viable artifact |
+| standard | Full artifact (current default) | Full artifact, includes all Step outputs |
+| deep | Full assumption map + validation experiment design + risk quantitative assessment + hypothesis evolution tracking | Full artifact + extended analysis + deep inference |
 
-## 输出
+## Output
 
-**存储路径**：`docs/product/PRD.md（“假设图”章节）`
-**输出文件**：assumption_map.json
+**Storage path**: `docs/product/PRD.md ("Assumption Map" section)`
+**Output file**: assumption_map.json
 
 ```json
 {
@@ -136,13 +136,13 @@ writes:
       "id": "A001",
       "feature_id": "F001",
       "type": "value|feasibility|usability|growth",
-      "assumption": "假设内容描述",
+      "assumption": "Hypothesis content description",
       "impact": 4,
       "uncertainty": 4,
       "risk_score": 16,
       "is_max_risk": false,
-      "validation_method": "推荐验证方法",
-      "validation_metric": "验证指标"
+      "validation_method": "Recommended validation method",
+      "validation_metric": "Validation metric"
     }
   ],
   "summary": {
@@ -153,109 +153,109 @@ writes:
 }
 ```
 
-### 输出字段说明
+### Output Field Description
 
-| 字段 | 类型 | 说明 |
+| Field | Type | Description |
 |------|------|------|
-| id | string | 假设唯一标识 |
-| feature_id | string | 关联的功能点ID |
-| type | enum | 假设类型 |
-| assumption | string | 假设内容 |
-| impact | number | 影响度评分(1-5) |
-| uncertainty | number | 不确定性评分(1-5) |
-| risk_score | number | 风险分数(1-25) |
-| is_max_risk | boolean | 是否为最大风险假设 |
-| validation_method | string | 推荐验证方法 |
-| validation_metric | string | 验证指标 |
+| id | string | Hypothesis unique identifier |
+| feature_id | string | Associated feature point ID |
+| type | enum | Hypothesis type |
+| assumption | string | Hypothesis content |
+| impact | number | Impact score (1-5) |
+| uncertainty | number | Uncertainty score (1-5) |
+| risk_score | number | Risk score (1-25) |
+| is_max_risk | boolean | Whether it is a maximum risk hypothesis |
+| validation_method | string | Recommended validation method |
+| validation_metric | string | Validation metric |
 
-**输出校验规则**：详见下方输出校验规则章节
+**Output validation rules**: See the output validation rules section below
 
-## 决策规则
+## Decision Rules
 
-1. **最大风险假设识别**
-   - 必须识别风险分数最高的假设
-   - 最大风险假设必须有明确的验证计划
+1. **Maximum risk hypothesis identification**
+   - Must identify the hypothesis with the highest risk score
+   - Maximum risk hypotheses must have a clear validation plan
 
-2. **假设验证方法**
-   - 每个假设必须有对应的验证方法
-   - 验证方法必须与假设类型匹配
+2. **Hypothesis validation methods**
+   - Each hypothesis must have a corresponding validation method
+   - Validation methods must match the hypothesis type
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 功能点覆盖（所有功能点都有至少1个假设）
-- [ ] 假设风险评估（每个假设都有impact和uncertainty评分）
+- [ ] Feature point coverage (all feature points have at least 1 hypothesis)
+- [ ] Hypothesis risk assessment (each hypothesis has impact and uncertainty scores)
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 验证方法匹配（验证方法与假设类型对应）
-- [ ] 最大风险识别（识别出风险分数最高的假设）
+- [ ] Validation method matching (validation methods correspond to hypothesis types)
+- [ ] Maximum risk identification (identify the hypothesis with the highest risk score)
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep inference and roadmap generated)
+- [ ] Decision record complete (key decisions have rationale and alternatives)
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Instructions |
 |---------------|---------|---------|------------|
-| 方案设计数据缺失 | 用户提供方案描述，提取假设 | 缺乏结构化方案数据，假设覆盖可能不全 | 要求用户提供方案描述，或从 harness-design 的交接文档（docs/handoff/design-to-solo.md）获取设计方案 |
-| PRD文档缺失 | 用户提供方案描述，提取假设 | 缺乏PRD数据，假设与需求可能脱节 | 要求用户提供功能需求描述或上传prd.json文件 |
-| 方案设计+PRD均缺失 | 用户提供方案描述，提取假设 | 整体置信度降低，假设可能不够完整 | 要求用户提供核心假设和功能需求描述 |
-| 所有上游文件均缺失 | 提示用户先执行前序阶段，或基于用户方案描述提取假设 | 输出仅为基本假设列表 | 要求用户提供核心假设、用户痛点和功能需求 |
+| Solution design data missing | User provides solution description, extract hypotheses | Lacks structured solution data, hypothesis coverage may be incomplete | Require user to provide solution description, or obtain design solution from harness-design handoff document (docs/handoff/design-to-solo.md) |
+| PRD document missing | User provides solution description, extract hypotheses | Lacks PRD data, hypotheses may be disconnected from requirements | Require user to provide feature requirement description or upload prd.json file |
+| Solution design + PRD both missing | User provides solution description, extract hypotheses | Overall confidence reduced, hypotheses may not be complete enough | Require user to provide core hypotheses and feature requirement description |
+| All upstream files missing | Prompt user to execute prior stages first, or extract hypotheses based on user solution description | Output is only a basic hypothesis list | Require user to provide core hypotheses, user pain points, and feature requirements |
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| assumption_map | array | 是 | 假设列表 |
-| assumption_map[].id | string | 是 | 假设唯一标识 |
-| assumption_map[].feature_id | string | 是 | 关联功能点ID |
-| assumption_map[].type | string | 是 | 假设类型（value/feasibility/usability/growth） |
-| assumption_map[].assumption | string | 是 | 假设内容 |
-| assumption_map[].impact | number | 是 | 影响度评分（1-5） |
-| assumption_map[].uncertainty | number | 是 | 不确定性评分（1-5） |
-| assumption_map[].risk_score | number | 是 | 风险分数（1-25） |
-| assumption_map[].is_max_risk | boolean | 是 | 是否为最大风险假设 |
-| assumption_map[].validation_method | string | 是 | 推荐验证方法 |
-| assumption_map[].validation_metric | string | 是 | 验证指标 |
-| summary | object | 是 | 统计摘要 |
-| summary.total_assumptions | integer | 是 | 假设总数 |
-| summary.max_risk_assumptions | array | 是 | 最大风险假设ID列表 |
+| assumption_map | array | Yes | Hypothesis list |
+| assumption_map[].id | string | Yes | Hypothesis unique identifier |
+| assumption_map[].feature_id | string | Yes | Associated feature point ID |
+| assumption_map[].type | string | Yes | Hypothesis type (value/feasibility/usability/growth) |
+| assumption_map[].assumption | string | Yes | Hypothesis content |
+| assumption_map[].impact | number | Yes | Impact score (1-5) |
+| assumption_map[].uncertainty | number | Yes | Uncertainty score (1-5) |
+| assumption_map[].risk_score | number | Yes | Risk score (1-25) |
+| assumption_map[].is_max_risk | boolean | Yes | Whether it is a maximum risk hypothesis |
+| assumption_map[].validation_method | string | Yes | Recommended validation method |
+| assumption_map[].validation_metric | string | Yes | Validation metric |
+| summary | object | Yes | Statistical summary |
+| summary.total_assumptions | integer | Yes | Total hypothesis count |
+| summary.max_risk_assumptions | array | Yes | Maximum risk hypothesis ID list |
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响
+### Upstream Change Impact
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| 方案设计功能增删 | 假设提取、风险评估 | 标注受影响的功能点，建议人类确认是否重新提取假设 |
-| PRD核心价值变更 | 价值假设 | 标注受影响的价值假设，建议人类确认是否重新评估 |
-| 原型交互变更 | 可用性假设 | 标注受影响的可用性假设，建议人类确认是否重新评估 |
+| Solution design feature add/remove | Hypothesis extraction, risk assessment | Flag affected feature points, suggest human confirm whether to re-extract hypotheses |
+| PRD core value change | Value hypotheses | Flag affected value hypotheses, suggest human confirm whether to re-assess |
+| Prototype interaction change | Usability hypotheses | Flag affected usability hypotheses, suggest human confirm whether to re-assess |
 
-### 下游通知机制
+### Downstream Notification Mechanism
 
-| 假设地图变更类型 | 通知范围 | 通知方式 |
+| Assumption Map Change Type | Notification Scope | Notification Method |
 |-----------------|----------|----------|
-| 假设增删 | validation-mvp、validation-experiment | 标记假设变更，触发MVP范围和实验设计更新 |
-| 风险评分变更 | validation-mvp、validation-experiment | 标记评分变更，触发MVP Must Have和实验优先级更新 |
-| 验证方法变更 | validation-experiment | 标记方法变更，触发实验方案更新 |
+| Hypothesis add/remove | validation-mvp, validation-experiment | Mark hypothesis change, trigger MVP scope and experiment design update |
+| Risk score change | validation-mvp, validation-experiment | Mark score change, trigger MVP Must Have and experiment priority update |
+| Validation method change | validation-experiment | Mark method change, trigger experiment plan update |
 
 ---
 
-## 使用示例
+## Usage Example
 
-**输入**:
+**Input**:
 ```
-功能点: 智能推荐
-PRD核心价值: 帮助用户快速发现感兴趣的内容
+Feature point: Smart recommendations
+PRD core value: Help users quickly discover content they are interested in
 ```
 
-**输出**:
+**Output**:
 ```json
 {
   "assumption_map": [
@@ -263,25 +263,25 @@ PRD核心价值: 帮助用户快速发现感兴趣的内容
       "id": "A001",
       "feature_id": "F001",
       "type": "value",
-      "assumption": "用户认为智能推荐能帮助其发现感兴趣的内容",
+      "assumption": "Users believe smart recommendations can help them discover content they are interested in",
       "impact": 4,
       "uncertainty": 4,
       "risk_score": 16,
       "is_max_risk": true,
-      "validation_method": "用户访谈",
-      "validation_metric": "推荐内容点击率>15%"
+      "validation_method": "User interviews",
+      "validation_metric": "Recommended content click-through rate > 15%"
     },
     {
       "id": "A002",
       "feature_id": "F001",
       "type": "usability",
-      "assumption": "用户能理解推荐结果的来源和含义",
+      "assumption": "Users can understand the source and meaning of recommended results",
       "impact": 3,
       "uncertainty": 3,
       "risk_score": 9,
       "is_max_risk": false,
-      "validation_method": "原型测试",
-      "validation_metric": "任务完成率>80%"
+      "validation_method": "Prototype testing",
+      "validation_metric": "Task completion rate > 80%"
     }
   ]
 }

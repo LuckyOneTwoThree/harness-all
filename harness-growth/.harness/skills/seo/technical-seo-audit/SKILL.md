@@ -1,11 +1,11 @@
 ---
 name: technical-seo-audit
-description: 技术SEO审计，含爬虫可访问性/Core Web Vitals/索引状态/移动端/安全
+description: Technical SEO audit, including crawlability / Core Web Vitals / index status / mobile / security
 triggers:
-  - SEO优化时需要检查技术基础
-  - SEO优化Loop的EXPERIMENT阶段
-  - 用户要求"检查技术SEO"
-  - 排名异常下降时
+  - When SEO optimization needs a technical foundation check
+  - EXPERIMENT phase of the SEO optimization Loop
+  - User asks to "check technical SEO"
+  - When rankings drop abnormally
 reads:
   - rules/security.md
 writes:
@@ -15,111 +15,111 @@ quality_gates: []
 max_iterations: 2
 ---
 
-# Technical SEO Audit — 技术 SEO 审计
+# Technical SEO Audit — Technical SEO Audit
 
-## 铁律
-- 审计必须基于**实际检测**，不是"我猜应该没问题"
-- 发现的问题必须按**影响面 × 严重度**排序
-- 严重问题（如索引被屏蔽）必须优先修复
+## Iron Rules
+- Audit must be based on **actual detection**, not "I guess it should be fine"
+- Issues found must be sorted by **impact scope × severity**
+- Critical issues (e.g., indexing blocked) must be fixed first
 
-## 流程
+## Process
 
-1. **爬虫可访问性检查**
-   - Robots.txt 是否正确（未屏蔽重要页面）
-   - Meta Robots 是否正确（noindex/nofollow 使用合理）
-   - Canonical 标签是否正确（避免重复内容）
-   - 爬虫日志分析（搜索引擎是否在爬）
-   - Sitemap.xml 是否完整且提交
+1. **Crawlability check**
+   - Is Robots.txt correct (no important pages blocked)
+   - Is Meta Robots correct (noindex/nofollow used reasonably)
+   - Is the Canonical tag correct (avoid duplicate content)
+   - Crawl log analysis (are search engines crawling)
+   - Is Sitemap.xml complete and submitted
 
-2. **索引状态检查**
-   - 重要页面是否被索引（site: 查询）
-   - 是否有被索引的低质页面（应 noindex）
-   - 是否有孤儿页面（无内链指向，搜索引擎找不到）
-   - 重复内容检查（相同内容不同 URL）
+2. **Index status check**
+   - Are important pages indexed (site: query)
+   - Are there low-quality pages indexed (should be noindex)
+   - Are there orphan pages (no internal links pointing to them; search engines can't find them)
+   - Duplicate content check (same content, different URLs)
 
-3. **Core Web Vitals 检查**
-   | 指标 | 达标 | 需优化 | 不达标 |
-   |------|------|--------|--------|
-   | LCP（最大内容渲染） | < 2.5s | 2.5-4s | > 4s |
-   | INP（交互延迟） | < 200ms | 200-500ms | > 500ms |
-   | CLS（布局偏移） | < 0.1 | 0.1-0.25 | > 0.25 |
+3. **Core Web Vitals check**
+   | Metric | Pass | Needs optimization | Fail |
+   |--------|------|--------------------|------|
+   | LCP (Largest Contentful Paint) | < 2.5s | 2.5-4s | > 4s |
+   | INP (Interaction latency) | < 200ms | 200-500ms | > 500ms |
+   | CLS (Layout shift) | < 0.1 | 0.1-0.25 | > 0.25 |
 
-   - 检查 LCP 元素（通常是首屏大图/大标题）
-   - 检查 INP 瓶颈（长任务/第三方脚本）
-   - 检查 CLS 来源（图片无尺寸/动态注入内容）
+   - Check the LCP element (usually the above-the-fold large image / large heading)
+   - Check INP bottlenecks (long tasks / third-party scripts)
+   - Check CLS sources (images without dimensions / dynamically injected content)
 
-4. **移动端适配**
-   - 响应式设计是否正确
-   - 移动端字体大小（≥ 16px）
-   - 点击目标大小（≥ 48px）
-   - 无水平滚动
-   - 移动端加载速度
+4. **Mobile responsiveness**
+   - Is responsive design correct
+   - Mobile font size (≥ 16px)
+   - Tap target size (≥ 48px)
+   - No horizontal scrolling
+   - Mobile load speed
 
-5. **安全检查**
-   - HTTPS 是否启用
-   - 混合内容（HTTPS 页面加载 HTTP 资源）
-   - HSTS 头是否设置
+5. **Security check**
+   - Is HTTPS enabled
+   - Mixed content (HTTPS pages loading HTTP resources)
+   - Is the HSTS header set
 
-6. **结构化数据验证**
-   - Schema 标记是否正确（Google Rich Results Test）
-   - 是否有 Schema 错误/警告
+6. **Structured data validation**
+   - Is the Schema markup correct (Google Rich Results Test)
+   - Are there Schema errors / warnings
 
-7. **内链结构分析**
-   - 孤儿页面清单
-   - 内链深度分布（重要页面是否 ≤ 3 次点击）
-   - 锚文本多样性
+7. **Internal link structure analysis**
+   - Orphan page list
+   - Internal link depth distribution (are important pages ≤ 3 clicks away)
+   - Anchor text diversity
 
-8. **产出审计报告**
-   写入 `docs/seo/technical-audit.md`：
+8. **Produce audit report**
+   Write to `docs/seo/technical-audit.md`:
    ```markdown
-   # 技术 SEO 审计报告
+   # Technical SEO Audit Report
 
-   ## 审计概览
-   - 审计日期: YYYY-MM-DD
-   - 检查页面数: N
-   - 发现问题数: N（严重 X / 中等 Y / 低 Z）
+   ## Audit overview
+   - Audit date: YYYY-MM-DD
+   - Pages checked: N
+   - Issues found: N (Critical X / Medium Y / Low Z)
 
-   ## 问题清单（按优先级排序）
-   | 优先级 | 问题 | 影响面 | 严重度 | 修复建议 |
-   |--------|------|--------|--------|---------|
-   | P0 | robots.txt 屏蔽了 /blog | 全站博客 | 严重 | 修改 robots.txt |
-   | P1 | LCP 4.5s | 首页 | 中等 | 压缩首图 |
-   | P2 | 缺少 Schema | 博客 | 低 | 添加 Article Schema |
+   ## Issue list (sorted by priority)
+   | Priority | Issue | Impact scope | Severity | Fix recommendation |
+   |----------|-------|--------------|----------|---------------------|
+   | P0 | robots.txt blocks /blog | Whole blog | Critical | Modify robots.txt |
+   | P1 | LCP 4.5s | Homepage | Medium | Compress hero image |
+   | P2 | Missing Schema | Blog | Low | Add Article Schema |
 
    ## Core Web Vitals
-   | 页面 | LCP | INP | CLS | 评级 |
-   |------|-----|-----|-----|------|
+   | Page | LCP | INP | CLS | Rating |
+   |------|-----|-----|-----|--------|
 
-   ## 索引状态
-   | 检查项 | 结果 | 说明 |
-   |--------|------|------|
-   | 重要页面索引 | N/M | |
-   | 孤儿页面 | N | |
-   | 重复内容 | N | |
+   ## Index status
+   | Check item | Result | Notes |
+   |------------|--------|-------|
+   | Important pages indexed | N/M | |
+   | Orphan pages | N | |
+   | Duplicate content | N | |
 
-   ## 修复路线图
-   1. [P0 修复步骤]
-   2. [P1 修复步骤]
+   ## Fix roadmap
+   1. [P0 fix steps]
+   2. [P1 fix steps]
    ```
 
-## 问题优先级标准
+## Issue priority criteria
 
-| 优先级 | 定义 | 修复时限 |
-|--------|------|---------|
-| P0 | 严重影响索引/排名（如被 noindex/robots 屏蔽） | 立即 |
-| P1 | 影响排名/用户体验（如 CWV 不达标/移动端问题） | 1 周内 |
-| P2 | 优化空间（如缺 Schema/内链不足） | 1 月内 |
+| Priority | Definition | Fix timeframe |
+|----------|------------|---------------|
+| P0 | Severely affects indexing / ranking (e.g., blocked by noindex/robots) | Immediately |
+| P1 | Affects ranking / user experience (e.g., CWV below bar / mobile issues) | Within 1 week |
+| P2 | Optimization room (e.g., missing Schema / insufficient internal links) | Within 1 month |
 
-## 禁止事项
-- 不跳过爬虫可访问性检查（技术基础不解决，其他优化白做）
-- 不忽略 Core Web Vitals（Google 排名信号）
-- 不只报告问题不给修复方案
-- 不把 P0 问题降级为"以后再说"
+## Prohibitions
+- Don't skip the crawlability check (without solving the technical foundation, other optimization is wasted)
+- Don't ignore Core Web Vitals (Google ranking signal)
+- Don't report problems without fix recommendations
+- Don't downgrade P0 issues to "later"
 
-## 与 LOOP 的关系
-本 skill 在 LOOP(seo) 的 **EXPERIMENT 阶段**执行。
+## Relationship to LOOP
+This skill runs in the **EXPERIMENT phase** of LOOP(seo).
 PLAN → EXPERIMENT(onpage → technical-seo-audit) → MEASURE(ranking)
 
-## 与 Workflow 的关系
-本 skill 是 **seo-optimization-workflow** 的第 4 步。
-P0 问题必须修复后才能进入 ranking-tracking。
+## Relationship to Workflow
+This skill is step 4 of **seo-optimization-workflow**.
+P0 issues must be fixed before entering ranking-tracking.

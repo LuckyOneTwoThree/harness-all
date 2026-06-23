@@ -1,20 +1,20 @@
 ---
 name: business-pricing
-description: 当需要制定或优化产品定价策略时使用。定价策略自动分析，AI建议人类审批，分析竞品定价、推断用户支付意愿、生成3个差异化定价方案。关键词：定价策略、竞品分析、支付意愿、套餐设计、单位经济、怎么收费、定价方案。
+description: Used when formulating or optimizing a product pricing strategy. Auto-analyzes pricing strategy with AI suggestions and human approval, analyzing competitor pricing, inferring user willingness to pay, and generating 3 differentiated pricing options. Keywords: pricing strategy, competitive analysis, willingness to pay, tier design, unit economics, how to charge, pricing options.
 metadata:
-  module: "产品商业与战略"
-  sub-module: "商业模式设计"
+  module: "Product Business & Strategy"
+  sub-module: "Business Model Design"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["SaaS", "电商", "通用"]
+  domain_tags: ["SaaS", "E-commerce", "General"]
   trigger_examples:
-    - "产品该怎么定价"
-    - "定价方案怎么做"
+    - "How should we price the product"
+    - "How to design pricing options"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "生成竞品定价矩阵概览和1个推荐定价方案，含基础单位经济验证"
-  deep_description: "额外包含3个完整定价方案对比、支付意愿多方法交叉推断、敏感性分析、定价调整路线图、竞品定价趋势预测"
+  quick_description: "Generate a competitor pricing matrix overview and 1 recommended pricing option, including basic unit economics validation"
+  deep_description: "Additionally includes 3 complete pricing option comparisons, willingness-to-pay multi-method cross-inference, sensitivity analysis, pricing adjustment roadmap, and competitor pricing trend forecasting"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -25,34 +25,34 @@ writes:
   - memory/progress.md
 ---
 
-# 定价策略自动分析
+# Pricing Strategy Auto-Analysis
 
-## 核心原则
+## Core Principles
 
-1. **三方案对比**——必须生成渗透/价值/混合3个差异化定价方案供人类选择
-2. **数据锚定定价**——竞品定价和支付意愿是定价的硬约束，不可凭感觉定价
-3. **单位经济验证**——每个方案必须通过LTV/CAC等单位经济指标验证可行性
-4. **风险前置**——定价过低损害品牌、过高阻碍获客等风险必须显式标注
+1. **Three-option comparison** — Must generate 3 differentiated pricing options (penetration/value/hybrid) for human selection
+2. **Data-anchored pricing** — Competitor pricing and willingness to pay are hard constraints on pricing; do not price based on gut feeling
+3. **Unit economics validation** — Each option must pass feasibility validation through unit economics metrics such as LTV/CAC
+4. **Risk surfacing** — Risks such as pricing too low damaging the brand or too high hindering acquisition must be explicitly flagged
 
-**执行周期**：在Pipeline 2（价值主张匹配）完成后触发
+**Execution Cycle**: Triggered after Pipeline 2 (Value Proposition Fit) is complete
 
-**核心目标**：基于商业画布、竞品分析和用户支付意愿推断，生成3个差异化的定价方案，并完成单位经济效益分析。
+**Core Objective**: Based on the Business Model Canvas, competitive analysis, and user willingness-to-pay inference, generate 3 differentiated pricing options and complete unit economics analysis.
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| BMC数据 | JSON | 是 | docs/strategy/business-strategy.md（“商业模式画布”章节） | 价值主张、收入模式、客户细分、成本结构 |
-| 竞品定价数据 | JSON | 是 | docs/discovery/market-analysis.md（“竞品分析”章节） | 竞品定价层级、市场定位、市场份额 |
-| 支付意愿推断数据 | JSON | ○ | 用户提供 | 用户支付意愿区间、推断方法、置信度 |
+| BMC Data | JSON | Yes | docs/strategy/business-strategy.md ("Business Model Canvas" section) | Value propositions, revenue models, customer segments, cost structure |
+| Competitor Pricing Data | JSON | Yes | docs/discovery/market-analysis.md ("Competitive Analysis" section) | Competitor pricing tiers, market positioning, market share |
+| Willingness-to-Pay Inference Data | JSON | ○ | User provided | User willingness-to-pay range, inference method, confidence |
 
-### 必需输入
+### Required Inputs
 
-**BMC数据（来自Pipeline 1）：**
+**BMC Data (from Pipeline 1):**
 ```json
 {
   "value_propositions": [...],
@@ -62,37 +62,37 @@ writes:
 }
 ```
 
-**竞品定价数据：**
+**Competitor Pricing Data:**
 ```json
 {
   "competitor_pricing": [
     {
-      "competitor_name": "竞品名称",
-      "product_name": "产品名称",
+      "competitor_name": "Competitor Name",
+      "product_name": "Product Name",
       "pricing_tiers": [
         {
-          "tier_name": "套餐名称",
-          "price": "价格",
-          "billing_cycle": "月/年/一次性",
-          "features": ["功能1", "功能2"],
-          "target_segment": "目标用户"
+          "tier_name": "Tier Name",
+          "price": "Price",
+          "billing_cycle": "monthly/annual/one-time",
+          "features": ["Feature 1", "Feature 2"],
+          "target_segment": "Target Users"
         }
       ],
       "market_position": "premium/mid-market/budget",
-      "market_share": "市场份额估算"
+      "market_share": "Market Share Estimate"
     }
   ]
 }
 ```
 
-**用户支付意愿推断数据：**
+**User Willingness-to-Pay Inference Data:**
 ```json
 {
   "willingness_to_pay": {
     "inferred_price_range": {
-      "min": "最低价格",
-      "max": "最高价格",
-      "optimal": "最优价格估算"
+      "min": "Minimum Price",
+      "max": "Maximum Price",
+      "optimal": "Optimal Price Estimate"
     },
     "confidence": 0.7,
     "inference_method": "direct_survey/conjoint_analysis/market_analog/comparative_judgment",
@@ -108,81 +108,81 @@ writes:
 }
 ```
 
-## 执行步骤
+## Execution Steps
 
-### Step 1：竞品定价矩阵分析 [核心]
+### Step 1: Competitor Pricing Matrix Analysis [Core]
 
-**任务**：整合和系统化分析竞品定价策略。
+**Task**: Integrate and systematically analyze competitor pricing strategies.
 
-**执行逻辑**：
-1. 收集竞品定价数据
-2. 按价格区间和目标市场进行分类
-3. 分析定价结构模式（层级数、功能差异点）
-4. 识别市场定价空白区域
-5. 评估竞品定价的市场接受度
+**Execution Logic**:
+1. Collect competitor pricing data
+2. Classify by price range and target market
+3. Analyze pricing structure patterns (number of tiers, feature differentiation points)
+4. Identify market pricing gaps
+5. Assess market acceptance of competitor pricing
 
-**输出格式：**
+**Output Format:**
 ```json
 {
   "competitor_pricing_matrix": {
     "premium_segment": {
-      "price_range": "¥200-500/月",
-      "players": ["竞品A", "竞品B"],
-      "typical_features": ["完整功能", "高级支持"],
-      "positioning": "企业级/高需求用户"
+      "price_range": "¥200-500/month",
+      "players": ["Competitor A", "Competitor B"],
+      "typical_features": ["Full features", "Premium support"],
+      "positioning": "Enterprise / high-demand users"
     },
     "mid_market_segment": {
-      "price_range": "¥50-200/月",
-      "players": ["竞品C"],
-      "typical_features": ["核心功能+部分高级"],
-      "positioning": "成长型团队"
+      "price_range": "¥50-200/month",
+      "players": ["Competitor C"],
+      "typical_features": ["Core features + some premium"],
+      "positioning": "Growth-stage teams"
     },
     "budget_segment": {
-      "price_range": "¥0-50/月",
-      "players": ["竞品D", "竞品E"],
-      "typical_features": ["基础功能"],
-      "positioning": "个人用户/入门级"
+      "price_range": "¥0-50/month",
+      "players": ["Competitor D", "Competitor E"],
+      "typical_features": ["Basic features"],
+      "positioning": "Individual users / entry-level"
     },
     "market_gaps": [
       {
-        "gap_description": "空白区域描述",
-        "target_segment": "目标用户",
-        "opportunity": "机会说明"
+        "gap_description": "Gap description",
+        "target_segment": "Target Users",
+        "opportunity": "Opportunity description"
       }
     ]
   }
 }
 ```
 
-**验收标准**：
-- 覆盖主要竞品
-- 价格区间分类清晰
-- 市场空白识别准确
+**Acceptance Criteria**:
+- Covers major competitors
+- Price range classification is clear
+- Market gaps identified accurately
 
-### Step 2：支付意愿推断 [条件]
+### Step 2: Willingness-to-Pay Inference [Conditional]
 
-**任务**：基于多种数据源推断用户支付意愿。
+**Task**: Infer user willingness to pay based on multiple data sources.
 
-**推断方法优先级**：
-1. 直接调研数据（置信度最高）
-2. 联合分析法结果
-3. 市场类比法
-4. 比较判断法
+**Inference Method Priority**:
+1. Direct survey data (highest confidence)
+2. Conjoint analysis results
+3. Market analog method
+4. Comparative judgment method
 
-**执行逻辑**：
-1. 整合多种推断方法的结果
-2. 加权平均计算综合支付意愿区间
-3. 按用户细分群体分层分析
-4. 评估推断置信度
+**Execution Logic**:
+1. Integrate results from multiple inference methods
+2. Calculate weighted average for a comprehensive willingness-to-pay range
+3. Analyze by user segment
+4. Assess inference confidence
 
-**输出格式：**
+**Output Format:**
 ```json
 {
   "willingness_to_pay_analysis": {
     "overall_range": {
-      "floor": "¥30/月",
-      "ceiling": "¥300/月",
-      "optimal": "¥80/月"
+      "floor": "¥30/month",
+      "ceiling": "¥300/month",
+      "optimal": "¥80/month"
     },
     "confidence": 0.65,
     "confidence_breakdown": {
@@ -194,64 +194,64 @@ writes:
     "segment_analysis": [
       {
         "segment_id": "segment-1",
-        "segment_name": "细分群体名称",
-        "price_floor": "¥50/月",
-        "price_ceiling": "¥200/月",
-        "price_optimal": "¥80/月",
+        "segment_name": "Segment Name",
+        "price_floor": "¥50/month",
+        "price_ceiling": "¥200/month",
+        "price_optimal": "¥80/month",
         "price_sensitivity": "medium"
       }
     ],
     "key_factors": [
-      "功能完整性是主要价值驱动",
-      "竞品价格锚定效应明显",
-      "年度订阅意愿高于月度"
+      "Feature completeness is the primary value driver",
+      "Competitor price anchoring effect is significant",
+      "Annual subscription willingness is higher than monthly"
     ]
   }
 }
 ```
 
-**验收标准**：
-- 推断方法透明
-- 置信度有依据
-- 细分群体差异已分析
+**Acceptance Criteria**:
+- Inference method is transparent
+- Confidence has a basis
+- Segment differences analyzed
 
-### Step 3：定价方案生成 [核心]
+### Step 3: Pricing Option Generation [Core]
 
-**任务**：生成3个差异化的定价方案。
+**Task**: Generate 3 differentiated pricing options.
 
-#### 方案A：渗透定价方案
+#### Option A: Penetration Pricing
 
-**定位**：市场进入策略，以有竞争力的价格快速获取用户
+**Positioning**: Market entry strategy, rapidly acquiring users at a competitive price
 
-**执行逻辑**：
-1. 参考竞品中低端定价
-2. 考虑支付意愿下限
-3. 设定可接受的初期亏损容忍期
-4. 设计转化路径
+**Execution Logic**:
+1. Reference competitor low-to-mid pricing
+2. Consider the lower bound of willingness to pay
+3. Set an acceptable early-stage loss tolerance period
+4. Design conversion paths
 
-**套餐结构示例：**
+**Tier Structure Example:**
 ```json
 {
   "pricing_option_a": {
-    "name": "渗透定价",
-    "positioning": "市场进入/用户获取",
+    "name": "Penetration Pricing",
+    "positioning": "Market entry / user acquisition",
     "tiers": [
       {
-        "tier_name": "入门版",
+        "tier_name": "Starter",
         "price": 29,
         "billing_cycle": "monthly",
         "annual_price": 290,
-        "features": ["核心功能", "5GB存储", "基础支持"],
-        "limitations": ["用户上限5人", "无高级分析"],
-        "target_segment": "个人用户/小团队"
+        "features": ["Core features", "5GB storage", "Basic support"],
+        "limitations": ["User limit of 5", "No advanced analytics"],
+        "target_segment": "Individual users / small teams"
       },
       {
-        "tier_name": "专业版",
+        "tier_name": "Pro",
         "price": 79,
         "billing_cycle": "monthly",
         "annual_price": 790,
-        "features": ["全功能", "50GB存储", "优先支持", "API访问"],
-        "target_segment": "成长型团队"
+        "features": ["Full features", "50GB storage", "Priority support", "API access"],
+        "target_segment": "Growth-stage teams"
       }
     ],
     "unit_economics": {
@@ -262,47 +262,47 @@ writes:
       "ltv_cac_ratio": 3.5
     },
     "risks": [
-      "定价过低可能损害品牌认知",
-      "初期亏损影响现金流",
-      "价格调整空间有限"
+      "Pricing too low may damage brand perception",
+      "Early-stage losses affect cash flow",
+      "Limited room for price adjustments"
     ],
-    "recommended_timeline": "12-18个月后评估提价"
+    "recommended_timeline": "Evaluate price increase after 12-18 months"
   }
 }
 ```
 
-#### 方案B：价值定价方案
+#### Option B: Value-Based Pricing
 
-**定位**：基于价值感知的中高端定价
+**Positioning**: Mid-to-high-end pricing based on value perception
 
-**执行逻辑**：
-1. 锚定用户支付意愿最优区间
-2. 强调差异化价值的价值溢价
-3. 设计清晰的功能分层
-4. 包含一定的捆绑价值
+**Execution Logic**:
+1. Anchor to the optimal range of user willingness to pay
+2. Emphasize the value premium of differentiated value
+3. Design clear feature tiering
+4. Include some bundled value
 
-**套餐结构示例：**
+**Tier Structure Example:**
 ```json
 {
   "pricing_option_b": {
-    "name": "价值定价",
-    "positioning": "价值导向/品质优先",
+    "name": "Value-Based Pricing",
+    "positioning": "Value-driven / quality-first",
     "tiers": [
       {
-        "tier_name": "标准版",
+        "tier_name": "Standard",
         "price": 99,
         "billing_cycle": "monthly",
         "annual_price": 990,
-        "features": ["核心功能+", "20GB存储", "邮件支持"],
-        "target_segment": "中小企业"
+        "features": ["Core features+", "20GB storage", "Email support"],
+        "target_segment": "Small and medium businesses"
       },
       {
-        "tier_name": "企业版",
+        "tier_name": "Enterprise",
         "price": 299,
         "billing_cycle": "monthly",
         "annual_price": 2990,
-        "features": ["完整功能", "无限存储", "专属支持", "SSO集成", " SLA保障"],
-        "target_segment": "大型企业"
+        "features": ["Complete features", "Unlimited storage", "Dedicated support", "SSO integration", "SLA guarantee"],
+        "target_segment": "Large enterprises"
       }
     ],
     "unit_economics": {
@@ -313,53 +313,53 @@ writes:
       "ltv_cac_ratio": 5.2
     },
     "risks": [
-      "获客难度较高",
-      "需要强价值传递支撑"
+      "Higher acquisition difficulty",
+      "Requires strong value delivery support"
     ],
-    "recommended_timeline": "持续执行"
+    "recommended_timeline": "Continuous execution"
   }
 }
 ```
 
-#### 方案C：混合定价方案
+#### Option C: Hybrid Pricing
 
-**定位**：分层覆盖，最大化市场覆盖和收入潜力
+**Positioning**: Tiered coverage, maximizing market coverage and revenue potential
 
-**执行逻辑**：
-1. 引入免费层级建立用户基础
-2. 中间层级作为主力收入
-3. 高端层级捕获高价值客户
-4. 设计清晰的升级路径
+**Execution Logic**:
+1. Introduce a free tier to build a user base
+2. Middle tier as the primary revenue driver
+3. High-end tier to capture high-value customers
+4. Design a clear upgrade path
 
-**套餐结构示例：**
+**Tier Structure Example:**
 ```json
 {
   "pricing_option_c": {
-    "name": "混合定价",
-    "positioning": "全面覆盖/收入最大化",
+    "name": "Hybrid Pricing",
+    "positioning": "Full coverage / revenue maximization",
     "tiers": [
       {
-        "tier_name": "免费版",
+        "tier_name": "Free",
         "price": 0,
-        "features": ["基础功能", "1GB存储", "社区支持"],
-        "limitations": ["功能受限", "有使用限制"],
-        "target_segment": "个人用户/试用"
+        "features": ["Basic features", "1GB storage", "Community support"],
+        "limitations": ["Limited features", "Usage limits"],
+        "target_segment": "Individual users / trial"
       },
       {
-        "tier_name": "付费版",
+        "tier_name": "Paid",
         "price": 59,
         "billing_cycle": "monthly",
         "annual_price": 590,
-        "features": ["进阶功能", "30GB存储", "优先支持"],
-        "target_segment": "专业用户"
+        "features": ["Advanced features", "30GB storage", "Priority support"],
+        "target_segment": "Professional users"
       },
       {
-        "tier_name": "团队版",
+        "tier_name": "Team",
         "price": 199,
         "billing_cycle": "monthly",
         "annual_price": 1990,
-        "features": ["团队协作", "100GB存储", "专属CSM", "高级权限"],
-        "target_segment": "团队/部门"
+        "features": ["Team collaboration", "100GB storage", "Dedicated CSM", "Advanced permissions"],
+        "target_segment": "Teams / departments"
       }
     ],
     "unit_economics": {
@@ -371,67 +371,67 @@ writes:
       "ltv_cac_ratio": 4.2
     },
     "risks": [
-      "免费版运维成本",
-      "定价层级管理复杂度",
-      "内部竞争可能分流"
+      "Free tier operational costs",
+      "Pricing tier management complexity",
+      "Internal cannibalization may occur"
     ],
-    "recommended_timeline": "视初期数据调整层级"
+    "recommended_timeline": "Adjust tiers based on early data"
   }
 }
 ```
 
-## 输出
+## Output
 
-**存储路径**：`docs/strategy/business-strategy.md（“定价策略”章节）`
+**Storage Path**: `docs/strategy/business-strategy.md ("Pricing Strategy" section)`
 
-**输出文件**：pricing_analysis.json
+**Output File**: pricing_analysis.json
 
-### 输出校验规则
+### Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| pricing_analysis.competitor_pricing_matrix | object | 是 | 含premium/mid/budget三段分析 |
-| pricing_analysis.competitor_pricing_matrix.premium_segment | object | 否 | 高端市场段 |
-| pricing_analysis.competitor_pricing_matrix.premium_segment.price_range | string | 条件必填 | 高端价格区间 |
-| pricing_analysis.competitor_pricing_matrix.premium_segment.players | string[] | 条件必填 | 高端市场竞品列表 |
-| pricing_analysis.competitor_pricing_matrix.mid_market_segment | object | 否 | 中端市场段 |
-| pricing_analysis.competitor_pricing_matrix.mid_market_segment.price_range | string | 条件必填 | 中端价格区间 |
-| pricing_analysis.competitor_pricing_matrix.mid_market_segment.players | string[] | 条件必填 | 中端市场竞品列表 |
-| pricing_analysis.competitor_pricing_matrix.budget_segment | object | 否 | 低端市场段 |
-| pricing_analysis.competitor_pricing_matrix.budget_segment.price_range | string | 条件必填 | 低端价格区间 |
-| pricing_analysis.competitor_pricing_matrix.budget_segment.players | string[] | 条件必填 | 低端市场竞品列表 |
-| pricing_analysis.willingness_to_pay | object | 是 | 含整体区间、置信度、细分分析 |
-| pricing_analysis.willingness_to_pay.overall_range | object | 是 | 整体支付意愿区间 |
-| pricing_analysis.willingness_to_pay.overall_range.floor | string | 是 | 价格下限 |
-| pricing_analysis.willingness_to_pay.overall_range.ceiling | string | 是 | 价格上限 |
-| pricing_analysis.willingness_to_pay.confidence | number | 是 | 推断置信度，0-1 |
-| pricing_analysis.willingness_to_pay.segment_analysis | array | 否 | 按细分群体的支付意愿分析 |
-| pricing_analysis.willingness_to_pay.segment_analysis[].segment_name | string | 是 | 细分群体名称 |
-| pricing_analysis.willingness_to_pay.segment_analysis[].price_sensitivity | string | 是 | 价格敏感度，枚举：high/medium/low |
-| pricing_analysis.pricing_options.option_a | object | 是 | 渗透定价方案，含tiers和unit_economics |
-| pricing_analysis.pricing_options.option_a.tiers | array | 是 | 套餐层级列表，至少1个 |
-| pricing_analysis.pricing_options.option_a.tiers[].tier_name | string | 是 | 套餐名称，不可为空 |
-| pricing_analysis.pricing_options.option_a.tiers[].price | number | 是 | 价格 |
-| pricing_analysis.pricing_options.option_a.tiers[].features | string[] | 是 | 包含功能列表 |
-| pricing_analysis.pricing_options.option_a.unit_economics | object | 是 | 单位经济指标 |
-| pricing_analysis.pricing_options.option_b | object | 是 | 价值定价方案，含tiers和unit_economics |
-| pricing_analysis.pricing_options.option_b.tiers | array | 是 | 套餐层级列表，至少1个 |
-| pricing_analysis.pricing_options.option_b.tiers[].tier_name | string | 是 | 套餐名称，不可为空 |
-| pricing_analysis.pricing_options.option_b.tiers[].price | number | 是 | 价格 |
-| pricing_analysis.pricing_options.option_b.tiers[].features | string[] | 是 | 包含功能列表 |
-| pricing_analysis.pricing_options.option_b.unit_economics | object | 是 | 单位经济指标 |
-| pricing_analysis.pricing_options.option_c | object | 是 | 混合定价方案，含tiers和unit_economics |
-| pricing_analysis.pricing_options.option_c.tiers | array | 是 | 套餐层级列表，至少1个 |
-| pricing_analysis.pricing_options.option_c.tiers[].tier_name | string | 是 | 套餐名称，不可为空 |
-| pricing_analysis.pricing_options.option_c.tiers[].price | number | 是 | 价格 |
-| pricing_analysis.pricing_options.option_c.tiers[].features | string[] | 是 | 包含功能列表 |
-| pricing_analysis.pricing_options.option_c.unit_economics | object | 是 | 单位经济指标 |
-| pricing_options.*.unit_economics.ltv_cac_ratio | number | 是 | LTV/CAC比值，健康标准≥3 |
-| pricing_options.*.unit_economics.payback_period_months | number | 是 | 回本周期（月） |
-| pricing_analysis.recommendation.recommended_option | string | 是 | A/B/C |
-| pricing_analysis.recommendation.reasoning | string | 是 | 推荐理由 |
+| pricing_analysis.competitor_pricing_matrix | object | Yes | Includes premium/mid/budget three-segment analysis |
+| pricing_analysis.competitor_pricing_matrix.premium_segment | object | No | Premium market segment |
+| pricing_analysis.competitor_pricing_matrix.premium_segment.price_range | string | Conditionally required | Premium price range |
+| pricing_analysis.competitor_pricing_matrix.premium_segment.players | string[] | Conditionally required | Premium market competitor list |
+| pricing_analysis.competitor_pricing_matrix.mid_market_segment | object | No | Mid-market segment |
+| pricing_analysis.competitor_pricing_matrix.mid_market_segment.price_range | string | Conditionally required | Mid-market price range |
+| pricing_analysis.competitor_pricing_matrix.mid_market_segment.players | string[] | Conditionally required | Mid-market competitor list |
+| pricing_analysis.competitor_pricing_matrix.budget_segment | object | No | Budget market segment |
+| pricing_analysis.competitor_pricing_matrix.budget_segment.price_range | string | Conditionally required | Budget price range |
+| pricing_analysis.competitor_pricing_matrix.budget_segment.players | string[] | Conditionally required | Budget market competitor list |
+| pricing_analysis.willingness_to_pay | object | Yes | Includes overall range, confidence, segment analysis |
+| pricing_analysis.willingness_to_pay.overall_range | object | Yes | Overall willingness-to-pay range |
+| pricing_analysis.willingness_to_pay.overall_range.floor | string | Yes | Price floor |
+| pricing_analysis.willingness_to_pay.overall_range.ceiling | string | Yes | Price ceiling |
+| pricing_analysis.willingness_to_pay.confidence | number | Yes | Inference confidence, 0-1 |
+| pricing_analysis.willingness_to_pay.segment_analysis | array | No | Willingness-to-pay analysis by segment |
+| pricing_analysis.willingness_to_pay.segment_analysis[].segment_name | string | Yes | Segment name |
+| pricing_analysis.willingness_to_pay.segment_analysis[].price_sensitivity | string | Yes | Price sensitivity, enum: high/medium/low |
+| pricing_analysis.pricing_options.option_a | object | Yes | Penetration pricing option, includes tiers and unit_economics |
+| pricing_analysis.pricing_options.option_a.tiers | array | Yes | Tier list, at least 1 |
+| pricing_analysis.pricing_options.option_a.tiers[].tier_name | string | Yes | Tier name, cannot be empty |
+| pricing_analysis.pricing_options.option_a.tiers[].price | number | Yes | Price |
+| pricing_analysis.pricing_options.option_a.tiers[].features | string[] | Yes | Included features list |
+| pricing_analysis.pricing_options.option_a.unit_economics | object | Yes | Unit economics metrics |
+| pricing_analysis.pricing_options.option_b | object | Yes | Value-based pricing option, includes tiers and unit_economics |
+| pricing_analysis.pricing_options.option_b.tiers | array | Yes | Tier list, at least 1 |
+| pricing_analysis.pricing_options.option_b.tiers[].tier_name | string | Yes | Tier name, cannot be empty |
+| pricing_analysis.pricing_options.option_b.tiers[].price | number | Yes | Price |
+| pricing_analysis.pricing_options.option_b.tiers[].features | string[] | Yes | Included features list |
+| pricing_analysis.pricing_options.option_b.unit_economics | object | Yes | Unit economics metrics |
+| pricing_analysis.pricing_options.option_c | object | Yes | Hybrid pricing option, includes tiers and unit_economics |
+| pricing_analysis.pricing_options.option_c.tiers | array | Yes | Tier list, at least 1 |
+| pricing_analysis.pricing_options.option_c.tiers[].tier_name | string | Yes | Tier name, cannot be empty |
+| pricing_analysis.pricing_options.option_c.tiers[].price | number | Yes | Price |
+| pricing_analysis.pricing_options.option_c.tiers[].features | string[] | Yes | Included features list |
+| pricing_analysis.pricing_options.option_c.unit_economics | object | Yes | Unit economics metrics |
+| pricing_options.*.unit_economics.ltv_cac_ratio | number | Yes | LTV/CAC ratio, healthy standard ≥3 |
+| pricing_options.*.unit_economics.payback_period_months | number | Yes | Payback period (months) |
+| pricing_analysis.recommendation.recommended_option | string | Yes | A/B/C |
+| pricing_analysis.recommendation.reasoning | string | Yes | Recommendation rationale |
 
-### 完整定价分析报告
+### Complete Pricing Analysis Report
 
 ```json
 {
@@ -445,137 +445,137 @@ writes:
     },
     "recommendation": {
       "recommended_option": "A/B/C",
-      "reasoning": "推荐理由",
-      "alternative_for_mitigation": "备选方案"
+      "reasoning": "Recommendation rationale",
+      "alternative_for_mitigation": "Alternative option"
     }
   }
 }
 ```
 
-## 决策规则
+## Decision Rules
 
-### 支付意愿置信度规则
+### Willingness-to-Pay Confidence Rules
 
-**置信度<0.5时的处理**：
-1. 标注建议预售测试验证
-2. 提供降低不确定性所需的最小样本量
-3. 建议保守定价策略作为备选
-4. 明确标注定价数字需要人类拍板
+**Handling when confidence < 0.5**:
+1. Flag recommendation for pre-sale testing validation
+2. Provide minimum sample size needed to reduce uncertainty
+3. Recommend a conservative pricing strategy as an alternative
+4. Explicitly flag that pricing numbers require human sign-off
 
-### 定价数字规则
+### Pricing Number Rules
 
-**必须人类拍板的决策**：
-- 具体定价数字（任何方案的定价）
-- 套餐结构设计
-- 折扣力度
-- 价格调整时机
+**Decisions requiring human sign-off**:
+- Specific pricing numbers (for any option)
+- Tier structure design
+- Discount levels
+- Timing of price adjustments
 
-### AI辅助范围
+### AI Assistance Scope
 
-**AI可自动完成的分析**：
-- 竞品数据整合和可视化
-- 支付意愿区间推断
-- 单位经济计算
-- 敏感性分析
-- 方案对比表格生成
+**Analysis AI can complete automatically**:
+- Competitor data integration and visualization
+- Willingness-to-pay range inference
+- Unit economics calculations
+- Sensitivity analysis
+- Option comparison table generation
 
-## 质量检查
+## Quality Checks
 
-### 自检清单
+### Self-Check List
 
-- [ ] 3个定价方案都已生成（P0）
-- [ ] 每个方案包含差异化定位（P0）
-- [ ] 单位经济计算正确：（P1）
-  - ARPU计算逻辑正确
-  - CAC分摊合理
-  - LTV计算包含留存假设
-  - 盈亏平衡分析完整
-- [ ] 风险已完整标注（P1）
-- [ ] 竞品矩阵覆盖主要竞品（P0）
-- [ ] 支付意愿推断方法透明（P2）
+- [ ] 3 pricing options generated (P0)
+- [ ] Each option includes differentiated positioning (P0)
+- [ ] Unit economics calculations correct: (P1)
+  - ARPU calculation logic correct
+  - CAC allocation reasonable
+  - LTV calculation includes retention assumptions
+  - Break-even analysis complete
+- [ ] Risks fully flagged (P1)
+- [ ] Competitor matrix covers major competitors (P0)
+- [ ] Willingness-to-pay inference method transparent (P2)
 
-### 计算验证
+### Calculation Validation
 
-**单位经济验证清单**：
-- [ ] ARPU = Σ(套餐价格 × 套餐用户占比)（P1）
-- [ ] CAC包括获取成本（广告、BD等）分摊（P1）
-- [ ] LTV = ARPU × 平均生命周期（月）（P1）
-- [ ] 回收期 = CAC / (ARPU - 边际成本)（P2）
-- [ ] LTV/CAC ≥ 3（健康标准）（P2）
+**Unit Economics Validation Checklist**:
+- [ ] ARPU = Σ(tier price × tier user share) (P1)
+- [ ] CAC includes acquisition costs (ads, BD, etc.) allocation (P1)
+- [ ] LTV = ARPU × average lifetime (months) (P1)
+- [ ] Payback period = CAC / (ARPU - marginal cost) (P2)
+- [ ] LTV/CAC ≥ 3 (healthy standard) (P2)
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-当上游文件不存在时，本Skill仍可独立执行：
+When upstream files do not exist, this Skill can still execute independently:
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Instructions |
 |---------------|---------|---------|------------|
-| bmc.json | 用户提供产品描述 → 基于行业基准推荐定价 | 价值主张和成本结构缺乏BMC数据支撑，定价可能偏离实际 | 要求用户提供产品功能、目标用户和成本结构描述或上传bmc.json文件 |
-| 竞品定价数据（competitor-analysis.json） | 用户提供产品描述 → 基于行业基准推荐定价 | 竞品矩阵为空，市场空白无法识别，定价缺乏竞品锚定 | 要求用户提供竞品名称、定价层级和价格或上传competitor-analysis.json文件 |
-| bmc.json + 竞品定价数据 | 用户提供产品描述和目标市场 → 基于行业基准推荐定价 | 整体置信度降低，方案缺乏数据锚定 | 要求用户提供产品描述、竞品定价和行业基准数据 |
-| 所有上游文件均缺失 | 提示用户先执行前序阶段，或基于用户提供的产品描述和行业基准推荐定价 | 整体置信度显著降低，方案仅为行业基准参考 | 要求用户提供产品功能、目标用户、竞品定价和成本结构信息 |
-| 支付意愿推断数据（用户提供） | 若用户未提供支付意愿推断数据，提示用户提供或跳过该输入相关步骤 | 支付意愿分析缺失，定价方案缺乏用户端验证 | 要求用户提供用户支付意愿调研数据或价格敏感度测试结果 |
+| bmc.json | User provides product description → recommend pricing based on industry benchmarks | Value proposition and cost structure lack BMC data support, pricing may deviate from reality | Require user to provide product features, target users, and cost structure description or upload bmc.json file |
+| Competitor pricing data (competitor-analysis.json) | User provides product description → recommend pricing based on industry benchmarks | Competitor matrix is empty, market gaps cannot be identified, pricing lacks competitor anchoring | Require user to provide competitor names, pricing tiers, and prices or upload competitor-analysis.json file |
+| bmc.json + Competitor pricing data | User provides product description and target market → recommend pricing based on industry benchmarks | Overall confidence reduced, options lack data anchoring | Require user to provide product description, competitor pricing, and industry benchmark data |
+| All upstream files missing | Prompt user to execute prior stages first, or recommend pricing based on user-provided product description and industry benchmarks | Overall confidence significantly reduced, options are only industry benchmark references | Require user to provide product features, target users, competitor pricing, and cost structure info |
+| Willingness-to-pay inference data (user provided) | If user does not provide willingness-to-pay inference data, prompt user to provide or skip related steps | Willingness-to-pay analysis missing, pricing options lack user-side validation | Require user to provide user willingness-to-pay survey data or price sensitivity test results |
 
-## 数据获取说明
+## Data Acquisition Instructions
 
-本Skill需要BMC和竞品定价数据，请通过以下方式之一提供：
-  1. 直接描述产品功能、目标用户和定价预期
-  2. 上传bmc.json / competitor-analysis.json文件
-  3. 提供数据文件路径
-- AI不负责外部数据采集，仅负责分析
+This Skill requires BMC and competitor pricing data. Please provide via one of the following methods:
+  1. Directly describe product features, target users, and pricing expectations
+  2. Upload bmc.json / competitor-analysis.json files
+  3. Provide data file paths
+- AI is not responsible for external data collection, only analysis
 
 ---
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| bmc.json价值主张更新 | 定价方案的价值锚点需调整 | 重新评估各方案定价合理性，更新价值溢价依据 |
-| bmc.json客户细分变更 | 支付意愿分段和套餐目标用户 | 重新执行Step 2和Step 3，按新细分调整定价 |
-| bmc.json成本结构变更 | 单位经济指标需重新计算 | 重新计算LTV/CAC和回本周期 |
-| competitor-analysis竞品定价更新 | 竞品定价矩阵和市场空白 | 重新执行Step 1，更新竞品对标 |
+| bmc.json value proposition update | Value anchors of pricing options need adjustment | Reassess pricing rationale of each option, update value premium basis |
+| bmc.json customer segment change | Willingness-to-pay segmentation and tier target users | Re-execute Step 2 and Step 3, adjust pricing by new segments |
+| bmc.json cost structure change | Unit economics metrics need recalculation | Recalculate LTV/CAC and payback period |
+| competitor-analysis competitor pricing update | Competitor pricing matrix and market gaps | Re-execute Step 1, update competitor benchmarking |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 变更类型 | 影响范围 | 通知方式 |
+| Change Type | Impact Scope | Notification Method |
 |----------|----------|----------|
-| 定价方案调整 | business-strategy-report、stakeholder-analysis | 输出文件版本号+变更摘要 |
-| 单位经济指标变更 | business-strategy-report | 输出文件版本号+变更摘要 |
-| 竞品定价矩阵更新 | positioning-strategy | 输出文件版本号+变更摘要 |
+| Pricing option adjustment | business-strategy-report, stakeholder-analysis | Output file version number + change summary |
+| Unit economics metric change | business-strategy-report | Output file version number + change summary |
+| Competitor pricing matrix update | positioning-strategy | Output file version number + change summary |
 
 ---
 
 ## Human Review Checklist
 
-在提交人类审批前，确保以下内容已呈现：
+Before submitting for human approval, ensure the following content is presented:
 
-### 竞品分析
-- [ ] 主要竞品定价已覆盖
-- [ ] 价格区间分布清晰
-- [ ] 市场空白已识别
+### Competitor Analysis
+- [ ] Major competitor pricing covered
+- [ ] Price range distribution clear
+- [ ] Market gaps identified
 
-### 支付意愿
-- [ ] 推断方法已说明
-- [ ] 置信度已标注
-- [ ] 细分差异已分析
+### Willingness to Pay
+- [ ] Inference method explained
+- [ ] Confidence annotated
+- [ ] Segment differences analyzed
 
-### 定价方案
-- [ ] 3个方案定位差异化明显
-- [ ] 单位经济指标已计算
-- [ ] 风险已标注
-- [ ] 方案优劣对比清晰
+### Pricing Options
+- [ ] 3 options have clearly differentiated positioning
+- [ ] Unit economics metrics calculated
+- [ ] Risks flagged
+- [ ] Option pros/cons comparison clear
 
-### 建议
-- [ ] 推荐方案有清晰理由
-- [ ] 备选方案已提供
-- [ ] 决策所需信息完整
+### Recommendation
+- [ ] Recommended option has clear rationale
+- [ ] Alternative option provided
+- [ ] Information needed for decision-making complete
 
-## 数据流规范
+## Data Flow Specification
 
-### 输入目录
+### Input Directory
 ```
 output/
 ├── pm-strategy/business-model-canvas/
@@ -586,7 +586,7 @@ output/
     └── user_modeling.json
 ```
 
-### 输出目录
+### Output Directory
 ```
-docs/strategy/business-strategy.md（“定价策略”章节）
+docs/strategy/business-strategy.md ("Pricing Strategy" section)
 ```

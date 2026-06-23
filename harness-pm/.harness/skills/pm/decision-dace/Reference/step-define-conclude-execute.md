@@ -1,15 +1,15 @@
-<!-- 从 SKILL.md 提取的参考材料，按需查阅 -->
+<!-- Reference material extracted from SKILL.md, consult as needed -->
 
-# Step 1 / Step 3 / Step 4 示例
+# Step 1 / Step 3 / Step 4 Examples
 
-## Step 1: Define（定义）示例
+## Step 1: Define Example
 
-自动建立OKR追踪体系：
+Automatically establish the OKR tracking system:
 
 ```yaml
 define:
   status: "automated"
-  trigger: "OKR更新或季度开始"
+  trigger: "OKR update or quarter start"
 
   output:
     current_cycle: "2024_Q1"
@@ -17,12 +17,12 @@ define:
 
     objectives:
       - id: "obj_1"
-        text: "提升用户活跃度"
+        text: "Improve user engagement"
         owner: "product_team"
 
         key_results:
           - id: "kr_1_1"
-            text: "DAU达到1200万"
+            text: "DAU reaches 12 million"
             metric: "dau"
             baseline: 10500000
             target: 12000000
@@ -30,7 +30,7 @@ define:
             progress: 30
 
           - id: "kr_1_2"
-            text: "D7留存率达到30%"
+            text: "D7 retention rate reaches 30%"
             metric: "d7_retention"
             baseline: 0.25
             target: 0.30
@@ -38,12 +38,12 @@ define:
             progress: 70
 
       - id: "obj_2"
-        text: "提升商业化收入"
+        text: "Improve commercial revenue"
         owner: "biz_team"
 
         key_results:
           - id: "kr_2_1"
-            text: "月收入达到5000万"
+            text: "Monthly revenue reaches 50 million"
             metric: "monthly_revenue"
             baseline: 42000000
             target: 50000000
@@ -56,9 +56,9 @@ define:
       guardrail: ["user_satisfaction", "app_crash_rate"]
 ```
 
-## Step 3: Conclude（决策选项）示例
+## Step 3: Conclude (Decision Options) Example
 
-AI生成决策建议，人类做出最终决定：
+AI generates decision recommendations, humans make the final decision:
 
 ```yaml
 conclude:
@@ -70,21 +70,21 @@ conclude:
 
     recommendations:
       - priority: 1
-        action: "全量发布简化注册流程"
-        rationale: "实验数据显示转化提升8.2%，护栏指标安全"
-        expected_outcome: "新用户注册转化+8.2%"
+        action: "Full release of simplified registration flow"
+        rationale: "Experimental data shows 8.2% conversion improvement, guardrail metrics safe"
+        expected_outcome: "New user registration conversion +8.2%"
         risk_level: "low"
 
       - priority: 2
-        action: "优化加购环节流程"
-        rationale: "漏斗分析显示加购是关键流失点"
-        expected_outcome: "整体转化提升潜力+15%"
+        action: "Optimize add-to-cart flow"
+        rationale: "Funnel analysis shows add-to-cart is a key drop-off point"
+        expected_outcome: "Overall conversion improvement potential +15%"
         risk_level: "medium"
 
       - priority: 3
-        action: "针对Android做留存优化"
-        rationale: "Android留存低于iOS，需针对性优化"
-        expected_outcome: "Android D7留存+5%"
+        action: "Retention optimization for Android"
+        rationale: "Android retention is lower than iOS, needs targeted optimization"
+        expected_outcome: "Android D7 retention +5%"
         risk_level: "medium"
 
   human_decision_required:
@@ -93,15 +93,15 @@ conclude:
     deadline: "2024-01-20"
 
     context_provided:
-      - "实验完整分析报告"
-      - "风险评估"
-      - "资源配置需求"
-      - "时间规划"
+      - "Complete experiment analysis report"
+      - "Risk assessment"
+      - "Resource allocation requirements"
+      - "Timeline planning"
 ```
 
-## Step 4: Execute（执行追踪）示例
+## Step 4: Execute (Execution Tracking) Example
 
-追踪执行效果：
+Track execution effectiveness:
 
 ```yaml
 execute:
@@ -110,7 +110,7 @@ execute:
 
   approved_actions:
     - action_id: "act_001"
-      action: "全量发布简化注册流程"
+      action: "Full release of simplified registration flow"
       approved_by: "product_director"
       approved_at: "2024-01-18"
 
@@ -150,5 +150,5 @@ execute:
           change: -0.2%
           status: "safe"
 
-      verdict: "功能表现符合预期，继续监控"
+      verdict: "Feature performance meets expectations, continue monitoring"
 ```

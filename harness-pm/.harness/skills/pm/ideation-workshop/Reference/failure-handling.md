@@ -1,15 +1,15 @@
-<!-- 从 SKILL.md 提取的参考材料，按需查阅 -->
+<!-- Reference material extracted from SKILL.md, consult as needed -->
 
-# 失败处理决策表
+# Failure Handling Decision Table
 
-| 失败场景 | 处理流程 |
+| Failure Scenario | Handling Process |
 |----------|----------|
-| HMW未通过质量检查 | 识别质量问题类型，针对性重新生成，重新质量检查 |
-| HMW维度覆盖不全 | 检查6个维度的HMW数量，针对缺失维度补充生成 |
-| HMW缺乏数据支撑 | 关联现有数据或返回输入阶段补充用户研究数据 |
-| SCAMPER方案数量不足 | 针对稀缺维度补充生成，降低相似度阈值 |
-| SCAMPER维度覆盖不全 | 回到Step 2A，针对缺失维度补充生成方案 |
-| 反转思维失败路径不足 | 检查失败路径分类完整性，补充缺失维度 |
-| 设计约束过于抽象 | 审查约束描述，转化为具体可执行描述并定义验证方法 |
-| 收敛方案深化不足 | 补充缺失的深化维度 |
-| 对比矩阵维度缺失 | 补充缺失维度评分，无法评分则标注"数据不足" |
+| HMW failed quality check | Identify quality issue type, targeted regeneration, re-run quality check |
+| HMW dimension coverage incomplete | Check HMW count for 6 dimensions, supplement generation for missing dimensions |
+| HMW lacks data support | Associate existing data or return to input phase to supplement user research data |
+| Insufficient SCAMPER solutions | Supplement generation for sparse dimensions, lower similarity threshold |
+| SCAMPER dimension coverage incomplete | Return to Step 2A, supplement generation for missing dimensions |
+| Insufficient reverse thinking failure paths | Check failure path classification completeness, supplement missing dimensions |
+| Design constraints too abstract | Review constraint descriptions, transform into specific actionable descriptions and define verification methods |
+| Insufficient convergence solution deepening | Supplement missing deepening dimensions |
+| Comparison matrix dimensions missing | Supplement missing dimension scores; if scoring is not possible, annotate "insufficient data" |

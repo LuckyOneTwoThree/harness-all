@@ -1,22 +1,22 @@
-# 项目知识库
+# Project knowledge base
 
-> 永久记忆，跨会话沉淀。重要发现写入本文件。
-> 与 progress.md 的分工：progress.md 是会话级临时日志，本文件是项目级长期知识。
+> Permanent memory, accumulated across sessions. Important findings are written to this file.
+> Division of labor with progress.md: progress.md is a session-level temporary log; this file is project-level long-term knowledge.
 
-## 设计决策
+## Design decisions
 
-| 日期 | 决策/根因 | 理由 | 替代方案 |
+| Date | Decision / root cause | Reason | Alternatives |
 |------|------|------|---------|
-| YYYY-MM-DD | [决策描述] | [为什么这样选] | [其他可选方案] |
+| YYYY-MM-DD | [decision description] | [why this choice] | [other options] |
 
-## 踩坑记录
+## Pitfalls
 
-| 日期 | 问题 | 解决方案 | 相关文件 |
+| Date | Problem | Solution | Related files |
 |------|------|---------|---------|
-| YYYY-MM-DD | [问题描述] | [怎么解决的] | [涉及文件路径] |
+| YYYY-MM-DD | [problem description] | [how it was solved] | [related file paths] |
 
-## 模式沉淀
+## Pattern accumulation
 
-| 模式 | 适用场景 | 示例 |
+| Pattern | Applicable scenario | Example |
 |------|---------|------|
-| [模式名] | [什么时候用] | [设计/规范示例] |
+| [pattern name] | [when to use] | [design/spec example] |

@@ -1,20 +1,20 @@
 ---
 name: product-proposal
-description: 当需要撰写产品立项提案时使用。产品立项提案自动生成，整合所有前序分析结果，生成结构化的产品立项文档。关键词：产品立项、产品提案、立项文档、商业计划书、产品规划文档、立项申请、项目提案。
+description: Use when you need to write a product project initiation proposal. Product project initiation proposal auto-generation, integrating all prior analysis results to generate a structured product project initiation document. Keywords: project initiation, product proposal, initiation document, business plan, product planning document, project application, project proposal.
 metadata:
-  module: "产品商业与战略"
-  sub-module: "产品立项"
+  module: "Product Business & Strategy"
+  sub-module: "Product Project Initiation"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["SaaS", "通用"]
+  domain_tags: ["SaaS", "General"]
   trigger_examples:
-    - "帮我写产品立项文档"
-    - "产品提案怎么写"
+    - "Help me write a product project initiation document"
+    - "How to write a product proposal"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出产品提案和核心论点"
-  deep_description: "完整提案 + 商业可行性分析 + 技术可行性评估 + 风险与缓解方案"
+  quick_description: "Directly output the product proposal and core arguments"
+  deep_description: "Full proposal + business feasibility analysis + technical feasibility assessment + risk and mitigation plan"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -30,391 +30,391 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 产品立项提案自动生成
+# Product Project Initiation Proposal Auto-Generation
 
-## 核心原则
+## Core Principles
 
-1. **证据链闭环**——提案中每个结论必须可追溯到前序分析数据，拒绝无据断言
-2. **决策点显式**——所有需要人类决策的关键节点必须标注，不可AI代决
-3. **风险前置**——技术/市场/资源/合规风险必须在提案中显式呈现
-4. **一页纸先行**——执行摘要必须一页纸说清核心逻辑，详细内容作为支撑
+1. **Evidence chain closed loop** — Every conclusion in the proposal must be traceable to prior analysis data; unsupported assertions are rejected
+2. **Decision points explicit** — All key nodes requiring human decision must be annotated; AI cannot decide on behalf of humans
+3. **Risks up front** — Technical/market/resource/compliance risks must be explicitly presented in the proposal
+4. **One-pager first** — The executive summary must explain the core logic on one page, with detailed content as support
 
-## 交互模式
-🤖→👤 AI建议人类审批
+## Interaction Mode
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 用户研究数据 | JSON | ○ | user-research-user-modeling | 用户画像、痛点、需求 |
-| 商业模式画布 | JSON | ○ | docs/strategy/business-strategy.md（“商业模式画布”章节） | 商业模式9宫格 |
-| SWOT分析 | JSON | ○ | docs/strategy/PRODUCT_STRATEGY.md（“战略分析”章节） | 战略态势 |
-| OKR | JSON | ○ | docs/strategy/OKR.md | 目标与关键结果 |
-| 路线图 | JSON | ○ | docs/strategy/roadmap.md | 产品路线图 |
-| 定价策略 | JSON | ○ | docs/strategy/business-strategy.md（“定价策略”章节） | 定价方案 |
-| 定位策略 | JSON | ○ | docs/strategy/positioning.md | 产品定位 |
-| 利益相关者 | JSON | ○ | docs/strategy/stakeholder-analysis.md | 利益相关者 |
-| 产品/业务信息 | string | 是 | 用户提供 | 产品名称、业务描述 |
+| User research data | JSON | ○ | user-research-user-modeling | User personas, pain points, needs |
+| Business model canvas | JSON | ○ | docs/strategy/business-strategy.md ("Business Model Canvas" section) | Business model 9-grid canvas |
+| SWOT analysis | JSON | ○ | docs/strategy/PRODUCT_STRATEGY.md ("Strategic Analysis" section) | Strategic posture |
+| OKR | JSON | ○ | docs/strategy/OKR.md | Objectives and Key Results |
+| Roadmap | JSON | ○ | docs/strategy/roadmap.md | Product roadmap |
+| Pricing strategy | JSON | ○ | docs/strategy/business-strategy.md ("Pricing Strategy" section) | Pricing plan |
+| Positioning strategy | JSON | ○ | docs/strategy/positioning.md | Product positioning |
+| Stakeholders | JSON | ○ | docs/strategy/stakeholder-analysis.md | Stakeholders |
+| Product/business information | string | Yes | Provided by user | Product name, business description |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 执行摘要生成 [核心]
+### Step 1: Executive Summary Generation [Core]
 
-生成一页纸执行摘要，包含：
+Generate a one-page executive summary, including:
 
-| 要素 | 内容 |
+| Element | Content |
 |------|------|
-| 产品名称 | 产品名称和一句话描述 |
-| 目标用户 | 核心用户群体 |
-| 核心价值 | 价值主张一句话 |
-| 商业模式 | 收入模式概述 |
-| 市场机会 | 市场规模和增长 |
-| 竞争优势 | 差异化优势 |
-| 关键指标 | 北极星指标+核心OKR |
-| 资源需求 | 团队、预算、时间 |
-| 关键风险 | Top3风险 |
-| 决策请求 | 需要审批的事项 |
+| Product name | Product name and one-sentence description |
+| Target users | Core user groups |
+| Core value | One-sentence value proposition |
+| Business model | Revenue model overview |
+| Market opportunity | Market size and growth |
+| Competitive advantage | Differentiated advantages |
+| Key metrics | North Star Metric + core OKR |
+| Resource requirements | Team, budget, time |
+| Key risks | Top 3 risks |
+| Decision requests | Items requiring approval |
 
-### Step 2: 产品定义 [核心]
+### Step 2: Product Definition [Core]
 
-整合用户研究和定位数据：
+Integrate user research and positioning data:
 
-**产品概述**：
-- 产品愿景
-- 目标用户画像
-- 核心使用场景
-- 价值主张
+**Product Overview**:
+- Product vision
+- Target user personas
+- Core use scenarios
+- Value proposition
 
-**功能范围**：
-- MVP功能列表
-- V2.0功能规划
-- 功能优先级
+**Feature Scope**:
+- MVP feature list
+- V2.0 feature planning
+- Feature priorities
 
-### Step 3: 商业分析 [核心]
+### Step 3: Business Analysis [Core]
 
-整合BMC、定价和SWOT数据：
+Integrate BMC, pricing, and SWOT data:
 
-**市场分析**：
-- 市场规模（TAM/SAM/SOM）
-- 市场增长趋势
-- 目标市场定位
+**Market Analysis**:
+- Market size (TAM/SAM/SOM)
+- Market growth trends
+- Target market positioning
 
-**商业模式**：
-- 收入模式
-- 定价策略
-- 成本结构
-- 单位经济
+**Business Model**:
+- Revenue model
+- Pricing strategy
+- Cost structure
+- Unit economics
 
-**竞争分析**：
-- 竞品对比
-- 差异化优势
-- 竞争壁垒
+**Competitive Analysis**:
+- Competitor comparison
+- Differentiated advantages
+- Competitive moat
 
-### Step 4: 执行计划 [核心]
+### Step 4: Execution Plan [Core]
 
-整合OKR和路线图数据：
+Integrate OKR and roadmap data:
 
-**目标体系**：
-- 年度OKR
-- 季度里程碑
-- 关键指标
+**Goal System**:
+- Annual OKR
+- Quarterly milestones
+- Key metrics
 
-**路线图**：
+**Roadmap**:
 - Now/Next/Later
-- 资源需求
-- 依赖关系
+- Resource requirements
+- Dependencies
 
-### Step 5: 风险评估 [核心]
+### Step 5: Risk Assessment [Core]
 
-识别和评估关键风险：
+Identify and assess key risks:
 
-| 风险类别 | 评估维度 |
+| Risk Category | Assessment Dimension |
 |----------|----------|
-| 市场风险 | 需求变化、竞品动作、市场萎缩 |
-| 技术风险 | 技术可行性、性能瓶颈、安全合规 |
-| 资源风险 | 人才短缺、预算不足、时间压力 |
-| 执行风险 | 团队能力、协作效率、外部依赖 |
+| Market risk | Demand changes, competitor actions, market contraction |
+| Technical risk | Technical feasibility, performance bottlenecks, security compliance |
+| Resource risk | Talent shortage, budget shortfall, time pressure |
+| Execution risk | Team capability, collaboration efficiency, external dependencies |
 
-### Step 6: 文档组装 [核心]
+### Step 6: Document Assembly [Core]
 
-**提案结构**：
+**Proposal Structure**:
 
 ```
-# {产品名}产品立项提案
+# {Product Name} Product Project Initiation Proposal
 
-## 执行摘要（一页纸）
+## Executive Summary (one page)
 
-## 1. 产品定义
-### 1.1 产品愿景
-### 1.2 目标用户
-### 1.3 核心价值
-### 1.4 功能范围
+## 1. Product Definition
+### 1.1 Product Vision
+### 1.2 Target Users
+### 1.3 Core Value
+### 1.4 Feature Scope
 
-## 2. 商业分析
-### 2.1 市场机会
-### 2.2 商业模式
-### 2.3 竞争分析
+## 2. Business Analysis
+### 2.1 Market Opportunity
+### 2.2 Business Model
+### 2.3 Competitive Analysis
 
-## 3. 执行计划
-### 3.1 目标体系
-### 3.2 产品路线图
-### 3.3 资源需求
+## 3. Execution Plan
+### 3.1 Goal System
+### 3.2 Product Roadmap
+### 3.3 Resource Requirements
 
-## 4. 风险评估
-### 4.1 风险矩阵
-### 4.2 缓解措施
+## 4. Risk Assessment
+### 4.1 Risk Matrix
+### 4.2 Mitigation Measures
 
-## 5. 决策请求
-### 5.1 需要审批的事项
-### 5.2 建议的下一步
+## 5. Decision Requests
+### 5.1 Items Requiring Approval
+### 5.2 Suggested Next Steps
 
-## 附录
-- 数据来源
-- 假设清单
-- 详细分析
+## Appendix
+- Data sources
+- Assumption list
+- Detailed analysis
 ```
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 产品提案和核心论点 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整提案 + 商业可行性分析 + 技术可行性评估 + 风险与缓解方案 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Product proposal and core arguments | Core conclusions + minimum viable artifact |
+| standard | Full artifact (current default) | Complete artifact, including all Step outputs |
+| deep | Full proposal + business feasibility analysis + technical feasibility assessment + risk and mitigation plan | Full artifact + extended analysis + deep reasoning |
 
-## 输出
+## Output
 
-**存储路径**：`docs/strategy/PRODUCT_STRATEGY.md（“产品提案”章节）`
+**Storage path**: `docs/strategy/PRODUCT_STRATEGY.md ("Product Proposal" section)`
 
-**输出文件**：
+**Output files**:
 
-| 文件 | 格式 | 说明 |
+| File | Format | Description |
 |------|------|------|
-| product-proposal.md | Markdown | 完整产品立项提案 |
-| product-proposal.json | JSON | 结构化数据 |
+| product-proposal.md | Markdown | Complete product project initiation proposal |
+| product-proposal.json | JSON | Structured data |
 
-### 输出校验规则
+### Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| proposal_metadata.product_name | string | 是 | 产品名称 |
-| proposal_metadata.generated_at | string | 是 | 生成时间戳 |
-| proposal_metadata.data_sources | array | 是 | 数据来源列表 |
-| proposal_metadata.overall_confidence | number | 是 | 整体置信度0-1 |
-| executive_summary.product_name | string | 是 | 产品名称 |
-| executive_summary.target_user | string | 是 | 目标用户 |
-| executive_summary.core_value | string | 是 | 核心价值 |
-| executive_summary.business_model | string | 是 | 商业模式 |
-| executive_summary.market_opportunity | string | 是 | 市场机会 |
-| executive_summary.key_risks | array | 是 | Top3风险 |
-| executive_summary.decision_requests | array | 是 | 需审批事项 |
-| product_definition.vision | string | 是 | 产品愿景 |
-| product_definition.target_users | array | 是 | 目标用户群体列表 |
-| product_definition.target_users[].segment_name | string | 是 | 用户群体名称 |
-| product_definition.target_users[].description | string | 是 | 群体描述 |
-| product_definition.target_users[].core_needs | array | 是 | 核心需求列表 |
-| product_definition.target_users[].scenarios | array | 是 | 使用场景列表 |
-| product_definition.core_value_proposition | string | 是 | 核心价值主张 |
-| product_definition.feature_scope | object | 是 | 功能范围 |
-| product_definition.feature_scope.mvp_features | array | 是 | MVP功能列表 |
-| product_definition.feature_scope.mvp_features[].name | string | 是 | 功能名称 |
-| product_definition.feature_scope.mvp_features[].priority | string | 是 | 优先级：must/should/could |
-| product_definition.feature_scope.mvp_features[].description | string | 是 | 功能描述 |
-| product_definition.feature_scope.v2_features | array | 是 | V2.0功能规划列表 |
-| business_analysis.market_analysis | object | 是 | 市场分析 |
-| business_analysis.market_analysis.tam | string | 是 | 总可达市场 |
-| business_analysis.market_analysis.sam | string | 是 | 可服务市场 |
-| business_analysis.market_analysis.som | string | 是 | 可获得市场 |
-| business_analysis.market_analysis.growth_trend | string | 是 | 增长趋势 |
-| business_analysis.business_model | object | 是 | 商业模式 |
-| business_analysis.business_model.revenue_model | string | 是 | 收入模式 |
-| business_analysis.business_model.pricing_strategy | string | 是 | 定价策略概述 |
-| business_analysis.business_model.cost_structure | array | 是 | 主要成本项列表 |
-| business_analysis.business_model.unit_economics | string | 是 | 单位经济 |
-| business_analysis.competitive_analysis | object | 是 | 竞争分析 |
-| business_analysis.competitive_analysis.key_competitors | array | 是 | 核心竞品列表 |
-| business_analysis.competitive_analysis.differentiation | string | 是 | 差异化优势 |
-| business_analysis.competitive_analysis.competitive_moat | string | 是 | 竞争壁垒 |
-| execution_plan.okr | object | 是 | 目标与关键结果 |
-| execution_plan.okr.objective | string | 是 | 年度目标 |
-| execution_plan.okr.key_results | array | 是 | 关键结果列表 |
-| execution_plan.okr.key_results[].kr | string | 是 | 关键结果 |
-| execution_plan.okr.key_results[].metric | string | 是 | 衡量指标 |
-| execution_plan.okr.key_results[].target | string | 是 | 目标值 |
-| execution_plan.roadmap | object | 是 | 产品路线图 |
-| execution_plan.roadmap.now | array | 是 | 当前阶段事项 |
-| execution_plan.roadmap.next | array | 是 | 下一阶段事项 |
-| execution_plan.roadmap.later | array | 是 | 远期规划事项 |
-| execution_plan.resource_needs | object | 是 | 资源需求 |
-| execution_plan.resource_needs.team | string | 是 | 团队配置 |
-| execution_plan.resource_needs.budget | string | 是 | 预算需求 |
-| execution_plan.resource_needs.timeline | string | 是 | 时间规划 |
-| execution_plan.dependencies | array | 是 | 关键依赖列表 |
-| risk_assessment.risks | array | 是 | 风险列表 |
-| risk_assessment.risks[].category | string | 是 | 风险类别：market/technology/resource/execution |
-| risk_assessment.risks[].description | string | 是 | 风险描述 |
-| risk_assessment.risks[].severity | string | 是 | 严重程度：high/medium/low |
-| risk_assessment.risks[].probability | string | 是 | 发生概率：high/medium/low |
-| risk_assessment.risks[].mitigation | string | 是 | 缓解措施 |
-| risk_assessment.risk_matrix_summary | string | 是 | 风险矩阵概述 |
-| decision_requests | array | 是 | 决策请求 |
+| proposal_metadata.product_name | string | Yes | Product name |
+| proposal_metadata.generated_at | string | Yes | Generation timestamp |
+| proposal_metadata.data_sources | array | Yes | Data source list |
+| proposal_metadata.overall_confidence | number | Yes | Overall confidence 0-1 |
+| executive_summary.product_name | string | Yes | Product name |
+| executive_summary.target_user | string | Yes | Target users |
+| executive_summary.core_value | string | Yes | Core value |
+| executive_summary.business_model | string | Yes | Business model |
+| executive_summary.market_opportunity | string | Yes | Market opportunity |
+| executive_summary.key_risks | array | Yes | Top 3 risks |
+| executive_summary.decision_requests | array | Yes | Items requiring approval |
+| product_definition.vision | string | Yes | Product vision |
+| product_definition.target_users | array | Yes | Target user group list |
+| product_definition.target_users[].segment_name | string | Yes | User group name |
+| product_definition.target_users[].description | string | Yes | Group description |
+| product_definition.target_users[].core_needs | array | Yes | Core needs list |
+| product_definition.target_users[].scenarios | array | Yes | Use scenario list |
+| product_definition.core_value_proposition | string | Yes | Core value proposition |
+| product_definition.feature_scope | object | Yes | Feature scope |
+| product_definition.feature_scope.mvp_features | array | Yes | MVP feature list |
+| product_definition.feature_scope.mvp_features[].name | string | Yes | Feature name |
+| product_definition.feature_scope.mvp_features[].priority | string | Yes | Priority: must/should/could |
+| product_definition.feature_scope.mvp_features[].description | string | Yes | Feature description |
+| product_definition.feature_scope.v2_features | array | Yes | V2.0 feature planning list |
+| business_analysis.market_analysis | object | Yes | Market analysis |
+| business_analysis.market_analysis.tam | string | Yes | Total Addressable Market |
+| business_analysis.market_analysis.sam | string | Yes | Serviceable Available Market |
+| business_analysis.market_analysis.som | string | Yes | Serviceable Obtainable Market |
+| business_analysis.market_analysis.growth_trend | string | Yes | Growth trend |
+| business_analysis.business_model | object | Yes | Business model |
+| business_analysis.business_model.revenue_model | string | Yes | Revenue model |
+| business_analysis.business_model.pricing_strategy | string | Yes | Pricing strategy overview |
+| business_analysis.business_model.cost_structure | array | Yes | Major cost items list |
+| business_analysis.business_model.unit_economics | string | Yes | Unit economics |
+| business_analysis.competitive_analysis | object | Yes | Competitive analysis |
+| business_analysis.competitive_analysis.key_competitors | array | Yes | Key competitor list |
+| business_analysis.competitive_analysis.differentiation | string | Yes | Differentiated advantage |
+| business_analysis.competitive_analysis.competitive_moat | string | Yes | Competitive moat |
+| execution_plan.okr | object | Yes | Objectives and Key Results |
+| execution_plan.okr.objective | string | Yes | Annual objective |
+| execution_plan.okr.key_results | array | Yes | Key Results list |
+| execution_plan.okr.key_results[].kr | string | Yes | Key Result |
+| execution_plan.okr.key_results[].metric | string | Yes | Measurement metric |
+| execution_plan.okr.key_results[].target | string | Yes | Target value |
+| execution_plan.roadmap | object | Yes | Product roadmap |
+| execution_plan.roadmap.now | array | Yes | Current phase items |
+| execution_plan.roadmap.next | array | Yes | Next phase items |
+| execution_plan.roadmap.later | array | Yes | Long-term planning items |
+| execution_plan.resource_needs | object | Yes | Resource requirements |
+| execution_plan.resource_needs.team | string | Yes | Team configuration |
+| execution_plan.resource_needs.budget | string | Yes | Budget requirements |
+| execution_plan.resource_needs.timeline | string | Yes | Time planning |
+| execution_plan.dependencies | array | Yes | Key dependency list |
+| risk_assessment.risks | array | Yes | Risk list |
+| risk_assessment.risks[].category | string | Yes | Risk category: market/technology/resource/execution |
+| risk_assessment.risks[].description | string | Yes | Risk description |
+| risk_assessment.risks[].severity | string | Yes | Severity: high/medium/low |
+| risk_assessment.risks[].probability | string | Yes | Probability: high/medium/low |
+| risk_assessment.risks[].mitigation | string | Yes | Mitigation measure |
+| risk_assessment.risk_matrix_summary | string | Yes | Risk matrix overview |
+| decision_requests | array | Yes | Decision requests |
 
 ```json
 {
   "proposal_metadata": {
-    "product_name": "产品名",
-    "generated_at": "时间戳",
+    "product_name": "Product name",
+    "generated_at": "Timestamp",
     "data_sources": [],
     "overall_confidence": 0.0
   },
   "executive_summary": {
-    "product_name": "产品名",
-    "target_user": "目标用户",
-    "core_value": "核心价值",
-    "business_model": "商业模式",
-    "market_opportunity": "市场机会",
-    "competitive_advantage": "竞争优势",
+    "product_name": "Product name",
+    "target_user": "Target users",
+    "core_value": "Core value",
+    "business_model": "Business model",
+    "market_opportunity": "Market opportunity",
+    "competitive_advantage": "Competitive advantage",
     "key_metrics": {},
     "resource_needs": {},
     "key_risks": [],
     "decision_requests": []
   },
   "product_definition": {
-    "vision": "产品愿景",
+    "vision": "Product vision",
     "target_users": [
       {
-        "segment_name": "用户群体名称",
-        "description": "群体描述",
-        "core_needs": ["核心需求"],
-        "scenarios": ["使用场景"]
+        "segment_name": "User group name",
+        "description": "Group description",
+        "core_needs": ["Core needs"],
+        "scenarios": ["Use scenarios"]
       }
     ],
-    "core_value_proposition": "核心价值主张",
+    "core_value_proposition": "Core value proposition",
     "feature_scope": {
       "mvp_features": [
-        {"name": "功能名称", "priority": "must|should|could", "description": "功能描述"}
+        {"name": "Feature name", "priority": "must|should|could", "description": "Feature description"}
       ],
-      "v2_features": ["V2.0功能规划"]
+      "v2_features": ["V2.0 feature planning"]
     }
   },
   "business_analysis": {
     "market_analysis": {
-      "tam": "总可达市场",
-      "sam": "可服务市场",
-      "som": "可获得市场",
-      "growth_trend": "增长趋势"
+      "tam": "Total Addressable Market",
+      "sam": "Serviceable Available Market",
+      "som": "Serviceable Obtainable Market",
+      "growth_trend": "Growth trend"
     },
     "business_model": {
-      "revenue_model": "收入模式",
-      "pricing_strategy": "定价策略概述",
-      "cost_structure": ["主要成本项"],
-      "unit_economics": "单位经济"
+      "revenue_model": "Revenue model",
+      "pricing_strategy": "Pricing strategy overview",
+      "cost_structure": ["Major cost items"],
+      "unit_economics": "Unit economics"
     },
     "competitive_analysis": {
-      "key_competitors": ["核心竞品"],
-      "differentiation": "差异化优势",
-      "competitive_moat": "竞争壁垒"
+      "key_competitors": ["Key competitors"],
+      "differentiation": "Differentiated advantage",
+      "competitive_moat": "Competitive moat"
     }
   },
   "execution_plan": {
     "okr": {
-      "objective": "年度目标",
+      "objective": "Annual objective",
       "key_results": [
-        {"kr": "关键结果", "metric": "衡量指标", "target": "目标值"}
+        {"kr": "Key Result", "metric": "Measurement metric", "target": "Target value"}
       ]
     },
     "roadmap": {
-      "now": ["当前阶段"],
-      "next": ["下一阶段"],
-      "later": ["远期规划"]
+      "now": ["Current phase"],
+      "next": ["Next phase"],
+      "later": ["Long-term planning"]
     },
     "resource_needs": {
-      "team": "团队配置",
-      "budget": "预算需求",
-      "timeline": "时间规划"
+      "team": "Team configuration",
+      "budget": "Budget requirements",
+      "timeline": "Time planning"
     },
-    "dependencies": ["关键依赖"]
+    "dependencies": ["Key dependencies"]
   },
   "risk_assessment": {
     "risks": [
       {
         "category": "market|technology|resource|execution",
-        "description": "风险描述",
+        "description": "Risk description",
         "severity": "high|medium|low",
         "probability": "high|medium|low",
-        "mitigation": "缓解措施"
+        "mitigation": "Mitigation measure"
       }
     ],
-    "risk_matrix_summary": "风险矩阵概述"
+    "risk_matrix_summary": "Risk matrix overview"
   },
   "decision_requests": []
 }
 ```
 
-## 决策规则
+## Decision Rules
 
-| 条件 | 决策 |
+| Condition | Decision |
 |------|------|
-| 所有上游数据完整 | 生成完整提案 |
-| 部分上游数据缺失 | 标注缺失部分，基于已有数据生成 |
-| 关键数据缺失（用户/市场） | 提示补充数据，降低置信度 |
-| 整体置信度<0.5 | 标注"建议补充数据后再审批" |
+| All upstream data complete | Generate full proposal |
+| Some upstream data missing | Annotate missing parts, generate based on existing data |
+| Key data missing (user/market) | Prompt to supplement data, lower confidence |
+| Overall confidence < 0.5 | Annotate "Recommend supplementing data before approval" |
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] executive_summary字段≤500字
-- [ ] product_definition包含≥1个target_user且feature_scope.mvp_features≥3个
+- [ ] executive_summary field ≤ 500 characters
+- [ ] product_definition contains ≥ 1 target_user and feature_scope.mvp_features ≥ 3
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] business_analysis.market_analysis包含TAM/SAM/SOM且business_model.revenue_model非空
-- [ ] execution_plan.okr包含≥2个key_results且roadmap.now非空
-- [ ] risk_assessment.risks覆盖≥3个category
-- [ ] decision_requests包含≥1个具体审批事项
-- [ ] proposal_metadata.data_sources包含≥1个来源
+- [ ] business_analysis.market_analysis contains TAM/SAM/SOM and business_model.revenue_model is non-empty
+- [ ] execution_plan.okr contains ≥ 2 key_results and roadmap.now is non-empty
+- [ ] risk_assessment.risks covers ≥ 3 categories
+- [ ] decision_requests contains ≥ 1 specific approval item
+- [ ] proposal_metadata.data_sources contains ≥ 1 source
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only required for deep)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep reasoning and roadmap generated)
+- [ ] Decision record complete (key decisions have rationale and alternatives)
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-当上游文件不存在时，本Skill仍可独立执行：
+When upstream files are missing, this Skill can still execute independently:
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Instructions |
 |---------------|---------|---------|------------|
-| 用户研究数据 | 基于产品描述推导用户画像 | 用户定义缺乏实证数据，画像可能偏主观 | 要求用户提供目标用户特征和核心痛点描述或上传persona.json文件 |
-| bmc.json | 基于产品描述推导商业模式 | 商业模式缺乏9格画布结构化支撑 | 要求用户提供收入模式、成本结构和价值主张描述或上传bmc.json文件 |
-| strategic-analysis.json | 基于产品描述推导战略态势 | 战略分析缺乏结构化依据 | 要求用户提供产品优势和挑战描述或上传strategic-analysis.json文件 |
-| okr.json | 基于产品描述推导目标 | OKR缺乏战略对齐，可量化性可能不足 | 要求用户提供业务目标和关键结果或上传okr.json文件 |
-| roadmap.json | 基于产品描述推导路线图 | 路线图缺乏RICE排序依据 | 要求用户提供功能优先级和时间规划或上传roadmap.json文件 |
-| 定价/定位/利益相关者数据 | 基于产品描述推导 | 对应章节缺乏数据锚定 | 要求用户提供定价方案、产品定位和组织架构信息 |
-| 所有上游文件均缺失 | 基于用户提供的产品描述生成完整提案 | 整体置信度显著降低，提案缺乏数据支撑 | 要求用户提供产品名称、核心功能、目标用户和业务目标 |
+| User research data | Derive user personas based on product description | User definition lacks empirical data, personas may be subjective | Ask user to provide target user characteristics and core pain point descriptions or upload persona.json file |
+| bmc.json | Derive business model based on product description | Business model lacks 9-grid canvas structured support | Ask user to provide revenue model, cost structure, and value proposition descriptions or upload bmc.json file |
+| strategic-analysis.json | Derive strategic posture based on product description | Strategic analysis lacks structured basis | Ask user to provide product strengths and challenges descriptions or upload strategic-analysis.json file |
+| okr.json | Derive objectives based on product description | OKR lacks strategic alignment, quantifiability may be insufficient | Ask user to provide business objectives and Key Results or upload okr.json file |
+| roadmap.json | Derive roadmap based on product description | Roadmap lacks RICE prioritization basis | Ask user to provide feature priorities and time planning or upload roadmap.json file |
+| Pricing/positioning/stakeholder data | Derive based on product description | Corresponding sections lack data anchoring | Ask user to provide pricing plan, product positioning, and organizational structure information |
+| All upstream files missing | Generate full proposal based on user-provided product description | Overall confidence significantly reduced, proposal lacks data support | Ask user to provide product name, core features, target users, and business objectives |
 
 ---
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| 用户研究数据更新 | 产品定义、目标用户 | 更新产品定义章节 |
-| bmc.json商业模式变更 | 商业分析章节 | 更新商业模式和单位经济 |
-| strategic-analysis.json战略分析更新 | 商业分析竞争分析 | 更新竞争分析和风险评估 |
-| okr.json OKR调整 | 执行计划章节 | 更新目标体系和路线图 |
-| roadmap.json路线图变更 | 执行计划章节 | 更新路线图和资源需求 |
-| 定价策略变更 | 商业分析章节 | 更新定价策略和单位经济 |
+| User research data update | Product definition, target users | Update product definition section |
+| bmc.json business model change | Business analysis section | Update business model and unit economics |
+| strategic-analysis.json strategic analysis update | Business analysis competitive analysis | Update competitive analysis and risk assessment |
+| okr.json OKR adjustment | Execution plan section | Update goal system and roadmap |
+| roadmap.json roadmap change | Execution plan section | Update roadmap and resource requirements |
+| Pricing strategy change | Business analysis section | Update pricing strategy and unit economics |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 变更类型 | 影响范围 | 通知方式 |
+| Change Type | Impact Scope | Notification Method |
 |----------|----------|----------|
-| 提案内容变更 | stakeholder-analysis | 输出文件版本号+变更摘要 |
-| 风险评估变更 | stakeholder-analysis | 输出文件版本号+变更摘要 |
-| 决策请求变更 | stakeholder-analysis | 输出文件版本号+变更摘要 |
+| Proposal content change | stakeholder-analysis | Output file version number + change summary |
+| Risk assessment change | stakeholder-analysis | Output file version number + change summary |
+| Decision request change | stakeholder-analysis | Output file version number + change summary |

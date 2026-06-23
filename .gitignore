@@ -1,4 +1,4 @@
-# 敏感文件（禁止提交）
+# Sensitive files (do not commit)
 .env
 .env.local
 .env.production
@@ -10,14 +10,14 @@ id_ed25519
 credentials.json
 service-account*.json
 
-# 依赖
+# Dependencies
 node_modules/
 __pycache__/
 *.pyc
 .venv/
 venv/
 
-# 构建产物
+# Build artifacts
 dist/
 build/
 .next/

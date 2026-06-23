@@ -1,10 +1,10 @@
 ---
 name: channel-assessment
-description: 渠道评估，基于Product-Channel Fit判断渠道优先级
+description: Channel assessment, prioritizing channels based on Product-Channel Fit
 triggers:
-  - 需要选择获客渠道时
-  - 获客投放Workflow
-  - 用户要求"评估渠道"
+  - When acquisition channels need to be selected
+  - Acquisition campaign Workflow
+  - User asks to "assess channels"
 reads:
   - docs/handoff/pm-to-growth.md
   - memory/knowledge-base.md
@@ -14,64 +14,64 @@ quality_gates: []
 max_iterations: 1
 ---
 
-# Channel Assessment — 渠道评估
+# Channel Assessment — Channel Assessment
 
-## 铁律
-- 渠道选择基于 **Product-Channel Fit**——产品形态是否匹配渠道用户行为
-- 必须评估 **CAC vs LTV**——CAC > LTV/3 的渠道不可持续
-- 不只看流量大小，要看**转化质量**
+## Iron Rules
+- Channel selection is based on **Product-Channel Fit** — whether the product form matches channel user behavior
+- Must assess **CAC vs LTV** — channels with CAC > LTV/3 are unsustainable
+- Don't look only at traffic volume; focus on **conversion quality**
 
-## 流程
+## Process
 
-1. **渠道清单**
-   | 渠道类型 | 具体渠道 | 适配产品 |
-   |---------|---------|---------|
-   | SEO/内容 | 博客/官网 | 有长尾需求的信息型产品 |
-   | 付费搜索 | Google Ads/Baidu | 有明确搜索意图的产品 |
-   | 社媒广告 | Facebook/抖音/小红书 | 视觉型/消费型产品 |
-   | 社媒运营 | 公众号/知乎/Twitter | 内容型/专业型产品 |
-   | 病毒传播 | 邀请/分享 | 社交/协作型产品 |
-   | 合作/BD | 资源互换 | B2B/平台型产品 |
-   | 社群 | 微信群/Discord | 高互动型产品 |
+1. **Channel inventory**
+   | Channel type | Specific channels | Suited products |
+   |--------------|-------------------|-----------------|
+   | SEO/Content | Blog/Official site | Informational products with long-tail demand |
+   | Paid search | Google Ads/Baidu | Products with clear search intent |
+   | Social ads | Facebook/TikTok/Xiaohongshu | Visual/consumer products |
+   | Social media ops | WeChat Official Account/Zhihu/Twitter | Content/professional products |
+   | Viral | Invite/share | Social/collaboration products |
+   | Partnerships/BD | Resource exchange | B2B/platform products |
+   | Community | WeChat groups/Discord | High-engagement products |
 
-2. **Product-Channel Fit 评估**
-   对每个渠道评估：
-   | 维度 | 评分(1-5) | 说明 |
-   |------|----------|------|
-   | 用户匹配 | ? | 渠道用户是否是目标受众 |
-   | 行为匹配 | ? | 渠道用户行为是否适配产品 |
-   | 内容匹配 | ? | 产品内容形态是否适合该渠道 |
-   | 转化路径 | ? | 从渠道到转化的路径是否短 |
+2. **Product-Channel Fit assessment**
+   For each channel, assess:
+   | Dimension | Score (1-5) | Notes |
+   |-----------|-------------|-------|
+   | User match | ? | Are channel users the target audience |
+   | Behavior match | ? | Does channel user behavior fit the product |
+   | Content match | ? | Is the product's content form suited to the channel |
+   | Conversion path | ? | Is the path from channel to conversion short |
 
-3. **CAC vs LTV 评估**
-   | 渠道 | 预估 CAC | LTV | LTV/CAC | 评估 |
-   |------|---------|-----|---------|------|
-   | SEO | ¥50 | ¥450 | 9.0 | ✅ 优秀 |
-   | 付费搜索 | ¥150 | ¥450 | 3.0 | ✅ 合格 |
-   | 社媒广告 | ¥300 | ¥450 | 1.5 | ❌ 不达标 |
+3. **CAC vs LTV assessment**
+   | Channel | Estimated CAC | LTV | LTV/CAC | Assessment |
+   |---------|---------------|-----|---------|------------|
+   | SEO | ¥50 | ¥450 | 9.0 | ✅ Excellent |
+   | Paid search | ¥150 | ¥450 | 3.0 | ✅ Acceptable |
+   | Social ads | ¥300 | ¥450 | 1.5 | ❌ Below threshold |
 
-   > LTV/CAC ≥ 3 为健康，< 3 需优化，< 1 亏损
+   > LTV/CAC ≥ 3 is healthy, < 3 needs optimization, < 1 is loss-making
 
-4. **渠道优先级矩阵**
+4. **Channel priority matrix**
    ```
-   | 渠道 | PCF 评分 | CAC | LTV/CAC | 优先级 | 理由 |
-   |------|---------|-----|---------|--------|------|
-   | SEO | 4.5 | ¥50 | 9.0 | P0 | 高匹配+低成本 |
-   | 付费搜索 | 3.5 | ¥150 | 3.0 | P1 | 中匹配+合格 |
-   | 社媒广告 | 2.5 | ¥300 | 1.5 | P2 | 低匹配+高成本 |
+   | Channel | PCF score | CAC | LTV/CAC | Priority | Reason |
+   |---------|-----------|-----|---------|----------|--------|
+   | SEO | 4.5 | ¥50 | 9.0 | P0 | High fit + low cost |
+   | Paid search | 3.5 | ¥150 | 3.0 | P1 | Medium fit + acceptable |
+   | Social ads | 2.5 | ¥300 | 1.5 | P2 | Low fit + high cost |
    ```
 
-5. **产出渠道评估报告**
-   写入 `docs/operations/channel-assessment.md`
+5. **Produce channel assessment report**
+   Write to `docs/operations/channel-assessment.md`
 
-## 禁止事项
-- 不选 PCF 不匹配的渠道（有流量无转化）
-- 不选 CAC > LTV/3 的渠道（亏损获客）
-- 不只看单一渠道（分散风险）
-- 不忽略渠道规模化后的 CAC 通胀
+## Prohibitions
+- Don't select channels with poor PCF (traffic without conversion)
+- Don't select channels with CAC > LTV/3 (loss-making acquisition)
+- Don't rely on a single channel (diversify risk)
+- Don't ignore CAC inflation after channel scaling
 
-## 与 LOOP 的关系
-本 skill 不在 LOOP 内执行，是**战略级**评估。
+## Relationship to LOOP
+This skill does not run inside LOOP; it is a **strategic-level** assessment.
 
-## 与 Workflow 的关系
-本 skill 是获客投放相关流程的第 1 步。
+## Relationship to Workflow
+This skill is step 1 of acquisition campaign workflows.

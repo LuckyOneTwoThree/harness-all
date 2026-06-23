@@ -1,21 +1,21 @@
 ---
 name: product-sunset-plan
-description: 当需要制定产品或功能下线计划时使用。产品下线方案自动生成，包含下线决策评估、用户迁移方案、数据处置策略、时间线和沟通计划。关键词：产品下线、功能下线、产品退役、Sunset、下线方案、用户迁移、数据处置、功能下线、停服。
+description: Used when formulating a product or feature sunset plan. Auto-generates product sunset plans including sunset decision assessment, user migration plan, data disposal strategy, timeline, and communication plan. Keywords: product sunset, feature sunset, product retirement, Sunset, sunset plan, user migration, data disposal, feature sunset, service discontinuation.
 metadata:
-  module: "产品监控与迭代"
-  sub-module: "问题诊断"
+  module: "Product Monitoring & Iteration"
+  sub-module: "Issue Diagnosis"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["互联网", "SaaS", "通用"]
+  domain_tags: ["Internet", "SaaS", "General"]
   trigger_examples:
-    - "这个功能要下线怎么做"
-    - "产品要停服了怎么安排"
-    - "老功能要退役怎么办"
+    - "How to sunset this feature"
+    - "How to arrange product service discontinuation"
+    - "What to do when retiring an old feature"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出下线计划和风险清单"
-  deep_description: "完整下线计划 + 用户迁移方案 + 数据归档策略 + 影响评估报告"
+  quick_description: "Directly output sunset plan and risk list"
+  deep_description: "Full sunset plan + user migration plan + data archival strategy + impact assessment report"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -25,217 +25,217 @@ writes:
   - memory/knowledge-base.md
 ---
 
-# 产品下线方案生成
+# Product Sunset Plan Generation
 
-## 核心原则
+## Core Principle
 
-**下线是对用户最后的尊重**
+**Sunset is the last respect for users**
 
-产品下线方案的核心价值在于确保产品退役过程对用户的影响最小化。好的下线不是突然消失，而是有序过渡。用户投入的时间和数据值得被认真对待。
+The core value of a product sunset plan lies in ensuring the product retirement process minimizes impact on users. A good sunset is not a sudden disappearance, but an orderly transition. The time and data users invested deserve to be taken seriously.
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI suggests, human approves
 
-## 输入
+## Input
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| 健康度诊断 | markdown | 否 | diagnosis-health | 产品健康度评分、趋势 |
-| 留存数据 | markdown | 否 | retention-management | 用户留存、流失趋势 |
-| 下线对象 | text | 是 | 用户输入 | 需要下线的产品/功能名称和范围 |
-| 下线原因 | text | 是 | 用户输入 | 业务决策原因 |
+| Health diagnosis | markdown | No | diagnosis-health | Product health score, trends |
+| Retention data | markdown | No | retention-management | User retention, churn trends |
+| Sunset target | text | Yes | User input | Product/feature name and scope to be sunset |
+| Sunset reason | text | Yes | User input | Business decision reason |
 
-### 降级策略
+### Degradation Strategy
 
-| 缺失输入 | 降级方案 |
+| Missing Input | Degradation Plan |
 |----------|----------|
-| 无健康度诊断 | 基于用户提供信息评估下线影响，标注"待健康度诊断" |
-| 无留存数据 | 基于用户提供信息估算受影响用户数，标注"待留存数据验证" |
-| 无下线对象/原因 | 无法生成，要求用户提供基本信息 |
+| No health diagnosis | Assess sunset impact based on user-provided information, label "pending health diagnosis" |
+| No retention data | Estimate affected user count based on user-provided information, label "pending retention data validation" |
+| No sunset target/reason | Cannot generate, require user to provide basic information |
 
-## 执行步骤
+## Execution Steps
 
-### Step 1：下线决策评估 [核心]
+### Step 1: Sunset Decision Assessment [Core]
 
-评估下线决策的合理性和影响：
+Assess the rationality and impact of the sunset decision:
 
-1. **下线理由验证**：
-   - 业务指标持续下滑（收入/用户/活跃度）
-   - 战略方向调整（不再符合产品定位）
-   - 技术成本过高（维护成本 > 产出价值）
-   - 合规要求（法规变更）
-2. **替代方案评估**：是否有不下线的替代方案
-3. **影响范围评估**：
-   - 受影响用户数及占比
-   - 受影响收入及占比
-   - 受影响合作伙伴
-   - 品牌影响评估
+1. **Sunset reason validation**:
+   - Business metrics continuously declining (Revenue/Users/Activity)
+   - Strategic direction adjustment (no longer fits product positioning)
+   - Excessive technical cost (maintenance cost > output value)
+   - Compliance requirements (regulatory changes)
+2. **Alternative solution assessment**: Are there alternative solutions without sunsetting
+3. **Impact scope assessment**:
+   - Affected user count and proportion
+   - Affected revenue and proportion
+   - Affected partners
+   - Brand impact assessment
 
-### Step 2：用户迁移方案 [核心]
+### Step 2: User Migration Plan [Core]
 
-制定用户从下线产品到替代方案的迁移策略：
+Develop a migration strategy for users from the sunset product to alternative solutions:
 
-1. **替代方案识别**：
-   - 自有替代产品/功能
-   - 第三方替代方案
-   - 无替代（需明确告知）
-2. **迁移路径设计**：
-   - 数据导出→导入流程
-   - 功能映射表（旧功能→新功能）
-   - 迁移工具/脚本
-3. **迁移激励**：
-   - 迁移优惠/折扣
-   - 专属迁移支持
-   - 数据迁移保障承诺
-4. **特殊用户处理**：
-   - 企业客户：1对1迁移支持
-   - 高价值用户：专属迁移方案
-   - 长期用户：感恩回馈
+1. **Alternative solution identification**:
+   - Own alternative products/features
+   - Third-party alternative solutions
+   - No alternative (must clearly communicate)
+2. **Migration path design**:
+   - Data export → import process
+   - Feature mapping table (old feature → new feature)
+   - Migration tools/scripts
+3. **Migration incentives**:
+   - Migration discounts/offers
+   - Dedicated migration support
+   - Data migration guarantee commitment
+4. **Special user handling**:
+   - Enterprise customers: 1-on-1 migration support
+   - High-value users: Dedicated migration plan
+   - Long-term users: Gratitude rewards
 
-### Step 3：数据处置策略 [核心]
+### Step 3: Data Disposal Strategy [Core]
 
-制定用户数据的处置方案：
+Develop a disposal plan for user data:
 
-1. **数据分类**：
-   - 用户生成内容（UGC）
-   - 用户配置/设置
-   - 使用历史/行为数据
-   - 付费/交易记录
-2. **处置方式**：
-   - 可导出：提供标准格式导出工具
-   - 可迁移：自动迁移到替代产品
-   - 需保留：法定保留期限和访问方式
-   - 需删除：删除时间线和确认机制
-3. **数据保留期限**：
-   - 法定保留（交易记录≥5年）
-   - 用户自选保留期
-   - 最终删除时间线
+1. **Data classification**:
+   - User-generated content (UGC)
+   - User configurations/settings
+   - Usage history/behavioral data
+   - Payment/transaction records
+2. **Disposal methods**:
+   - Exportable: Provide standard format export tools
+   - Migratable: Automatically migrate to alternative product
+   - Must retain: Legal retention period and access method
+   - Must delete: Deletion timeline and confirmation mechanism
+3. **Data retention period**:
+   - Legal retention (transaction records ≥ 5 years)
+   - User-selected retention period
+   - Final deletion timeline
 
-### Step 4：下线时间线 [核心]
+### Step 4: Sunset Timeline [Core]
 
-制定分阶段下线时间线：
+Develop a phased sunset timeline:
 
-1. **预告期**（T-90天）：
-   - 发布下线公告
-   - 开启数据导出
-   - 停止新用户注册
-2. **过渡期**（T-60天）：
-   - 停止付费续订
-   - 推送迁移引导
-   - 提供迁移支持
-3. **只读期**（T-30天）：
-   - 功能只读，不可新建/修改
-   - 最后数据导出窗口
-   - 客服专项支持
-4. **下线日**（T-0）：
-   - 服务停止
-   - 数据进入保留期
-   - 下线页面上线
-5. **清理期**（T+30天）：
-   - 数据按策略删除/归档
-   - 最终确认报告
+1. **Announcement period** (T-90 days):
+   - Publish sunset announcement
+   - Enable data export
+   - Stop new user registration
+2. **Transition period** (T-60 days):
+   - Stop paid renewals
+   - Push migration guidance
+   - Provide migration support
+3. **Read-only period** (T-30 days):
+   - Features read-only, no new creation/modification
+   - Final data export window
+   - Dedicated customer service support
+4. **Sunset day** (T-0):
+   - Service stops
+   - Data enters retention period
+   - Sunset page goes live
+5. **Cleanup period** (T+30 days):
+   - Data deleted/archived per strategy
+   - Final confirmation report
 
-### Step 5：沟通计划 [核心]
+### Step 5: Communication Plan [Core]
 
-制定各利益相关方的沟通计划：
+Develop a communication plan for each stakeholder:
 
-1. **用户沟通**：
-   - 公告文案（各渠道版本）
-   - FAQ文档
-   - 迁移教程
-   - 客服话术
-2. **内部沟通**：
-   - 团队通知
-   - 客服培训
-   - 销售话术更新
-3. **外部沟通**：
-   - 合作伙伴通知
-   - 媒体口径
-   - 社区公告
+1. **User communication**:
+   - Announcement copy (versions for each channel)
+   - FAQ document
+   - Migration tutorials
+   - Customer service scripts
+2. **Internal communication**:
+   - Team notification
+   - Customer service training
+   - Sales script updates
+3. **External communication**:
+   - Partner notification
+   - Media messaging
+   - Community announcement
 
-### Step 6：报告组装 [核心]
+### Step 6: Report Assembly [Core]
 
-将以上内容组装为完整下线方案。
+Assemble the above content into a complete sunset plan.
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 下线计划和风险清单 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整下线计划 + 用户迁移方案 + 数据归档策略 + 影响评估报告 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Sunset plan and risk list | Core conclusions + minimum viable artifact |
+| standard | Full artifact (current default) | Full artifact, including all Step outputs |
+| deep | Full sunset plan + user migration plan + data archival strategy + impact assessment report | Full artifact + extended analysis + deep reasoning |
 
-## 输出
+## Output
 
-### 输出文件
+### Output Files
 
-| 文件 | 路径 | 说明 |
+| File | Path | Description |
 |------|------|------|
-| 产品下线方案 | `docs/monitoring/product-sunset-plan.md` | 人类可读的完整方案 |
-| 结构化数据 | `docs/monitoring/product-sunset-plan.md` | 机器可消费的结构化数据 |
+| Product sunset plan | `docs/monitoring/product-sunset-plan.md` | Human-readable complete plan |
+| Structured data | `docs/monitoring/product-sunset-plan.md` | Machine-consumable structured data |
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["product_name", "sunset_date", "decision_assessment", "migration_plan"],
   "properties": {
-    "product_name": {"type": "string", "description": "产品名称"},
-    "sunset_date": {"type": "string", "description": "下线日期"},
-    "report_date": {"type": "string", "description": "报告日期"},
-    "decision_assessment": {"type": "object", "description": "下线决策评估，包含理由、替代方案和影响"},
-    "migration_plan": {"type": "object", "description": "用户迁移方案，包含替代方案、路径和激励"},
-    "data_disposal": {"type": "object", "description": "数据处置策略，包含分类、方式和保留期限"},
-    "timeline": {"type": "object", "description": "下线时间线，包含预告/过渡/只读/下线/清理"},
-    "communication_plan": {"type": "object", "description": "沟通计划，包含用户/内部/外部沟通"},
-    "risks": {"type": "array", "description": "风险清单"}
+    "product_name": {"type": "string", "description": "Product name"},
+    "sunset_date": {"type": "string", "description": "Sunset date"},
+    "report_date": {"type": "string", "description": "Report date"},
+    "decision_assessment": {"type": "object", "description": "Sunset decision assessment, including reasons, alternatives, and impact"},
+    "migration_plan": {"type": "object", "description": "User migration plan, including alternatives, paths, and incentives"},
+    "data_disposal": {"type": "object", "description": "Data disposal strategy, including classification, methods, and retention periods"},
+    "timeline": {"type": "object", "description": "Sunset timeline, including announcement/transition/read-only/sunset/cleanup"},
+    "communication_plan": {"type": "object", "description": "Communication plan, including user/internal/external communication"},
+    "risks": {"type": "array", "description": "Risk list"}
   }
 }
 ```
 
-### Markdown 报告结构
+### Markdown Report Structure
 
 ```markdown
-# 产品下线方案：旧版数据分析模块
+# Product Sunset Plan: Legacy Data Analytics Module
 
-## 1. 下线决策评估
-- 下线理由与验证
-- 替代方案评估
-- 影响范围评估
+## 1. Sunset Decision Assessment
+- Sunset reasons and validation
+- Alternative solution assessment
+- Impact scope assessment
 
-## 2. 用户迁移方案
-- 替代方案
-- 迁移路径与工具
-- 迁移激励
-- 特殊用户处理
+## 2. User Migration Plan
+- Alternative solutions
+- Migration paths and tools
+- Migration incentives
+- Special user handling
 
-## 3. 数据处置策略
-- 数据分类
-- 处置方式
-- 保留期限
-- 删除时间线
+## 3. Data Disposal Strategy
+- Data classification
+- Disposal methods
+- Retention periods
+- Deletion timeline
 
-## 4. 下线时间线
-- 预告期（T-90）
-- 过渡期（T-60）
-- 只读期（T-30）
-- 下线日（T-0）
-- 清理期（T+30）
+## 4. Sunset Timeline
+- Announcement period (T-90)
+- Transition period (T-60)
+- Read-only period (T-30)
+- Sunset day (T-0)
+- Cleanup period (T+30)
 
-## 5. 沟通计划
-- 用户沟通（公告/FAQ/教程）
-- 内部沟通（团队/客服/销售）
-- 外部沟通（伙伴/媒体/社区）
+## 5. Communication Plan
+- User communication (announcement/FAQ/tutorial)
+- Internal communication (team/customer service/sales)
+- External communication (partners/media/community)
 
-## 6. 风险与应急
-- 迁移失败预案
-- 法律合规风险
-- 品牌声誉风险
+## 6. Risks and Contingency
+- Migration failure contingency
+- Legal compliance risks
+- Brand reputation risks
 ```
 
-### JSON 结构
+### JSON Structure
 
 ```json
 {
@@ -279,59 +279,59 @@ writes:
 }
 ```
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 影响评估完整（用户/收入/品牌3维度均有评估）
-- [ ] 迁移方案可行（每类用户有明确迁移路径）
+- [ ] Impact assessment complete (users/revenue/brand 3 dimensions all assessed)
+- [ ] Migration plan feasible (each user type has clear migration path)
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 数据处置合规（法定保留数据有保留方案）
-- [ ] 时间线可执行（5个阶段有明确日期和交付物）
+- [ ] Data disposal compliant (legally retained data has retention plan)
+- [ ] Timeline executable (5 phases have clear dates and deliverables)
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep reasoning and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
-## 决策规则
+## Decision Rules
 
-- 当受影响用户>10%时，下线时间线必须包含≥60天过渡期
-- 当产品涉及付费用户时，必须包含退款或迁移补偿方案
-- 当数据涉及个人隐私时，数据处置策略必须包含合规删除方案
-- 需要人类确认的决策点：下线决策确认、迁移方案选择、数据保留期限、沟通口径审批
+- When affected users > 10%, sunset timeline must include ≥ 60-day transition period
+- When product involves paid users, must include refund or migration compensation plan
+- When data involves personal privacy, data disposal strategy must include compliant deletion plan
+- Decision points requiring human confirmation: sunset decision confirmation, migration plan selection, data retention period, communication messaging approval
 
-## 降级策略
+## Degradation Strategy
 
-| 缺失的上游输入 | 降级方案 | 输出影响 |
+| Missing Upstream Input | Degradation Plan | Output Impact |
 |----------|----------|----------|
-| 无健康度诊断 | 用户描述产品现状，AI基于描述评估下线必要性 | 下线决策缺乏健康度数据支撑 |
-| 无留存数据 | 跳过用户影响量化，标注"留存数据待补充" | 用户影响评估为定性描述 |
-| 无健康度+无留存 | 用户描述产品现状和用户规模，AI基于描述生成下线方案 | 下线方案基于定性描述，关键数据标注"待确认" |
+| No health diagnosis | User describes product status, AI assesses sunset necessity based on description | Sunset decision lacks health data support |
+| No retention data | Skip user impact quantification, label "retention data pending supplementation" | User impact assessment is qualitative description |
+| No health + no retention | User describes product status and user scale, AI generates sunset plan based on description | Sunset plan based on qualitative description, key data labeled "pending confirmation" |
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| sunset_object | string | 是 | 下线对象名称，不可为空 |
-| impact_assessment | object | 是 | 影响评估，须含users/revenue/brand三维度 |
-| migration_plan | object | 是 | 迁移方案，须含每类用户的迁移路径 |
-| data_disposal | object | 是 | 数据处置策略，须含retention_policy/compliance |
-| timeline | object | 是 | 时间线，须含5个阶段的日期和交付物 |
+| sunset_object | string | Yes | Sunset target name, cannot be empty |
+| impact_assessment | object | Yes | Impact assessment, must contain users/revenue/brand 3 dimensions |
+| migration_plan | object | Yes | Migration plan, must contain migration path for each user type |
+| data_disposal | object | Yes | Data disposal strategy, must contain retention_policy/compliance |
+| timeline | object | Yes | Timeline, must contain 5 phases with dates and deliverables |
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响表
+### Upstream Change Impact Table
 
-| 上游来源 | 变更类型 | 影响范围 | 响应动作 |
+| Upstream Source | Change Type | Impact Scope | Response Action |
 |----------|----------|----------|----------|
-| diagnosis-health | 健康度评分变更 | 下线决策评估 | 重新评估下线必要性 |
-| retention-management | 留存数据更新 | 用户影响评估 | 更新受影响用户规模和迁移方案 |
+| diagnosis-health | Health score change | Sunset decision assessment | Re-evaluate sunset necessity |
+| retention-management | Retention data update | User impact assessment | Update affected user scale and migration plan |
 
-### 下游通知机制表
+### Downstream Notification Mechanism Table
 
-| 下游消费者 | 通知条件 | 通知方式 | 通知内容 |
+| Downstream Consumer | Notification Condition | Notification Method | Notification Content |
 |------------|----------|----------|----------|
-| diagnosis-orchestrator | 下线方案生成完成 | 输出文件更新 | 方案完成状态和关键结论 |
+| diagnosis-orchestrator | Sunset plan generation completed | Output file updated | Plan completion status and key conclusions |

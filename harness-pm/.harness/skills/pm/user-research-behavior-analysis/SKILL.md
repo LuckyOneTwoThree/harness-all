@@ -1,21 +1,21 @@
 ---
 name: user-research-behavior-analysis
-description: 当需要从事件数据、漏斗数据、热力图数据中诊断漏斗健康度、发现Aha Moment、分析功能使用深度时使用。行为数据自动分析Pipeline。关键词：行为分析、漏斗分析、Aha Moment、功能使用分析、异常检测、用户流失、转化率、用户行为异常。
+description: Used when diagnosing funnel health, discovering Aha Moments, and analyzing feature usage depth from event data, funnel data, and heatmap data. Behavior data auto-analysis pipeline. Keywords: behavior analysis, funnel analysis, Aha Moment, feature usage analysis, anomaly detection, user churn, conversion rate, user behavior anomaly.
 metadata:
-  module: "产品探索与发现"
-  sub-module: "用户研究"
+  module: "Product Discovery"
+  sub-module: "User Research"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["互联网", "SaaS", "通用"]
+  domain_tags: ["Internet", "SaaS", "General"]
   trigger_examples:
-    - "用户在哪里流失了"
-    - "漏斗转化率怎么这么低"
-    - "用户行为有什么异常"
+    - "Where are users churning"
+    - "Why is the funnel conversion rate so low"
+    - "Are there any anomalies in user behavior"
   interaction_mode: "ai_auto"
 execution_depth:
   default: standard
-  quick_description: "直接输出行为模式和使用洞察"
-  deep_description: "完整分析 + 行为序列挖掘 + 用户分群深度分析 + 行为预测模型"
+  quick_description: "Directly output behavior patterns and usage insights"
+  deep_description: "Full analysis + behavior sequence mining + user segmentation deep analysis + behavior prediction model"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -24,31 +24,31 @@ writes:
   - memory/progress.md
 ---
 
-# 行为数据自动分析
+# Behavior Data Auto-Analysis
 
-## 核心原则
+## Core Principles
 
-1. **行为不说谎**——用户实际行为比自我报告更可靠，以行为数据为事实基准
-2. **漏斗是症状不是病因**——漏斗断裂点指向问题表现，需深挖流失用户的最后行为和特征
-3. **Aha Moment是因果不是相关**——候选行为必须通过预测力验证，相关性≠因果性
-4. **异常是信号不是噪音**——指标突变/渐变/周期异常都需归因，不可忽略或简单平滑
+1. **Behavior doesn't lie** — Actual user behavior is more reliable than self-reporting; behavior data is the factual baseline
+2. **Funnel is symptom, not cause** — Funnel break points indicate problem manifestation; dig into the last behavior and characteristics of churned users
+3. **Aha Moment is causation, not correlation** — Candidate behaviors must pass predictive power validation; correlation ≠ causation
+4. **Anomalies are signals, not noise** — Metric spikes / gradual drifts / cyclical anomalies all require attribution; do not ignore or simply smooth them out
 
-## 交互模式
+## Interaction Mode
 
-🤖 **AI自动执行** — 无需人类介入，全程自动化完成
+🤖 **AI auto-executes** — No human intervention required; fully automated end-to-end
 
 ---
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| event_data | JSON | 是 | 用户提供 | 用户行为事件日志（点击、浏览、提交等） |
-| funnel_data | JSON | 是 | 用户提供 | 转化漏斗各步骤数据 |
-| heatmap_data | JSON | ○ | 用户提供 | 页面热力图数据（点击热力图、滚动热力图） |
-| analysis_config | object | ○ | 用户提供 | 分析配置（异常灵敏度、漏斗粒度、队列维度） |
+| event_data | JSON | Yes | User-provided | User behavior event logs (clicks, views, submissions, etc.) |
+| funnel_data | JSON | Yes | User-provided | Conversion funnel step-by-step data |
+| heatmap_data | JSON | ○ | User-provided | Page heatmap data (click heatmap, scroll heatmap) |
+| analysis_config | object | ○ | User-provided | Analysis configuration (anomaly sensitivity, funnel granularity, cohort dimensions) |
 
-### 输入格式
+### Input Format
 
 ```json
 {
@@ -81,124 +81,124 @@ writes:
 }
 ```
 
-**数据源说明**：
-- `event_data`：用户行为事件日志（点击、浏览、提交等）
-- `funnel_data`：转化漏斗各步骤数据
-- `heatmap_data`：页面热力图数据（点击热力图、滚动热力图）
+**Data source descriptions**:
+- `event_data`: User behavior event logs (clicks, views, submissions, etc.)
+- `funnel_data`: Conversion funnel step-by-step data
+- `heatmap_data`: Page heatmap data (click heatmap, scroll heatmap)
 
 ---
 
-## 执行步骤
+## Execution Steps
 
-### Step 1：漏斗健康度诊断 [核心]
+### Step 1: Funnel Health Diagnosis [Core]
 
-- 计算漏斗各步骤转化率
-- 识别转化率异常低的步骤（低于行业基准或历史均值1个标准差）
-- 分析各步骤流失用户的特征（最后行为、停留时长、设备等）
-- 计算漏斗整体健康度评分（0-100）
-- 输出：漏斗诊断报告，包含各步骤转化率、流失分析、健康度评分
+- Calculate conversion rate for each funnel step
+- Identify steps with abnormally low conversion rates (below industry benchmark or 1 standard deviation below historical average)
+- Analyze characteristics of churned users at each step (last action, time spent, device, etc.)
+- Calculate overall funnel health score (0-100)
+- Output: Funnel diagnosis report, including conversion rate per step, churn analysis, and health score
 
-### Step 2：行为路径分析 [核心]
+### Step 2: Behavior Path Analysis [Core]
 
-- 提取用户实际行为路径（非预设路径）
-- 识别高频路径和异常路径
-- 发现用户"绕路"行为（走了非预期路径到达目标）
-- 识别用户"迷失"行为（在多个页面间反复跳转）
-- 输出：行为路径图，标注高频路径、绕路、迷失点
+- Extract actual user behavior paths (not predefined paths)
+- Identify high-frequency paths and anomalous paths
+- Discover user "detour" behaviors (taking unexpected paths to reach a goal)
+- Identify user "lost" behaviors (bouncing back and forth between multiple pages)
+- Output: Behavior path diagram, annotating high-frequency paths, detours, and lost points
 
-### Step 3：功能使用深度分析 [核心]
+### Step 3: Feature Usage Depth Analysis [Core]
 
-- 统计各功能的使用率（触达用户数 / 活跃用户数）
-- 分析功能使用深度（仅发现 → 尝试 → 深度使用 → 付费转化）
-- 识别高价值但低使用率的功能（发现障碍）
-- 识别低价值但高使用率的功能（可能误导用户）
-- 输出：功能使用矩阵（使用率 × 价值度）
+- Calculate usage rate for each feature (users reached / active users)
+- Analyze feature usage depth (Discovery only → Trial → Deep use → Paid conversion)
+- Identify high-value but low-usage features (discovery obstacles)
+- Identify low-value but high-usage features (potentially misleading users)
+- Output: Feature usage matrix (usage rate × value score)
 
-### Step 4：异常检测 [核心]
+### Step 4: Anomaly Detection [Core]
 
-- 对关键行为指标进行时序异常检测
-- 检测维度：日活、留存、核心功能使用率、转化率
-- 异常类型：突变（单日大幅变化）、渐变（持续趋势变化）、周期异常（与历史周期不符）
-- 关联异常与可能的原因（版本发布、外部事件、数据问题）
-- 输出：异常事件列表，包含异常类型、影响范围、可能原因、置信度
+- Perform time-series anomaly detection on key behavior metrics
+- Detection dimensions: DAU, retention, core feature usage rate, conversion rate
+- Anomaly types: Spike (large single-day change), Gradual (sustained trend change), Cyclical (inconsistent with historical cycles)
+- Correlate anomalies with possible causes (version releases, external events, data issues)
+- Output: Anomaly event list, including anomaly type, impact scope, possible causes, and confidence
 
 ---
 
-### 输出深度分级
+### Output Depth Tiers
 
-| 深度级别 | 输出范围 | 说明 |
+| Depth level | Output scope | Description |
 |----------|----------|------|
-| quick | 行为模式和使用洞察 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整分析 + 行为序列挖掘 + 用户分群深度分析 + 行为预测模型 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Behavior patterns and usage insights | Core conclusions + minimum viable deliverable |
+| standard | Full deliverable (current default) | Complete deliverable, including all Step outputs |
+| deep | Full analysis + behavior sequence mining + user segmentation deep analysis + behavior prediction model | Full deliverable + extended analysis + deep inference |
 
-## 输出
+## Output
 
-输出文件：`docs/discovery/user-research.md（追加“用户行为分析”章节）`
+Output file: `docs/discovery/user-research.md (append "User Behavior Analysis" section)`
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["funnel_health", "aha_moment_candidates", "feature_usage", "metadata"],
   "properties": {
-    "funnel_health": {"type": "object", "description": "漏斗健康度诊断，含各步骤转化率和健康度评分"},
-    "aha_moment_candidates": {"type": "array", "description": "Aha Moment候选列表"},
-    "feature_usage": {"type": "array", "description": "功能使用深度分析列表"},
-    "behavior_paths": {"type": "object", "description": "行为路径分析，含高频路径、绕路和迷失模式"},
-    "anomalies": {"type": "array", "description": "异常事件检测列表"},
-    "metadata": {"type": "object", "description": "分析元数据，含时间戳和置信度"}
+    "funnel_health": {"type": "object", "description": "Funnel health diagnosis, including conversion rate per step and health score"},
+    "aha_moment_candidates": {"type": "array", "description": "Aha Moment candidate list"},
+    "feature_usage": {"type": "array", "description": "Feature usage depth analysis list"},
+    "behavior_paths": {"type": "object", "description": "Behavior path analysis, including high-frequency paths, detours, and lost patterns"},
+    "anomalies": {"type": "array", "description": "Anomaly event detection list"},
+    "metadata": {"type": "object", "description": "Analysis metadata, including timestamp and confidence"}
   }
 }
 ```
 
-**输出校验规则**：
+**Output validation rules**:
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field path | Type | Required | Description |
 |----------|------|------|------|
-| funnel_health.overall_score | number | 是 | 漏斗整体健康度评分，0-100 |
-| funnel_health.steps | array | 是 | 漏斗各步骤数据，每项须含step_name、conversion_rate、drop_off_rate、confidence |
-| funnel_health.steps[].step_name | string | 是 | 步骤名称，不可为空 |
-| funnel_health.steps[].conversion_rate | number | 是 | 转化率，0-1 |
-| funnel_health.steps[].drop_off_rate | number | 是 | 流失率，0-1 |
-| funnel_health.steps[].is_anomaly | boolean | 是 | 该步骤是否异常 |
-| funnel_health.steps[].confidence | number | 是 | 步骤置信度，0-1 |
-| funnel_health.trend | string | 是 | 趋势枚举：improving/stable/declining |
-| aha_moment_candidates | array | 是 | Aha Moment候选列表，每项须含behavior_pattern、correlation_with_retention、predictive_power、confidence |
-| aha_moment_candidates[].behavior_pattern | string | 是 | 行为模式描述，不可为空 |
-| aha_moment_candidates[].correlation_with_retention | number | 是 | 与留存的相关性，<0.3标记"预测力不足" |
-| aha_moment_candidates[].predictive_power | number | 是 | 预测力评分，0-1 |
-| aha_moment_candidates[].confidence | number | 是 | 候选置信度，0-1 |
-| feature_usage | array | 是 | 功能使用列表，每项须含feature_name、adoption_rate、value_score、usage_vs_value_quadrant、confidence |
-| feature_usage[].feature_name | string | 是 | 功能名称，不可为空 |
-| feature_usage[].adoption_rate | number | 是 | 使用率，0-1 |
-| feature_usage[].value_score | number | 是 | 价值评分，0-1 |
-| feature_usage[].usage_vs_value_quadrant | string | 是 | 象限枚举：high_value_high_use/high_value_low_use/low_value_high_use/low_value_low_use |
-| feature_usage[].confidence | number | 是 | 功能置信度，0-1 |
-| behavior_paths.top_paths | array | 否 | 高频路径列表 |
-| behavior_paths.top_paths[].path | string[] | 是 | 路径步骤序列 |
-| behavior_paths.top_paths[].user_count | number | 是 | 使用该路径的用户数 |
-| behavior_paths.top_paths[].avg_completion_time | number | 是 | 平均完成时间（秒） |
-| behavior_paths.detour_patterns | array | 否 | 绕路模式列表 |
-| behavior_paths.detour_patterns[].description | string | 是 | 绕路描述，不可为空 |
-| behavior_paths.detour_patterns[].affected_user_ratio | number | 是 | 受影响用户占比，0-1 |
-| behavior_paths.detour_patterns[].possible_cause | string | 是 | 可能原因 |
-| behavior_paths.lost_patterns | array | 否 | 迷失模式列表 |
-| behavior_paths.lost_patterns[].description | string | 是 | 迷失描述，不可为空 |
-| behavior_paths.lost_patterns[].affected_user_ratio | number | 是 | 受影响用户占比，0-1 |
-| behavior_paths.lost_patterns[].loop_pages | string[] | 是 | 循环跳转页面列表 |
-| anomalies | array | 否 | 异常事件列表，每项须含metric、anomaly_type、detected_date、magnitude、possible_causes、confidence |
-| anomalies[].metric | string | 是 | 异常指标名称，不可为空 |
-| anomalies[].anomaly_type | string | 是 | 异常类型枚举：spike/gradual/cyclical |
-| anomalies[].detected_date | string | 是 | 检测日期，ISO 8601格式 |
-| anomalies[].magnitude | number | 是 | 变化幅度 |
-| anomalies[].possible_causes | string[] | 是 | 可能原因列表 |
-| anomalies[].impact_scope | string | 否 | 影响范围 |
-| anomalies[].confidence | number | 是 | 异常置信度，0-1 |
-| metadata.analysis_timestamp | string | 是 | 分析时间戳 |
-| metadata.data_quality_flags | string[] | 是 | 数据质量标记 |
-| metadata.confidence_overall | number | 是 | 整体置信度，0-1 |
+| funnel_health.overall_score | number | Yes | Overall funnel health score, 0-100 |
+| funnel_health.steps | array | Yes | Funnel step data, each item must contain step_name, conversion_rate, drop_off_rate, confidence |
+| funnel_health.steps[].step_name | string | Yes | Step name, cannot be empty |
+| funnel_health.steps[].conversion_rate | number | Yes | Conversion rate, 0-1 |
+| funnel_health.steps[].drop_off_rate | number | Yes | Drop-off rate, 0-1 |
+| funnel_health.steps[].is_anomaly | boolean | Yes | Whether this step is anomalous |
+| funnel_health.steps[].confidence | number | Yes | Step confidence, 0-1 |
+| funnel_health.trend | string | Yes | Trend enum: improving/stable/declining |
+| aha_moment_candidates | array | Yes | Aha Moment candidate list, each item must contain behavior_pattern, correlation_with_retention, predictive_power, confidence |
+| aha_moment_candidates[].behavior_pattern | string | Yes | Behavior pattern description, cannot be empty |
+| aha_moment_candidates[].correlation_with_retention | number | Yes | Correlation with retention, <0.3 marked as "insufficient predictive power" |
+| aha_moment_candidates[].predictive_power | number | Yes | Predictive power score, 0-1 |
+| aha_moment_candidates[].confidence | number | Yes | Candidate confidence, 0-1 |
+| feature_usage | array | Yes | Feature usage list, each item must contain feature_name, adoption_rate, value_score, usage_vs_value_quadrant, confidence |
+| feature_usage[].feature_name | string | Yes | Feature name, cannot be empty |
+| feature_usage[].adoption_rate | number | Yes | Adoption rate, 0-1 |
+| feature_usage[].value_score | number | Yes | Value score, 0-1 |
+| feature_usage[].usage_vs_value_quadrant | string | Yes | Quadrant enum: high_value_high_use/high_value_low_use/low_value_high_use/low_value_low_use |
+| feature_usage[].confidence | number | Yes | Feature confidence, 0-1 |
+| behavior_paths.top_paths | array | No | High-frequency path list |
+| behavior_paths.top_paths[].path | string[] | Yes | Path step sequence |
+| behavior_paths.top_paths[].user_count | number | Yes | Number of users on this path |
+| behavior_paths.top_paths[].avg_completion_time | number | Yes | Average completion time (seconds) |
+| behavior_paths.detour_patterns | array | No | Detour pattern list |
+| behavior_paths.detour_patterns[].description | string | Yes | Detour description, cannot be empty |
+| behavior_paths.detour_patterns[].affected_user_ratio | number | Yes | Affected user ratio, 0-1 |
+| behavior_paths.detour_patterns[].possible_cause | string | Yes | Possible cause |
+| behavior_paths.lost_patterns | array | No | Lost pattern list |
+| behavior_paths.lost_patterns[].description | string | Yes | Lost description, cannot be empty |
+| behavior_paths.lost_patterns[].affected_user_ratio | number | Yes | Affected user ratio, 0-1 |
+| behavior_paths.lost_patterns[].loop_pages | string[] | Yes | Looping page list |
+| anomalies | array | No | Anomaly event list, each item must contain metric, anomaly_type, detected_date, magnitude, possible_causes, confidence |
+| anomalies[].metric | string | Yes | Anomaly metric name, cannot be empty |
+| anomalies[].anomaly_type | string | Yes | Anomaly type enum: spike/gradual/cyclical |
+| anomalies[].detected_date | string | Yes | Detection date, ISO 8601 format |
+| anomalies[].magnitude | number | Yes | Change magnitude |
+| anomalies[].possible_causes | string[] | Yes | Possible cause list |
+| anomalies[].impact_scope | string | No | Impact scope |
+| anomalies[].confidence | number | Yes | Anomaly confidence, 0-1 |
+| metadata.analysis_timestamp | string | Yes | Analysis timestamp |
+| metadata.data_quality_flags | string[] | Yes | Data quality flags |
+| metadata.confidence_overall | number | Yes | Overall confidence, 0-1 |
 
 ```json
 {
@@ -291,70 +291,70 @@ writes:
 
 ---
 
-## 决策规则
+## Decision Rules
 
-| 条件 | 动作 |
+| Condition | Action |
 |------|------|
-| 关键指标日级环比变化 > 15% | 触发告警，标记为"需立即关注"，暂停自动流程通知人类 |
-| 漏斗健康度评分 < 40 | 标记"漏斗严重不健康"，建议进入深度诊断 |
-| Aha Moment候选预测力 < 0.3 | 标记"预测力不足"，不作为Aha Moment推荐 |
-| 功能使用率 < 5% 且价值度高 | 标记"发现障碍"，建议进入可用性分析 |
-| 数据源缺失关键步骤 | 标记"数据不完整"，漏斗分析降级为"部分分析" |
+| Key metric daily WoW change > 15% | Trigger alert, mark as "needs immediate attention", pause automated flow and notify human |
+| Funnel health score < 40 | Mark "funnel severely unhealthy", recommend entering deep diagnosis |
+| Aha Moment candidate predictive power < 0.3 | Mark "insufficient predictive power", do not recommend as Aha Moment |
+| Feature usage rate < 5% and high value | Mark "discovery obstacle", recommend entering usability analysis |
+| Data source missing key steps | Mark "incomplete data", funnel analysis degrades to "partial analysis" |
 
 ---
 
-## 质量检查
+## Quality Checks
 
-### P0 检查（quick/standard/deep 都必须通过）
+### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] 漏斗数据完整性（所有步骤有数据）
-- [ ] Aha Moment候选有预测力验证（与留存的相关性 ≥ 0.3）
+- [ ] Funnel data completeness (all steps have data)
+- [ ] Aha Moment candidates have predictive power validation (correlation with retention ≥ 0.3)
 
-### P1 检查（standard/deep 必须通过）
+### P1 Checks (must pass for standard/deep)
 
-- [ ] 行为路径样本量（≥ 1000条路径）
-- [ ] 异常检测假阳性控制（异常事件需有人工可理解的原因假设）
-- [ ] 所有输出标注置信度（100%）
-- [ ] 热力图数据时效性（最近30天内）
+- [ ] Behavior path sample size (≥ 1000 paths)
+- [ ] Anomaly detection false positive control (anomaly events need human-understandable cause hypotheses)
+- [ ] All outputs annotated with confidence (100%)
+- [ ] Heatmap data timeliness (within the last 30 days)
 
-### P2 检查（仅 deep 必须通过）
+### P2 Checks (only deep must pass)
 
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+- [ ] Extended analysis complete (deep inference and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-当上游文件不存在时，本Skill仍可独立执行：
+When upstream files do not exist, this Skill can still execute independently:
 
-| 缺失的上游输入 | 降级方案 | 输出影响 | 数据获取说明 |
+| Missing upstream input | Degradation plan | Output impact | Data acquisition instructions |
 |---------------|---------|---------|------------|
-| 所有数据源均缺失 | 提示用户先提供行为数据，或基于用户提供的事件数据/漏斗数据直接执行分析 | funnel_health、feature_usage等字段为空，置信度降为0 | 要求用户提供行为事件日志和漏斗数据 |
-| 若用户未提供event_data | 提示用户提供行为事件日志，否则缺乏核心行为数据来源 | aha_moment_candidates和behavior_paths无法生成，功能使用分析缺失 | 要求用户提供用户行为事件日志（含事件名、时间戳、用户ID） |
-| 若用户未提供funnel_data | 提示用户提供漏斗数据，否则无法执行漏斗健康度诊断 | funnel_health字段标注"数据缺失"，整体健康度评分不可用 | 要求用户提供漏斗各步骤用户数和转化率数据 |
-| 若用户未提供heatmap_data | 跳过该输入相关步骤，热力图数据不参与分析 | 行为路径分析缺少热力图维度，页面级洞察缺失 | 要求用户提供页面热力图数据或点击分布数据 |
-| 若用户未提供analysis_config | 跳过该输入相关步骤，使用默认分析配置 | 使用默认配置，异常检测灵敏度和漏斗粒度可能非最优 | 要求用户提供异常检测灵敏度、漏斗粒度等分析参数配置 |
+| All data sources missing | Prompt user to provide behavior data first, or execute analysis directly based on user-provided event data / funnel data | funnel_health, feature_usage and other fields are empty, confidence drops to 0 | Ask user to provide behavior event logs and funnel data |
+| If user does not provide event_data | Prompt user to provide behavior event logs, otherwise core behavior data source is missing | aha_moment_candidates and behavior_paths cannot be generated, feature usage analysis is missing | Ask user to provide user behavior event logs (including event name, timestamp, user ID) |
+| If user does not provide funnel_data | Prompt user to provide funnel data, otherwise funnel health diagnosis cannot be executed | funnel_health field marked "data missing", overall health score unavailable | Ask user to provide funnel step user counts and conversion rate data |
+| If user does not provide heatmap_data | Skip steps related to this input, heatmap data not included in analysis | Behavior path analysis lacks heatmap dimension, page-level insights missing | Ask user to provide page heatmap data or click distribution data |
+| If user does not provide analysis_config | Skip steps related to this input, use default analysis configuration | Using default configuration, anomaly detection sensitivity and funnel granularity may be suboptimal | Ask user to provide analysis parameter configuration such as anomaly detection sensitivity and funnel granularity |
 
-## 数据获取说明
+## Data Acquisition Instructions
 
-本Skill需要行为数据（事件日志、漏斗数据、热力图数据），请通过以下方式之一提供：
-  1. 直接粘贴事件数据或漏斗步骤数据
-  2. 上传CSV/Excel/JSON文件
-  3. 提供数据文件路径
-- AI不负责外部数据采集，仅负责分析
+This Skill requires behavior data (event logs, funnel data, heatmap data). Please provide via one of the following methods:
+  1. Directly paste event data or funnel step data
+  2. Upload CSV/Excel/JSON files
+  3. Provide data file paths
+- AI is not responsible for external data collection, only for analysis
 
 ---
 
-## 上游变更响应
+## Upstream Change Response
 
-### 上游变更影响
+### Upstream Change Impact
 
-本Skill为起始Skill，无上游文件依赖，不涉及上游变更影响。
+This Skill is a starting Skill with no upstream file dependencies and does not involve upstream change impact.
 
-### 下游通知机制
+### Downstream Notification Mechanism
 
-| 下游Skill | 通知触发条件 | 通知方式 | 通知内容 |
+| Downstream Skill | Notification trigger condition | Notification method | Notification content |
 |-----------|------------|---------|---------|
-| user-research-user-modeling | behavior-analysis.json更新完成 | 写入output文件 | 通知行为分群、Aha Moment、功能使用数据已就绪 |
-| user-research-report | behavior-analysis.json更新完成 | 写入output文件 | 通知漏斗健康度、行为路径、异常检测数据已就绪 |
+| user-research-user-modeling | behavior-analysis.json update complete | Write to output file | Notify that behavior segments, Aha Moment, and feature usage data are ready |
+| user-research-report | behavior-analysis.json update complete | Write to output file | Notify that funnel health, behavior paths, and anomaly detection data are ready |

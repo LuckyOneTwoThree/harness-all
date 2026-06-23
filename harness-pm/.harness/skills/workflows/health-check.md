@@ -4,98 +4,104 @@ name: health-check
 default_mode: skip
 ---
 
-# 工作流 J：定期健康检查
+# Workflow J: Periodic Health Check
 
-> 适用场景：产品定期体检、季度健康度评估、主动发现问题
-> 核心模式：健康度诊断 → 竞品快照 → 报告产出（无 LOOP，轻量级）
+> Applicable scenario: Product periodic checkup, quarterly health assessment, proactive issue discovery
+> Core mode: Health diagnosis → competitor snapshot → report output (no LOOP, lightweight)
 
-## 与其他工作流的差异
+## Differences from Other Workflows
 
-| 维度 | diagnosis | **health-check** |
+| Dimension | diagnosis | **health-check** |
 |------|-----------|------------------|
-| 触发 | 被动（健康度下降） | **主动（定期）** |
-| 范围 | 完整诊断+下线 | **仅健康度+竞品快照** |
-| 深度 | 深度诊断 | **快速体检** |
-| 产出 | 诊断报告+下线方案 | **健康度报告+改进建议** |
+| Trigger | Reactive (health decline) | **Proactive (periodic)** |
+| Scope | Full diagnosis + sunset | **Health + competitor snapshot only** |
+| Depth | Deep diagnosis | **Quick checkup** |
+| Output | Diagnosis report + sunset plan | **Health report + improvement suggestions** |
 
-## 触发条件
+## Trigger Conditions
 
-- 定期体检（月度/季度）
-- 重大版本发布后检查
-- 节假日前健康确认
-- 主动发现问题
+- Periodic checkup (monthly/quarterly)
+- Check after major version release
+- Health confirmation before holidays
+- Proactive issue discovery
 
-## 流程
+## Process
 
 ```
 ┌─────────────────┐
-│ session-start   │  加载上下文，确认检查范围
+│ session-start   │  Load context, confirm check scope
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ 模块7：健康度诊断（diagnosis-           │
-│ orchestrator 的 phase-1）               │
+│ Module 7: Health Diagnosis (diagnosis-  │
+│ orchestrator phase-1)                   │
 │                                         │
 │  - diagnosis-health                     │
-│    （多维度数据采集+综合评分+           │
-│     趋势预测+瓶颈识别）                  │
+│    (Multi-dimensional data collection + │
+│     composite scoring + trend           │
+│     prediction + bottleneck             │
+│     identification)                     │
 │                                         │
-│  产出：docs/monitoring/health-check-report.md │
+│  Output: docs/monitoring/health-check-report.md │
 └────────┬────────────────────────────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ 模块7：竞品快照（diagnosis-orchestrator │
-│ 的 phase-2，轻量版）                    │
+│ Module 7: Competitor Snapshot           │
+│ (diagnosis-orchestrator phase-2,        │
+│  lightweight version)                   │
 │                                         │
 │  - diagnosis-competition                │
-│    （竞品动态快速扫描，非深度分析）       │
+│    (Quick scan of competitor dynamics,  │
+│     not deep analysis)                  │
 │                                         │
-│  产出：docs/monitoring/competitor-monitoring-report.md │
+│  Output: docs/monitoring/competitor-monitoring-report.md │
 └────────┬────────────────────────────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ 健康度报告生成                          │
+│ Health Report Generation                │
 │                                         │
-│  - 汇总健康度评分+趋势+竞品动态          │
-│  - 标注需要关注的指标                    │
-│  - 给出改进建议（不深入方案设计）         │
+│  - Aggregate health score + trends +    │
+│    competitor dynamics                  │
+│  - Highlight metrics needing attention  │
+│  - Provide improvement suggestions      │
+│    (no deep solution design)            │
 │                                         │
-│  产出：docs/monitoring/health-check-report.md │
+│  Output: docs/monitoring/health-check-report.md │
 └────────┬────────────────────────────────┘
          ▼
 ┌─────────────────┐
-│ session-end     │  归档健康度报告
-│                 │  + 更新 memory/baseline.json
-│                 │  + 记录到 memory/knowledge-base.md
+│ session-end     │  Archive health report
+│                 │  + Update memory/baseline.json
+│                 │  + Record to memory/knowledge-base.md
 └─────────────────┘
 ```
 
-## 关键检查点
+## Key Checkpoints
 
-- [ ] 健康度评分采集了吗？（多维度数据）
-- [ ] 趋势分析做了吗？（环比/同比）
-- [ ] 竞品快照扫描了吗？
-- [ ] 需要关注的指标标注了吗？
-- [ ] 改进建议给出了吗？
+- [ ] Health score collected? (Multi-dimensional data)
+- [ ] Trend analysis done? (MoM/YoY)
+- [ ] Competitor snapshot scanned?
+- [ ] Metrics needing attention highlighted?
+- [ ] Improvement suggestions provided?
 
-## 失败处理
+## Failure Handling
 
-| 失败点 | 处理方式 |
+| Failure point | Handling |
 |--------|---------|
-| 数据源不可用 | 基于历史数据生成快照，标注"数据源限制" |
-| 健康度评分异常 | 触发完整 diagnosis 工作流深入诊断 |
-| 竞品有重大动作 | 触发完整 diagnosis 工作流深入分析 |
+| Data source unavailable | Generate snapshot based on historical data, mark "data source limitation" |
+| Health score abnormal | Trigger full diagnosis workflow for deep diagnosis |
+| Competitor has major moves | Trigger full diagnosis workflow for deep analysis |
 
-## 与 diagnosis 的衔接
+## Connection with diagnosis
 
-- 健康度评分下降超过阈值 → 进入 **diagnosis** 工作流完整诊断
-- 竞品有重大动作 → 进入 **diagnosis** 工作流深入分析
-- 发现增长瓶颈 → 进入 **growth** 工作流
-- 发现优化空间 → 进入 **optimization** 工作流
+- Health score drops beyond threshold → enter **diagnosis** workflow for full diagnosis
+- Competitor has major moves → enter **diagnosis** workflow for deep analysis
+- Growth bottleneck discovered → enter **growth** workflow
+- Optimization opportunity discovered → enter **optimization** workflow
 
-## 下一步
+## Next Steps
 
-- 健康度异常 → 进入 **diagnosis** 工作流
-- 发现增长机会 → 进入 **growth** 工作流
-- 发现优化空间 → 进入 **optimization** 工作流
-- 一切正常 → 归档报告，等待下次检查
+- Health abnormality → enter **diagnosis** workflow
+- Growth opportunity discovered → enter **growth** workflow
+- Optimization opportunity discovered → enter **optimization** workflow
+- All normal → archive report, wait for next check

@@ -1,126 +1,126 @@
-# 交接：harness-pm → harness-solo
+# Handoff: harness-pm → harness-solo
 
-> 生成时间：YYYY-MM-DD HH:MM
-> 源框架：harness-pm
-> 目标框架：harness-solo
+> Generated at: YYYY-MM-DD HH:MM
+> Source framework: harness-pm
+> Target framework: harness-solo
 
-## 阶段总结
+## Phase Summary
 
-<本阶段做了什么，一句话概括。如：完成 V1 PRD，含 3 个核心功能 + 验收标准 + 埋点方案>
+<One-sentence summary of what was done in this phase. e.g., Completed V1 PRD, including 3 core features + acceptance criteria + tracking plan>
 
-## 产品基本信息
+## Product Basics
 
-| 字段 | 值 | 说明 |
+| Field | Value | Notes |
 |------|-----|------|
-| 产品名称 | <名称> | |
-| 产品类型 | <web app / mobile app / desktop / landing page / ...> | 决定工程架构 |
-| 技术栈 | <React / Vue / Svelte / 原生 / ...> | 决定 component-map.json 的 props Type 体系 |
-| 平台 | <iOS / Android / Web / 桌面> | 决定部署策略 |
-| 当前阶段 | <MVP / PMF / 规模化 / ...> | 决定开发优先级 |
+| Product name | <name> | |
+| Product type | <web app / mobile app / desktop / landing page / ...> | Determines engineering architecture |
+| Tech stack | <React / Vue / Svelte / vanilla / ...> | Determines the props Type system in component-map.json |
+| Platform | <iOS / Android / Web / desktop> | Determines deployment strategy |
+| Current stage | <MVP / PMF / Scaling / ...> | Determines development priorities |
 
-## 定位陈述
+## Positioning Statement
 
-<一句话定位，来自 positioning skill 产出。如：为独立开发者提供一站式项目管理工具>
+<One-sentence positioning, from positioning skill output. e.g., A one-stop project management tool for indie developers>
 
-## PRD 路径与验收标准
+## PRD Path and Acceptance Criteria
 
-**PRD 文档**：`docs/product/PRD.md`
+**PRD document**: `docs/product/PRD.md`
 
-**验收标准清单（AC-xxx）**：
+**Acceptance criteria list (AC-xxx)**:
 
-> 以下 AC 直接复用 PRD 的 acceptance_criteria，已带 ac_id 编号。
-> harness-solo 的 writing-plans skill 应直接沿用此编号，不重新编号。
-> 如有 harness-design 产出的 design-to-solo.md，其中 DAC-xxx 为设计专属验收点，需一并写入 spec.md。
+> The following ACs directly reuse the acceptance_criteria from the PRD, already numbered with ac_id.
+> harness-solo's writing-plans skill should reuse these IDs as-is, do not renumber.
+> If harness-design produced a design-to-solo.md, the DAC-xxx entries there are design-specific acceptance points and must also be written into spec.md.
 
-- [ ] AC-001: <Given-When-Then 或可测试描述>
-- [ ] AC-002: <可测试描述>
-- [ ] AC-003: <可测试描述>
+- [ ] AC-001: <Given-When-Then or testable description>
+- [ ] AC-002: <testable description>
+- [ ] AC-003: <testable description>
 
-## 业务上下文摘要（Business Context Digest）
+## Business Context Digest
 
-> PM 从 user-research.md / market-analysis.md 提取的**工程相关约束**。
-> harness-solo 在架构设计和技术选型时**必须参考**，避免脱离业务场景做技术决策。
+> Engineering-relevant constraints extracted by PM from user-research.md / market-analysis.md.
+> harness-solo **must reference** these when making architecture and tech-stack decisions, to avoid technical choices detached from business reality.
 >
-> 提取规则：
-> - ✅ 提取：影响架构/技术选型/性能要求/容量规划/数据规模的约束
-> - ❌ 不提取：用户画像/心理模型/审美偏好（这些交 harness-design，不给工程）
+> Extraction rules:
+> - ✅ Extract: constraints that affect architecture / tech selection / performance requirements / capacity planning / data scale
+> - ❌ Do not extract: user personas / mental models / aesthetic preferences (these go to harness-design, not engineering)
 
-| 约束项 | 工程影响 | 来源 |
+| Constraint | Engineering impact | Source |
 |--------|---------|------|
-| <如：单次导出可能高达 5GB> | <如：需异步队列，不能同步生成> | <user-research.md#导出场景> |
-| <如：目标用户 70% 移动端> | <如：移动优先，首屏 < 2s> | <user-research.md#设备分布> |
-| <如：峰值并发预计 1000 QPS> | <如：需缓存层 + 限流> | <market-analysis.md#容量预估> |
+| <e.g., single export can be up to 5GB> | <e.g., requires async queue, cannot generate synchronously> | <user-research.md#export-scenarios> |
+| <e.g., 70% of target users on mobile> | <e.g., mobile-first, first screen < 2s> | <user-research.md#device-distribution> |
+| <e.g., peak concurrency estimated at 1000 QPS> | <e.g., requires cache layer + rate limiting> | <market-analysis.md#capacity-estimate> |
 
-> 如无 user-research.md / market-analysis.md（项目早期），填"无业务上下文摘要，按 AC 自行判断"。
+> If user-research.md / market-analysis.md do not exist (early-stage project), fill in "No business context digest, judge based on ACs".
 
-## 功能优先级
+## Feature Priorities
 
-| 优先级 | 功能 | 来源 | 说明 |
+| Priority | Feature | Source | Notes |
 |--------|------|------|------|
-| P0 | <核心功能1> | PRD | MVP 必做 |
-| P1 | <重要功能2> | PRD | 重要但可延后 |
-| P2 | <增强功能3> | PRD | 可选 |
+| P0 | <core feature 1> | PRD | MVP must-do |
+| P1 | <important feature 2> | PRD | Important but can be deferred |
+| P2 | <enhancement 3> | PRD | Optional |
 
-## 埋点方案（如有）
+## Tracking Plan (if any)
 
-| 资产 | 路径 | 说明 |
+| Asset | Path | Notes |
 |------|------|------|
-| 埋点方案 | docs/metrics/tracking-plan.md | 事件埋点定义 |
-| 指标体系 | docs/metrics/metrics-system.md | 北极星 + 关键指标 |
+| Tracking plan | docs/metrics/tracking-plan.md | Event tracking definitions |
+| Metric system | docs/metrics/metrics-system.md | North Star + key metrics |
 
-> 如尚未产出，填"待补"。
+> If not yet produced, fill in "To be supplemented".
 
-## 设计资产（如有，来自 harness-design）
+## Design Assets (if any, from harness-design)
 
-> 以下路径为 harness-design 项目内的路径，非 harness-pm。如 harness-design 尚未执行，填"待 harness-design 产出"。
+> The following paths are inside the harness-design project, not harness-pm. If harness-design has not run yet, fill in "Pending harness-design output".
 
-| 资产 | harness-design 内路径 | 是否已产出 |
+| Asset | Path inside harness-design | Produced? |
 |------|----------------------|-----------|
-| 设计交付说明 | docs/handoff/design-to-solo.md | <是/否> |
-| 组件映射 | docs/handoff/component-map.json | <是/否> |
-| 设计系统 | docs/design-system/DESIGN.md | <是/否> |
-| 设计令牌 | docs/design-system/tokens.json / tokens.css | <是/否> |
+| Design handoff spec | docs/handoff/design-to-solo.md | <yes/no> |
+| Component map | docs/handoff/component-map.json | <yes/no> |
+| Design system | docs/design-system/DESIGN.md | <yes/no> |
+| Design tokens | docs/design-system/tokens.json / tokens.css | <yes/no> |
 
-## 不做清单（Out of Scope）
+## Out of Scope
 
-明确不在本次工程范围内的内容：
+Content explicitly excluded from this engineering scope:
 
-- 不做 <X>
-- 不做 <Y>
+- Not doing <X>
+- Not doing <Y>
 
-## 关键决策
+## Key Decisions
 
-| 决策 | 理由 | 影响范围 |
+| Decision | Rationale | Impact scope |
 |------|------|---------|
-| 选用技术栈 X | 团队熟悉度 + 生态成熟 | 全项目 |
-| 不做功能 Y | 不在 MVP 范围 | 范围边界 |
+| Choose tech stack X | Team familiarity + mature ecosystem | Whole project |
+| Skip feature Y | Not in MVP scope | Scope boundary |
 
-## 未决事项
+## Open Items
 
-需 harness-solo 处理或与 harness-pm 确认的问题：
+Issues for harness-solo to handle or confirm with harness-pm:
 
-- 待定 1: <问题描述>
-- 待定 2: <问题描述>
+- TBD 1: <issue description>
+- TBD 2: <issue description>
 
-## 建议下一步
+## Suggested Next Steps
 
-harness-solo 应优先处理：
+harness-solo should prioritize:
 
-1. 运行 brainstorming skill，消费本文件的 AC-xxx + 功能优先级
-2. 运行 writing-plans skill，将 AC-xxx（+ DAC-xxx 如有）写入 spec.md
-3. 如有 design-to-solo.md，运行 frontend-implementation skill，按 component-map.json 实现组件
+1. Run the brainstorming skill, consume the AC-xxx + feature priorities in this file
+2. Run the writing-plans skill, write AC-xxx (+ DAC-xxx if any) into spec.md
+3. If design-to-solo.md exists, run the frontend-implementation skill, implement components per component-map.json
 
-## 风险提示
+## Risk Notes
 
-| 风险 | 等级 | 缓解措施 |
+| Risk | Level | Mitigation |
 |------|------|---------|
-| 技术栈未定 | 高/中/低 | <措施> |
-| 设计稿未就绪 | 高/中/低 | <措施> |
-| 埋点方案缺失 | 高/中/低 | <措施> |
+| Tech stack undecided | High/Medium/Low | <action> |
+| Design assets not ready | High/Medium/Low | <action> |
+| Tracking plan missing | High/Medium/Low | <action> |
 
 ---
 
-## 下游框架使用说明
+## Downstream Framework Usage Notes
 
-harness-solo 的 brainstorming / writing-plans / verify skill 会自动检测本文件并读取 AC-xxx 清单、功能优先级和业务上下文摘要。
-如未自动识别，可手动指向本文件路径让 Agent 读取。
+harness-solo's brainstorming / writing-plans / verify skills will auto-detect this file and read the AC-xxx list, feature priorities, and business context digest.
+If not auto-detected, you can manually point the Agent to this file path to read it.

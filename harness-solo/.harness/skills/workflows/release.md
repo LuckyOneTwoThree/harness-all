@@ -4,110 +4,113 @@ name: release
 default_mode: skip
 ---
 
-# 工作流 F：发版
+# Workflow F: Release
 
-> 适用场景：版本发布、CHANGELOG 更新、打 tag、构建发布物
-> 核心模式：verify 全量验证 → writing-documentation 更新 CHANGELOG → 打 tag → 构建发布物
+> Applicable scenario: Version release, CHANGELOG update, tagging, building release artifacts
+> Core mode: verify full validation → writing-documentation update CHANGELOG → tag → build release artifacts
 
-## 与其他工作流的差异
+## Differences from Other Workflows
 
-| 维度 | new-feature | **release** |
+| Dimension | new-feature | **release** |
 |------|-------------|------------|
-| 目标 | 实现新功能 | 发布版本 |
-| 前置 | brainstorming | **所有计划功能已完成（FEATURES.md 全 done）** |
-| LOOP | tdd→verify | **无 LOOP（验证为主）** |
-| 产出 | 代码 + 测试 | **版本号 + tag + CHANGELOG + 发布物** |
+| Goal | Implement new features | Release a version |
+| Prerequisite | brainstorming | **All planned features complete (FEATURES.md all done)** |
+| LOOP | tdd→verify | **No LOOP (validation-focused)** |
+| Output | Code + tests | **Version number + tag + CHANGELOG + release artifacts** |
 
-## 流程
+## Process
 
 ```
 ┌─────────────────┐
-│ session-start   │  加载上下文，确认发版范围
+│ session-start   │  Load context, confirm release scope
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ 发版前置检查（硬门）                    │
+│ Release prerequisite check (hard gate)  │
 │                                         │
-│  - FEATURES.md 所有功能状态为 done？    │
-│  - PROJECT.md 的成功指标已达标？        │
-│  - PROJECT.md 的里程碑状态已更新？      │
-│  - 全量测试通过？                       │
-│  - verify skill 综合检查通过？          │
-│  - 安全扫描无 critical/high？           │
-│  - constitution 合规？                  │
+│  - Are all features in FEATURES.md done?│
+│  - Have PROJECT.md's success metrics    │
+│    been met?                            │
+│  - Have PROJECT.md's milestone statuses │
+│    been updated?                        │
+│  - Does the full test suite pass?       │
+│  - Does the verify skill's comprehensive│
+│    check pass?                          │
+│  - Security scan has no critical/high?  │
+│  - Constitution compliant?              │
 │                                         │
-│  ★ 任何一条不满足 → 不发版              │
+│  ★ If any is not met → don't release    │
 └────────┬────────────────────────────────┘
-         │ 通过
+         │ Passed
          ▼
 ┌─────────────────┐
-│ writing-docu-   │  更新 CHANGELOG
+│ writing-docu-   │  Update CHANGELOG
 │ mentation       │  - Added / Fixed / Changed
-│                 │  - 关联 issue 号
-│                 │  - 从 iterations.log 提取变更
+│                 │  - Link issue numbers
+│                 │  - Extract changes from iterations.log
 └────────┬────────┘
          ▼
 ┌─────────────────┐
-│ 版本号管理      │  按语义化版本
-│                 │  - major: 不兼容的 API 变更
-│                 │  - minor: 向后兼容的新功能
-│                 │  - patch: 向后兼容的修复
+│ Version number  │  Per semantic versioning
+│ management      │  - major: incompatible API changes
+│                 │  - minor: backward-compatible new features
+│                 │  - patch: backward-compatible fixes
 └────────┬────────┘
          ▼
 ┌─────────────────┐
-│ 构建 + 验证     │
-│                 │  - 构建发布物（如 npm pack / go build）
-│                 │  - 在干净环境验证发布物可运行
-│                 │  - 展示构建输出
+│ Build + verify  │
+│                 │  - Build release artifacts (e.g. npm pack / go build)
+│                 │  - Verify artifacts run in a clean environment
+│                 │  - Show build output
 └────────┬────────┘
          ▼
 ┌─────────────────┐
-│ 打 tag          │  git tag v<X.Y.Z>
-│                 │  - annotated tag 含 CHANGELOG 摘要
-│                 │  - 不自动 push（需用户确认）
+│ Tag             │  git tag v<X.Y.Z>
+│                 │  - annotated tag with CHANGELOG summary
+│                 │  - Don't auto-push (requires user confirmation)
 └────────┬────────┘
          ▼
 ┌─────────────────────┐
-│ requesting-code-    │  发版审查
-│ review              │  - CHANGELOG 准确？
-│                     │  - 版本号合理？
-│                     │  - 发布物完整？
+│ requesting-code-    │  Release review
+│ review              │  - CHANGELOG accurate?
+│                     │  - Version number reasonable?
+│                     │  - Release artifacts complete?
 └──────────┬──────────┘
-           │ 通过
+           │ Passed
            ▼
 ┌─────────────────┐
-│ session-end     │  归档 + baseline
-│                 │  - 记录发版信息到 progress.md
-│                 │  - 可选产出 solo-to-growth.md
+│ session-end     │  Archive + baseline
+│                 │  - Record release info to progress.md
+│                 │  - Optional output solo-to-growth.md
 └─────────────────┘
 ```
 
-## 关键检查点
+## Key Checkpoints
 
-- [ ] FEATURES.md 所有功能状态为 done？
-- [ ] PROJECT.md 的成功指标已达标？（逐条对照，展示数据）
-- [ ] PROJECT.md 的里程碑状态已更新？（在 FEATURES.md 中更新）
-- [ ] 全量测试通过？（展示输出）
-- [ ] verify 综合检查通过？
-- [ ] 安全扫描无 critical/high？
-- [ ] CHANGELOG 更新了？（Added/Fixed/Changed）
-- [ ] 版本号符合语义化版本？
-- [ ] 发布物在干净环境验证过？
-- [ ] tag 打了？（不自动 push）
+- [ ] Are all features in FEATURES.md marked done?
+- [ ] Have PROJECT.md's success metrics been met? (Check item by item, show data)
+- [ ] Have PROJECT.md's milestone statuses been updated? (Updated in FEATURES.md)
+- [ ] Does the full test suite pass? (Show output)
+- [ ] Does verify's comprehensive check pass?
+- [ ] Security scan has no critical/high?
+- [ ] CHANGELOG updated? (Added/Fixed/Changed)
+- [ ] Does the version number follow semantic versioning?
+- [ ] Were release artifacts verified in a clean environment?
+- [ ] Was the tag created? (Don't auto-push)
 
-## 失败处理
+## Failure Handling
 
-| 失败点 | 处理方式 |
+| Failure Point | Handling |
 |--------|---------|
-| 有功能未 done | 不发版，先完成或从本版本移除 |
-| 测试失败 | 修复后重新验证，不许跳过 |
-| 安全扫描有 critical | 修复后发版，不许忽略 |
-| 发布物构建失败 | 修复构建问题，不许发布损坏的产物 |
-| code-review 不通过 | 修复问题后重新审查 |
+| Some features not done | Don't release; finish them or remove from this version |
+| Tests fail | Fix and re-validate; no skipping |
+| Security scan has critical | Fix before release; don't ignore |
+| Release artifact build fails | Fix the build issue; don't publish broken artifacts |
+| code-review not passed | Fix issues and re-review |
 
-## 安全原则
+## Safety Principles
 
-1. **不自动 push tag**：tag 打在本地，push 需用户明确确认
-2. **不自动 publish**：npm publish / docker push 等需用户明确确认
-3. **发布物验证**：必须在干净环境验证可运行，不能"构建成功就发"
-4. **CHANGELOG 准确**：从 iterations.log 提取，不凭记忆编写
+1. **Don't auto-push tags**: Tags are created locally; push requires explicit user confirmation
+2. **Don't auto-publish**: npm publish / docker push etc. require explicit user confirmation
+3. **Release artifact verification**: Must verify it runs in a clean environment; don't "publish just because the build succeeded"
+4. **CHANGELOG accuracy**: Extract from iterations.log; don't write from memory

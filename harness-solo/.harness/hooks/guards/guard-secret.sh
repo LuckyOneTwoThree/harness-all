@@ -1,19 +1,19 @@
 #!/bin/bash
-# guard-secret.sh — 密钥泄露检测
-# 用法：bash guard-secret.sh [file_or_dir]
-# 不带参数时检查 staged 文件
+# guard-secret.sh — Secret leak detection
+# Usage: bash guard-secret.sh [file_or_dir]
+# Checks staged files when no argument is provided
 #
-# 定位：主动验证工具（Agent 或 git pre-commit 调用）
-# 不是自动拦截器，是"先跑一遍再决定"的工具
+# Positioning: proactive validation tool (invoked by Agent or git pre-commit)
+# Not an auto-interceptor; it is a "run first, then decide" tool
 
-# CRLF 防御：Windows 下 core.autocrlf 可能导致脚本含 \r，Git Bash 无法执行
+# CRLF defense: on Windows, core.autocrlf may cause scripts to contain \r, which Git Bash cannot execute
 if grep -qI $'\r' "$0" 2>/dev/null; then
   exec bash < <(tr -d '\r' < "$0")
 fi
 
 set -e
 
-# 密钥模式（高置信度）
+# Secret patterns (high confidence)
 PATTERNS=(
   'sk-[a-zA-Z0-9]{20,}'           # OpenAI
   'AKIA[A-Z0-9]{16}'              # AWS Access Key
@@ -25,7 +25,7 @@ PATTERNS=(
   'eyJ[a-zA-Z0-9_-]*\.eyJ'        # JWT
 )
 
-# 敏感文件名
+# Sensitive file names
 SENSITIVE_FILES=(
   '\.env$'
   '\.env\.local$'
@@ -44,19 +44,19 @@ exit_code=0
 check_file() {
   local file="$1"
 
-  # 检查文件名是否敏感
+  # Check whether the file name is sensitive
   for pattern in "${SENSITIVE_FILES[@]}"; do
     if [[ "$file" =~ $pattern ]]; then
-      echo "BLOCK: 敏感文件名 $file（匹配 $pattern）"
+      echo "BLOCK: sensitive file name $file (matched $pattern)"
       exit_code=1
     fi
   done
 
-  # 检查文件内容是否包含密钥
+  # Check whether the file content contains secrets
   if [ -f "$file" ]; then
     for pattern in "${PATTERNS[@]}"; do
       if grep -qE "$pattern" "$file" 2>/dev/null; then
-        echo "BLOCK: $file 包含疑似密钥（匹配 $pattern）"
+        echo "BLOCK: $file contains a suspected secret (matched $pattern)"
         grep -nE "$pattern" "$file" 2>/dev/null | head -3
         exit_code=1
       fi
@@ -65,7 +65,7 @@ check_file() {
 }
 
 if [ $# -gt 0 ]; then
-  # 显式传参（用进程替换避免子 shell 变量丢失）
+  # Explicit arguments (use process substitution to avoid losing subshell variables)
   for target in "$@"; do
     if [ -d "$target" ]; then
       while read -r f; do
@@ -76,19 +76,19 @@ if [ $# -gt 0 ]; then
     fi
   done
 else
-  # 检查 staged 文件（用进程替换避免子 shell 变量丢失）
+  # Check staged files (use process substitution to avoid losing subshell variables)
   if git rev-parse --git-dir >/dev/null 2>&1; then
     while read -r f; do
       check_file "$f"
     done < <(git diff --cached --name-only --diff-filter=ACM)
   else
-    echo "WARN: 不在 git 仓库，且未传参数，无法检查"
+    echo "WARN: not in a git repository and no arguments provided; cannot check"
     exit 1
   fi
 fi
 
 if [ $exit_code -eq 0 ]; then
-  echo "OK: 未检测到密钥泄露"
+  echo "OK: no secret leaks detected"
 fi
 
 exit $exit_code

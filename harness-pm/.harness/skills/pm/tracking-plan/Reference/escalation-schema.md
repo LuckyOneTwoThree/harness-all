@@ -1,10 +1,10 @@
-<!-- 从 SKILL.md 提取的参考材料，按需查阅 -->
+<!-- Reference material extracted from SKILL.md, consult as needed -->
 
-# 升级输出 Schema
+# Escalation Output Schema
 
-> 来源：SKILL.md「升级路径 → 升级输出」中的升级输出 schema
+> Source: Escalation output schema in SKILL.md "Escalation Path → Escalation Output"
 
-## 升级输出
+## Escalation Output
 
 ```json
 {
@@ -15,9 +15,9 @@
     "ai_recommendation": {},
     "requires_human_action": true,
     "human_decision_needed": [
-      "业务逻辑确认",
-      "隐私合规确认",
-      "埋点优先级调整"
+      "Business logic confirmation",
+      "Privacy compliance confirmation",
+      "Tracking priority adjustment"
     ]
   }
 }

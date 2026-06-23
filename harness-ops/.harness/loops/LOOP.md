@@ -1,208 +1,208 @@
-# LOOP.md — 循环引擎定义 + 验证协议
+# LOOP.md — Loop Engine Definition + Verification Protocol
 
-> 来源：SRE 实践 (plan→provision→verify) + loop-engineering CLI
-> 作用：替代线性 workflow，实现循环验证闭环
-> 合并了原 verification.md 的内容
+> Source: SRE practice (plan→provision→verify) + loop-engineering CLI
+> Purpose: replaces linear workflows to implement a closed-loop verification cycle
+> Merges the content of the former verification.md
 
-## 核心循环
+## Core Loop
 
 ```
 ┌──────────┐
-│   PLAN   │ ← 定义变更目标 + 验证指标 + 宪法检查 + 回滚方案
+│   PLAN   │ ← Define change objectives + validation metrics + constitution check + rollback plan
 └────┬─────┘
      ▼
 ┌──────────┐
-│ PROVISION │ ← 执行部署（IaC apply / kubectl / Helm / CI 流水线）
+│ PROVISION │ ← Execute deployment (IaC apply / kubectl / Helm / CI pipeline)
 └────┬─────┘
      ▼
 ┌──────────┐
-│  VERIFY  │ ← 检查健康指标 + 监控大盘 + 冒烟测试
+│  VERIFY  │ ← Check health metrics + monitoring dashboard + smoke tests
 └────┬─────┘
      │
-     ├── 通过 → DONE → 记录 evidence
+     ├── Pass → DONE → record evidence
      │
-     └── 失败 → ROLLBACK → 分析原因
-                   ├── 可修复 → 回到 PROVISION
-                   └── 需重新规划 → 回到 PLAN
+     └── Fail → ROLLBACK → analyze cause
+                   ├── Fixable → back to PROVISION
+                   └── Needs re-planning → back to PLAN
 ```
 
-## 循环类型
+## Loop Types
 
-| 类型 | 触发场景 | 最大迭代 | 停止条件 |
+| Type | Trigger Scenario | Max Iterations | Stop Condition |
 |------|---------|---------|---------|
-| **provision** | 基础设施部署 / 版本发布 | 3 | 健康检查通过 + 监控指标平稳 |
-| **incident** | 线上排障 / 应急响应 | 5 | 故障恢复 + 根因定位 |
-| **optimization** | 性能/成本/资源优化 | 3 | 核心指标提升达标 + 无负面影响 |
-| **recovery** | 容灾恢复演练 | 3 | RTO/RPO 达标 + 数据完整 |
-| **audit** | 安全审计与合规检查 | 3 | 所有违规项修复或确认 |
+| **provision** | Infrastructure deployment / release | 3 | Health check passes + monitoring metrics stable |
+| **incident** | Online troubleshooting / emergency response | 5 | Incident resolved + root cause located |
+| **optimization** | Performance / cost / resource optimization | 3 | Core metrics meet improvement target + no negative impact |
+| **recovery** | Disaster recovery drill | 3 | RTO/RPO met + data intact |
+| **audit** | Security audit and compliance check | 3 | All violations fixed or acknowledged |
 
-## 成本控制
+## Cost Control
 
-| 维度 | 限制 | 超限动作 |
+| Dimension | Limit | Action on Exceedance |
 |------|------|---------|
-| 总循环次数 | 10 | **硬熔断**：写入 `hard_limit_reached: true` 到 state.yaml，status 改为 `failed`，**禁止继续循环**，必须请求人类介入 |
+| Total loop iterations | 10 | **Hard Circuit Breaker**: write `hard_limit_reached: true` to state.yaml, change status to `failed`, **prohibit further looping**, must request human intervention |
 
-> **硬熔断执行规则（不可协商）**：
-> 1. Agent 在每次 VERIFY 阶段**必须**读取 `state.yaml` 的 `iteration` 字段
-> 1.5. **VERIFY 阶段必须强制读取 state.yaml 原始内容**：Agent 在每次 VERIFY 时，必须使用 Read 工具读取 `state.yaml` 的完整内容，获取真实的 iteration 值。**禁止从上下文记忆中引用 iteration 值**（防止幻觉状态下跳过熔断检查）。
-> 2. 当 Read 工具读取的 `iteration >= 10` 时（必须来自文件原始内容，不是记忆引用），Agent **必须**执行以下操作，不得跳过：
->    - 将 `status` 改为 `failed`
->    - 将 `hard_limit_reached` 写为 `true`
->    - 将 `last_error` 写为"迭代超限（iteration >= 10），硬熔断触发"
->    - 向用户报告熔断原因，请求人类介入
-> 3. 当 `hard_limit_reached: true` 时，Agent **禁止**继续执行当前任务的任何 LOOP 阶段
-> 4. 只有用户显式指示"重置熔断"后，Agent 才可将 `hard_limit_reached` 改为 `false` 并重置 `iteration`
+> **Hard Circuit Breaker execution rules (non-negotiable)**:
+> 1. The Agent **must** read the `iteration` field of `state.yaml` at each VERIFY stage
+> 1.5. **VERIFY stage must forcibly read the raw content of state.yaml**: At each VERIFY, the Agent must use the Read tool to read the full content of `state.yaml` to obtain the true iteration value. **Referencing the iteration value from context memory is prohibited** (to prevent skipping the circuit breaker check in a hallucinated state).
+> 2. When the `iteration >= 10` read by the Read tool (must come from the raw file content, not a memory reference), the Agent **must** perform the following operations, without skipping:
+>    - Change `status` to `failed`
+>    - Write `hard_limit_reached` to `true`
+>    - Write `last_error` as "Iteration exceeded (iteration >= 10), Hard Circuit Breaker triggered"
+>    - Report the circuit breaker reason to the user and request human intervention
+> 3. When `hard_limit_reached: true`, the Agent is **prohibited** from continuing any LOOP phase of the current task
+> 4. Only after the user explicitly instructs "reset circuit breaker" may the Agent change `hard_limit_reached` to `false` and reset `iteration`
 >
-> Token 限制由用户在 IDE 中自行监控，不纳入框架规则（Agent 没有 token 计数器）。
+> Token limits are monitored by the user in the IDE and are not part of the framework rules (the Agent has no token counter).
 
-## Specs 持久化
+## Specs Persistence
 
-每次循环的 PLAN 阶段，将规格写入 `loops/specs/<task>/spec.md`。
+At the PLAN stage of each loop, write the spec to `loops/specs/<task>/spec.md`.
 
-## Evidence 追踪
+## Evidence Tracking
 
-每次 VERIFY 阶段的证据写入 `loops/specs/<task>/evidence.md`。
+Evidence from each VERIFY stage is written to `loops/specs/<task>/evidence.md`.
 
-**文件写入语义区分（重要，避免混淆）**：
+**File write semantics distinction (important, avoid confusion)**:
 
-| 文件 | 写入语义 | 原因 | 操作方式 |
+| File | Write Semantics | Reason | Operation |
 |------|---------|------|---------|
-| `spec.md` | 覆盖 | 只保留最终通过的规格 | Write 直接覆盖 |
-| `state.yaml` | 覆盖 | 只保留当前状态 | Write 直接覆盖 |
-| `evidence.md` | 覆盖 | 只保留最终成功的证据 | Write 直接覆盖 |
-| `iterations.log` | **追加** | 保留完整迭代历史 | Read+拼接+Write，或 `echo >>` |
+| `spec.md` | Overwrite | Keep only the final passing spec | Write directly overwrites |
+| `state.yaml` | Overwrite | Keep only the current state | Write directly overwrites |
+| `evidence.md` | Overwrite | Keep only the final successful evidence | Write directly overwrites |
+| `iterations.log` | **Append** | Preserve complete iteration history | Read+concatenate+Write, or `echo >>` |
 
 ```
 loops/specs/001-deploy-v2/
-├── spec.md          ← 变更规格（覆盖：最终通过版本）
-├── state.yaml       ← 循环状态（覆盖：当前状态）
-├── evidence.md      ← 验证证据（覆盖：最终成功）
-└── iterations.log   ← 迭代历史（append-only，完整轨迹）
+├── spec.md          ← Change spec (overwrite: final passing version)
+├── state.yaml       ← Loop state (overwrite: current state)
+├── evidence.md      ← Verification evidence (overwrite: final success)
+└── iterations.log   ← Iteration history (append-only, complete trajectory)
 ```
 
-iterations.log 示例：
+iterations.log example:
 ```
-[2026-06-20 14:30] iter=1 stage=provision → verify FAILED: /health 返回 503
-[2026-06-20 14:35] iter=2 stage=rollback → provision → verify FAILED: DB 连接超时
+[2026-06-20 14:30] iter=1 stage=provision → verify FAILED: /health returned 503
+[2026-06-20 14:35] iter=2 stage=rollback → provision → verify FAILED: DB connection timeout
 [2026-06-20 14:40] iter=3 stage=verify → PASSED
 ```
 
-## 状态维护
+## State Maintenance
 
-**决策：Agent 读写维护 state.yaml（每任务一个文件，落盘）**
+**Decision: The Agent reads and writes state.yaml (one file per task, persisted to disk)**
 
-`loops/specs/<task>/state.yaml` 由部署/排障 skill 在循环中主动读写：
-  - 记录当前迭代次数、上次失败原因、当前阶段
-  - 会话中断后可断点续传（读取 state.yaml 恢复上下文）
-  - verify skill 反正要写 evidence，多写一行 state 成本可忽略
-  - 每任务一个文件，天然支持多任务并行
+`loops/specs/<task>/state.yaml` is actively read and written by deployment / troubleshooting skills during the loop:
+  - Records the current iteration count, last failure reason, and current stage
+  - Supports checkpoint resume after session interruption (read state.yaml to restore context)
+  - The verify skill has to write evidence anyway; writing one more line of state has negligible cost
+  - One file per task, naturally supporting multi-task parallelism
 
-### state.yaml Schema（单一来源，各 SKILL.md 引用本节）
+### state.yaml Schema (single source of truth; each SKILL.md references this section)
 
 ```yaml
-# 必填字段
-current_task: <NNN>-<task-name>       # 任务编号+名称，与目录名一致
-iteration: <int>                       # 当前迭代次数，从 0 开始，每次 PROVISION→VERIFY 循环 +1
-stage: <enum>                          # 当前阶段，枚举见下表
-status: <enum>                         # 任务状态，枚举见下表
-started_at: "<ISO 8601>"               # 任务开始时间，如 "2026-06-20T14:30:00"
+# Required fields
+current_task: <NNN>-<task-name>       # Task number + name, consistent with the directory name
+iteration: <int>                       # Current iteration count, starts from 0, +1 for each PROVISION→VERIFY cycle
+stage: <enum>                          # Current stage, see enum table below
+status: <enum>                         # Task status, see enum table below
+started_at: "<ISO 8601>"               # Task start time, e.g., "2026-06-20T14:30:00"
 
-# 可选字段（失败时填写）
-last_error: "<错误描述>"                # 最近一次失败原因，成功时清空为 ""
-last_error_at: "<ISO 8601>"            # 最近一次失败时间
+# Optional fields (filled on failure)
+last_error: "<error description>"      # Most recent failure reason; cleared to "" on success
+last_error_at: "<ISO 8601>"            # Most recent failure time
 
-# 可选字段（子阶段描述，用于 incident 等多子阶段工作流）
-substage: "<子阶段描述>"                # 如 "detect" / "mitigate" / "root-cause" / "recover"
+# Optional fields (substage description, for multi-substage workflows such as incident)
+substage: "<substage description>"     # e.g., "detect" / "mitigate" / "root-cause" / "recover"
 
-# 可选字段（探索模式，ops 专属）
-exploration_mode: "<enum>"                 # deep / standard / skip，默认 standard，控制 workflow 交互深度
+# Optional fields (exploration mode, ops-specific)
+exploration_mode: "<enum>"             # deep / standard / skip; default standard; controls workflow interaction depth
 
-# 可选字段（硬熔断标记）
-hard_limit_reached: <bool>                 # true 时禁止继续循环，默认 false，仅 iteration >= 10 时置 true
+# Optional fields (hard circuit breaker flag)
+hard_limit_reached: <bool>             # When true, looping is prohibited; default false; set to true only when iteration >= 10
 ```
 
-**stage 枚举值**：
+**stage enum values**:
 
-| 值 | 含义 | 写入时机 |
+| Value | Meaning | Write Timing |
 |----|------|---------|
-| `plan` | 规划阶段 | 变更初始化时 |
-| `provision` | 执行部署阶段 | IaC apply / kubectl / Helm 执行时 |
-| `verify` | 验证阶段 | 健康检查 / 监控验证时 |
-| `rollback` | 回滚阶段 | 验证失败触发回滚时 |
-| `debug` | 排障阶段 | incident 循环中根因分析时 |
+| `plan` | Planning stage | When the change is initialized |
+| `provision` | Deployment execution stage | When IaC apply / kubectl / Helm is executed |
+| `verify` | Verification stage | During health check / monitoring verification |
+| `rollback` | Rollback stage | When verification failure triggers rollback |
+| `debug` | Troubleshooting stage | During root cause analysis in the incident loop |
 
-**status 枚举值**（与全家族统一 Schema 对齐）：
+**status enum values** (aligned with the unified family-wide schema):
 
-| 值 | 含义 | 写入时机 |
+| Value | Meaning | Write Timing |
 |----|------|---------|
-| `running` | 进行中 | 任务初始化 / 部署成功继续验证 |
-| `retrying` | 重试中 | 部署/验证失败后 |
-| `done` | 已完成 | 验证通过 + 监控指标平稳 |
-| `failed` | 失败（需人类介入） | 迭代超限 |
-| `needs-human` | 需人类介入 | 破坏性操作待审批 / 需人工决策 |
-| `blocked` | 被阻塞 | 等待上游修复 / 等待资源就绪 |
+| `running` | In progress | Task initialization / deployment successful, continuing verification |
+| `retrying` | Retrying | After deployment / verification failure |
+| `done` | Completed | Verification passed + monitoring metrics stable |
+| `failed` | Failed (human intervention required) | Iteration limit exceeded |
+| `needs-human` | Human intervention required | Destructive operation pending approval / manual decision required |
+| `blocked` | Blocked | Waiting for upstream fix / waiting for resources to be ready |
 
-**字段写入责任**：
+**Field write responsibility**:
 
-| 字段 | plan（初始化） | provision | verify | rollback |
+| Field | plan (init) | provision | verify | rollback |
 |------|:---:|:---:|:---:|:---:|
-| current_task | 写（初始化） | 不改 | 不改 | 不改 |
-| iteration | 写（0） | 写（+1） | 不改 | 不改 |
-| stage | 写（plan） | 写（provision） | 写（verify） | 写（rollback） |
-| status | 写（running） | 写（running/retrying） | 写（done/retrying） | 写（retrying） |
-| last_error | 写（""） | 写（失败时/成功清空） | 写（失败时/成功清空） | 写（回滚原因） |
-| started_at | 写（初始化） | 不改 | 不改 | 不改 |
-| exploration_mode | 写（workflow default_mode） | 不改 | 不改 | 不改 |
+| current_task | Write (init) | No change | No change | No change |
+| iteration | Write (0) | Write (+1) | No change | No change |
+| stage | Write (plan) | Write (provision) | Write (verify) | Write (rollback) |
+| status | Write (running) | Write (running/retrying) | Write (done/retrying) | Write (retrying) |
+| last_error | Write ("") | Write (on failure / cleared on success) | Write (on failure / cleared on success) | Write (rollback reason) |
+| started_at | Write (init) | No change | No change | No change |
+| exploration_mode | Write (workflow default_mode) | No change | No change | No change |
 
-**示例**：
+**Example**:
 
 ```yaml
-# loops/specs/001-deploy-v2/state.yaml 示例
+# loops/specs/001-deploy-v2/state.yaml example
 current_task: 001-deploy-v2
 iteration: 2
 stage: verify
 status: retrying
-last_error: "健康检查 /health 返回 503，新版本 Pod 启动失败"
+last_error: "Health check /health returned 503, new version Pod failed to start"
 last_error_at: "2026-06-20T14:35:00"
 started_at: "2026-06-20T14:30:00"
 ```
 
-## 验证协议
+## Verification Protocol
 
-### VERIFY 阶段必做检查
+### VERIFY Stage Mandatory Checks
 
-1. **健康检查**：调用 `/health` 或等价接口，确认返回 200
-2. **监控指标**：检查 Grafana/Prometheus 大盘，确认核心指标平稳（CPU/内存/错误率/延迟）
-3. **冒烟测试**：执行关键链路的冒烟测试脚本
-4. **宪法合规**：检查是否违反 constitution.md 的原则（IaC 文件存在、无明文秘钥等）
-5. **安全扫描**：按 verify SKILL.md 的方式用 Grep 工具扫描秘钥泄漏（跨平台）
+1. **Health check**: Call `/health` or an equivalent endpoint and confirm a 200 response
+2. **Monitoring metrics**: Check the Grafana/Prometheus dashboard and confirm core metrics are stable (CPU / memory / error rate / latency)
+3. **Smoke tests**: Execute smoke test scripts for critical paths
+4. **Constitution compliance**: Check for violations of the principles in constitution.md (IaC file exists, no plaintext secrets, etc.)
+5. **Security scan**: Use the Grep tool to scan for secret leaks per the verify SKILL.md approach (cross-platform)
 
-### 声称"完成"的前置条件
+### Preconditions for Claiming "Complete"
 
-Agent 在声称任务完成前，**必须**：
-- [ ] 健康检查通过（实际 HTTP 响应，不是"应该通过"）
-- [ ] 监控指标平稳（实际数值，不是"看起来正常"）
-- [ ] 冒烟测试通过（实际输出）
-- [ ] 执行安全扫描并展示输出
-- [ ] 将证据写入 `loops/specs/<task>/evidence.md`
-- [ ] 更新 `loops/specs/<task>/state.yaml` 的 status 为 done
+Before claiming a task complete, the Agent **must**:
+- [ ] Health check passed (actual HTTP response, not "should pass")
+- [ ] Monitoring metrics stable (actual values, not "looks normal")
+- [ ] Smoke tests passed (actual output)
+- [ ] Security scan executed and output shown
+- [ ] Evidence written to `loops/specs/<task>/evidence.md`
+- [ ] Updated `loops/specs/<task>/state.yaml` status to done
 
-**没有证据不声称完成**——这是 AGENTS.md 核心规则第 1 条。
+**No claiming complete without evidence** — this is Core Rule 1 in AGENTS.md.
 
-### 失败处理
+### Failure Handling
 
-VERIFY 失败时：
-1. 触发 ROLLBACK（执行 spec.md 中的回滚方案）
-2. 将失败信息写入 `state.yaml` 的 `last_error` 字段
-3. 追加一行到 `iterations.log`
-4. 分析失败原因：
-   - 可修复（配置错误、资源不足）→ 回到 PROVISION
-   - 需重新规划（方案错误、需求变更）→ 回到 PLAN
-5. 迭代次数 +1，检查是否超过最大迭代
+When VERIFY fails:
+1. Trigger ROLLBACK (execute the rollback plan in spec.md)
+2. Write the failure information to the `last_error` field of `state.yaml`
+3. Append a line to `iterations.log`
+4. Analyze the failure cause:
+   - Fixable (configuration error, insufficient resources) → back to PROVISION
+   - Needs re-planning (wrong approach, requirement change) → back to PLAN
+5. Increment the iteration count and check whether the maximum iterations are exceeded
 
-### 断点续传
+### Checkpoint Resume
 
-会话中断后恢复：
-1. 读取 `loops/specs/<task>/state.yaml` 获取当前阶段和迭代次数
-2. 读取 `iterations.log` 了解失败历史
-3. 从中断点继续，不从头开始
+Recovery after session interruption:
+1. Read `loops/specs/<task>/state.yaml` to get the current stage and iteration count
+2. Read `iterations.log` to understand the failure history
+3. Continue from the interruption point; do not start over

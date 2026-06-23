@@ -1,60 +1,60 @@
 # Anti AI-Slop Rules
 
-> 通用工艺规则（品牌无关）· 被 visual-design / design-lint / design-review 引用
+> Generic craft rules (brand-agnostic) · referenced by visual-design / design-lint / design-review
 >
-> 来源：整合 anthropics/skills + addyosmani/agent-skills + Open Design 的反 AI 同质化共识
+> Source: integrates the anti-AI homogenization consensus from anthropics/skills + addyosmani/agent-skills + Open Design
 
-## 核心理念
+## Core philosophy
 
-AI 生成的设计有强烈的"同质化默认值"——所有 app 长得一样。这些默认值是 AI slop 的标志，必须作为硬约束禁止。
+AI-generated designs have strong "homogenized defaults" — every app looks the same. These defaults are signs of AI slop and must be prohibited as hard constraints.
 
-## 禁用字体
+## Forbidden fonts
 
-| 禁用 | 原因 | 替代 |
+| Forbidden | Reason | Alternative |
 |------|------|------|
-| Inter | AI 默认字体，所有 app 长一样 | 用项目设计系统的字体 |
-| Roboto | 同上 | 同上 |
-| Arial | 同上 | 同上 |
-| 系统默认字体作为主字体 | 偷懒 | 显式声明字体栈 |
+| Inter | AI default font, all apps look the same | Use the project design system's font |
+| Roboto | Same as above | Same as above |
+| Arial | Same as above | Same as above |
+| System default font as primary font | Lazy | Explicitly declare the font stack |
 
-## 禁用配色
+## Forbidden colors
 
-| 禁用 | 原因 | 替代 |
+| Forbidden | Reason | Alternative |
 |------|------|------|
-| #6366f1（indigo-500） | AI 默认紫，识别度极高 | 用项目设计系统的 primary |
-| 紫色渐变（indigo→purple） | AI 默认渐变 | 扁平色或匹配设计系统的微妙渐变 |
-| 蓝紫渐变（blue→violet） | 同上 | 同上 |
-| 硬编码 hex（非 token） | 破坏一致性 | 用 token 引用 |
+| #6366f1 (indigo-500) | AI default purple, highly recognizable | Use the project design system's primary |
+| Purple gradient (indigo→purple) | AI default gradient | Flat color or a subtle gradient matching the design system |
+| Blue-purple gradient (blue→violet) | Same as above | Same as above |
+| Hardcoded hex (non-token) | Breaks consistency | Use token references |
 
-## 禁用布局
+## Forbidden layouts
 
-| 禁用 | 原因 | 替代 |
+| Forbidden | Reason | Alternative |
 |------|------|------|
-| 过度居中（所有元素居中） | 摧毁视觉层级 | 目的驱动布局 |
-| 统一圆角（rounded-2xl 全场） | 忽略圆角层级 | 设计系统一致的 border-radius |
-| 标准卡片网格（均匀 3 列） | 忽略信息优先级和扫描模式 | 目的驱动布局 |
-| 过度 padding（等量 padding） | 摧毁视觉层级 | 一致 spacing scale |
-| 通用 hero 区（模板驱动） | 与内容/用户需求无关 | 内容优先布局 |
+| Over-centering (all elements centered) | Destroys visual hierarchy | Purpose-driven layout |
+| Uniform radius (rounded-2xl everywhere) | Ignores radius hierarchy | Design-system-consistent border-radius |
+| Standard card grid (uniform 3 columns) | Ignores information priority and scanning patterns | Purpose-driven layout |
+| Excessive padding (equal padding) | Destroys visual hierarchy | Consistent spacing scale |
+| Generic hero area (template-driven) | Disconnected from content / user needs | Content-first layout |
 
-## 禁用内容
+## Forbidden content
 
-| 禁用 | 原因 | 替代 |
+| Forbidden | Reason | Alternative |
 |------|------|------|
-| Lorem ipsum 占位文本 | 隐藏布局问题（长度/换行/溢出） | 真实占位内容 |
-| 通用 hero 区文案 | 与内容无关 | 真实业务文案 |
-| emoji 作结构图标 | 不专业 | Phosphor 等图标库 |
+| Lorem ipsum placeholder text | Hides layout issues (length / wrapping / overflow) | Real placeholder content |
+| Generic hero copy | Disconnected from content | Real business copy |
+| Emoji as structural icons | Unprofessional | Phosphor and other icon libraries |
 
-## 禁用效果
+## Forbidden effects
 
-| 禁用 | 原因 | 替代 |
+| Forbidden | Reason | Alternative |
 |------|------|------|
-| 重阴影（多层叠加） | 与内容竞争，低端设备渲染慢 | 微妙或无阴影 |
-| 过度渐变 | 视觉噪声 | 扁平或微妙渐变 |
-| 标题下强调线 | AI 生成幻灯片的典型信号 | 用字重/字号建立层级 |
-| 3D 球体装饰 | AI 默认装饰 | 移除 |
+| Heavy shadows (multi-layer stacking) | Competes with content, slow on low-end devices | Subtle or no shadow |
+| Excessive gradients | Visual noise | Flat or subtle gradients |
+| Underline accents below headings | Typical signal of AI-generated slides | Use weight / size to establish hierarchy |
+| 3D sphere decorations | AI default decoration | Remove |
 
-## 检查时机
+## Check timing
 
-- **visual-design**：产出设计稿时逐条对照
-- **design-lint**：L011-L015 规则自动检查
-- **design-review**：Five-Axis Review 的"视觉层级"轴检查
+- **visual-design**: cross-check item by item when producing design specs
+- **design-lint**: L011-L015 rules auto-check
+- **design-review**: Five-Axis Review's "visual hierarchy" axis check

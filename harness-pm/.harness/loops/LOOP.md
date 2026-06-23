@@ -1,205 +1,205 @@
-# LOOP.md — PM 循环引擎定义 + 验证协议
+# LOOP.md — PM Loop Engine Definition + Validation Protocol
 
-> 作用：替代线性 workflow，实现产品工作的循环验证闭环
-> 与 harness-solo 的 LOOP 区别：solo 是 plan→act→verify（测试驱动），pm 是 plan→research→validate（数据驱动）
+> Purpose: Replaces linear workflows to implement a cyclic validation loop for product work
+> Difference from harness-solo's LOOP: solo is plan→act→verify (test-driven); pm is plan→research→validate (data-driven)
 
-## 核心循环
+## Core Loop
 
 ```
 ┌──────────┐
-│   PLAN   │ ← 定义研究目标 + 决策标准 + 宪法检查
+│   PLAN   │ ← Define research goals + decision criteria + constitution check
 └────┬─────┘
      ▼
 ┌──────────┐
-│ RESEARCH │ ← 执行调研/分析/建模（调用 PM skill）
+│ RESEARCH │ ← Execute research / analysis / modeling (invoke PM skill)
 └────┬─────┘
      ▼
 ┌──────────┐
-│ VALIDATE │ ← 验证结论 + 人类评审 + 置信度检查
+│ VALIDATE │ ← Validate conclusions + human review + confidence check
 └────┬─────┘
      │
-     ├── 通过 → DELIVER → 记录 evidence + 产出交付物
+     ├── Pass → DELIVER → Record evidence + produce deliverables
      │
-     └── 失败 → 分析原因
-                   ├── 数据不足 → 回到 RESEARCH
-                   └── 方向错误 → 回到 PLAN
+     └── Fail → Analyze the cause
+                   ├── Insufficient data → back to RESEARCH
+                   └── Wrong direction → back to PLAN
 ```
 
-## 循环类型
+## Loop Types
 
-| 类型 | 触发场景 | 最大迭代 | 停止条件 |
+| Type | Trigger Scenario | Max Iterations | Stop Condition |
 |------|---------|---------|---------|
-| **research** | 用户研究/市场分析 | 5 | 数据充分 + 置信度 ≥ 0.7 |
-| **prd** | PRD 生成/方案设计 | 5 | 质量门禁通过 + 人类审批 |
-| **iteration** | 已有产品迭代 | 3 | 验收标准满足 |
-| **growth** | 增长实验 | 3 | 实验结果达标 |
-| **pivot** | 战略调整/重新定位 | 5 | 战略一致性 + 人类审批 |
+| **research** | User research / market analysis | 5 | Sufficient data + confidence ≥ 0.7 |
+| **prd** | PRD generation / solution design | 5 | Quality gates passed + human approval |
+| **iteration** | Iteration on an existing product | 3 | Acceptance criteria met |
+| **growth** | Growth experiment | 3 | Experiment results meet target |
+| **pivot** | Strategic adjustment / repositioning | 5 | Strategic consistency + human approval |
 
-## 成本控制
+## Cost Control
 
-| 维度 | 限制 | 超限动作 |
+| Dimension | Limit | Action on Exceedance |
 |------|------|---------|
-| 总循环次数 | 10 | **硬熔断**：写入 `hard_limit_reached: true` 到 state.yaml，status 改为 `failed`，**禁止继续循环**，必须请求人类介入 |
+| Total loop count | 10 | **Hard Circuit Breaker**: Write `hard_limit_reached: true` to state.yaml, change status to `failed`, **further looping is prohibited**, must request human intervention |
 
-> **硬熔断执行规则（不可协商）**：
-> 1. Agent 在每次 VALIDATE 阶段**必须**读取 `state.yaml` 的 `iteration` 字段
-> 1.5. **VALIDATE 阶段必须强制读取 state.yaml 原始内容**：Agent 在每次 VALIDATE 时，必须使用 Read 工具读取 `state.yaml` 的完整内容，获取真实的 iteration 值。**禁止从上下文记忆中引用 iteration 值**（防止幻觉状态下跳过熔断检查）。
-> 2. 当 Read 工具读取的 `iteration >= 10` 时（必须来自文件原始内容，不是记忆引用），Agent **必须**执行以下操作，不得跳过：
->    - 将 `status` 改为 `failed`
->    - 将 `hard_limit_reached` 写为 `true`
->    - 将 `last_error` 写为"迭代超限（iteration >= 10），硬熔断触发"
->    - 向用户报告熔断原因，请求人类介入
-> 3. 当 `hard_limit_reached: true` 时，Agent **禁止**继续执行当前任务的任何 LOOP 阶段
-> 4. 只有用户显式指示"重置熔断"后，Agent 才可将 `hard_limit_reached` 改为 `false` 并重置 `iteration`
+> **Hard Circuit Breaker execution rules (non-negotiable)**:
+> 1. At each VALIDATE stage, the Agent **must** read the `iteration` field of `state.yaml`
+> 1.5. **VALIDATE stage must forcibly read the raw contents of state.yaml**: At each VALIDATE, the Agent must use the Read tool to read the full contents of `state.yaml` to obtain the true iteration value. **Referencing the iteration value from context memory is prohibited** (to prevent skipping the circuit breaker check in a hallucination state).
+> 2. When the `iteration >= 10` read by the Read tool (must come from the raw file contents, not a memory reference), the Agent **must** perform the following operations, without skipping:
+>    - Change `status` to `failed`
+>    - Write `hard_limit_reached` to `true`
+>    - Write `last_error` as "Iteration limit exceeded (iteration >= 10), hard circuit breaker triggered"
+>    - Report the circuit breaker reason to the user and request human intervention
+> 3. When `hard_limit_reached: true`, the Agent is **prohibited** from continuing any LOOP stage of the current task
+> 4. Only after the user explicitly instructs "reset circuit breaker" may the Agent change `hard_limit_reached` to `false` and reset `iteration`
 >
-> Token 限制由用户在 IDE 中自行监控，不纳入框架规则（Agent 没有 token 计数器）。
+> Token limits are monitored by the user in the IDE and are not part of the framework rules (the Agent has no token counter).
 
-## Specs 持久化
+## Specs Persistence
 
-每次循环的 PLAN 阶段，将规格写入 `loops/specs/<task>/spec.md`。
+At the PLAN stage of each loop, write the spec to `loops/specs/<task>/spec.md`.
 
-## Evidence 追踪
+## Evidence Tracking
 
-每次 VALIDATE 阶段的证据写入 `loops/specs/<task>/evidence.md`。
+Evidence from each VALIDATE stage is written to `loops/specs/<task>/evidence.md`.
 
-**文件写入语义区分（重要，避免混淆）**：
+**File write semantics distinction (important, to avoid confusion)**:
 
-| 文件 | 写入语义 | 原因 | 操作方式 |
+| File | Write Semantics | Reason | How |
 |------|---------|------|---------|
-| `spec.md` | 覆盖 | 只保留最终通过的规格 | Write 直接覆盖 |
-| `state.yaml` | 覆盖 | 只保留当前状态 | Write 直接覆盖 |
-| `evidence.md` | 覆盖 | 只保留最终成功的证据 | Write 直接覆盖 |
-| `iterations.log` | **追加** | 保留完整迭代历史 | Read+拼接+Write，或 `echo >>` |
+| `spec.md` | Overwrite | Keep only the final passed spec | Write directly overwrites |
+| `state.yaml` | Overwrite | Keep only the current state | Write directly overwrites |
+| `evidence.md` | Overwrite | Keep only the final successful evidence | Write directly overwrites |
+| `iterations.log` | **Append** | Preserve full iteration history | Read + concatenate + Write, or `echo >>` |
 
 ```
 loops/specs/001-market-research/
-├── spec.md          ← 任务规格（覆盖：最终通过版本）
-├── state.yaml       ← 循环状态（覆盖：当前状态）
-├── evidence.md      ← 验证证据（覆盖：最终成功）
-└── iterations.log   ← 迭代历史（append-only，完整轨迹）
+├── spec.md          ← Task spec (overwrite: final passed version)
+├── state.yaml       ← Loop state (overwrite: current state)
+├── evidence.md      ← Validation evidence (overwrite: final success)
+└── iterations.log   ← Iteration history (append-only, full trajectory)
 ```
 
-iterations.log 示例：
+iterations.log example:
 ```
-[2026-06-20 14:30] iter=1 stage=research → validate FAILED: 用户反馈数据不足（<500条）
-[2026-06-20 14:35] iter=2 stage=research → validate FAILED: Persona 置信度 < 0.7
-[2026-06-20 14:40] iter=3 stage=validate → PASSED: 置信度 0.8，人类审批通过
+[2026-06-20 14:30] iter=1 stage=research → validate FAILED: Insufficient user feedback data (<500 entries)
+[2026-06-20 14:35] iter=2 stage=research → validate FAILED: Persona confidence < 0.7
+[2026-06-20 14:40] iter=3 stage=validate → PASSED: Confidence 0.8, human approval passed
 ```
 
-## 状态维护
+## State Maintenance
 
-**决策：Agent 读写维护 state.yaml（每任务一个文件，落盘）**
+**Decision: The Agent reads and writes state.yaml (one file per task, persisted to disk)**
 
-`loops/specs/<task>/state.yaml` 由 PM skill 在循环中主动读写：
-  - 记录当前迭代次数、上次失败原因、当前阶段
-  - 会话中断后可断点续传（读取 state.yaml 恢复上下文）
-  - 每任务一个文件，天然支持多产品线并行
+`loops/specs/<task>/state.yaml` is actively read and written by PM skills during the loop:
+  - Records the current iteration count, last failure reason, and current stage
+  - Supports resuming from a checkpoint after a session interruption (read state.yaml to restore context)
+  - One file per task, naturally supporting parallel work on multiple product lines
 
-### state.yaml Schema（单一来源，各 SKILL.md 引用本节）
+### state.yaml Schema (single source of truth; each SKILL.md references this section)
 
 ```yaml
-# 必填字段
-current_task: <NNN>-<task-name>          # 任务编号+名称，与目录名一致
-iteration: <int>                          # 当前迭代次数，从 0 开始，每次 RESEARCH→VALIDATE 循环 +1
-stage: <enum>                             # 当前阶段，枚举见下表
-status: <enum>                            # 任务状态，枚举见下表
-started_at: "<ISO 8601>"                  # 任务开始时间，如 "2026-06-20T14:30:00"
+# Required fields
+current_task: <NNN>-<task-name>          # Task number + name, consistent with the directory name
+iteration: <int>                          # Current iteration count, starts at 0, +1 per RESEARCH→VALIDATE loop
+stage: <enum>                             # Current stage, see enum table below
+status: <enum>                            # Task status, see enum table below
+started_at: "<ISO 8601>"                  # Task start time, e.g., "2026-06-20T14:30:00"
 
-# 可选字段（失败时填写）
-last_error: "<错误描述>"                   # 最近一次失败原因，成功时清空为 ""
-last_error_at: "<ISO 8601>"               # 最近一次失败时间
+# Optional fields (filled on failure)
+last_error: "<error description>"          # Most recent failure reason; cleared to "" on success
+last_error_at: "<ISO 8601>"               # Most recent failure time
 
-# 可选字段（子阶段描述，用于多子阶段工作流）
-substage: "<子阶段描述>"                   # 如 "voice-analysis" / "persona-modeling" / "prd-generation"
+# Optional fields (substage description, for multi-substage workflows)
+substage: "<substage description>"         # e.g., "voice-analysis" / "persona-modeling" / "prd-generation"
 
-# 可选字段（探索模式，pm 专属）
-exploration_mode: "<enum>"                 # deep / standard / skip，默认 standard，受 workflow default_mode 和用户切换控制
+# Optional fields (exploration mode, pm-specific)
+exploration_mode: "<enum>"                 # deep / standard / skip; default standard; controlled by workflow default_mode and user switching
 
-# 可选字段（硬熔断标记）
-hard_limit_reached: <bool>                 # true 时禁止继续循环，默认 false，仅 iteration >= 10 时置 true
+# Optional fields (hard circuit breaker flag)
+hard_limit_reached: <bool>                 # When true, further looping is prohibited; default false; set to true only when iteration >= 10
 ```
 
-**stage 枚举值**：
+**stage enum values**:
 
-| 值 | 含义 | 写入时机 |
+| Value | Meaning | When Written |
 |----|------|---------|
-| `plan` | 规划阶段 | 任务初始化时 |
-| `research` | 调研阶段 | PM skill 执行调研/分析时 |
-| `validate` | 验证阶段 | 质量门禁/人类评审时 |
-| `revise` | 修订阶段 | 根据反馈修订产出时 |
+| `plan` | Planning stage | On task initialization |
+| `research` | Research stage | When a PM skill executes research / analysis |
+| `validate` | Validation stage | During quality gates / human review |
+| `revise` | Revision stage | When revising output based on feedback |
 
-**status 枚举值（全局统一规范）**：
+**status enum values (globally unified standard)**:
 
-| 值 | 含义 | 写入时机 |
+| Value | Meaning | When Written |
 |----|------|---------|
-| `running` | 任务正在执行中 | 任务初始化 / 调研成功继续 |
-| `retrying` | 任务失败，正在进行重试或自动回滚 | 验证失败后 |
-| `done` | 任务已成功验证并完成 | 验证通过 + 人类审批通过 |
-| `failed` | 任务失败且重试耗尽 | 迭代超限 |
-| `needs-human` | 需要人类干预（如：必须审批、自动修复失败） | 人类决策点暂停时 |
-| `blocked` | 任务被阻塞（如：等待上游产出物、等待环境权限） | 探索硬门未通过时 |
+| `running` | Task is in progress | On task initialization / research success continues |
+| `retrying` | Task failed, retry or auto-rollback in progress | After validation failure |
+| `done` | Task successfully validated and completed | Validation passed + human approval passed |
+| `failed` | Task failed and retries exhausted | Iteration limit exceeded |
+| `needs-human` | Human intervention required (e.g., must approve, auto-repair failed) | When paused at a human decision point |
+| `blocked` | Task is blocked (e.g., waiting for upstream deliverable, waiting for environment permissions) | When an exploration hard gate is not passed |
 
-**字段写入责任**：
+**Field write responsibility**:
 
-| 字段 | 任务初始化 | PM skill（research） | verify（validate） |
+| Field | Task initialization | PM skill (research) | verify (validate) |
 |------|:---:|:---:|:---:|
-| current_task | 写 | 不改 | 不改 |
-| iteration | 写（0） | 写（+1） | 不改 |
-| stage | 写（plan） | 写（research） | 写（validate） |
-| status | 写（running） | 写（running/retrying） | 写（done/retrying/needs-human） |
-| exploration_mode | 写（workflow default_mode） | 不改 | 不改 |
-| last_error | 写（""） | 写（失败时/成功清空） | 写（失败时/成功清空） |
-| started_at | 写（初始化） | 不改 | 不改 |
+| current_task | Write | No change | No change |
+| iteration | Write (0) | Write (+1) | No change |
+| stage | Write (plan) | Write (research) | Write (validate) |
+| status | Write (running) | Write (running/retrying) | Write (done/retrying/needs-human) |
+| exploration_mode | Write (workflow default_mode) | No change | No change |
+| last_error | Write ("") | Write (on failure / cleared on success) | Write (on failure / cleared on success) |
+| started_at | Write (on initialization) | No change | No change |
 
-**示例**：
+**Example**:
 
 ```yaml
-# loops/specs/001-market-research/state.yaml 示例
+# loops/specs/001-market-research/state.yaml example
 current_task: 001-market-research
 iteration: 3
 stage: validate
 status: retrying
-last_error: "Persona 置信度 0.6 < 0.7，需补充数据"
+last_error: "Persona confidence 0.6 < 0.7, more data needed"
 last_error_at: "2026-06-20T14:35:00"
 started_at: "2026-06-20T14:30:00"
 ```
 
-## 验证协议
+## Validation Protocol
 
-### VALIDATE 阶段必做检查
+### Required Checks at the VALIDATE Stage
 
-1. **数据充分性**：检查产出 JSON 的必填字段是否完整（按各 skill 的输出校验规则）
-2. **置信度检查**：推断性字段置信度 ≥ 0.7 可自动传递，< 0.3 阻断
-3. **质量门禁**：PRD 等契约产出必须通过 4 道门禁（完整性/一致性/歧义消除/可追溯性）
-4. **宪法合规**：检查是否违反 constitution.md 的原则
-5. **人类审批**：关键决策点（方案选择/优先级/策略方向）必须人类确认
+1. **Data sufficiency**: Check whether the required fields of the output JSON are complete (per each skill's output validation rules)
+2. **Confidence check**: Inferential fields with confidence ≥ 0.7 may propagate automatically; < 0.3 blocks
+3. **Quality gates**: Contract outputs such as PRD must pass 4 gates (completeness / consistency / ambiguity elimination / traceability)
+4. **Constitution compliance**: Check for violations of the principles in constitution.md
+5. **Human approval**: Key decision points (solution selection / priority / strategic direction) must be confirmed by a human
 
-### 声称"完成"的前置条件
+### Prerequisites for Claiming "Completion"
 
-Agent 在声称任务完成前，**必须**：
-- [ ] 展示实际产出（JSON/Markdown，不是"应该生成了"）
-- [ ] 逐条对照验收标准，每条标注 ✓/✗
-- [ ] 检查置信度，低置信度项标注并请求人类确认
-- [ ] 执行质量门禁检查（如涉及 PRD 等契约产出）
-- [ ] 将证据写入 `loops/specs/<task>/evidence.md`
-- [ ] 更新 `loops/specs/<task>/state.yaml` 的 status 为 done
+Before claiming a task is complete, the Agent **must**:
+- [ ] Show the actual output (JSON / Markdown, not "should have been generated")
+- [ ] Check against acceptance criteria item by item, marking each ✓/✗
+- [ ] Check confidence; mark low-confidence items and request human confirmation
+- [ ] Run quality gate checks (if contract outputs such as PRD are involved)
+- [ ] Write evidence to `loops/specs/<task>/evidence.md`
+- [ ] Update the status in `loops/specs/<task>/state.yaml` to done
 
-**没有证据不声称完成**——这是 AGENTS.md 核心规则第 3 条。
+**No claiming completion without evidence** — this is Core Rule 3 of AGENTS.md.
 
-### 失败处理
+### Failure Handling
 
-VALIDATE 失败时：
-1. 将失败信息写入 `state.yaml` 的 `last_error` 字段
-2. 追加一行到 `iterations.log`
-3. 分析失败原因：
-   - 数据不足（反馈少/样本小）→ 回到 RESEARCH 补充数据
-   - 方向错误（假设不成立/需求变更）→ 回到 PLAN 重新规划
-   - 质量不达标（门禁未过/置信度低）→ 回到 RESEARCH 优化产出
-4. 迭代次数 +1，检查是否超过最大迭代
+When VALIDATE fails:
+1. Write the failure information to the `last_error` field of `state.yaml`
+2. Append a line to `iterations.log`
+3. Analyze the failure cause:
+   - Insufficient data (little feedback / small sample) → back to RESEARCH to gather more data
+   - Wrong direction (hypothesis not supported / requirements changed) → back to PLAN to re-plan
+   - Quality not met (gates not passed / low confidence) → back to RESEARCH to improve the output
+4. Increment the iteration count and check whether the maximum iterations have been exceeded
 
-### 断点续传
+### Checkpoint Resume
 
-会话中断后恢复：
-1. 读取 `loops/specs/<task>/state.yaml` 获取当前阶段和迭代次数
-2. 读取 `iterations.log` 了解失败历史
-3. 从中断点继续，不从头开始
+Recovery after a session interruption:
+1. Read `loops/specs/<task>/state.yaml` to get the current stage and iteration count
+2. Read `iterations.log` to understand the failure history
+3. Continue from the interruption point; do not start from scratch

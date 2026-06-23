@@ -1,21 +1,21 @@
 ---
 name: metrics-dashboard
-description: 当需要配置产品度量Dashboard时使用。Dashboard自动配置，基于指标层级设计Dashboard结构，自动分配指标到各Dashboard，配置告警规则和阈值。关键词：Dashboard配置、数据看板、指标可视化、告警配置、监控面板、看板搭建、数据报表。
+description: Use when configuring a product metrics Dashboard. Dashboard Auto-Configuration designs Dashboard structure based on metric hierarchy, auto-assigns metrics to each Dashboard, and configures alert rules and thresholds. Keywords: Dashboard configuration, data dashboard, metric visualization, alert configuration, monitoring panel, dashboard setup, data report.
 metadata:
-  module: "产品度量设计"
-  sub-module: "度量设计"
+  module: "Product Metrics Design"
+  sub-module: "Metrics Design"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["互联网", "SaaS", "通用"]
+  domain_tags: ["Internet", "SaaS", "General"]
   trigger_examples:
-    - "帮我搭一个数据看板"
-    - "配置一个监控面板"
-    - "做个Dashboard把关键指标都展示出来"
+    - "Help me build a data dashboard"
+    - "Configure a monitoring panel"
+    - "Create a Dashboard showing all key metrics"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "直接输出核心指标看板设计"
-  deep_description: "完整看板 + 下钻分析设计 + 告警规则体系 + 数据治理规范"
+  quick_description: "Directly output core metric dashboard design"
+  deep_description: "Full dashboard + drill-down analysis design + alert rule system + data governance specs"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -28,27 +28,27 @@ writes:
   - dashboard_config.json
 ---
 
-# Dashboard自动配置
+# Dashboard Auto-Configuration
 
-## 核心原则
+## Core Principles
 
-1. **全量分析**：对所有可用数据进行系统性分析，不遗漏关键维度
-2. **实时感知**：指标体系设计支持实时监控和快速响应
-3. **自动归因**：异常波动自动归因到具体原因，减少人工排查
-4. **决策规则显式化**：每个告警和升级条件都有明确的量化规则
+1. **Full Analysis**: Systematically analyze all available data without missing key dimensions
+2. **Real-time Awareness**: Metrics system design supports real-time monitoring and rapid response
+3. **Automated Attribution**: Anomaly fluctuations are automatically attributed to specific causes, reducing manual investigation
+4. **Explicit Decision Rules**: Every alert and escalation condition has clear quantitative rules
 
-## 交互模式
+## Interaction Mode
 
-🤖→👤 AI建议人类审批
+🤖→👤 AI Suggests, Human Approves
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| metric_system | JSON | 是 | docs/metrics/metrics-system.md | 指标体系（含北极星、L1/L2/行动指标） |
-| tracking_plan | JSON数组 | 是 | docs/metrics/tracking-plan.md | 埋点方案 |
-| user_roles | string[] | ○ | 用户提供 | Dashboard使用角色 |
-| dashboard_platform | string | ○ | 用户提供 | 可视化平台（amplitude/grafana/datadog） |
+| metric_system | JSON | Yes | docs/metrics/metrics-system.md | Metrics system (including North Star, L1/L2/actionable metrics) |
+| tracking_plan | JSON array | Yes | docs/metrics/tracking-plan.md | Tracking plan |
+| user_roles | string[] | ○ | User-provided | Dashboard user roles |
+| dashboard_platform | string | ○ | User-provided | Visualization platform (amplitude/grafana/datadog) |
 
 ```json
 {
@@ -59,103 +59,103 @@ writes:
     "actionable_metrics": [...]
   },
   "tracking_plan": [...],
-  "user_roles": ["产品经理", "运营", "管理层"],
+  "user_roles": ["Product Manager", "Operations", "Management"],
   "dashboard_platform": "amplitude|grafana|datadog"
 }
 ```
 
 ---
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: Dashboard结构设计 [核心]
+### Step 1: Dashboard Structure Design [Core]
 
-**任务**：根据指标层级设计Dashboard结构
+**Task**: Design Dashboard structure based on metric hierarchy
 
-**规则**：
-- 战略Dashboard（1个）：展示北极星指标和L1指标趋势，面向管理层
-- 战术Dashboard（N个）：按用户生命周期（AARRR）或业务线划分，面向PM
-- 运营Dashboard（N个）：按功能模块或团队划分，面向具体执行者
+**Rules**:
+- Strategic Dashboard (1): Displays North Star metric and L1 metric trends, for management
+- Tactical Dashboard (N): Divided by user lifecycle (AARRR) or business line, for PMs
+- Operational Dashboard (N): Divided by feature module or team, for specific operators
 
-**执行**：
-1. 基于指标体系的层级关系设计Dashboard数量和类型
-2. 确定每个Dashboard的主题和定位
-3. 规划Dashboard之间的导航关系
-
----
-
-### Step 2: 指标自动分配 [核心]
-
-**任务**：将指标自动分配到各Dashboard
-
-**规则**：
-- 北极星指标 → 战略Dashboard
-- L1指标 → 战术Dashboard
-- L2指标 → 按L1归属分配到战术Dashboard或运营Dashboard
-- 行动指标 → 运营Dashboard
-
-**执行**：
-1. 遍历指标体系，按层级规则分配
-2. 标记每个Widget的数据源
-3. 确定刷新频率（战略Dashboard: 日级，战术Dashboard: 小时级，运营Dashboard: 分钟级）
+**Execution**:
+1. Design Dashboard count and types based on metric system hierarchy
+2. Determine each Dashboard's theme and positioning
+3. Plan navigation relationships between Dashboards
 
 ---
 
-### Step 3: 告警规则配置 [核心]
+### Step 2: Metric Auto-Assignment [Core]
 
-**任务**：为关键指标配置告警规则
+**Task**: Auto-assign metrics to each Dashboard
 
-**规则**：
-- 北极星指标：配置日级环比告警（阈值：±15%）
-- L1指标：配置周级环比告警（阈值：±10%）
-- 异常检测触发的指标：自动继承异常检测的告警配置
+**Rules**:
+- North Star metric → Strategic Dashboard
+- L1 metrics → Tactical Dashboard
+- L2 metrics → Assigned to Tactical or Operational Dashboard based on L1 affiliation
+- Actionable metrics → Operational Dashboard
 
-**执行**：
-1. 基于统计阈值（均值±2σ）或历史基线生成告警规则
-2. 确定告警级别（P0/P1/P2/P3）
-3. 配置通知渠道和接收人
-
----
-
-### Step 4: Dashboard配置生成 [核心]
-
-**任务**：生成各平台的Dashboard配置
-
-**支持平台**：
-- Amplitude / Mixpanel / GrowingIO（国内常用）
-- Grafana / Datadog（技术监控）
-- 自定义JSON配置
-
-**执行**：
-1. 根据目标平台生成对应的配置格式
-2. 生成Widget定义（类型、位置、尺寸）
-3. 配置Dashboard布局和主题
+**Execution**:
+1. Traverse metric system, assign by hierarchy rules
+2. Mark each Widget's data source
+3. Determine refresh frequency (Strategic Dashboard: daily, Tactical Dashboard: hourly, Operational Dashboard: per-minute)
 
 ---
 
-### 输出深度分级
+### Step 3: Alert Rule Configuration [Core]
 
-| 深度级别 | 输出范围 | 说明 |
+**Task**: Configure alert rules for key metrics
+
+**Rules**:
+- North Star metric: Configure daily period-over-period alert (threshold: ±15%)
+- L1 metrics: Configure weekly period-over-period alert (threshold: ±10%)
+- Metrics triggered by anomaly detection: Auto-inherit anomaly detection alert configuration
+
+**Execution**:
+1. Generate alert rules based on statistical thresholds (mean ± 2σ) or historical baseline
+2. Determine alert severity (P0/P1/P2/P3)
+3. Configure notification channels and recipients
+
+---
+
+### Step 4: Dashboard Configuration Generation [Core]
+
+**Task**: Generate Dashboard configurations for each platform
+
+**Supported Platforms**:
+- Amplitude / Mixpanel / GrowingIO (commonly used domestically)
+- Grafana / Datadog (technical monitoring)
+- Custom JSON configuration
+
+**Execution**:
+1. Generate corresponding configuration format based on target platform
+2. Generate Widget definitions (type, position, size)
+3. Configure Dashboard layout and theme
+
+---
+
+### Output Depth Tiers
+
+| Depth Level | Output Scope | Description |
 |----------|----------|------|
-| quick | 核心指标看板设计 | 核心结论 + 最小可行产物 |
-| standard | 完整产物（当前默认） | 完整产物，包含全部Step输出 |
-| deep | 完整看板 + 下钻分析设计 + 告警规则体系 + 数据治理规范 | 完整产物 + 扩展分析 + 深度推演 |
+| quick | Core metric dashboard design | Core conclusions + minimum viable artifact |
+| standard | Full artifact (current default) | Full artifact, including all Step outputs |
+| deep | Full dashboard + drill-down analysis design + alert rule system + data governance specs | Full artifact + extended analysis + deep inference |
 
-## 输出
+## Output
 
-**存储路径**：`docs/metrics/dashboard.md`
+**Storage Path**: `docs/metrics/dashboard.md`
 
-**输出文件**：`dashboard_config.json`
+**Output File**: `dashboard_config.json`
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["dashboards", "configuration_files"],
   "properties": {
-    "dashboards": {"type": "array", "description": "Dashboard配置列表，包含战略/战术/运营看板"},
-    "configuration_files": {"type": "object", "description": "平台配置文件，包含平台类型和Dashboard JSON配置"}
+    "dashboards": {"type": "array", "description": "Dashboard configuration list, including strategic/tactical/operational dashboards"},
+    "configuration_files": {"type": "object", "description": "Platform configuration files, including platform type and Dashboard JSON configuration"}
   }
 }
 ```
@@ -164,9 +164,9 @@ writes:
 {
   "dashboards": [
     {
-      "name": "战略看板",
+      "name": "Strategic Dashboard",
       "type": "strategic",
-      "owner": "产品负责人",
+      "owner": "Product Owner",
       "widgets": [
         {
           "type": "kpi",
@@ -201,132 +201,132 @@ writes:
 
 ---
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| dashboards | array | 是 | Dashboard配置列表，至少包含1个战略看板 |
-| dashboards[].name | string | 是 | Dashboard名称，不可为空 |
-| dashboards[].type | string | 是 | 看板类型，枚举值：strategic/tactical/operational |
-| dashboards[].owner | string | 是 | 看板负责人 |
-| dashboards[].widgets | array | 是 | Widget列表，至少包含1个Widget |
-| dashboards[].widgets[].type | string | 是 | Widget类型，枚举值：kpi/chart/table/funnel |
-| dashboards[].widgets[].metric | string | 是 | 关联指标名称 |
-| dashboards[].widgets[].visualization | string | 是 | 可视化类型 |
-| dashboards[].widgets[].refresh_interval | string | 是 | 刷新频率 |
-| dashboards[].alerts | array | 否 | 告警规则列表 |
-| dashboards[].alerts[].metric | string | 条件必填 | 告警关联指标，有alerts时必填 |
-| dashboards[].alerts[].threshold | number | 条件必填 | 告警阈值，有alerts时必填 |
-| dashboards[].alerts[].severity | string | 条件必填 | 告警级别，枚举值：P0/P1/P2/P3 |
-| configuration_files | object | 是 | 平台配置文件 |
-| configuration_files.platform | string | 是 | 平台类型 |
-| configuration_files.dashboard_json | object | 是 | Dashboard JSON配置 |
+| dashboards | array | Yes | Dashboard configuration list, must include at least 1 strategic dashboard |
+| dashboards[].name | string | Yes | Dashboard name, cannot be empty |
+| dashboards[].type | string | Yes | Dashboard type, enum: strategic/tactical/operational |
+| dashboards[].owner | string | Yes | Dashboard owner |
+| dashboards[].widgets | array | Yes | Widget list, must include at least 1 Widget |
+| dashboards[].widgets[].type | string | Yes | Widget type, enum: kpi/chart/table/funnel |
+| dashboards[].widgets[].metric | string | Yes | Associated metric name |
+| dashboards[].widgets[].visualization | string | Yes | Visualization type |
+| dashboards[].widgets[].refresh_interval | string | Yes | Refresh frequency |
+| dashboards[].alerts | array | No | Alert rule list |
+| dashboards[].alerts[].metric | string | Conditionally required | Alert associated metric, required when alerts present |
+| dashboards[].alerts[].threshold | number | Conditionally required | Alert threshold, required when alerts present |
+| dashboards[].alerts[].severity | string | Conditionally required | Alert severity, enum: P0/P1/P2/P3 |
+| configuration_files | object | Yes | Platform configuration files |
+| configuration_files.platform | string | Yes | Platform type |
+| configuration_files.dashboard_json | object | Yes | Dashboard JSON configuration |
 
-## 上游变更响应
+## Upstream Change Response
 
-当上游输入发生变更时，本Skill的响应策略：
+When upstream inputs change, this skill's response strategy:
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| 北极星指标变更 | 战略Dashboard的KPI Widget和告警规则 | 更新战略Dashboard的核心Widget，重新计算告警阈值，标记需人类确认 |
-| L1/L2指标增删 | 战术/运营Dashboard的Widget分配 | 重新执行指标自动分配，标记新增/移除的Widget，保留人类已确认的布局 |
-| 行动指标变更 | 运营Dashboard的Widget和告警 | 更新运营Dashboard，重新评估告警配置 |
-| 埋点事件增删 | Widget数据源标记 | 更新Widget的数据源状态，标记"待配置"或"已就绪" |
-| 指标定义修改 | 关联Widget的计算逻辑 | 更新Widget展示逻辑，标记需人类确认 |
+| North Star metric change | Strategic Dashboard's KPI Widget and alert rules | Update Strategic Dashboard's core Widget, recalculate alert thresholds, mark for human confirmation |
+| L1/L2 metric add/remove | Tactical/Operational Dashboard Widget assignment | Re-execute metric auto-assignment, mark added/removed Widgets, preserve human-confirmed layouts |
+| Actionable metric change | Operational Dashboard Widgets and alerts | Update Operational Dashboard, re-evaluate alert configuration |
+| Tracking event add/remove | Widget data source marking | Update Widget data source status, mark "pending configuration" or "ready" |
+| Metric definition modification | Associated Widget calculation logic | Update Widget display logic, mark for human confirmation |
 
-当Dashboard配置自身变更时，对下游的通知机制：
+When Dashboard configuration itself changes, the notification mechanism to downstream:
 
-| 配置变更类型 | 通知范围 | 通知方式 |
+| Configuration Change Type | Notification Scope | Notification Method |
 |-------------|----------|----------|
-| Dashboard结构变更 | 模块7（产品度量运营） | 标记看板结构变更，触发监控配置更新 |
-| 告警规则变更 | 运维团队、产品团队 | 标记告警变更，触发告警通知配置更新 |
-| Widget增删 | 模块7（产品度量运营） | 标记Widget变更，触发数据源验证 |
+| Dashboard structure change | Module 7 (Product Metrics Operations) | Mark dashboard structure change, trigger monitoring configuration update |
+| Alert rule change | Operations team, Product team | Mark alert change, trigger alert notification configuration update |
+| Widget add/remove | Module 7 (Product Metrics Operations) | Mark Widget change, trigger data source validation |
 
 ---
 
-## 决策规则
+## Decision Rules
 
-### 自动执行规则
-- 指标分配按层级规则自动执行
-- 告警阈值按默认值配置
+### Auto-Execution Rules
+- Metric assignment auto-executes by hierarchy rules
+- Alert thresholds configured by default values
 
-### 人类决策点
-- Dashboard布局需人类确认（🤖→👤）
-- 告警阈值可根据实际情况调整
-- Dashboard命名和归属由人类决定
+### Human Decision Points
+- Dashboard layout requires human confirmation (🤖→👤)
+- Alert thresholds can be adjusted based on actual conditions
+- Dashboard naming and ownership decided by human
 
-### 升级规则
-- 告警数量超过50个时，提示需要精简告警
-- Dashboard数量超过10个时，提示需要合并或归档
-
----
-
-## 质量检查
-
-### P0 检查（quick/standard/deep 都必须通过）
-
-- [ ] 所有指标已分配到Dashboard
-- [ ] 每个Dashboard至少有1个Widget
-
-### P1 检查（standard/deep 必须通过）
-
-- [ ] 北极星指标出现在战略Dashboard
-- [ ] 告警规则配置完整
-- [ ] Dashboard配置可正常解析
-- [ ] Dashboard布局合理性
-- [ ] 告警阈值设置合理性
-- [ ] 访问权限配置
-- [ ] 导航结构清晰性
-
-### P2 检查（仅 deep 必须通过）
-
-- [ ] 扩展分析完整（深度推演和路线图已生成）
-- [ ] 决策记录完整（关键决策有依据和替代方案）
+### Escalation Rules
+- When alert count exceeds 50, prompt to streamline alerts
+- When Dashboard count exceeds 10, prompt to merge or archive
 
 ---
 
-## 降级策略
+## Quality Checks
 
-### 上游文件缺失降级方案
+### P0 Checks (quick/standard/deep must all pass)
 
-| 缺失范围 | 降级方案 | 输出影响 |
+- [ ] All metrics assigned to Dashboards
+- [ ] Each Dashboard has at least 1 Widget
+
+### P1 Checks (standard/deep must pass)
+
+- [ ] North Star metric appears on Strategic Dashboard
+- [ ] Alert rules fully configured
+- [ ] Dashboard configuration parses correctly
+- [ ] Dashboard layout reasonableness
+- [ ] Alert threshold setting reasonableness
+- [ ] Access permission configuration
+- [ ] Navigation structure clarity
+
+### P2 Checks (only deep must pass)
+
+- [ ] Extended analysis complete (deep inference and roadmap generated)
+- [ ] Decision records complete (key decisions have rationale and alternatives)
+
+---
+
+## Degradation Strategy
+
+### Upstream File Missing Degradation Plan
+
+| Missing Scope | Degradation Plan | Output Impact |
 |----------|----------|----------|
-| 指标体系缺失 | 提示用户提供核心指标列表，基于指标列表生成基础Dashboard配置 | Dashboard层级结构简化，无战略/战术/运营分层 |
-| 埋点方案缺失 | 跳过数据源标记步骤，Widget数据源标注"待配置" | 无法确认数据采集可行性 |
-| 指标体系 + 埋点方案均缺失 | 用户提供核心指标列表 → 生成基础Dashboard配置 | 输出基础Dashboard配置，数据源和刷新频率标注"待确认" |
-| user_roles缺失 | 若用户未提供user_roles，提示用户提供或跳过该输入相关步骤 | Dashboard角色分层缺失，使用默认角色配置 |
-| dashboard_platform缺失 | 若用户未提供dashboard_platform，提示用户提供或跳过该输入相关步骤 | 使用通用JSON配置格式，平台特定配置标注"待指定" |
+| Metrics system missing | Prompt user to provide core metric list, generate basic Dashboard configuration based on metric list | Dashboard hierarchy simplified, no strategic/tactical/operational layering |
+| Tracking plan missing | Skip data source marking step, Widget data source marked "pending configuration" | Cannot confirm data collection feasibility |
+| Metrics system + Tracking plan both missing | User provides core metric list → generate basic Dashboard configuration | Output basic Dashboard configuration, data source and refresh frequency marked "to be confirmed" |
+| user_roles missing | If user does not provide user_roles, prompt user to provide or skip steps related to this input | Dashboard role layering missing, use default role configuration |
+| dashboard_platform missing | If user does not provide dashboard_platform, prompt user to provide or skip steps related to this input | Use generic JSON configuration format, platform-specific configuration marked "to be specified" |
 
-### 数据获取说明
+### Data Acquisition Instructions
 
-当上游文件缺失时，需用户提供以下信息以支撑降级生成：
-- **核心指标列表**：需要监控的关键指标名称和定义
-- **目标用户角色**（可选）：Dashboard的主要使用角色（管理层/PM/运营）
-- **Dashboard平台**（可选）：使用的可视化平台（Amplitude/Grafana/Datadog等）
-
----
-
-## 上下文依赖
-
-- **依赖前序Pipeline**：Pipeline 1（指标体系自动构建）、Pipeline 2（埋点方案自动生成）
-- **被后续Pipeline消费**：模块7（产品度量运营）中的Dashboard监控
+When upstream files are missing, the user needs to provide the following information to support degraded generation:
+- **Core Metric List**: Names and definitions of key metrics to monitor
+- **Target User Roles** (optional): Primary Dashboard user roles (Management/PM/Operations)
+- **Dashboard Platform** (optional): Visualization platform used (Amplitude/Grafana/Datadog, etc.)
 
 ---
 
-## 关键原则
+## Context Dependencies
 
-### 数据驱动可视化
-- 选择最适合展示指标趋势的图表类型
-- KPI卡片展示当前值和趋势
-- 折线图展示时间序列变化
+- **Depends on Prior Pipelines**: Pipeline 1 (Metrics System Auto-Construction), Pipeline 2 (Tracking Plan Auto-Generation)
+- **Consumed by Subsequent Pipelines**: Dashboard monitoring in Module 7 (Product Metrics Operations)
 
-### 告警分层
-- P0：核心指标异常，需立即处理
-- P1：重要指标异常，需当天处理
-- P2：一般指标异常，需关注
-- P3：轻微偏离，可忽略
+---
 
-### 可操作性强
-- 每个Dashboard都有明确的目标用户
-- 每个Widget都有清晰的数据来源说明
-- 告警都有明确的处理指引
+## Key Principles
+
+### Data-Driven Visualization
+- Select chart types best suited for displaying metric trends
+- KPI cards show current value and trend
+- Line charts show time series changes
+
+### Alert Layering
+- P0: Core metric anomaly, requires immediate handling
+- P1: Important metric anomaly, requires same-day handling
+- P2: General metric anomaly, requires attention
+- P3: Minor deviation, can be ignored
+
+### High Actionability
+- Each Dashboard has a clear target user
+- Each Widget has a clear data source description
+- Each alert has clear handling guidance

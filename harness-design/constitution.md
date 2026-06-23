@@ -1,92 +1,92 @@
-# constitution.md — 项目宪法
+# constitution.md — Project Constitution
 
-> **角色说明**：本文件是 **harness-design 框架仓库自身**的项目宪法。
-> 当用 install.sh 安装到新项目时，会从 `.harness/templates/constitution.md.template` 复制生成新项目的宪法，覆盖本文件。
-> 因此本文件约束的是"开发 harness-design 框架本身"，不是"用 harness-design 设计其他项目"。
+> **Role description**: This file is the project constitution for **the harness-design framework repository itself**.
+> When installed to a new project via install.sh, it will be copied from `.harness/templates/constitution.md.template` to generate the new project's constitution, overriding this file.
+> Therefore, this file constrains "developing the harness-design framework itself", not "using harness-design to design other projects".
 >
-> 与 AGENTS.md 的分工：AGENTS.md 是通用工作规则（所有项目相同），constitution.md 是项目特定约束。
-> 加载时机：AGENTS.md 之后，首次交互时读。
+> Division of labor with AGENTS.md: AGENTS.md contains general work rules (the same for all projects); constitution.md contains project-specific constraints.
+> Load timing: after AGENTS.md, read on first interaction.
 
-## 项目特定原则
+## Project-Specific Principles
 
-### 原则 1：零运行时依赖
+### Principle 1: Zero Runtime Dependencies
 
-harness-design 是**纯文档/规则框架**，本身不引入任何运行时依赖。
-- 所有流程通过 Agent 工具完成，不依赖 bash 脚本
-- 设计产出是文档/规范，不是可运行代码
+harness-design is a **pure documentation / rules framework** and introduces no runtime dependencies itself.
+- All workflows are completed via Agent tools, with no bash script dependency
+- Design output is documentation / specs, not runnable code
 
-**验证方式**：仓库根目录无 `package.json` / `requirements.txt` / `Cargo.toml` 等运行时依赖清单。
+**Verification**: No `package.json` / `requirements.txt` / `Cargo.toml` or other runtime dependency manifests at the repository root.
 
-### 原则 2：Agent 工具优先，不绑定 bash
+### Principle 2: Agent Tools First, Not Bound to bash
 
-框架所有流程必须能在无 bash 环境（如 Windows PowerShell）下工作。
-- SKILL.md 中的操作步骤必须给出"Agent 工具方式"（Read/Write/Glob/Grep/Edit 等）
-- `.sh` 脚本只能标注为"可选兜底"
+All framework workflows must work in a bash-free environment (e.g., Windows PowerShell).
+- Operation steps in SKILL.md must provide an "Agent tool approach" (Read/Write/Glob/Grep/Edit, etc.)
+- `.sh` scripts may only be marked as "optional fallback"
 
-**验证方式**：任意 SKILL.md 流程不依赖 bash 特有语法完成核心任务。
+**Verification**: No SKILL.md workflow relies on bash-specific syntax to complete core tasks.
 
-### 原则 3：核心文件修改需用户确认
+### Principle 3: Core File Modifications Require User Confirmation
 
-以下文件变更必须由用户明确授权：
+Changes to the following files must be explicitly authorized by the user:
 - `AGENTS.md`
 - `SOUL.md`
 - `constitution.md`
 - `.harness/rules/security.md`
 - `.harness/rules/prompt-defense.md`
 
-**验证方式**：修改前通过 `AskUserQuestion` 或显式对话获得授权。
+**Verification**: Obtain authorization via `AskUserQuestion` or explicit conversation before modifying.
 
-### 原则 4：Skill 必须有完整 frontmatter
+### Principle 4: Skills Must Have Complete Frontmatter
 
-所有 `.harness/skills/*/*/SKILL.md` 必须包含：
-- `name:`（与目录名一致）
+All `.harness/skills/*/*/SKILL.md` must include:
+- `name:` (consistent with the directory name)
 - `description:`
 - `triggers:`
 - `reads:`
 - `writes:`
 
-**验证方式**：`skill-maintenance` 扫描无 frontmatter 缺失。
+**Verification**: `skill-maintenance` scans for missing frontmatter.
 
-### 原则 5：文档简洁，防止膨胀
+### Principle 5: Concise Documentation, Prevent Bloat
 
-- `AGENTS.md` 不超过 150 行
-- `SKILL.md` 不超过 300 行（超过时将 schema/示例/决策表提取到 `Reference/` 子目录，Reference/ 下不限）
-- `progress.md` 超过 200 行必须归档
+- `AGENTS.md` must not exceed 150 lines
+- `SKILL.md` must not exceed 300 lines (when exceeded, extract schema/examples/decision tables to a `Reference/` subdirectory; Reference/ has no limit)
+- `progress.md` must be archived when it exceeds 200 lines
 
-**验证方式**：`skill-maintenance` 行数检查 + Agent 自检。
+**Verification**: `skill-maintenance` line count check + Agent self-check.
 
-### 原则 6：设计产出必须标注可访问性合规等级
+### Principle 6: Design Output Must Mark Accessibility Compliance Level
 
-所有设计稿（视觉/交互/原型）必须标注 WCAG 合规等级：
+All design drafts (visual / interaction / prototype) must mark their WCAG compliance level:
 - WCAG 2.1 A / AA / AAA
-- 不达标项必须列出原因和补救方案
+- Non-compliant items must list the reason and remediation plan
 
-**验证方式**：`accessibility-audit` skill 检查 + `verify` skill 综合验证。
+**Verification**: `accessibility-audit` skill check + `verify` skill comprehensive validation.
 
-### 原则 7：探索先行不可绕过
+### Principle 7: Exploration-First Cannot Be Bypassed
 
-`default_mode: deep` 的 workflow（如 new-design / redesign），必须完成需求探索阶段（design-brief / 用户审美调研）才能进入设计产出。
+Workflows with `default_mode: deep` (e.g., new-design / redesign) must complete the requirements exploration phase (design-brief / user aesthetics research) before entering design output.
 
-- `deep` 模式下，⏸ 探索对话点不可跳过，必须获得用户输入后才继续
-- `deep` 模式下，禁用 skill 降级策略，不允许"基于默认审美"降级
-- 用户只能通过显式声明"切换到 skip 模式"来绕过，且 Agent 必须记录理由到 `state.yaml`
-- `skip` 模式有安全兜底：无需求文档时自动降级为 `standard`
+- In `deep` mode, ⏸ exploration dialog points cannot be skipped; user input must be obtained before continuing
+- In `deep` mode, skill degradation strategy is disabled; "based on default aesthetics" degradation is not allowed
+- Users can only bypass by explicitly declaring "switch to skip mode", and the Agent must record the reason in `state.yaml`
+- `skip` mode has a safety fallback: automatically downgrades to `standard` when no requirement documents exist
 
-**验证方式**：workflow 执行前检查 `state.yaml` 的 `exploration_mode` 字段；`deep` 模式下未完成探索阶段则阻断 PLAN→DESIGN 流转。
+**Verification**: Before workflow execution, check the `exploration_mode` field of `state.yaml`; in `deep` mode, block the PLAN→DESIGN transition if the exploration phase is not complete.
 
-## 宪法检查点（PLAN 阶段必查）
+## Constitution Checkpoints (required at PLAN stage)
 
-- [ ] 当前变更是否引入运行时依赖？
-- [ ] 当前流程是否能在无 bash 环境下完成？
-- [ ] 是否涉及核心文件修改？是否已获得用户授权？
-- [ ] 新增/修改的 skill 是否有完整 frontmatter？
-- [ ] 文档长度是否超过项目阈值？
-- [ ] 设计产出是否标注可访问性合规等级？
-- [ ] 当前 workflow 的 exploration_mode 是否为 deep？若是，是否已完成需求探索阶段？
+- [ ] Does the current change introduce runtime dependencies?
+- [ ] Can the current workflow be completed in a bash-free environment?
+- [ ] Does it involve core file modifications? Has user authorization been obtained?
+- [ ] Do new/modified skills have complete frontmatter?
+- [ ] Does the document length exceed the project threshold?
+- [ ] Does the design output mark the accessibility compliance level?
+- [ ] Is the current workflow's exploration_mode deep? If so, has the requirements exploration phase been completed?
 
-## 修订记录
+## Revision History
 
-| 日期 | 修订内容 | 原因 |
-|------|---------|------|
-| 2026-06-21 | 初始版本 | 明确 harness-design 自身约束 |
-| 2026-06-23 | 增加原则 7：探索先行不可绕过；原则 5 AGENTS.md 行数限制 120→150 | exploration_mode 机制需要宪法依据 |
+| Date | Revision | Reason |
+|------|----------|--------|
+| 2026-06-21 | Initial version | Clarify harness-design's own constraints |
+| 2026-06-23 | Add Principle 7: Exploration-first cannot be bypassed; Principle 5 AGENTS.md line limit 120→150 | exploration_mode mechanism needs constitutional basis |

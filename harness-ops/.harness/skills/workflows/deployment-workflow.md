@@ -4,124 +4,128 @@ name: deployment-workflow
 default_mode: skip
 ---
 
-# Workflow: 部署全流程（Deployment Workflow）
+# Workflow: Deployment Workflow
 
-> 所属 LOOP 类型：provision
-> 触发场景：收到 solo-to-ops.md 交接文档、用户要求部署新版本、CI/CD 流水线触发
-> 编排 Skill：deployment-pipeline → release-strategy → [staging部署] → deployment-verify → [GitOps PR] → [人类审批] → [production部署] → deployment-verify → [产出 ops-to-pm.md]
+> LOOP type: provision
+> Trigger scenarios: Received solo-to-ops.md handoff document, user requests new version deployment, CI/CD pipeline trigger
+> Orchestration Skill: deployment-pipeline → release-strategy → [staging deployment] → deployment-verify → [GitOps PR] → [human approval] → [production deployment] → deployment-verify → [produce ops-to-pm.md]
 
-## 流程图
+## Flowchart
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│ 消费 solo-to-ops.md（前置硬门，字段缺失不开始）            │
+│ Consume solo-to-ops.md (prerequisite hard gate,         │
+│ do not start if fields missing)                         │
 └───────────────────────────┬─────────────────────────────┘
                             ▼
           ┌─────────────────────────────────┐
-          │ deployment-pipeline              │  评估影响面 + 编排流水线
+          │ deployment-pipeline              │  Assess impact + orchestrate pipeline
           └─────────────────┬───────────────┘
                             ▼
           ┌─────────────────────────────────┐
-          │ release-strategy                 │  选择发布策略（滚动/灰度/蓝绿）
+          │ release-strategy                 │  Select release strategy (rolling/canary/blue-green)
           └─────────────────┬───────────────┘
                             ▼
           ┌─────────────────────────────────┐
-          │ [staging 部署]                   │  Agent 可直接执行
+          │ [staging deployment]             │  Agent can execute directly
           └─────────────────┬───────────────┘
                             ▼
           ┌─────────────────────────────────┐
-          │ deployment-verify[质量门1]       │  staging 健康检查+冒烟测试
-          └─────────────────┬───────────────┘
-                            │
-                  ┌─────────┴─────────┐
-                  │ staging 验证通过?  │
-                  └─────────┬─────────┘
-                    ↓ 是    │    ↓ 否
-                            │    回滚 → 分析原因 → 回到部署
-                            ▼
-          ┌─────────────────────────────────┐
-          │ 生成 GitOps PR（production）     │  Agent 生成，不直接 apply
-          └─────────────────┬───────────────┘
-                            ▼
-          ┌─────────────────────────────────┐
-          │ [人类审批门]                     │  AskUserQuestion 请求确认
+          │ deployment-verify [Quality Gate 1]│  staging health check + smoke test
           └─────────────────┬───────────────┘
                             │
                   ┌─────────┴─────────┐
-                  │ 人类批准?          │
+                  │ staging validation │
+                  │ passed?            │
                   └─────────┬─────────┘
-                    ↓ 是    │    ↓ 否
-                            │    终止部署，记录原因
+                    ↓ Yes   │    ↓ No
+                            │    Rollback → analyze cause → back to deployment
                             ▼
           ┌─────────────────────────────────┐
-          │ [production 部署]                │  GitOps 同步（ArgoCD/Flux）
-          │ 灰度: 5%→25%→100%               │  每阶段 deployment-verify
+          │ Generate GitOps PR (production)  │  Agent generates, does not apply directly
           └─────────────────┬───────────────┘
                             ▼
           ┌─────────────────────────────────┐
-          │ deployment-verify[质量门2]       │  production 健康检查+监控验证
+          │ [Human approval gate]            │  AskUserQuestion requests confirmation
           └─────────────────┬───────────────┘
                             │
                   ┌─────────┴─────────┐
-                  │ production 验证通过?│
+                  │ Human approved?    │
                   └─────────┬─────────┘
-                    ↓ 是    │    ↓ 否
-                            │    rollback → 通知人类 → 退出
+                    ↓ Yes   │    ↓ No
+                            │    Terminate deployment, record reason
                             ▼
           ┌─────────────────────────────────┐
-          │ 归档：部署记录 + 知识库          │
-          │ 产出 ops-to-pm.md（如需）        │
+          │ [production deployment]          │  GitOps sync (ArgoCD/Flux)
+          │ Canary: 5%→25%→100%              │  deployment-verify at each stage
+          └─────────────────┬───────────────┘
+                            ▼
+          ┌─────────────────────────────────┐
+          │ deployment-verify [Quality Gate 2]│  production health check + monitoring validation
+          └─────────────────┬───────────────┘
+                            │
+                  ┌─────────┴─────────┐
+                  │ production         │
+                  │ validation passed? │
+                  └─────────┬─────────┘
+                    ↓ Yes   │    ↓ No
+                            │    rollback → notify human → exit
+                            ▼
+          ┌─────────────────────────────────┐
+          │ Archive: deployment records +    │
+          │ knowledge base                   │
+          │ Produce ops-to-pm.md (if needed) │
           └─────────────────────────────────┘
 ```
 
-## 质量门控
+## Quality Gates
 
-| 门控点 | 检查内容 | 不通过处理 |
+| Gate | Checks | On Failure |
 |--------|---------|-----------|
-| 前置硬门 | solo-to-ops.md 字段完整（6 项必填） | 要求 solo 补全，不开始部署 |
-| staging 验证 | 健康检查+冒烟测试+监控平稳 | 自动回滚 staging，分析原因 |
-| 人类审批门 | 人类 review GitOps PR | 拒绝则终止，记录原因 |
-| 灰度每阶段 | 错误率<1% + 延迟正常 + 业务指标稳定 | 自动回滚到上一阶段 |
-| production 验证 | 四件套全通过（健康+冒烟+监控+日志） | 触发 rollback，通知人类 |
+| Prerequisite hard gate | solo-to-ops.md fields complete (6 required fields) | Require solo to complete, do not start deployment |
+| staging validation | Health check + smoke test + monitoring stable | Auto-rollback staging, analyze cause |
+| Human approval gate | Human reviews GitOps PR | Reject then terminate, record reason |
+| Each canary stage | Error rate <1% + normal latency + stable business metrics | Auto-rollback to previous stage |
+| production validation | All four checks pass (health + smoke + monitoring + logs) | Trigger rollback, notify human |
 
-## 数据流
+## Data Flow
 
-| 阶段 | 产出 | 存储位置 |
+| Stage | Output | Storage Location |
 |------|------|---------|
-| 消费交接 | 交接文档解析结果 | progress.md |
-| deployment-pipeline | 部署方案 + 流水线配置 | spec.md + docs/deployment/ |
-| release-strategy | 发布策略方案 | spec.md |
-| staging 部署 | K8s Manifest / Helm values | docs/deployment/ |
-| staging 验证 | 验证报告 | evidence.md |
-| GitOps PR | PR 内容 + diff | Git 仓库 |
-| production 部署 | 部署记录 | iterations.log |
-| production 验证 | 最终验证报告 | evidence.md |
-| 归档 | 部署记录 + ops-to-pm.md | docs/deployment/ + docs/handoff/ + knowledge-base.md |
+| Consume handoff | Handoff document parse result | progress.md |
+| deployment-pipeline | Deployment plan + pipeline config | spec.md + docs/deployment/ |
+| release-strategy | Release strategy plan | spec.md |
+| staging deployment | K8s Manifest / Helm values | docs/deployment/ |
+| staging validation | Validation report | evidence.md |
+| GitOps PR | PR content + diff | Git repo |
+| production deployment | Deployment record | iterations.log |
+| production validation | Final validation report | evidence.md |
+| Archive | Deployment records + ops-to-pm.md | docs/deployment/ + docs/handoff/ + knowledge-base.md |
 
-## 与 LOOP 的交互
+## Interaction with LOOP
 
 ```
 LOOP(provision):
-  PLAN:       deployment-pipeline → release-strategy → 生成配置
-  PROVISION:  staging 部署 → [GitOps PR] → [人类审批] → production 部署
-  VERIFY:     deployment-verify（staging + production 每阶段）
-  通过? DONE : rollback → 分析原因 → 可修复回 PROVISION / 需重新规划回 PLAN
+  PLAN:       deployment-pipeline → release-strategy → generate config
+  PROVISION:  staging deployment → [GitOps PR] → [human approval] → production deployment
+  VERIFY:     deployment-verify (staging + production each stage)
+  Pass? DONE : rollback → analyze cause → fixable back to PROVISION / needs replanning back to PLAN
 ```
 
-## 环境分层执行
+## Execution by Environment
 
-| 操作 | staging | production |
+| Operation | staging | production |
 |------|---------|------------|
-| 生成配置 | Agent | Agent |
+| Generate config | Agent | Agent |
 | kubectl apply | Agent | ❌ GitOps PR |
-| 健康检查 | Agent | Agent |
-| 回滚 | Agent 自动 | Agent 建议 + 人类确认 |
-| 数据库 Migration | Agent | 人类执行 |
+| Health check | Agent | Agent |
+| Rollback | Agent auto | Agent suggests + human confirms |
+| Database Migration | Agent | Human executes |
 
-## 使用方式
+## Usage
 
-对 Agent 说：
-- "solo 交付了新版本，开始部署" → 触发本 workflow
-- "部署 v1.2.3 到 staging" → 从 deployment-pipeline 开始
-- "staging 验证通过了，推进到 production" → 从 GitOps PR 开始
-- "部署失败了，回滚" → 触发 rollback skill
+Tell the Agent:
+- "solo delivered a new version, start deployment" → Trigger this workflow
+- "Deploy v1.2.3 to staging" → Start from deployment-pipeline
+- "staging validation passed, promote to production" → Start from GitOps PR
+- "Deployment failed, rollback" → Trigger rollback skill

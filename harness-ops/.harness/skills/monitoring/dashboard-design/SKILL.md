@@ -1,12 +1,12 @@
 ---
 name: dashboard-design
-description: Grafana Dashboard 生成与优化，按服务/层级/角色设计可视化面板
+description: Grafana Dashboard generation and optimization, designing visualization panels by service / tier / role
 triggers:
-  - 需要生成 Grafana Dashboard 时
-  - monitoring-setup 部署后设计可视化时
-  - Dashboard 需要优化时
-  - 用户要求"做个监控面板"时
-  - 新服务上线需要 Dashboard 时
+  - When a Grafana Dashboard needs to be generated
+  - When designing visualization after monitoring-setup deployment
+  - When a Dashboard needs optimization
+  - When the user requests "make a monitoring panel"
+  - When a new service goes live and needs a Dashboard
 reads:
   - docs/infrastructure/OPS_STRATEGY.md
   - rules/security.md
@@ -21,30 +21,30 @@ operation_tier: propose
 requires_approval: false
 ---
 
-# Dashboard Design — Grafana Dashboard 生成
+# Dashboard Design — Grafana Dashboard Generation
 
-## 铁律
+## Ground Rules
 
-1. **面向角色设计** —— 不同角色看不同 Dashboard（运维/开发/业务）
-2. **黄金信号优先** —— 延迟/流量/错误/饱和度
-3. **阈值线标注** —— SLO 目标线必须可视化
-4. **不堆砌图表** —— 每个 Panel 有明确目的
+1. **Design for the role** — different roles view different Dashboards (ops / dev / business)
+2. **Golden signals first** — latency / traffic / errors / saturation
+3. **Mark threshold lines** — SLO target lines must be visualized
+4. **Do not pile up charts** — every Panel has a clear purpose
 
-## 流程
+## Process
 
-### 1. 确定 Dashboard 类型
+### 1. Determine Dashboard Type
 
-| 类型 | 目标用户 | 核心指标 |
+| Type | Target Audience | Core Metrics |
 |------|---------|---------|
-| **服务总览** | 运维/管理 | 可用性/错误率/延迟/吞吐 |
-| **服务详情** | 开发 | JVM/连接池/慢查询/缓存 |
-| **基础设施** | 运维 | CPU/内存/磁盘/网络 |
-| **业务监控** | 业务/产品 | 订单量/转化率/营收 |
-| **告警视图** | Oncall | 当前告警/历史趋势 |
+| **Service Overview** | Ops / Management | Availability / error rate / latency / throughput |
+| **Service Details** | Dev | JVM / connection pool / slow queries / cache |
+| **Infrastructure** | Ops | CPU / memory / disk / network |
+| **Business Monitoring** | Business / Product | Order volume / conversion rate / revenue |
+| **Alert View** | Oncall | Current alerts / historical trends |
 
-### 2. 生成 Dashboard JSON
+### 2. Generate Dashboard JSON
 
-#### 服务总览 Dashboard
+#### Service Overview Dashboard
 ```json
 {
   "title": "Payment Service - Overview",
@@ -101,60 +101,60 @@ requires_approval: false
 }
 ```
 
-### 3. 黄金信号四件套
+### 3. Golden Signals Four-Part Suite
 
-每个服务 Dashboard 必须包含：
+Every service Dashboard must include:
 
-#### 延迟（Latency）
+#### Latency
 ```promql
-# p50/p95/p99 延迟
+# p50/p95/p99 latency
 histogram_quantile(0.50, rate(http_request_duration_seconds_bucket[5m]))
 histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))
 histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))
 ```
 
-#### 流量（Traffic）
+#### Traffic
 ```promql
-# 请求速率
+# Request rate
 sum(rate(http_requests_total[5m])) by (status)
 ```
 
-#### 错误（Errors）
+#### Errors
 ```promql
-# 错误率
+# Error rate
 sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m]))
 ```
 
-#### 饱和度（Saturation）
+#### Saturation
 ```promql
-# CPU 使用率
+# CPU utilization
 avg(rate(container_cpu_usage_seconds_total[5m])) * 100
 
-# 内存使用率
+# Memory utilization
 container_memory_usage_bytes / container_spec_memory_limit_bytes * 100
 
-# 连接池使用率
+# Connection pool utilization
 mysql_connection_pool_active / mysql_connection_pool_max
 ```
 
-### 4. SLO 阈值线
+### 4. SLO Threshold Lines
 
-在图表上标注 SLO 目标：
-- 可用性目标线：99.9%
-- 延迟目标线：p95 < 200ms
-- 错误率目标线：< 0.1%
+Mark SLO targets on charts:
+- Availability target line: 99.9%
+- Latency target line: p95 < 200ms
+- Error rate target line: < 0.1%
 
-### 5. 导入到 Grafana
+### 5. Import to Grafana
 
 ```bash
-# 通过 API 导入
+# Import via API
 curl -X POST http://grafana:3000/api/dashboards/db \
   -H "Authorization: Bearer $GRAFANA_TOKEN" \
   -H "Content-Type: application/json" \
   -d @dashboard.json
 ```
 
-或通过 GitOps 管理 Dashboard（推荐）：
+Or manage Dashboards via GitOps (recommended):
 ```
 gitops-repo/
 └── monitoring/
@@ -164,26 +164,26 @@ gitops-repo/
             └── payment-service-details.json
 ```
 
-### 6. 更新监控配置库
+### 6. Update Monitoring Config Library
 
-`memory/knowledge-base.md` 追加：
+Append to `memory/knowledge-base.md`:
 ```
-| Dashboard | URL | 类型 | 目标用户 | 最后更新 |
+| Dashboard | URL | Type | Target Audience | Last Updated |
 |-----------|-----|------|---------|---------|
-| Payment Overview | grafana/d/payment-overview | 总览 | 运维 | 2026-06-22 |
+| Payment Overview | grafana/d/payment-overview | Overview | Ops | 2026-06-22 |
 ```
 
-## 禁止事项
+## Prohibitions
 
-- 不堆砌无意义的图表（每个 Panel 必须有目的）
-- 不使用绝对值代替速率（用 rate 而非 counter 原值）
-- 不隐藏 SLO 阈值线（必须可视化目标）
-- 不在 Dashboard 中暴露敏感数据（如用户 PII）
-- 不创建无人看的 Dashboard（每个 Dashboard 必须有受众）
+- Do not pile up meaningless charts (every Panel must have a purpose)
+- Do not use absolute values instead of rates (use rate, not raw counter values)
+- Do not hide SLO threshold lines (targets must be visualized)
+- Do not expose sensitive data in Dashboards (e.g., user PII)
+- Do not create Dashboards no one views (every Dashboard must have an audience)
 
-## 与 LOOP 的关系
+## Relationship to LOOP
 
-**所属 LOOP 类型**：无（配置类 skill）
+**LOOP type**: none (configuration skill)
 
-本 skill 在 monitoring-setup 的 PLAN 阶段被调用，生成 Dashboard JSON。
-也可作为独立 skill 执行（优化现有 Dashboard）。
+This skill is invoked during the PLAN stage of monitoring-setup to generate Dashboard JSON.
+It can also be executed as a standalone skill (to optimize existing Dashboards).

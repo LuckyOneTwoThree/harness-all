@@ -1,21 +1,21 @@
 ---
 name: metrics-system
-description: 当需要构建产品指标体系时使用。指标体系自动构建，包含北极星指标校验与推荐、L1/L2指标拆解、行动指标识别、虚荣指标检测。关键词：指标体系、AARRR模型、北极星指标、L1/L2指标、OSM模型、度量体系、定指标、核心数据。
+description: Use when building a product metrics system. Metrics System Auto-Construction includes North Star metric validation and recommendation, L1/L2 metric breakdown, actionable metric identification, and vanity metric detection. Keywords: metrics system, AARRR model, North Star metric, L1/L2 metrics, OSM model, measurement system, define metrics, core data.
 metadata:
-  module: "产品度量设计"
-  sub-module: "指标体系"
+  module: "Product Metrics Design"
+  sub-module: "Metrics System"
   type: "pipeline"
   version: "2.1"
-  domain_tags: ["互联网", "SaaS", "通用"]
+  domain_tags: ["Internet", "SaaS", "General"]
   trigger_examples:
-    - "帮我梳理一下产品的核心指标"
-    - "我们要定北极星指标"
-    - "搭建一套指标体系"
+    - "Help me organize the product's core metrics"
+    - "We need to define the North Star metric"
+    - "Build a metrics system"
   interaction_mode: "ai_suggest_human_approve"
 execution_depth:
   default: standard
-  quick_description: "输出北极星指标校验结果和L1指标拆解"
-  deep_description: "完整L1/L2拆解 + 行动指标识别 + 虚荣指标检测 + 指标健康度评分 + 指标间关联分析"
+  quick_description: "Output North Star metric validation results and L1 metric breakdown"
+  deep_description: "Full L1/L2 breakdown + actionable metric identification + vanity metric detection + metric health scoring + metric correlation analysis"
 reads:
   - rules/security.md
   - loops/LOOP.md
@@ -28,58 +28,58 @@ writes:
   - metric_system.json
 ---
 
-# 指标体系自动构建
+# Metrics System Auto-Construction
 
-## 核心原则
+## Core Principles
 
-1. **全量分析**：对所有可用数据进行系统性分析，不遗漏关键维度
-2. **实时感知**：指标体系设计支持实时监控和快速响应
-3. **自动归因**：异常波动自动归因到具体原因，减少人工排查
-4. **决策规则显式化**：每个告警和升级条件都有明确的量化规则
+1. **Full Analysis**: Systematically analyze all available data without missing key dimensions
+2. **Real-time Awareness**: Metrics system design supports real-time monitoring and rapid response
+3. **Automated Attribution**: Anomaly fluctuations are automatically attributed to specific causes, reducing manual investigation
+4. **Explicit Decision Rules**: Every alert and escalation condition has clear quantitative rules
 
-## 交互模式
+## Interaction Mode
 
-**🤖→👤 AI建议，人类审批**
+**🤖→👤 AI Suggests, Human Approves**
 
-本Pipeline由AI自动执行指标体系构建，但关键决策点需要人类审批：
-- **必须审批**：北极星指标选择
-- **建议审批**：虚荣指标处理方案
+This pipeline is automatically executed by AI for metrics system construction, but key decision points require human approval:
+- **Must Approve**: North Star metric selection
+- **Recommended to Approve**: Vanity metric handling plan
 
-## 输入
+## Inputs
 
-| 输入项 | 类型 | 必填 | 来源 | 说明 |
+| Input | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| product_context | JSON | 是 | docs/strategy/OKR.md + docs/strategy/business-strategy.md（“商业模式画布”章节） / 用户提供 | 产品类型、北极星指标、OKR、商业模式 |
-| existing_metrics | JSON数组 | ○ | 用户提供 | 已有指标清单（含名称、定义、计算方式、数据源、层级） |
+| product_context | JSON | Yes | docs/strategy/OKR.md + docs/strategy/business-strategy.md ("Business Model Canvas" section) / User-provided | Product type, North Star metric, OKR, business model |
+| existing_metrics | JSON array | ○ | User-provided | Existing metrics list (with name, definition, calculation, data source, layer) |
 
-### product_context（必填）
+### product_context (Required)
 
 ```json
 {
-  "product_type": "string",        // 产品类型枚举
-  "north_star_metric": "string",   // 如已定义则校验，否则自动推荐
+  "product_type": "string",        // Product type enum
+  "north_star_metric": "string",   // Validate if defined, otherwise auto-recommend
   "okr": {
-    "objective": "string",         // 当前阶段目标
-    "key_results": ["string"]     // 关键结果
+    "objective": "string",         // Current phase objective
+    "key_results": ["string"]     // Key results
   },
-  "business_model": "string"       // 商业模式描述
+  "business_model": "string"       // Business model description
 }
 ```
 
-**product_type枚举值**：
-- `social` - 社交产品
-- `ecommerce` - 电商产品
-- `saas` - SaaS产品
-- `content` - 内容平台
-- `gaming` - 游戏产品
-- `fintech` - 金融科技
-- `education` - 在线教育
-- `healthcare` - 医疗健康
-- `other` - 其他
+**product_type enum values**:
+- `social` - Social product
+- `ecommerce` - E-commerce product
+- `saas` - SaaS product
+- `content` - Content platform
+- `gaming` - Gaming product
+- `fintech` - Fintech
+- `education` - Online education
+- `healthcare` - Healthcare
+- `other` - Other
 
 ---
 
-### existing_metrics（可选）
+### existing_metrics (Optional)
 
 ```json
 [
@@ -95,37 +95,37 @@ writes:
 
 ---
 
-## 执行步骤
+## Execution Steps
 
-### Step 1: 北极星指标校验 [核心]
+### Step 1: North Star Metric Validation [Core]
 
-**🤖 AI处理**
+**🤖 AI Processing**
 
-#### 分支A：北极星已定义
+#### Branch A: North Star Already Defined
 
-当`product_context.north_star_metric`已定义时：
+When `product_context.north_star_metric` is defined:
 
-**校验项**：
-1. **定义清晰性检查**
-   - 是否有明确的计算公式
-   - 是否有清晰的数据来源
-   - 是否可被拆解为子指标
+**Validation Items**:
+1. **Definition Clarity Check**
+   - Has a clear calculation formula
+   - Has a clear data source
+   - Can be decomposed into sub-metrics
 
-2. **虚荣指标检测**
+2. **Vanity Metric Detection**
    ```
-   IF 符合以下任一条件 THEN 标记为潜在虚荣指标
-     - 只增不减（无时间维度）
-     - 无因果关联（无法指导行动）
-     - 不可操作（无法被团队影响）
-   ```
-
-3. **产品类型匹配度**
-   ```
-   score = 基于产品类型的北极星指标推荐评分
-   IF score < 0.6 THEN 建议重新选择北极星
+   IF meets any of the following conditions THEN mark as potential vanity metric
+     - Only increases, never decreases (no time dimension)
+     - No causal link (cannot guide action)
+     - Not actionable (cannot be influenced by the team)
    ```
 
-**输出**：
+3. **Product Type Fit**
+   ```
+   score = North Star metric recommendation score based on product type
+   IF score < 0.6 THEN suggest re-selecting North Star
+   ```
+
+**Output**:
 ```json
 {
   "north_star": {
@@ -145,31 +145,31 @@ writes:
 
 ---
 
-#### 分支B：北极星未定义
+#### Branch B: North Star Not Defined
 
-当`product_context.north_star_metric`未定义时：
+When `product_context.north_star_metric` is not defined:
 
-**自动推荐逻辑**：
+**Auto-Recommendation Logic**:
 
 ```
-基于 product_context.product_type 和 business_model
-生成3个北极星指标候选
+Based on product_context.product_type and business_model
+Generate 3 North Star metric candidates
 ```
 
-**产品类型→北极星指标映射**：
+**Product Type → North Star Metric Mapping**:
 
-| 产品类型 | 推荐北极星指标候选 |
+| Product Type | Recommended North Star Metric Candidates |
 |---------|------------------|
-| 社交 | 1. 日活跃用户数 × 平均互动次数<br>2. 日发送消息用户数<br>3. 社交网络密度（好友关系活跃比） |
-| 电商 | 1. GMV<br>2. 支付订单量<br>3. 活跃买家数 × 平均客单价 |
-| SaaS | 1. 付费ARR<br>2. 核心功能周活跃用户数<br>3. NRR（净收入留存率） |
-| 内容 | 1. 用户总时长<br>2. 人均内容消费量 × 消费用户数<br>3. 内容互动率 |
-| 游戏 | 1. 日活跃用户数<br>2. DAU × 平均游戏时长<br>3. 付费用户LTV |
-| 金融科技 | 1. 活跃用户贷款/理财转化率<br>2. AUM（资产管理规模）<br>3. 风控通过率 × 放款额 |
-| 在线教育 | 1. 完课率 × 付费学员数<br>2. 学员完课率 × NPS<br>3. 活跃学习用户数 × 人均学习时长 |
-| 医疗健康 | 1. 核心服务使用率<br>2. 用户健康指标改善率<br>3. 用户满意度 × 复购率 |
+| Social | 1. DAU × Average interactions per user<br>2. Daily messaging users<br>3. Social network density (active friend ratio) |
+| E-commerce | 1. GMV<br>2. Paid orders<br>3. Active buyers × Average order value |
+| SaaS | 1. Paid ARR<br>2. Weekly active users of core feature<br>3. NRR (Net Revenue Retention) |
+| Content | 1. Total user time spent<br>2. Per-capita content consumption × Consuming users<br>3. Content interaction rate |
+| Gaming | 1. DAU<br>2. DAU × Average session length<br>3. Paying user LTV |
+| Fintech | 1. Active user loan/wealth management conversion rate<br>2. AUM (Assets Under Management)<br>3. Risk approval rate × Loan disbursement |
+| Online Education | 1. Course completion rate × Paying students<br>2. Student completion rate × NPS<br>3. Active learning users × Per-capita learning time |
+| Healthcare | 1. Core service usage rate<br>2. User health metric improvement rate<br>3. User satisfaction × Repurchase rate |
 
-**输出**：
+**Output**:
 ```json
 {
   "north_star_candidates": [
@@ -190,56 +190,56 @@ writes:
 
 ---
 
-### Step 2: L1指标自动拆解 [核心]
+### Step 2: L1 Metric Auto-Breakdown [Core]
 
-**🤖 AI处理**
+**🤖 AI Processing**
 
-**输入**：北极星指标定义
+**Input**: North Star metric definition
 
-**拆解逻辑**：
+**Breakdown Logic**:
 
-基于AARRR模型，将北极星指标拆解为5个L1维度（根据产品类型可能选择其中3-5个）：
+Based on the AARRR model, decompose the North Star metric into 5 L1 dimensions (3-5 may be selected depending on product type):
 
 ```
-北极星指标
-  ↓ 拆解
-L1 维度（按AARRR）
-  ├── Acquisition（获取）
-  ├── Activation（激活）
-  ├── Retention（留存）
-  ├── Revenue（变现）
-  └── Referral（推荐）
+North Star Metric
+  ↓ Breakdown
+L1 Dimensions (by AARRR)
+  ├── Acquisition
+  ├── Activation
+  ├── Retention
+  ├── Revenue
+  └── Referral
 ```
 
-**拆解规则**：
+**Breakdown Rules**:
 
 ```
 FOR each L1 dimension:
-  1. 识别与北极星的相关性
-  2. 计算权重（基于相关性强度）
-  3. 定义L1指标
-  4. 确保L1指标可独立衡量
+  1. Identify correlation with North Star
+  2. Calculate weight (based on correlation strength)
+  3. Define L1 metric
+  4. Ensure L1 metric is independently measurable
 ```
 
-**北极星→L1权重映射示例**（电商）：
+**North Star → L1 Weight Mapping Example** (E-commerce):
 
-| 北极星指标 | Acquisition权重 | Activation权重 | Retention权重 | Revenue权重 | Referral权重 |
+| North Star Metric | Acquisition Weight | Activation Weight | Retention Weight | Revenue Weight | Referral Weight |
 |-----------|----------------|---------------|-------------|-----------|-------------|
 | GMV | 0.15 | 0.15 | 0.25 | 0.35 | 0.10 |
-| 支付订单量 | 0.20 | 0.25 | 0.20 | 0.25 | 0.10 |
-| 活跃买家数×客单价 | 0.20 | 0.15 | 0.30 | 0.25 | 0.10 |
+| Paid orders | 0.20 | 0.25 | 0.20 | 0.25 | 0.10 |
+| Active buyers × AOV | 0.20 | 0.15 | 0.30 | 0.25 | 0.10 |
 
-**输出**：
+**Output**:
 ```json
 {
   "l1_metrics": [
     {
       "layer": "Acquisition",
-      "name": "用户获取",
+      "name": "User Acquisition",
       "weight": 0.20,
       "calculation": "string",
       "data_source": "string",
-      "relationship_to_north_star": "直接正向关系",
+      "relationship_to_north_star": "Direct positive correlation",
       "l2_metrics_count": 3
     }
   ]
@@ -248,59 +248,59 @@ FOR each L1 dimension:
 
 ---
 
-### Step 3: L2指标自动拆解 [条件]
+### Step 3: L2 Metric Auto-Breakdown [Conditional]
 
-**🤖 AI处理**
+**🤖 AI Processing**
 
-**输入**：L1指标列表
+**Input**: L1 metric list
 
-**拆解逻辑**：
+**Breakdown Logic**:
 
 ```
 FOR each L1 metric:
-  拆解 3-5 个 L2 指标
-  确保每个 L2 指标:
-    1. 与 L1 有明确的数学关系
-    2. 可独立衡量
-    3. 有明确的数据来源
-    4. 可被特定团队负责
+  Break down 3-5 L2 metrics
+  Ensure each L2 metric:
+    1. Has a clear mathematical relationship with L1
+    2. Is independently measurable
+    3. Has a clear data source
+    4. Can be owned by a specific team
 ```
 
-**L1→L2拆解示例**（电商-Activation）：
+**L1 → L2 Breakdown Example** (E-commerce - Activation):
 
 ```json
 {
-  "l1": "用户激活",
+  "l1": "User Activation",
   "l2_metrics": [
     {
-      "name": "新用户首次下单转化率",
-      "calculation": "首次下单新用户数 / 新用户总数",
-      "data_source": "订单系统",
+      "name": "New user first-order conversion rate",
+      "calculation": "New users with first order / Total new users",
+      "data_source": "Order system",
       "is_actionable": true,
-      "optimization_team": "增长团队"
+      "optimization_team": "Growth team"
     }
-    // ... 同结构可扩展：新用户激活时长、核心功能首次使用率、新用户引导完成率等
+    // ... Same structure can be extended: new user activation time, core feature first-use rate, onboarding completion rate, etc.
   ]
 }
 ```
 
-**L2指标分类**：
+**L2 Metric Categories**:
 
-| 类型 | 说明 | 示例 |
+| Type | Description | Example |
 |-----|------|------|
-| 转化率 | 漏斗各步骤转化 | 点击率、注册率、付费率 |
-| 频次类 | 用户使用频率 | 人均使用次数、人均使用时长 |
-| 质量类 | 使用效果/质量 | 满意度评分、功能使用深度 |
-| 效率类 | 操作效率指标 | 页面加载时间、响应时间 |
-| 覆盖类 | 功能/内容覆盖 | 品类覆盖率、功能使用率 |
+| Conversion Rate | Funnel step conversions | Click-through rate, registration rate, payment rate |
+| Frequency | User usage frequency | Per-capita usage count, per-capita usage time |
+| Quality | Usage effect/quality | Satisfaction score, feature usage depth |
+| Efficiency | Operational efficiency metrics | Page load time, response time |
+| Coverage | Feature/content coverage | Category coverage rate, feature usage rate |
 
-**输出**：
+**Output**:
 ```json
 {
   "l1_metrics": [
     {
       "layer": "Activation",
-      "name": "用户激活",
+      "name": "User Activation",
       "l2_metrics": [
         {
           "name": "string",
@@ -318,47 +318,47 @@ FOR each L1 metric:
 
 ---
 
-### Step 4: 行动指标自动识别 [条件]
+### Step 4: Actionable Metric Auto-Identification [Conditional]
 
-**🤖 AI处理**
+**🤖 AI Processing**
 
-**识别逻辑**：
+**Identification Logic**:
 
 ```
 FOR each L2 metric:
-  IF 可被特定团队直接影响 AND
-     可通过A/B测试验证 AND
-     有明确优化路径
-  THEN 标记为行动指标
+  IF can be directly influenced by a specific team AND
+     can be validated via A/B testing AND
+     has a clear optimization path
+  THEN mark as actionable metric
 ```
 
-**行动指标特征**：
+**Actionable Metric Characteristics**:
 
-1. **可归因**：可追溯到具体原因
-2. **可操作**：可被特定团队采取行动
-3. **可验证**：可通过A/B测试验证效果
-4. **可迭代**：可在短周期内持续优化
+1. **Attributable**: Can be traced to specific causes
+2. **Actionable**: Can be acted upon by a specific team
+3. **Validatable**: Can be validated via A/B testing
+4. **Iterable**: Can be continuously optimized in short cycles
 
-**行动指标映射示例**：
+**Actionable Metric Mapping Example**:
 
-| L2指标 | 行动指标 | 优化方向 |
+| L2 Metric | Actionable Metric | Optimization Direction |
 |-------|---------|---------|
-| 新用户激活时长 | 注册流程平均时长 | 简化注册步骤 |
-| 首次下单转化率 | 新手引导流程转化率 | 优化引导文案 |
-| 核心功能使用率 | 功能入口点击率 | 优化功能入口位置 |
-| 搜索结果点击率 | 搜索结果首条点击率 | 优化排序算法 |
+| New user activation time | Average registration flow duration | Simplify registration steps |
+| First-order conversion rate | Onboarding flow conversion rate | Optimize onboarding copy |
+| Core feature usage rate | Feature entry click-through rate | Optimize feature entry placement |
+| Search result click-through rate | First result click-through rate | Optimize ranking algorithm |
 
-**输出**：
+**Output**:
 ```json
 {
   "actionable_metrics": [
     {
-      "name": "注册流程平均时长",
-      "linked_l2": "新用户激活时长",
-      "linked_l1": "用户激活",
-      "optimization_approach": "通过A/B测试验证简化注册步骤的效果",
-      "estimated_impact": "每降低1秒可提升3%激活率",
-      "measurement_method": "A/B测试"
+      "name": "Average registration flow duration",
+      "linked_l2": "New user activation time",
+      "linked_l1": "User Activation",
+      "optimization_approach": "Validate the effect of simplifying registration steps via A/B testing",
+      "estimated_impact": "Each 1-second reduction can increase activation rate by 3%",
+      "measurement_method": "A/B testing"
     }
   ]
 }
@@ -366,92 +366,92 @@ FOR each L2 metric:
 
 ---
 
-### Step 5: 虚荣指标自动检测 [深度]
+### Step 5: Vanity Metric Auto-Detection [Deep]
 
-**🤖 AI处理**
+**🤖 AI Processing**
 
-**检测规则**：
+**Detection Rules**:
 
-#### 规则1：只增不减检测
+#### Rule 1: Only-Increasing Detection
 
 ```
-IF 指标计算方式满足以下任一条件:
-  - 累计值（无时间维度）
-  - 不可逆指标
-THEN 标记为「只增不减」虚荣指标
+IF metric calculation meets any of the following:
+  - Cumulative value (no time dimension)
+  - Irreversible metric
+THEN mark as "only-increasing" vanity metric
 ```
 
-**问题指标示例**：
-- ❌ 累计用户数 → ✅ 日活跃用户数
-- ❌ 总注册量 → ✅ 日新增注册量
-- ❌ 页面总浏览量 → ✅ 人均页面浏览量
+**Problem Metric Examples**:
+- ❌ Cumulative user count → ✅ Daily Active Users
+- ❌ Total registrations → ✅ Daily new registrations
+- ❌ Total page views → ✅ Per-capita page views
 
 ---
 
-#### 规则2：无时间限定检测
+#### Rule 2: No Time Bound Detection
 
 ```
-IF 指标定义中无明确时间维度:
-  - 未定义统计周期
-  - 无法计算变化趋势
-THEN 标记为「无时间限定」虚荣指标
+IF metric definition has no clear time dimension:
+  - No defined statistical period
+  - Cannot calculate change trend
+THEN mark as "no time bound" vanity metric
 ```
 
-**问题指标示例**：
-- ❌ 用户总数 → ✅ DAU / MAU
-- ❌ 总收入 → ✅ 月度MRR / 年度ARR
+**Problem Metric Examples**:
+- ❌ Total users → ✅ DAU / MAU
+- ❌ Total revenue → ✅ Monthly MRR / Annual ARR
 
 ---
 
-#### 规则3：无因果关联检测
+#### Rule 3: No Causal Link Detection
 
 ```
-IF 指标无法满足以下任一条件:
-  - 可关联到北极星指标
-  - 可指导具体行动
-  - 可归因到具体原因
-THEN 标记为「无因果关联」虚荣指标
+IF metric cannot meet any of the following:
+  - Can be linked to North Star metric
+  - Can guide specific action
+  - Can be attributed to specific cause
+THEN mark as "no causal link" vanity metric
 ```
 
-**问题指标示例**：
-- 与核心价值无关的功能使用率
-- 多个独立指标无法形成逻辑链
+**Problem Metric Examples**:
+- Feature usage rate unrelated to core value
+- Multiple independent metrics that cannot form a logical chain
 
 ---
 
-#### 规则4：不可操作检测
+#### Rule 4: Non-Actionable Detection
 
 ```
-IF 指标无法满足以下任一条件:
-  - 可被特定团队影响
-  - 可通过产品/运营手段改变
-  - 可在合理时间内看到效果
-THEN 标记为「不可操作」虚荣指标
+IF metric cannot meet any of the following:
+  - Can be influenced by a specific team
+  - Can be changed via product/operations means
+  - Can show effect within a reasonable time
+THEN mark as "non-actionable" vanity metric
 ```
 
-**问题指标示例**：
-- ❌ 品牌知名度 → ✅ 品牌关键词搜索量
-- ❌ 用户满意度 → ✅ NPS分项指标
-- ❌ 市场占有率 → ✅ 垂直市场渗透率
+**Problem Metric Examples**:
+- ❌ Brand awareness → ✅ Brand keyword search volume
+- ❌ User satisfaction → ✅ NPS sub-metrics
+- ❌ Market share → ✅ Vertical market penetration rate
 
 ---
 
-**检测结果输出**：
+**Detection Result Output**:
 
 ```json
 {
   "vanity_alerts": [
     {
-      "metric_name": "累计用户数",
-      "alert_type": "只增不减",
+      "metric_name": "Cumulative user count",
+      "alert_type": "only-increasing",
       "severity": "high",
-      "recommendation": "替换为「日活跃用户数」或「月活跃用户数」",
+      "recommendation": "Replace with 'Daily Active Users' or 'Monthly Active Users'",
       "suggested_replacement": {
         "name": "DAU",
-        "calculation": "当日活跃用户数"
+        "calculation": "Active users on the day"
       }
     }
-    // ... 同结构可扩展：无时间限定、无因果关联、不可操作等类型
+    // ... Same structure can be extended: no time bound, no causal link, non-actionable, etc.
   ],
   "summary": {
     "total_detected": 2,
@@ -464,20 +464,20 @@ THEN 标记为「不可操作」虚荣指标
 
 ---
 
-## 输出
+## Output
 
-**存储路径**：`docs/metrics/metrics-system.md`
+**Storage Path**: `docs/metrics/metrics-system.md`
 
-**输出文件**：`metric_system.json`
+**Output File**: `metric_system.json`
 
-**输出Schema**：
+**Output Schema**:
 
 ```json
 {
   "type": "object",
   "required": ["metric_system"],
   "properties": {
-    "metric_system": {"type": "object", "description": "指标体系，包含北极星指标、L1/L2指标、行动指标和虚荣指标告警"}
+    "metric_system": {"type": "object", "description": "Metrics system, including North Star metric, L1/L2 metrics, actionable metrics, and vanity metric alerts"}
   }
 }
 ```
@@ -503,18 +503,18 @@ THEN 标记为「不可操作」虚荣指标
         "data_source": "string",
         "l2_metrics": [
           { "name": "string", "calculation": "string", "data_source": "string", "type": "string", "is_actionable": true }
-          // ... 同结构可扩展，每L1至少3个L2指标
+          // ... Same structure can be extended, at least 3 L2 metrics per L1
         ]
       }
-      // ... 同结构可扩展，至少3个L1维度，权重之和为1.0
+      // ... Same structure can be extended, at least 3 L1 dimensions, weights sum to 1.0
     ],
     "actionable_metrics": [
       { "name": "string", "linked_l2": "string", "linked_l1": "string", "optimization_approach": "string" }
-      // ... 同结构可扩展
+      // ... Same structure can be extended
     ],
     "vanity_alerts": [
       { "metric_name": "string", "alert_type": "string", "severity": "high|medium|low", "recommendation": "string", "suggested_replacement": {} }
-      // ... 同结构可扩展
+      // ... Same structure can be extended
     ]
   }
 }
@@ -522,147 +522,147 @@ THEN 标记为「不可操作」虚荣指标
 
 ---
 
-## 输出校验规则
+## Output Validation Rules
 
-| 字段路径 | 类型 | 必填 | 说明 |
+| Field Path | Type | Required | Description |
 |----------|------|------|------|
-| metric_system | object | 是 | 指标体系根对象 |
-| metric_system.north_star | object | 是 | 北极星指标 |
-| metric_system.north_star.name | string | 是 | 北极星指标名称 |
-| metric_system.north_star.definition | string | 是 | 北极星指标定义 |
-| metric_system.north_star.calculation | string | 是 | 计算公式 |
-| metric_system.north_star.data_source | string | 是 | 数据来源 |
-| metric_system.north_star.validation | object | 是 | 校验结果 |
-| metric_system.north_star.validation.is_vanity_free | boolean | 是 | 是否无虚荣特征 |
-| metric_system.l1_metrics | array | 是 | L1指标列表，至少3个维度 |
-| metric_system.l1_metrics[].layer | string | 是 | AARRR维度枚举值 |
-| metric_system.l1_metrics[].name | string | 是 | L1指标名称 |
-| metric_system.l1_metrics[].weight | number | 是 | 权重，所有L1权重之和应为1.0 |
-| metric_system.l1_metrics[].l2_metrics | array | 是 | L2指标列表，每L1至少3个 |
-| metric_system.l1_metrics[].l2_metrics[].name | string | 是 | L2指标名称 |
-| metric_system.l1_metrics[].l2_metrics[].calculation | string | 是 | 计算公式 |
-| metric_system.l1_metrics[].l2_metrics[].is_actionable | boolean | 是 | 是否为行动指标 |
-| metric_system.actionable_metrics | array | 是 | 行动指标列表 |
-| metric_system.actionable_metrics[].name | string | 是 | 行动指标名称 |
-| metric_system.actionable_metrics[].linked_l2 | string | 是 | 关联L2指标 |
-| metric_system.actionable_metrics[].optimization_approach | string | 是 | 优化方案 |
-| metric_system.vanity_alerts | array | 否 | 虚荣指标告警列表 |
+| metric_system | object | Yes | Metrics system root object |
+| metric_system.north_star | object | Yes | North Star metric |
+| metric_system.north_star.name | string | Yes | North Star metric name |
+| metric_system.north_star.definition | string | Yes | North Star metric definition |
+| metric_system.north_star.calculation | string | Yes | Calculation formula |
+| metric_system.north_star.data_source | string | Yes | Data source |
+| metric_system.north_star.validation | object | Yes | Validation result |
+| metric_system.north_star.validation.is_vanity_free | boolean | Yes | Whether free of vanity characteristics |
+| metric_system.l1_metrics | array | Yes | L1 metric list, at least 3 dimensions |
+| metric_system.l1_metrics[].layer | string | Yes | AARRR dimension enum value |
+| metric_system.l1_metrics[].name | string | Yes | L1 metric name |
+| metric_system.l1_metrics[].weight | number | Yes | Weight, all L1 weights should sum to 1.0 |
+| metric_system.l1_metrics[].l2_metrics | array | Yes | L2 metric list, at least 3 per L1 |
+| metric_system.l1_metrics[].l2_metrics[].name | string | Yes | L2 metric name |
+| metric_system.l1_metrics[].l2_metrics[].calculation | string | Yes | Calculation formula |
+| metric_system.l1_metrics[].l2_metrics[].is_actionable | boolean | Yes | Whether it is an actionable metric |
+| metric_system.actionable_metrics | array | Yes | Actionable metric list |
+| metric_system.actionable_metrics[].name | string | Yes | Actionable metric name |
+| metric_system.actionable_metrics[].linked_l2 | string | Yes | Linked L2 metric |
+| metric_system.actionable_metrics[].optimization_approach | string | Yes | Optimization approach |
+| metric_system.vanity_alerts | array | No | Vanity metric alert list |
 
 ---
 
-## 决策规则
+## Decision Rules
 
-### 规则1：北极星指标最终由人类选择
+### Rule 1: North Star Metric Final Selection by Human
 
-**触发条件**：
-- `north_star_metric`未在product_context中定义
-- AI生成了3个候选北极星指标
+**Trigger Conditions**:
+- `north_star_metric` not defined in product_context
+- AI generated 3 North Star metric candidates
 
-**执行流程**：
+**Execution Flow**:
 
 ```
-1. AI生成3个北极星指标候选（含评分）
-2. 人类产品负责人选择最终北极星指标
-3. 记录选择理由
-4. 继续后续步骤
+1. AI generates 3 North Star metric candidates (with scores)
+2. Human product owner selects the final North Star metric
+3. Record selection rationale
+4. Continue with subsequent steps
 ```
 
-**人类决策要素**：
-- ✅ 是否反映用户核心价值
-- ✅ 是否可被团队直接影响
-- ✅ 是否与业务发展阶段匹配
-- ✅ 是否具备数据采集条件
-- ✅ 是否易于被全公司理解
+**Human Decision Elements**:
+- ✅ Whether it reflects core user value
+- ✅ Whether it can be directly influenced by the team
+- ✅ Whether it matches the business development stage
+- ✅ Whether data collection conditions are met
+- ✅ Whether it is easy for the whole company to understand
 
 ---
 
-### 规则2：虚荣指标处理方案需建议性审批
+### Rule 2: Vanity Metric Handling Plan Requires Advisory Approval
 
-**触发条件**：
-- 存在高严重度的虚荣指标
-- AI推荐了替代指标方案
+**Trigger Conditions**:
+- High-severity vanity metrics exist
+- AI recommended replacement metric plan
 
-**执行流程**：
+**Execution Flow**:
 
 ```
-1. AI检测虚荣指标并生成处理建议
-2. 标记需要审批的虚荣指标
-3. 人类确认处理方案（或修改）
-4. 执行指标替换或删除
+1. AI detects vanity metrics and generates handling recommendations
+2. Mark vanity metrics requiring approval
+3. Human confirms handling plan (or modifies)
+4. Execute metric replacement or deletion
 ```
 
 ---
 
-## 质量检查
+## Quality Checks
 
-| 检查项 | 标准 | 不达标处理 |
+| Check Item | Standard | Action if Not Met |
 |--------|------|------------|
-| 北极星虚荣指标检测（P0） | 无「只增不减」特征、有时间维度、可关联业务目标、可被团队影响 | 标记具体问题，重新推荐北极星指标，触发人类决策流程 |
-| L1-L2拆解完整性（P1） | 每个L1层（Acquisition/Activation/Retention/Revenue/Referral）各有3-5个L2指标 | 自动补充缺失L2指标，基于AARRR模型推荐，标记补充项供人工确认 |
-| 行动指标可追踪性（P1） | 有明确数据来源、有可执行优化方案、可进行A/B测试验证 | 标记不可追踪指标，建议补充数据埋点，降低该指标优先级 |
-| 虚荣指标检测覆盖率（P2） | 所有指标已过虚荣指标检测，标记结果完整 | 补充检测，标记未检测指标 |
+| North Star vanity metric detection (P0) | No "only-increasing" characteristic, has time dimension, can be linked to business goals, can be influenced by team | Mark specific issues, re-recommend North Star metric, trigger human decision flow |
+| L1-L2 breakdown completeness (P1) | Each L1 layer (Acquisition/Activation/Retention/Revenue/Referral) has 3-5 L2 metrics | Auto-supplement missing L2 metrics, recommend based on AARRR model, mark supplements for human confirmation |
+| Actionable metric traceability (P1) | Has clear data source, has executable optimization plan, can be validated via A/B testing | Mark non-traceable metrics, recommend supplementing data tracking, lower metric priority |
+| Vanity metric detection coverage (P2) | All metrics have passed vanity metric detection, marking results complete | Supplement detection, mark undetected metrics |
 
 ---
 
-## 降级策略
+## Degradation Strategy
 
-### 上游文件缺失降级方案
+### Upstream File Missing Degradation Plan
 
-| 缺失范围 | 降级方案 | 输出影响 |
+| Missing Scope | Degradation Plan | Output Impact |
 |----------|----------|----------|
-| product_context缺失 | 提示用户提供产品类型和业务目标，基于用户输入执行 | 北极星推荐基于用户描述而非结构化输入 |
-| existing_metrics缺失 | 跳过现有指标校验，从零构建指标体系 | 无现有指标对比，无法检测冗余 |
-| product_context + existing_metrics均缺失 | 用户提供产品类型和业务目标 → 基于行业模板推荐指标体系 | 输出基于行业模板的指标体系，标注"待确认" |
+| product_context missing | Prompt user to provide product type and business goals, execute based on user input | North Star recommendation based on user description rather than structured input |
+| existing_metrics missing | Skip existing metric validation, build metrics system from scratch | No existing metric comparison, cannot detect redundancy |
+| product_context + existing_metrics both missing | User provides product type and business goals → recommend metrics system based on industry template | Output metrics system based on industry template, marked "to be confirmed" |
 
-### 数据获取说明
+### Data Acquisition Instructions
 
-当上游文件缺失时，需用户提供以下信息以支撑降级生成：
-- **产品类型**：社交/电商/SaaS/内容/游戏/金融科技/在线教育/医疗健康/其他
-- **业务目标**：当前阶段的核心业务目标（如提升GMV、提高留存率等）
-- **商业模式**：产品的商业模式描述（可选，有助于更精准推荐）
+When upstream files are missing, the user needs to provide the following information to support degraded generation:
+- **Product Type**: Social/E-commerce/SaaS/Content/Gaming/Fintech/Online Education/Healthcare/Other
+- **Business Goal**: Core business goal of the current phase (e.g., increase GMV, improve retention rate, etc.)
+- **Business Model**: Product business model description (optional, helps with more accurate recommendation)
 
-## 上游变更响应
+## Upstream Change Response
 
-当上游输入发生变更时，本Skill的响应策略：
+When upstream inputs change, this skill's response strategy:
 
-| 上游变更 | 影响范围 | 响应策略 |
+| Upstream Change | Impact Scope | Response Strategy |
 |----------|----------|----------|
-| OKR调整 | 北极星指标、L1指标 | 标注受影响的指标层级，建议人类确认是否更新指标体系 |
-| 商业模式变更 | 收入类指标定义 | 标注受影响的指标，建议人类确认是否更新 |
-| PRD功能变更 | 行动指标 | 标注受影响的行动指标，建议人类确认是否更新 |
+| OKR adjustment | North Star metric, L1 metrics | Mark affected metric layers, recommend human confirmation on whether to update metrics system |
+| Business model change | Revenue metric definitions | Mark affected metrics, recommend human confirmation on whether to update |
+| PRD feature change | Actionable metrics | Mark affected actionable metrics, recommend human confirmation on whether to update |
 
-当指标体系自身变更时，对下游的通知机制：
+When the metrics system itself changes, the notification mechanism to downstream:
 
-| 指标变更类型 | 通知范围 | 通知方式 |
+| Metric Change Type | Notification Scope | Notification Method |
 |-------------|----------|----------|
-| 北极星指标变更 | tracking-plan、metrics-dashboard、monitoring-alert-detection | 标记核心指标变更，触发全链路更新 |
-| L1/L2指标增删 | tracking-plan、metrics-dashboard | 标记指标增删，触发埋点和看板更新 |
-| 行动指标变更 | tracking-plan | 标记行动指标变更，触发埋点更新 |
-| 指标定义修改 | tracking-plan、metrics-dashboard、monitoring-alert-detection | 标记定义变更，触发相关Skill重新评估 |
+| North Star metric change | tracking-plan, metrics-dashboard, monitoring-alert-detection | Mark core metric change, trigger full-chain update |
+| L1/L2 metric add/remove | tracking-plan, metrics-dashboard | Mark metric add/remove, trigger tracking and dashboard update |
+| Actionable metric change | tracking-plan | Mark actionable metric change, trigger tracking update |
+| Metric definition modification | tracking-plan, metrics-dashboard, monitoring-alert-detection | Mark definition change, trigger related skill re-evaluation |
 
 ---
 
-## 升级路径
+## Escalation Path
 
-### 升级触发条件
+### Escalation Trigger Conditions
 
-当以下任一条件满足时，升级到人工处理：
+When any of the following conditions are met, escalate to human handling:
 
-1. **北极星指标候选推荐失败**
-   - 无法基于产品类型推荐北极星指标
-   - 推荐评分的置信度低于0.5
+1. **North Star Metric Candidate Recommendation Failed**
+   - Cannot recommend North Star metric based on product type
+   - Recommendation score confidence below 0.5
 
-2. **虚荣指标处理无法自动化**
-   - 高严重度虚荣指标数量>3个
-   - 替代指标方案存在冲突
+2. **Vanity Metric Handling Cannot Be Automated**
+   - Number of high-severity vanity metrics > 3
+   - Replacement metric plan has conflicts
 
-3. **L2拆解逻辑异常**
-   - L2指标数量超出合理范围（<3或>10）
-   - L2与L1之间无法建立逻辑关系
+3. **L2 Breakdown Logic Anomaly**
+   - L2 metric count out of reasonable range (< 3 or > 10)
+   - Cannot establish logical relationship between L2 and L1
 
 ---
 
-### 升级输出
+### Escalation Output
 
 ```json
 {
@@ -673,8 +673,8 @@ THEN 标记为「不可操作」虚荣指标
     "ai_recommendation": {},
     "requires_human_action": true,
     "human_decision_needed": [
-      "北极星指标选择",
-      "虚荣指标处理方案"
+      "North Star metric selection",
+      "Vanity metric handling plan"
     ]
   }
 }

@@ -1,10 +1,10 @@
 ---
 name: requesting-code-review
-description: 代码审查，质量把关——完成后审查，不是边写边审
+description: Code Review — quality gatekeeping; review after completion, not while writing
 triggers:
-  - verify 通过后
-  - 任务声称完成前
-  - 合并分支前
+  - After verify passes
+  - Before a task is claimed complete
+  - Before merging a branch
 reads:
   - rules/security.md
   - constitution.md
@@ -14,84 +14,84 @@ writes:
   - loops/specs/<feature>/iterations.log
 ---
 
-# Requesting Code Review — 代码审查
+# Requesting Code Review — Code Review
 
-## 铁律
-**verify 通过不等于能交付。** 测试过了只代表"功能对"，审查才代表"代码好"。
+## Iron Rule
+**Passing verify does not mean deliverable.** Tests passing only means "the feature works"; review means "the code is good".
 
-## 流程
+## Process
 
-1. **准备审查材料**
-   - 读 spec.md 确认功能范围
-   - 读 evidence.md 确认验证已通过
-   - 列出本次变更的文件（git diff）
+1. **Prepare review materials**
+   - Read spec.md to confirm the feature scope
+   - Read evidence.md to confirm verification has passed
+   - List the files changed in this change (git diff)
 
-2. **逐项审查**
+2. **Review item by item**
 
-   ### 设计层面
-   - [ ] 代码是否符合 spec.md 定义的设计？
-   - [ ] 有没有过度设计？（YAGNI）
-   - [ ] 有没有职责不清？（一个函数做太多事）
-   - [ ] 命名是否清晰？（不需要注释就能懂）
+   ### Design level
+   - [ ] Does the code match the design defined in spec.md?
+   - [ ] Is there over-engineering? (YAGNI)
+   - [ ] Are responsibilities unclear? (one function doing too much)
+   - [ ] Is naming clear? (understandable without comments)
 
-   ### 实现层面
-   - [ ] 有没有硬编码的魔法值？
-   - [ ] 有没有重复代码？（DRY）
-   - [ ] 错误处理是否完整？（边界情况）
-   - [ ] 有没有安全隐患？（读 security.md 对照）
+   ### Implementation level
+   - [ ] Are there hardcoded magic values?
+   - [ ] Is there duplicated code? (DRY)
+   - [ ] Is error handling complete? (edge cases)
+   - [ ] Are there security risks? (check against security.md)
 
-   ### 宪法合规
-   - [ ] 是否引入未审批的新依赖？
-   - [ ] 新增 API 是否有测试？
-   - [ ] schema 变更是否有迁移脚本？
+   ### Constitution compliance
+   - [ ] Are unapproved new dependencies introduced?
+   - [ ] Do new APIs have tests?
+   - [ ] Do schema changes have migration scripts?
 
-   ### 可维护性
-   - [ ] 三个月后还能看懂吗？
-   - [ ] 别人接手能看懂吗？
-   - [ ] 关键决策有没有注释说明 why（不是 what）？
+   ### Maintainability
+   - [ ] Will it still be understandable three months from now?
+   - [ ] Can someone else taking it over understand it?
+   - [ ] Are key decisions annotated with why (not what)?
 
-3. **记录审查结果**
-   - 通过 → 在 iterations.log 追加：`[时间] code-review PASSED`
-   - 不通过 → 列出问题清单（按 Critical/Major/Minor/Question/Nitpick 分类），交给 `receiving-code-review` skill 处理
+3. **Record review results**
+   - Pass → append to iterations.log: `[time] code-review PASSED`
+   - Fail → list the issues (classified by Critical/Major/Minor/Question/Nitpick) and hand off to the `receiving-code-review` skill
 
-4. **更新功能状态**
-   审查通过后，该功能可以标记为 `done`（由 session-end 批量同步到 FEATURES.md）
+4. **Update feature status**
+   After the review passes, the feature can be marked as `done` (batch-synced to FEATURES.md by session-end)
 
-## 审查反馈分类标准
+## Review Feedback Classification Standard
 
-| 级别 | 定义 | 示例 |
+| Level | Definition | Example |
 |------|------|------|
-| **Critical** | 功能错误/安全漏洞/数据丢失 | SQL 注入、空指针崩溃、密码明文存储 |
-| **Major** | 设计缺陷/性能问题/可维护性差 | 函数 500 行、循环嵌套 5 层、重复代码 |
-| **Minor** | 命名/注释/风格 | 变量名 `a`、缺少类型注解、魔法数字 |
-| **Question** | 审查者不确定，需讨论 | "这里为什么用 X 不用 Y？" |
-| **Nitpick** | 个人偏好，无关紧要 | "我觉得这个空行可以删" |
+| **Critical** | Functional bug / security vulnerability / data loss | SQL injection, null pointer crash, plaintext password storage |
+| **Major** | Design flaw / performance issue / poor maintainability | 500-line function, 5-level nested loops, duplicated code |
+| **Minor** | Naming / comments / style | Variable name `a`, missing type annotation, magic number |
+| **Question** | Reviewer is unsure; needs discussion | "Why use X instead of Y here?" |
+| **Nitpick** | Personal preference; inconsequential | "I think this blank line can be removed" |
 
-问题清单交给 `receiving-code-review` skill 处理，本 skill 不负责修复。
+The issue list is handed off to the `receiving-code-review` skill; this skill does not handle fixes.
 
-## 禁止事项
-- 跳过审查直接声称完成
-- 审查只看"能不能跑"（那是 verify 的活）
-- 审查发现问题但不修就放过
-- 自己审自己还放水（要诚实，像审别人的代码一样）
+## Prohibitions
+- Claiming completion while skipping review
+- Reviewing only for "does it run" (that's verify's job)
+- Spotting issues in review but letting them pass without fixing
+- Going soft on self-review (be honest; review your code as if it were someone else's)
 
-## 与 LOOP 的关系
-本 skill 在 LOOP 之外，是 LOOP 完成后的最终审查：
-- LOOP(tdd → verify) 通过 → requesting-code-review → 通过 = 真正完成
-- LOOP(tdd → verify) 通过 → requesting-code-review → 不通过 → 回到 tdd
+## Relationship with LOOP
+This skill is outside LOOP and is the final review after LOOP completes:
+- LOOP(tdd → verify) passes → requesting-code-review → passes = truly complete
+- LOOP(tdd → verify) passes → requesting-code-review → fails → return to tdd
 
-## 与 verify 的分工
-| 维度 | verify | code-review |
+## Division of Labor with verify
+| Dimension | verify | code-review |
 |------|--------|-------------|
-| 关注点 | 功能对不对 | 代码好不好 |
-| 时机 | LOOP 每次迭代 | LOOP 完成后一次 |
-| 产出 | evidence.md | 审查结论 |
-| 失败 | 回到 tdd | 交给 receiving-code-review |
+| Focus | Is the feature correct? | Is the code good? |
+| Timing | Every LOOP iteration | Once after LOOP completes |
+| Output | evidence.md | Review conclusion |
+| Failure | Return to tdd | Hand off to receiving-code-review |
 
-## 与 receiving-code-review 的配合
-| 阶段 | 职责 |
+## Coordination with receiving-code-review
+| Stage | Responsibility |
 |------|------|
-| requesting-code-review | 发起审查，列问题清单 |
-| receiving-code-review | 响应反馈，修复/拒绝/讨论 |
-| （如修复）tdd + verify | 修复后重新验证 |
-| requesting-code-review（复审） | 确认修复有效 |
+| requesting-code-review | Initiate review, list issues |
+| receiving-code-review | Respond to feedback, fix/reject/discuss |
+| (if fixed) tdd + verify | Re-verify after the fix |
+| requesting-code-review (re-review) | Confirm the fix is effective |

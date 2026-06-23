@@ -1,12 +1,12 @@
 ---
 name: policy-as-code
-description: Kyverno/OPA 策略生成，将运维规范转化为可机器执行的策略规则
+description: Kyverno/OPA policy generation, converting ops standards into machine-enforceable policy rules
 triggers:
-  - 需要配置 K8s 准入策略时
-  - 安全合规需要策略 enforcement 时
-  - OPS_STRATEGY.md 定义规范需要落地时
-  - 检测到资源不符合规范时
-  - 用户要求"配置策略"时
+  - When K8s admission policies need to be configured
+  - When security compliance requires policy enforcement
+  - When OPS_STRATEGY.md defines standards that need to be enforced
+  - When resources are detected that do not conform to standards
+  - When the user requests "configure policies"
 reads:
   - docs/infrastructure/OPS_STRATEGY.md
   - rules/security.md
@@ -22,30 +22,30 @@ operation_tier: propose
 requires_approval: false
 ---
 
-# Policy as Code — Kyverno/OPA 策略生成
+# Policy as Code — Kyverno/OPA Policy Generation
 
-## 铁律
+## Ground Rules
 
-1. **策略先于部署** —— 策略在资源创建前生效，不是事后审计
-2. **策略必须有文档** —— 每个策略对应一条规范，可追溯
-3. **策略分模式** —— enforce（阻断）vs audit（记录）vs warn（警告）
-4. **不策略化业务逻辑** —— 只策略化安全/合规/规范
+1. **Policies before deployments** — policies take effect before resources are created, not as after-the-fact audits
+2. **Every policy has documentation** — each policy maps to a standard and is traceable
+3. **Policies have modes** — enforce (block) vs audit (log) vs warn (warn)
+4. **Do not codify business logic** — only codify security/compliance/standards
 
-## 流程
+## Process
 
-### 1. 识别策略需求
+### 1. Identify Policy Requirements
 
-从 `OPS_STRATEGY.md` 和 `security.md` 提取需要 enforcement 的规范：
-- 镜像必须固定版本（非 latest）
-- 必须设置资源限制
-- 必须配置 securityContext
-- 禁止特权容器
-- 禁止 hostPath 挂载
-- 必须配置 NetworkPolicy
+Extract standards requiring enforcement from `OPS_STRATEGY.md` and `security.md`:
+- Images must use pinned versions (not latest)
+- Resource limits must be set
+- securityContext must be configured
+- Privileged containers are prohibited
+- hostPath mounts are prohibited
+- NetworkPolicy must be configured
 
-### 2. 生成 Kyverno 策略
+### 2. Generate Kyverno Policies
 
-#### 验证策略（Validation）
+#### Validation Policies
 ```yaml
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
@@ -60,7 +60,7 @@ spec:
         kinds:
         - Pod
     validate:
-      message: "资源必须设置 limits"
+      message: "Resources must have limits set"
       pattern:
         spec:
           containers:
@@ -83,7 +83,7 @@ spec:
         kinds:
         - Pod
     validate:
-      message: "镜像必须使用固定版本，不允许 latest"
+      message: "Images must use a pinned version; latest is not allowed"
       pattern:
         spec:
           containers:
@@ -103,7 +103,7 @@ spec:
         kinds:
         - Pod
     validate:
-      message: "必须配置 runAsNonRoot: true"
+      message: "runAsNonRoot: true must be configured"
       pattern:
         spec:
           securityContext:
@@ -123,7 +123,7 @@ spec:
         kinds:
         - Pod
     validate:
-      message: "禁止特权容器"
+      message: "Privileged containers are prohibited"
       pattern:
         spec:
           containers:
@@ -131,7 +131,7 @@ spec:
               privileged: "false"
 ```
 
-#### 变异策略（Mutation）
+#### Mutation Policies
 ```yaml
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
@@ -157,7 +157,7 @@ spec:
           - Ingress
 ```
 
-#### 生成策略（Generation）
+#### Generation Policies
 ```yaml
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
@@ -183,60 +183,60 @@ spec:
           - Egress
 ```
 
-### 3. 策略模式选择
+### 3. Policy Mode Selection
 
-| 模式 | 行为 | 适用场景 |
+| Mode | Behavior | Applicable Scenarios |
 |------|------|---------|
-| **enforce** | 阻断不合规资源创建 | 安全红线（禁止特权/latest） |
-| **audit** | 记录但不阻断 | 新策略上线观察期 |
-| **warn** | 警告但允许创建 | 非关键规范 |
+| **enforce** | Blocks non-compliant resource creation | Security red lines (no privileged/latest) |
+| **audit** | Logs but does not block | Observation period for new policies |
+| **warn** | Warns but allows creation | Non-critical standards |
 
-**推荐上线流程**：audit（1 周）→ warn（1 周）→ enforce
+**Recommended rollout flow**: audit (1 week) → warn (1 week) → enforce
 
-### 4. 策略测试
+### 4. Policy Testing
 
 ```bash
-# 使用 kyverno CLI 测试策略
+# Test policies with the kyverno CLI
 kyverno apply require-resource-limits.yaml --resource test-pod.yaml
 
-# 验证策略生效
+# Verify the policy takes effect
 kubectl apply -f test-non-compliant-pod.yaml
-# 期望: 被 Kyverno 拒绝
+# Expected: rejected by Kyverno
 ```
 
-### 5. 策略违规监控
+### 5. Policy Violation Monitoring
 
 ```yaml
-# Prometheus 告警规则
+# Prometheus alerting rule
 - alert: KyvernoPolicyViolation
   expr: increase(kyverno_policy_results_total{result="fail"}[5m]) > 0
   for: 1m
   labels:
     severity: P2
   annotations:
-    summary: "Kyverno 策略违规"
-    description: "策略 {{ $labels.policy }} 在 5 分钟内被违反 {{ $value }} 次"
+    summary: "Kyverno policy violation"
+    description: "Policy {{ $labels.policy }} was violated {{ $value }} times within 5 minutes"
 ```
 
-### 6. 更新知识库
+### 6. Update the Knowledge Base
 
-`memory/knowledge-base.md` 追加：
+Append to `memory/knowledge-base.md`:
 ```
-| 策略名 | 模式 | 规范来源 | 违规次数 | 最后更新 |
+| Policy Name | Mode | Standard Source | Violations | Last Updated |
 |--------|------|---------|---------|---------|
 | require-resource-limits | enforce | OPS_STRATEGY §3.2 | 0 | 2026-06-22 |
 ```
 
-## 禁止事项
+## Prohibitions
 
-- 不策略化业务逻辑（如"订单金额必须>0"）
-- 不在 enforce 模式下未经 audit 直接上线
-- 不创建相互冲突的策略
-- 不删除策略不记录原因
+- Do not codify business logic (e.g., "order amount must be > 0")
+- Do not go straight to enforce mode without going through audit first
+- Do not create conflicting policies
+- Do not delete policies without recording the reason
 
-## 与 LOOP 的关系
+## Relationship to LOOP
 
-**所属 LOOP 类型**：audit（PLAN 阶段）
+**LOOP type**: audit (PLAN stage)
 
-本 skill 在 security-audit-workflow 中被调用，生成策略配置。
-策略部署后持续生效，违规事件由 audit-review skill 分析。
+This skill is invoked in security-audit-workflow to generate policy configurations.
+Policies take effect continuously after deployment; violations are analyzed by the audit-review skill.

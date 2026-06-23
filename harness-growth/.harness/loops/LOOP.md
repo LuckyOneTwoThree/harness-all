@@ -1,212 +1,212 @@
-# LOOP.md — 循环引擎定义 + 验证协议
+# LOOP.md — Loop Engine Definition + Validation Protocol
 
-> 作用：替代线性 workflow，实现增长循环验证闭环
-> 增长循环：PLAN → EXPERIMENT → MEASURE
+> Purpose: Replaces linear workflows to implement a closed-loop growth validation cycle
+> Growth Loop: PLAN → EXPERIMENT → MEASURE
 
-## 核心循环
+## Core Loop
 
 ```
 ┌──────────┐
-│   PLAN   │ ← 定义增长假设 + 度量指标 + 实验设计 + 宪法检查
+│   PLAN   │ ← Define growth hypothesis + metrics + experiment design + constitution check
 └────┬─────┘
      ▼
 ┌──────────────┐
-│ EXPERIMENT   │ ← 执行实验（内容生产/SEO优化/A-B测试/用户运营）
+│ EXPERIMENT   │ ← Execute experiment (content production / SEO optimization / A/B testing / user operations)
 └────┬─────────┘
      ▼
 ┌──────────┐
-│  MEASURE │ ← 测量结果 + 统计显著性 + 决策 + 人类审批
+│  MEASURE │ ← Measure results + statistical significance + decision + human approval
 └────┬─────┘
      │
-     ├── 通过 → DONE → 记录 evidence + 结论写入知识库
+     ├── Pass → DONE → Record evidence + write conclusion to knowledge base
      │
-     └── 失败 → 分析原因
-                   ├── 可修复 → 回到 EXPERIMENT
-                   └── 需重新规划 → 回到 PLAN
+     └── Fail → Analyze cause
+                   ├── Fixable → Back to EXPERIMENT
+                   └── Needs replanning → Back to PLAN
 ```
 
-## 循环类型
+## Loop Types
 
-| 类型 | 触发场景 | 最大迭代 | 停止条件 |
+| Type | Trigger Scenario | Max Iterations | Stop Condition |
 |------|---------|---------|---------|
-| **content** | 内容生产与优化 | 3 | 内容质量门通过 + 度量达标 |
-| **seo** | SEO 优化 | 5 | 排名/流量提升达标 |
-| **experiment** | A/B 测试、增长实验 | 3 | 统计显著性达成 |
-| **optimization** | 转化漏斗、留存优化 | 3 | 核心指标提升达标 |
-| **monetization** | 定价/付费转化优化 | 3 | NRR 达标（如 >120%） |
-| **lifecycle** | 留存专项优化 | 5 | 留存曲线趋于水平且达标 |
+| **content** | Content production and optimization | 3 | Content quality gate passed + metrics met |
+| **seo** | SEO optimization | 5 | Ranking/traffic improvement targets met |
+| **experiment** | A/B testing, growth experiments | 3 | Statistical significance achieved |
+| **optimization** | Conversion funnel, retention optimization | 3 | Core metric improvement targets met |
+| **monetization** | Pricing / payment conversion optimization | 3 | NRR target met (e.g., >120%) |
+| **lifecycle** | Retention-focused optimization | 5 | Retention curve flattens and meets target |
 
-## 成本控制
+## Cost Control
 
-| 维度 | 限制 | 超限动作 |
+| Dimension | Limit | Over-Limit Action |
 |------|------|---------|
-| 总循环次数 | 10 | **硬熔断**：写入 `hard_limit_reached: true` 到 state.yaml，status 改为 `failed`，**禁止继续循环**，必须请求人类介入 |
+| Total loop iterations | 10 | **Hard Circuit Breaker**: Write `hard_limit_reached: true` to state.yaml, change status to `failed`, **further looping is prohibited**, must request human intervention |
 
-> **硬熔断执行规则（不可协商）**：
-> 1. Agent 在每次 MEASURE 阶段**必须**读取 `state.yaml` 的 `iteration` 字段
-> 1.5. **MEASURE 阶段必须强制读取 state.yaml 原始内容**：Agent 在每次 MEASURE 时，必须使用 Read 工具读取 `state.yaml` 的完整内容，获取真实的 iteration 值。**禁止从上下文记忆中引用 iteration 值**（防止幻觉状态下跳过熔断检查）。
-> 2. 当 Read 工具读取的 `iteration >= 10` 时（必须来自文件原始内容，不是记忆引用），Agent **必须**执行以下操作，不得跳过：
->    - 将 `status` 改为 `failed`
->    - 将 `hard_limit_reached` 写为 `true`
->    - 将 `last_error` 写为"迭代超限（iteration >= 10），硬熔断触发"
->    - 向用户报告熔断原因，请求人类介入
-> 3. 当 `hard_limit_reached: true` 时，Agent **禁止**继续执行当前任务的任何 LOOP 阶段
-> 4. 只有用户显式指示"重置熔断"后，Agent 才可将 `hard_limit_reached` 改为 `false` 并重置 `iteration`
+> **Hard Circuit Breaker execution rules (non-negotiable)**:
+> 1. At every MEASURE stage, the Agent **must** read the `iteration` field of `state.yaml`
+> 1.5. **MEASURE stage must mandatorily read the raw contents of state.yaml**: At every MEASURE, the Agent must use the Read tool to read the full contents of `state.yaml` to obtain the true iteration value. **Referencing the iteration value from contextual memory is prohibited** (to prevent skipping the circuit-breaker check under hallucination).
+> 2. When the `iteration >= 10` read by the Read tool (must come from raw file contents, not memory reference), the Agent **must** perform the following operations, without skipping any:
+>    - Change `status` to `failed`
+>    - Write `hard_limit_reached` to `true`
+>    - Write `last_error` as "Iteration limit exceeded (iteration >= 10), hard circuit breaker triggered"
+>    - Report the circuit-breaker reason to the user and request human intervention
+> 3. When `hard_limit_reached: true`, the Agent is **prohibited** from continuing any LOOP stage of the current task
+> 4. Only after the user explicitly instructs "reset circuit breaker" may the Agent change `hard_limit_reached` to `false` and reset `iteration`
 >
-> Token 限制由用户在 IDE 中自行监控，不纳入框架规则（Agent 没有 token 计数器）。
+> Token limits are monitored by the user in the IDE and are not part of the framework rules (the Agent has no token counter).
 
-## Specs 持久化
+## Specs Persistence
 
-每次循环的 PLAN 阶段，将规格写入 `loops/specs/<experiment>/spec.md`。
+At the PLAN stage of each loop, write the spec to `loops/specs/<experiment>/spec.md`.
 
-## Evidence 追踪
+## Evidence Tracking
 
-每次 MEASURE 阶段的证据写入 `loops/specs/<experiment>/evidence.md`。
+Evidence from each MEASURE stage is written to `loops/specs/<experiment>/evidence.md`.
 
-**文件写入语义区分（重要，避免混淆）**：
+**File write semantics distinction (important, to avoid confusion)**:
 
-| 文件 | 写入语义 | 原因 | 操作方式 |
+| File | Write Semantics | Reason | Operation |
 |------|---------|------|---------|
-| `spec.md` | 覆盖 | 只保留最终通过的规格 | Write 直接覆盖 |
-| `state.yaml` | 覆盖 | 只保留当前状态 | Write 直接覆盖 |
-| `evidence.md` | 覆盖 | 只保留最终成功的证据 | Write 直接覆盖 |
-| `iterations.log` | **追加** | 保留完整迭代历史 | Read+拼接+Write，或 `echo >>` |
+| `spec.md` | Overwrite | Keep only the final passed spec | Write directly overwrites |
+| `state.yaml` | Overwrite | Keep only the current state | Write directly overwrites |
+| `evidence.md` | Overwrite | Keep only the final successful evidence | Write directly overwrites |
+| `iterations.log` | **Append** | Preserve complete iteration history | Read+concatenate+Write, or `echo >>` |
 
 ```
 loops/specs/001-blog-seo-experiment/
-├── spec.md          ← 实验规格（覆盖：最终通过版本）
-├── state.yaml       ← 循环状态（覆盖：当前状态）
-├── evidence.md      ← 验证证据（覆盖：最终成功）
-└── iterations.log   ← 迭代历史（append-only，完整轨迹）
+├── spec.md          ← Experiment spec (overwrite: final passed version)
+├── state.yaml       ← Loop state (overwrite: current state)
+├── evidence.md      ← Validation evidence (overwrite: final success)
+└── iterations.log   ← Iteration history (append-only, complete trajectory)
 ```
 
-iterations.log 示例：
+iterations.log example:
 ```
-[2026-06-20 14:30] iter=1 stage=experiment → measure FAILED: 样本量不足，无法得出显著结论
-[2026-06-20 14:35] iter=2 stage=experiment → measure FAILED: 护栏指标触发，实验组留存下降
-[2026-06-20 14:40] iter=3 stage=measure → PASSED: 转化率提升 12% (p<0.05)
+[2026-06-20 14:30] iter=1 stage=experiment → measure FAILED: Insufficient sample size, cannot reach a significant conclusion
+[2026-06-20 14:35] iter=2 stage=experiment → measure FAILED: Guardrail metric triggered, retention dropped in experiment group
+[2026-06-20 14:40] iter=3 stage=measure → PASSED: Conversion rate increased 12% (p<0.05)
 ```
 
-为什么这样设计？
-  - spec.md / state.yaml / evidence.md 覆盖写入 → 只保留最新状态，不污染上下文
-  - iterations.log append-only → 保留完整迭代历史，复盘时能看到失败轨迹
-  - 一个实验的所有产物在一个目录 → 内聚性好，不用跨目录找
+Why this design?
+  - spec.md / state.yaml / evidence.md overwrite → Keep only the latest state, do not pollute context
+  - iterations.log append-only → Preserve complete iteration history, allowing failure trajectories to be seen during review
+  - All artifacts of one experiment in one directory → Good cohesion, no need to search across directories
 
-## 状态维护
+## State Maintenance
 
-**决策：Agent 读写维护 state.yaml（每实验一个文件，落盘）**
+**Decision: The Agent reads and writes state.yaml (one file per experiment, persisted to disk)**
 
-`loops/specs/<experiment>/state.yaml` 由 experiment/measure skill 在循环中主动读写：
-  - 记录当前迭代次数、上次失败原因、当前阶段
-  - 会话中断后可断点续传（读取 state.yaml 恢复上下文）
-  - measure skill 反正要写 evidence，多写一行 state 成本可忽略
-  - 每实验一个文件，天然支持多实验并行
+`loops/specs/<experiment>/state.yaml` is actively read and written by the experiment/measure skill during the loop:
+  - Records the current iteration count, last failure reason, and current stage
+  - Supports resuming from a breakpoint after session interruption (read state.yaml to restore context)
+  - The measure skill has to write evidence anyway; writing one extra line of state has negligible cost
+  - One file per experiment naturally supports parallel experiments
 
-### state.yaml Schema（单一来源，各 SKILL.md 引用本节）
+### state.yaml Schema (single source of truth; each SKILL.md references this section)
 
 ```yaml
-# 必填字段
-current_task: <NNN>-<experiment-name>      # 实验编号+名称，与目录名一致
-iteration: <int>                            # 当前迭代次数，从 0 开始，每次 EXPERIMENT→MEASURE 循环 +1
-stage: <enum>                               # 当前阶段，枚举见下表
-status: <enum>                              # 实验状态，枚举见下表
-started_at: "<ISO 8601>"                    # 实验开始时间，如 "2026-06-20T14:30:00"
+# Required fields
+current_task: <NNN>-<experiment-name>      # Experiment number + name, consistent with the directory name
+iteration: <int>                            # Current iteration count, starts at 0, +1 per EXPERIMENT→MEASURE loop
+stage: <enum>                               # Current stage, see enum table below
+status: <enum>                              # Experiment status, see enum table below
+started_at: "<ISO 8601>"                    # Experiment start time, e.g., "2026-06-20T14:30:00"
 
-# 可选字段（失败时填写）
-last_error: "<错误描述>"                     # 最近一次失败原因，成功时清空为 ""
-last_error_at: "<ISO 8601>"                 # 最近一次失败时间
+# Optional fields (filled on failure)
+last_error: "<error description>"           # Most recent failure reason; cleared to "" on success
+last_error_at: "<ISO 8601>"                 # Most recent failure time
 
-# 可选字段（子阶段描述，用于多子阶段工作流）
-substage: "<子阶段描述>"                     # 如 "ab-test" / "keyword-research" / "content-draft"，配合 stage 使用
+# Optional field (substage description, for multi-substage workflows)
+substage: "<substage description>"          # e.g., "ab-test" / "keyword-research" / "content-draft", used with stage
 
-# 可选字段（探索模式，growth 专属）
-exploration_mode: "<enum>"                 # deep / standard / skip，默认 standard，控制 workflow 交互深度
+# Optional field (exploration mode, growth-specific)
+exploration_mode: "<enum>"                 # deep / standard / skip, defaults to standard, controls workflow interaction depth
 
-# 可选字段（硬熔断标记）
-hard_limit_reached: <bool>                 # true 时禁止继续循环，默认 false，仅 iteration >= 10 时置 true
+# Optional field (hard circuit breaker flag)
+hard_limit_reached: <bool>                 # When true, further looping is prohibited; defaults to false; set to true only when iteration >= 10
 ```
 
-**stage 枚举值**：
+**stage enum values**:
 
-| 值 | 含义 | 写入时机 |
+| Value | Meaning | Write Timing |
 |----|------|---------|
-| `plan` | 规划阶段 | PLAN 阶段初始化时 |
-| `experiment` | 执行阶段 | 实验执行中 |
-| `measure` | 度量阶段 | measure skill 执行检查时 |
-| `revise` | 修订阶段 | 重新设计实验时 |
+| `plan` | Planning stage | When PLAN stage initializes |
+| `experiment` | Execution stage | While experiment is executing |
+| `measure` | Measurement stage | When the measure skill performs checks |
+| `revise` | Revision stage | When redesigning the experiment |
 
-**status 枚举值**（与 harness 家族统一）：
+**status enum values** (unified with the harness family):
 
-| 值 | 含义 | 写入时机 |
+| Value | Meaning | Write Timing |
 |----|------|---------|
-| `running` | 进行中 | PLAN 初始化 / 实验执行中 |
-| `retrying` | 重试中 | measure 失败后 |
-| `done` | 已完成 | measure 通过 + 增长审查通过 |
-| `failed` | 失败（迭代超限，需人类介入） | 迭代超限 |
-| `needs-human` | 需人类决策（非失败，但 Agent 无法继续） | 遇到宪法/伦理/权限边界 |
-| `blocked` | 被阻塞（等待外部依赖） | 等待上游交接/数据/审批 |
+| `running` | In progress | PLAN initialization / during experiment execution |
+| `retrying` | Retrying | After measure failure |
+| `done` | Completed | measure passed + growth review passed |
+| `failed` | Failed (iteration limit exceeded, human intervention required) | Iteration limit exceeded |
+| `needs-human` | Needs human decision (not a failure, but the Agent cannot continue) | Encountering constitution/ethics/permission boundaries |
+| `blocked` | Blocked (waiting on external dependencies) | Waiting on upstream handoff / data / approval |
 
-**字段写入责任**：
+**Field write responsibilities**:
 
-| 字段 | PLAN | EXPERIMENT | MEASURE | revise |
+| Field | PLAN | EXPERIMENT | MEASURE | revise |
 |------|:---:|:---:|:---:|:---:|
-| current_task | 写（初始化） | 不改 | 不改 | 不改 |
-| iteration | 写（0） | 写（+1） | 不改 | 不改 |
-| stage | 写（plan） | 写（experiment） | 写（measure） | 写（revise） |
-| status | 写（running） | 写（running/retrying） | 写（done/retrying） | 写（retrying） |
-| last_error | 写（""） | 写（失败时/成功清空） | 写（失败时/成功清空） | 写（原因描述） |
-| started_at | 写（初始化） | 不改 | 不改 | 不改 |
-| exploration_mode | 写（workflow default_mode） | 不改 | 不改 | 不改 |
+| current_task | Write (initialize) | No change | No change | No change |
+| iteration | Write (0) | Write (+1) | No change | No change |
+| stage | Write (plan) | Write (experiment) | Write (measure) | Write (revise) |
+| status | Write (running) | Write (running/retrying) | Write (done/retrying) | Write (retrying) |
+| last_error | Write ("") | Write (on failure / cleared on success) | Write (on failure / cleared on success) | Write (reason description) |
+| started_at | Write (initialize) | No change | No change | No change |
+| exploration_mode | Write (workflow default_mode) | No change | No change | No change |
 
-**示例**：
+**Example**:
 
 ```yaml
-# loops/specs/001-blog-seo-experiment/state.yaml 示例
+# loops/specs/001-blog-seo-experiment/state.yaml example
 current_task: 001-blog-seo-experiment
 iteration: 3
 stage: measure
 status: retrying
-last_error: "样本量不足，p=0.12 未达显著阈值 0.05"
+last_error: "Insufficient sample size, p=0.12 did not reach the 0.05 significance threshold"
 last_error_at: "2026-06-20T14:35:00"
 started_at: "2026-06-20T14:30:00"
 ```
 
-## 验证协议
+## Validation Protocol
 
-### MEASURE 阶段必做检查
+### MEASURE Stage Required Checks
 
-1. **数据完整性**：实验数据是否完整（样本量、时长、分组）
-2. **统计显著性**：核心指标是否达到显著阈值（通常 p<0.05）
-3. **验收标准**：逐条检查 spec.md 里的假设是否被验证
-4. **护栏指标**：检查是否有副作用（如留存下降、投诉上升）
-5. **宪法合规**：检查是否违反 constitution.md 的原则（黑帽 SEO、刷量、PII 泄露等）
+1. **Data completeness**: Is the experiment data complete (sample size, duration, grouping)
+2. **Statistical significance**: Has the core metric reached the significance threshold (typically p<0.05)
+3. **Acceptance Criteria**: Check each hypothesis in spec.md item by item to verify it
+4. **Guardrail metrics**: Check for side effects (e.g., retention drop, complaint increase)
+5. **Constitution compliance**: Check for violations of constitution.md principles (black-hat SEO, fake traffic, PII leaks, etc.)
 
-### 声称"完成"的前置条件
+### Prerequisites for Claiming "Completion"
 
-Agent 在声称实验完成前，**必须**：
-- [ ] 展示实验数据（不是"应该有效"，而是实际数据）
-- [ ] 逐条对照假设，标注 ✓/✗（验证/证伪/不确定）
-- [ ] 检查统计显著性，展示 p 值或置信区间
-- [ ] 检查护栏指标，确认无副作用
-- [ ] 将证据写入 `loops/specs/<experiment>/evidence.md`
-- [ ] 更新 `loops/specs/<experiment>/state.yaml` 的 status 为 done
-- [ ] 将结论写入 `memory/knowledge-base.md`（有效/无效/不确定 + 行动建议）
+Before claiming an experiment is complete, the Agent **must**:
+- [ ] Show experiment data (not "should work", but actual data)
+- [ ] Check each hypothesis item by item, marking ✓/✗ (verified / falsified / inconclusive)
+- [ ] Check statistical significance, show p-value or confidence interval
+- [ ] Check guardrail metrics, confirm no side effects
+- [ ] Write evidence to `loops/specs/<experiment>/evidence.md`
+- [ ] Update the status in `loops/specs/<experiment>/state.yaml` to done
+- [ ] Write the conclusion to `memory/knowledge-base.md` (effective / ineffective / inconclusive + action recommendation)
 
-**没有数据不声称完成**——这是 AGENTS.md 核心规则第 1 条。
+**No claiming completion without data** — this is Core Rule #1 in AGENTS.md.
 
-### 失败处理
+### Failure Handling
 
-MEASURE 失败时：
-1. 将失败信息写入 `state.yaml` 的 `last_error` 字段
-2. 追加一行到 `iterations.log`
-3. 分析失败原因：
-   - 可修复（样本不足、时长不够）→ 回到 EXPERIMENT（延长实验/扩大样本）
-   - 需重新规划（假设错误、设计缺陷）→ 回到 PLAN
-4. 迭代次数 +1，检查是否超过最大迭代
+When MEASURE fails:
+1. Write the failure info to the `last_error` field of `state.yaml`
+2. Append a line to `iterations.log`
+3. Analyze the failure cause:
+   - Fixable (insufficient sample, insufficient duration) → Back to EXPERIMENT (extend experiment / enlarge sample)
+   - Needs replanning (wrong hypothesis, design flaw) → Back to PLAN
+4. Increment the iteration count and check whether the maximum iterations have been exceeded
 
-### 断点续传
+### Breakpoint Resumption
 
-会话中断后恢复：
-1. 读取 `loops/specs/<experiment>/state.yaml` 获取当前阶段和迭代次数
-2. 读取 `iterations.log` 了解失败历史
-3. 从中断点继续，不从头开始
+Resuming after a session interruption:
+1. Read `loops/specs/<experiment>/state.yaml` to get the current stage and iteration count
+2. Read `iterations.log` to understand the failure history
+3. Continue from the interruption point; do not start from scratch
