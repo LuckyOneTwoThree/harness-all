@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.0"
   domain_tags: ["Internet", "General"]
-  trigger_examples:
+  triggers:
     - "Help me write version update notes"
     - "Generate release notes"
     - "What's new in this version, organize it"

@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Internet", "SaaS", "General"]
-  trigger_examples:
+  triggers:
     - "The new user onboarding flow is too long"
     - "How can we get users up to speed faster"
     - "How to improve the onboarding tutorial"

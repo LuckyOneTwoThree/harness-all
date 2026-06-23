@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Help me generate a user research report"
     - "How to organize the user research findings"
     - "Produce a user analysis report"

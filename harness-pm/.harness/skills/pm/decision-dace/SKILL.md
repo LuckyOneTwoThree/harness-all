@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.0"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Help me make a data decision using the DACE method"
     - "How to do a complete loop from data to action"
     - "Data was analyzed but no one executes, what to do"

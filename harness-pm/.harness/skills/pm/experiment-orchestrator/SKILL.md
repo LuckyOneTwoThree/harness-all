@@ -7,7 +7,7 @@ metadata:
   type: "orchestrator"
   version: "8.0"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Design an A/B test"
     - "Validate the solution effect"
     - "Run a controlled experiment"

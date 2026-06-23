@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Internet", "SaaS", "General"]
-  trigger_examples:
+  triggers:
     - "Help me build a data dashboard"
     - "Configure a monitoring panel"
     - "Create a Dashboard showing all key metrics"

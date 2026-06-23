@@ -7,7 +7,7 @@ metadata:
   type: "orchestrator"
   version: "6.1"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Validate the product solution"
     - "Design MVP scope"
     - "Do some hypothesis validation"

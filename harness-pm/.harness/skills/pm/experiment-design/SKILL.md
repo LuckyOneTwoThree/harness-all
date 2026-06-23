@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Internet", "General"]
-  trigger_examples:
+  triggers:
     - "I want to validate if the new homepage improves conversion, help me design an AB test"
     - "How many samples does this feature change need"
     - "Help me design a traffic split experiment plan"

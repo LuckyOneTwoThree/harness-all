@@ -7,7 +7,7 @@ metadata:
   type: "orchestrator"
   version: "7.1"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Help me analyze the data"
     - "There's a data anomaly, investigate it"
     - "Do a funnel analysis"

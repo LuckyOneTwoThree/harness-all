@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Help me write a business strategy plan"
     - "Produce a strategy report"
   interaction_mode: "ai_suggest_human_approve"

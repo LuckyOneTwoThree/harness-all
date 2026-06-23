@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Internet", "Consumer", "General"]
-  trigger_examples:
+  triggers:
     - "What are users complaining about"
     - "Help me analyze user feedback"
     - "How are the user reviews"

@@ -8,7 +8,7 @@ metadata:
   version: "2.0"
   domain_tags: ["Internet", "Software", "General"]
   interaction_mode: "ai_auto"
-  trigger_examples:
+  triggers:
     - "Alert root cause analysis"
     - "Anomaly attribution localization"
     - "Metric drop cause investigation"

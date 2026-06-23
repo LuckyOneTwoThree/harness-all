@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Internet", "SaaS", "General"]
-  trigger_examples:
+  triggers:
     - "Help me produce a growth strategy report"
     - "What to do when growth hits a bottleneck"
     - "How to formulate a growth plan"

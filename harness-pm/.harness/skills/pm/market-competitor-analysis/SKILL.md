@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "3.0"
   domain_tags: ["Internet", "Consumer", "General"]
-  trigger_examples:
+  triggers:
     - "Help me do competitive analysis"
     - "How to do competitive research"
     - "Help me map the competitive landscape"

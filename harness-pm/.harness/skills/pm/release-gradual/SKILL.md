@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.0"
   domain_tags: ["Internet", "General"]
-  trigger_examples:
+  triggers:
     - "Do a canary release, start with 1% traffic"
     - "Help me do small traffic validation"
     - "Gradually increase traffic to full"

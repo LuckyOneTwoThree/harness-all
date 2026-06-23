@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.0"
   domain_tags: ["Internet", "General"]
-  trigger_examples:
+  triggers:
     - "Help me list a checklist before launch"
     - "Generate a release Checklist"
     - "Organize what to check for launch"

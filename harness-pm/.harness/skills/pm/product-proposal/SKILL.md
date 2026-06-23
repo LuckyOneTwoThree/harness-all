@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["SaaS", "General"]
-  trigger_examples:
+  triggers:
     - "Help me write a product project initiation document"
     - "How to write a product proposal"
   interaction_mode: "ai_suggest_human_approve"

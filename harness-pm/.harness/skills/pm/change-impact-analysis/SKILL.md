@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Internet", "General"]
-  trigger_examples:
+  triggers:
     - "Requirements changed, check the impact scope"
     - "Analyze which modules this change will affect"
     - "Requirements changed, help me evaluate the impact"

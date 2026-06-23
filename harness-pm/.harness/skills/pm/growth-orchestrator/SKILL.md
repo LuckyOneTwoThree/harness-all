@@ -7,7 +7,7 @@ metadata:
   type: "orchestrator"
   version: "8.0"
   domain_tags: ["E-commerce", "Social", "Gaming", "Education", "General"]
-  trigger_examples:
+  triggers:
     - "Help me formulate a growth strategy"
     - "User growth has hit a bottleneck"
     - "Diagnose the growth issue"

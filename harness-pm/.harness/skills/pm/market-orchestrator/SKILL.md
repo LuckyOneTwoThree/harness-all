@@ -7,7 +7,7 @@ metadata:
   type: "orchestrator"
   version: "9.0"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Help me analyze the market"
     - "See what competitors are doing"
     - "Evaluate the market size"

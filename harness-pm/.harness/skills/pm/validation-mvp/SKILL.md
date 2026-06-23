@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Internet", "Software", "General"]
-  trigger_examples:
+  triggers:
     - "What features should the MVP include"
     - "How to build the minimal product"
     - "Which features can be deferred"

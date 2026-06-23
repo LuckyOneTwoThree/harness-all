@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.0"
   domain_tags: ["Internet", "General"]
-  trigger_examples:
+  triggers:
     - "AB test finished, help me analyze the results"
     - "Experiment data looks different, is it significant"
     - "Help me monitor a running experiment"

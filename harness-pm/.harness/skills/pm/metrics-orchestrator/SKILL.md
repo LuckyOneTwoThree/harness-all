@@ -7,7 +7,7 @@ metadata:
   type: "orchestrator"
   version: "6.1"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Help me design a metrics system"
     - "Plan the data tracking"
     - "Design product KPIs"

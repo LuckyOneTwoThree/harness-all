@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Internet", "SaaS", "General"]
-  trigger_examples:
+  triggers:
     - "New product is about to launch, how to promote it"
     - "Help me make a launch plan"
     - "How to do product release strategy"

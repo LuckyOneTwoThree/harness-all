@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Internet", "Software", "General"]
-  trigger_examples:
+  triggers:
     - "How to conduct usability testing"
     - "Help me design test tasks"
     - "How to run user experience testing"

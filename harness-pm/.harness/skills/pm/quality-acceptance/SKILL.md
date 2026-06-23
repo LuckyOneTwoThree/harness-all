@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "3.1"
   domain_tags: ["Internet", "General"]
-  trigger_examples:
+  triggers:
     - "Run the acceptance tests automatically"
     - "Help me execute the acceptance checks"
     - "Check if it can pass the quality gate"

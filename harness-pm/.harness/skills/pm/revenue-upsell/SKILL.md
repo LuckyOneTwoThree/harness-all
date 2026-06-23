@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["SaaS", "Internet", "General"]
-  trigger_examples:
+  triggers:
     - "How to get users to upgrade their plan"
     - "Which users are suitable for add-on recommendations"
     - "How to do cross-selling"

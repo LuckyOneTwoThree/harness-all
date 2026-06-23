@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.0"
   interaction_mode: "ai_suggest_human_approve"
-  trigger_examples:
+  triggers:
     - "Diagnose the product's growth model"
     - "Are we PLG or SLG"
     - "How to build the growth flywheel"

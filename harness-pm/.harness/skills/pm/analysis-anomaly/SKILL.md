@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Internet", "SaaS", "General"]
-  trigger_examples:
+  triggers:
     - "DAU suddenly dropped 30% today, help me check the cause"
     - "Metric anomaly alert, help me with attribution analysis"
     - "Data fluctuation is too large, see what went wrong"

@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Finance", "Healthcare", "General"]
-  trigger_examples:
+  triggers:
     - "What's changed in the market environment"
     - "How do policies affect us"
     - "Help me scan the external environment"

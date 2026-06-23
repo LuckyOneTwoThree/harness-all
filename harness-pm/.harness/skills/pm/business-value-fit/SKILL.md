@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["SaaS", "General"]
-  trigger_examples:
+  triggers:
     - "Is our value proposition right"
     - "Do users really need this feature"
   interaction_mode: "ai_suggest_human_approve"

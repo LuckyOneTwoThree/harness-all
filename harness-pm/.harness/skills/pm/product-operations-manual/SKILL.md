@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Internet", "SaaS", "General"]
-  trigger_examples:
+  triggers:
     - "How to write an operations manual"
     - "How to standardize daily operations processes"
     - "Help me organize operations SOP"

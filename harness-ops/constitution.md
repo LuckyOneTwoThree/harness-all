@@ -47,7 +47,15 @@ All `.harness/skills/*/*/SKILL.md` must include:
 
 **Verification**: `skill-maintenance` scans for missing frontmatter.
 
-### Principle 5: Infrastructure as Code (IaC) and Destructive Change Protection
+### Principle 5: Concise Documentation, Prevent Bloat
+
+- `AGENTS.md` no more than 150 lines
+- `SKILL.md` no more than 300 lines (when exceeded, extract schema / examples / decision tables into a `Reference/` subdirectory; no limit under Reference/)
+- `progress.md` must be archived when it exceeds 200 lines
+
+**Verification**: The Agent uses the Read tool to count lines + the `skill-maintenance` meta skill checks.
+
+### Principle 6: Infrastructure as Code (IaC) and Destructive Change Protection
 
 harness-ops is an **automated operations framework**; any ClickOps (console manual click) operations solution is prohibited.
 - All infrastructure changes must have corresponding Terraform (`.tf`), Ansible (`.yml`), or Kubernetes YAML files
@@ -55,21 +63,13 @@ harness-ops is an **automated operations framework**; any ClickOps (console manu
 
 **Verification**: The project must contain IaC declaration files corresponding to the change; the PLAN stage must obtain explicit authorization for destructive operations via `AskUserQuestion`.
 
-### Principle 6: Monitoring First and Zero Secret Leakage
+### Principle 7: Monitoring First and Zero Secret Leakage
 
 A deployment without observability is flying blind.
 - Before each service goes live, the metrics used to judge service health must be explicitly defined (e.g., HTTP 200, CPU < 60%)
 - The code repository must absolutely not contain plaintext secrets; all credentials must be injected via environment variables or a secret management system
 
 **Verification**: The VERIFY stage must provide explicit logs, monitoring screenshots, or script detection results as Evidence; scan `.env` or configuration files, and refuse to commit or execute if plaintext passwords are found.
-
-### Principle 7: Concise Documentation, Prevent Bloat
-
-- `AGENTS.md` no more than 150 lines
-- `SKILL.md` no more than 300 lines (when exceeded, extract schema / examples / decision tables into a `Reference/` subdirectory; no limit under Reference/)
-- `progress.md` must be archived when it exceeds 200 lines
-
-**Verification**: The Agent uses the Read tool to count lines + the `skill-maintenance` meta skill checks.
 
 ### Principle 8: Exploration First Cannot Be Bypassed
 
@@ -84,12 +84,15 @@ Workflows with `default_mode: deep` (e.g., infrastructure-setup-workflow / secur
 
 ## Constitution Checkpoints (checked at PLAN stage)
 
-- [ ] Has the core file modification been authorized by the user?
+- [ ] Does the current change introduce runtime dependencies?
+- [ ] Can the current process be completed in a bash-free environment?
+- [ ] Does it involve core file modifications? Has user authorization been obtained?
+- [ ] Do new/modified skills have complete frontmatter?
+- [ ] Does the documentation length exceed the project threshold?
 - [ ] Is there a corresponding IaC code file supporting the current change?
 - [ ] Does it involve high-risk / destructive operations? Has user authorization been obtained?
 - [ ] What are the validation metrics for the release / change? Are they monitorable?
 - [ ] Are there absolutely no hardcoded plaintext secrets in the code or configuration?
-- [ ] Does the documentation length exceed the project threshold?
 - [ ] Is the current workflow's exploration_mode deep? If so, has the current-state assessment been completed?
 
 ## Revision History
@@ -99,3 +102,4 @@ Workflows with `default_mode: deep` (e.g., infrastructure-setup-workflow / secur
 | 2026-06-22 | Initial version | Clarify harness-ops's own architectural constraints |
 | 2026-06-23 | Add Principle 6 (Exploration First cannot be bypassed) + AGENTS.md line limit 120→150 | Promote the exploration_mode mechanism to the ops framework |
 | 2026-06-23 | Fill in Principles 1-4 general baseline principles + merge domain principles into 5-6 + renumber principles + Reference/ exception clause | Cross-framework constitution consistency |
+| 2026-06-23 | Reorder principles: P5=Concise Docs (common), P6=IaC, P7=Monitoring, P8=Exploration | Align common principles 1-5 ordering across all frameworks |

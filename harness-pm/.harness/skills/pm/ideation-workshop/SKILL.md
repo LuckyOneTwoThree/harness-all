@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "3.0"
   domain_tags: ["Internet", "Software", "General"]
-  trigger_examples:
+  triggers:
     - "Help me brainstorm ideas"
     - "Innovate using the SCAMPER method"
     - "Think in reverse"

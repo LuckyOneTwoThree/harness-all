@@ -8,7 +8,7 @@ metadata:
   version: "2.0"
   domain_tags: ["Internet", "Software", "General"]
   interaction_mode: "ai_auto"
-  trigger_examples:
+  triggers:
     - "Set up monitoring system"
     - "Configure alert rules"
     - "Metric anomaly detection"

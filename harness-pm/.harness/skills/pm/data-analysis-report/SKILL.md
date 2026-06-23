@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Help me produce this month's data analysis report"
     - "Summarize the recent data situation"
     - "Generate an operations weekly report"

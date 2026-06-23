@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Internet", "SaaS", "General"]
-  trigger_examples:
+  triggers:
     - "What to do when competitors update again"
     - "How to respond when opponent adds new feature"
     - "How to track competitor dynamics"

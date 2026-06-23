@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["SaaS", "General"]
-  trigger_examples:
+  triggers:
     - "Help me plan the product roadmap"
     - "What should the next release include"
   interaction_mode: "ai_suggest_human_approve"

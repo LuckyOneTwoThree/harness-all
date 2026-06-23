@@ -7,7 +7,7 @@ metadata:
   type: "orchestrator"
   version: "7.1"
   domain_tags: ["E-commerce", "SaaS", "Finance", "Education", "General"]
-  trigger_examples:
+  triggers:
     - "Help me design a business model"
     - "How does the product make money"
     - "Design a pricing strategy"

@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "3.3"
   domain_tags: ["Internet", "Software", "General"]
-  trigger_examples:
+  triggers:
     - "Help me write a PRD document"
     - "Generate a product requirements document"
     - "How to write a requirements document"

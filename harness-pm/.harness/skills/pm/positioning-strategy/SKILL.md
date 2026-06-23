@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "3.0"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Help me define product positioning"
     - "Write a positioning statement"
     - "Analyze our differentiation advantages"

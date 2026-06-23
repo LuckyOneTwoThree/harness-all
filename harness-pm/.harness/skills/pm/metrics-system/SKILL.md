@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Internet", "SaaS", "General"]
-  trigger_examples:
+  triggers:
     - "Help me organize the product's core metrics"
     - "We need to define the North Star metric"
     - "Build a metrics system"

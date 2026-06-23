@@ -7,7 +7,7 @@ metadata:
   type: "orchestrator"
   version: "11.0"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Plan the next iteration"
     - "Adjust priorities"
     - "Optimize the Backlog"

@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "3.0"
   domain_tags: ["Internet", "SaaS", "General"]
-  trigger_examples:
+  triggers:
     - "Which channel has the best user acquisition performance"
     - "Help me check the ROI of each channel"
     - "Registration-to-activation conversion rate is too low"

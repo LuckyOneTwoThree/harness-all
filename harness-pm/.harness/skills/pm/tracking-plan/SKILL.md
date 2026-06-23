@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Internet", "E-commerce", "General"]
-  trigger_examples:
+  triggers:
     - "This feature needs tracking"
     - "Help me produce a tracking plan"
     - "Organize what data needs to be collected"

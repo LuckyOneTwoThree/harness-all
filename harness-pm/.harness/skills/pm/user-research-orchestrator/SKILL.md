@@ -7,7 +7,7 @@ metadata:
   type: "orchestrator"
   version: "8.2"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Help me do user research"
     - "Analyze user feedback"
     - "Design a user interview"

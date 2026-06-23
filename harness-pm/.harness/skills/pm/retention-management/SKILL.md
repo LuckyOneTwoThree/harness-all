@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "3.0"
   domain_tags: ["Internet", "SaaS", "General"]
-  trigger_examples:
+  triggers:
     - "Users keep churning, what should I do"
     - "How to spot users about to leave early"
     - "Churn rate is too high, how to reduce it"

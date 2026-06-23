@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.0"
   domain_tags: ["Internet", "Software", "General"]
-  trigger_examples:
+  triggers:
     - "The requirement pool is messy, how to organize it"
     - "How to prioritize the backlog"
     - "Too many requirements, which to do first"

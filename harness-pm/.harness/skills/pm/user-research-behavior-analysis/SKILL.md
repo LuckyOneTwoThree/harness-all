@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Internet", "SaaS", "General"]
-  trigger_examples:
+  triggers:
     - "Where are users churning"
     - "Why is the funnel conversion rate so low"
     - "Are there any anomalies in user behavior"

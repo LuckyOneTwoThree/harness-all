@@ -7,7 +7,7 @@ metadata:
   type: "orchestrator"
   version: "7.0"
   domain_tags: ["E-commerce", "SaaS", "Finance", "Education", "Gaming", "General"]
-  trigger_examples:
+  triggers:
     - "Optimize payment conversion rate"
     - "Increase product revenue"
     - "Analyze the payment funnel"

@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Internet", "SaaS", "General"]
-  trigger_examples:
+  triggers:
     - "How to sunset this feature"
     - "How to arrange product service discontinuation"
     - "What to do when retiring an old feature"

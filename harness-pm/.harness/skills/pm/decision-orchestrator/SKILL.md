@@ -7,7 +7,7 @@ metadata:
   type: "orchestrator"
   version: "7.0"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Make decisions based on data"
     - "Build a data-driven decision mechanism"
     - "Transform analysis results into actions"

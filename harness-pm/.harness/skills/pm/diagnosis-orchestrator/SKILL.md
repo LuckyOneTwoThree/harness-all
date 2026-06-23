@@ -7,7 +7,7 @@ metadata:
   type: "orchestrator"
   version: "10.0"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Diagnose product health"
     - "Track competitor dynamics"
     - "Troubleshoot product issues"

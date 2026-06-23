@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["SaaS", "General"]
-  trigger_examples:
+  triggers:
     - "What should our core metric be"
     - "How do we measure product success"
   interaction_mode: "human_ai_collaborate"

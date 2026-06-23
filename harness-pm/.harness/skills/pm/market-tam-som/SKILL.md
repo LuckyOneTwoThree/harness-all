@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Internet", "Finance", "General"]
-  trigger_examples:
+  triggers:
     - "How big is this market"
     - "Help me estimate the market size"
     - "Where is our ceiling"

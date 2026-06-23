@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "3.0"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Help me map out the stakeholders"
     - "Who will influence this project"
     - "Help me develop a stakeholder management strategy"

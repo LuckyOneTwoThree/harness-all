@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["E-commerce", "Internet", "General"]
-  trigger_examples:
+  triggers:
     - "Registration flow conversion rate is too low, help me analyze"
     - "At which step do users drop off the most"
     - "Take a look at the payment conversion funnel"

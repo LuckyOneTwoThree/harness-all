@@ -7,7 +7,7 @@ metadata:
   type: "orchestrator"
   version: "7.0"
   domain_tags: ["E-commerce", "Social", "Tools", "General"]
-  trigger_examples:
+  triggers:
     - "Find the Aha Moment"
     - "Design the onboarding flow"
     - "Improve user activation rate"

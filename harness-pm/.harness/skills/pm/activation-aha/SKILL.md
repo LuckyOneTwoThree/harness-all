@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Internet", "SaaS", "General"]
-  trigger_examples:
+  triggers:
     - "When do users feel the product is good to use"
     - "How to find the aha moment"
     - "How long for new users to experience core value"

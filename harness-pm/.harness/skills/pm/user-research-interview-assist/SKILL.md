@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Help me prepare an interview outline"
     - "How to synthesize insights after an interview"
     - "How to conduct a user interview"

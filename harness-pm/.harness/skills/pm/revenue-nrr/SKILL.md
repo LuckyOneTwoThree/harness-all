@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["SaaS", "Enterprise Services", "General"]
-  trigger_examples:
+  triggers:
     - "How to calculate Net Revenue Retention"
     - "How are existing customer renewals doing"
     - "How to view revenue retention trends"

@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "3.0"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Help me evaluate this product opportunity"
     - "Identify what product opportunities exist"
     - "Define the problem we need to solve"

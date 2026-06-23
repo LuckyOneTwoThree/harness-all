@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Help me create user personas"
     - "How to map the user journey"
     - "What kind of users are they"

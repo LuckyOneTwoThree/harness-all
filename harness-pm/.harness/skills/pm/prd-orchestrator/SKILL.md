@@ -7,7 +7,7 @@ metadata:
   type: "orchestrator"
   version: "11.0"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Help me write a PRD"
     - "Generate a product requirements document"
     - "The PRD has changed, analyze the impact"

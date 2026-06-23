@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Internet", "SaaS", "General"]
-  trigger_examples:
+  triggers:
     - "Why are users unwilling to pay"
     - "How to improve payment conversion rate"
     - "Where is the best place to put the paywall"

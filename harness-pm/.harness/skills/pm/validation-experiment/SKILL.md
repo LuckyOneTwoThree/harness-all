@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Internet", "Software", "General"]
-  trigger_examples:
+  triggers:
     - "How to validate this hypothesis"
     - "Help me design an A/B test"
     - "How to make an experiment plan"

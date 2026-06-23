@@ -7,7 +7,7 @@ metadata:
   type: "orchestrator"
   version: "7.0"
   domain_tags: ["E-commerce", "Social", "Education", "General"]
-  trigger_examples:
+  triggers:
     - "Evaluate the acquisition channels"
     - "Optimize the acquisition funnel"
     - "How to acquire new users"

@@ -7,7 +7,7 @@ metadata:
   type: "orchestrator"
   version: "7.0"
   domain_tags: ["E-commerce", "Social", "Gaming", "General"]
-  trigger_examples:
+  triggers:
     - "User churn is severe"
     - "Improve user retention rate"
     - "Run a churn prediction"

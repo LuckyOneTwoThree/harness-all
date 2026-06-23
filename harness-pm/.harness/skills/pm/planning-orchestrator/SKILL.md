@@ -7,7 +7,7 @@ metadata:
   type: "orchestrator"
   version: "10.0"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Help me with product project initiation"
     - "Create a strategic plan"
     - "Set OKR objectives"

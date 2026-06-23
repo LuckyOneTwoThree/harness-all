@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Internet", "Software", "General"]
-  trigger_examples:
+  triggers:
     - "What hypotheses does the product have that are unvalidated"
     - "Help me map out hypotheses and risks"
     - "Which hypotheses might not hold"

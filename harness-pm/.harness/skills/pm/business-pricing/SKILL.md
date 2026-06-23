@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["SaaS", "E-commerce", "General"]
-  trigger_examples:
+  triggers:
     - "How should we price the product"
     - "How to design pricing options"
   interaction_mode: "ai_suggest_human_approve"

@@ -7,7 +7,7 @@ metadata:
   type: "orchestrator"
   version: "9.0"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Release product"
     - "Canary launch"
     - "Execute release process"

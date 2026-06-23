@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Team doesn't habitually look at data, how to drive change"
     - "Help me build a data-driven culture"
     - "Set up regular data report delivery"

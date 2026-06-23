@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "3.0"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Help me analyze strengths and weaknesses"
     - "What are our opportunities and threats"
     - "How should we expand the market"

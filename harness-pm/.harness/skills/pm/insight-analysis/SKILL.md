@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "3.0"
   domain_tags: ["General"]
-  trigger_examples:
+  triggers:
     - "Help me analyze user requirements"
     - "Too many requirements, help me prioritize"
     - "Analyze requirements using the KANO model"

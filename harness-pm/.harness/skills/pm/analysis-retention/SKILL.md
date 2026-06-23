@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Internet", "SaaS", "General"]
-  trigger_examples:
+  triggers:
     - "New user 7-day retention is only 15%, help me analyze"
     - "When do users start churning"
     - "Help me find the Aha Moment"

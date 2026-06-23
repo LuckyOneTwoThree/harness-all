@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.0"
   domain_tags: ["Internet", "Software", "General"]
-  trigger_examples:
+  triggers:
     - "Need to retrospective this iteration"
     - "Sprint is over, how to summarize"
     - "How did the iteration go"

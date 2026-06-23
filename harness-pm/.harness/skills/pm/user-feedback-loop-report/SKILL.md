@@ -7,7 +7,7 @@ metadata:
   type: "pipeline"
   version: "2.1"
   domain_tags: ["Internet", "SaaS", "General"]
-  trigger_examples:
+  triggers:
     - "How is user feedback handling going"
     - "Help me generate a feedback loop report"
     - "How is the feedback closure rate"
