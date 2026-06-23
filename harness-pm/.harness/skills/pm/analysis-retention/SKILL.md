@@ -16,6 +16,13 @@ execution_depth:
   default: standard
   quick_description: "直接输出留存分析和流失原因"
   deep_description: "完整分析 + 留存曲线拟合 + 流失预测模型 + 留存优化路线图"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+writes:
+  - docs/metrics/data-analysis-report.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 留存自动分析

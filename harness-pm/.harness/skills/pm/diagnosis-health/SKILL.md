@@ -16,6 +16,14 @@ execution_depth:
   default: standard
   quick_description: "直接输出健康度评分和问题清单"
   deep_description: "完整诊断 + 健康度趋势分析 + 根因深度推演 + 改进优先级路线图"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/monitoring/diagnosis-report.md
+writes:
+  - docs/monitoring/diagnosis-report.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 产品健康度自动诊断 🤖

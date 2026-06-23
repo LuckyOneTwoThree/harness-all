@@ -12,6 +12,15 @@ metadata:
     - "调整一下优先级"
     - "优化一下Backlog"
     - "做一下迭代复盘"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/monitoring/iteration-plan.md
+  - docs/monitoring/iteration-retrospective.md
+writes:
+  - output/phase-reports/iteration-orchestrator.json
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 迭代决策指挥官

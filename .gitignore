@@ -1,3 +1,29 @@
+# 敏感文件（禁止提交）
+.env
+.env.local
+.env.production
+.env.staging
+*.pem
+*.key
+id_rsa
+id_ed25519
+credentials.json
+service-account*.json
+
+# 依赖
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# 构建产物
+dist/
+build/
+.next/
+.nuxt/
+out/
+
 # OS
 .DS_Store
 Thumbs.db

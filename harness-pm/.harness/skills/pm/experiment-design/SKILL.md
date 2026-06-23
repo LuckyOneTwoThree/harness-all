@@ -16,6 +16,14 @@ execution_depth:
   default: standard
   quick_description: "直接输出实验设计和假设"
   deep_description: "完整设计 + 统计功效计算 + 多变量实验方案 + 结果解读框架"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/metrics/metrics-system.md
+writes:
+  - docs/metrics/experiment-report.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # A/B测试自动设计

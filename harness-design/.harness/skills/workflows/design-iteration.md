@@ -1,3 +1,9 @@
+---
+workflow_id: C
+name: design-iteration
+default_mode: standard
+---
+
 # Workflow: design-iteration
 
 > 设计迭代工作流 · 已有设计的修改

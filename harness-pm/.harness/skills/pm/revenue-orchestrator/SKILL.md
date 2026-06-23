@@ -13,6 +13,15 @@ metadata:
     - "分析付费漏斗"
     - "设计增购策略"
     - "提升NRR"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/growth/growth-strategy.md
+writes:
+  - memory/progress.md
+  - memory/knowledge-base.md
+  - output/phase-reports/revenue-orchestrator.json
+  - output/approvals/revenue-orchestrator/{stage-id}.approval.json
 ---
 
 # 商业化指挥官

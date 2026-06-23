@@ -16,6 +16,14 @@ execution_depth:
   default: standard
   quick_description: "直接输出竞品动态汇总和威胁等级"
   deep_description: "完整报告 + 竞品趋势预测 + 战略影响推演 + 应对策略路线图"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/discovery/market-analysis.md
+  - docs/monitoring/diagnosis-report.md
+writes:
+  - docs/monitoring/diagnosis-report.md
+  - memory/progress.md
 ---
 
 # 竞品动态监控报告生成

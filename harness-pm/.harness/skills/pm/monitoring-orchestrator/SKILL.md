@@ -12,6 +12,15 @@ metadata:
     - "线上有异常告警"
     - "配置监控仪表盘"
     - "处理线上问题"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/monitoring/monitoring-config.md
+  - docs/monitoring/feedback-loop.md
+writes:
+  - output/phase-reports/monitoring-orchestrator.json
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 监控预警指挥官

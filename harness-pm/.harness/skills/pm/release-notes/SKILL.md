@@ -16,6 +16,15 @@ execution_depth:
   default: standard
   quick_description: "直接输出发布说明和变更清单"
   deep_description: "完整说明 + 变更影响分析 + 升级指南 + 回滚预案"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/monitoring/release-notes.md
+  - docs/product/PRD.md
+writes:
+  - docs/monitoring/release-notes.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 版本发布说明自动生成

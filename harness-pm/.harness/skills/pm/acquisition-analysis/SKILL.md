@@ -18,6 +18,15 @@ execution_depth:
   default: standard
   quick_description: "直接输出获客渠道和CAC分析"
   deep_description: "完整分析 + 渠道归因模型 + CAC优化模拟 + 获客实验路线图"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+writes:
+  - memory/progress.md
+  - memory/knowledge-base.md
+  - docs/growth/growth-strategy.md
+  - acquisition-analysis.json
+  - acquisition-analysis.md
 ---
 
 # 获客分析一体化

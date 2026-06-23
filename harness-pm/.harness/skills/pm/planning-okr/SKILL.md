@@ -15,6 +15,16 @@ execution_depth:
   default: standard
   quick_description: "直接输出OKR和关键结果"
   deep_description: "完整OKR + 对齐验证 + 进度追踪机制 + 季度复盘模板"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/strategy/PRODUCT_STRATEGY.md
+  - docs/strategy/business-strategy.md
+writes:
+  - memory/progress.md
+  - memory/knowledge-base.md
+  - docs/strategy/OKR.md
+  - okr.json
 ---
 
 # OKR自动生成

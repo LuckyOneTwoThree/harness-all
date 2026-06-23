@@ -16,6 +16,14 @@ execution_depth:
   default: standard
   quick_description: "直接输出实验方案和验证指标"
   deep_description: "完整方案 + 实验设计优化 + 统计功效分析 + 结果解读框架"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/product/PRD.md
+writes:
+  - docs/metrics/experiment-report.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 验证实验自动设计

@@ -1,3 +1,9 @@
+---
+workflow_id: C
+name: content-marketing-workflow
+default_mode: standard
+---
+
 # Workflow: 内容营销全流程（Content Marketing Workflow）
 
 > 所属 LOOP 类型：content

@@ -1,3 +1,9 @@
+---
+workflow_id: A
+name: infrastructure-setup-workflow
+default_mode: deep
+---
+
 # Workflow: 基础设施搭建（Infrastructure Setup Workflow）
 
 > 所属 LOOP 类型：provision

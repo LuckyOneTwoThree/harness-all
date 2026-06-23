@@ -1,3 +1,9 @@
+---
+workflow_id: C
+name: bugfix
+default_mode: standard
+---
+
 # 工作流 B：Bug 修复
 
 > 适用场景：修复线上 Bug、测试失败、功能异常

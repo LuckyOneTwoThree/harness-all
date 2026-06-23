@@ -1,6 +1,6 @@
 # Skills 索引
 
-> 纯索引，40 行内。需要选 Skill 时读。工作流编排见 `workflows/`。
+> 纯索引，80 行内。需要选 Skill 时读。工作流编排见 `workflows/`。
 > 定位：harness-pm 是**产品管理框架**，PM 方法论 skill 在 `.harness/skills/pm/` 目录下（82 个）。
 > 工程开发见 harness 家族其他成员（通过 docs/handoff/ 交接）。
 
@@ -11,16 +11,17 @@
 - **memory-maintenance** — memory retention 清理
 
 ## 工作流（.harness/skills/workflows/，10 个）
-- **setup** — 立项引导（install.sh 后引导填写 SOUL/constitution/PRODUCT_STRATEGY 骨架）
-- **new-product** — 从 0 到 1 做新产品（模块1→2→3→4→7监控准备）
-- **iteration** — 已有产品功能迭代（模块3→5→7，变更驱动）
-- **growth** — 增长突破（模块6→5实验→7发布）
-- **optimization** — 数据驱动优化（模块5→7→3，数据驱动）
-- **launch** — 验收发布（模块7，含埋点补充能力）
-- **diagnosis** — 产品诊断与下线（模块7，被动触发）
-- **pivot** — 战略调整（模块1→2，战略级变更）
-- **incident-response** — 危机响应（模块7，P0事故紧急通道）
-- **health-check** — 定期健康检查（模块7，主动体检）
+> `default_mode`：deep=强制探索 / standard=模块边界暂停 / skip=直接执行（用户可随时切换）
+- **new-product** [deep] — 从 0 到 1 做新产品（模块1→2→3→4→7监控准备）
+- **pivot** [deep] — 战略调整（模块1→2，战略级变更）
+- **iteration** [standard] — 已有产品功能迭代（模块3→5→7，变更驱动）
+- **growth** [standard] — 增长突破（模块6→5实验→7发布）
+- **optimization** [standard] — 数据驱动优化（模块5→7→3，数据驱动）
+- **launch** [skip] — 验收发布（模块7，含埋点补充能力）
+- **diagnosis** [skip] — 产品诊断与下线（模块7，被动触发）
+- **setup** [skip] — 立项引导（install.sh 后引导填写 SOUL/constitution/PRODUCT_STRATEGY 骨架）
+- **incident-response** [skip] — 危机响应（模块7，P0事故紧急通道）
+- **health-check** [skip] — 定期健康检查（模块7，主动体检）
 
 ## PM 方法论 skill（.harness/skills/pm/，82 个 = 19 orchestrator + 63 pipeline，7 个模块）
 - **模块1 探索发现**：10 pipeline + 2 orchestrator = 12（user-research / market，insight/opportunity 退化壳已删）

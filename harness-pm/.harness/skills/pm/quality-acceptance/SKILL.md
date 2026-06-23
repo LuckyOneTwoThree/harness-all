@@ -19,6 +19,15 @@ execution_depth:
   default: standard
   quick_description: "仅输出P0验收结果"
   deep_description: "完整报告 + 回归测试矩阵 + 性能基线对比 + 安全审计清单"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/product/PRD.md
+  - docs/handoff/solo-to-pm.md
+writes:
+  - docs/monitoring/release-notes.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 验收执行计划生成与签收报告生成

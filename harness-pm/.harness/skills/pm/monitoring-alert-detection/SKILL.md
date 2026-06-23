@@ -8,10 +8,25 @@ metadata:
   version: "2.0"
   domain_tags: ["互联网", "软件", "通用"]
   interaction_mode: "ai_auto"
+  trigger_examples:
+    - "搭建监控系统"
+    - "配置告警规则"
+    - "指标异常检测"
+    - "核心路径监控怎么做"
 execution_depth:
   default: standard
   quick_description: "仅输出核心路径监控 + 基础告警规则"
   deep_description: "完整体系 + 容量规划 + 混沌工程方案 + SRE成熟度评估"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/metrics/metrics-system.md
+  - docs/monitoring/monitoring-config.md
+  - docs/monitoring/release-notes.md
+writes:
+  - docs/monitoring/monitoring-config.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 监控告警检测 🤖

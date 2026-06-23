@@ -12,6 +12,15 @@ metadata:
     - "设计新手引导流程"
     - "提升用户激活率"
     - "优化Onboarding"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/growth/growth-strategy.md
+writes:
+  - memory/progress.md
+  - memory/knowledge-base.md
+  - output/phase-reports/activation-orchestrator.json
+  - output/approvals/activation-orchestrator/{stage-id}.approval.json
 ---
 
 # 用户激活指挥官

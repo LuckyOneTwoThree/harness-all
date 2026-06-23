@@ -1,3 +1,9 @@
+---
+workflow_id: J
+name: health-check
+default_mode: skip
+---
+
 # 工作流 J：定期健康检查
 
 > 适用场景：产品定期体检、季度健康度评估、主动发现问题

@@ -16,6 +16,16 @@ execution_depth:
   default: standard
   quick_description: "直接输出Aha时刻和激活路径"
   deep_description: "完整策略 + Aha时刻量化验证 + 激活路径优化 + 激活漏斗深度分析"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/metrics/data-analysis-report.md
+writes:
+  - memory/progress.md
+  - memory/knowledge-base.md
+  - docs/growth/growth-strategy.md
+  - output/metrics/aha-moment.json
+  - aha_moment.json
 ---
 
 # Aha Moment自动工程化

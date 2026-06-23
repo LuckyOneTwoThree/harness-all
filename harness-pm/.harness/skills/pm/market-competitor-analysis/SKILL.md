@@ -19,6 +19,13 @@ execution_depth:
   default: standard
   quick_description: "生成四象限竞品分类和核心竞品画像，含执行摘要和Top1策略建议"
   deep_description: "额外包含Feature Matrix功能对比、用户口碑横向对比、定价策略对比、竞争护城河评估、市场份额估算、象限间流动追踪"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/discovery/market-analysis.md
+writes:
+  - docs/discovery/market-analysis.md
+  - memory/progress.md
 ---
 
 # 综合竞品分析

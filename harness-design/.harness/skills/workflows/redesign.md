@@ -1,3 +1,9 @@
+---
+workflow_id: D
+name: redesign
+default_mode: deep
+---
+
 # Workflow: redesign
 
 > 重设计工作流 · 已有项目的重设计

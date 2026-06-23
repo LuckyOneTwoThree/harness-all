@@ -1,3 +1,9 @@
+---
+workflow_id: B
+name: new-feature
+default_mode: deep
+---
+
 # 工作流 A：新功能开发
 
 > 适用场景：开发新功能、添加新模块、实现新需求

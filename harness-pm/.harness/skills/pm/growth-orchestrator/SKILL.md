@@ -12,6 +12,17 @@ metadata:
     - "用户增长遇到瓶颈"
     - "诊断一下增长问题"
     - "建立增长体系"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/growth/growth-strategy.md
+  - docs/growth/gtm.md
+  - docs/growth/operations-manual.md
+writes:
+  - memory/progress.md
+  - memory/knowledge-base.md
+  - output/phase-reports/growth-orchestrator.json
+  - output/approvals/growth-orchestrator/{stage-id}.approval.json
 ---
 
 # 增长策略总指挥官

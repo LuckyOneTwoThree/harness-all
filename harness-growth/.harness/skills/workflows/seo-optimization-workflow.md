@@ -1,3 +1,9 @@
+---
+workflow_id: D
+name: seo-optimization-workflow
+default_mode: standard
+---
+
 # Workflow: SEO 优化全流程（SEO Optimization Workflow）
 
 > 所属 LOOP 类型：seo

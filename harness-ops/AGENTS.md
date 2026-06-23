@@ -12,6 +12,43 @@
 3. **安全红线** —— 绝不在代码库硬编码密码与密钥，执行破坏性操作（`rm -rf`, `drop table`）前必须经过人类 Double Check
 4. **循环验证（Loop-First）** —— 运维变更走 Loop（plan→provision/deploy→verify），最多 5 次失败重试，超限请求人类介入
 5. **会话结束（session-end）** —— 更新 `memory/progress.md`，按 `session-end` SKILL.md 步骤执行归档（跨平台，不依赖 bash）
+6. **交互先行（Interact First）** —— workflow 不是自动执行脚本，探索对话点（⏸）受 exploration_mode 控制，人类决策点（👤）始终暂停
+
+## 探索模式（exploration_mode）
+
+控制 workflow 执行时的交互深度。三种模式：
+
+| 模式 | ⏸ 探索对话 | 适用场景 |
+|------|-----------|---------|
+| `deep` | 每个模块前都暂停对话，必须获得用户输入后才继续 | 基础设施搭建/安全审计/需要深度评估现状 |
+| `standard` | 仅在模块边界暂停对话，模块内自动执行 | 监控部署/有明确方案的运维任务 |
+| `skip` | 不暂停探索对话，按流程自动执行 | 部署/故障响应/容灾演练/紧急运维 |
+
+**默认模式来源优先级**：用户显式切换 > workflow frontmatter `default_mode` > `standard`
+
+**切换方式**：对话中随时说"切换到 deep/standard/skip 模式"，Agent 确认后写入 `state.yaml` 的 `exploration_mode` 字段
+
+**skip 模式安全兜底**：skip 模式启动时，Agent 必须检查 `memory/progress.md` 和 `docs/handoff/` 是否有上游交接文档。如无任何运维上下文，**拒绝执行 skip，降级为 standard 并告知用户**
+
+**模式与降级策略联动**：
+
+| 模式 | 降级策略 |
+|------|---------|
+| `deep` | **禁用降级**——用户要深度探索，不允许跳过现状评估 |
+| `standard` | 允许降级，但降级产出必须标注 `degraded: true` |
+| `skip` | 允许降级，不额外标注 |
+
+## 人类决策点（通用规则）
+
+以下场景**始终暂停**，不受 exploration_mode 影响：
+
+1. 基础设施方案选择（用什么架构/云服务/IaC 工具）
+2. 变更优先级排序
+3. 破坏性操作审批（删除数据卷/清空数据库/销毁生产）
+4. 产出文档的最终审批（监控配置/安全审计报告/运维手册）
+5. 花资源的决策（扩容/采购/基础设施变更）
+
+> workflow 中的 `👤` 标记为人类决策点，`⏸` 标记为探索对话点。即使 workflow 漏标 `👤`，上述通用规则仍然生效。
 
 ## SRE 运维四原则
 
@@ -44,13 +81,13 @@
 
 1. **AGENTS.md**（本文件）—— 启动必读
 2. **SOUL.md + constitution.md** —— 首次交互时读（人格身份 + 项目宪法）
-3. **skills/INDEX.md** —— 需要选 Skill 时读（纯索引，按模块分组）
+3. **skills/INDEX.md** —— 需要选 Skill 时读（80 行内，纯索引，按模块分组）
 4. **对应 SKILL.md** —— 执行任务时读（frontmatter 的 `reads` 字段声明依赖的 rules，自动拉取）
 5. **memory/progress.md** —— session-start 时读
 
 ## 技能选择
 
-需要选择 Skill 时，读取 `.harness/skills/INDEX.md`（纯索引）。
+需要选择 Skill 时，读取 `.harness/skills/INDEX.md`（纯索引，80 行内）。
 工作流编排（部署/基础设施/监控/故障响应/安全审计/容灾/运维回顾）在 `.harness/skills/workflows/` 下按需读取。
 
 当前已全部建设完成（32 skill = 28 领域 + 4 meta，+ 7 workflow）：
@@ -95,12 +132,6 @@ harness-ops 是 harness 家族的**SRE 与运维**核心，充当工程代码和
 - 故障排查与工单记录存放在 `docs/incident/`
 - 功能进度看 `.harness/FEATURES.md`
 - 交接文档在 `docs/handoff/`（来自 harness 家族其他成员）
-
-## 项目宪法（constitution.md）
-
-首次交互时读取 `constitution.md`。示例条款：
-- 严禁提交任何包含了明文 AK/SK、密码、数据库连接串的代码或文档
-- 生产库数据严禁在测试环境混用
 
 ## 循环引擎
 

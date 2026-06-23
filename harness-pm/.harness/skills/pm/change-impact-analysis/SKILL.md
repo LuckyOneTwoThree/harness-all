@@ -16,6 +16,14 @@ execution_depth:
   default: standard
   quick_description: "执行变更分类（L1-L4）和功能影响分析，输出变更级别与重评审必要性判断"
   deep_description: "额外包含原型/交互规范两维度影响分析、版本联动更新建议、设计规范一致性评估、设计重做清单"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/product/PRD.md
+writes:
+  - docs/product/PRD.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 需求变更影响分析自动化

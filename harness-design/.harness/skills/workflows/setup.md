@@ -1,3 +1,9 @@
+---
+workflow_id: A
+name: setup
+default_mode: skip
+---
+
 # Workflow: setup
 
 > 项目初始化工作流 · 首次使用 harness-design 时执行

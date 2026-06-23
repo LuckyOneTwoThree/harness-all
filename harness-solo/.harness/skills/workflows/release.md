@@ -1,3 +1,9 @@
+---
+workflow_id: G
+name: release
+default_mode: skip
+---
+
 # 工作流 F：发版
 
 > 适用场景：版本发布、CHANGELOG 更新、打 tag、构建发布物

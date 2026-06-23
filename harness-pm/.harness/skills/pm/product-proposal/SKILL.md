@@ -15,6 +15,19 @@ execution_depth:
   default: standard
   quick_description: "直接输出产品提案和核心论点"
   deep_description: "完整提案 + 商业可行性分析 + 技术可行性评估 + 风险与缓解方案"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/strategy/business-strategy.md
+  - docs/strategy/PRODUCT_STRATEGY.md
+  - docs/strategy/OKR.md
+  - docs/strategy/roadmap.md
+  - docs/strategy/positioning.md
+  - docs/strategy/stakeholder-analysis.md
+writes:
+  - docs/strategy/PRODUCT_STRATEGY.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 产品立项提案自动生成

@@ -13,6 +13,17 @@ metadata:
     - "设定OKR目标"
     - "规划一下产品路线图"
     - "做一下SWOT分析"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/strategy/PRODUCT_STRATEGY.md
+  - docs/strategy/OKR.md
+  - docs/strategy/roadmap.md
+writes:
+  - memory/progress.md
+  - memory/knowledge-base.md
+  - output/phase-reports/planning-orchestrator.json
+  - output/approvals/planning-orchestrator/{stage-id}.approval.json
 ---
 
 # 战略规划与路线图指挥官

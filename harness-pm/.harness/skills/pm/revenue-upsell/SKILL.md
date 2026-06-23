@@ -16,6 +16,15 @@ execution_depth:
   default: standard
   quick_description: "直接输出增购策略和机会清单"
   deep_description: "完整策略 + 增购触发器设计 + 客户分层增购模型 + 增购实验方案"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/growth/growth-strategy.md
+writes:
+  - memory/progress.md
+  - memory/knowledge-base.md
+  - docs/growth/growth-strategy.md
+  - upsell_strategy.json
 ---
 
 # 升级转化自动化

@@ -16,6 +16,16 @@ execution_depth:
   default: standard
   quick_description: "直接输出数据洞察和关键发现"
   deep_description: "完整报告 + 多维交叉分析 + 预测模型 + 决策建议路线图"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/metrics/data-analysis-report.md
+  - docs/metrics/decision-report.md
+  - docs/metrics/metrics-system.md
+writes:
+  - docs/metrics/data-analysis-report.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 数据洞察报告自动生成

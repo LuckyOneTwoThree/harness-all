@@ -12,6 +12,14 @@ metadata:
     - "灰度上线"
     - "执行发布流程"
     - "验收后发布"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/monitoring/release-notes.md
+writes:
+  - output/phase-reports/release-orchestrator.json
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 发布交付指挥官

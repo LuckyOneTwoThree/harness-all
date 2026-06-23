@@ -13,6 +13,14 @@ metadata:
     - "做一下漏斗分析"
     - "分析一下用户留存"
     - "数据不好，找找原因"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/metrics/data-analysis-report.md
+writes:
+  - output/phase-reports/analysis-orchestrator.json
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 数据分析指挥官

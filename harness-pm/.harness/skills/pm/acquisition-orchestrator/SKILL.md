@@ -12,6 +12,15 @@ metadata:
     - "优化一下获客漏斗"
     - "怎么拉新用户"
     - "获客成本太高了"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/growth/growth-strategy.md
+writes:
+  - memory/progress.md
+  - memory/knowledge-base.md
+  - output/phase-reports/acquisition-orchestrator.json
+  - output/approvals/acquisition-orchestrator/{stage-id}.approval.json
 ---
 
 # 用户获取指挥官

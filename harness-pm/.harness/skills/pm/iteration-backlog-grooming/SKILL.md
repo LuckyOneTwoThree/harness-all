@@ -18,6 +18,14 @@ execution_depth:
   default: standard
   quick_description: "仅输出Backlog优先级排序建议"
   deep_description: "完整整理 + 技术债务影响分析 + 关联分析 + 重组建议"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/monitoring/monitoring-config.md
+writes:
+  - docs/monitoring/iteration-plan.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # Backlog 整理与优先级评估 🤖

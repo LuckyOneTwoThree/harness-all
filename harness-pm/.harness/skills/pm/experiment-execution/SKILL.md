@@ -19,6 +19,14 @@ execution_depth:
   default: standard
   quick_description: "执行统计显著性检验和护栏指标检查，输出实验结论与基础决策建议"
   deep_description: "额外包含多维下钻异质性分析、新奇效应检测、交互效应检查、完整A/B测试报告生成、后续实验建议"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/metrics/experiment-report.md
+writes:
+  - docs/metrics/experiment-report.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # A/B测试自动执行、分析与报告

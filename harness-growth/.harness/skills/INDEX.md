@@ -1,6 +1,6 @@
 # Skills 索引
 
-> 纯索引，40 行内。需要选 Skill 时读。工作流编排见 `workflows/`。
+> 纯索引，80 行内。需要选 Skill 时读。工作流编排见 `workflows/`。
 > 添加新 Skill：在分类目录下创建 SKILL.md，然后本文件追加一行。
 > 定位：harness-growth 是**运营增长框架**，只含让产品被用起来相关 skill。
 > 产品/设计/工程见 harness 家族其他成员（通过 docs/handoff/ 交接）。
@@ -66,9 +66,12 @@
 - **growth-review** — 增长回顾报告+产出 growth-to-pm.md
 
 ## 工作流（6 个，✅ 全部已建设）
-- **growth-experiment-workflow** — 增长实验全流程
-- **growth-review-workflow** — 增长回顾报告
-- **content-marketing-workflow** — 内容营销全流程
-- **seo-optimization-workflow** — SEO 优化全流程
-- **lifecycle-operations-workflow** — 用户运营全流程
-- **growth-strategy-workflow** — 增长战略制定
+
+> `default_mode`：deep=强制探索 / standard=模块边界暂停 / skip=直接执行（用户可随时切换）
+
+- **growth-experiment-workflow** — 增长实验全流程 [standard]
+- **growth-review-workflow** — 增长回顾报告 [skip]
+- **content-marketing-workflow** — 内容营销全流程 [standard]
+- **seo-optimization-workflow** — SEO 优化全流程 [standard]
+- **lifecycle-operations-workflow** — 用户运营全流程 [standard]
+- **growth-strategy-workflow** — 增长战略制定 [deep]

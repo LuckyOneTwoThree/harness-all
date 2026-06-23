@@ -16,6 +16,16 @@ execution_depth:
   default: standard
   quick_description: "输出北极星指标校验结果和L1指标拆解"
   deep_description: "完整L1/L2拆解 + 行动指标识别 + 虚荣指标检测 + 指标健康度评分 + 指标间关联分析"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/strategy/OKR.md
+  - docs/strategy/business-strategy.md
+writes:
+  - memory/progress.md
+  - memory/knowledge-base.md
+  - docs/metrics/metrics-system.md
+  - metric_system.json
 ---
 
 # 指标体系自动构建

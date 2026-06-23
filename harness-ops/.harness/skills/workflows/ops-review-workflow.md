@@ -1,3 +1,9 @@
+---
+workflow_id: G
+name: ops-review-workflow
+default_mode: skip
+---
+
 # Workflow: 运维回顾（Ops Review Workflow）
 
 > 所属 LOOP 类型：无（周期性报告）

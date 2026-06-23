@@ -3,6 +3,11 @@
 # 用法：bash guard-commit-msg.sh "$1"（git hook 调用，$1 是 commit-msg 文件路径）
 #   或 bash guard-commit-msg.sh -m "commit message"
 
+# CRLF 防御：Windows 下 core.autocrlf 可能导致脚本含 \r，Git Bash 无法执行
+if grep -qI $'\r' "$0" 2>/dev/null; then
+  exec bash < <(tr -d '\r' < "$0")
+fi
+
 set -e
 
 # 获取 commit message

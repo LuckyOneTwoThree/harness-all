@@ -8,7 +8,6 @@ triggers:
   - 需要设计或修改部署流水线时
 reads:
   - docs/handoff/solo-to-ops.md
-  - docs/handoff/solo-to-ops-template.md
   - docs/infrastructure/OPS_STRATEGY.md
   - rules/security.md
   - loops/LOOP.md
@@ -38,7 +37,7 @@ requires_approval: true
 
 ### 1. 消费交接文档
 
-读取 `docs/handoff/solo-to-ops.md`，逐字段核对（按 `solo-to-ops-template.md`）：
+读取 `docs/handoff/solo-to-ops.md`，逐字段核对：
 - 交付物版本（镜像 Tag / Commit Hash）✓
 - 变更内容与影响面（高/中/低）✓
 - 环境变量增删改清单 ✓

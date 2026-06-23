@@ -16,6 +16,14 @@ execution_depth:
   default: standard
   quick_description: "直接输出异常诊断和根因"
   deep_description: "完整分析 + 根因推演链 + 影响范围评估 + 预防机制设计"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/metrics/metrics-system.md
+writes:
+  - docs/metrics/data-analysis-report.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 自动化数据分析引擎

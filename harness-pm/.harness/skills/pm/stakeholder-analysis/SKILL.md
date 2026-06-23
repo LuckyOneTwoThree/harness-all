@@ -19,6 +19,13 @@ execution_depth:
   default: standard
   quick_description: "直接输出利益相关方地图和影响力评估"
   deep_description: "完整分析 + 影响力动态推演 + 沟通策略设计 + 利益平衡方案"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/strategy/business-strategy.md
+writes:
+  - docs/strategy/stakeholder-analysis.md
+  - memory/progress.md
 ---
 
 # 利益相关者分析

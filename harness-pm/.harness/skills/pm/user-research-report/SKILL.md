@@ -16,6 +16,13 @@ execution_depth:
   default: standard
   quick_description: "直接输出研究结论和建议"
   deep_description: "完整报告 + 研究方法论反思 + 洞察深度分析 + 行动建议路线图"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/discovery/user-research.md
+writes:
+  - docs/discovery/user-research.md
+  - memory/progress.md
 ---
 
 # 用户研究报告自动生成

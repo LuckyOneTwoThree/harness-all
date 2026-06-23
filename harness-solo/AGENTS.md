@@ -12,6 +12,43 @@
 3. **安全红线** —— 禁止硬编码密钥、禁止 `rm -rf`、禁止 `curl | sh`、禁止修改 `.git/hooks/`
 4. **循环验证（Loop-First）** —— 功能开发走 Loop（plan→act→verify），最多 5 次迭代，超 10 次请求人类介入
 5. **会话结束（session-end）** —— 更新 `memory/progress.md`，然后按 `session-end` SKILL.md 步骤执行归档（不依赖 bash 脚本，跨平台）
+6. **交互先行（Interact First）** —— workflow 不是自动执行脚本，探索对话点（⏸）受 exploration_mode 控制，人类决策点（👤）始终暂停
+
+## 探索模式（exploration_mode）
+
+控制 workflow 执行时的交互深度。三种模式：
+
+| 模式 | ⏸ 探索对话 | 适用场景 |
+|------|-----------|---------|
+| `deep` | 每个模块前都暂停对话，必须获得用户输入后才继续 | 新功能开发/方向不明/需要 brainstorming 硬门 |
+| `standard` | 仅在模块边界暂停对话，模块内自动执行 | Bug 修复/性能优化/有明确需求的任务 |
+| `skip` | 不暂停探索对话，按流程自动执行 | 发版/紧急修复/已有充分技术方案 |
+
+**默认模式来源优先级**：用户显式切换 > workflow frontmatter `default_mode` > `standard`
+
+**切换方式**：对话中随时说"切换到 deep/standard/skip 模式"，Agent 确认后写入 `state.yaml` 的 `exploration_mode` 字段
+
+**skip 模式安全兜底**：skip 模式启动时，Agent 必须检查 `memory/progress.md` 和 `docs/handoff/` 是否有上游需求文档。如无任何需求文档，**拒绝执行 skip，降级为 standard 并告知用户**
+
+**模式与降级策略联动**：
+
+| 模式 | 降级策略 |
+|------|---------|
+| `deep` | **禁用降级**——用户要深度探索，不允许跳过 brainstorming 硬门 |
+| `standard` | 允许降级，但降级产出必须标注 `degraded: true` |
+| `skip` | 允许降级，不额外标注 |
+
+## 人类决策点（通用规则）
+
+以下场景**始终暂停**，不受 exploration_mode 影响：
+
+1. 技术方案选择（用什么框架/架构/库）
+2. 任务优先级排序
+3. 置信度 < 0.3 的结论传递
+4. 产出文档的最终审批（spec.md/CHANGELOG/交付文档）
+5. 花资源的决策（引入新依赖/基础设施变更）
+
+> workflow 中的 `👤` 标记为人类决策点，`⏸` 标记为探索对话点。即使 workflow 漏标 `👤`，上述通用规则仍然生效。
 
 ## 卡帕西工程原则（Karpathy Principles）
 
@@ -64,13 +101,13 @@
 
 1. **AGENTS.md**（本文件）—— 启动必读
 2. **SOUL.md + constitution.md** —— 首次交互时读（人格身份 + 项目宪法）
-3. **skills/INDEX.md** —— 需要选 Skill 时读（40 行内，纯索引）
+3. **skills/INDEX.md** —— 需要选 Skill 时读（80 行内，纯索引）
 4. **对应 SKILL.md** —— 执行任务时读（frontmatter 的 `reads` 字段声明依赖的 rules，自动拉取）
 5. **memory/progress.md** —— session-start 时读
 
 ## 技能选择
 
-需要选择 Skill 时，读取 `.harness/skills/INDEX.md`（纯索引，40 行内）。
+需要选择 Skill 时，读取 `.harness/skills/INDEX.md`（纯索引，80 行内）。
 工作流编排（新功能/Bug 修复）在 `.harness/skills/workflows/` 下按需读取。
 
 ## 与 harness 家族的关系
@@ -96,10 +133,7 @@ harness-solo 是 harness 家族的**工程开发**成员，专注写代码。其
 
 ## 项目宪法（constitution.md）
 
-每个项目独有的不可协商原则。首次交互时读取 `constitution.md`（项目根）。示例条款：
-- 本项目不接受新的运行时依赖（除非经过审批）
-- 所有公开 API 必须有集成测试
-- 数据库变更必须生成迁移脚本
+每个项目独有的不可协商原则。首次交互时读取 `constitution.md`（项目根），示例条款见该文件。
 
 ## 循环引擎
 

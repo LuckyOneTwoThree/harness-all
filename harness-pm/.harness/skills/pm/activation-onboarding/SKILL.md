@@ -16,6 +16,15 @@ execution_depth:
   default: standard
   quick_description: "直接输出Onboarding流程和激活策略"
   deep_description: "完整策略 + 激活漏斗深度分析 + 个性化Onboarding设计 + A/B测试方案"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/growth/growth-strategy.md
+writes:
+  - memory/progress.md
+  - memory/knowledge-base.md
+  - docs/growth/growth-strategy.md
+  - onboarding_plan.json
 ---
 
 # Onboarding自动优化

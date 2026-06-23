@@ -16,6 +16,14 @@ execution_depth:
   default: standard
   quick_description: "直接输出竞品诊断和功能对比"
   deep_description: "完整诊断 + 竞品战略推演 + 差异化机会识别 + 竞争应对路线图"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/monitoring/diagnosis-report.md
+writes:
+  - docs/monitoring/diagnosis-report.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 竞品动态追踪与应对 🤖

@@ -152,7 +152,7 @@ harness-solo/
 │   │   ├── entropy-check.sh           # 熵检查（可选）
 │   │   └── archive-progress.sh        # 进度归档（可选）
 │   ├── skills/
-│   │   ├── INDEX.md                   # skill 索引（40 行内）
+│   │   ├── INDEX.md                   # skill 索引（80 行内）
 │   │   ├── engineering/               # 16 个工程 skill
 │   │   ├── meta/                      # 4 个元 skill
 │   │   └── workflows/                 # 7 个工作流
@@ -174,7 +174,9 @@ harness-solo/
     ├── decisions/                     # 架构决策记录（ADR）
     └── handoff/                       # harness 家族交接文档
         ├── README.md
-        └── handoff-template.md
+        ├── handoff-template.md
+        ├── solo-to-growth-template.md
+        └── solo-to-ops-template.md
 ```
 
 ## 文档体系

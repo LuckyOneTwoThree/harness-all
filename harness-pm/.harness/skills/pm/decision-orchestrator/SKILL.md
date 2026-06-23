@@ -12,6 +12,14 @@ metadata:
     - "建立数据驱动决策机制"
     - "把分析结果转化为行动"
     - "推动数据文化建设"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/metrics/decision-report.md
+writes:
+  - output/phase-reports/decision-orchestrator.json
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 数据驱动决策指挥官

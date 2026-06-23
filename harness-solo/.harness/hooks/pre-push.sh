@@ -4,6 +4,11 @@
 #
 # 职责：推送前运行测试（如果有），防止破坏性推送
 
+# CRLF 防御：Windows 下 core.autocrlf 可能导致脚本含 \r，Git Bash 无法执行
+if grep -qI $'\r' "$0" 2>/dev/null; then
+  exec bash < <(tr -d '\r' < "$0")
+fi
+
 set -e
 
 # 1. 防止 force push 到 main/master

@@ -6,6 +6,11 @@
 # 定位：主动验证工具（Agent 或 git pre-commit 调用）
 # 不是自动拦截器，是"先跑一遍再决定"的工具
 
+# CRLF 防御：Windows 下 core.autocrlf 可能导致脚本含 \r，Git Bash 无法执行
+if grep -qI $'\r' "$0" 2>/dev/null; then
+  exec bash < <(tr -d '\r' < "$0")
+fi
+
 set -e
 
 # 密钥模式（高置信度）

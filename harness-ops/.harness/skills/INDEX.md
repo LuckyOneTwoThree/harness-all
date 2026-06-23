@@ -1,6 +1,6 @@
 # Skills Index — harness-ops
 
-> 纯索引，40 行内。需要选 Skill 时读此文件，然后读对应 SKILL.md。
+> 纯索引，80 行内。需要选 Skill 时读此文件，然后读对应 SKILL.md。
 > 工作流编排见 `workflows/`。
 
 ## Meta Skill（4 个，✅ 已建设）
@@ -64,10 +64,12 @@
 
 ## 工作流（7 个，✅ 全部已建设）
 
-- **deployment-workflow** — 部署全流程
-- **incident-response-workflow** — 故障响应全流程
-- **infrastructure-setup-workflow** — 基础设施搭建
-- **monitoring-deployment-workflow** — 监控体系部署
-- **security-audit-workflow** — 安全审计
-- **disaster-recovery-workflow** — 容灾演练
-- **ops-review-workflow** — 运维回顾
+> `default_mode`：deep=强制探索 / standard=模块边界暂停 / skip=直接执行（用户可随时切换）
+
+- **deployment-workflow** — 部署全流程 [skip]
+- **incident-response-workflow** — 故障响应全流程 [skip]
+- **infrastructure-setup-workflow** — 基础设施搭建 [deep]
+- **monitoring-deployment-workflow** — 监控体系部署 [standard]
+- **security-audit-workflow** — 安全审计 [deep]
+- **disaster-recovery-workflow** — 容灾演练 [skip]
+- **ops-review-workflow** — 运维回顾 [skip]

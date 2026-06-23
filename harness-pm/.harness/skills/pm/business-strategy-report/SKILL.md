@@ -15,6 +15,18 @@ execution_depth:
   default: standard
   quick_description: "直接输出战略建议和优先级"
   deep_description: "完整报告 + 战略推演 + 竞争格局分析 + 执行路线图"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/strategy/business-strategy.md
+  - docs/strategy/PRODUCT_STRATEGY.md
+  - docs/strategy/OKR.md
+  - docs/strategy/roadmap.md
+  - docs/strategy/positioning.md
+  - docs/strategy/stakeholder-analysis.md
+writes:
+  - docs/strategy/business-strategy.md
+  - memory/progress.md
 ---
 
 # 商业战略规划报告自动生成

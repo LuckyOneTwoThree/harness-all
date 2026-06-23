@@ -19,6 +19,16 @@ execution_depth:
   default: standard
   quick_description: "执行机会评分和Problem Statement生成，输出机会优先级列表和问题陈述"
   deep_description: "额外包含HMW四维度发散、机会简报完整组装、关键假设风险分析、人类决策事项清单"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/discovery/user-research.md
+  - docs/discovery/market-analysis.md
+  - docs/discovery/insight.md
+writes:
+  - docs/discovery/opportunity.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # Opportunity Definition — 机会识别与定义

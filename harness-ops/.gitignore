@@ -2,11 +2,16 @@
 
 # 运维敏感文件（绝不提交）
 .env
-.env.*
+.env.local
+.env.production
+.env.staging
 *.pem
 *.key
+id_rsa
+id_ed25519
 kubeconfig
 credentials.json
+service-account*.json
 *.tfvars
 !*.tfvars.example
 
@@ -18,6 +23,23 @@ credentials.json
 
 # Ansible vault
 *.vault
+
+# 依赖
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# 构建产物
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
 
 # 临时文件
 .harness-ops-tmp-*/

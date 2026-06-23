@@ -15,6 +15,14 @@ execution_depth:
   default: standard
   quick_description: "直接输出价值-市场匹配度评估"
   deep_description: "完整评估 + 价值-市场匹配矩阵 + 差距分析 + 优化路线图"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/strategy/business-strategy.md
+  - docs/discovery/user-research.md
+writes:
+  - docs/strategy/business-strategy.md
+  - memory/progress.md
 ---
 
 # 价值主张匹配度自动评估

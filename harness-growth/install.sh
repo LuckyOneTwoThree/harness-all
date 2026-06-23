@@ -88,10 +88,12 @@ else
     echo "WARN: 临时目录清理失败或路径异常: $TEMP_DIR"
 fi
 
-# 设置脚本可执行权限（Unix only；Windows 无 chmod，hooks 由 Git Bash 自身处理）
+# 设置脚本可执行权限（Unix only；Windows 无 chmod）
 if command -v chmod >/dev/null 2>&1; then
+  chmod +x .harness/scripts/*.sh 2>/dev/null || true
   echo "  ✓ 设置脚本可执行权限"
 else
+  echo "  ⚠ Windows 环境，跳过 chmod（脚本仍可运行）"
 fi
 
 echo ""
@@ -102,4 +104,11 @@ echo "  1. 编辑 constitution.md，填写项目特定原则"
 echo "  2. 编辑 SOUL.md 的 [用户名] 和增长偏好"
 echo "  3. 编辑 docs/operations/GROWTH_STRATEGY.md，填写增长策略"
 echo "  4. 让 AI Agent 读取 AGENTS.md 开始工作"
+echo ""
+echo "⚠️ Windows CRLF 指引："
+echo "  Windows 环境下 core.autocrlf=true 会导致 .sh 脚本变成 CRLF，"
+echo "  Git Bash 执行 CRLF 脚本会报错 /bin/bash^M: bad interpreter"
+echo "  解决方案："
+echo "    1. git config core.autocrlf false（关闭自动转换）"
+echo "    2. 或在项目根目录添加 .gitattributes 强制 *.sh 使用 LF（推荐）"
 echo ""

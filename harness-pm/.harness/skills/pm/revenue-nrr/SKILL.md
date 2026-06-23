@@ -16,6 +16,14 @@ execution_depth:
   default: standard
   quick_description: "直接输出NRR分析和留存策略"
   deep_description: "完整分析 + 客户健康评分 + 流失预警模型 + 增购机会识别"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+writes:
+  - memory/progress.md
+  - memory/knowledge-base.md
+  - docs/growth/growth-strategy.md
+  - nrr_analysis.json
 ---
 
 # NRR自动追踪与预警

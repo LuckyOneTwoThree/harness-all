@@ -22,8 +22,9 @@
 | 模板 | 用途 |
 |------|------|
 | `handoff-template.md` | 通用交接模板 |
-| `solo-to-ops-template.md` | 工程交付给运维的专用模板 |
 | `ops-to-pm-template.md` | 运维反馈给产品的专用模板 |
+
+> 入站模板（solo-to-ops）由源框架 harness-solo 提供，不在本框架存放。
 
 ## 使用方式
 

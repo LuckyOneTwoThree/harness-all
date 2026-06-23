@@ -1,3 +1,9 @@
+---
+workflow_id: I
+name: incident-response
+default_mode: skip
+---
+
 # 工作流 I：危机响应
 
 > 适用场景：P0 级线上事故、重大用户投诉、安全漏洞等紧急情况

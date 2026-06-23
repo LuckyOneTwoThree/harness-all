@@ -12,6 +12,15 @@ metadata:
     - "设计MVP范围"
     - "做一下假设验证"
     - "评估一下方案风险"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/product/PRD.md
+  - docs/metrics/experiment-report.md
+writes:
+  - output/phase-reports/validation-orchestrator.json
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 方案验证指挥官

@@ -176,7 +176,7 @@ harness-design/
 │   │   ├── security.md                # 安全红线
 │   │   └── prompt-defense.md          # prompt 注入防护
 │   ├── skills/
-│   │   ├── INDEX.md                   # skill 索引（40 行内）
+│   │   ├── INDEX.md                   # skill 索引（80 行内）
 │   │   ├── design/                    # 14 个设计 skill
 │   │   ├── meta/                      # 4 个元 skill
 │   │   └── workflows/                 # 6 个工作流

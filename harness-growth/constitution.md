@@ -49,8 +49,8 @@ harness-growth 是**纯文档/规则框架**，本身不引入任何运行时依
 
 ### 原则 5：文档简洁，防止膨胀
 
-- `AGENTS.md` 不超过 120 行
-- `SKILL.md` 不超过 300 行
+- `AGENTS.md` 不超过 150 行
+- `SKILL.md` 不超过 300 行（超过时将 schema/示例/决策表提取到 `Reference/` 子目录，Reference/ 下不限）
 - `progress.md` 超过 200 行必须归档
 
 **验证方式**：`skill-maintenance` 元 skill 扫描行数 + Agent 在 session-end 时检查文档长度。
@@ -65,6 +65,17 @@ harness-growth 是**纯文档/规则框架**，本身不引入任何运行时依
 
 **验证方式**：`spec.md` 缺少假设或度量字段的实验不准进入 EXPERIMENT 阶段。
 
+### 原则 7：探索先行不可绕过
+
+`default_mode: deep` 的 workflow（如 growth-strategy-workflow），必须完成增长现状探索阶段（指标分析/用户分群/渠道评估）才能进入策略产出。
+
+- `deep` 模式下，⏸ 探索对话点不可跳过，必须获得用户输入后才继续
+- `deep` 模式下，禁用 skill 降级策略，不允许"基于默认假设"降级
+- 用户只能通过显式声明"切换到 skip 模式"来绕过，且 Agent 必须记录理由到 `state.yaml`
+- `skip` 模式有安全兜底：无数据基础时自动降级为 `standard`
+
+**验证方式**：workflow 执行前检查 `state.yaml` 的 `exploration_mode` 字段；`deep` 模式下未完成探索阶段则阻断 PLAN→EXPERIMENT 流转。
+
 ## 宪法检查点（PLAN 阶段必查）
 
 - [ ] 当前变更是否引入运行时依赖？
@@ -74,9 +85,11 @@ harness-growth 是**纯文档/规则框架**，本身不引入任何运行时依
 - [ ] 文档长度是否超过项目阈值？
 - [ ] 当前实验是否标注了假设和度量指标？
 - [ ] 当前实验是否符合内容质量、SEO 长期主义、数据闭环原则？
+- [ ] 当前 workflow 的 exploration_mode 是否为 deep？若是，是否已完成增长现状探索？
 
 ## 修订记录
 
 | 日期 | 修订内容 | 原因 |
 |------|---------|------|
 | 2026-06-21 | 初始版本 | 明确 harness-growth 自身约束 |
+| 2026-06-23 | 增加原则 7（探索先行不可绕过）、宪法检查点、AGENTS.md 行数限制 120→150 | 推广 exploration_mode 机制到 growth 框架 |

@@ -1,3 +1,9 @@
+---
+workflow_id: F
+name: growth-review-workflow
+default_mode: skip
+---
+
 # Workflow: 增长回顾报告（Growth Review Workflow）
 
 > 所属 LOOP 类型：无（非循环，周期性报告）
@@ -25,9 +31,8 @@
 
 ## 说明
 
-- 数据分析 skill（funnel-analysis / cohort-analysis / metric-anomaly-detection）在第 3 批建设
-- 在第 3 批完成前，growth-review 直接从 knowledge-base.md 和 evidence.md 读取已有数据
-- aarr-diagnosis 在第 3 批建设，当前由 growth-review 内联处理 AARRR 诊断
+- 数据分析 skill（funnel-analysis / cohort-analysis / metric-anomaly-detection）已建成，growth-review 调用它们获取分析数据
+- aarr-diagnosis 已建成，growth-review 调用获取 AARRR 诊断结果
 
 ## 质量门控
 

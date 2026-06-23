@@ -1,3 +1,9 @@
+---
+workflow_id: E
+name: lifecycle-operations-workflow
+default_mode: standard
+---
+
 # Workflow: 用户运营全流程（Lifecycle Operations Workflow）
 
 > 所属 LOOP 类型：lifecycle / optimization

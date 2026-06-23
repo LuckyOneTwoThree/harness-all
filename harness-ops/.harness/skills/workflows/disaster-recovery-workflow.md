@@ -1,3 +1,9 @@
+---
+workflow_id: F
+name: disaster-recovery-workflow
+default_mode: skip
+---
+
 # Workflow: 容灾演练（Disaster Recovery Workflow）
 
 > 所属 LOOP 类型：recovery

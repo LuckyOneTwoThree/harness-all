@@ -1,3 +1,9 @@
+---
+workflow_id: D
+name: monitoring-deployment-workflow
+default_mode: standard
+---
+
 # Workflow: 监控体系部署（Monitoring Deployment Workflow）
 
 > 所属 LOOP 类型：provision

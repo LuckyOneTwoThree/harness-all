@@ -8,10 +8,25 @@ metadata:
   version: "2.0"
   domain_tags: ["互联网", "软件", "通用"]
   interaction_mode: "ai_auto"
+  trigger_examples:
+    - "告警根因分析"
+    - "异常归因定位"
+    - "指标下跌原因排查"
+    - "影响范围评估"
 execution_depth:
   default: standard
   quick_description: "仅输出根因摘要和即时修复动作"
   deep_description: "完整归因 + 5Why深度链 + 影响面量化 + 长期修复方案 + 复盘建议"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/monitoring/monitoring-config.md
+  - docs/monitoring/release-notes.md
+  - docs/metrics/metrics-system.md
+writes:
+  - docs/monitoring/monitoring-config.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 异常归因分析 🤖

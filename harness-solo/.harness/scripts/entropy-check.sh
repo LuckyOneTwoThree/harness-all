@@ -11,6 +11,11 @@
 #
 # 来源：ArtemisAI/Harness_Engineering 的 entropy-check
 
+# CRLF 防御：Windows 下 core.autocrlf 可能导致脚本含 \r，Git Bash 无法执行
+if grep -qI $'\r' "$0" 2>/dev/null; then
+  exec bash < <(tr -d '\r' < "$0")
+fi
+
 set -e
 
 HARNESS_DIR=".harness"

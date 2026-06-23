@@ -34,4 +34,9 @@
 
 ## 模板
 
-见 `handoff-template.md`。复制后按实际情况填写。
+| 模板 | 用途 |
+|------|------|
+| `handoff-template.md` | 通用交接模板 |
+| `growth-to-pm-template.md` | 增长反馈给产品的专用模板 |
+
+> 入站模板（pm-to-growth / solo-to-growth）由源框架提供，不在本框架存放。

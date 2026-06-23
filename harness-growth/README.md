@@ -151,7 +151,7 @@ harness-growth/
 │   │   ├── security.md                # 安全红线
 │   │   └── prompt-defense.md          # prompt 注入防护
 │   ├── skills/
-│   │   ├── INDEX.md                   # skill 索引（40 行内）
+│   │   ├── INDEX.md                   # skill 索引（80 行内）
 │   │   ├── meta/                      # 4 个元 skill
 │   │   ├── strategy/                  # 增长策略 skill（5个）
 │   │   ├── experiment/                # 增长实验 skill（6个）
@@ -171,7 +171,8 @@ harness-growth/
     ├── operations/                    # 运营文档（GROWTH_STRATEGY.md）
     └── handoff/                       # harness 家族交接文档
         ├── README.md
-        └── handoff-template.md
+        ├── handoff-template.md
+        └── growth-to-pm-template.md
 ```
 
 ## 文档体系

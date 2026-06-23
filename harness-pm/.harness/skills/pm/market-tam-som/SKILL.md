@@ -16,6 +16,12 @@ execution_depth:
   default: standard
   quick_description: "直接输出市场规模估算"
   deep_description: "完整估算 + 细分市场拆解 + 增长率预测 + 市场进入优先级"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+writes:
+  - docs/discovery/market-analysis.md
+  - memory/progress.md
 ---
 
 # 市场规模自动测算

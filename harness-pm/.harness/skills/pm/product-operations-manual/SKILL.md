@@ -16,6 +16,13 @@ execution_depth:
   default: standard
   quick_description: "直接输出运营SOP和应急响应流程"
   deep_description: "完整手册 + 运营策略深度分析 + 场景化SOP + 运营指标体系设计"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+writes:
+  - docs/growth/operations-manual.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 产品运营手册生成

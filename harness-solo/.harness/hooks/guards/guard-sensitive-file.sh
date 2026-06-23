@@ -3,6 +3,11 @@
 # 用法：bash guard-sensitive-file.sh [file_path...]
 # 不带参数时检查 staged 文件
 
+# CRLF 防御：Windows 下 core.autocrlf 可能导致脚本含 \r，Git Bash 无法执行
+if grep -qI $'\r' "$0" 2>/dev/null; then
+  exec bash < <(tr -d '\r' < "$0")
+fi
+
 set -e
 
 # 受保护文件（禁止修改/删除）

@@ -16,6 +16,13 @@ execution_depth:
   default: standard
   quick_description: "直接输出用户模型和行为特征"
   deep_description: "完整建模 + 行为序列分析 + 模型验证方案 + 用户演进追踪"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/discovery/user-research.md
+writes:
+  - docs/discovery/user-research.md
+  - memory/progress.md
 ---
 
 # 用户建模自动生成

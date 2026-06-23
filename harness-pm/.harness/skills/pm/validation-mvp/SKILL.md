@@ -16,6 +16,15 @@ execution_depth:
   default: standard
   quick_description: "直接输出MVP范围和验证计划"
   deep_description: "完整方案 + MVP范围优化 + 验证指标体系 + 迭代演进路线"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/product/PRD.md
+  - docs/handoff/design-to-solo.md
+writes:
+  - docs/product/PRD.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # MVP范围自动界定

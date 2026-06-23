@@ -12,6 +12,43 @@
 3. **安全红线** —— 不做黑帽 SEO、不刷量、不泄露用户 PII、不抓取竞品非公开数据
 4. **循环验证（Loop-First）** —— 增长实验走 Loop（plan→experiment→measure），最多 5 次迭代，超 10 次请求人类介入
 5. **会话结束（session-end）** —— 更新 `memory/progress.md`，然后按 `session-end` SKILL.md 步骤执行归档（不依赖 bash 脚本，跨平台）
+6. **交互先行（Interact First）** —— workflow 不是自动执行脚本，探索对话点（⏸）受 exploration_mode 控制，人类决策点（👤）始终暂停
+
+## 探索模式（exploration_mode）
+
+控制 workflow 执行时的交互深度。三种模式：
+
+| 模式 | ⏸ 探索对话 | 适用场景 |
+|------|-----------|---------|
+| `deep` | 每个模块前都暂停对话，必须获得用户输入后才继续 | 增长战略制定/新业务冷启动/需要深度探索增长现状 |
+| `standard` | 仅在模块边界暂停对话，模块内自动执行 | 增长实验/内容营销/SEO 优化/有明确目标的运营 |
+| `skip` | 不暂停探索对话，按流程自动执行 | 增长回顾/定期报告/已有充分数据基础 |
+
+**默认模式来源优先级**：用户显式切换 > workflow frontmatter `default_mode` > `standard`
+
+**切换方式**：对话中随时说"切换到 deep/standard/skip 模式"，Agent 确认后写入 `state.yaml` 的 `exploration_mode` 字段
+
+**skip 模式安全兜底**：skip 模式启动时，Agent 必须检查 `memory/progress.md` 和 `docs/handoff/` 是否有上游增长需求。如无任何数据基础，**拒绝执行 skip，降级为 standard 并告知用户**
+
+**模式与降级策略联动**：
+
+| 模式 | 降级策略 |
+|------|---------|
+| `deep` | **禁用降级**——用户要深度探索，不允许"基于默认假设"降级 |
+| `standard` | 允许降级，但降级产出必须标注 `degraded: true` |
+| `skip` | 允许降级，不额外标注 |
+
+## 人类决策点（通用规则）
+
+以下场景**始终暂停**，不受 exploration_mode 影响：
+
+1. 增长策略方向选择（做哪个渠道、用哪种增长模型）
+2. 实验优先级排序
+3. 置信度 < 0.3 的结论传递
+4. 产出文档的最终审批（增长策略/实验报告/运营手册）
+5. 花资源的决策（实验投放预算、渠道采购）
+
+> workflow 中的 `👤` 标记为人类决策点，`⏸` 标记为探索对话点。即使 workflow 漏标 `👤`，上述通用规则仍然生效。
 
 ## 增长四原则（Growth Principles）
 
@@ -57,26 +94,16 @@
 
 1. **AGENTS.md**（本文件）—— 启动必读
 2. **SOUL.md + constitution.md** —— 首次交互时读（人格身份 + 项目宪法）
-3. **skills/INDEX.md** —— 需要选 Skill 时读（100 行内，纯索引）
+3. **skills/INDEX.md** —— 需要选 Skill 时读（80 行内，纯索引）
 4. **对应 SKILL.md** —— 执行任务时读（frontmatter 的 `reads` 字段声明依赖的 rules，自动拉取）
 5. **memory/progress.md** —— session-start 时读
 
 ## 技能选择
 
-需要选择 Skill 时，读取 `.harness/skills/INDEX.md`（纯索引，100 行内）。
+需要选择 Skill 时，读取 `.harness/skills/INDEX.md`（纯索引，80 行内）。
 工作流编排（增长实验/内容营销/SEO优化/用户运营/增长战略/增长回顾）在 `.harness/skills/workflows/` 下按需读取。
 
-当前已全部建设完成（40 skill + 6 workflow）：
-- **模块1 增长策略**（5 skill）：nsm-definition / kpi-tree / aarr-diagnosis / growth-loop-design / four-fits-assessment
-- **模块2 增长实验**（6 skill）：hypothesis-generation / ice-scoring / experiment-design / sample-size-calc / experiment-analysis / experiment-conclusion
-- **模块3 内容营销**（5 skill）：content-ideation / content-creation / content-review / content-distribution / content-performance
-- **模块4 SEO优化**（5 skill）：keyword-research / serp-analysis / onpage-optimization / technical-seo-audit / ranking-tracking
-- **模块5 用户运营**（5 skill）：user-segmentation / onboarding-design / aha-moment-identification / retention-analysis / churn-rescue
-- **模块6 获客投放**（3 skill）：channel-assessment / landing-page-optimization / cac-analysis
-- **模块7 变现**（3 skill）：pricing-strategy / paywall-optimization / nrr-analysis
-- **模块8 数据分析**（3 skill）：funnel-analysis / cohort-analysis / metric-anomaly-detection
-- **模块9 增长审查**（1 skill）：growth-review
-- **工作流**（6 个）：growth-experiment / growth-review / content-marketing / seo-optimization / lifecycle-operations / growth-strategy
+当前已全部建设完成（40 skill + 6 workflow），9 个模块（策略/实验/内容/SEO/用户运营/获客/变现/数据分析/审查）详见 INDEX.md。
 
 ## 与 harness 家族的关系
 

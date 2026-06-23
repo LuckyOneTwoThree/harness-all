@@ -27,5 +27,6 @@
 
 - `handoff-template.md` — 通用交接模板
 - `solo-to-growth-template.md` — harness-solo → harness-growth 专用模板（含已实现功能清单 + AC-xxx + 性能指标 + 埋点事件）
+- `solo-to-ops-template.md` — harness-solo → 运维专用模板（工程交付给运维：部署清单 + 配置项 + 监控告警 + 回滚预案）
 
 复制后按实际情况填写。

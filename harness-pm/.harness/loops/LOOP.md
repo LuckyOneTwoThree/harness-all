@@ -39,8 +39,19 @@
 
 | 维度 | 限制 | 超限动作 |
 |------|------|---------|
-| 总循环次数 | 10 | 停止，请求人类介入 |
+| 总循环次数 | 10 | **硬熔断**：写入 `hard_limit_reached: true` 到 state.yaml，status 改为 `failed`，**禁止继续循环**，必须请求人类介入 |
 
+> **硬熔断执行规则（不可协商）**：
+> 1. Agent 在每次 VALIDATE 阶段**必须**读取 `state.yaml` 的 `iteration` 字段
+> 1.5. **VALIDATE 阶段必须强制读取 state.yaml 原始内容**：Agent 在每次 VALIDATE 时，必须使用 Read 工具读取 `state.yaml` 的完整内容，获取真实的 iteration 值。**禁止从上下文记忆中引用 iteration 值**（防止幻觉状态下跳过熔断检查）。
+> 2. 当 Read 工具读取的 `iteration >= 10` 时（必须来自文件原始内容，不是记忆引用），Agent **必须**执行以下操作，不得跳过：
+>    - 将 `status` 改为 `failed`
+>    - 将 `hard_limit_reached` 写为 `true`
+>    - 将 `last_error` 写为"迭代超限（iteration >= 10），硬熔断触发"
+>    - 向用户报告熔断原因，请求人类介入
+> 3. 当 `hard_limit_reached: true` 时，Agent **禁止**继续执行当前任务的任何 LOOP 阶段
+> 4. 只有用户显式指示"重置熔断"后，Agent 才可将 `hard_limit_reached` 改为 `false` 并重置 `iteration`
+>
 > Token 限制由用户在 IDE 中自行监控，不纳入框架规则（Agent 没有 token 计数器）。
 
 ## Specs 持久化
@@ -100,6 +111,12 @@ last_error_at: "<ISO 8601>"               # 最近一次失败时间
 
 # 可选字段（子阶段描述，用于多子阶段工作流）
 substage: "<子阶段描述>"                   # 如 "voice-analysis" / "persona-modeling" / "prd-generation"
+
+# 可选字段（探索模式，pm 专属）
+exploration_mode: "<enum>"                 # deep / standard / skip，默认 standard，受 workflow default_mode 和用户切换控制
+
+# 可选字段（硬熔断标记）
+hard_limit_reached: <bool>                 # true 时禁止继续循环，默认 false，仅 iteration >= 10 时置 true
 ```
 
 **stage 枚举值**：
@@ -111,14 +128,16 @@ substage: "<子阶段描述>"                   # 如 "voice-analysis" / "person
 | `validate` | 验证阶段 | 质量门禁/人类评审时 |
 | `revise` | 修订阶段 | 根据反馈修订产出时 |
 
-**status 枚举值**：
+**status 枚举值（全局统一规范）**：
 
 | 值 | 含义 | 写入时机 |
 |----|------|---------|
-| `running` | 进行中 | 任务初始化 / 调研成功继续 |
-| `retrying` | 重试中 | 验证失败后 |
-| `done` | 已完成 | 验证通过 + 人类审批通过 |
-| `failed` | 失败（需人类介入） | 迭代超限 |
+| `running` | 任务正在执行中 | 任务初始化 / 调研成功继续 |
+| `retrying` | 任务失败，正在进行重试或自动回滚 | 验证失败后 |
+| `done` | 任务已成功验证并完成 | 验证通过 + 人类审批通过 |
+| `failed` | 任务失败且重试耗尽 | 迭代超限 |
+| `needs-human` | 需要人类干预（如：必须审批、自动修复失败） | 人类决策点暂停时 |
+| `blocked` | 任务被阻塞（如：等待上游产出物、等待环境权限） | 探索硬门未通过时 |
 
 **字段写入责任**：
 
@@ -127,20 +146,12 @@ substage: "<子阶段描述>"                   # 如 "voice-analysis" / "person
 | current_task | 写 | 不改 | 不改 |
 | iteration | 写（0） | 写（+1） | 不改 |
 | stage | 写（plan） | 写（research） | 写（validate） |
-| status | 写（running） | 写（running/retrying） | 写（done/retrying） |
+| status | 写（running） | 写（running/retrying） | 写（done/retrying/needs-human） |
+| exploration_mode | 写（workflow default_mode） | 不改 | 不改 |
 | last_error | 写（""） | 写（失败时/成功清空） | 写（失败时/成功清空） |
 | started_at | 写（初始化） | 不改 | 不改 |
 
 **示例**：
-
-
-**status 枚举（全局统一规范）**：
-- `running`: 任务正在执行中。
-- `retrying`: 任务失败，正在进行重试或自动回滚。
-- `done`: 任务已成功验证并完成。
-- `failed`: 任务失败且重试耗尽。
-- `needs-human`: 需要人类干预（如：必须审批、自动修复失败）。
-- `blocked`: 任务被阻塞（如：等待上游产出物、等待环境权限）。
 
 ```yaml
 # loops/specs/001-market-research/state.yaml 示例

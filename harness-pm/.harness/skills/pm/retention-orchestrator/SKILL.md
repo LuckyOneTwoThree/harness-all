@@ -12,6 +12,15 @@ metadata:
     - "提升用户留存率"
     - "做一下流失预警"
     - "设计分层运营策略"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/growth/growth-strategy.md
+writes:
+  - memory/progress.md
+  - memory/knowledge-base.md
+  - output/phase-reports/retention-orchestrator.json
+  - output/approvals/retention-orchestrator/{stage-id}.approval.json
 ---
 
 # 用户留存指挥官

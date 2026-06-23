@@ -15,6 +15,14 @@ execution_depth:
   default: standard
   quick_description: "生成竞品定价矩阵概览和1个推荐定价方案，含基础单位经济验证"
   deep_description: "额外包含3个完整定价方案对比、支付意愿多方法交叉推断、敏感性分析、定价调整路线图、竞品定价趋势预测"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/strategy/business-strategy.md
+  - docs/discovery/market-analysis.md
+writes:
+  - docs/strategy/business-strategy.md
+  - memory/progress.md
 ---
 
 # 定价策略自动分析

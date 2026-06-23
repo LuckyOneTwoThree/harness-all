@@ -32,6 +32,7 @@ writes:
 3. **检查进行中的任务**
    扫描 `.harness/loops/specs/*/state.yaml`，找出 status 为 `running` 或 `retrying` 的任务
    如有，向用户报告："发现进行中的设计任务 X，是否继续？"
+   同时读取 `exploration_mode` 字段，报告当前模式（如"当前探索模式：deep"）
 
 4. **读取任务看板**
    读 `.harness/FEATURES.md`，了解项目整体设计进度

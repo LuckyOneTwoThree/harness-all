@@ -1,3 +1,9 @@
+---
+workflow_id: D
+name: refactor
+default_mode: deep
+---
+
 # 工作流 C：重构
 
 > 适用场景：改善现有代码结构，不改变外部行为

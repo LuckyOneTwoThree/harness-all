@@ -1,3 +1,9 @@
+---
+workflow_id: C
+name: growth
+default_mode: standard
+---
+
 # 工作流 C：增长突破
 
 > 适用场景：需要获取用户、提升留存、商业化变现

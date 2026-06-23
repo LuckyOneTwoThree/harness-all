@@ -6,6 +6,11 @@
 # ⚠️ 跨平台说明：本脚本是可选兜底，仅在 bash 可用环境下执行。
 # Windows 或无 bash 环境下，Agent 可用 Glob/Read 工具按本脚本的检查清单自检。
 
+# CRLF 防御：Windows 下 core.autocrlf 可能导致脚本含 \r，Git Bash 无法执行
+if grep -qI $'\r' "$0" 2>/dev/null; then
+  exec bash < <(tr -d '\r' < "$0")
+fi
+
 set -e
 
 HARNESS_DIR=".harness"
@@ -126,16 +131,16 @@ for s in "${SCRIPTS[@]}"; do
   fi
 done
 
-# AGENTS.md 行数检查（ETH 研究建议 < 60 行）
+# AGENTS.md 行数检查（constitution.md 上限 150 行）
 echo "→ AGENTS.md 行数检查"
 if [ -f "AGENTS.md" ]; then
   agents_lines=$(wc -l < AGENTS.md | tr -d ' ')
-  if [ "$agents_lines" -le 60 ]; then
-    echo "  ✓ $agents_lines 行（≤60）"
-  elif [ "$agents_lines" -le 120 ]; then
-    echo "  ⚠ $agents_lines 行（建议 ≤60，当前可接受）"
+  if [ "$agents_lines" -le 100 ]; then
+    echo "  ✓ $agents_lines 行（≤100）"
+  elif [ "$agents_lines" -le 150 ]; then
+    echo "  ⚠ $agents_lines 行（建议 ≤100，当前可接受）"
   else
-    echo "  ✗ $agents_lines 行（超过 120，违反 ETH 研究建议）"
+    echo "  ✗ $agents_lines 行（超过 150，违反 constitution.md 原则5）"
     errors=$((errors + 1))
   fi
 fi

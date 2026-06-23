@@ -30,6 +30,7 @@ writes:
    - 完成的事项（带证据摘要）
    - 待续事项（下次会话需要知道的上下文）
    - 关键决策（本次会话做出的重要决定）
+   - 探索模式（如本次会话使用了 workflow，记录当前 exploration_mode 及切换历史）
 
 2. **批量更新 FEATURES.md**
    扫描 `.harness/loops/specs/*/state.yaml`：
@@ -73,6 +74,8 @@ writes:
 
 6. **产出交接文档**（可选，满足条件时执行）
 
+   **写权限单向隔离（不可协商）**：交接文档只有产出方可以写入。`design-to-solo.md` 只有 Design 能写。消费方只能读取，禁止修改上游交接文档。如需反馈，通过 `AskUserQuestion` 让用户转达，或写入自己的出站交接文档。
+
    > **与 design-handoff-spec 的分工**：`design-to-solo.md` 由 design-handoff-spec skill 负责生成（使用专用模板 `docs/handoff/design-to-solo-template.md`，覆盖语义，含 AC-xxx/DAC-xxx 章节 + component-map.json 引用）。session-end 只在 design-handoff-spec 未执行时才用同模板兜底产出，避免与 design-handoff-spec 的覆盖语义冲突。
 
    **跳过条件**：如果 design-handoff-spec 已产出 `docs/handoff/design-to-solo.md`（文件存在且含 AC-xxx/DAC-xxx 章节结构），则跳过本步骤，不重复产出。
@@ -94,6 +97,13 @@ writes:
    - 如本次会话无可交付产出（纯探索、纯迭代），跳过本步骤
    - 如 `design-to-solo.md` 已存在且由 session-end 兜底产出（非 design-handoff-spec 产出），追加本次交付内容，不覆盖历史
    - 文件名固定为 `design-to-solo.md`，不要按日期拆分（下游只看最新状态）
+
+   **AC 格式校验**（交接文档必须通过）
+   对产出的交接文档执行验收标准格式校验：
+   - 扫描交接文档中的验收标准，检查编号格式是否为 `AC-NNN`（如 AC-001, AC-002）
+   - 检查编号是否连续（不允许 AC-001 后直接跳到 AC-003）
+   - 检查每个 AC 是否包含：描述 + 验证方式
+   - 如发现格式异常（如"验收标准一"、编号不连续、缺少验证方式），**阻断交接**，要求修正后重新产出
 
 ## 禁止事项
 - 不更新 progress.md 就结束（下次会话失忆）

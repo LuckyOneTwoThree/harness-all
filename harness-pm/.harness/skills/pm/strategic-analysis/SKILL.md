@@ -20,6 +20,15 @@ execution_depth:
   default: standard
   quick_description: "直接输出战略分析结论和建议"
   deep_description: "完整分析 + 战略推演 + 竞争格局模拟 + 战略路线图"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/discovery/market-analysis.md
+  - docs/strategy/business-strategy.md
+  - docs/strategy/OKR.md
+writes:
+  - docs/strategy/PRODUCT_STRATEGY.md
+  - memory/progress.md
 ---
 
 # Strategic Analysis — 战略分析

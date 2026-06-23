@@ -16,6 +16,17 @@ execution_depth:
   default: standard
   quick_description: "直接输出可用性问题和改进建议"
   deep_description: "完整评估 + 可用性评分体系 + 优先级排序 + 改进路线图"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/product/PRD.md
+  - docs/metrics/experiment-report.md
+  - docs/handoff/design-to-solo.md
+writes:
+  - docs/product/PRD.md
+  - docs/handoff/pm-to-design.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 可用性测试辅助

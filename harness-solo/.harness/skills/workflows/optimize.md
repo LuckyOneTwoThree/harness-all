@@ -1,3 +1,9 @@
+---
+workflow_id: E
+name: optimize
+default_mode: standard
+---
+
 # 工作流 D：性能优化
 
 > 适用场景：用户报告性能问题、基准测试未达标、Web Vitals 恶化

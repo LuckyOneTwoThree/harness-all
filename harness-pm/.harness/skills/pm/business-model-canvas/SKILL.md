@@ -15,6 +15,14 @@ execution_depth:
   default: standard
   quick_description: "生成9格画布核心要素（客户细分、价值主张、收入来源、成本结构）及基础假设清单"
   deep_description: "额外包含单位经济敏感性分析、假设验证路线图、象限间联动一致性校验、长期商业模式演进推演"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/discovery/user-research.md
+  - docs/discovery/market-analysis.md
+writes:
+  - docs/strategy/business-strategy.md
+  - memory/progress.md
 ---
 
 # 商业模式画布自动生成

@@ -12,6 +12,14 @@ metadata:
     - "验证一下方案效果"
     - "跑一下对照实验"
     - "分析实验结果"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/metrics/experiment-report.md
+writes:
+  - output/phase-reports/experiment-orchestrator.json
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 实验设计指挥官

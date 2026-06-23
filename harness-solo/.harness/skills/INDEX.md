@@ -1,6 +1,6 @@
 # Skills 索引
 
-> 纯索引，40 行内。需要选 Skill 时读。工作流编排见 `workflows/`。
+> 纯索引，80 行内。需要选 Skill 时读。工作流编排见 `workflows/`。
 > 添加新 Skill：在分类目录下创建 SKILL.md，然后本文件追加一行。
 > 定位：harness-solo 是**工程开发框架**，只含写代码相关 skill。
 > 产品/设计/增长见 harness 家族其他成员（通过 docs/handoff/ 交接）。
@@ -30,10 +30,13 @@
 - **writing-documentation** — 文档编写，ADR/API doc/CHANGELOG，document the why
 
 ## 工作流
-- **setup** — 立项引导（install.sh 后引导填写 SOUL/constitution/PROJECT/TECH_STACK）
-- **new-feature** — 新功能开发（brainstorming → LOOP → code-review）
-- **bugfix** — Bug 修复（systematic-debugging → LOOP → code-review）
-- **refactor** — 重构（brainstorming 确认边界 → LOOP 守护不回归 → code-review）
-- **optimize** — 性能优化（performance-optimization measure→fix→verify → code-review）
-- **migration** — 代码迁移（migration 决策 → LOOP 增量迁移 → 验证零用量 → 移除旧系统）
-- **release** — 发版（verify 全量 → CHANGELOG → tag → 发布物验证）
+
+> `default_mode`：deep=强制探索 / standard=模块边界暂停 / skip=直接执行（用户可随时切换）
+
+- **setup** [skip] — 立项引导（install.sh 后引导填写 SOUL/constitution/PROJECT/TECH_STACK）
+- **new-feature** [deep] — 新功能开发（brainstorming → LOOP → code-review）
+- **bugfix** [standard] — Bug 修复（systematic-debugging → LOOP → code-review）
+- **refactor** [deep] — 重构（brainstorming 确认边界 → LOOP 守护不回归 → code-review）
+- **optimize** [standard] — 性能优化（performance-optimization measure→fix→verify → code-review）
+- **migration** [standard] — 代码迁移（migration 决策 → LOOP 增量迁移 → 验证零用量 → 移除旧系统）
+- **release** [skip] — 发版（verify 全量 → CHANGELOG → tag → 发布物验证）

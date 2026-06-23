@@ -1,3 +1,9 @@
+---
+workflow_id: A
+name: growth-strategy-workflow
+default_mode: deep
+---
+
 # Workflow: 增长战略制定（Growth Strategy Workflow）
 
 > 所属 LOOP 类型：experiment（战略本身也是假设，需验证）

@@ -1,3 +1,9 @@
+---
+workflow_id: E
+name: launch
+default_mode: skip
+---
+
 # 工作流 E：验收发布
 
 > 适用场景：产品功能验收、版本发布、灰度上线

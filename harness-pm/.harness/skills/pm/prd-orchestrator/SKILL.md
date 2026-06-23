@@ -12,6 +12,17 @@ metadata:
     - "生成产品需求文档"
     - "PRD变更了，分析一下影响"
     - "评估这个需求变更的影响范围"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/product/PRD.md
+writes:
+  - docs/product/PRD.md
+  - docs/handoff/pm-to-design.md
+  - docs/handoff/pm-to-solo.md
+  - output/phase-reports/prd-orchestrator.json
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 产品需求指挥官

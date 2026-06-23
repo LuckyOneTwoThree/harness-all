@@ -16,6 +16,13 @@ execution_depth:
   default: standard
   quick_description: "生成发布Checklist模板和各阶段检查项，输出待确认清单"
   deep_description: "完整Checklist + 逐项自动检查 + 未完成项告警 + 状态追踪 + 发布后验证 + 回归检查"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+writes:
+  - docs/monitoring/release-notes.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 上线Checklist自动生成与追踪

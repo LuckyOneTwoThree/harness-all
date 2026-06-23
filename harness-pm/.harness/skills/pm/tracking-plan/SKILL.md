@@ -16,6 +16,15 @@ execution_depth:
   default: standard
   quick_description: "仅输出核心事件列表和埋点清单"
   deep_description: "完整方案 + 数据治理规范 + 隐私合规审计 + 长期演进路线"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/metrics/metrics-system.md
+writes:
+  - memory/progress.md
+  - memory/knowledge-base.md
+  - docs/metrics/tracking-plan.md
+  - tracking_plan.json
 ---
 
 # 埋点方案自动生成
@@ -62,37 +71,13 @@ execution_depth:
 
 ### 指标体系（来自Pipeline 1）
 
-```json
-{
-  "north_star": {
-    "name": "string",
-    "calculation": "string"
-  },
-  "l1_metrics": [...],
-  "l2_metrics": [...],
-  "actionable_metrics": [...]
-}
-```
+> 📋 输入 JSON schema 详见 [Reference/input-schemas.md](./Reference/input-schemas.md)
 
 ---
 
 ### 现有埋点清单（可选）
 
-```json
-[
-  {
-    "event_name": "string",
-    "trigger": "string",
-    "properties": [
-      {
-        "name": "string",
-        "type": "string"
-      }
-    ],
-    "last_modified": "2026-01-01"
-  }
-]
-```
+> 📋 输入 JSON schema 详见 [Reference/input-schemas.md](./Reference/input-schemas.md)
 
 ---
 
@@ -112,33 +97,7 @@ FOR each metric in metric_system:
   4. 列出必需的埋点属性
 ```
 
-**反推映射表**：
-
-| 指标类型 | 所需行为数据 | 埋点事件示例 |
-|---------|------------|-------------|
-| 转化率指标 | 页面/功能曝光+点击 | page_view + button_click |
-| 频次指标 | 行为发生次数 | feature_use |
-| 时长指标 | 行为开始+结束时间 | session_start + session_end |
-| 质量指标 | 行为结果+评价 | action_result + feedback |
-| 覆盖率指标 | 功能使用+未使用对比 | feature_use vs non_use |
-
-**输出**：
-
-```json
-{
-  "metrics_to_track": [
-    {
-      "metric_name": "string",
-      "required_behavior": "string",
-      "proposed_event": {
-        "event_name": "string",
-        "trigger": "string",
-        "required_properties": ["string"]
-      }
-    }
-  ]
-}
-```
+> 📋 反推映射表与输出 schema 详见 [Reference/step1-metric-mapping.md](./Reference/step1-metric-mapping.md)
 
 ---
 
@@ -156,74 +115,7 @@ FOR each metric in metric_system:
 5. 定义功能埋点事件
 ```
 
-**PRD解析维度**：
-
-#### 2.1 功能模块识别
-
-```
-识别PRD中的功能模块 → 定义模块级埋点
-```
-
-**示例**：
-
-| PRD功能模块 | 埋点命名空间 | 埋点事件示例 |
-|-----------|------------|-------------|
-| 用户认证 | user_auth | login_success, logout, register_complete |
-| 商品浏览 | product_browse | product_view, product_list_view, search |
-| 购物车 | cart | add_to_cart, remove_from_cart, cart_view |
-| 订单流程 | order | checkout_start, payment_success, order_complete |
-| 用户中心 | user_center | profile_view, settings_view |
-
----
-
-#### 2.2 核心用户路径提取
-
-```
-识别PRD描述的用户流程 → 定义路径埋点
-```
-
-**示例流程**（电商）：
-
-```
-注册/登录 → 首页浏览 → 商品搜索/分类 → 商品详情 → 加入购物车 → 结算支付 → 订单完成
-```
-
-**路径埋点设计**：
-```json
-{
-  "user_journey": "注册→浏览→搜索→详情→加购→结算→支付→完成",
-  "touchpoints": [
-    "register_success",
-    "homepage_view",
-    "product_list_view",
-    "product_detail_view",
-    "add_to_cart",
-    "cart_view",
-    "checkout_start",
-    "payment_page_view",
-    "payment_success",
-    "order_complete"
-  ]
-}
-```
-
----
-
-#### 2.3 关键交互节点识别
-
-```
-识别PRD中的交互细节 → 定义交互埋点
-```
-
-**交互类型**：
-
-| 交互类型 | 触发时机 | 埋点属性 |
-|---------|---------|---------|
-| 按钮点击 | 点击动作发生时 | button_name, page_name, position |
-| 表单提交 | 表单提交成功时 | form_name, submit_result, error_type |
-| 滑动手势 | 滑动结束时 | swipe_direction, swipe_distance |
-| 输入行为 | 输入完成时 | input_field, input_length, input_type |
-| 切换操作 | 切换完成时 | switch_from, switch_to, switch_type |
+> 📋 功能模块/路径/交互示例表详见 [Reference/step2-prd-extraction.md](./Reference/step2-prd-extraction.md)
 
 ---
 
@@ -242,34 +134,7 @@ FOR each proposed_event:
   5. ELSE 标记为新增埋点
 ```
 
-**相似度计算规则**：
-
-```
-相似度 = α × 命名相似度 + β × 触发时机相似度 + γ × 属性相似度
-
-其中：
-  - 命名相似度：基于字符串匹配和语义分析
-  - 触发时机相似度：基于trigger描述的语义距离
-  - 属性相似度：基于共同属性的Jaccard系数
-
-权重建议：
-  - α = 0.4
-  - β = 0.3
-  - γ = 0.3
-```
-
-**去重结果输出**：
-
-```json
-{
-  "deduplication_result": {
-    "new_events": [...],        // 新增埋点
-    "duplicate_events": [...],   // 重复埋点（可复用现有）
-    "similar_events": [...],     // 相似埋点（需人工确认）
-    "updated_events": [...]      // 现有埋点需更新属性
-  }
-}
-```
+> 📋 相似度计算规则与去重输出详见 [Reference/step3-dedup-rules.md](./Reference/step3-dedup-rules.md)
 
 ---
 
@@ -277,213 +142,7 @@ FOR each proposed_event:
 
 **🤖 AI处理**
 
-#### 4.1 命名规范检查 [核心]
-
-**命名规则**：
-
-```
-事件命名：全部小写 + 下划线分隔
-  示例：user_login_success, product_add_to_cart
-
-属性命名：全部小写 + 下划线分隔
-  示例：user_id, product_price, page_name
-```
-
-**检查项**：
-
-| 检查项 | 规则 | 通过条件 |
-|-------|------|---------|
-| 字母规范 | 仅允许a-z、0-9、下划线 | 无大写字母、无特殊字符 |
-| 分隔规范 | 使用下划线分隔语义单元 | 非驼峰、非连字符 |
-| 完整性 | 包含主体_动作_对象 | 至少3个语义单元 |
-| 无缩写 | 避免不规范的缩写 | 常见缩写需在规范中定义 |
-
-**检查输出**：
-
-```json
-{
-  "naming_check": {
-    "total_events": 100,
-    "passed": 95,
-    "failed": 5,
-    "issues": [
-      {
-        "event_name": "UserLoginSuccess",
-        "issue": "包含大写字母",
-        "suggestion": "user_login_success"
-      }
-    ]
-  }
-}
-```
-
----
-
-#### 4.2 属性完整性检查 [核心]
-
-**核心属性定义**：
-
-| 属性类型 | 属性名 | 必需 | 说明 |
-|---------|-------|------|------|
-| 通用属性 | user_id | 是 | 用户唯一标识 |
-| 通用属性 | session_id | 是 | 会话唯一标识 |
-| 通用属性 | timestamp | 是 | 事件发生时间 |
-| 通用属性 | platform | 是 | 平台类型 |
-| 通用属性 | app_version | 是 | App版本号 |
-| 页面属性 | page_name | 是 | 页面名称 |
-| 页面属性 | page_url | 是 | 页面URL |
-| 设备属性 | device_type | 是 | 设备类型 |
-| 设备属性 | os_version | 是 | 操作系统版本 |
-
-**检查规则**：
-
-```
-FOR each event:
-  1. 验证核心通用属性是否完整
-  2. 验证特定事件类型的必需属性
-  3. 计算属性完整率
-  4. IF 完整率 < 80% THEN 标记为不通过
-```
-
-**检查输出**：
-
-```json
-{
-  "completeness_check": {
-    "total_events": 100,
-    "core_attributes_coverage": 0.95,
-    "events_with_full_attributes": 92,
-    "events_needing_review": [
-      {
-        "event_name": "product_view",
-        "missing_attributes": ["product_category", "source_page"],
-        "completeness_rate": 0.70
-      }
-    ]
-  }
-}
-```
-
----
-
-#### 4.3 核心路径覆盖检查 [条件]
-
-**核心路径定义**：
-
-```
-基于指标体系和PRD，定义必须覆盖的核心用户路径
-```
-
-**覆盖要求**：
-
-```
-核心路径覆盖率 ≥ 90%
-```
-
-**检查逻辑**：
-
-```python
-def check_core_path_coverage():
-    core_paths = get_core_paths_from_prd()
-    covered_paths = get_covered_paths_from_tracking()
-    
-    coverage_rate = len(covered_paths & core_paths) / len(core_paths)
-    
-    return {
-        "total_core_paths": len(core_paths),
-        "covered_paths": len(covered_paths & core_paths),
-        "uncovered_paths": core_paths - covered_paths,
-        "coverage_rate": coverage_rate,
-        "pass": coverage_rate >= 0.9
-    }
-```
-
-**检查输出**：
-
-```json
-{
-  "core_path_coverage": {
-    "total_paths": 10,
-    "covered": 9,
-    "uncovered": ["path_to_checkout"],
-    "coverage_rate": 0.90,
-    "status": "pass"
-  }
-}
-```
-
----
-
-#### 4.4 异常状态覆盖检查 [深度]
-
-**异常状态定义**：
-
-| 异常类型 | 异常场景 | 埋点需求 |
-|---------|---------|---------|
-| 加载异常 | 页面/接口加载失败 | error_view, api_error |
-| 表单异常 | 表单验证失败、提交失败 | form_error, submit_failed |
-| 支付异常 | 支付失败、取消支付 | payment_failed, payment_cancelled |
-| 权限异常 | 无权限访问 | permission_denied |
-| 网络异常 | 断网、超时 | network_error, timeout |
-
-**检查规则**：
-
-```
-FOR each core_flow:
-  1. 识别该流程中的异常分支
-  2. 检查是否有对应异常埋点
-  3. IF 异常场景无埋点 THEN 添加警告
-```
-
-**检查输出**：
-
-```json
-{
-  "anomaly_coverage": {
-    "total_anomaly_scenarios": 15,
-    "covered_scenarios": 14,
-    "missing_scenarios": [
-      {
-        "scenario": "搜索结果为空",
-        "flow": "search",
-        "suggested_event": "search_no_result"
-      }
-    ],
-    "coverage_rate": 0.93
-  }
-}
-```
-
----
-
-#### 4.5 冗余检测 [深度]
-
-**冗余规则**：
-
-```
-IF 存在以下任一情况 THEN 标记为冗余埋点：
-  - 两个事件采集完全相同的数据
-  - 父子事件数据重复（父事件已包含子事件数据）
-  - 统计口径完全一致的事件重复定义
-```
-
-**检测输出**：
-
-```json
-{
-  "redundancy_check": {
-    "duplicates": [
-      {
-        "event_a": "page_view",
-        "event_b": "screen_show",
-        "reason": "两者采集相同数据（页面曝光）",
-        "recommendation": "保留page_view，删除screen_show"
-      }
-    ],
-    "total_redundant": 1
-  }
-}
-```
+> 📋 4.1~4.5 全部质量检查规则与输出详见 [Reference/step4-quality-checks.md](./Reference/step4-quality-checks.md)
 
 ---
 
@@ -491,47 +150,7 @@ IF 存在以下任一情况 THEN 标记为冗余埋点：
 
 **🤖 AI处理**
 
-**文档结构**：
-
-```json
-{
-  "tracking_document": {
-    "version": "1.0",
-    "generated_date": "2026-05-08",
-    "overview": {
-      "total_events": 100,
-      "new_events": 30,
-      "updated_events": 10,
-      "existing_events": 60
-    },
-    "events": [
-      {
-        "event_name": "string",
-        "display_name": "string",
-        "trigger": {
-          "description": "string",
-          "timing": "on_action|immediate|on_exit",
-          "conditions": ["string"]
-        },
-        "properties": [
-          {
-            "name": "string",
-            "type": "string|string[]|number|boolean",
-            "required": true,
-            "description": "string",
-            "example": "string"
-          }
-        ],
-        "analysis_purpose": "string",
-        "linked_metric": "string",
-        "priority": "high|medium|low",
-        "status": "pending|approved|implemented",
-        "source": "metrics_prd|existing|new"
-      }
-    ]
-  }
-}
-```
+> 📋 文档结构 schema 详见 [Reference/step5-document-schema.md](./Reference/step5-document-schema.md)
 
 ---
 
@@ -539,100 +158,7 @@ IF 存在以下任一情况 THEN 标记为冗余埋点：
 
 **🤖 AI处理**
 
-#### 6.1 双向校验机制 [条件]
-
-**正向校验**：PRD功能 → 埋点覆盖
-
-```
-FOR each functional_requirement in PRD:
-  1. 识别该功能对应的埋点
-  2. IF 埋点缺失 THEN 标记为未覆盖
-  3. 计算正向覆盖率
-```
-
-**逆向校验**：埋点 → PRD功能
-
-```
-FOR each tracking_event:
-  1. 识别该埋点支持的功能分析
-  2. IF 功能不在PRD中 THEN 标记为额外埋点
-  3. 计算逆向覆盖率
-```
-
----
-
-#### 6.2 PRD特征提取 [条件]
-
-**特征类型**：
-
-| 特征类型 | 识别关键词 | 埋点需求 |
-|---------|-----------|---------|
-| 页面 | 页面、模块、Tab | page_view + 页面属性 |
-| 按钮 | 点击、按下、触发 | button_click + 按钮属性 |
-| 表单 | 填写、输入、提交 | input + form_submit |
-| 列表 | 列表、浏览、翻页 | list_view + item_click |
-| 详情 | 详情、查看、内容 | detail_view + 详情属性 |
-| 流程 | 流程、步骤、完成 | flow_start + flow_complete |
-| 异常 | 失败、错误、超时 | error + 错误详情 |
-
----
-
-#### 6.3 一致性评分 [条件]
-
-**评分规则**：
-
-```python
-def calculate_prd_consistency_score():
-    forward_coverage = calculate_forward_coverage()  # PRD→埋点
-    backward_coverage = calculate_backward_coverage()  # 埋点→PRD
-    
-    consistency_score = (
-        0.6 * forward_coverage +  # 正向权重60%
-        0.4 * backward_coverage   # 逆向权重40%
-    )
-    
-    return {
-        "forward_coverage": forward_coverage,
-        "backward_coverage": backward_coverage,
-        "consistency_score": consistency_score,
-        "status": "pass" if consistency_score >= 0.9 else "fail"
-    }
-```
-
----
-
-#### 6.4 持续校验机制 [深度]
-
-**触发时机**：
-
-| 触发类型 | 触发条件 | 校验内容 |
-|---------|---------|---------|
-| PRD变更触发 | PRD文档更新 | 新增功能是否已埋点 |
-| 埋点变更触发 | 埋点方案更新 | 变更是否影响PRD覆盖 |
-| 定期校验 | 每周/每月 | 全量一致性检查 |
-| 上线前校验 | 发布前 | 变更部分专项校验 |
-
-**校验输出**：
-
-```json
-{
-  "prd_consistency": {
-    "forward_coverage": 0.92,
-    "backward_coverage": 0.88,
-    "consistency_score": 0.90,
-    "status": "pass",
-    "discrepancies": [
-      {
-        "type": "uncovered_function",
-        "description": "商品分享功能未配置埋点",
-        "prd_reference": "PRD章节3.2",
-        "severity": "high",
-        "suggested_event": "product_share"
-      }
-    ]
-  }
-}
-```
+> 📋 6.1~6.4 一致性校验全部内容详见 [Reference/step6-prd-consistency.md](./Reference/step6-prd-consistency.md)
 
 ---
 
@@ -650,88 +176,13 @@ def calculate_prd_consistency_score():
 
 **输出文件**：`tracking_plan.json`
 
-**输出Schema**：
-
-```json
-{
-  "type": "object",
-  "required": ["tracking_plan", "quality_check"],
-  "properties": {
-    "tracking_plan": {"type": "array", "description": "埋点事件列表，包含事件定义、属性、触发条件等"},
-    "quality_check": {"type": "object", "description": "质量检查结果，包含命名合规性、属性完整性、路径覆盖率等"}
-  }
-}
-```
-
-### tracking_plan
-
-```json
-{
-  "tracking_plan": [
-    {
-      "event_name": "string",
-      "display_name": "string",
-      "trigger": {
-        "description": "string",
-        "timing": "on_action|immediate|on_exit",
-        "conditions": ["string"]
-      },
-      "properties": [
-        {
-          "name": "string",
-          "type": "string|string[]|number|boolean",
-          "required": true,
-          "description": "string",
-          "example": "string"
-        }
-      ],
-      "analysis_purpose": "string",
-      "linked_metric": "string",
-      "priority": "high|medium|low",
-      "status": "pending|approved|implemented"
-    }
-  ],
-  "quality_check": {
-    "naming_compliance": true,
-    "property_completeness": 0.95,
-    "core_path_coverage": 0.92,
-    "anomaly_coverage": true,
-    "redundancy_detected": [],
-    "prd_consistency": {
-      "forward_coverage": 0.92,
-      "backward_coverage": 0.88,
-      "consistency_score": 0.90,
-      "status": "pass"
-    }
-  }
-}
-```
+> 📋 输出总 Schema 与 tracking_plan schema 详见 [Reference/output-schemas.md](./Reference/output-schemas.md)
 
 ---
 
 ## 输出校验规则
 
-| 字段路径 | 类型 | 必填 | 说明 |
-|----------|------|------|------|
-| tracking_plan | array | 是 | 埋点事件列表 |
-| tracking_plan[].event_name | string | 是 | 事件名称，小写下划线格式 |
-| tracking_plan[].display_name | string | 是 | 事件显示名称 |
-| tracking_plan[].trigger | object | 是 | 触发条件定义 |
-| tracking_plan[].trigger.description | string | 是 | 触发描述 |
-| tracking_plan[].trigger.timing | string | 是 | 触发时机，枚举值：on_action/immediate/on_exit |
-| tracking_plan[].properties | array | 是 | 属性列表 |
-| tracking_plan[].properties[].name | string | 是 | 属性名称 |
-| tracking_plan[].properties[].type | string | 是 | 属性类型 |
-| tracking_plan[].properties[].required | boolean | 是 | 是否必填 |
-| tracking_plan[].analysis_purpose | string | 是 | 分析目的 |
-| tracking_plan[].linked_metric | string | 是 | 关联指标 |
-| tracking_plan[].priority | string | 是 | 优先级，枚举值：high/medium/low |
-| tracking_plan[].status | string | 是 | 状态，枚举值：pending/approved/implemented |
-| quality_check | object | 是 | 质量检查结果 |
-| quality_check.naming_compliance | boolean | 是 | 命名规范是否通过 |
-| quality_check.property_completeness | number | 是 | 属性完整率，≥0.8 |
-| quality_check.core_path_coverage | number | 是 | 核心路径覆盖率，≥0.9 |
-| quality_check.prd_consistency | object | 是 | PRD一致性校验结果 |
+> 📋 输出字段校验规则表详见 [Reference/output-validation-rules.md](./Reference/output-validation-rules.md)
 
 ## 上游变更响应
 
@@ -873,21 +324,6 @@ def calculate_prd_consistency_score():
 
 ### 升级输出
 
-```json
-{
-  "escalation": {
-    "trigger": "string",
-    "reason": "string",
-    "affected_events": ["string"],
-    "ai_recommendation": {},
-    "requires_human_action": true,
-    "human_decision_needed": [
-      "业务逻辑确认",
-      "隐私合规确认",
-      "埋点优先级调整"
-    ]
-  }
-}
-```
+> 📋 升级输出 schema 详见 [Reference/escalation-schema.md](./Reference/escalation-schema.md)
 
 ---

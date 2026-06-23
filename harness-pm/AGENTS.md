@@ -12,6 +12,43 @@
 3. **数据决策（Data-Driven）** —— 用数据减少猜测，AI 建议人类决策，置信度 < 0.3 阻断自动传递
 4. **闭环迭代（Loop-First）** —— 产品工作走 Loop（plan→research→validate），最多 5 次迭代，超 10 次请求人类介入
 5. **会话结束（session-end）** —— 更新 `memory/progress.md`，然后按 `session-end` SKILL.md 步骤执行归档（不依赖 bash 脚本，跨平台）
+6. **交互先行（Interact First）** —— workflow 不是自动执行脚本，探索对话点（⏸）受 exploration_mode 控制，人类决策点（👤）始终暂停
+
+## 探索模式（exploration_mode）
+
+控制 workflow 执行时的交互深度。三种模式：
+
+| 模式 | ⏸ 探索对话 | 适用场景 |
+|------|-----------|---------|
+| `deep` | 每个模块前都暂停对话，必须获得用户输入后才继续 | 全新产品/方向不明/需要深度探索 |
+| `standard` | 仅在模块边界暂停对话（探索→战略→构思→度量），模块内自动执行 | 有想法但需验证/日常产品迭代 |
+| `skip` | 不暂停探索对话，按流程自动执行 | 需求清晰/紧急执行/已有充分数据 |
+
+**默认模式来源优先级**：用户显式切换 > workflow frontmatter `default_mode` > `standard`
+
+**切换方式**：对话中随时说"切换到 deep/standard/skip 模式"，Agent 确认后写入 `state.yaml` 的 `exploration_mode` 字段
+
+**skip 模式安全兜底**：skip 模式启动时，Agent 必须检查 `memory/progress.md` 和 `docs/discovery/` 是否有探索数据。如无任何探索数据，**拒绝执行 skip，降级为 standard 并告知用户**
+
+**模式与降级策略联动**：
+
+| 模式 | 降级策略 |
+|------|---------|
+| `deep` | **禁用降级**——用户要深度探索，不允许"基于口头描述"降级 |
+| `standard` | 允许降级，但降级产出必须标注 `degraded: true` |
+| `skip` | 允许降级，不额外标注 |
+
+## 人类决策点（通用规则）
+
+以下场景**始终暂停**，不受 exploration_mode 影响：
+
+1. 战略方向选择（做不做、先做哪个）
+2. 优先级排序（资源分配）
+3. 置信度 < 0.3 的结论传递
+4. 产出文档的最终审批（PRD/定位陈述/指标体系）
+5. 花钱/花资源的决策（实验投放、渠道选择）
+
+> workflow 中的 `👤` 标记为人类决策点，`⏸` 标记为探索对话点。即使 workflow 漏标 `👤`，上述通用规则仍然生效。
 
 ## 产品四原则（PM Principles）
 
@@ -28,13 +65,13 @@
 
 1. **AGENTS.md**（本文件）—— 启动必读
 2. **SOUL.md + constitution.md** —— 首次交互时读（人格身份 + 项目宪法）
-3. **skills/INDEX.md** —— 需要选 Skill 时读（40 行内，纯索引）
+3. **skills/INDEX.md** —— 需要选 Skill 时读（80 行内，纯索引）
 4. **对应 SKILL.md** —— 执行任务时读（`.harness/skills/pm/` 下的 82 个 PM skill）
 5. **memory/progress.md** —— session-start 时读
 
 ## 技能选择
 
-需要选择 Skill 时，读取 `.harness/skills/INDEX.md`（纯索引，40 行内）。
+需要选择 Skill 时，读取 `.harness/skills/INDEX.md`（纯索引，80 行内）。
 - PM 方法论 skill 在 `.harness/skills/pm/` 目录下（7 个模块、82 个 skill）
 - 工作流编排在 `.harness/skills/workflows/` 下按需读取（10 个工作流）
 - 元 skill（会话管理/维护）在 `.harness/skills/meta/` 下

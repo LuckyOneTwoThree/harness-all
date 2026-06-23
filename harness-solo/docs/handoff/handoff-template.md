@@ -12,7 +12,7 @@
 
 | 产出物 | 路径 | 类型 | 说明 |
 |--------|------|------|------|
-| PRD | docs/handoff/pm-to-solo.md（本文件） | Markdown | 产品需求文档，含功能列表和验收标准 |
+| PRD | docs/handoff/<source>-to-<target>.md（复制后重命名） | Markdown | 产品需求文档，含功能列表和验收标准 |
 | Persona | docs/product/persona.md | Markdown | 目标用户画像 |
 | 路线图 | docs/product/roadmap.md | Markdown | 功能优先级和迭代计划 |
 

@@ -12,6 +12,17 @@ metadata:
     - "规划一下数据埋点"
     - "设计产品KPI"
     - "配置数据Dashboard"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/metrics/metrics-system.md
+  - docs/metrics/tracking-plan.md
+  - docs/metrics/dashboard.md
+writes:
+  - memory/progress.md
+  - memory/knowledge-base.md
+  - output/phase-reports/metrics-orchestrator.json
+  - output/approvals/metrics-orchestrator/{stage-id}.approval.json
 ---
 
 # 产品度量设计指挥官

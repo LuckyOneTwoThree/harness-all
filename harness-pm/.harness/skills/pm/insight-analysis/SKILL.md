@@ -21,6 +21,14 @@ execution_depth:
   default: standard
   quick_description: "执行JTBD功能性任务提取和需求三层拆解，输出需求列表与基础优先级排序"
   deep_description: "额外包含情感性/社会性Job推断、5Whys根因深挖、KANO分类、完整优先级评分（含KANO加成）"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/discovery/user-research.md
+writes:
+  - docs/discovery/insight.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # Insight Analysis — 需求洞察分析

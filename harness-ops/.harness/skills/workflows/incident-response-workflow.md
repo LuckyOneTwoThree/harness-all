@@ -1,3 +1,9 @@
+---
+workflow_id: C
+name: incident-response-workflow
+default_mode: skip
+---
+
 # Workflow: 故障响应全流程（Incident Response Workflow）
 
 > 所属 LOOP 类型：incident

@@ -15,6 +15,15 @@ execution_depth:
   default: standard
   quick_description: "直接输出推荐北极星指标和输入变量"
   deep_description: "完整分析 + 指标相关性矩阵 + 操纵风险评估 + 指标演进路线"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/strategy/business-strategy.md
+writes:
+  - memory/progress.md
+  - memory/knowledge-base.md
+  - docs/strategy/PRODUCT_STRATEGY.md
+  - output/metrics/north-star.json
 ---
 
 # 北极星指标选择

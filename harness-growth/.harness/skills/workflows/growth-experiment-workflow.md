@@ -1,3 +1,9 @@
+---
+workflow_id: B
+name: growth-experiment-workflow
+default_mode: standard
+---
+
 # Workflow: 增长实验全流程（Growth Experiment Workflow）
 
 > 所属 LOOP 类型：experiment

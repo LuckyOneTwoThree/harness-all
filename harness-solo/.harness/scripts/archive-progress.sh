@@ -8,6 +8,11 @@
 #
 # 机制：wc -l 检测行数，超过阈值自动切割归档到 archives/
 
+# CRLF 防御：Windows 下 core.autocrlf 可能导致脚本含 \r，Git Bash 无法执行
+if grep -qI $'\r' "$0" 2>/dev/null; then
+  exec bash < <(tr -d '\r' < "$0")
+fi
+
 set -e
 
 HARNESS_DIR=".harness"

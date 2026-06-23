@@ -158,7 +158,7 @@ harness-pm/
 │   │   ├── security.md                # 安全红线
 │   │   └── prompt-defense.md          # prompt 注入防护
 │   ├── skills/
-│   │   ├── INDEX.md                   # skill 索引（40 行内）
+│   │   ├── INDEX.md                   # skill 索引（80 行内）
 │   │   ├── meta/                      # 4 个元 skill
 │   │   ├── pm/                        # 82 个 PM skill（7 模块，扁平化组织）
 │   │   └── workflows/                 # 10 个工作流
@@ -173,7 +173,10 @@ harness-pm/
 │   ├── project/                       # 项目宪章、Sprint
 │   └── handoff/                       # harness 家族交接文档
 │       ├── README.md
-│       └── handoff-template.md
+│       ├── handoff-template.md
+│       ├── pm-to-design-template.md
+│       ├── pm-to-growth-template.md
+│       └── pm-to-solo-template.md
 └── output/                            # 机器消费 JSON（审批记录、阶段总结、指标数据）
     ├── approvals/
     ├── phase-reports/

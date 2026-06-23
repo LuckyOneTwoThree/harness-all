@@ -13,6 +13,14 @@ metadata:
     - "评估一下市场规模"
     - "做一下竞品调研"
     - "分析一下行业趋势"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - templates/orchestrator-protocol.md
+  - docs/discovery/market-analysis.md
+writes:
+  - output/phase-reports/market-orchestrator.json
+  - memory/progress.md
 ---
 
 # 市场竞品指挥官

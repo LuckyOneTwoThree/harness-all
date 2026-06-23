@@ -16,6 +16,12 @@ execution_depth:
   default: standard
   quick_description: "直接输出用户声音主题和情感分布"
   deep_description: "完整分析 + 情感趋势追踪 + 主题聚类深度分析 + 行动建议路线图"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+writes:
+  - docs/discovery/user-research.md
+  - memory/progress.md
 ---
 
 # 大规模用户声音分析

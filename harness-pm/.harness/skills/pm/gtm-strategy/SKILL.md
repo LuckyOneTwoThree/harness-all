@@ -16,6 +16,13 @@ execution_depth:
   default: standard
   quick_description: "直接输出目标市场定义和上市路径"
   deep_description: "完整GTM策略 + 渠道ROI模拟 + 上市风险预案 + 竞品应对策略"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+writes:
+  - docs/growth/gtm.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # Go-to-Market策略文档生成

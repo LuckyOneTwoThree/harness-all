@@ -19,6 +19,15 @@ execution_depth:
   default: standard
   quick_description: "直接输出定位陈述和差异化策略"
   deep_description: "完整策略 + 定位验证方案 + 差异化量化评估 + 定位演进路线"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/strategy/business-strategy.md
+  - docs/discovery/market-analysis.md
+  - docs/discovery/user-research.md
+writes:
+  - docs/strategy/positioning.md
+  - memory/progress.md
 ---
 
 # 产品定位策略制定

@@ -13,6 +13,8 @@ reads:
   - docs/handoff/pm-to-design-template.md
   - docs/handoff/pm-to-solo-template.md
   - docs/handoff/pm-to-growth-template.md
+  - docs/discovery/user-research.md
+  - docs/discovery/market-analysis.md
 writes:
   - memory/progress.md
   - memory/baseline.json
@@ -35,6 +37,7 @@ writes:
    - 完成的事项（带证据摘要）
    - 待续事项（下次会话需要知道的上下文）
    - 关键决策（本次会话做出的重要决定）
+   - 探索模式（如本次会话使用了 workflow，记录当前 exploration_mode 及切换历史）
 
 2. **批量更新 FEATURES.md**
    扫描 `.harness/loops/specs/*/state.yaml`：
@@ -78,6 +81,8 @@ writes:
 
 6. **产出交接文档**（可选，满足条件时执行）
 
+   **写权限单向隔离（不可协商）**：交接文档只有产出方可以写入。`pm-to-solo.md` 只有 PM 能写，`pm-to-design.md` 只有 PM 能写，`pm-to-growth.md` 只有 PM 能写，以此类推。消费方只能读取，禁止修改上游交接文档。如需反馈，通过 `AskUserQuestion` 让用户转达，或写入自己的出站交接文档。
+
    根据本次会话产出类型，生成对应的交接文档：
 
    **6a. 产出 pm-to-solo.md**（产品 → 工程）
@@ -91,9 +96,17 @@ writes:
    **产出内容**（按 pm-to-solo-template.md 填写）：
    - 产品基本信息（产品类型 / 技术栈 / 平台 / 当前阶段）
    - PRD 路径 + AC-xxx 清单
+   - **业务上下文摘要**（Business Context Digest，见 6a.1）
    - 功能优先级（P0/P1/P2）
    - 埋点方案路径（如有）
    - 设计资产状态（待 harness-design 产出 / 已就绪）
+
+   **6a.1 业务上下文摘要提取**（6a 子步骤）：
+   - 读取 `docs/discovery/user-research.md` 和 `docs/discovery/market-analysis.md`（如不存在则跳过，摘要填"无业务上下文摘要，按 AC 自行判断"）
+   - **只提取影响工程决策的约束**，不提取用户画像/心理模型/审美偏好（那些给 design，不给工程）
+   - 提取范围：影响架构/技术选型/性能要求/容量规划/数据规模的约束
+   - 每条约束填写：约束项 + 工程影响 + 来源（文件名#章节）
+   - 写入 pm-to-solo.md 的"业务上下文摘要"章节
 
    **6b. 产出 pm-to-design.md**（产品 → 设计）
    如果本次会话完成了**可交接给设计**的产品需求（如 PRD、定位陈述、Persona、用户画像），按 `docs/handoff/pm-to-design-template.md` 模板产出 `docs/handoff/pm-to-design.md`：
@@ -130,6 +143,13 @@ writes:
    - OKR 清单 / Persona 增长特征
    - 增长假设 / 已有数据资产路径（如有）
 
+   **6d. AC 格式校验**（交接文档必须通过）
+   对步骤 6a/6b/6c 产出的交接文档执行验收标准格式校验：
+   - 扫描交接文档中的验收标准，检查编号格式是否为 `AC-NNN`（如 AC-001, AC-002）
+   - 检查编号是否连续（不允许 AC-001 后直接跳到 AC-003）
+   - 检查每个 AC 是否包含：描述 + 验证方式
+   - 如发现格式异常（如"验收标准一"、编号不连续、缺少验证方式），**阻断交接**，要求修正后重新产出
+
 ## 禁止事项
 - 不更新 progress.md 就结束（下次会话失忆）
 - 不执行归档步骤 4（progress.md 无限膨胀）
@@ -145,6 +165,6 @@ session-end 完成后，progress.md 必须包含：
 - 本次会话做了什么
 - 下次会话需要继续什么
 - 归档操作的实际结果（如"progress.md 从 250 行切到 45 行，归档到 archives/2026-06-20-1900-progress.md"）
-- 如执行了步骤 6a，记录"产出 pm-to-solo.md，包含 X 个交付项"
+- 如执行了步骤 6a，记录"产出 pm-to-solo.md，包含 X 个交付项 + 业务上下文摘要 X 条约束"
 - 如执行了步骤 6b，记录"产出 pm-to-design.md，包含 PRD 路径 + X 条 AC + Persona 路径"
 - 如执行了步骤 6c，记录"产出 pm-to-growth.md，包含 OKR + 北极星指标 + X 条增长假设"

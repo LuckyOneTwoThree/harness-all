@@ -16,6 +16,14 @@ execution_depth:
   default: standard
   quick_description: "仅输出每日摘要和异常告警推送"
   deep_description: "完整报告体系 + 数据素养评估 + 决策影响追踪 + 文化成熟度评分 + 改进路线图"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/metrics/decision-report.md
+writes:
+  - docs/metrics/decision-report.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 数据文化自动化

@@ -1,3 +1,9 @@
+---
+workflow_id: B
+name: iteration
+default_mode: standard
+---
+
 # 工作流 B：已有产品功能迭代
 
 > 适用场景：已有产品需要加功能/改需求/优化体验

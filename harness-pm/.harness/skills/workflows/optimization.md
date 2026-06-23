@@ -1,3 +1,9 @@
+---
+workflow_id: D
+name: optimization
+default_mode: standard
+---
+
 # 工作流 D：数据驱动优化
 
 > 适用场景：已有产品需要基于数据优化体验/性能/转化

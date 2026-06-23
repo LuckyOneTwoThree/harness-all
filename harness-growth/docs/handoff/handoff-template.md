@@ -12,7 +12,7 @@
 
 | 产出物 | 路径 | 类型 | 说明 |
 |--------|------|------|------|
-| 增长报告 | docs/handoff/growth-to-pm.md（本文件） | Markdown | 增长数据反馈，含实验结论和用户洞察 |
+| 增长报告 | docs/handoff/<source>-to-<target>.md（复制后重命名） | Markdown | 增长数据反馈，含实验结论和用户洞察 |
 | 实验记录 | docs/experiment/G-001-xxx.md | Markdown | 实验设计与结果 |
 | 内容资产 | docs/content/xxx.md | Markdown | 已发布内容 |
 

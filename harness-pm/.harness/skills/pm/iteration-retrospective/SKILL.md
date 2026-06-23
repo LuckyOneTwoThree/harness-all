@@ -18,6 +18,14 @@ execution_depth:
   default: standard
   quick_description: "仅输出迭代回顾核心结论"
   deep_description: "完整回顾 + 变更影响评估 + 调整方案 + 风险评估 + 沟通草案 + 竞品迭代对比"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/monitoring/monitoring-config.md
+writes:
+  - docs/monitoring/iteration-retrospective.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 迭代回顾与调整 🤖

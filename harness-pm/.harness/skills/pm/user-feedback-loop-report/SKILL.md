@@ -16,6 +16,13 @@ execution_depth:
   default: standard
   quick_description: "直接输出闭环率和P0未解决清单"
   deep_description: "完整报告 + 反馈趋势预测 + 根因深度分析 + 改进路线图"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+writes:
+  - docs/monitoring/feedback-loop.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 用户反馈闭环报告生成

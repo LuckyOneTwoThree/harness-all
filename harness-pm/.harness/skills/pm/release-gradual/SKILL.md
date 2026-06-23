@@ -16,6 +16,13 @@ execution_depth:
   default: standard
   quick_description: "执行灰度计划生成和Feature Flag配置，输出灰度发布方案"
   deep_description: "完整灰度流程 + 各阶段自动监控 + 自动回滚触发 + 回滚影响评估 + 灰度指标深度分析"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+writes:
+  - docs/monitoring/release-notes.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 灰度发布自动执行

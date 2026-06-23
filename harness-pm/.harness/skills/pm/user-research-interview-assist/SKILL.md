@@ -16,6 +16,13 @@ execution_depth:
   default: standard
   quick_description: "直接输出访谈提纲和关键问题"
   deep_description: "完整辅助 + 访谈策略设计 + 追问逻辑树 + 数据分析框架"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/discovery/user-research.md
+writes:
+  - docs/discovery/user-research.md
+  - memory/progress.md
 ---
 
 # 访谈辅助

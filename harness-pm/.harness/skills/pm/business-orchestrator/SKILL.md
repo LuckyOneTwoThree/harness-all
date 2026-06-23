@@ -13,6 +13,14 @@ metadata:
     - "设计一下定价策略"
     - "评估一下商业模式是否可行"
     - "做一下商业画布"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - templates/orchestrator-protocol.md
+  - docs/strategy/business-strategy.md
+writes:
+  - output/phase-reports/business-orchestrator.json
+  - memory/progress.md
 ---
 
 # 商业模式设计指挥官

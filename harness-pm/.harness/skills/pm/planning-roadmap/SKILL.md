@@ -15,6 +15,16 @@ execution_depth:
   default: standard
   quick_description: "直接输出路线图和里程碑"
   deep_description: "完整路线图 + 依赖关系分析 + 风险缓冲设计 + 多场景路线图"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/strategy/OKR.md
+  - docs/strategy/PRODUCT_STRATEGY.md
+writes:
+  - memory/progress.md
+  - memory/knowledge-base.md
+  - docs/strategy/roadmap.md
+  - roadmap.json
 ---
 
 # 路线图自动规划

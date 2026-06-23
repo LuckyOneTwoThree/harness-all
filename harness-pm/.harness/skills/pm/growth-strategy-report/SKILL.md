@@ -16,6 +16,14 @@ execution_depth:
   default: standard
   quick_description: "直接输出增长策略和优先动作"
   deep_description: "完整报告 + 增长模型推演 + 渠道组合优化 + 增长实验路线图"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/growth/growth-strategy.md
+writes:
+  - memory/progress.md
+  - memory/knowledge-base.md
+  - docs/growth/growth-strategy.md
 ---
 
 # 增长策略报告生成

@@ -9,6 +9,8 @@ reads:                              # 可选，依赖的文件（Agent 执行时
   - loops/LOOP.md
 writes:                             # 可选，产出的文件（帮助 Agent 理解副作用）
   - loops/specs/<experiment>/state.yaml
+quality_gates: []                   # 可选，质量门禁规则列表
+max_iterations: 3                   # 可选，LOOP 最大迭代次数
 ---
 
 # Skill 标题

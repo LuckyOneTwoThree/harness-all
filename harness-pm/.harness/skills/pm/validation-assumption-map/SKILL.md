@@ -16,6 +16,15 @@ execution_depth:
   default: standard
   quick_description: "直接输出核心假设和验证优先级"
   deep_description: "完整假设地图 + 验证实验设计 + 风险量化评估 + 假设演进追踪"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/product/PRD.md
+  - docs/handoff/design-to-solo.md
+writes:
+  - docs/product/PRD.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 假设地图自动生成

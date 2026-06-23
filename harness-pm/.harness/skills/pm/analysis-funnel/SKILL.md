@@ -16,6 +16,13 @@ execution_depth:
   default: standard
   quick_description: "直接输出漏斗分析和转化瓶颈"
   deep_description: "完整分析 + 漏斗细分拆解 + 转化优化模拟 + 多维度归因分析"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+writes:
+  - docs/metrics/data-analysis-report.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 漏斗自动分析

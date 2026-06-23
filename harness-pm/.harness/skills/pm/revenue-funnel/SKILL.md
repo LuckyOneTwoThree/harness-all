@@ -16,6 +16,15 @@ execution_depth:
   default: standard
   quick_description: "直接输出付费漏斗和转化瓶颈"
   deep_description: "完整分析 + 漏斗优化模拟 + 定价弹性测试 + 收入预测模型"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/growth/growth-strategy.md
+writes:
+  - memory/progress.md
+  - memory/knowledge-base.md
+  - docs/growth/growth-strategy.md
+  - revenue_funnel.json
 ---
 
 # 付费漏斗自动分析

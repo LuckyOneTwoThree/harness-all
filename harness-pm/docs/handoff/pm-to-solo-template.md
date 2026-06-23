@@ -36,6 +36,23 @@
 - [ ] AC-002: <可测试描述>
 - [ ] AC-003: <可测试描述>
 
+## 业务上下文摘要（Business Context Digest）
+
+> PM 从 user-research.md / market-analysis.md 提取的**工程相关约束**。
+> harness-solo 在架构设计和技术选型时**必须参考**，避免脱离业务场景做技术决策。
+>
+> 提取规则：
+> - ✅ 提取：影响架构/技术选型/性能要求/容量规划/数据规模的约束
+> - ❌ 不提取：用户画像/心理模型/审美偏好（这些交 harness-design，不给工程）
+
+| 约束项 | 工程影响 | 来源 |
+|--------|---------|------|
+| <如：单次导出可能高达 5GB> | <如：需异步队列，不能同步生成> | <user-research.md#导出场景> |
+| <如：目标用户 70% 移动端> | <如：移动优先，首屏 < 2s> | <user-research.md#设备分布> |
+| <如：峰值并发预计 1000 QPS> | <如：需缓存层 + 限流> | <market-analysis.md#容量预估> |
+
+> 如无 user-research.md / market-analysis.md（项目早期），填"无业务上下文摘要，按 AC 自行判断"。
+
 ## 功能优先级
 
 | 优先级 | 功能 | 来源 | 说明 |
@@ -105,5 +122,5 @@ harness-solo 应优先处理：
 
 ## 下游框架使用说明
 
-harness-solo 的 brainstorming / writing-plans / verify skill 会自动检测本文件并读取 AC-xxx 清单和功能优先级。
+harness-solo 的 brainstorming / writing-plans / verify skill 会自动检测本文件并读取 AC-xxx 清单、功能优先级和业务上下文摘要。
 如未自动识别，可手动指向本文件路径让 Agent 读取。

@@ -16,6 +16,12 @@ execution_depth:
   default: standard
   quick_description: "直接输出PEST分析结论"
   deep_description: "完整分析 + 政策影响推演 + 趋势预测 + 战略应对建议"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+writes:
+  - docs/discovery/market-analysis.md
+  - memory/progress.md
 ---
 
 # PEST自动扫描

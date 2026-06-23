@@ -1,3 +1,9 @@
+---
+workflow_id: F
+name: diagnosis
+default_mode: skip
+---
+
 # 工作流 F：产品诊断与下线
 
 > 适用场景：产品健康度下降、竞品威胁追踪、产品下线决策

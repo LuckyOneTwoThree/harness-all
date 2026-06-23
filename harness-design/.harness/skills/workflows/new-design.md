@@ -1,3 +1,9 @@
+---
+workflow_id: B
+name: new-design
+default_mode: deep
+---
+
 # Workflow: new-design
 
 > 新设计任务工作流 · 核心工作流

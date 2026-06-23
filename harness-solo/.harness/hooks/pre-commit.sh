@@ -5,6 +5,12 @@
 # 职责：调用 guards/*.sh 检查 staged 文件
 # 注意：Windows 纯 PowerShell 环境跳过 hooks，verify skill 兜底
 
+# CRLF 防御：Windows 下 core.autocrlf 可能导致脚本含 \r，Git Bash 无法执行
+# 检测自身是否含 CRLF，若是则去除 \r 后重新执行
+if grep -qI $'\r' "$0" 2>/dev/null; then
+  exec bash < <(tr -d '\r' < "$0")
+fi
+
 set -e
 
 HARNESS_DIR=".harness"

@@ -7,10 +7,24 @@ metadata:
   type: "pipeline"
   version: "2.0"
   interaction_mode: "ai_suggest_human_approve"
+  trigger_examples:
+    - "诊断一下产品的增长模式"
+    - "我们是PLG还是SLG"
+    - "增长飞轮怎么搭"
+    - "增长瓶颈在哪里"
 execution_depth:
   default: standard
   quick_description: "直接输出增长模式诊断和瓶颈定位"
   deep_description: "完整诊断 + 飞轮建模推演 + 冷启动模拟 + 增长阶段演进路线"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/metrics/data-analysis-report.md
+writes:
+  - memory/progress.md
+  - memory/knowledge-base.md
+  - docs/growth/growth-strategy.md
+  - growth_model.json
 ---
 
 # 增长模式自动诊断

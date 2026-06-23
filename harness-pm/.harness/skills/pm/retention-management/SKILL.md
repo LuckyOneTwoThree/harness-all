@@ -19,6 +19,15 @@ execution_depth:
   default: standard
   quick_description: "执行流失预警和基础干预策略推荐，输出高风险用户列表与干预建议"
   deep_description: "完整分层运营策略 + 个性化触达内容 + 干预效果ROI追踪 + 流失模型优化建议 + 用户生命周期价值预测"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+writes:
+  - memory/progress.md
+  - memory/knowledge-base.md
+  - docs/growth/growth-strategy.md
+  - retention-management.json
+  - retention-management.md
 ---
 
 # 留存管理一体化

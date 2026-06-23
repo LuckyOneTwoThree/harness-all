@@ -1,3 +1,9 @@
+---
+workflow_id: G
+name: setup
+default_mode: skip
+---
+
 # 工作流 G：立项引导
 
 > 适用场景：新项目首次使用 harness-pm，需要初始化配置文件

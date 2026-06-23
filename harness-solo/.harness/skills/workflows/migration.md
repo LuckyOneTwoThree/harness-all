@@ -1,3 +1,9 @@
+---
+workflow_id: F
+name: migration
+default_mode: standard
+---
+
 # 工作流 E：代码迁移
 
 > 适用场景：框架/库大版本升级、API 迁移、数据迁移、移除弃用代码

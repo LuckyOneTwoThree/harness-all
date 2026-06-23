@@ -16,6 +16,12 @@ execution_depth:
   default: standard
   quick_description: "直接输出行为模式和使用洞察"
   deep_description: "完整分析 + 行为序列挖掘 + 用户分群深度分析 + 行为预测模型"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+writes:
+  - docs/discovery/user-research.md
+  - memory/progress.md
 ---
 
 # 行为数据自动分析

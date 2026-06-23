@@ -1,3 +1,9 @@
+---
+workflow_id: E
+name: design-system-setup
+default_mode: standard
+---
+
 # Workflow: design-system-setup
 
 > 设计系统建设工作流 · 从零建设计系统

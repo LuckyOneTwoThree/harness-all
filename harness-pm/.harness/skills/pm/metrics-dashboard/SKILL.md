@@ -16,6 +16,16 @@ execution_depth:
   default: standard
   quick_description: "直接输出核心指标看板设计"
   deep_description: "完整看板 + 下钻分析设计 + 告警规则体系 + 数据治理规范"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/metrics/metrics-system.md
+  - docs/metrics/tracking-plan.md
+writes:
+  - memory/progress.md
+  - memory/knowledge-base.md
+  - docs/metrics/dashboard.md
+  - dashboard_config.json
 ---
 
 # Dashboard自动配置

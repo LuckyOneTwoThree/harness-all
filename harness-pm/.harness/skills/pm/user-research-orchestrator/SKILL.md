@@ -13,6 +13,14 @@ metadata:
     - "设计一个用户访谈"
     - "生成用户画像"
     - "了解一下用户行为"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - templates/orchestrator-protocol.md
+  - docs/discovery/user-research.md
+writes:
+  - output/phase-reports/user-research-orchestrator.json
+  - memory/progress.md
 ---
 
 # 用户研究指挥官

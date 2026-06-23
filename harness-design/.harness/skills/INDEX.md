@@ -1,6 +1,6 @@
 # Skills 索引
 
-> 纯索引，40 行内。需要选 Skill 时读。工作流编排见 `workflows/`。
+> 纯索引，80 行内。需要选 Skill 时读。工作流编排见 `workflows/`。
 > 添加新 Skill：在分类目录下创建 SKILL.md，然后本文件追加一行。
 > 定位：harness-design 是**UI 设计框架**，只含设计相关 skill。
 > 产品/工程/增长见 harness 家族其他成员（通过 docs/handoff/ 交接）。
@@ -28,9 +28,10 @@
 - **design-system-refactor** — 设计系统重构（合并/抽象/token 化）
 
 ## 工作流
-- **setup** — 项目初始化（design-brief → design-recommendation → design-system）
-- **new-design** — 新设计任务（3 个独立 LOOP + design-review）
-- **design-iteration** — 设计迭代（Chesterton's Fence + LOOP）
-- **redesign** — 重设计（design-system-import + 差异分析 + LOOP）
-- **design-system-setup** — 设计系统建设（recommendation → system → LOOP）
-- **design-handoff** — 设计交付（handoff-spec + accessibility + lint + verify）
+> `default_mode`：deep=强制探索 / standard=模块边界暂停 / skip=直接执行（用户可随时切换）
+- **setup** [skip] — 项目初始化（design-brief → design-recommendation → design-system）
+- **new-design** [deep] — 新设计任务（3 个独立 LOOP + design-review）
+- **design-iteration** [standard] — 设计迭代（Chesterton's Fence + LOOP）
+- **redesign** [deep] — 重设计（design-system-import + 差异分析 + LOOP）
+- **design-system-setup** [standard] — 设计系统建设（recommendation → system → LOOP）
+- **design-handoff** [skip] — 设计交付（handoff-spec + accessibility + lint + verify）

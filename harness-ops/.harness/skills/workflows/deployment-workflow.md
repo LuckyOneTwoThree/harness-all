@@ -1,3 +1,9 @@
+---
+workflow_id: B
+name: deployment-workflow
+default_mode: skip
+---
+
 # Workflow: 部署全流程（Deployment Workflow）
 
 > 所属 LOOP 类型：provision

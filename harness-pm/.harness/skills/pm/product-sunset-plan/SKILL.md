@@ -16,6 +16,13 @@ execution_depth:
   default: standard
   quick_description: "直接输出下线计划和风险清单"
   deep_description: "完整下线计划 + 用户迁移方案 + 数据归档策略 + 影响评估报告"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+writes:
+  - docs/monitoring/product-sunset-plan.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 产品下线方案生成

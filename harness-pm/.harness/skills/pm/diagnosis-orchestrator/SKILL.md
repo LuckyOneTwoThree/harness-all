@@ -12,6 +12,15 @@ metadata:
     - "追踪一下竞品动态"
     - "排查产品问题"
     - "评估是否需要下线产品"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/monitoring/diagnosis-report.md
+  - docs/monitoring/product-sunset-plan.md
+writes:
+  - output/phase-reports/diagnosis-orchestrator.json
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # 智能诊断指挥官

@@ -12,6 +12,11 @@
 #   2. 脚本输出 OK → 可以执行
 #   3. 脚本输出 BLOCK → 不要执行，向用户说明
 
+# CRLF 防御：Windows 下 core.autocrlf 可能导致脚本含 \r，Git Bash 无法执行
+if grep -qI $'\r' "$0" 2>/dev/null; then
+  exec bash < <(tr -d '\r' < "$0")
+fi
+
 set -e
 
 if [ $# -eq 0 ]; then

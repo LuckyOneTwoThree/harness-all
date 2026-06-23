@@ -1,3 +1,9 @@
+---
+workflow_id: E
+name: security-audit-workflow
+default_mode: deep
+---
+
 # Workflow: 安全审计（Security Audit Workflow）
 
 > 所属 LOOP 类型：audit

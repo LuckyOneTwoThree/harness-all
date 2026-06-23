@@ -16,6 +16,18 @@ execution_depth:
   default: standard
   quick_description: "生成PRD-L级别文档，包含核心章节（背景目标、功能规格、验收标准）和基础质量检查"
   deep_description: "生成PRD-X级别文档，额外包含上游冲突决策记录、自校正循环日志、开放问题管理、版本变更追溯链、降级方案影响评估"
+reads:
+  - rules/security.md
+  - loops/LOOP.md
+  - docs/discovery/insight.md
+  - docs/discovery/opportunity.md
+  - docs/strategy/PRODUCT_STRATEGY.md
+  - docs/strategy/OKR.md
+  - docs/product/PRD.md
+writes:
+  - docs/product/PRD.md
+  - memory/progress.md
+  - memory/knowledge-base.md
 ---
 
 # PRD生成器

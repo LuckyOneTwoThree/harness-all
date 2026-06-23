@@ -1,0 +1,53 @@
+# .gitattributes — harness-all 全局换行符策略
+#
+# 核心原则：所有 Shell 脚本（.sh）必须使用 LF 换行符
+# 原因：Git Bash (MINGW64) 无法执行 CRLF 脚本，会报错：
+#   \r: command not found
+#   /bin/bash^M: bad interpreter
+#
+# 即使 Windows 用户开启了 core.autocrlf=true，
+# .gitattributes 的 eol=lf 也会覆盖本地设置，确保工作区检出为 LF
+
+# Shell 脚本 — 强制 LF（最关键）
+*.sh text eol=lf
+
+# Git hook 脚本（无扩展名）— 强制 LF
+# 注意：.git/hooks/ 下的文件不受 .gitattributes 管理，
+# 但 .harness/hooks/ 下的源文件受管理
+.harness/hooks/* text eol=lf
+.harness/hooks/guards/* text eol=lf
+
+# 通用文本文件 — 自动规范化（检出时跟随本地设置，提交时转 LF）
+*.md text auto
+*.yaml text auto
+*.yml text auto
+*.json text auto
+*.toml text auto
+*.txt text auto
+*.csv text auto
+
+# Web/代码文件 — 强制 LF
+*.js text eol=lf
+*.ts text eol=lf
+*.jsx text eol=lf
+*.tsx text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.html text eol=lf
+*.py text eol=lf
+
+# 配置文件 — 强制 LF
+.gitignore text eol=lf
+.gitattributes text eol=lf
+.editorconfig text eol=lf
+.env.example text eol=lf
+
+# 二进制文件 — 不做转换
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.tar.gz binary
