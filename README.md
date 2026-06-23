@@ -1,5 +1,9 @@
 <div align="center">
 
+**🌐 Language / 语言**: **English** | [中文](./README.zh.md)
+
+---
+
 # 🪢 harness-all
 
 ### Personal AI Studio · Multi-Agent Framework Family
