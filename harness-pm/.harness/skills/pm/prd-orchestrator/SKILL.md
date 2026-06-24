@@ -176,7 +176,7 @@ Downstream handoff:
     - target: validation-orchestrator
       reason: High-risk assumptions in PRD need validation
       condition: When features marked as high-risk in PRD account for >30%
-  cross_framework:
+  special_cases:
     - target: harness-design (handoff via docs/handoff/pm-to-design.md)
       reason: After PRD is confirmed, harness-design consumes PRD for visual/interaction/component design
       condition: Handoff document generation is automatically triggered after PRD passes quality gates

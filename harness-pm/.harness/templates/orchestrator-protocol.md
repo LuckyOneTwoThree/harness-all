@@ -100,11 +100,11 @@ Input:
   <param>: <source>
 Output: docs/<module>/<file>.md ("<section>")
 Verification: <verification condition>
-Mode: AI / AI→Human
+Mode: 🤖 / 🤖→👤
 ```
 
-- `Mode: AI` means AI executes automatically
-- `Mode: AI→Human` means human approval is required after AI execution
+- `Mode: 🤖` means AI executes automatically
+- `Mode: 🤖→👤` means human approval is required after AI execution
 
 ## 4. State management
 
@@ -207,4 +207,32 @@ downstream_connection:
     - target: <skill-name>
       reason: <selection reason>
       condition: <trigger condition>
+```
+
+## 7. Required SKILL.md sections for orchestrators
+
+Orchestrator SKILL.md files must include the following sections (in addition to the standard frontmatter):
+
+1. **Core Principles / Orchestration Philosophy** — The orchestrator's design philosophy and key rules
+2. **Responsibility Boundaries** (optional) — Explicit ✅/❌ lists of what the orchestrator does and does not do
+3. **Exception Handling** — Table of exception types and handling strategies (extends §5)
+4. **Orchestration Protocol** — Reference to this protocol: `Follows the [orchestrator-protocol.md](../../../templates/orchestrator-protocol.md) orchestration protocol.`
+5. **Pipeline** — YAML pipeline definition (see §6 for format)
+6. **Phase Execution Plan** — Detailed call blocks for each stage using the §3.3 call specification format
+7. **Phase Summary** — Post-pipeline output structure (see §6)
+8. **Phase Gates** — Table of gate conditions per stage with pass/fail criteria
+9. **Human Decision Points** — Table of decisions requiring human input, with context and options
+10. **Downstream Connection** — Declaration of downstream orchestrators (see §6)
+
+### Frontmatter: metadata field
+
+All orchestrator SKILL.md files must include a `metadata` frontmatter field:
+
+```yaml
+metadata:
+  module: <module-name>
+  sub-module: <sub-module-name>
+  type: orchestrator
+  version: <version>
+  domain_tags: [<tag1>, <tag2>]
 ```
