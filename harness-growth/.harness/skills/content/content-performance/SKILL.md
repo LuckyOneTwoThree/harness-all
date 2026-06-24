@@ -6,6 +6,7 @@ triggers:
   - MEASURE phase of the content marketing Loop
   - User asks to "analyze content performance"
 reads:
+  - docs/handoff/solo-to-growth.md
   - docs/content/published/
   - memory/knowledge-base.md
   - loops/specs/<content>/state.yaml

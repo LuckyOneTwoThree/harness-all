@@ -9,6 +9,7 @@ reads:
   - .harness/rules/security.md
   - .harness/data/design/vibes.csv
   - .harness/craft/anti-ai-slop.md
+  - docs/handoff/pm-to-design.md
 writes:
   - docs/visual/DESIGN_BRIEF.md
 ---

@@ -1,6 +1,6 @@
 # harness-all Multi-Agent Framework Family · Architecture Design
 
-> Version: v2.0 · 2026-06-22
+> Version: v2.1 · 2026-06-22
 > Positioning: A "Personal AI Studio" framework family for AI Agents; each framework works independently and collaborates via contract documents
 
 ---
@@ -520,11 +520,13 @@ PLAN → EXPERIMENT → MEASURE → Pass? DONE : Back to EXPERIMENT/PLAN
 - Module 8 Data Analysis (3): funnel-analysis / cohort-analysis / metric-anomaly-detection
 - Module 9 Growth Review (1): growth-review
 
-**Loop Types** (4 types):
+**Loop Types** (6 types):
 - `content` — Content production
 - `seo` — SEO optimization
 - `experiment` — Growth experiments
 - `optimization` — Funnel optimization
+- `monetization` — Monetization optimization
+- `lifecycle` — User lifecycle management
 
 **Core Outputs**:
 - `docs/operations/GROWTH_STRATEGY.md` — Growth Strategy
@@ -955,7 +957,7 @@ If multiple people + multiple Agents collaborate:
 
 ## 10. Evolution Roadmap
 
-### 10.1 Current Stage (v2.0, completed)
+### 10.1 Current Stage (v2.1, completed)
 
 - ✅ 4 core frameworks built independently (pm/design/solo/growth all complete)
 - ✅ Contract document system connected (pm→design→solo→growth→pm closed loop)

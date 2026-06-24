@@ -17,6 +17,7 @@ reads:
   - loops/LOOP.md
   - docs/monitoring/monitoring-config.md
   - docs/monitoring/feedback-loop.md
+  - docs/handoff/ops-to-pm.md
 writes:
   - output/phase-reports/monitoring-orchestrator.json
   - memory/progress.md

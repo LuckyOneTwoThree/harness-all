@@ -17,6 +17,8 @@ reads:
   - loops/LOOP.md
   - docs/monitoring/iteration-plan.md
   - docs/monitoring/iteration-retrospective.md
+  - docs/handoff/growth-to-pm.md
+  - docs/handoff/ops-to-pm.md
 writes:
   - output/phase-reports/iteration-orchestrator.json
   - memory/progress.md

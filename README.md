@@ -15,7 +15,7 @@
 
 ![Version](https://img.shields.io/badge/version-v2.1-blue.svg?style=for-the-badge&logo=semver)
 ![Frameworks](https://img.shields.io/badge/frameworks-5-green.svg?style=for-the-badge&logo=github)
-![Skills](https://img.shields.io/badge/skills-206-orange.svg?style=for-the-badge&logo=skill)
+![Skills](https://img.shields.io/badge/skills-196-orange.svg?style=for-the-badge&logo=skill)
 ![Workflows](https://img.shields.io/badge/workflows-36-purple.svg?style=for-the-badge&logo=git)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge&logo=open-source-initiative)
 ![Status](https://img.shields.io/badge/status-production--ready-brightgreen.svg?style=for-the-badge&logo=checkmarx)
@@ -30,7 +30,7 @@
 | **harness-growth** | Operations · Content · SEO · Growth Experiments | 40 | 6 | ✅ |
 | **harness-ops** | Ops · Deployment · Monitoring · Disaster Recovery | 32 | 7 | ✅ |
 
-**Total**: 5 frameworks · 206 Skills · 36 Workflows · 11 contract documents · 25 LOOP loop types
+**Total**: 5 frameworks · 196 Skills · 36 Workflows · 11 contract documents · 24 LOOP loop types
 
 </div>
 

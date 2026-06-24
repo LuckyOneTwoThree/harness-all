@@ -25,6 +25,7 @@ reads:
   - rules/security.md
   - loops/LOOP.md
   - docs/discovery/user-research.md
+  - docs/handoff/growth-to-pm.md
 writes:
   - docs/discovery/insight.md
   - memory/progress.md

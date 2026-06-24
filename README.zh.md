@@ -15,7 +15,7 @@
 
 ![Version](https://img.shields.io/badge/version-v2.1-blue.svg?style=for-the-badge&logo=semver)
 ![Frameworks](https://img.shields.io/badge/frameworks-5-green.svg?style=for-the-badge&logo=github)
-![Skills](https://img.shields.io/badge/skills-206-orange.svg?style=for-the-badge&logo=skill)
+![Skills](https://img.shields.io/badge/skills-196-orange.svg?style=for-the-badge&logo=skill)
 ![Workflows](https://img.shields.io/badge/workflows-36-purple.svg?style=for-the-badge&logo=git)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge&logo=open-source-initiative)
 ![Status](https://img.shields.io/badge/status-production--ready-brightgreen.svg?style=for-the-badge&logo=checkmarx)
@@ -30,7 +30,7 @@
 | **harness-growth** | 运营 · 内容 · SEO · 增长实验 | 40 | 6 | ✅ |
 | **harness-ops** | 运维 · 部署 · 监控 · 容灾 | 32 | 7 | ✅ |
 
-**总计**：5 个框架 · 206 个 Skill · 36 个 Workflow · 11 份契约文档 · 25 种 LOOP 循环类型
+**总计**：5 个框架 · 196 个 Skill · 36 个 Workflow · 11 份契约文档 · 24 种 LOOP 循环类型
 
 </div>
 
