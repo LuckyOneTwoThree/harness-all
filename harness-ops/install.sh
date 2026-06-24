@@ -100,14 +100,6 @@ else
     echo "WARN: Temporary directory cleanup failed or path is abnormal: $TEMP_DIR"
 fi
 
-# Set script executable permissions (Unix only; Windows has no chmod)
-if command -v chmod >/dev/null 2>&1; then
-  chmod +x .harness/scripts/*.sh 2>/dev/null || true
-  echo "  ✓ Set script executable permissions"
-else
-  echo "  ⚠ Windows environment: skipping chmod (scripts still work)"
-fi
-
 echo ""
 echo "✓ Installation complete"
 echo ""

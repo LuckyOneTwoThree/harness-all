@@ -49,7 +49,7 @@ If this sub-module needs to be expanded into a multi-stage Pipeline in the futur
 
 ## Orchestration Protocol
 
-Follows the [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) orchestration protocol.
+Follows the [orchestrator-protocol.md](../../../templates/orchestrator-protocol.md) orchestration protocol.
 
 ## Pipeline
 

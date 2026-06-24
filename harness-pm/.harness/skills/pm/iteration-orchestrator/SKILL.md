@@ -40,7 +40,7 @@ Iteration is not simply queuing requirements; it is making optimal trade-offs un
 
 ## Orchestration Protocol
 
-Follows the [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) orchestration protocol.
+Follows the [orchestrator-protocol.md](../../../templates/orchestrator-protocol.md) orchestration protocol.
 
 ### Orchestrator-Specific Conventions
 

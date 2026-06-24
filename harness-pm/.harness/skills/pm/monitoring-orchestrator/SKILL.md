@@ -39,7 +39,7 @@ The highest state of monitoring is not rapid response, but proactive prevention.
 
 ## Orchestration Protocol
 
-Follows the [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) orchestration protocol.
+Follows the [orchestrator-protocol.md](../../../templates/orchestrator-protocol.md) orchestration protocol.
 
 ## Pipeline
 

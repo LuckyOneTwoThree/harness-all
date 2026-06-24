@@ -39,7 +39,7 @@ The value of data analysis lies not in producing reports, but in converting unce
 
 ## Orchestration Protocol
 
-Follows the [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) orchestration protocol.
+Follows the [orchestrator-protocol.md](../../../templates/orchestrator-protocol.md) orchestration protocol.
 
 ## Pipeline
 

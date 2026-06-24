@@ -39,7 +39,7 @@ Use data to reduce guesswork in decisions, not to back up decisions with data.
 
 ## Orchestration Protocol
 
-Follows the [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) orchestration protocol.
+Follows the [orchestrator-protocol.md](../../../templates/orchestrator-protocol.md) orchestration protocol.
 
 ## Pipeline
 

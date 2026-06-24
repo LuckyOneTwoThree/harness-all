@@ -38,7 +38,7 @@ The value of diagnosis lies not in producing reports, but in shortening the time
 
 ## Orchestration Protocol
 
-Follows the [orchestrator-protocol.md](../../../../templates/orchestrator-protocol.md) orchestration protocol.
+Follows the [orchestrator-protocol.md](../../../templates/orchestrator-protocol.md) orchestration protocol.
 
 ## Pipeline
 

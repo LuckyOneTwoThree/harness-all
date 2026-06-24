@@ -12,7 +12,7 @@
 [![Workflows](https://img.shields.io/badge/workflows-7-purple.svg)](#workflows-in-detail)
 [![Skills](https://img.shields.io/badge/skills-20-red.svg)](#core-features)
 
-**[English](README.en.md)** · **[Quick Start](#quick-start)** · **[Directory Structure](#directory-structure)**
+**[Quick Start](#quick-start)** · **[Directory Structure](#directory-structure)**
 
 </div>
 
@@ -382,6 +382,6 @@ MIT
 
 <div align="center">
 
-**[⬆ Back to top](#harness-solo)** · **[English](README.en.md)**
+**[⬆ Back to top](#harness-solo)**
 
 </div>
