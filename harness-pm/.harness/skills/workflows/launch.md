@@ -1,6 +1,7 @@
 ---
 workflow_id: E
 name: launch
+description: "Accept product features and release versions through pre-release checks, acceptance, and gradual rollout"
 default_mode: skip
 ---
 

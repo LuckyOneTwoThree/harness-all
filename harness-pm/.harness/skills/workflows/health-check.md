@@ -1,6 +1,7 @@
 ---
 workflow_id: J
 name: health-check
+description: "Perform periodic product health checkups with multi-dimensional scoring and competitor snapshots"
 default_mode: skip
 ---
 

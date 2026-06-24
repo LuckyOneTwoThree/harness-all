@@ -1,6 +1,7 @@
 ---
 workflow_id: B
 name: iteration
+description: "Iterate on existing product features through change impact analysis, data diagnosis, and PRD updates"
 default_mode: standard
 ---
 

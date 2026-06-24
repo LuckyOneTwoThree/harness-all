@@ -1,6 +1,7 @@
 ---
 workflow_id: F
 name: diagnosis
+description: "Diagnose product health decline and competitor threats, with optional product sunset planning"
 default_mode: skip
 ---
 

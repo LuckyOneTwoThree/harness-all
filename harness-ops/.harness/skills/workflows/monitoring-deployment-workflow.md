@@ -1,6 +1,7 @@
 ---
 workflow_id: D
 name: monitoring-deployment-workflow
+description: "Deploy monitoring infrastructure with collectors, alerting rules, dashboards, and deployment verification"
 default_mode: standard
 ---
 

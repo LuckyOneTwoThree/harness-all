@@ -1,6 +1,7 @@
 ---
 workflow_id: E
 name: design-system-setup
+description: "Build a complete design system from scratch with tokens, components, and design recommendations"
 default_mode: standard
 ---
 

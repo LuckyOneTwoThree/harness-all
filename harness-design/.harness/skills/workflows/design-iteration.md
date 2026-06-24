@@ -1,6 +1,7 @@
 ---
 workflow_id: C
 name: design-iteration
+description: "Iterate on existing designs through Chesterton's Fence analysis, visual and interaction LOOPs"
 default_mode: standard
 ---
 

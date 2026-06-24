@@ -1,6 +1,7 @@
 ---
 workflow_id: A
 name: new-product
+description: "Build a new product from 0 to 1 through exploration, strategy, PRD design, and engineering handoff"
 default_mode: deep
 ---
 

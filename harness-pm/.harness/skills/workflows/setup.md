@@ -1,6 +1,7 @@
 ---
 workflow_id: G
 name: setup
+description: "Initialize a new harness-pm project by guiding users through filling in core configuration files"
 default_mode: skip
 ---
 

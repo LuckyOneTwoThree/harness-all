@@ -1,6 +1,7 @@
 ---
 workflow_id: E
 name: lifecycle-operations-workflow
+description: "Manage user lifecycle through segmentation, onboarding design, aha-moment identification, and churn rescue"
 default_mode: standard
 ---
 

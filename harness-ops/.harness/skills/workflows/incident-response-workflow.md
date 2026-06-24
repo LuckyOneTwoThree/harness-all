@@ -1,6 +1,7 @@
 ---
 workflow_id: C
 name: incident-response-workflow
+description: "Respond to P0/P1 incidents through detection, mitigation, root cause analysis, and post-mortem"
 default_mode: skip
 ---
 

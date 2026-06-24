@@ -1,6 +1,7 @@
 ---
 workflow_id: H
 name: pivot
+description: "Execute strategic adjustments including repositioning, business model changes, and roadmap revisions"
 default_mode: deep
 ---
 

@@ -1,6 +1,7 @@
 ---
 workflow_id: E
 name: optimize
+description: "Optimize performance through measurement, bottleneck identification, and guarded iterative fixes"
 default_mode: standard
 ---
 

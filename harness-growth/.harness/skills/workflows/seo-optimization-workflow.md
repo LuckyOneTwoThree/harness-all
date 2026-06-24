@@ -1,6 +1,7 @@
 ---
 workflow_id: D
 name: seo-optimization-workflow
+description: "Optimize SEO through keyword research, SERP analysis, on-page optimization, and technical audits"
 default_mode: standard
 ---
 

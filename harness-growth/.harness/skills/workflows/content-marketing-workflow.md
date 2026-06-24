@@ -1,6 +1,7 @@
 ---
 workflow_id: C
 name: content-marketing-workflow
+description: "Produce and distribute content through ideation, creation, review, multi-channel distribution, and performance tracking"
 default_mode: standard
 ---
 

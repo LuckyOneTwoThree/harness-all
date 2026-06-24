@@ -1,6 +1,7 @@
 ---
 workflow_id: G
 name: release
+description: "Release a version through prerequisite checks, CHANGELOG updates, semantic versioning, and artifact building"
 default_mode: skip
 ---
 

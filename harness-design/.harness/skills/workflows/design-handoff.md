@@ -1,6 +1,7 @@
 ---
 workflow_id: F
 name: design-handoff
+description: "Hand off completed design deliverables to engineering with specs, component maps, and pre-delivery checks"
 default_mode: skip
 ---
 

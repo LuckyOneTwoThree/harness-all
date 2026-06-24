@@ -1,6 +1,7 @@
 ---
 workflow_id: B
 name: new-design
+description: "Design new pages or components from scratch through wireframe, visual, and interaction LOOPs"
 default_mode: deep
 ---
 

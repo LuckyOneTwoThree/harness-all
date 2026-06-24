@@ -1,6 +1,7 @@
 ---
 workflow_id: B
 name: deployment-workflow
+description: "Deploy new versions through staging validation, GitOps PR, human approval, and canary production rollout"
 default_mode: skip
 ---
 

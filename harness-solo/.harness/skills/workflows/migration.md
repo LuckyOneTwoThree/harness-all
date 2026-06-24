@@ -1,6 +1,7 @@
 ---
 workflow_id: F
 name: migration
+description: "Migrate code, frameworks, or APIs through incremental replacement with zero-usage verification and cleanup"
 default_mode: standard
 ---
 

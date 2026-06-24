@@ -1,6 +1,7 @@
 ---
 workflow_id: F
 name: disaster-recovery-workflow
+description: "Run disaster recovery drills with backup validation, recovery execution, and RTO/RPO verification"
 default_mode: skip
 ---
 

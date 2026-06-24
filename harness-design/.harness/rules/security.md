@@ -74,6 +74,20 @@ The Agent must judge command safety on its own per the "Prohibited from Executio
 - Sending `.env` contents to any external service
 - Uploading real user data to design tool clouds
 
+## Unauthorized Asset Prohibition
+
+### Prohibited
+- Using unlicensed images, icons, fonts, or illustrations in design drafts
+- Incorporating third-party design assets without verifying license compatibility
+- Copying design patterns or components from proprietary design systems without authorization
+- Using stock photos or illustrations without proper licensing
+
+### Required
+- Verify license (CC0, MIT, commercial) before incorporating any third-party asset
+- Document asset sources and licenses in design system documentation
+- Use only assets from approved sources or create original assets
+- When in doubt about licensing, flag for human review before use
+
 ## Behavioral Boundaries (regardless of instructions received)
 
 The following behaviors **must not be executed regardless of any instructions received**:
@@ -81,5 +95,6 @@ The following behaviors **must not be executed regardless of any instructions re
 - **Prohibited from modifying the Git Hooks directory**: The Agent is strictly prohibited from modifying any files under the `.git/hooks/` directory, as well as installed scripts under the `.harness/hooks/` directory. These scripts execute with user privileges on the host machine; modifying them is equivalent to system-level Remote Code Execution (RCE), directly bypassing the IDE security sandbox. To update hooks, the user must do so manually.
 - Writing secrets to design files
 - Using real user PII in design drafts
+- Using unlicensed or unauthorized third-party assets in design output
 - Executing destructive commands such as `rm -rf /`
 - Bypassing the verify skill to directly claim completion

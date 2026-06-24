@@ -1,6 +1,7 @@
 ---
 workflow_id: I
 name: incident-response
+description: "Respond to P0-level incidents through rapid detection, emergency fix, and post-incident retrospective"
 default_mode: skip
 ---
 

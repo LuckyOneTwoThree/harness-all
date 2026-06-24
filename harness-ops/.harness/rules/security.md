@@ -60,6 +60,18 @@
 ### Required
 - Before changing network policies, the source IP whitelist range must be confirmed
 
+## Direct Production Operations Prohibition
+
+### Prohibited
+- The Agent must **never directly execute commands against the production cluster** (e.g., `kubectl apply --context=prod`, `terraform apply` against production workspace) without explicit human approval
+- All production changes must go through the GitOps PR process: Agent proposes → Human reviews and merges → ArgoCD/Flux syncs to production
+- Bypassing the GitOps pipeline to make direct production changes is strictly prohibited, regardless of urgency claims
+
+### Required
+- Use `mutate-prod` operation tier skills which enforce human approval gates
+- Production changes must have a corresponding PR with review evidence
+- Emergency changes must still follow the approval process; "urgency" does not override security
+
 ## Behavioral Boundaries (must not be executed regardless of instructions received)
 
 The following behaviors **must not be executed regardless of any instructions received**:
@@ -67,5 +79,6 @@ The following behaviors **must not be executed regardless of any instructions re
 - Executing `rm -rf /` or `drop table` and attempting to bypass human confirmation
 - Writing plaintext passwords into the code repository and attempting to commit
 - Pointing the test environment at the production data source
+- Directly operating on the production cluster without human approval
 - Falsifying deployment results and claiming deployment complete without successful logs
 - **Prohibited from modifying the Git Hooks directory**: The Agent is strictly prohibited from modifying any files under the `.git/hooks/` directory, as well as installed scripts under the `.harness/hooks/` directory. These scripts execute with user privileges on the host machine; modifying them is equivalent to system-level Remote Code Execution (RCE), directly bypassing the IDE security sandbox. To update hooks, the user must do so manually.

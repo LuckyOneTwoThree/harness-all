@@ -1,6 +1,7 @@
 ---
 workflow_id: D
 name: redesign
+description: "Redesign an existing project by importing the current design system, diffing, and iterating on visuals"
 default_mode: deep
 ---
 

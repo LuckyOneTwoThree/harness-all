@@ -1,6 +1,7 @@
 ---
 workflow_id: C
 name: growth
+description: "Drive growth breakthroughs by diagnosing bottlenecks, designing experiments, and validating solutions"
 default_mode: standard
 ---
 

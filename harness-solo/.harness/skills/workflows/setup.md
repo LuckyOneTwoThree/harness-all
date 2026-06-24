@@ -1,6 +1,7 @@
 ---
 workflow_id: A
 name: setup
+description: "Initialize a new harness-solo project by guiding users through filling in core configuration files"
 default_mode: skip
 ---
 

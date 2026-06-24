@@ -1,6 +1,7 @@
 ---
 workflow_id: A
 name: setup
+description: "Initialize a harness-design project by creating the design brief, recommendation, and design system"
 default_mode: skip
 ---
 

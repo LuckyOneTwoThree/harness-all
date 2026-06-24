@@ -1,6 +1,7 @@
 ---
 workflow_id: F
 name: growth-review-workflow
+description: "Generate periodic growth review reports with funnel analysis, cohort analysis, and AARRR diagnosis"
 default_mode: skip
 ---
 

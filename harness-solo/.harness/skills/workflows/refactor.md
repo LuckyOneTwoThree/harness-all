@@ -1,6 +1,7 @@
 ---
 workflow_id: D
 name: refactor
+description: "Refactor existing code to improve structure without changing external behavior, with test safety nets"
 default_mode: deep
 ---
 

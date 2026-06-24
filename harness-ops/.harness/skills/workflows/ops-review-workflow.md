@@ -1,6 +1,7 @@
 ---
 workflow_id: G
 name: ops-review-workflow
+description: "Generate periodic ops review reports with SLA calculations, cost analysis, and handoff to PM"
 default_mode: skip
 ---
 

@@ -1,6 +1,7 @@
 ---
 workflow_id: E
 name: security-audit-workflow
+description: "Audit security through vulnerability scanning, policy-as-code checks, and operation record review"
 default_mode: deep
 ---
 

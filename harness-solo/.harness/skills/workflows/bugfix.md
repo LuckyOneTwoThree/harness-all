@@ -1,6 +1,7 @@
 ---
 workflow_id: C
 name: bugfix
+description: "Fix production bugs through systematic debugging, root cause analysis, and TDD-driven iterative repair"
 default_mode: standard
 ---
 

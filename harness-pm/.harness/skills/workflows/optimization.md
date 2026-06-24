@@ -1,6 +1,7 @@
 ---
 workflow_id: D
 name: optimization
+description: "Optimize existing products through data-driven diagnosis, iteration decisions, and solution validation"
 default_mode: standard
 ---
 

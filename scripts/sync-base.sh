@@ -57,7 +57,7 @@ for fw in "${FRAMEWORKS[@]}"; do
   fi
 
   # Check hard circuit breaker execution rule
-  if ! grep -q "circuit breaker execution rule" "$FILE"; then
+  if ! grep -qi "circuit breaker execution rule" "$FILE"; then
     echo "  ✗ $fw: LOOP.md missing hard circuit breaker execution rule"
     DIFF_COUNT=$((DIFF_COUNT + 1))
   fi

@@ -1,6 +1,7 @@
 ---
 workflow_id: B
 name: growth-experiment-workflow
+description: "Run growth experiments from hypothesis generation through ICE scoring, design, and statistical analysis"
 default_mode: standard
 ---
 

@@ -1,6 +1,7 @@
 ---
 workflow_id: B
 name: new-feature
+description: "Develop new features through brainstorming, TDD-driven LOOPs, and code review"
 default_mode: deep
 ---
 
