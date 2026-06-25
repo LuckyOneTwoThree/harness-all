@@ -99,13 +99,16 @@
 
 ```bash
 # 1. 克隆框架家族到任意位置（一次性操作）
+#    会在当前目录下创建一个 harness-all 文件夹
+cd /path/to/your-parent-dir
 git clone https://github.com/LuckyOneTwoThree/harness-all.git
+# 现在框架位于 /path/to/your-parent-dir/harness-all/
 
 # 2. 进入你的项目目录（没有则新建）
 cd /path/to/your-project
 
 # 3. 安装你需要的框架（以 solo 为例）
-bash /path/to/harness-all/harness-solo/install.sh
+bash /path/to/your-parent-dir/harness-all/harness-solo/install.sh
 ```
 
 安装脚本会在你的项目中创建 `.harness/` 目录结构、复制核心配置文件、初始化记忆。

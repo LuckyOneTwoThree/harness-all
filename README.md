@@ -99,13 +99,16 @@ Each framework is **self-sufficient** — no handoff documents required. When yo
 
 ```bash
 # 1. Clone the framework family to any location (one-time)
+#    Creates a "harness-all" folder in the current directory
+cd /path/to/your-parent-dir
 git clone https://github.com/LuckyOneTwoThree/harness-all.git
+# Now the frameworks are at /path/to/your-parent-dir/harness-all/
 
 # 2. Navigate to your project (create one if not exists)
 cd /path/to/your-project
 
 # 3. Install the framework you need (solo as example)
-bash /path/to/harness-all/harness-solo/install.sh
+bash /path/to/your-parent-dir/harness-all/harness-solo/install.sh
 ```
 
 The install script creates the `.harness/` directory structure in your project, copies core config files, and initializes memory.
