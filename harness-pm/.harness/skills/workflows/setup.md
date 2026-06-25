@@ -98,11 +98,12 @@ default_mode: skip
 
 ## Key Checkpoints
 
+- [ ] AGENTS.md's [project name] replaced with the real project name? (Also PRODUCT_STRATEGY.md / PRD.md titles?)
 - [ ] [Username] in SOUL.md replaced? Product preferences filled?
 - [ ] constitution.md clauses verifiable? (Not "product should be good", but "PRD must pass 4 gates")
 - [ ] PRODUCT_STRATEGY.md success metrics quantifiable? (Not "users like it", but "DAU > 10000")
 - [ ] PRD.md skeleton created?
-- [ ] All 4 files saved?
+- [ ] All 5 files (AGENTS.md, SOUL.md, constitution.md, PRODUCT_STRATEGY.md, PRD.md) saved?
 
 ## Failure Handling
 
