@@ -57,15 +57,15 @@ PLAN (inline) → LOOP(DESIGN → VERIFY → LINT) → LOOP outer gate(DESIGN-RE
 ### 6 Workflows Cover the Full Design Lifecycle
 
 ```
-setup (project initiation) → new-design/design-iteration/design-system-setup/redesign (design) → design-handoff (delivery)
+design-onboarding (first-time onboarding) → new-design/design-iteration/design-system-setup/redesign (design) → design-handoff (delivery)
 ```
 
 | Workflow | Scenario | LOOP Type | Iteration Limit |
 |--------|------|---------|:---:|
-| setup | New project initiation guide | No LOOP | - |
+| design-onboarding | First-time onboarding, quick design system skeleton | No LOOP | - |
 | new-design | New design task (from 0 to 1) | wireframe/visual/interaction | 5/5/5 |
 | design-iteration | Design iteration (existing design optimization) | visual (mandatory) + interaction (conditional) | 5/5 |
-| design-system-setup | Design system from 0 to 1 | component | 5 |
+| design-system-setup | Full design system build (with component LOOP + review) | component | 5 |
 | redesign | Redesign (major revamp) | visual (mandatory) + interaction (conditional) | 5/5 |
 | design-handoff | Design handoff | No LOOP | - |
 
@@ -138,18 +138,23 @@ install.sh will:
 
 ### 2. Fill in Project Configuration
 
-Run the setup workflow; the Agent will guide you to fill in:
+Manually fill in (or ask the Agent to help):
 - `SOUL.md` : Persona + design preferences
 - `constitution.md` : Project constitution (non-negotiable principles)
+
+### 3. Initialize Design System
+
+Tell the Agent "initialize design system" → enters design-onboarding workflow, which produces:
 - `docs/visual/DESIGN_BRIEF.md` : Design requirements (including AC-xxx acceptance criteria)
 - `docs/design-system/DESIGN.md` : Design system (10-section standard format)
+- `docs/design-system/tokens.json` / `tokens.css` : Design tokens
 
-### 3. Start Designing
+### 4. Start Designing
 
 Tell the Agent:
 - "I want to design a login page" → enters new-design workflow
 - "Optimize this page's color scheme" → enters design-iteration workflow
-- "Build a design system" → enters design-system-setup workflow
+- "Build a complete design system with components" → enters design-system-setup workflow
 - "This module needs a redo" → enters redesign workflow
 - "Prepare to hand off to engineering" → enters design-handoff workflow
 
@@ -202,8 +207,8 @@ harness-design/
 | File | Purpose | Author |
 |------|------|------|
 | `AGENTS.md` | Entry point, core rules + design four principles | Provided by framework, customizable per project |
-| `SOUL.md` | Agent persona + design preferences | Filled via setup workflow |
-| `constitution.md` | Project constitution (non-negotiable principles) | Filled via setup workflow |
+| `SOUL.md` | Agent persona + design preferences | Manual fill |
+| `constitution.md` | Project constitution (non-negotiable principles) | Manual fill |
 | `docs/visual/DESIGN_BRIEF.md` | Design requirements (features + AC-xxx + milestones) | Maintained by design-brief |
 | `docs/design-system/DESIGN.md` | Design system (10-section standard format) | Maintained by design-system |
 | `docs/design-system/tokens.json` | Tokens (W3C format, machine-readable) | Maintained by design-system |
@@ -211,11 +216,13 @@ harness-design/
 
 ## Workflows in Detail
 
-### setup (Project Initiation Guide)
+### design-onboarding (First-Time Onboarding)
 
 ```
 session-start → design-brief (hard gate) → design-recommendation → design-system → session-end
 ```
+
+Quick design system skeleton (no component LOOP, no review). For full build with component design + review, use design-system-setup.
 
 ### new-design (New Design Task)
 

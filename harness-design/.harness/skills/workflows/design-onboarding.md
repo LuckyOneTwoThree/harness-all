@@ -1,18 +1,19 @@
 ---
 workflow_id: A
-name: setup
-description: "Initialize a harness-design project by creating the design brief, recommendation, and design system"
+name: design-onboarding
+description: "First-time harness-design onboarding: quickly build a design system skeleton (brief → recommendation → system)"
 default_mode: skip
 ---
 
-# Workflow: setup
+# Workflow: design-onboarding
 
-> Project initialization workflow · Run when using harness-design for the first time
+> First-time onboarding workflow · Run when using harness-design for the first time
+> Difference from design-system-setup: this is a fast skeleton (no component LOOP, no review); use design-system-setup for the full build with component design + review
 
 ## Applicable Scenarios
 
 - Using harness-design in a project for the first time
-- Need to initialize the design system
+- Need to quickly initialize the design system skeleton
 - Project has no DESIGN.md
 
 ## Orchestration
@@ -79,3 +80,11 @@ Update `memory/progress.md` and archive the session.
 - DESIGN_BRIEF.md passes the hard gate
 - DESIGN.md contains 10 sections
 - tokens.json conforms to W3C format
+
+## When to Use design-system-setup Instead
+
+If the project needs a **complete** design system with component design and review (not just a skeleton), use the `design-system-setup` workflow instead, which adds:
+
+```
+→ PLAN → LOOP(component-design → verify → design-lint) → design-review
+```

@@ -29,9 +29,9 @@
 
 ## Workflows
 > `default_mode`: deep=forced exploration / standard=pause at module boundaries / skip=direct execution (user can switch at any time)
-- **setup** [skip] — Project initialization (design-brief → design-recommendation → design-system)
+- **design-onboarding** [skip] — First-time onboarding, quick design system skeleton (brief → recommendation → system)
 - **new-design** [deep] — New design task (3 independent LOOPs + design-review)
 - **design-iteration** [standard] — Design iteration (Chesterton's Fence + LOOP)
 - **redesign** [deep] — Redesign (design-system-import + diff analysis + LOOP)
-- **design-system-setup** [standard] — Design system build (recommendation → system → LOOP)
+- **design-system-setup** [standard] — Full design system build (recommendation → system → component LOOP → review)
 - **design-handoff** [skip] — Design handoff (handoff-spec + accessibility + lint + verify)
