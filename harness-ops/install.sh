@@ -6,13 +6,10 @@
 #   # Review install.sh contents
 #   bash install.sh
 #
-# Purpose: Clone the .harness/ template into the current directory and initialize the ops project
+# Purpose: Install the .harness/ template into the current directory and initialize the ops project
+#          Supports both local install (from harness-all repo) and remote clone install
 
 set -e
-
-REPO_URL="https://github.com/LuckyOneTwoThree/harness-ops.git"
-TEMPLATE_BRANCH="main"
-TEMP_DIR=".harness-ops-tmp-$$"
 
 echo "=== harness-ops cold-start install ==="
 echo ""
@@ -42,28 +39,42 @@ if ! command -v docker >/dev/null 2>&1; then
   echo "WARN: docker not found. Containerization deployment/image build-related skills require Docker."
 fi
 
-# Shallow-clone the template repository into a temporary directory
-echo "→ Cloning template repository..."
-git clone --depth 1 -b "$TEMPLATE_BRANCH" "$REPO_URL" "$TEMP_DIR" 2>/dev/null || {
-  echo "BLOCK: Clone failed; check network or repository URL: $REPO_URL"
-  exit 1
-}
+# Detect if running from within the harness-all repo (local install)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+if [ -d "$SCRIPT_DIR/.harness" ]; then
+  # Local install: script is inside harness-all/harness-ops/
+  echo "→ Using local framework files from: $SCRIPT_DIR"
+  TEMPLATE_DIR="$SCRIPT_DIR"
+else
+  # Remote install: clone from GitHub (for standalone single-framework use)
+  echo "→ Cloning template repository..."
+  REPO_URL="https://github.com/LuckyOneTwoThree/harness-ops.git"
+  TEMPLATE_BRANCH="main"
+  TEMP_DIR=".harness-ops-tmp-$$"
+  git clone --depth 1 -b "$TEMPLATE_BRANCH" "$REPO_URL" "$TEMP_DIR" 2>/dev/null || {
+    echo "BLOCK: Clone failed; check network or repository URL: $REPO_URL"
+    echo "Tip: If you already cloned harness-all, run this script from harness-all/harness-ops/"
+    exit 1
+  }
+  TEMPLATE_DIR="$TEMP_DIR"
+fi
 
 # Copy .harness/ to the current directory
 echo "→ Copying .harness/ framework..."
-cp -r "$TEMP_DIR/.harness" .harness
+cp -r "$TEMPLATE_DIR/.harness" .harness
 
 # Copy AGENTS.md and SOUL.md templates (if they don't exist)
 if [ ! -f "AGENTS.md" ]; then
-  cp "$TEMP_DIR/.harness/templates/AGENTS.md.template" AGENTS.md
+  cp "$TEMPLATE_DIR/.harness/templates/AGENTS.md.template" AGENTS.md
   echo "  ✓ Created AGENTS.md (from template; please fill in [project name])"
 fi
 if [ ! -f "SOUL.md" ]; then
-  cp "$TEMP_DIR/.harness/templates/SOUL.md.template" SOUL.md
+  cp "$TEMPLATE_DIR/.harness/templates/SOUL.md.template" SOUL.md
   echo "  ✓ Created SOUL.md (from template; please fill in [ops lead] and tech preferences)"
 fi
 if [ ! -f "constitution.md" ]; then
-  cp "$TEMP_DIR/.harness/templates/constitution.md.template" constitution.md
+  cp "$TEMPLATE_DIR/.harness/templates/constitution.md.template" constitution.md
   echo "  ✓ Created constitution.md (from template; fill in project-level ops principles)"
 fi
 
@@ -73,13 +84,13 @@ mkdir -p docs/infrastructure docs/monitoring docs/incident docs/deployment docs/
 
 # Initialize OPS_STRATEGY.md from template (ops strategy overview; if it doesn't exist)
 if [ ! -f "docs/infrastructure/OPS_STRATEGY.md" ]; then
-  cp "$TEMP_DIR/.harness/templates/OPS_STRATEGY.md.template" docs/infrastructure/OPS_STRATEGY.md
+  cp "$TEMPLATE_DIR/.harness/templates/OPS_STRATEGY.md.template" docs/infrastructure/OPS_STRATEGY.md
   echo "  ✓ Initialized docs/infrastructure/OPS_STRATEGY.md (from template; please fill in architecture topology / deployment specs / monitoring matrix / disaster recovery plan)"
 fi
 
 # Copy handoff document templates (if the template repository has them)
-if [ -d "$TEMP_DIR/docs/handoff" ]; then
-  cp -r "$TEMP_DIR/docs/handoff/." docs/handoff/ 2>/dev/null || true
+if [ -d "$TEMPLATE_DIR/docs/handoff" ]; then
+  cp -r "$TEMPLATE_DIR/docs/handoff/." docs/handoff/ 2>/dev/null || true
   echo "  ✓ Copied docs/handoff/ handoff protocol documents (solo-to-ops / ops-to-pm)"
 fi
 
@@ -93,11 +104,9 @@ if [ ! -f ".harness/memory/progress.md" ]; then
   echo "  ✓ Initialized .harness/memory/progress.md"
 fi
 
-# Clean up the temporary directory (safe approach: validate path prefix before using rm -r)
+# Clean up the temporary directory (only in remote mode; safe approach: validate path prefix before using rm -r)
 if [ -n "$TEMP_DIR" ] && [ -d "$TEMP_DIR" ] && [[ "$TEMP_DIR" == .harness-ops-tmp-* ]]; then
     rm -r -- "$TEMP_DIR"
-else
-    echo "WARN: Temporary directory cleanup failed or path is abnormal: $TEMP_DIR"
 fi
 
 echo ""

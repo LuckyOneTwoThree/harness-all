@@ -20,26 +20,22 @@ if [ -d ".harness" ]; then
   exit 1
 fi
 
-# Check whether we are inside the harness-pm repository itself (by checking .harness/skills/pm/)
-if [ -d ".harness/skills/pm" ] && [ -f "AGENTS.md" ]; then
-  echo "Detected that we are inside the harness-pm repository; skipping clone and initializing directly"
-  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Detect if running from within the harness-all repo (local install)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+if [ -d "$SCRIPT_DIR/.harness" ]; then
+  # Local install: script is inside harness-all/harness-pm/
+  echo "→ Using local framework files from: $SCRIPT_DIR"
   TEMPLATE_DIR="$SCRIPT_DIR"
 else
-  # Check git
-  if ! command -v git >/dev/null 2>&1; then
-    echo "BLOCK: git not found; please install Git first"
-    exit 1
-  fi
-
+  # Remote install: clone from GitHub (for standalone single-framework use)
+  echo "→ Cloning template repository..."
   REPO_URL="https://github.com/LuckyOneTwoThree/harness-pm.git"
   TEMPLATE_BRANCH="main"
   TEMP_DIR=".harness-pm-tmp-$$"
-
-  # Shallow-clone the template repository into a temporary directory
-  echo "→ Cloning template repository..."
   git clone --depth 1 -b "$TEMPLATE_BRANCH" "$REPO_URL" "$TEMP_DIR" 2>/dev/null || {
     echo "BLOCK: Clone failed; check network or repository URL: $REPO_URL"
+    echo "Tip: If you already cloned harness-all, run this script from harness-all/harness-pm/"
     exit 1
   }
   TEMPLATE_DIR="$TEMP_DIR"

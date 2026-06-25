@@ -108,6 +108,7 @@ git clone https://github.com/LuckyOneTwoThree/harness-all.git
 cd /path/to/your-project
 
 # 3. 安装你需要的框架（以 solo 为例）
+#    安装脚本会自动检测本地文件，无需联网
 bash /path/to/your-parent-dir/harness-all/harness-solo/install.sh
 ```
 

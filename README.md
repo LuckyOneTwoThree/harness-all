@@ -108,6 +108,7 @@ git clone https://github.com/LuckyOneTwoThree/harness-all.git
 cd /path/to/your-project
 
 # 3. Install the framework you need (solo as example)
+#    The install script auto-detects local files, no network needed
 bash /path/to/your-parent-dir/harness-all/harness-solo/install.sh
 ```
 

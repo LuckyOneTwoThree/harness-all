@@ -6,13 +6,11 @@
 #   # Review install.sh contents
 #   bash install.sh
 #
-# Purpose: Clone the .harness/ template into the current directory and initialize the project
+# Purpose: Install the .harness/ template into the current directory and initialize the project
+#          Local-first: if run from within harness-all/harness-solo/, copy local files directly;
+#          otherwise clone the standalone repository from GitHub.
 
 set -e
-
-REPO_URL="https://github.com/LuckyOneTwoThree/harness-solo.git"
-TEMPLATE_BRANCH="main"
-TEMP_DIR=".harness-solo-tmp-$$"
 
 echo "=== harness-solo cold-start install ==="
 echo ""
@@ -36,28 +34,43 @@ if ! command -v node >/dev/null 2>&1; then
   echo "      Please install Node.js afterwards (v18+ recommended): https://nodejs.org/"
 fi
 
-# Shallow-clone the template repository into a temporary directory
-echo "→ Cloning template repository..."
-git clone --depth 1 -b "$TEMPLATE_BRANCH" "$REPO_URL" "$TEMP_DIR" 2>/dev/null || {
-  echo "BLOCK: Clone failed; check network or repository URL: $REPO_URL"
-  exit 1
-}
+# Detect if running from within the harness-all repo (local install)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+if [ -d "$SCRIPT_DIR/.harness" ]; then
+  # Local install: script is inside harness-all/harness-solo/
+  echo "→ Using local framework files from: $SCRIPT_DIR"
+  TEMPLATE_DIR="$SCRIPT_DIR"
+  TEMP_DIR=""
+else
+  # Remote install: clone from GitHub (for standalone single-framework use)
+  echo "→ Cloning template repository..."
+  REPO_URL="https://github.com/LuckyOneTwoThree/harness-solo.git"
+  TEMPLATE_BRANCH="main"
+  TEMP_DIR=".harness-solo-tmp-$$"
+  git clone --depth 1 -b "$TEMPLATE_BRANCH" "$REPO_URL" "$TEMP_DIR" 2>/dev/null || {
+    echo "BLOCK: Clone failed; check network or repository URL: $REPO_URL"
+    echo "Tip: If you already cloned harness-all, run this script from harness-all/harness-solo/"
+    exit 1
+  }
+  TEMPLATE_DIR="$TEMP_DIR"
+fi
 
 # Copy .harness/ to the current directory
 echo "→ Copying .harness/ framework..."
-cp -r "$TEMP_DIR/.harness" .harness
+cp -r "$TEMPLATE_DIR/.harness" .harness
 
 # Copy AGENTS.md and SOUL.md templates (if they don't exist)
 if [ ! -f "AGENTS.md" ]; then
-  cp "$TEMP_DIR/.harness/templates/AGENTS.md.template" AGENTS.md
+  cp "$TEMPLATE_DIR/.harness/templates/AGENTS.md.template" AGENTS.md
   echo "  ✓ Created AGENTS.md (from template; please fill in [project name])"
 fi
 if [ ! -f "SOUL.md" ]; then
-  cp "$TEMP_DIR/.harness/templates/SOUL.md.template" SOUL.md
+  cp "$TEMPLATE_DIR/.harness/templates/SOUL.md.template" SOUL.md
   echo "  ✓ Created SOUL.md (from template; please fill in [username] and tech preferences)"
 fi
 if [ ! -f "constitution.md" ]; then
-  cp "$TEMP_DIR/.harness/templates/constitution.md.template" constitution.md
+  cp "$TEMPLATE_DIR/.harness/templates/constitution.md.template" constitution.md
   echo "  ✓ Created constitution.md (from template)"
 fi
 
@@ -67,17 +80,17 @@ mkdir -p docs/product docs/engineering docs/acceptance docs/handoff docs/decisio
 
 # Initialize PROJECT.md and TECH_STACK.md from templates (if they don't exist)
 if [ ! -f "docs/product/PROJECT.md" ]; then
-  cp "$TEMP_DIR/.harness/templates/PROJECT.md.template" docs/product/PROJECT.md
+  cp "$TEMPLATE_DIR/.harness/templates/PROJECT.md.template" docs/product/PROJECT.md
   echo "  ✓ Initialized docs/product/PROJECT.md (from template; please fill in product requirements)"
 fi
 if [ ! -f "docs/engineering/TECH_STACK.md" ]; then
-  cp "$TEMP_DIR/.harness/templates/TECH_STACK.md.template" docs/engineering/TECH_STACK.md
+  cp "$TEMPLATE_DIR/.harness/templates/TECH_STACK.md.template" docs/engineering/TECH_STACK.md
   echo "  ✓ Initialized docs/engineering/TECH_STACK.md (from template; please fill in the tech stack)"
 fi
 
 # Copy handoff document templates (if the template repository has them)
-if [ -d "$TEMP_DIR/docs/handoff" ]; then
-  cp -r "$TEMP_DIR/docs/handoff/." docs/handoff/ 2>/dev/null || true
+if [ -d "$TEMPLATE_DIR/docs/handoff" ]; then
+  cp -r "$TEMPLATE_DIR/docs/handoff/." docs/handoff/ 2>/dev/null || true
   echo "  ✓ Copied docs/handoff/ handoff protocol documents"
 fi
 
@@ -91,11 +104,9 @@ if [ ! -f ".harness/memory/progress.md" ]; then
   echo "  ✓ Initialized .harness/memory/progress.md"
 fi
 
-# Clean up the temporary directory (safe approach: validate path prefix before using rm -r)
+# Clean up the temporary directory (only in remote mode; local mode has no TEMP_DIR)
 if [ -n "$TEMP_DIR" ] && [ -d "$TEMP_DIR" ] && [[ "$TEMP_DIR" == .harness-solo-tmp-* ]]; then
     rm -r -- "$TEMP_DIR"
-else
-    echo "WARN: Temporary directory cleanup failed or path is abnormal: $TEMP_DIR"
 fi
 
 # Set script executable permissions (Unix only; Windows has no chmod; hooks handled by Git Bash itself)
