@@ -1,33 +1,28 @@
 ---
 name: design-system
 description: Creates a design system with DESIGN.md 10-section standard and token exports. Use when no design system exists. Use after design-recommendation.
-triggers:
-  - Create a design system
-  - No DESIGN.md
-  - After design-recommendation completes
-reads:
-  - .harness/craft/anti-ai-slop.md
-  - .harness/craft/typography.md
-  - .harness/craft/color.md
-writes:
-  - docs/design-system/DESIGN.md
-  - docs/design-system/tokens.json
-  - docs/design-system/tokens.css
-  - docs/design-system/pages/
 ---
-
 # Design System
+
+## When to use
+- Create a design system
+- No DESIGN.md
+- After design-recommendation completes
+
+## Inputs
+- .harness/craft/anti-ai-slop.md
+- .harness/craft/typography.md
+- .harness/craft/color.md
+
+## Outputs
+- docs/design-system/DESIGN.md
+- docs/design-system/tokens.json
+- docs/design-system/tokens.css
+- docs/design-system/pages/
 
 ## Overview
 
 Creates the DESIGN.md 10-section standard + token exports (md + json + css). The design system is the single source of truth; all design mockups must follow it.
-
-## When to Use
-
-- ✅ Create a design system
-- ✅ No DESIGN.md
-- ✅ After design-recommendation completes
-- ❌ NOT for cases where DESIGN.md already exists and no changes are needed
 
 ## Process
 

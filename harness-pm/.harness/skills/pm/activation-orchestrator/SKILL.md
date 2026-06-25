@@ -1,29 +1,25 @@
 ---
 name: activation-orchestrator
 description: Use when identifying the Aha Moment or designing the Onboarding flow. User Activation Orchestrator dispatches activation-aha/onboarding. Keywords: user activation, Aha Moment, Onboarding, new user guidance, onboarding tutorial, activation rate.
-metadata:
-  module: "Product Growth & Operations"
-  sub-module: "Activation"
-  type: "orchestrator"
-  version: "7.0"
-  domain_tags: ["E-commerce", "Social", "Tools", "General"]
-  triggers:
-    - "Find the Aha Moment"
-    - "Design the onboarding flow"
-    - "Improve user activation rate"
-    - "Optimize Onboarding"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/growth/growth-strategy.md
-writes:
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - output/phase-reports/activation-orchestrator.json
-  - output/approvals/activation-orchestrator/{stage-id}.approval.json
 ---
-
 # User Activation Orchestrator
+
+## When to use
+- Find the Aha Moment
+- Design the onboarding flow
+- Improve user activation rate
+- Optimize Onboarding
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/growth/growth-strategy.md
+
+## Outputs
+- memory/progress.md
+- memory/knowledge-base.md
+- output/phase-reports/activation-orchestrator.json
+- output/approvals/activation-orchestrator/{stage-id}.approval.json
 
 ## Core Principles
 

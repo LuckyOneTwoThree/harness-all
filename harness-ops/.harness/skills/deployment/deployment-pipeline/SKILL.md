@@ -1,29 +1,29 @@
 ---
 name: deployment-pipeline
 description: CI/CD pipeline orchestration and execution, consuming the solo-to-ops handoff document and orchestrating the build-test-deploy workflow
-triggers:
-  - When a solo-to-ops.md handoff document is received
-  - When the user requests "deploy a new version" or "release to staging/production"
-  - When the CI/CD pipeline fails and needs troubleshooting
-  - When designing or modifying a deployment pipeline
-reads:
-  - docs/handoff/solo-to-ops.md
-  - docs/infrastructure/OPS_STRATEGY.md
-  - rules/security.md
-  - loops/LOOP.md
-  - memory/knowledge-base.md
-writes:
-  - docs/deployment/
-  - loops/specs/<task-name>/spec.md
-  - loops/specs/<task-name>/state.yaml
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 3
 operation_tier: propose
 requires_approval: true
 ---
-
 # Deployment Pipeline — CI/CD Pipeline Orchestration and Execution
+
+## When to use
+- When a solo-to-ops.md handoff document is received
+- When the user requests "deploy a new version" or "release to staging/production
+- When the CI/CD pipeline fails and needs troubleshooting
+- When designing or modifying a deployment pipeline
+
+## Inputs
+- docs/handoff/solo-to-ops.md
+- docs/infrastructure/OPS_STRATEGY.md
+- rules/security.md
+- loops/LOOP.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/deployment/
+- loops/specs/<task-name>/spec.md
+- loops/specs/<task-name>/state.yaml
+- memory/knowledge-base.md
 
 ## Ground Rules
 

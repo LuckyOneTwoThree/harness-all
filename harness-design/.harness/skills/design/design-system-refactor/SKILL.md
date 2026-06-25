@@ -1,31 +1,26 @@
 ---
 name: design-system-refactor
 description: Scans design system and suggests merges/abstractions/tokenization. Use when design system has accumulated redundancy. Use for design system evolution.
-triggers:
-  - Design system has redundancy
-  - Component count is bloating
-  - Design system refactor needed
-reads:
-  - docs/design-system/DESIGN.md
-  - docs/design-system/tokens.json
-  - docs/visual/
-  - docs/interaction/
-writes:
-  - docs/design-system/REFACTOR_REPORT.md
 ---
-
 # Design System Refactor
+
+## When to use
+- Design system has redundancy
+- Component count is bloating
+- Design system refactor needed
+
+## Inputs
+- docs/design-system/DESIGN.md
+- docs/design-system/tokens.json
+- docs/visual/
+- docs/interaction/
+
+## Outputs
+- docs/design-system/REFACTOR_REPORT.md
 
 ## Overview
 
 Scans the existing design system and recommends merges / abstractions / tokenization. The design system is a living document that needs continuous evolution. Not refactoring is riskier—technical debt accumulates and becomes unrecoverable.
-
-## When to Use
-
-- ✅ Design system has redundancy (≥3 similar components)
-- ✅ Component count is bloating (>20 components)
-- ✅ Design system refactor needed
-- ❌ NOT for initial design system creation (use the design-system skill)
 
 ## Process
 

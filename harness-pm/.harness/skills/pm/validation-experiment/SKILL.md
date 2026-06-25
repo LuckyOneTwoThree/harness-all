@@ -1,32 +1,13 @@
 ---
 name: validation-experiment
 description: Used when designing validation experiment plans. Validation experiment auto-design tool, based on assumption map and MVP scope, intelligently selects validation methods and designs experiment plans, including parameter design for A/B testing and usability testing. Keywords: experiment design, A/B testing, sample size, validation method, validation plan, test design. This Skill is only responsible for selecting validation methods and outputting the experiment design framework; it does not generate specific usability test task scripts (handled by validation-usability).
-metadata:
-  module: "Product Ideation & Design"
-  sub-module: "Solution Validation"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "Software", "General"]
-  triggers:
-    - "How to validate this hypothesis"
-    - "Help me design an A/B test"
-    - "How to make an experiment plan"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output experiment plan and validation metrics"
-  deep_description: "Full plan + experiment design optimization + statistical power analysis + result interpretation framework"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/product/PRD.md
-writes:
-  - docs/metrics/experiment-report.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Validation Experiment Auto-Design
+
+## Outputs
+- docs/metrics/experiment-report.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

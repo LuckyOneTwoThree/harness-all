@@ -1,38 +1,13 @@
 ---
 name: insight-analysis
 description: Used when requirement insight analysis, requirement layering, root cause analysis, or requirement priority assessment is needed. Integrates JTBD, requirement layering, 5 Whys root cause, KANO classification, and priority scoring. Keywords: requirement insight, JTBD, 5 Whys, KANO, priority scoring, requirement analysis.
-metadata:
-  module: "Product Discovery"
-  sub-module: "Requirement Insight"
-  type: "pipeline"
-  version: "3.0"
-  domain_tags: ["General"]
-  triggers:
-    - "Help me analyze user requirements"
-    - "Too many requirements, help me prioritize"
-    - "Analyze requirements using the KANO model"
-    - "Uncover users' deeper needs"
-    - "What task are users really trying to accomplish"
-    - "Why do users always complain about this feature"
-    - "Which features are must-haves"
-    - "Too many requirements, which one to do first"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Execute JTBD functional job extraction and requirement three-layer decomposition, output requirement list with basic priority ranking"
-  deep_description: "Additionally includes emotional/social job inference, 5 Whys root cause deep dive, KANO classification, full priority scoring (including KANO bonus)"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/discovery/user-research.md
-  - docs/handoff/growth-to-pm.md
-writes:
-  - docs/discovery/insight.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Insight Analysis — Requirement Insight Analysis
+
+## Outputs
+- docs/discovery/insight.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

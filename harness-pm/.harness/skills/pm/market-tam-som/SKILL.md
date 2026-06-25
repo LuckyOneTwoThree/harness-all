@@ -1,30 +1,12 @@
 ---
 name: market-tam-som
 description: Used when evaluating the TAM/SAM/SOM size of the target market. Market size auto-estimation, supports top-down and bottom-up dual-path cross-validation, marks and escalates to human judgment when divergence > 20%, outputs range estimates and confidence assessment. Keywords: market size, TAM, SAM, SOM, market capacity, range estimate, dual-path cross-validation, how big is the market, ceiling, growth potential.
-metadata:
-  module: "Product Discovery"
-  sub-module: "Market & Competition"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "Finance", "General"]
-  triggers:
-    - "How big is this market"
-    - "Help me estimate the market size"
-    - "Where is our ceiling"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output market size estimation"
-  deep_description: "Full estimation + segment market breakdown + growth rate forecast + market entry prioritization"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-writes:
-  - docs/discovery/market-analysis.md
-  - memory/progress.md
 ---
-
 # Market Size Auto-Estimation
+
+## Outputs
+- docs/discovery/market-analysis.md
+- memory/progress.md
 
 ## Core Principles
 

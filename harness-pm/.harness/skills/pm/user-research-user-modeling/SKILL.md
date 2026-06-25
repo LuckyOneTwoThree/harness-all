@@ -1,31 +1,12 @@
 ---
 name: user-research-user-modeling
 description: Used when generating Persona, Empathy Map, and Journey Map from user voice analysis and behavior analysis results. User modeling auto-generation pipeline. Keywords: user modeling, Persona generation, empathy map, user journey map, user persona, typical user, user role, what users look like.
-metadata:
-  module: "Product Discovery"
-  sub-module: "User Research"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["General"]
-  triggers:
-    - "Help me create user personas"
-    - "How to map the user journey"
-    - "What kind of users are they"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output user models and behavioral traits"
-  deep_description: "Full modeling + behavior sequence analysis + model validation plan + user evolution tracking"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/discovery/user-research.md
-writes:
-  - docs/discovery/user-research.md
-  - memory/progress.md
 ---
-
 # User Modeling Auto-Generation
+
+## Outputs
+- docs/discovery/user-research.md
+- memory/progress.md
 
 ## Core Principles
 

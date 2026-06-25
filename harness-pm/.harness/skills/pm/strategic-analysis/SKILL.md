@@ -1,37 +1,12 @@
 ---
 name: strategic-analysis
 description: Used when product strategy analysis, competitive strategy judgment, or strategy framework selection is needed. Automatically selects applicable strategy frameworks (SWOT/Ansoff/Porter's Five Forces) based on product stage and industry characteristics. Keywords: strategic analysis, SWOT, Ansoff Matrix, Porter's Five Forces, strategic planning.
-metadata:
-  module: "Product Business & Strategy"
-  sub-module: "Strategy Planning & Roadmap"
-  type: "pipeline"
-  version: "3.0"
-  domain_tags: ["General"]
-  triggers:
-    - "Help me analyze strengths and weaknesses"
-    - "What are our opportunities and threats"
-    - "How should we expand the market"
-    - "Where is the next growth direction"
-    - "Is this industry worth entering"
-    - "Analyze the industry competitive landscape"
-    - "Do a strategic analysis"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output strategic analysis conclusions and recommendations"
-  deep_description: "Full analysis + strategic projection + competitive landscape simulation + strategic roadmap"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/discovery/market-analysis.md
-  - docs/strategy/business-strategy.md
-  - docs/strategy/OKR.md
-writes:
-  - docs/strategy/PRODUCT_STRATEGY.md
-  - memory/progress.md
 ---
-
 # Strategic Analysis
+
+## Outputs
+- docs/strategy/PRODUCT_STRATEGY.md
+- memory/progress.md
 
 ## Core Principles
 

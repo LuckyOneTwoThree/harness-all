@@ -1,31 +1,27 @@
 ---
 name: metrics-orchestrator
 description: Use when building a product measurement system. Product Metrics Design Orchestrator dispatches sub-skills: metrics-system (metrics system auto-construction), tracking-plan (tracking plan auto-generation), metrics-dashboard (Dashboard auto-configuration). Keywords: measurement design, metrics system, tracking plan, Dashboard configuration, data metrics, KPI design, data tracking.
-metadata:
-  module: "Product Metrics Design"
-  sub-module: "Metrics Design"
-  type: "orchestrator"
-  version: "6.1"
-  domain_tags: ["General"]
-  triggers:
-    - "Help me design a metrics system"
-    - "Plan the data tracking"
-    - "Design product KPIs"
-    - "Configure a data Dashboard"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/metrics/metrics-system.md
-  - docs/metrics/tracking-plan.md
-  - docs/metrics/dashboard.md
-writes:
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - output/phase-reports/metrics-orchestrator.json
-  - output/approvals/metrics-orchestrator/{stage-id}.approval.json
 ---
-
 # Product Metrics Design Orchestrator
+
+## When to use
+- Help me design a metrics system
+- Plan the data tracking
+- Design product KPIs
+- Configure a data Dashboard
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/metrics/metrics-system.md
+- docs/metrics/tracking-plan.md
+- docs/metrics/dashboard.md
+
+## Outputs
+- memory/progress.md
+- memory/knowledge-base.md
+- output/phase-reports/metrics-orchestrator.json
+- output/approvals/metrics-orchestrator/{stage-id}.approval.json
 
 ## Core Principles
 

@@ -1,31 +1,13 @@
 ---
 name: release-auto-checklist
 description: Used when generating a release checklist. Launch Checklist auto-generation and tracking, automatically generates T-7/T-1/during release/T+24h/T+72h release Checklists, performs item-by-item auto-checks and manual confirmation, supports incomplete item alerts and status tracking. 🤖 AI auto-executes. Keywords: release Checklist, launch check, release process, release tracking, launch preparation, release list, launch list, release verification.
-metadata:
-  module: "Product Monitoring & Iteration"
-  sub-module: "Release Launch"
-  type: "pipeline"
-  version: "2.0"
-  domain_tags: ["Internet", "General"]
-  triggers:
-    - "Help me list a checklist before launch"
-    - "Generate a release Checklist"
-    - "Organize what to check for launch"
-  interaction_mode: "ai_auto"
-execution_depth:
-  default: standard
-  quick_description: "Generate release Checklist template and check items for each phase, output pending confirmation list"
-  deep_description: "Full Checklist + item-by-item auto-check + incomplete item alerts + status tracking + post-release validation + regression check"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-writes:
-  - docs/monitoring/release-notes.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Launch Checklist Auto-Generation & Tracking
+
+## Outputs
+- docs/monitoring/release-notes.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

@@ -1,20 +1,20 @@
 ---
 name: landing-page-optimization
 description: Landing page design and optimization, including value proposition/CTA/form/A-B testing recommendations
-triggers:
-  - Need to design a landing page after acquisition channels are decided
-  - Landing page conversion rate is low and needs optimization
-  - User asks to "optimize landing page"
-reads:
-  - docs/handoff/pm-to-growth.md
-  - docs/handoff/solo-to-growth.md
-writes:
-  - docs/operations/landing-page-spec.md
-quality_gates: []
-max_iterations: 2
 ---
-
 # Landing Page Optimization — Landing Page Optimization
+
+## When to use
+- Need to design a landing page after acquisition channels are decided
+- Landing page conversion rate is low and needs optimization
+- User asks to "optimize landing page
+
+## Inputs
+- docs/handoff/pm-to-growth.md
+- docs/handoff/solo-to-growth.md
+
+## Outputs
+- docs/operations/landing-page-spec.md
 
 ## Iron Rules
 - Landing page must be **message-matched** with the ad creative — deliver what the ad promises

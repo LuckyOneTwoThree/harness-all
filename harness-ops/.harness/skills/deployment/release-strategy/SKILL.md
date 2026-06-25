@@ -1,27 +1,27 @@
 ---
 name: release-strategy
 description: Release strategy selection and design (blue-green / canary / rolling / A-B testing), recommending the optimal release method based on impact
-triggers:
-  - When a release strategy needs to be selected
-  - When a high-impact change requires a canary plan
-  - When the user requests "blue-green deployment" or "canary release"
-  - When OPS_STRATEGY.md needs to define release standards
-reads:
-  - docs/infrastructure/OPS_STRATEGY.md
-  - docs/handoff/solo-to-ops.md
-  - rules/security.md
-  - loops/LOOP.md
-  - memory/knowledge-base.md
-writes:
-  - docs/deployment/release-strategy.md
-  - loops/specs/<task-name>/spec.md
-quality_gates: []
-max_iterations: 2
 operation_tier: propose
 requires_approval: false
 ---
-
 # Release Strategy — Release Strategy Selection and Design
+
+## When to use
+- When a release strategy needs to be selected
+- When a high-impact change requires a canary plan
+- When the user requests "blue-green deployment" or "canary release
+- When OPS_STRATEGY.md needs to define release standards
+
+## Inputs
+- docs/infrastructure/OPS_STRATEGY.md
+- docs/handoff/solo-to-ops.md
+- rules/security.md
+- loops/LOOP.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/deployment/release-strategy.md
+- loops/specs/<task-name>/spec.md
 
 ## Ground Rules
 

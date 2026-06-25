@@ -1,19 +1,19 @@
 ---
 name: ice-scoring
 description: ICE/RICE scoring and ranking of the growth hypothesis backlog to determine experiment priority
-triggers:
-  - When there are multiple hypotheses to rank
-  - PLAN phase of the growth experiment Loop, after hypothesis-generation
-reads:
-  - loops/specs/<experiment>/spec.md
-  - memory/knowledge-base.md
-writes:
-  - loops/specs/<experiment>/spec.md
-quality_gates: []
-max_iterations: 2
 ---
-
 # ICE Scoring — Hypothesis Priority Ranking
+
+## When to use
+- When there are multiple hypotheses to rank
+- PLAN phase of the growth experiment Loop, after hypothesis-generation
+
+## Inputs
+- loops/specs/<experiment>/spec.md
+- memory/knowledge-base.md
+
+## Outputs
+- loops/specs/<experiment>/spec.md
 
 ## Iron Rules
 - Each hypothesis must be scored; "by gut feel" ranking is not allowed

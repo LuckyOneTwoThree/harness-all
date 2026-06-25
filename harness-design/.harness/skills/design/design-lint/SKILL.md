@@ -1,35 +1,30 @@
 ---
 name: design-lint
 description: Mechanically verifies design against design system rules using script execution. Use after verify in LOOP. Use before design-review.
-triggers:
-  - In-LOOP, after verify
-  - Design mockups need mechanical rule checks
-  - Before design-review
-reads:
-  - .harness/craft/anti-ai-slop.md
-  - docs/design-system/DESIGN.md
-  - docs/design-system/tokens.json
-  - docs/visual/
-  - docs/interaction/
-  - docs/design-system/components/
-writes:
-  - loops/specs/<task>/lint-report.md
 ---
-
 # Design Lint
+
+## When to use
+- In-LOOP, after verify
+- Design mockups need mechanical rule checks
+- Before design-review
+
+## Inputs
+- .harness/craft/anti-ai-slop.md
+- docs/design-system/DESIGN.md
+- docs/design-system/tokens.json
+- docs/visual/
+- docs/interaction/
+- docs/design-system/components/
+
+## Outputs
+- loops/specs/<task>/lint-report.md
 
 ## Overview
 
 AI design Linter; mechanically verifiable rule checks with zero subjective judgment. Checks consistency against the design system itself, like ESLint catching code errors.
 
 **Key**: Real mechanical rules must be executed by real code, not LLM hallucination. The Agent writes and runs a one-off Node.js script to do regex scanning.
-
-## When to Use
-
-- ✅ In-LOOP, after verify
-- ✅ Design mockups need mechanical rule checks
-- ✅ Before design-review
-- ❌ NOT for subjective design judgment (use the design-review skill)
 
 ## Process
 

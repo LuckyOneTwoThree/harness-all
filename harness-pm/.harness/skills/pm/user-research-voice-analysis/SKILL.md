@@ -1,30 +1,12 @@
 ---
 name: user-research-voice-analysis
 description: Used when extracting sentiment, themes, and pain points from user reviews, support tickets, social media mentions, and community posts. Large-scale user voice analysis pipeline. Keywords: user voice analysis, VOC, sentiment analysis, pain point extraction, user feedback analysis, user complaints, user reviews, user feedback.
-metadata:
-  module: "Product Discovery"
-  sub-module: "User Research"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "Consumer", "General"]
-  triggers:
-    - "What are users complaining about"
-    - "Help me analyze user feedback"
-    - "How are the user reviews"
-  interaction_mode: "ai_auto"
-execution_depth:
-  default: standard
-  quick_description: "Directly output user voice themes and sentiment distribution"
-  deep_description: "Full analysis + sentiment trend tracking + theme clustering deep analysis + action recommendation roadmap"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-writes:
-  - docs/discovery/user-research.md
-  - memory/progress.md
 ---
-
 # Large-Scale User Voice Analysis
+
+## Outputs
+- docs/discovery/user-research.md
+- memory/progress.md
 
 ## Core Principles
 

@@ -1,31 +1,12 @@
 ---
 name: business-value-fit
 description: Used when assessing the fit between value propositions and user needs. Auto-assesses value proposition fit, executed by AI, evaluating how well the value propositions in the Business Model Canvas match user pains and gains. Keywords: value proposition fit, pain coverage, gain validation, fit score, do users need this, is the value right.
-metadata:
-  module: "Product Business & Strategy"
-  sub-module: "Business Model Design"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["SaaS", "General"]
-  triggers:
-    - "Is our value proposition right"
-    - "Do users really need this feature"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output value-market fit assessment"
-  deep_description: "Complete assessment + value-market fit matrix + gap analysis + optimization roadmap"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/strategy/business-strategy.md
-  - docs/discovery/user-research.md
-writes:
-  - docs/strategy/business-strategy.md
-  - memory/progress.md
 ---
-
 # Value Proposition Fit Auto-Assessment
+
+## Outputs
+- docs/strategy/business-strategy.md
+- memory/progress.md
 
 ## Core Principles
 

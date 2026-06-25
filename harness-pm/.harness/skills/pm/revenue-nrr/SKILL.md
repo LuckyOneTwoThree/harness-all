@@ -1,32 +1,14 @@
 ---
 name: revenue-nrr
 description: Use when tracking Net Revenue Retention. NRR Auto-Tracking and Early Warning Pipeline automatically calculates NRR, analyzes NRR trends, identifies churn warnings, and identifies expansion revenue opportunities. Keywords: NRR, Net Revenue Retention, revenue retention, churn warning, expansion revenue, renewal rate, existing customer revenue, is revenue growing or declining.
-metadata:
-  module: "Product Growth & Operations"
-  sub-module: "Monetization"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["SaaS", "Enterprise Services", "General"]
-  triggers:
-    - "How to calculate Net Revenue Retention"
-    - "How are existing customer renewals doing"
-    - "How to view revenue retention trends"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output NRR analysis and retention strategy"
-  deep_description: "Full analysis + customer health score + churn prediction model + expansion opportunity identification"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-writes:
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - docs/growth/growth-strategy.md
-  - nrr_analysis.json
 ---
-
 # NRR Auto-Tracking and Early Warning
+
+## Outputs
+- memory/progress.md
+- memory/knowledge-base.md
+- docs/growth/growth-strategy.md
+- nrr_analysis.json
 
 ## Core Principles
 

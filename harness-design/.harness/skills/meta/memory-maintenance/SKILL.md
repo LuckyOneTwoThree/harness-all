@@ -1,21 +1,23 @@
 ---
 name: memory-maintenance
 description: Maintain the memory directory, execute retention strategy, prevent progress/knowledge-base/archives from growing unbounded
-triggers:
-  - session-end optional invocation
-  - When the user says "clean up history" / "archive" / "memory too large"
-  - When memory files exceed the threshold
-reads:
-  - .harness/loops/LOOP.md
-  - .harness/skills/meta/session-end/SKILL.md
-writes:
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - memory/archives/
-  - loops/specs/*/iterations.log
 ---
-
 # Memory Maintenance — Memory Maintenance
+
+## When to use
+- session-end optional invocation
+- When the user says "clean up history" / "archive" / "memory too large
+- When memory files exceed the threshold
+
+## Inputs
+- .harness/loops/LOOP.md
+- .harness/skills/meta/session-end/SKILL.md
+
+## Outputs
+- memory/progress.md
+- memory/knowledge-base.md
+- memory/archives/
+- loops/specs/*/iterations.log
 
 ## Core Principle
 **Memory is not a dumpster. If you can't afford to read it, don't keep it.**

@@ -1,22 +1,22 @@
 ---
 name: experiment-analysis
 description: Analyze A/B testing data, calculate statistical significance / confidence intervals / effect size, detect SRM and segment heterogeneity
-triggers:
-  - After experiment data collection is complete
-  - MEASURE phase of the growth experiment Loop
-  - User asks "how did the experiment turn out"
-reads:
-  - loops/specs/<experiment>/spec.md
-  - loops/LOOP.md
-writes:
-  - loops/specs/<experiment>/evidence.md
-  - loops/specs/<experiment>/state.yaml
-  - loops/specs/<experiment>/iterations.log
-quality_gates: []
-max_iterations: 2
 ---
-
 # Experiment Analysis — Experiment Data Analysis
+
+## When to use
+- After experiment data collection is complete
+- MEASURE phase of the growth experiment Loop
+- User asks "how did the experiment turn out
+
+## Inputs
+- loops/specs/<experiment>/spec.md
+- loops/LOOP.md
+
+## Outputs
+- loops/specs/<experiment>/evidence.md
+- loops/specs/<experiment>/state.yaml
+- loops/specs/<experiment>/iterations.log
 
 ## Iron Rules
 - **No claiming completion without data** — must show actual data, not "should be effective"

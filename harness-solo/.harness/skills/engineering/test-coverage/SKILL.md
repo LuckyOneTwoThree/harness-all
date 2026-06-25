@@ -1,22 +1,24 @@
 ---
 name: test-coverage
 description: Test Coverage — coverage gap analysis + adding boundary/integration/E2E tests
-triggers:
-  - When existing code lacks tests
-  - When coverage drops
-  - When adding tests before refactoring (Beyonce Rule)
-  - When adding regression tests after a bug fix
-reads:
-  - loops/LOOP.md
-  - rules/security.md
-  - docs/engineering/TECH_STACK.md
-writes:
-  - loops/specs/<feature>/state.yaml
-  - loops/specs/<feature>/evidence.md
-  - loops/specs/<feature>/iterations.log
 ---
-
 # Test Coverage — Test Coverage
+
+## When to use
+- When existing code lacks tests
+- When coverage drops
+- When adding tests before refactoring (Beyonce Rule)
+- When adding regression tests after a bug fix
+
+## Inputs
+- loops/LOOP.md
+- rules/security.md
+- docs/engineering/TECH_STACK.md
+
+## Outputs
+- loops/specs/<feature>/state.yaml
+- loops/specs/<feature>/evidence.md
+- loops/specs/<feature>/iterations.log
 
 ## Iron Rule
 **Tests are proof.** "Seems right" is not done. Code without tests that breaks during refactoring/migration is not the refactor's fault — it is the fault of your missing tests (Beyonce Rule).

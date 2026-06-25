@@ -1,37 +1,31 @@
 ---
 name: design-review
 description: Performs final human-level design review with Five-Axis and Doubt-Driven approach. Use after LOOP passes. Use before design-handoff.
-triggers:
-  - Final review after LOOP passes
-  - Before design-handoff
-  - Human-level comprehensive review needed
-reads:
-  - .harness/craft/anti-ai-slop.md
-  - .harness/craft/common-rules.md
-  - docs/design-system/DESIGN.md
-  - docs/design-system/tokens.json
-  - docs/visual/
-  - docs/interaction/
-  - docs/prototype/
-  - loops/specs/<task>/spec.md
-  - loops/specs/<task>/lint-report.md
-writes:
-  - loops/specs/<task>/evidence.md
 ---
-
 # Design Review
+
+## When to use
+- Final review after LOOP passes
+- Before design-handoff
+- Human-level comprehensive review needed
+
+## Inputs
+- .harness/craft/anti-ai-slop.md
+- .harness/craft/common-rules.md
+- docs/design-system/DESIGN.md
+- docs/design-system/tokens.json
+- docs/visual/
+- docs/interaction/
+- docs/prototype/
+- loops/specs/<task>/spec.md
+- loops/specs/<task>/lint-report.md
+
+## Outputs
+- loops/specs/<task>/evidence.md
 
 ## Overview
 
 Final human-level comprehensive review, Five-Axis + Doubt-Driven. "Looks right" is never enough—there must be evidence.
-
-## When to Use
-
-- ✅ Final review after LOOP passes
-- ✅ Before design-handoff
-- ✅ Human-level comprehensive review needed
-- ❌ NOT for quick in-LOOP checks (use the verify skill)
-- ❌ NOT for mechanical rule checks (use the design-lint skill)
 
 ## Process
 

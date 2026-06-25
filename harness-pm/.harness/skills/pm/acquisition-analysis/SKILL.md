@@ -1,35 +1,19 @@
 ---
 name: acquisition-analysis
 description: Use when you need to evaluate acquisition channels or optimize the acquisition funnel. Acquisition Analysis Integrated Pipeline first analyzes 19 acquisition channels to calculate channel scale, conversion rate, and ROI, outputting a channel tier report, then analyzes acquisition funnel data to identify the biggest drop-off nodes and auto-generate optimization plans and A/B test designs. Keywords: acquisition channels, channel evaluation, ROI analysis, channel tiering, acquisition optimization, funnel optimization, conversion optimization, A/B testing, acquisition funnel, low conversion rate, which channel is best, how to improve conversion.
-metadata:
-  module: "Product Growth & Operations"
-  sub-module: "Acquisition"
-  type: "pipeline"
-  version: "3.0"
-  domain_tags: ["Internet", "SaaS", "General"]
-  triggers:
-    - "Which channel has the best user acquisition performance"
-    - "Help me check the ROI of each channel"
-    - "Registration-to-activation conversion rate is too low"
-    - "Where in the funnel is the most drop-off"
-    - "How to improve acquisition conversion rate"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output acquisition channels and CAC analysis"
-  deep_description: "Complete analysis + channel attribution model + CAC optimization simulation + acquisition experiment roadmap"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-writes:
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - docs/growth/growth-strategy.md
-  - acquisition-analysis.json
-  - acquisition-analysis.md
 ---
-
 # Acquisition Analysis Integrated
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+
+## Outputs
+- memory/progress.md
+- memory/knowledge-base.md
+- docs/growth/growth-strategy.md
+- acquisition-analysis.json
+- acquisition-analysis.md
 
 ## Core Principles
 

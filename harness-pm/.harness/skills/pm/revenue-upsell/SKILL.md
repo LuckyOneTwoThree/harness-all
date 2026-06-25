@@ -1,33 +1,14 @@
 ---
 name: revenue-upsell
 description: Use when optimizing upgrade conversion strategy. Upsell Automation Pipeline identifies upgrade signal users, automatically generates personalized upgrade content, optimizes outreach timing, and designs A/B tests. Keywords: upgrade conversion, add-on, Upsell, upgrade strategy, cross-sell, push higher tier, get customers to buy more, upgrade plan.
-metadata:
-  module: "Product Growth & Operations"
-  sub-module: "Monetization"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["SaaS", "Internet", "General"]
-  triggers:
-    - "How to get users to upgrade their plan"
-    - "Which users are suitable for add-on recommendations"
-    - "How to do cross-selling"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output upsell strategy and opportunity list"
-  deep_description: "Full strategy + upsell trigger design + customer-tiered upsell model + upsell experiment plan"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/growth/growth-strategy.md
-writes:
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - docs/growth/growth-strategy.md
-  - upsell_strategy.json
 ---
-
 # Upsell Automation
+
+## Outputs
+- memory/progress.md
+- memory/knowledge-base.md
+- docs/growth/growth-strategy.md
+- upsell_strategy.json
 
 ## Core Principles
 

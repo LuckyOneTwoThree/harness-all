@@ -1,23 +1,25 @@
 ---
 name: migration
 description: Code Migration — framework upgrades/API migration/data migration, guarding against regressions
-triggers:
-  - On major version upgrades of frameworks/libraries
-  - On API migration
-  - On data migration
-  - When removing deprecated code
-reads:
-  - loops/LOOP.md
-  - rules/security.md
-  - constitution.md
-  - docs/engineering/TECH_STACK.md
-writes:
-  - loops/specs/<feature>/state.yaml
-  - loops/specs/<feature>/evidence.md
-  - loops/specs/<feature>/iterations.log
 ---
-
 # Migration — Code Migration
+
+## When to use
+- On major version upgrades of frameworks/libraries
+- On API migration
+- On data migration
+- When removing deprecated code
+
+## Inputs
+- loops/LOOP.md
+- rules/security.md
+- constitution.md
+- docs/engineering/TECH_STACK.md
+
+## Outputs
+- loops/specs/<feature>/state.yaml
+- loops/specs/<feature>/evidence.md
+- loops/specs/<feature>/iterations.log
 
 ## Iron Rule
 **Build the replacement first, then deprecate the old system.** Do not deprecate without a replacement in place — users (including future you) will be stuck unable to use either the old or the new.

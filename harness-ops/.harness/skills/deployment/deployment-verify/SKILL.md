@@ -1,29 +1,29 @@
 ---
 name: deployment-verify
 description: Deployment verification and health checks, running the four-part suite of health check, smoke test, metrics verification, and log inspection
-triggers:
-  - When verifying after a deployment
-  - During health gate checks at each canary stage
-  - When verifying recovery after a rollback
-  - When the user requests "check if the deployment succeeded"
-  - During the VERIFY stage of a LOOP
-reads:
-  - loops/specs/<task-name>/spec.md
-  - docs/handoff/solo-to-ops.md
-  - docs/infrastructure/OPS_STRATEGY.md
-  - rules/security.md
-  - loops/LOOP.md
-writes:
-  - loops/specs/<task-name>/evidence.md
-  - loops/specs/<task-name>/state.yaml
-  - loops/specs/<task-name>/iterations.log
-quality_gates: []
-max_iterations: 1
 operation_tier: inspect
 requires_approval: false
 ---
-
 # Deployment Verify — Deployment Verification and Health Check
+
+## When to use
+- When verifying after a deployment
+- During health gate checks at each canary stage
+- When verifying recovery after a rollback
+- When the user requests "check if the deployment succeeded
+- During the VERIFY stage of a LOOP
+
+## Inputs
+- loops/specs/<task-name>/spec.md
+- docs/handoff/solo-to-ops.md
+- docs/infrastructure/OPS_STRATEGY.md
+- rules/security.md
+- loops/LOOP.md
+
+## Outputs
+- loops/specs/<task-name>/evidence.md
+- loops/specs/<task-name>/state.yaml
+- loops/specs/<task-name>/iterations.log
 
 ## Ground Rules
 

@@ -1,36 +1,19 @@
 ---
 name: positioning-strategy
 description: Used when developing product positioning, differentiation strategy, or positioning statements. Integrates positioning statement, value curve, differentiation assessment, and exclusion strategy. Keywords: product positioning, positioning strategy, differentiation, value curve, positioning statement.
-metadata:
-  module: "Product Business & Strategy"
-  sub-module: "Product Positioning & Differentiation"
-  type: "pipeline"
-  version: "3.0"
-  domain_tags: ["General"]
-  triggers:
-    - "Help me define product positioning"
-    - "Write a positioning statement"
-    - "Analyze our differentiation advantages"
-    - "Where do we differ from competitors"
-    - "Is our differentiation sustainable"
-    - "Which users are not our target"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output positioning statement and differentiation strategy"
-  deep_description: "Complete strategy + positioning validation plan + differentiation quantitative assessment + positioning evolution roadmap"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/strategy/business-strategy.md
-  - docs/discovery/market-analysis.md
-  - docs/discovery/user-research.md
-writes:
-  - docs/strategy/positioning.md
-  - memory/progress.md
 ---
-
 # Product Positioning Strategy Development
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/strategy/business-strategy.md
+- docs/discovery/market-analysis.md
+- docs/discovery/user-research.md
+
+## Outputs
+- docs/strategy/positioning.md
+- memory/progress.md
 
 ## Core Principles
 

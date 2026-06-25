@@ -1,29 +1,24 @@
 ---
 name: accessibility-audit
 description: Performs deep WCAG 2.1 AA accessibility audit. Use before design-handoff. Use for accessibility compliance verification.
-triggers:
-  - Pre-handoff accessibility review
-  - Before design-handoff
-  - Accessibility compliance verification needed
-reads:
-  - .harness/craft/color.md
-  - .harness/data/design/ux-guidelines.csv
-writes:
-  - docs/visual/accessibility-report.md
 ---
-
 # Accessibility Audit
+
+## When to use
+- Pre-handoff accessibility review
+- Before design-handoff
+- Accessibility compliance verification needed
+
+## Inputs
+- .harness/craft/color.md
+- .harness/data/design/ux-guidelines.csv
+
+## Outputs
+- docs/visual/accessibility-report.md
 
 ## Overview
 
 In-depth WCAG 2.1 AA audit. Accessibility is a hard constraint, not an afterthought.
-
-## When to Use
-
-- ✅ Pre-handoff accessibility review
-- ✅ Before design-handoff
-- ✅ Accessibility compliance verification needed
-- ❌ NOT for quick in-LOOP checks (use the verify skill's basic accessibility check)
 
 ## Process
 

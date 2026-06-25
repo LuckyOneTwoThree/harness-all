@@ -1,28 +1,28 @@
 ---
 name: monitoring-setup
 description: Prometheus/Grafana monitoring stack deployment, the four-part suite of collectors / storage / alerting / visualization
-triggers:
-  - When a new service needs monitoring configured
-  - When Prometheus/Grafana needs to be deployed
-  - When the monitoring stack is missing and needs to be built
-  - When OPS_STRATEGY.md defines monitoring standards
-  - When monitoring-deployment-workflow triggers
-reads:
-  - docs/infrastructure/OPS_STRATEGY.md
-  - rules/security.md
-  - loops/LOOP.md
-  - memory/knowledge-base.md
-writes:
-  - docs/monitoring/
-  - loops/specs/<task-name>/spec.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 2
 operation_tier: propose
 requires_approval: false
 ---
-
 # Monitoring Setup — Monitoring Stack Deployment
+
+## When to use
+- When a new service needs monitoring configured
+- When Prometheus/Grafana needs to be deployed
+- When the monitoring stack is missing and needs to be built
+- When OPS_STRATEGY.md defines monitoring standards
+- When monitoring-deployment-workflow triggers
+
+## Inputs
+- docs/infrastructure/OPS_STRATEGY.md
+- rules/security.md
+- loops/LOOP.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/monitoring/
+- loops/specs/<task-name>/spec.md
+- memory/knowledge-base.md
 
 ## Ground Rules
 

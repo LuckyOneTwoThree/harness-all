@@ -1,21 +1,21 @@
 ---
 name: aarr-diagnosis
 description: AARRR funnel diagnosis, finding the weakest link as the priority growth direction
-triggers:
-  - When growth bottlenecks need to be diagnosed
-  - Growth strategy formulation Workflow
-  - Growth review report Workflow
-  - User asks to "diagnose growth issues"
-reads:
-  - docs/handoff/solo-to-growth.md
-  - memory/knowledge-base.md
-writes:
-  - docs/operations/GROWTH_STRATEGY.md
-quality_gates: []
-max_iterations: 1
 ---
-
 # AARR Diagnosis — AARRR Funnel Diagnosis
+
+## When to use
+- When growth bottlenecks need to be diagnosed
+- Growth strategy formulation Workflow
+- Growth review report Workflow
+- User asks to "diagnose growth issues
+
+## Inputs
+- docs/handoff/solo-to-growth.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/operations/GROWTH_STRATEGY.md
 
 ## Iron Rules
 - Diagnosis must be based on **actual data**, not "feels like retention has a problem"

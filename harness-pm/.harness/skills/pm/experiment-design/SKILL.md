@@ -1,32 +1,13 @@
 ---
 name: experiment-design
 description: Used when designing a new A/B test experiment. A/B test auto-design, AI automatically performs hypothesis structuring, metric selection, sample size calculation, traffic split design, and experiment configuration generation. Keywords: A/B test design, experiment design, sample size calculation, traffic split plan, hypothesis testing, do an AB test, want to validate this change, how to design an experiment.
-metadata:
-  module: "Product Metrics & Operations"
-  sub-module: "Experiment Validation"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "General"]
-  triggers:
-    - "I want to validate if the new homepage improves conversion, help me design an AB test"
-    - "How many samples does this feature change need"
-    - "Help me design a traffic split experiment plan"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output experiment design and hypothesis"
-  deep_description: "Full design + statistical power calculation + multivariate experiment plan + result interpretation framework"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/metrics/metrics-system.md
-writes:
-  - docs/metrics/experiment-report.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # A/B Test Auto-Design
+
+## Outputs
+- docs/metrics/experiment-report.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

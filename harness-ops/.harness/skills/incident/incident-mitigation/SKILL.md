@@ -1,30 +1,30 @@
 ---
 name: incident-mitigation
 description: Incident mitigation and stop-the-bleeding, executing whitelisted operations to quickly recover services (rollback / scale-out / restart / degrade)
-triggers:
-  - When a P0/P1 incident requires emergency stop-the-bleeding
-  - After incident-detection completes severity classification
-  - When the user requests "emergency service recovery"
-  - When monitoring alerts indicate service unavailable
-reads:
-  - loops/specs/<incident-id>/spec.md
-  - loops/specs/<incident-id>/state.yaml
-  - docs/handoff/solo-to-ops.md
-  - memory/knowledge-base.md
-  - rules/security.md
-  - loops/LOOP.md
-writes:
-  - loops/specs/<incident-id>/state.yaml
-  - loops/specs/<incident-id>/evidence.md
-  - loops/specs/<incident-id>/iterations.log
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 3
 operation_tier: mutate-staging
 requires_approval: true
 ---
-
 # Incident Mitigation — Incident Stop-the-Bleeding and Mitigation
+
+## When to use
+- When a P0/P1 incident requires emergency stop-the-bleeding
+- After incident-detection completes severity classification
+- When the user requests "emergency service recovery
+- When monitoring alerts indicate service unavailable
+
+## Inputs
+- loops/specs/<incident-id>/spec.md
+- loops/specs/<incident-id>/state.yaml
+- docs/handoff/solo-to-ops.md
+- memory/knowledge-base.md
+- rules/security.md
+- loops/LOOP.md
+
+## Outputs
+- loops/specs/<incident-id>/state.yaml
+- loops/specs/<incident-id>/evidence.md
+- loops/specs/<incident-id>/iterations.log
+- memory/knowledge-base.md
 
 ## Ground Rules
 

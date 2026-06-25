@@ -1,32 +1,28 @@
 ---
 name: planning-orchestrator
 description: Use when you need to do product project initiation, strategic planning, or roadmap creation. Strategic planning commander, orchestrating sub-skills such as product proposal, strategic analysis (SWOT/Ansoff/Porter's Five Forces), OKR, North Star, and roadmap. Keywords: project initiation, strategic planning, SWOT, OKR, roadmap, strategic analysis, setting objectives, product planning, annual planning.
-metadata:
-  module: "Product Business & Strategy"
-  sub-module: "Strategic Planning & Roadmap"
-  type: "orchestrator"
-  version: "10.0"
-  domain_tags: ["General"]
-  triggers:
-    - "Help me with product project initiation"
-    - "Create a strategic plan"
-    - "Set OKR objectives"
-    - "Plan the product roadmap"
-    - "Do a SWOT analysis"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/strategy/PRODUCT_STRATEGY.md
-  - docs/strategy/OKR.md
-  - docs/strategy/roadmap.md
-writes:
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - output/phase-reports/planning-orchestrator.json
-  - output/approvals/planning-orchestrator/{stage-id}.approval.json
 ---
-
 # Strategic Planning & Roadmap Commander
+
+## When to use
+- Help me with product project initiation
+- Create a strategic plan
+- Set OKR objectives
+- Plan the product roadmap
+- Do a SWOT analysis
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/strategy/PRODUCT_STRATEGY.md
+- docs/strategy/OKR.md
+- docs/strategy/roadmap.md
+
+## Outputs
+- memory/progress.md
+- memory/knowledge-base.md
+- output/phase-reports/planning-orchestrator.json
+- output/approvals/planning-orchestrator/{stage-id}.approval.json
 
 ## Core Principles
 

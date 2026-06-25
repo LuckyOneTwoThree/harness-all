@@ -1,31 +1,13 @@
 ---
 name: release-gradual
 description: Used when executing canary release. Canary release auto-execution, performs progressive canary release from 1% to 10% to 50% to 100%, automatically monitors metrics at each stage and determines whether to proceed to the next stage, supports auto-rollback when P0 metrics deteriorate. 🤖 AI auto-executes. Keywords: canary release, progressive release, Feature Flag, auto-rollback, release strategy, canary deployment, small traffic, gradual traffic increase.
-metadata:
-  module: "Product Monitoring & Iteration"
-  sub-module: "Release Launch"
-  type: "pipeline"
-  version: "2.0"
-  domain_tags: ["Internet", "General"]
-  triggers:
-    - "Do a canary release, start with 1% traffic"
-    - "Help me do small traffic validation"
-    - "Gradually increase traffic to full"
-  interaction_mode: "ai_auto"
-execution_depth:
-  default: standard
-  quick_description: "Generate canary plan and Feature Flag configuration, output canary release plan"
-  deep_description: "Full canary flow + per-stage auto-monitoring + auto-rollback trigger + rollback impact assessment + in-depth canary metric analysis"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-writes:
-  - docs/monitoring/release-notes.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Canary Release Auto-Execution
+
+## Outputs
+- docs/monitoring/release-notes.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

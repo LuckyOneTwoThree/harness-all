@@ -1,37 +1,13 @@
 ---
 name: opportunity-definition
 description: Used when opportunity identification, opportunity assessment, or product opportunity definition is needed. Integrates opportunity scoring, problem statement, HMW divergence, and opportunity brief. Keywords: opportunity identification, opportunity assessment, HMW, Problem Statement, opportunity brief, product opportunity.
-metadata:
-  module: "Product Discovery"
-  sub-module: "Opportunity Identification"
-  type: "pipeline"
-  version: "3.0"
-  domain_tags: ["General"]
-  triggers:
-    - "Help me evaluate this product opportunity"
-    - "Identify what product opportunities exist"
-    - "Define the problem we need to solve"
-    - "Generate an opportunity brief"
-    - "Is this opportunity worth pursuing"
-    - "Help me think about the problem from a different angle"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Execute opportunity scoring and Problem Statement generation, output opportunity priority list and problem statement"
-  deep_description: "Additionally includes HMW four-dimension divergence, full opportunity brief assembly, key assumption risk analysis, human decision items list"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/discovery/user-research.md
-  - docs/discovery/market-analysis.md
-  - docs/discovery/insight.md
-writes:
-  - docs/discovery/opportunity.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Opportunity Definition — Opportunity Identification & Definition
+
+## Outputs
+- docs/discovery/opportunity.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

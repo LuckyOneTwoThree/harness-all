@@ -1,21 +1,21 @@
 ---
 name: user-segmentation
 description: User segmentation (RFM / lifecycle / value tiering); Segment is a first-class citizen that can be reused
-triggers:
-  - When users need differentiated operations
-  - User operations Workflow
-  - User asks to "segment users"
-reads:
-  - docs/handoff/solo-to-growth.md
-  - memory/knowledge-base.md
-writes:
-  - docs/operations/segments.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 2
 ---
-
 # User Segmentation — User Segmentation
+
+## When to use
+- When users need differentiated operations
+- User operations Workflow
+- User asks to "segment users
+
+## Inputs
+- docs/handoff/solo-to-growth.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/operations/segments.md
+- memory/knowledge-base.md
 
 ## Iron Rules
 - Segments must be **actionable** — must enable differentiated operations, otherwise meaningless

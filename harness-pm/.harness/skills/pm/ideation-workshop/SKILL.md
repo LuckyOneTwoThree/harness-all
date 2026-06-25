@@ -1,36 +1,19 @@
 ---
 name: ideation-workshop
 description: Use when you need creative divergence, solution ideation, or creative convergence workshops. Integrates multi-method divergence (HMW/SCAMPER/Reverse Thinking) and creative convergence. Keywords: creative divergence, creative convergence, HMW, SCAMPER, reverse thinking, creative workshop.
-metadata:
-  module: "Product Ideation & Design"
-  sub-module: "Creative Divergence & Solution Ideation"
-  type: "pipeline"
-  version: "3.0"
-  domain_tags: ["Internet", "Software", "General"]
-  triggers:
-    - "Help me brainstorm ideas"
-    - "Innovate using the SCAMPER method"
-    - "Think in reverse"
-    - "Too many options, which one to choose"
-    - "Let's brainstorm"
-    - "Creative workshop"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Generate HMW problem reframing and SCAMPER basic solution list, including initial scoring and filtering"
-  deep_description: "Additionally includes reverse thinking failure path analysis, design constraint transformation, solution deepening (interaction flow/MVP scope/success metrics), 6-dimension comparison matrix, human decision package"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/discovery/insight.md
-  - docs/discovery/opportunity.md
-writes:
-  - docs/product/PRD.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Creative Workshop
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/discovery/insight.md
+- docs/discovery/opportunity.md
+
+## Outputs
+- docs/product/PRD.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

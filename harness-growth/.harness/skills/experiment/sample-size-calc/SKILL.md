@@ -1,19 +1,19 @@
 ---
 name: sample-size-calc
 description: Calculate required A/B test sample size and experiment duration based on statistical power
-triggers:
-  - When sample size needs to be calculated during experiment design
-  - Called by the experiment-design skill
-  - User asks "how long does this experiment need to run"
-reads:
-  - loops/specs/<experiment>/spec.md
-writes:
-  - loops/specs/<experiment>/spec.md
-quality_gates: []
-max_iterations: 1
 ---
-
 # Sample Size Calculation — Sample Size Calculation
+
+## When to use
+- When sample size needs to be calculated during experiment design
+- Called by the experiment-design skill
+- User asks "how long does this experiment need to run
+
+## Inputs
+- loops/specs/<experiment>/spec.md
+
+## Outputs
+- loops/specs/<experiment>/spec.md
 
 ## Iron Rules
 - Sample size calculation must be based on a **preset MDE**, not back-solved from post-experiment data

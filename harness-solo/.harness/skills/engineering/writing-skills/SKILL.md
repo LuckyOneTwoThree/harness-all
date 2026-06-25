@@ -1,20 +1,22 @@
 ---
 name: writing-skills
 description: Create new skills following the standard, supporting framework extension
-triggers:
-  - When the user asks to add a new skill
-  - When existing skills cannot cover a new scenario
-  - When extending the framework
-reads:
-  - .harness/templates/SKILL.md.template
-  - .harness/skills/INDEX.md
-  - .harness/loops/LOOP.md
-writes:
-  - .harness/skills/<category>/<new-skill-name>/SKILL.md
-  - .harness/skills/INDEX.md
 ---
-
 # Writing Skills — Creating New Skills
+
+## When to use
+- When the user asks to add a new skill
+- When existing skills cannot cover a new scenario
+- When extending the framework
+
+## Inputs
+- .harness/templates/SKILL.md.template
+- .harness/skills/INDEX.md
+- .harness/loops/LOOP.md
+
+## Outputs
+- .harness/skills/<category>/<new-skill-name>/SKILL.md
+- .harness/skills/INDEX.md
 
 ## Iron Rule
 **New skills must be created from the template, must be registered in INDEX.md, and must declare reads/writes.** No skill goes rogue.

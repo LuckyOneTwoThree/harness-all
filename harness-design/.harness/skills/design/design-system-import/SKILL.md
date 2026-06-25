@@ -1,32 +1,27 @@
 ---
 name: design-system-import
 description: Imports design system from existing code configuration. Use when redesigning an existing project. Use when CSS/Tailwind/MUI config exists.
-triggers:
-  - Redesigning an existing project
-  - CSS/Tailwind/MUI configuration exists
-  - Need to extract design system from code
-reads:
-  - tailwind.config.js
-  - src/theme.ts
-  - src/globals.css
-writes:
-  - docs/design-system/DESIGN.md
-  - docs/design-system/tokens.json
-  - docs/design-system/tokens.css
 ---
-
 # Design System Import
+
+## When to use
+- Redesigning an existing project
+- CSS/Tailwind/MUI configuration exists
+- Need to extract design system from code
+
+## Inputs
+- tailwind.config.js
+- src/theme.ts
+- src/globals.css
+
+## Outputs
+- docs/design-system/DESIGN.md
+- docs/design-system/tokens.json
+- docs/design-system/tokens.css
 
 ## Overview
 
 Extracts a design system from existing project configuration. Chesterton's Fence: understand the original design before deciding whether to rewrite it.
-
-## When to Use
-
-- ✅ Redesigning an existing project
-- ✅ CSS/Tailwind/MUI configuration exists
-- ✅ Need to extract design system from code
-- ❌ NOT for brand-new projects (use the design-system skill)
 
 ## Process
 

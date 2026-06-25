@@ -1,28 +1,24 @@
 ---
 name: release-orchestrator
 description: Used when executing the product release delivery process. Release Delivery Commander that orchestrates the complete release flow of quality acceptance, release checklist, canary release, and release notes. Keywords: product release, launch, canary, release checklist, release notes, delivery, acceptance release.
-metadata:
-  module: "Product Monitoring & Iteration"
-  sub-module: "Release Delivery"
-  type: "orchestrator"
-  version: "9.0"
-  domain_tags: ["General"]
-  triggers:
-    - "Release product"
-    - "Canary launch"
-    - "Execute release process"
-    - "Release after acceptance"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/monitoring/release-notes.md
-writes:
-  - output/phase-reports/release-orchestrator.json
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Release Delivery Commander
+
+## When to use
+- Release product
+- Canary launch
+- Execute release process
+- Release after acceptance
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/monitoring/release-notes.md
+
+## Outputs
+- output/phase-reports/release-orchestrator.json
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

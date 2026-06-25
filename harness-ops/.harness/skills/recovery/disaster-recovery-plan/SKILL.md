@@ -1,28 +1,28 @@
 ---
 name: disaster-recovery-plan
 description: Disaster recovery plan design, defining RTO/RPO targets, multi-AZ strategy, degradation plans, and cross-region disaster recovery
-triggers:
-  - When formulating a disaster recovery plan
-  - When OPS_STRATEGY.md defines disaster recovery strategy
-  - When business growth requires improved disaster recovery capabilities
-  - When planning disaster recovery drills
-  - When the user requests "design a disaster recovery plan"
-reads:
-  - docs/infrastructure/OPS_STRATEGY.md
-  - rules/security.md
-  - loops/LOOP.md
-  - memory/knowledge-base.md
-writes:
-  - docs/infrastructure/disaster-recovery-plan.md
-  - loops/specs/<task-name>/spec.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 1
 operation_tier: propose
 requires_approval: false
 ---
-
 # Disaster Recovery Plan — Disaster Recovery Plan Design
+
+## When to use
+- When formulating a disaster recovery plan
+- When OPS_STRATEGY.md defines disaster recovery strategy
+- When business growth requires improved disaster recovery capabilities
+- When planning disaster recovery drills
+- When the user requests "design a disaster recovery plan
+
+## Inputs
+- docs/infrastructure/OPS_STRATEGY.md
+- rules/security.md
+- loops/LOOP.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/infrastructure/disaster-recovery-plan.md
+- loops/specs/<task-name>/spec.md
+- memory/knowledge-base.md
 
 ## Ground Rules
 

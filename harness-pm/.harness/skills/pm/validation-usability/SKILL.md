@@ -1,35 +1,21 @@
 ---
 name: validation-usability
 description: Used when assistance is needed for usability testing. Usability testing assistance tool that provides AI-supported help across pre-test, during-test, and post-test phases: generates task scripts and recruitment surveys before testing, and organizes data and generates insight reports after testing. Note: Actual test execution must be led by a human researcher. Keywords: usability testing, task scripts, recruitment screening, problem clustering, insight extraction, user experience testing, test tasks. This Skill consumes the method selection from validation-experiment (when method=usability test), generating specific test task scripts, recruitment surveys, and test reports.
-metadata:
-  module: "Product Ideation & Design"
-  sub-module: "Solution Validation"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "Software", "General"]
-  triggers:
-    - "How to conduct usability testing"
-    - "Help me design test tasks"
-    - "How to run user experience testing"
-  interaction_mode: "human_ai_collaborate"
-execution_depth:
-  default: standard
-  quick_description: "Directly output usability issues and improvement suggestions"
-  deep_description: "Full assessment + usability scoring system + priority ranking + improvement roadmap"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/product/PRD.md
-  - docs/metrics/experiment-report.md
-  - docs/handoff/design-to-solo.md
-writes:
-  - docs/product/PRD.md
-  - docs/handoff/pm-to-design.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Usability Testing Assistance
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/product/PRD.md
+- docs/metrics/experiment-report.md
+- docs/handoff/design-to-solo.md
+
+## Outputs
+- docs/product/PRD.md
+- docs/handoff/pm-to-design.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

@@ -1,21 +1,21 @@
 ---
 name: nsm-definition
 description: North Star Metric definition and selection, guiding company-wide growth goal alignment
-triggers:
-  - When a new project / product needs to define a growth metric
-  - Growth strategy formulation Workflow
-  - User asks to "define the North Star Metric"
-reads:
-  - docs/handoff/pm-to-growth.md
-  - memory/knowledge-base.md
-writes:
-  - docs/operations/GROWTH_STRATEGY.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 2
 ---
-
 # NSM Definition — North Star Metric Definition
+
+## When to use
+- When a new project / product needs to define a growth metric
+- Growth strategy formulation Workflow
+- User asks to "define the North Star Metric
+
+## Inputs
+- docs/handoff/pm-to-growth.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/operations/GROWTH_STRATEGY.md
+- memory/knowledge-base.md
 
 ## Iron Rules
 - The NSM must reflect the **core value users receive**, not commercial revenue

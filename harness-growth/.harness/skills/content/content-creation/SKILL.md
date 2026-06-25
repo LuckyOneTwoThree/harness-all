@@ -1,22 +1,24 @@
 ---
 name: content-creation
 description: Produce SEO-optimized long-form content based on selected topics, with internal outline/draft/optimization steps
-triggers:
-  - When topics are decided and content needs to be created
-  - EXPERIMENT phase of the content marketing Loop
-reads:
-  - docs/content/ideation-backlog.md
-  - memory/knowledge-base.md
-  - rules/security.md
-writes:
-  - docs/content/drafts/
-  - loops/specs/<content>/state.yaml
-quality_gates:
-  - content-review
-max_iterations: 3
 ---
-
 # Content Creation — Content Creation
+
+## When to use
+- When topics are decided and content needs to be created
+- EXPERIMENT phase of the content marketing Loop
+
+## Inputs
+- docs/content/ideation-backlog.md
+- memory/knowledge-base.md
+- rules/security.md
+
+## Outputs
+- docs/content/drafts/
+- loops/specs/<content>/state.yaml
+
+## Quality gates
+- content-review
 
 ## Iron Rules
 - Content must deliver **real value** to users, not keyword stuffing for SEO

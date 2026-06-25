@@ -1,21 +1,21 @@
 ---
 name: metric-anomaly-detection
 description: Metric anomaly detection and attribution, including fluctuation detection, root cause analysis, and impact assessment
-triggers:
-  - When metrics show abnormal fluctuation
-  - Growth review report Workflow
-  - User asks to "analyze metric anomaly"
-reads:
-  - memory/knowledge-base.md
-  - loops/specs/*/state.yaml
-writes:
-  - docs/operations/anomaly-report.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 1
 ---
-
 # Metric Anomaly Detection — Metric Anomaly Detection
+
+## When to use
+- When metrics show abnormal fluctuation
+- Growth review report Workflow
+- User asks to "analyze metric anomaly
+
+## Inputs
+- memory/knowledge-base.md
+- loops/specs/*/state.yaml
+
+## Outputs
+- docs/operations/anomaly-report.md
+- memory/knowledge-base.md
 
 ## Iron Rules
 - Anomalies must be based on **statistical thresholds** (±2σ or ±3σ), not "feels off"

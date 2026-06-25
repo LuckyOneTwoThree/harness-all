@@ -1,36 +1,15 @@
 ---
 name: retention-management
 description: Use when reducing churn rate or improving user engagement. Retention Management Integrated Pipeline first builds a churn prediction model to identify high-risk users and automatically trigger interventions, then segments users by lifecycle stage to generate operation strategies and personalized outreach content. Keywords: churn prediction, churn intervention, churn model, user retention, user segmentation, tiered operations, lifecycle operations, personalized outreach, engagement improvement, user activity, high churn rate, how to retain, differentiated operations, operation segmentation.
-metadata:
-  module: "Product Growth & Operations"
-  sub-module: "Retention"
-  type: "pipeline"
-  version: "3.0"
-  domain_tags: ["Internet", "SaaS", "General"]
-  triggers:
-    - "Users keep churning, what should I do"
-    - "How to spot users about to leave early"
-    - "Churn rate is too high, how to reduce it"
-    - "How to run differentiated operations for different users"
-    - "How to improve user engagement"
-    - "How to do user segmentation"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Execute churn prediction and basic intervention strategy recommendations, output high-risk user list and intervention suggestions"
-  deep_description: "Full tiered operation strategy + personalized outreach content + intervention ROI tracking + churn model optimization suggestions + user lifetime value prediction"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-writes:
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - docs/growth/growth-strategy.md
-  - retention-management.json
-  - retention-management.md
 ---
-
 # Retention Management Integrated
+
+## Outputs
+- memory/progress.md
+- memory/knowledge-base.md
+- docs/growth/growth-strategy.md
+- retention-management.json
+- retention-management.md
 
 ## Core Principles
 

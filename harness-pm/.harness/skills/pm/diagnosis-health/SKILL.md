@@ -1,32 +1,18 @@
 ---
 name: diagnosis-health
 description: Used when diagnosing product health. Automated product health diagnosis, collecting multi-dimensional data for comprehensive scoring, trend prediction, and bottleneck identification, outputting a health report. Keywords: health score, product diagnosis, multi-dimensional scoring, health check, product health, health rating, product physical exam, how is the status.
-metadata:
-  module: "Product Monitoring & Iteration"
-  sub-module: "Issue Diagnosis"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "SaaS", "General"]
-  triggers:
-    - "Is the product healthy right now"
-    - "Help me do a health check"
-    - "How is the product status"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output health score and issue list"
-  deep_description: "Full diagnosis + health trend analysis + root cause deep reasoning + improvement priority roadmap"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/monitoring/diagnosis-report.md
-writes:
-  - docs/monitoring/diagnosis-report.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Automated Product Health Diagnosis 🤖
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/monitoring/diagnosis-report.md
+
+## Outputs
+- docs/monitoring/diagnosis-report.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

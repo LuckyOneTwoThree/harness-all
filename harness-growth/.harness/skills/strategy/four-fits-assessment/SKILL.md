@@ -1,20 +1,20 @@
 ---
 name: four-fits-assessment
 description: Product-Channel-Model-Market Fit four-dimensional assessment, diagnosing the root cause of growth bottlenecks
-triggers:
-  - When growth is stuck and the problem is unclear
-  - Growth strategy formulation Workflow
-  - User asks to "assess growth feasibility"
-reads:
-  - docs/operations/GROWTH_STRATEGY.md
-  - docs/handoff/pm-to-growth.md
-writes:
-  - docs/operations/GROWTH_STRATEGY.md
-quality_gates: []
-max_iterations: 1
 ---
-
 # Four Fits Assessment — Four-Fit Assessment
+
+## When to use
+- When growth is stuck and the problem is unclear
+- Growth strategy formulation Workflow
+- User asks to "assess growth feasibility
+
+## Inputs
+- docs/operations/GROWTH_STRATEGY.md
+- docs/handoff/pm-to-growth.md
+
+## Outputs
+- docs/operations/GROWTH_STRATEGY.md
 
 ## Iron Rules
 - The four Fits are **intercoupled** — a break in any one will stall growth

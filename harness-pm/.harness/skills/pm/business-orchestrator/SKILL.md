@@ -1,29 +1,25 @@
 ---
 name: business-orchestrator
 description: Used when designing or evaluating a product business model. Business Model Orchestrator, dispatching business-model-canvas/value-fit/pricing/strategy-report. Keywords: business model, business canvas, pricing strategy, business strategy report, how to make money, revenue model, charging model, business assessment.
-metadata:
-  module: "Product Business & Strategy"
-  sub-module: "Business Model Design"
-  type: "orchestrator"
-  version: "7.1"
-  domain_tags: ["E-commerce", "SaaS", "Finance", "Education", "General"]
-  triggers:
-    - "Help me design a business model"
-    - "How does the product make money"
-    - "Design a pricing strategy"
-    - "Assess whether the business model is viable"
-    - "Create a business canvas"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - templates/orchestrator-protocol.md
-  - docs/strategy/business-strategy.md
-writes:
-  - output/phase-reports/business-orchestrator.json
-  - memory/progress.md
 ---
-
 # Business Model Design Orchestrator
+
+## When to use
+- Help me design a business model
+- How does the product make money
+- Design a pricing strategy
+- Assess whether the business model is viable
+- Create a business canvas
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- templates/orchestrator-protocol.md
+- docs/strategy/business-strategy.md
+
+## Outputs
+- output/phase-reports/business-orchestrator.json
+- memory/progress.md
 
 ## Core Principles
 

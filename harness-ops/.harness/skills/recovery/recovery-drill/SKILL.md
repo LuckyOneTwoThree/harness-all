@@ -1,29 +1,29 @@
 ---
 name: recovery-drill
 description: Recovery drill, periodically executing backup recovery tests to verify RTO/RPO compliance
-triggers:
-  - During periodic recovery drills
-  - During backup verification
-  - When testing the disaster recovery plan
-  - When the user requests "test recovery"
-  - When disaster-recovery-workflow triggers
-reads:
-  - docs/infrastructure/OPS_STRATEGY.md
-  - rules/security.md
-  - loops/LOOP.md
-  - memory/knowledge-base.md
-writes:
-  - loops/specs/<task-name>/spec.md
-  - loops/specs/<task-name>/evidence.md
-  - loops/specs/<task-name>/iterations.log
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 2
 operation_tier: mutate-staging
 requires_approval: true
 ---
-
 # Recovery Drill — Recovery Drill
+
+## When to use
+- During periodic recovery drills
+- During backup verification
+- When testing the disaster recovery plan
+- When the user requests "test recovery
+- When disaster-recovery-workflow triggers
+
+## Inputs
+- docs/infrastructure/OPS_STRATEGY.md
+- rules/security.md
+- loops/LOOP.md
+- memory/knowledge-base.md
+
+## Outputs
+- loops/specs/<task-name>/spec.md
+- loops/specs/<task-name>/evidence.md
+- loops/specs/<task-name>/iterations.log
+- memory/knowledge-base.md
 
 ## Ground Rules
 

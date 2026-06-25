@@ -171,9 +171,9 @@ for fw in "${FRAMEWORKS[@]}"; do
 done
 
 # ──────────────────────────────────────────
-# 6. Check SKILL.md.template quality_gates/max_iterations
+# 6. Check SKILL.md.template minimal frontmatter (name + description; ops also operation_tier)
 # ──────────────────────────────────────────
-echo "▶ Checking SKILL.md.template field completeness..."
+echo "▶ Checking SKILL.md.template minimal frontmatter..."
 
 for fw in "${FRAMEWORKS[@]}"; do
   FILE="$ROOT_DIR/$fw/.harness/templates/SKILL.md.template"
@@ -183,12 +183,24 @@ for fw in "${FRAMEWORKS[@]}"; do
     continue
   fi
 
-  if ! grep -q "quality_gates" "$FILE"; then
-    echo "  ✗ $fw: SKILL.md.template missing quality_gates field"
+  if ! grep -q "^name:" "$FILE"; then
+    echo "  ✗ $fw: SKILL.md.template missing name field"
     DIFF_COUNT=$((DIFF_COUNT + 1))
   fi
-  if ! grep -q "max_iterations" "$FILE"; then
-    echo "  ✗ $fw: SKILL.md.template missing max_iterations field"
+  if ! grep -q "^description:" "$FILE"; then
+    echo "  ✗ $fw: SKILL.md.template missing description field"
+    DIFF_COUNT=$((DIFF_COUNT + 1))
+  fi
+  # Ops must additionally carry operation_tier
+  if [ "$fw" = "harness-ops" ]; then
+    if ! grep -q "^operation_tier:" "$FILE"; then
+      echo "  ✗ $fw: SKILL.md.template missing operation_tier field"
+      DIFF_COUNT=$((DIFF_COUNT + 1))
+    fi
+  fi
+  # Heavy fields must NOT appear in frontmatter (they now live in body text)
+  if grep -qE "^(triggers|reads|writes|quality_gates|max_iterations|metadata):" "$FILE"; then
+    echo "  ✗ $fw: SKILL.md.template still contains heavy frontmatter field(s) — move to body"
     DIFF_COUNT=$((DIFF_COUNT + 1))
   fi
 done
@@ -261,9 +273,11 @@ for fw in "${FRAMEWORKS[@]}"; do
 done
 
 # ──────────────────────────────────────────
-# 10. Check domain SKILL.md frontmatter coverage (quality_gates + max_iterations)
+# 10. Check domain SKILL.md minimal frontmatter (name + description; ops + operation_tier)
+#     and ensure heavy fields (triggers/reads/writes/quality_gates/max_iterations/metadata)
+#     are no longer present in frontmatter
 # ──────────────────────────────────────────
-echo "▶ Checking domain SKILL.md frontmatter coverage..."
+echo "▶ Checking domain SKILL.md minimal frontmatter..."
 
 for fw in "${FRAMEWORKS[@]}"; do
   SKILLS_DIR="$ROOT_DIR/$fw/.harness/skills"
@@ -272,27 +286,33 @@ for fw in "${FRAMEWORKS[@]}"; do
   fi
 
   TOTAL_DOMAIN=0
-  HAS_QG=0
-  HAS_MI=0
+  HAS_NAME=0
+  HAS_DESC=0
+  HEAVY_IN_FRONTMATTER=0
 
-  # Find all domain SKILL.md files (exclude meta/ and workflows/)
   while IFS= read -r skill_file; do
     TOTAL_DOMAIN=$((TOTAL_DOMAIN + 1))
-    if grep -q "quality_gates:" "$skill_file"; then
-      HAS_QG=$((HAS_QG + 1))
+    # Extract frontmatter block (between first two '---' lines)
+    FRONT=$(awk '/^---$/{c++; if(c==2) exit} c==1' "$skill_file" 2>/dev/null)
+    if echo "$FRONT" | grep -q "^name:"; then
+      HAS_NAME=$((HAS_NAME + 1))
     fi
-    if grep -q "max_iterations:" "$skill_file"; then
-      HAS_MI=$((HAS_MI + 1))
+    if echo "$FRONT" | grep -q "^description:"; then
+      HAS_DESC=$((HAS_DESC + 1))
+    fi
+    if echo "$FRONT" | grep -qE "^(triggers|reads|writes|quality_gates|max_iterations|metadata):"; then
+      HEAVY_IN_FRONTMATTER=$((HEAVY_IN_FRONTMATTER + 1))
     fi
   done < <(find "$SKILLS_DIR" -name "SKILL.md" -not -path "*/meta/*" -not -path "*/workflows/*" 2>/dev/null)
 
   if [ "$TOTAL_DOMAIN" -gt 0 ]; then
-    QG_PCT=$((HAS_QG * 100 / TOTAL_DOMAIN))
-    MI_PCT=$((HAS_MI * 100 / TOTAL_DOMAIN))
-    if [ "$QG_PCT" -lt 100 ] || [ "$MI_PCT" -lt 100 ]; then
-      echo "  ⚠ $fw: quality_gates=${HAS_QG}/${TOTAL_DOMAIN} (${QG_PCT}%), max_iterations=${HAS_MI}/${TOTAL_DOMAIN} (${MI_PCT}%)"
+    NAME_PCT=$((HAS_NAME * 100 / TOTAL_DOMAIN))
+    DESC_PCT=$((HAS_DESC * 100 / TOTAL_DOMAIN))
+    if [ "$NAME_PCT" -lt 100 ] || [ "$DESC_PCT" -lt 100 ] || [ "$HEAVY_IN_FRONTMATTER" -gt 0 ]; then
+      echo "  ⚠ $fw: name=${HAS_NAME}/${TOTAL_DOMAIN} (${NAME_PCT}%), description=${HAS_DESC}/${TOTAL_DOMAIN} (${DESC_PCT}%), heavy_in_frontmatter=${HEAVY_IN_FRONTMATTER}"
+      DIFF_COUNT=$((DIFF_COUNT + HEAVY_IN_FRONTMATTER))
     else
-      echo "  ✓ $fw: quality_gates=${HAS_QG}/${TOTAL_DOMAIN} (100%), max_iterations=${HAS_MI}/${TOTAL_DOMAIN} (100%)"
+      echo "  ✓ $fw: name=${HAS_NAME}/${TOTAL_DOMAIN} (100%), description=${HAS_DESC}/${TOTAL_DOMAIN} (100%), no heavy fields in frontmatter"
     fi
   fi
 done

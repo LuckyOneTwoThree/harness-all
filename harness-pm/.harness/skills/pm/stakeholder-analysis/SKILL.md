@@ -1,34 +1,17 @@
 ---
 name: stakeholder-analysis
 description: Used when stakeholder analysis, stakeholder alignment, or communication strategy design is needed. Integrates stakeholder map, communication strategy, and strategic briefs. Keywords: stakeholder, Stakeholder, stakeholder map, communication strategy.
-metadata:
-  module: "Product Business & Strategy"
-  sub-module: "Stakeholder Management"
-  type: "pipeline"
-  version: "3.0"
-  domain_tags: ["General"]
-  triggers:
-    - "Help me map out the stakeholders"
-    - "Who will influence this project"
-    - "Help me develop a stakeholder management strategy"
-    - "How to communicate with each party"
-    - "Help me write a strategic brief for my boss"
-    - "One-page strategy report"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output stakeholder map and influence assessment"
-  deep_description: "Complete analysis + influence dynamic simulation + communication strategy design + interest balancing plan"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/strategy/business-strategy.md
-writes:
-  - docs/strategy/stakeholder-analysis.md
-  - memory/progress.md
 ---
-
 # Stakeholder Analysis
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/strategy/business-strategy.md
+
+## Outputs
+- docs/strategy/stakeholder-analysis.md
+- memory/progress.md
 
 ## Core Principles
 

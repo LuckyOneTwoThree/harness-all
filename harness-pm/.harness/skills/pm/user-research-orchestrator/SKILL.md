@@ -1,29 +1,25 @@
 ---
 name: user-research-orchestrator
 description: Used when executing a complete user research process. User Research Orchestrator, dispatching voice-analysis/behavior-analysis/user-modeling/interview-assist/report. Keywords: user research, VOC analysis, behavior analysis, Persona, interview assist, user research, user persona, user feedback, user interview.
-metadata:
-  module: "Product Discovery"
-  sub-module: "User Research"
-  type: "orchestrator"
-  version: "8.2"
-  domain_tags: ["General"]
-  triggers:
-    - "Help me do user research"
-    - "Analyze user feedback"
-    - "Design a user interview"
-    - "Generate user personas"
-    - "Understand user behavior"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - templates/orchestrator-protocol.md
-  - docs/discovery/user-research.md
-writes:
-  - output/phase-reports/user-research-orchestrator.json
-  - memory/progress.md
 ---
-
 # User Research Orchestrator
+
+## When to use
+- Help me do user research
+- Analyze user feedback
+- Design a user interview
+- Generate user personas
+- Understand user behavior
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- templates/orchestrator-protocol.md
+- docs/discovery/user-research.md
+
+## Outputs
+- output/phase-reports/user-research-orchestrator.json
+- memory/progress.md
 
 ## Core Principles
 

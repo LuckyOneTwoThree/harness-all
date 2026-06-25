@@ -1,33 +1,13 @@
 ---
 name: release-notes
 description: Used when generating release notes, changelogs, or version announcements for product version releases. Version release notes auto-generation, based on change logs and PRD diffs, generates user/customer-facing version update notes, supports multi-language and multi-platform formats. Keywords: version release notes, Release Notes, changelog, version update, update notes, release notes, what's new.
-metadata:
-  module: "Product Monitoring & Iteration"
-  sub-module: "Release Launch"
-  type: "pipeline"
-  version: "2.0"
-  domain_tags: ["Internet", "General"]
-  triggers:
-    - "Help me write version update notes"
-    - "Generate release notes"
-    - "What's new in this version, organize it"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output release notes and change list"
-  deep_description: "Full notes + change impact analysis + upgrade guide + rollback plan"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/monitoring/release-notes.md
-  - docs/product/PRD.md
-writes:
-  - docs/monitoring/release-notes.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Version Release Notes Auto-Generation
+
+## Outputs
+- docs/monitoring/release-notes.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 
@@ -146,10 +126,6 @@ Generate release notes in different styles based on target audience:
 **Format C: Developer Version** (technical, detailed)
 
 ```
-## Breaking Changes
-- `POST /api/v1/users` → `POST /api/v2/users` (added required field `tenant_id`)
-- Removed `GET /api/v1/export` (use `GET /api/v2/export` instead)
-
 ## New APIs
 - `POST /api/v2/share` — Social sharing API
 - `GET /api/v2/preferences/theme` — Theme preference API
@@ -191,18 +167,6 @@ Generate release notes in different styles based on target audience:
 # {Product Name} v{Version} Release Notes
 
 ## ⚠️ Important Changes (if breaking changes or mandatory actions)
-- ...
-
-## ✨ New Features
-- **Feature Name**: Description (impact level)
-- ...
-
-## 🔧 Improvements
-- Description (impact level)
-- ...
-
-## 🐛 Fixes
-- Description
 - ...
 
 ## 🔒 Security Fixes (if any)

@@ -1,28 +1,28 @@
 ---
 name: secret-management
 description: Secret reference management, generating ExternalSecret/SealedSecret CRDs; never touches plaintext Secret values
-triggers:
-  - When Secrets need to be configured
-  - When a deployment requires a database password/API key
-  - When configuring Secret rotation policies
-  - When a security audit discovers plaintext Secrets
-  - When the user requests "configure secrets"
-reads:
-  - docs/infrastructure/OPS_STRATEGY.md
-  - rules/security.md
-  - loops/LOOP.md
-  - memory/knowledge-base.md
-writes:
-  - docs/infrastructure/
-  - loops/specs/<task-name>/spec.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 1
 operation_tier: propose
 requires_approval: true
 ---
-
 # Secret Management — Secret Reference Management
+
+## When to use
+- When Secrets need to be configured
+- When a deployment requires a database password/API key
+- When configuring Secret rotation policies
+- When a security audit discovers plaintext Secrets
+- When the user requests "configure secrets
+
+## Inputs
+- docs/infrastructure/OPS_STRATEGY.md
+- rules/security.md
+- loops/LOOP.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/infrastructure/
+- loops/specs/<task-name>/spec.md
+- memory/knowledge-base.md
 
 ## Ground Rules
 

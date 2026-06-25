@@ -1,33 +1,19 @@
 ---
 name: tracking-plan
 description: Use when you need to generate a tracking plan. Tracking plan auto-generation, including deriving tracking requirements from the metric system, extracting tracking requirements from PRD features, tracking quality checks, and PRD consistency validation. Keywords: tracking plan, event design, property design, tracking specification, Tracking Plan, data collection, add tracking, instrument events.
-metadata:
-  module: "Product Metrics Design"
-  sub-module: "Tracking Plan"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "E-commerce", "General"]
-  triggers:
-    - "This feature needs tracking"
-    - "Help me produce a tracking plan"
-    - "Organize what data needs to be collected"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Only output the core event list and tracking inventory"
-  deep_description: "Complete plan + data governance specification + privacy compliance audit + long-term evolution roadmap"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/metrics/metrics-system.md
-writes:
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - docs/metrics/tracking-plan.md
-  - tracking_plan.json
 ---
-
 # Tracking Plan Auto-Generation
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/metrics/metrics-system.md
+
+## Outputs
+- memory/progress.md
+- memory/knowledge-base.md
+- docs/metrics/tracking-plan.md
+- tracking_plan.json
 
 ## Core Principles
 

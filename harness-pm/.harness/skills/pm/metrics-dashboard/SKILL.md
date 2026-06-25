@@ -1,34 +1,14 @@
 ---
 name: metrics-dashboard
 description: Use when configuring a product metrics Dashboard. Dashboard Auto-Configuration designs Dashboard structure based on metric hierarchy, auto-assigns metrics to each Dashboard, and configures alert rules and thresholds. Keywords: Dashboard configuration, data dashboard, metric visualization, alert configuration, monitoring panel, dashboard setup, data report.
-metadata:
-  module: "Product Metrics Design"
-  sub-module: "Metrics Design"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "SaaS", "General"]
-  triggers:
-    - "Help me build a data dashboard"
-    - "Configure a monitoring panel"
-    - "Create a Dashboard showing all key metrics"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output core metric dashboard design"
-  deep_description: "Full dashboard + drill-down analysis design + alert rule system + data governance specs"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/metrics/metrics-system.md
-  - docs/metrics/tracking-plan.md
-writes:
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - docs/metrics/dashboard.md
-  - dashboard_config.json
 ---
-
 # Dashboard Auto-Configuration
+
+## Outputs
+- memory/progress.md
+- memory/knowledge-base.md
+- docs/metrics/dashboard.md
+- dashboard_config.json
 
 ## Core Principles
 

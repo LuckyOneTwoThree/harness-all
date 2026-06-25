@@ -1,32 +1,18 @@
 ---
 name: diagnosis-competition
 description: Used when tracking competitor dynamics and formulating response strategies. Competitor dynamics tracking and response, monitoring competitor feature changes, assessing dynamic changes in own advantages, generating response strategies and tracking effectiveness. Keywords: competitor tracking, competitor analysis, competitor monitoring, feature changes, competitive analysis, competitor changes, competitor dynamics, competitor made a move, opponent made a move.
-metadata:
-  module: "Product Monitoring & Iteration"
-  sub-module: "Issue Diagnosis"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "SaaS", "General"]
-  triggers:
-    - "What to do when competitors update again"
-    - "How to respond when opponent adds new feature"
-    - "How to track competitor dynamics"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output competitor diagnosis and feature comparison"
-  deep_description: "Full diagnosis + competitor strategic reasoning + differentiation opportunity identification + competitive response roadmap"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/monitoring/diagnosis-report.md
-writes:
-  - docs/monitoring/diagnosis-report.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Competitor Dynamics Tracking and Response 🤖
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/monitoring/diagnosis-report.md
+
+## Outputs
+- docs/monitoring/diagnosis-report.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

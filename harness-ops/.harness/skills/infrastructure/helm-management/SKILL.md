@@ -1,29 +1,29 @@
 ---
 name: helm-management
 description: Helm chart management and maintenance, generating / upgrading / rolling back Helm releases and managing values files
-triggers:
-  - When deploying an application with Helm
-  - When upgrading a Helm chart version
-  - When a Helm release is abnormal and needs troubleshooting
-  - When the user requests "deploy with Helm"
-  - When custom Helm values are needed
-reads:
-  - docs/infrastructure/OPS_STRATEGY.md
-  - docs/handoff/solo-to-ops.md
-  - rules/security.md
-  - loops/LOOP.md
-  - memory/knowledge-base.md
-writes:
-  - docs/infrastructure/
-  - loops/specs/<task-name>/spec.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 2
 operation_tier: propose
 requires_approval: false
 ---
-
 # Helm Management — Helm Chart Management and Maintenance
+
+## When to use
+- When deploying an application with Helm
+- When upgrading a Helm chart version
+- When a Helm release is abnormal and needs troubleshooting
+- When the user requests "deploy with Helm
+- When custom Helm values are needed
+
+## Inputs
+- docs/infrastructure/OPS_STRATEGY.md
+- docs/handoff/solo-to-ops.md
+- rules/security.md
+- loops/LOOP.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/infrastructure/
+- loops/specs/<task-name>/spec.md
+- memory/knowledge-base.md
 
 ## Ground Rules
 

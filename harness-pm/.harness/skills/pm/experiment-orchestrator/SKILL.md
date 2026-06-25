@@ -1,28 +1,24 @@
 ---
 name: experiment-orchestrator
 description: Used when designing or executing A/B test experiments. Experiment validation orchestrator, dispatches experiment-design/execution. Keywords: A/B testing, experiment design, statistical significance, experiment execution, effect validation, AB testing, controlled experiment.
-metadata:
-  module: "Product Metrics & Operations"
-  sub-module: "Experiment Validation"
-  type: "orchestrator"
-  version: "8.0"
-  domain_tags: ["General"]
-  triggers:
-    - "Design an A/B test"
-    - "Validate the solution effect"
-    - "Run a controlled experiment"
-    - "Analyze experiment results"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/metrics/experiment-report.md
-writes:
-  - output/phase-reports/experiment-orchestrator.json
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Experiment Design Orchestrator
+
+## When to use
+- Design an A/B test
+- Validate the solution effect
+- Run a controlled experiment
+- Analyze experiment results
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/metrics/experiment-report.md
+
+## Outputs
+- output/phase-reports/experiment-orchestrator.json
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

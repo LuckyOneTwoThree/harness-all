@@ -1,22 +1,24 @@
 ---
 name: brainstorming
 description: Requirements exploration and design refinement — a hard gate: no coding allowed until passed
-triggers:
-  - Before new feature development
-  - When kicking off a new project
-  - When requirements are ambiguous
-reads:
-  - constitution.md
-  - rules/security.md
-  - docs/handoff/pm-to-solo.md
-  - docs/handoff/design-to-solo.md
-  - docs/handoff/component-map.json
-  - docs/product/PROJECT.md
-writes:
-  - docs/product/PROJECT.md
 ---
-
 # Brainstorming — Requirements Exploration
+
+## When to use
+- Before new feature development
+- When kicking off a new project
+- When requirements are ambiguous
+
+## Inputs
+- constitution.md
+- rules/security.md
+- docs/handoff/pm-to-solo.md
+- docs/handoff/design-to-solo.md
+- docs/handoff/component-map.json
+- docs/product/PROJECT.md
+
+## Outputs
+- docs/product/PROJECT.md
 
 ## Iron Rule
 **No coding without clear requirements.** This is a hard gate — if you cannot pass it, stop and ask; do not guess and proceed.

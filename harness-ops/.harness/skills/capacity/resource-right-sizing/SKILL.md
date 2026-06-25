@@ -1,28 +1,28 @@
 ---
 name: resource-right-sizing
 description: Resource right-sizing recommendations, analyzing Pod resource usage based on Prometheus data and recommending optimal requests/limits
-triggers:
-  - During periodic resource optimization
-  - When cost optimization requires right-sizing
-  - When Pod resource utilization is persistently low/high
-  - When the user requests "optimize resources"
-  - When the optimization LOOP triggers
-reads:
-  - docs/infrastructure/OPS_STRATEGY.md
-  - rules/security.md
-  - loops/LOOP.md
-  - memory/knowledge-base.md
-writes:
-  - loops/specs/<task-name>/spec.md
-  - loops/specs/<task-name>/evidence.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 2
 operation_tier: inspect
 requires_approval: false
 ---
-
 # Resource Right Sizing — Resource Right-Sizing Recommendations
+
+## When to use
+- During periodic resource optimization
+- When cost optimization requires right-sizing
+- When Pod resource utilization is persistently low/high
+- When the user requests "optimize resources
+- When the optimization LOOP triggers
+
+## Inputs
+- docs/infrastructure/OPS_STRATEGY.md
+- rules/security.md
+- loops/LOOP.md
+- memory/knowledge-base.md
+
+## Outputs
+- loops/specs/<task-name>/spec.md
+- loops/specs/<task-name>/evidence.md
+- memory/knowledge-base.md
 
 ## Ground Rules
 

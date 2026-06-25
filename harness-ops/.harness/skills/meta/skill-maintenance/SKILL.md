@@ -1,21 +1,23 @@
 ---
 name: skill-maintenance
 description: Framework skill health check, detect empty directories, unregistered skills, missing frontmatter
-triggers:
-  - When the user says "check framework health" / "troubleshoot skill" / "skill index inconsistent"
-  - session-start optional invocation (report when anomalies are found)
-  - Validate consistency after adding/removing a skill
-reads:
-  - .harness/skills/INDEX.md
-  - .harness/templates/SKILL.md.template
-  - .harness/skills/ops/
-writes:
-  - .harness/skills/INDEX.md
-  - memory/knowledge-base.md
-  - memory/progress.md
 ---
-
 # Skill Maintenance
+
+## When to use
+- When the user says "check framework health" / "troubleshoot skill" / "skill index inconsistent
+- session-start optional invocation (report when anomalies are found)
+- Validate consistency after adding/removing a skill
+
+## Inputs
+- .harness/skills/INDEX.md
+- .harness/templates/SKILL.md.template
+- .harness/skills/ops/
+
+## Outputs
+- .harness/skills/INDEX.md
+- memory/knowledge-base.md
+- memory/progress.md
 
 ## Core Principle
 **If you can't find a skill, it doesn't exist. If it's registered but has no SKILL.md, it's broken.**
@@ -68,8 +70,8 @@ Skills are the organs of the framework. This skill ensures that all organs are i
    For each SKILL.md, check whether it contains:
    - `name:` and matches the directory name
    - `description:`
-   - `triggers:` or `metadata`
-   - `reads:` / `writes:` (if dependency declarations exist)
+   - `operation_tier:` (inspect / propose / mutate-staging / mutate-prod)
+   - `requires_approval:` (true / false)
    - Missing any item → mark "incomplete frontmatter"
 
    For each workflow .md, check whether it contains:

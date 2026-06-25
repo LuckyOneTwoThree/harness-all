@@ -1,25 +1,27 @@
 ---
 name: verify
 description: Delivery Verification — mandatory comprehensive check before claiming completion
-triggers:
-  - Before claiming a task is complete (mandatory)
-  - During the VERIFY phase of LOOP
-  - Before merge/push
-reads:
-  - loops/LOOP.md
-  - rules/security.md
-  - constitution.md
-  - docs/handoff/pm-to-solo.md
-  - docs/handoff/design-to-solo.md
-  - docs/handoff/component-map.json
-  - loops/specs/<feature>/spec.md
-writes:
-  - loops/specs/<feature>/evidence.md
-  - loops/specs/<feature>/state.yaml
-  - loops/specs/<feature>/iterations.log
 ---
-
 # Verify — Delivery Verification
+
+## When to use
+- Before claiming a task is complete (mandatory)
+- During the VERIFY phase of LOOP
+- Before merge/push
+
+## Inputs
+- loops/LOOP.md
+- rules/security.md
+- constitution.md
+- docs/handoff/pm-to-solo.md
+- docs/handoff/design-to-solo.md
+- docs/handoff/component-map.json
+- loops/specs/<feature>/spec.md
+
+## Outputs
+- loops/specs/<feature>/evidence.md
+- loops/specs/<feature>/state.yaml
+- loops/specs/<feature>/iterations.log
 
 ## Iron Rule
 **No claiming completion without evidence.** "Should have passed" is not evidence; you must show the actual output.

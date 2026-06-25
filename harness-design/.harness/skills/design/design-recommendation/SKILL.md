@@ -1,34 +1,29 @@
 ---
 name: design-recommendation
 description: Generates data-driven design recommendations based on product type. Use when a new design system needs to be created. Use when product type is identified in DESIGN_BRIEF.md.
-triggers:
-  - Design recommendation needed
-  - Before creating a design system
-  - DESIGN_BRIEF.md already exists
-reads:
-  - docs/visual/DESIGN_BRIEF.md
-  - .harness/data/design/reasoning.csv
-  - .harness/data/design/products.csv
-  - .harness/data/design/styles.csv
-  - .harness/data/design/colors.csv
-  - .harness/data/design/typography.csv
-  - .harness/data/design/landing.csv
-writes:
-  - docs/design-system/RECOMMENDATION.md
 ---
-
 # Design Recommendation
+
+## When to use
+- Design recommendation needed
+- Before creating a design system
+- DESIGN_BRIEF.md already exists
+
+## Inputs
+- docs/visual/DESIGN_BRIEF.md
+- .harness/data/design/reasoning.csv
+- .harness/data/design/products.csv
+- .harness/data/design/styles.csv
+- .harness/data/design/colors.csv
+- .harness/data/design/typography.csv
+- .harness/data/design/landing.csv
+
+## Outputs
+- docs/design-system/RECOMMENDATION.md
 
 ## Overview
 
 Recommends style / color palette / font / landing page patterns based on product type. Data-driven decisions; do not rely on LLM to "invent" design decisions.
-
-## When to Use
-
-- ✅ Design recommendation needed
-- ✅ Before creating a design system (prerequisite for the design-system skill)
-- ✅ DESIGN_BRIEF.md exists and product type identified
-- ❌ NOT for cases where RECOMMENDATION.md already exists and product type is unchanged
 
 ## Process
 

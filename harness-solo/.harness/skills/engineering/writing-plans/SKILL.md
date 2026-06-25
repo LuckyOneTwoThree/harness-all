@@ -1,24 +1,26 @@
 ---
 name: writing-plans
 description: Task breakdown — output an executable spec.md
-triggers:
-  - After brainstorming passes
-  - Before starting a multi-step task
-  - When entering the PLAN phase of LOOP
-reads:
-  - loops/LOOP.md
-  - constitution.md
-  - rules/security.md
-  - docs/product/PROJECT.md
-  - docs/handoff/pm-to-solo.md
-  - docs/handoff/design-to-solo.md
-  - docs/handoff/component-map.json
-writes:
-  - loops/specs/<feature>/spec.md
-  - loops/specs/<feature>/state.yaml
 ---
-
 # Writing Plans — Task Breakdown
+
+## When to use
+- After brainstorming passes
+- Before starting a multi-step task
+- When entering the PLAN phase of LOOP
+
+## Inputs
+- loops/LOOP.md
+- constitution.md
+- rules/security.md
+- docs/product/PROJECT.md
+- docs/handoff/pm-to-solo.md
+- docs/handoff/design-to-solo.md
+- docs/handoff/component-map.json
+
+## Outputs
+- loops/specs/<feature>/spec.md
+- loops/specs/<feature>/state.yaml
 
 ## Iron Rule
 **Write the spec before writing code.** Starting work with an unclear spec = the root cause of rework.

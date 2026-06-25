@@ -1,32 +1,27 @@
 ---
 name: interaction-design
 description: Produces interaction design with state machine and motion parameters. Use when visual design is approved. Use for interaction design tasks in LOOP.
-triggers:
-  - Interaction design tasks
-  - In-LOOP interaction-design stage
-  - Visual design approved
-reads:
-  - .harness/craft/common-rules.md
-  - docs/visual/DESIGN_BRIEF.md
-  - docs/design-system/DESIGN.md
-  - docs/design-system/tokens.json
-  - docs/visual/
-writes:
-  - docs/interaction/
 ---
-
 # Interaction Design
+
+## When to use
+- Interaction design tasks
+- In-LOOP interaction-design stage
+- Visual design approved
+
+## Inputs
+- .harness/craft/common-rules.md
+- docs/visual/DESIGN_BRIEF.md
+- docs/design-system/DESIGN.md
+- docs/design-system/tokens.json
+- docs/visual/
+
+## Outputs
+- docs/interaction/
 
 ## Overview
 
 Interaction design output, including state machines + motion parameters. Missing states confuse users more than extra states.
-
-## When to Use
-
-- ✅ Interaction design tasks
-- ✅ In-LOOP interaction-design stage
-- ✅ Visual design approved
-- ❌ NOT for visual design (use the visual-design skill)
 
 ## Process
 

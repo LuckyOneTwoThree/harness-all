@@ -1,35 +1,20 @@
 ---
 name: monitoring-attribution
 description: Used when attribution analysis is needed for monitoring anomalies. Anomaly attribution analysis tool responsible for root cause localization, impact scope assessment, and remediation suggestions. Keywords: anomaly attribution, root cause analysis, impact assessment, remediation suggestions.
-metadata:
-  module: "Product Monitoring & Iteration"
-  sub-module: "Monitoring & Alerting"
-  type: "pipeline"
-  version: "2.0"
-  domain_tags: ["Internet", "Software", "General"]
-  interaction_mode: "ai_auto"
-  triggers:
-    - "Alert root cause analysis"
-    - "Anomaly attribution localization"
-    - "Metric drop cause investigation"
-    - "Impact scope assessment"
-execution_depth:
-  default: standard
-  quick_description: "Only output root cause summary and immediate remediation actions"
-  deep_description: "Full attribution + 5 Why deep chain + impact quantification + long-term fix plan + retrospective suggestions"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/monitoring/monitoring-config.md
-  - docs/monitoring/release-notes.md
-  - docs/metrics/metrics-system.md
-writes:
-  - docs/monitoring/monitoring-config.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Anomaly Attribution Analysis 🤖
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/monitoring/monitoring-config.md
+- docs/monitoring/release-notes.md
+- docs/metrics/metrics-system.md
+
+## Outputs
+- docs/monitoring/monitoring-config.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

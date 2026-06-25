@@ -1,22 +1,22 @@
 ---
 name: content-ideation
 description: Produce a topic backlog based on the three-dimensional evaluation of keyword × search intent × business value, supporting content repurposing
-triggers:
-  - When content needs to be produced but there's no topic
-  - PLAN phase of the content marketing Loop
-  - User asks to "help me brainstorm topics"
-reads:
-  - memory/knowledge-base.md
-  - docs/handoff/pm-to-growth.md
-  - docs/handoff/solo-to-growth.md
-writes:
-  - docs/content/ideation-backlog.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 2
 ---
-
 # Content Ideation — Topic Opportunity Identification
+
+## When to use
+- When content needs to be produced but there's no topic
+- PLAN phase of the content marketing Loop
+- User asks to "help me brainstorm topics
+
+## Inputs
+- memory/knowledge-base.md
+- docs/handoff/pm-to-growth.md
+- docs/handoff/solo-to-growth.md
+
+## Outputs
+- docs/content/ideation-backlog.md
+- memory/knowledge-base.md
 
 ## Iron Rules
 - Topics must be based on the three-dimensional evaluation of **search intent × business value × creation difficulty**, not gut feeling

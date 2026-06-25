@@ -1,31 +1,27 @@
 ---
 name: prd-orchestrator
 description: Use when you need to generate a PRD or assess the impact of PRD changes. Product Requirements Commander, orchestrating design-prd/change-impact-analysis. Responsible for PRD generation and PRD change impact assessment. Visual/interaction/component/prototype design outputs have been migrated to harness-design; this orchestrator only handles the PM-compliant product requirements portion. Keywords: product design, PRD, write PRD, product documentation, requirements document, change impact analysis.
-metadata:
-  module: "Product Ideation & Design"
-  sub-module: "Product Requirements"
-  type: "orchestrator"
-  version: "11.0"
-  domain_tags: ["General"]
-  triggers:
-    - "Help me write a PRD"
-    - "Generate a product requirements document"
-    - "The PRD has changed, analyze the impact"
-    - "Assess the impact scope of this requirement change"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/product/PRD.md
-writes:
-  - docs/product/PRD.md
-  - docs/handoff/pm-to-design.md
-  - docs/handoff/pm-to-solo.md
-  - output/phase-reports/prd-orchestrator.json
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Product Requirements Commander
+
+## When to use
+- Help me write a PRD
+- Generate a product requirements document
+- The PRD has changed, analyze the impact
+- Assess the impact scope of this requirement change
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/product/PRD.md
+
+## Outputs
+- docs/product/PRD.md
+- docs/handoff/pm-to-design.md
+- docs/handoff/pm-to-solo.md
+- output/phase-reports/prd-orchestrator.json
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

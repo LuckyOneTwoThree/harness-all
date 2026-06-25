@@ -1,25 +1,25 @@
 ---
 name: ranking-tracking
 description: Ranking tracking and fluctuation attribution, including algorithm update detection / competitor changes / content performance feedback
-triggers:
-  - After SEO optimization is published, when rankings need to be tracked
-  - MEASURE phase of the SEO optimization Loop
-  - User asks to "check ranking changes"
-  - When rankings fluctuate abnormally
-reads:
-  - docs/seo/keyword-research.md
-  - memory/knowledge-base.md
-  - loops/specs/<seo>/state.yaml
-writes:
-  - docs/seo/ranking-report.md
-  - memory/knowledge-base.md
-  - loops/specs/<seo>/state.yaml
-  - loops/specs/<seo>/iterations.log
-quality_gates: []
-max_iterations: 1
 ---
-
 # Ranking Tracking — Ranking Tracking and Attribution
+
+## When to use
+- After SEO optimization is published, when rankings need to be tracked
+- MEASURE phase of the SEO optimization Loop
+- User asks to "check ranking changes
+- When rankings fluctuate abnormally
+
+## Inputs
+- docs/seo/keyword-research.md
+- memory/knowledge-base.md
+- loops/specs/<seo>/state.yaml
+
+## Outputs
+- docs/seo/ranking-report.md
+- memory/knowledge-base.md
+- loops/specs/<seo>/state.yaml
+- loops/specs/<seo>/iterations.log
 
 ## Iron Rules
 - Ranking data must be based on **actual queries**, not "should have gone up"

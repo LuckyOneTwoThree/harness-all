@@ -1,34 +1,13 @@
 ---
 name: iteration-retrospective
 description: Used when assisting with iteration retrospectives. Iteration retrospective tool responsible for completion analysis, problem identification, improvement suggestions, and communication draft generation. Keywords: iteration retrospective, completion analysis, problem identification, improvement suggestions, Retro.
-metadata:
-  module: "Product Monitoring & Iteration"
-  sub-module: "Iteration Optimization"
-  type: "pipeline"
-  version: "2.0"
-  domain_tags: ["Internet", "Software", "General"]
-  triggers:
-    - "Need to retrospective this iteration"
-    - "Sprint is over, how to summarize"
-    - "How did the iteration go"
-    - "Need to adjust the iteration plan, what to do"
-    - "Need to insert a requirement, how to reorder"
-  interaction_mode: "human_ai_collaborate"
-execution_depth:
-  default: standard
-  quick_description: "Only output iteration retrospective core conclusions"
-  deep_description: "Full retrospective + change impact assessment + adjustment plan + risk assessment + communication draft + competitor iteration comparison"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/monitoring/monitoring-config.md
-writes:
-  - docs/monitoring/iteration-retrospective.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Iteration Retrospective & Adjustment 🤖
+
+## Outputs
+- docs/monitoring/iteration-retrospective.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

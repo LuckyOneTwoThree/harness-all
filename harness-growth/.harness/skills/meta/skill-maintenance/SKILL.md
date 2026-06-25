@@ -1,20 +1,22 @@
 ---
 name: skill-maintenance
 description: Framework skill health check, detect empty directories, unregistered skills, missing frontmatter
-triggers:
-  - When the user says "check framework health" / "troubleshoot skill" / "skill index inconsistent"
-  - session-start optional invocation (report when anomalies are found)
-  - Validate consistency after adding/removing a skill
-reads:
-  - .harness/skills/INDEX.md
-  - .harness/templates/SKILL.md.template
-writes:
-  - .harness/skills/INDEX.md
-  - memory/knowledge-base.md
-  - memory/progress.md
 ---
-
 # Skill Maintenance
+
+## When to use
+- When the user says "check framework health" / "troubleshoot skill" / "skill index inconsistent
+- session-start optional invocation (report when anomalies are found)
+- Validate consistency after adding/removing a skill
+
+## Inputs
+- .harness/skills/INDEX.md
+- .harness/templates/SKILL.md.template
+
+## Outputs
+- .harness/skills/INDEX.md
+- memory/knowledge-base.md
+- memory/progress.md
 
 ## Core Principle
 **If you can't find a skill, it doesn't exist. If it's registered but has no SKILL.md, it's broken.**
@@ -28,7 +30,7 @@ Skills are the organs of the framework. This skill ensures that all organs are i
 - Every skill has a SKILL.md
 - Every SKILL.md has complete frontmatter
 - No empty directory placeholders (except .gitkeep)
-- Reasonable reads/writes declarations
+- Reasonable Inputs/Outputs declarations
 
 **Does not:**
 - Modify a skill's business logic (that is the skill's own concern)
@@ -79,9 +81,6 @@ Skills are the organs of the framework. This skill ensures that all organs are i
    For each SKILL.md, check whether it contains:
    - `name:` and matches the directory name
    - `description:`
-   - `triggers:`
-   - `reads:`
-   - `writes:`
    - Missing any item → mark "incomplete frontmatter"
 
    For each workflow .md, check whether it contains:
@@ -90,7 +89,7 @@ Skills are the organs of the framework. This skill ensures that all organs are i
    - `default_mode:` and is one of deep/standard/skip
    - Missing any item → mark "incomplete workflow frontmatter"
 
-5. **Check reads/writes reasonableness**
+5. **Check Inputs/Outputs reasonableness**
    - If it involves state.yaml → must read `loops/LOOP.md`
    - If it involves security → must read `rules/security.md`
    - If it involves docs/handoff/ → must be declared in reads or writes
@@ -106,7 +105,7 @@ Skills are the organs of the framework. This skill ensures that all organs are i
    | INDEX consistency | ✓ / ✗ | X registered, Y actual |
    | Empty directories | ✓ / ✗ | [list or "none"] |
    | frontmatter | ✓ / ✗ | [issue list or "none"] |
-   | reads/writes | ✓ / ✗ | [issue list or "none"] |
+   | Inputs/Outputs | ✓ / ✗ | [issue list or "none"] |
    | Workflow frontmatter | ✓ / ✗ | 6/6 have workflow_id+name+default_mode |
    ```
 

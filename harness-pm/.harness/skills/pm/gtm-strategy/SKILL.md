@@ -1,31 +1,17 @@
 ---
 name: gtm-strategy
 description: Used when developing a product go-to-market strategy. Auto-generates a Go-to-Market strategy document, including target market definition, launch path selection, pricing & packaging strategy, channel & promotion plan, launch milestones and success metrics. Keywords: Go-to-Market, GTM strategy, launch strategy, product launch, market entry, release strategy, product rollout, how to go to market, launch plan.
-metadata:
-  module: "Product Growth & Operations"
-  sub-module: "Growth Model"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "SaaS", "General"]
-  triggers:
-    - "New product is about to launch, how to promote it"
-    - "Help me make a launch plan"
-    - "How to do product release strategy"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output target market definition and launch path"
-  deep_description: "Complete GTM strategy + channel ROI simulation + launch risk contingency + competitor response strategy"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-writes:
-  - docs/growth/gtm.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Go-to-Market Strategy Document Generation
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+
+## Outputs
+- docs/growth/gtm.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

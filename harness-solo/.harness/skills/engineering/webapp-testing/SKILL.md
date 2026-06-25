@@ -1,19 +1,21 @@
 ---
 name: webapp-testing
 description: Frontend/Web App Verification — pure Agent tooling approach (no Playwright dependency)
-triggers:
-  - When frontend code is changed
-  - As a frontend verification sub-item of the verify skill
-  - When the user asks to verify UI/page behavior
-reads:
-  - loops/specs/<feature>/spec.md
-  - docs/engineering/TECH_STACK.md
-  - rules/security.md
-writes:
-  - loops/specs/<feature>/evidence.md
 ---
-
 # Webapp Testing — Frontend Verification
+
+## When to use
+- When frontend code is changed
+- As a frontend verification sub-item of the verify skill
+- When the user asks to verify UI/page behavior
+
+## Inputs
+- loops/specs/<feature>/spec.md
+- docs/engineering/TECH_STACK.md
+- rules/security.md
+
+## Outputs
+- loops/specs/<feature>/evidence.md
 
 ## Iron Rule
 **Frontend code changes must be verified; do not just read the code and say "should work".** Use a pure Agent tooling approach; do not introduce external dependencies like Playwright (abide by the constitution.md zero-new-dependency principle).

@@ -1,35 +1,20 @@
 ---
 name: monitoring-alert-detection
 description: Used when monitoring product metrics and detecting anomalies. Monitoring alert detection tool responsible for data collection, threshold monitoring, anomaly detection, and alert generation. Keywords: monitoring, alert, anomaly detection, threshold, data collection.
-metadata:
-  module: "Product Monitoring & Iteration"
-  sub-module: "Monitoring & Alerting"
-  type: "pipeline"
-  version: "2.0"
-  domain_tags: ["Internet", "Software", "General"]
-  interaction_mode: "ai_auto"
-  triggers:
-    - "Set up monitoring system"
-    - "Configure alert rules"
-    - "Metric anomaly detection"
-    - "How to monitor core paths"
-execution_depth:
-  default: standard
-  quick_description: "Only output core path monitoring + basic alert rules"
-  deep_description: "Full system + capacity planning + chaos engineering plan + SRE maturity assessment"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/metrics/metrics-system.md
-  - docs/monitoring/monitoring-config.md
-  - docs/monitoring/release-notes.md
-writes:
-  - docs/monitoring/monitoring-config.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Monitoring Alert Detection 🤖
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/metrics/metrics-system.md
+- docs/monitoring/monitoring-config.md
+- docs/monitoring/release-notes.md
+
+## Outputs
+- docs/monitoring/monitoring-config.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

@@ -224,15 +224,6 @@ Orchestrator SKILL.md files must include the following sections (in addition to 
 9. **Human Decision Points** — Table of decisions requiring human input, with context and options
 10. **Downstream Connection** — Declaration of downstream orchestrators (see §6)
 
-### Frontmatter: metadata field
+### Frontmatter
 
-All orchestrator SKILL.md files must include a `metadata` frontmatter field:
-
-```yaml
-metadata:
-  module: <module-name>
-  sub-module: <sub-module-name>
-  type: orchestrator
-  version: <version>
-  domain_tags: [<tag1>, <tag2>]
-```
+Orchestrator SKILL.md files use the same minimal frontmatter as all other skills (see SKILL.md.template): only `name` and `description`. The orchestrator type is identified by the body sections above (Pipeline, Phase Execution Plan, etc.) and by INDEX.md, not by a frontmatter field. Do not add `metadata`, `triggers`, `reads`, `writes`, `quality_gates`, or `max_iterations` to the frontmatter — those belong in the body text.

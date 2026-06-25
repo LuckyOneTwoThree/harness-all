@@ -1,29 +1,25 @@
 ---
 name: validation-orchestrator
 description: Used when validating product solutions. Solution validation sub-module orchestrator, dispatches sub-skills: validation-assumption-map, validation-mvp, validation-experiment, validation-usability. Keywords: solution validation, hypothesis validation, MVP, usability testing, experiment design, assumption map, risk assessment, validate idea, minimum viable product.
-metadata:
-  module: "Product Ideation & Design"
-  sub-module: "Solution Validation"
-  type: "orchestrator"
-  version: "6.1"
-  domain_tags: ["General"]
-  triggers:
-    - "Validate the product solution"
-    - "Design MVP scope"
-    - "Do some hypothesis validation"
-    - "Assess the solution risks"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/product/PRD.md
-  - docs/metrics/experiment-report.md
-writes:
-  - output/phase-reports/validation-orchestrator.json
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Solution Validation Orchestrator
+
+## When to use
+- Validate the product solution
+- Design MVP scope
+- Do some hypothesis validation
+- Assess the solution risks
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/product/PRD.md
+- docs/metrics/experiment-report.md
+
+## Outputs
+- output/phase-reports/validation-orchestrator.json
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

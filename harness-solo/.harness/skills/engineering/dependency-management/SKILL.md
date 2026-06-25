@@ -1,21 +1,23 @@
 ---
 name: dependency-management
 description: Dependency Management — add/upgrade/audit, integrated with the constitution's dependency approval gate
-triggers:
-  - Before adding a new dependency (mandatory)
-  - When upgrading dependencies
-  - During security audits
-  - When the verify stage checks dependency compliance
-reads:
-  - rules/security.md
-  - constitution.md
-  - docs/engineering/TECH_STACK.md
-writes:
-  - loops/specs/<feature>/iterations.log
-  - memory/knowledge-base.md
 ---
-
 # Dependency Management — Dependency Management
+
+## When to use
+- Before adding a new dependency (mandatory)
+- When upgrading dependencies
+- During security audits
+- When the verify stage checks dependency compliance
+
+## Inputs
+- rules/security.md
+- constitution.md
+- docs/engineering/TECH_STACK.md
+
+## Outputs
+- loops/specs/<feature>/iterations.log
+- memory/knowledge-base.md
 
 ## Iron Rule
 **Code is a liability.** Every dependency added expands the attack surface and maintenance cost. If it can be solved with under 50 lines of code, do not introduce a dependency.

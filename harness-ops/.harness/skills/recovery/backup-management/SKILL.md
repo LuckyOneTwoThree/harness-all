@@ -1,28 +1,28 @@
 ---
 name: backup-management
 description: Velero backup management, configuring backup schedules, executing backups, and verifying backup integrity
-triggers:
-  - When backup policies need to be configured
-  - When running periodic backups
-  - When a backup is needed before deployment
-  - During backup integrity verification
-  - When the user requests "back up data"
-reads:
-  - docs/infrastructure/OPS_STRATEGY.md
-  - rules/security.md
-  - loops/LOOP.md
-  - memory/knowledge-base.md
-writes:
-  - loops/specs/<task-name>/spec.md
-  - loops/specs/<task-name>/evidence.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 2
 operation_tier: propose
 requires_approval: false
 ---
-
 # Backup Management — Velero Backup Management
+
+## When to use
+- When backup policies need to be configured
+- When running periodic backups
+- When a backup is needed before deployment
+- During backup integrity verification
+- When the user requests "back up data
+
+## Inputs
+- docs/infrastructure/OPS_STRATEGY.md
+- rules/security.md
+- loops/LOOP.md
+- memory/knowledge-base.md
+
+## Outputs
+- loops/specs/<task-name>/spec.md
+- loops/specs/<task-name>/evidence.md
+- memory/knowledge-base.md
 
 ## Ground Rules
 

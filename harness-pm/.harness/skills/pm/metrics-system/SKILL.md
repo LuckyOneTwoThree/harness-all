@@ -1,34 +1,14 @@
 ---
 name: metrics-system
 description: Use when building a product metrics system. Metrics System Auto-Construction includes North Star metric validation and recommendation, L1/L2 metric breakdown, actionable metric identification, and vanity metric detection. Keywords: metrics system, AARRR model, North Star metric, L1/L2 metrics, OSM model, measurement system, define metrics, core data.
-metadata:
-  module: "Product Metrics Design"
-  sub-module: "Metrics System"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "SaaS", "General"]
-  triggers:
-    - "Help me organize the product's core metrics"
-    - "We need to define the North Star metric"
-    - "Build a metrics system"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Output North Star metric validation results and L1 metric breakdown"
-  deep_description: "Full L1/L2 breakdown + actionable metric identification + vanity metric detection + metric health scoring + metric correlation analysis"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/strategy/OKR.md
-  - docs/strategy/business-strategy.md
-writes:
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - docs/metrics/metrics-system.md
-  - metric_system.json
 ---
-
 # Metrics System Auto-Construction
+
+## Outputs
+- memory/progress.md
+- memory/knowledge-base.md
+- docs/metrics/metrics-system.md
+- metric_system.json
 
 ## Core Principles
 

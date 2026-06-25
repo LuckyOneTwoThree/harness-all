@@ -1,29 +1,25 @@
 ---
 name: analysis-orchestrator
 description: Use when data anomaly detection, funnel analysis, or retention analysis is needed. Data Analysis Orchestrator dispatches analysis-anomaly/funnel/retention/data-analysis-report. Keywords: data analysis, anomaly detection, funnel analysis, retention analysis, Aha Moment, look at data, data is bad, data insights.
-metadata:
-  module: "Product Metrics Operations"
-  sub-module: "Data Analysis"
-  type: "orchestrator"
-  version: "7.1"
-  domain_tags: ["General"]
-  triggers:
-    - "Help me analyze the data"
-    - "There's a data anomaly, investigate it"
-    - "Do a funnel analysis"
-    - "Analyze user retention"
-    - "Data is bad, find the cause"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/metrics/data-analysis-report.md
-writes:
-  - output/phase-reports/analysis-orchestrator.json
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Data Analysis Orchestrator
+
+## When to use
+- Help me analyze the data
+- There's a data anomaly, investigate it
+- Do a funnel analysis
+- Analyze user retention
+- Data is bad, find the cause
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/metrics/data-analysis-report.md
+
+## Outputs
+- output/phase-reports/analysis-orchestrator.json
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

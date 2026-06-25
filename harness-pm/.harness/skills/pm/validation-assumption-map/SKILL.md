@@ -1,33 +1,13 @@
 ---
 name: validation-assumption-map
 description: Used when extracting and evaluating product hypotheses. Assumption map auto-generation tool, based on solution design and PRD, automatically extracts value hypotheses, feasibility hypotheses, usability hypotheses, growth hypotheses, and performs risk assessment and validation method recommendation. Keywords: hypothesis extraction, risk assessment, assumption map, validation method, hypothesis mapping, risk hypothesis.
-metadata:
-  module: "Product Ideation & Design"
-  sub-module: "Solution Validation"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "Software", "General"]
-  triggers:
-    - "What hypotheses does the product have that are unvalidated"
-    - "Help me map out hypotheses and risks"
-    - "Which hypotheses might not hold"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output core hypotheses and validation priority"
-  deep_description: "Full assumption map + validation experiment design + risk quantitative assessment + hypothesis evolution tracking"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/product/PRD.md
-  - docs/handoff/design-to-solo.md
-writes:
-  - docs/product/PRD.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Assumption Map Auto-Generation
+
+## Outputs
+- docs/product/PRD.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

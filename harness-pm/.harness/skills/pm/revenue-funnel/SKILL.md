@@ -1,33 +1,14 @@
 ---
 name: revenue-funnel
 description: Use when analyzing and optimizing the payment conversion funnel. Payment Funnel Auto-Analysis Pipeline analyzes the full-link data from registration to payment, identifies payment barriers, calculates conversion optimization suggestions, and optimizes paywall timing. Keywords: payment funnel, payment conversion, paywall, conversion optimization, payment analysis, unwilling to pay, where payment gets stuck, how to get users to pay.
-metadata:
-  module: "Product Growth & Operations"
-  sub-module: "Monetization"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "SaaS", "General"]
-  triggers:
-    - "Why are users unwilling to pay"
-    - "How to improve payment conversion rate"
-    - "Where is the best place to put the paywall"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output payment funnel and conversion bottlenecks"
-  deep_description: "Full analysis + funnel optimization simulation + pricing elasticity testing + revenue prediction model"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/growth/growth-strategy.md
-writes:
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - docs/growth/growth-strategy.md
-  - revenue_funnel.json
 ---
-
 # Payment Funnel Auto-Analysis
+
+## Outputs
+- memory/progress.md
+- memory/knowledge-base.md
+- docs/growth/growth-strategy.md
+- revenue_funnel.json
 
 ## Core Principles
 

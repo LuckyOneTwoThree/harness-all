@@ -1,29 +1,29 @@
 ---
 name: kubernetes-manifest
 description: K8s YAML Manifest generation and maintenance, following best practices (resource limits / probes / RBAC / NetworkPolicy)
-triggers:
-  - When K8s deployment config needs to be generated
-  - When existing Manifests need to be modified
-  - When K8s resources are abnormal and need troubleshooting
-  - When deployment-pipeline generates deployment config
-  - When the user requests "write a K8s deployment file"
-reads:
-  - docs/infrastructure/OPS_STRATEGY.md
-  - docs/handoff/solo-to-ops.md
-  - rules/security.md
-  - loops/LOOP.md
-  - memory/knowledge-base.md
-writes:
-  - docs/infrastructure/
-  - loops/specs/<task-name>/spec.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 2
 operation_tier: propose
 requires_approval: false
 ---
-
 # Kubernetes Manifest — K8s YAML Generation and Maintenance
+
+## When to use
+- When K8s deployment config needs to be generated
+- When existing Manifests need to be modified
+- When K8s resources are abnormal and need troubleshooting
+- When deployment-pipeline generates deployment config
+- When the user requests "write a K8s deployment file
+
+## Inputs
+- docs/infrastructure/OPS_STRATEGY.md
+- docs/handoff/solo-to-ops.md
+- rules/security.md
+- loops/LOOP.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/infrastructure/
+- loops/specs/<task-name>/spec.md
+- memory/knowledge-base.md
 
 ## Ground Rules
 

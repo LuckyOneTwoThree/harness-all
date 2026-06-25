@@ -1,31 +1,13 @@
 ---
 name: analysis-retention
 description: Use when analyzing user stickiness and churn risk. Retention Auto-Analysis, AI automatically executes full retention curve, Cohort analysis, Aha Moment search, and churn warning. Keywords: retention analysis, Cohort analysis, Aha Moment, churn warning, user stickiness, users not coming back, retention too poor, when users leave.
-metadata:
-  module: "Product Metrics Operations"
-  sub-module: "Data Analysis"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "SaaS", "General"]
-  triggers:
-    - "New user 7-day retention is only 15%, help me analyze"
-    - "When do users start churning"
-    - "Help me find the Aha Moment"
-  interaction_mode: "ai_auto"
-execution_depth:
-  default: standard
-  quick_description: "Directly output retention analysis and churn causes"
-  deep_description: "Full analysis + retention curve fitting + churn prediction model + retention optimization roadmap"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-writes:
-  - docs/metrics/data-analysis-report.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Retention Auto-Analysis
+
+## Outputs
+- docs/metrics/data-analysis-report.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

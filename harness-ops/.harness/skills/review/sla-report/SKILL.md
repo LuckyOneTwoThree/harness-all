@@ -1,26 +1,26 @@
 ---
 name: sla-report
 description: SLA calculation and reporting, computing availability from monitoring data and generating SLA achievement reports
-triggers:
-  - During monthly SLA reporting
-  - When the user requests "calculate SLA"
-  - When SLA targets are not met and analysis is required
-  - When ops-review needs data support
-  - When contracts/compliance require SLA evidence
-reads:
-  - docs/infrastructure/OPS_STRATEGY.md
-  - memory/knowledge-base.md
-  - loops/LOOP.md
-writes:
-  - docs/monitoring/sla-report.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 1
 operation_tier: inspect
 requires_approval: false
 ---
-
 # SLA Report — SLA Calculation and Reporting
+
+## When to use
+- During monthly SLA reporting
+- When the user requests "calculate SLA
+- When SLA targets are not met and analysis is required
+- When ops-review needs data support
+- When contracts/compliance require SLA evidence
+
+## Inputs
+- docs/infrastructure/OPS_STRATEGY.md
+- memory/knowledge-base.md
+- loops/LOOP.md
+
+## Outputs
+- docs/monitoring/sla-report.md
+- memory/knowledge-base.md
 
 ## Ground Rules
 

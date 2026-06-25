@@ -1,41 +1,36 @@
 ---
 name: design-handoff-spec
 description: Produces engineering-consumable handoff with component-map.json. Use after design-review passes. Use for design-to-engineering delivery.
-triggers:
-  - Design handoff
-  - After design-review passes
-  - Need to hand off to engineering
-reads:
-  - .harness/data/design/ux-guidelines.csv
-  - .harness/craft/common-rules.md
-  - docs/visual/
-  - docs/interaction/
-  - docs/prototype/
-  - docs/design-system/DESIGN.md
-  - docs/design-system/tokens.json
-  - docs/design-system/tokens.css
-  - docs/design-system/components/
-  - docs/handoff/pm-to-design.md
-  - loops/specs/<task>/evidence.md
-writes:
-  - docs/handoff/design-to-solo.md
-  - docs/handoff/component-map.json
-  - docs/interaction/component-spec.md
-  - docs/prototype/flow.md
 ---
-
 # Design Handoff Spec
+
+## When to use
+- Design handoff
+- After design-review passes
+- Need to hand off to engineering
+
+## Inputs
+- .harness/data/design/ux-guidelines.csv
+- .harness/craft/common-rules.md
+- docs/visual/
+- docs/interaction/
+- docs/prototype/
+- docs/design-system/DESIGN.md
+- docs/design-system/tokens.json
+- docs/design-system/tokens.css
+- docs/design-system/components/
+- docs/handoff/pm-to-design.md
+- loops/specs/<task>/evidence.md
+
+## Outputs
+- docs/handoff/design-to-solo.md
+- docs/handoff/component-map.json
+- docs/interaction/component-spec.md
+- docs/prototype/flow.md
 
 ## Overview
 
 Engineering-consumable structured handoff. Turns "design to code" from "magic export" into "explicit mapping"—reviewable, version-controllable, testable.
-
-## When to Use
-
-- ✅ Design handoff
-- ✅ After design-review passes
-- ✅ Need to hand off to engineering (harness-solo)
-- ❌ NOT for the design stage (use visual-design and other skills)
 
 ## Process
 
@@ -55,9 +50,6 @@ Read approved design outputs:
 
 ```markdown
 # Design Handoff: <Project Name>
-
-## Overview
-<Design goals + scope>
 
 ## Design System
 - DESIGN.md path: docs/design-system/DESIGN.md

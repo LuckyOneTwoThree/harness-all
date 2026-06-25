@@ -36,14 +36,13 @@ Changes to the following files must be explicitly authorized by the user:
 
 **Verification**: Obtain authorization via `AskUserQuestion` or explicit conversation before modifying.
 
-### Principle 4: Skills Must Have Complete Frontmatter
+### Principle 4: Skills Must Have Minimal Frontmatter
 
 All `.harness/skills/pm/*/SKILL.md` and `.harness/skills/meta/*/SKILL.md` must include:
 - `name:` (consistent with the directory name)
 - `description:`
-- `triggers:`
-- `reads:`
-- `writes:`
+
+The former `triggers` / `reads` / `writes` / `quality_gates` / `max_iterations` fields are no longer frontmatter fields — they are now body text sections ("When to use" / "Inputs" / "Outputs" / "Quality gates"). See `.harness/templates/SKILL.md.template`.
 
 **Verification**: `skill-maintenance` scans for missing frontmatter.
 
@@ -92,4 +91,5 @@ Workflows with `default_mode: deep` (e.g., new-product / pivot) must complete th
 | 2026-06-21 | Initial version | Clarify harness-pm's own constraints |
 | 2026-06-23 | Add Principle 7: Discovery First cannot be bypassed | The exploration_mode mechanism needs a constitutional basis |
 | 2026-06-23 | Principle 4 frontmatter requirements unified to triggers+reads+writes | Align with the design/solo/growth/ops framework constitutions; the existing 82 domain skills in pm use the metadata structure as a known S2 issue, to be fixed separately later |
+| 2026-06-25 | Principle 4 frontmatter simplified to name+description only; triggers/reads/writes moved to body text sections | Align with mainstream minimal-frontmatter convention; ops retains operation_tier+requires_approval |
 | 2026-06-23 | Principle 5 adds Reference/ exception clause + Principle 4 frontmatter requirements unified | Cross-framework constitution consistency + SKILL.md split support |

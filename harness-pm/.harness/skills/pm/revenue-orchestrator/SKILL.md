@@ -1,30 +1,26 @@
 ---
 name: revenue-orchestrator
 description: Use when optimizing payment conversion or increasing revenue. Monetization Orchestrator dispatches revenue-funnel (payment funnel analysis), revenue-nrr (NRR tracking and early warning), and revenue-upsell (upgrade conversion), achieving a closed loop from payment funnel analysis to upsell strategy. Keywords: monetization, payment funnel, NRR, upsell strategy, revenue optimization, revenue-funnel, revenue-nrr, revenue-upsell, make money, monetization, payment conversion.
-metadata:
-  module: "Product Growth & Operations"
-  sub-module: "Monetization"
-  type: "orchestrator"
-  version: "7.0"
-  domain_tags: ["E-commerce", "SaaS", "Finance", "Education", "Gaming", "General"]
-  triggers:
-    - "Optimize payment conversion rate"
-    - "Increase product revenue"
-    - "Analyze the payment funnel"
-    - "Design upsell strategy"
-    - "Improve NRR"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/growth/growth-strategy.md
-writes:
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - output/phase-reports/revenue-orchestrator.json
-  - output/approvals/revenue-orchestrator/{stage-id}.approval.json
 ---
-
 # Monetization Orchestrator
+
+## When to use
+- Optimize payment conversion rate
+- Increase product revenue
+- Analyze the payment funnel
+- Design upsell strategy
+- Improve NRR
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/growth/growth-strategy.md
+
+## Outputs
+- memory/progress.md
+- memory/knowledge-base.md
+- output/phase-reports/revenue-orchestrator.json
+- output/approvals/revenue-orchestrator/{stage-id}.approval.json
 
 ## Core Principles
 

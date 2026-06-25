@@ -1,27 +1,29 @@
 ---
 name: session-end
 description: Session wrap-up, archive progress + write baseline + update board + optionally produce handoff documents
-triggers:
-  - Before claiming a task is complete
-  - When the user ends the session
-  - When the session context is near its limit
-reads:
-  - memory/progress.md
-  - loops/specs/*/state.yaml
-  - FEATURES.md
-  - docs/handoff/handoff-template.md
-  - docs/handoff/solo-to-growth-template.md
-  - docs/handoff/solo-to-ops-template.md
-writes:
-  - memory/progress.md
-  - memory/baseline.json
-  - memory/archives/
-  - FEATURES.md
-  - docs/handoff/solo-to-growth.md
-  - docs/handoff/solo-to-ops.md
 ---
-
 # Session End
+
+## When to use
+- Before claiming a task is complete
+- When the user ends the session
+- When the session context is near its limit
+
+## Inputs
+- memory/progress.md
+- loops/specs/*/state.yaml
+- FEATURES.md
+- docs/handoff/handoff-template.md
+- docs/handoff/solo-to-growth-template.md
+- docs/handoff/solo-to-ops-template.md
+
+## Outputs
+- memory/progress.md
+- memory/baseline.json
+- memory/archives/
+- FEATURES.md
+- docs/handoff/solo-to-growth.md
+- docs/handoff/solo-to-ops.md
 
 ## Core Rules
 Archiving must be performed before the session ends; "bare exit" is not allowed — the next session would lose context.

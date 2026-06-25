@@ -1,22 +1,24 @@
 ---
 name: session-start
 description: Session start, load context to restore working state
-triggers:
-  - When the Agent receives a new deployment/troubleshooting task
-  - When resuming work across sessions
-reads:
-  - SOUL.md
-  - constitution.md
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - FEATURES.md
-  - loops/specs/*/state.yaml
-  - docs/handoff/
-writes:
-  - memory/progress.md
 ---
-
 # Session Start
+
+## When to use
+- When the Agent receives a new deployment/troubleshooting task
+- When resuming work across sessions
+
+## Inputs
+- SOUL.md
+- constitution.md
+- memory/progress.md
+- memory/knowledge-base.md
+- FEATURES.md
+- loops/specs/*/state.yaml
+- docs/handoff/
+
+## Outputs
+- memory/progress.md
 
 ## Core Rules
 Context must be loaded before the session starts; working in an "amnesic" state is not allowed.

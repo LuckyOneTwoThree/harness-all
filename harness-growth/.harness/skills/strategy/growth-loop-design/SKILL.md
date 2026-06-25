@@ -1,21 +1,21 @@
 ---
 name: growth-loop-design
 description: Growth Loops identification and design, building self-reinforcing growth flywheels
-triggers:
-  - When a sustainable growth engine needs to be designed
-  - Growth strategy formulation Workflow
-  - User asks to "design a growth loop"
-reads:
-  - docs/operations/GROWTH_STRATEGY.md
-  - memory/knowledge-base.md
-writes:
-  - docs/operations/GROWTH_STRATEGY.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 2
 ---
-
 # Growth Loop Design — Growth Loop Design
+
+## When to use
+- When a sustainable growth engine needs to be designed
+- Growth strategy formulation Workflow
+- User asks to "design a growth loop
+
+## Inputs
+- docs/operations/GROWTH_STRATEGY.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/operations/GROWTH_STRATEGY.md
+- memory/knowledge-base.md
 
 ## Iron Rules
 - The Loop's output must **feed back into the input**, forming compounding

@@ -1,35 +1,13 @@
 ---
 name: experiment-execution
 description: Used when executing A/B tests, analyzing results, and generating complete reports. A/B test auto-execution, analysis, and report generation; AI automatically performs monitoring during experiment runtime and analysis after experiment completion, including statistical testing, business significance assessment, multi-dimensional drill-down, novelty effect detection, and generates a complete A/B test report containing experiment overview, statistical conclusions, effect analysis, and action recommendations. Keywords: A/B test execution, statistical testing, experiment analysis, novelty effect, experiment monitoring, experiment result analysis, AB test finished help me analyze results, how to read experiment data, is it significant, A/B test report, experiment report, statistical conclusion, effect analysis, experiment summary, produce an experiment report, AB test summary, experiment result presentation.
-metadata:
-  module: "Product Metrics & Operations"
-  sub-module: "Experiment Validation"
-  type: "pipeline"
-  version: "2.0"
-  domain_tags: ["Internet", "General"]
-  triggers:
-    - "AB test finished, help me analyze the results"
-    - "Experiment data looks different, is it significant"
-    - "Help me monitor a running experiment"
-    - "Help me produce a complete AB test report"
-    - "Experiment done, write a summary report"
-    - "Organize experiment results into a presentable document"
-  interaction_mode: "ai_auto"
-execution_depth:
-  default: standard
-  quick_description: "Execute statistical significance testing and guardrail metric checks, output experiment conclusions and basic decision recommendations"
-  deep_description: "Additionally includes multi-dimensional drill-down heterogeneity analysis, novelty effect detection, interaction effect checking, complete A/B test report generation, follow-up experiment recommendations"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/metrics/experiment-report.md
-writes:
-  - docs/metrics/experiment-report.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # A/B Test Auto-Execution, Analysis & Reporting
+
+## Outputs
+- docs/metrics/experiment-report.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

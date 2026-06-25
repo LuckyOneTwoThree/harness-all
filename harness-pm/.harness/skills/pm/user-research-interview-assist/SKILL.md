@@ -1,31 +1,12 @@
 ---
 name: user-research-interview-assist
 description: Used when designing user interview scripts, extracting insights after interviews, or conducting cross-interview clustering analysis. Interview Assist Pipeline. Keywords: user interview, interview script, interview insights, semi-structured interview, qualitative research assist, interview outline, interview synthesis, what to talk about with users.
-metadata:
-  module: "Product Discovery"
-  sub-module: "User Research"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["General"]
-  triggers:
-    - "Help me prepare an interview outline"
-    - "How to synthesize insights after an interview"
-    - "How to conduct a user interview"
-  interaction_mode: "human_ai_collaborate"
-execution_depth:
-  default: standard
-  quick_description: "Directly output interview outline and key questions"
-  deep_description: "Complete assist + interview strategy design + follow-up logic tree + data analysis framework"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/discovery/user-research.md
-writes:
-  - docs/discovery/user-research.md
-  - memory/progress.md
 ---
-
 # Interview Assist
+
+## Outputs
+- docs/discovery/user-research.md
+- memory/progress.md
 
 ## Core Principles
 

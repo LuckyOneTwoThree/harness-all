@@ -1,20 +1,20 @@
 ---
 name: onboarding-design
 description: Onboarding flow design, guiding new users to reach the aha moment on day 1
-triggers:
-  - When new user activation rate is low
-  - User operations Workflow
-  - User asks to "design an onboarding flow"
-reads:
-  - docs/handoff/solo-to-growth.md
-  - memory/knowledge-base.md
-writes:
-  - docs/operations/onboarding-plan.md
-quality_gates: []
-max_iterations: 2
 ---
-
 # Onboarding Design — Onboarding Flow Design
+
+## When to use
+- When new user activation rate is low
+- User operations Workflow
+- User asks to "design an onboarding flow
+
+## Inputs
+- docs/handoff/solo-to-growth.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/operations/onboarding-plan.md
 
 ## Iron Rules
 - The sole goal of onboarding is to **guide users to the aha moment**

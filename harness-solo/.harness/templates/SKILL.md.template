@@ -1,27 +1,36 @@
 ---
 name: skill-name                    # Required, must match the directory name
 description: One-sentence description, used for INDEX.md reference  # Required
-triggers:                           # Required, when to use this skill
-  - Scenario 1
-  - Scenario 2
-reads:                              # Optional, files this skill depends on (auto-fetched by the Agent at runtime)
-  - rules/security.md
-  - loops/LOOP.md
-writes:                             # Optional, files this skill produces (helps the Agent understand side effects)
-  - loops/specs/<feature>/state.yaml
-quality_gates: []                   # Optional, list of quality gate rules
-max_iterations: 3                   # Optional, max LOOP iterations
 ---
 
 # Skill Title
 
+## When to use
+- Scenario 1
+- Scenario 2
+[Replaces the former `triggers` frontmatter field]
+
 ## Iron Rules / Core Principles
 [Non-negotiable rules, placed at the top to avoid lost-in-the-middle]
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+[Files this skill depends on; auto-fetched by the Agent at runtime. Replaces the former `reads` field]
+
+## Outputs
+- loops/specs/<feature>/state.yaml
+[Files this skill produces; helps the Agent understand side effects. Replaces the former `writes` field]
 
 ## Process
 1. Step 1
 2. Step 2
 3. Step 3
+
+## Quality gates
+- [Quality gate rule 1]
+- [Quality gate rule 2]
+[Replaces the former `quality_gates` field. If this skill runs inside a LOOP, the iteration cap follows the LOOP.md default; the former `max_iterations` field is no longer used]
 
 ## Prohibited
 - Do not do X

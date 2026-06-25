@@ -1,21 +1,21 @@
 ---
 name: kpi-tree
 description: Break down the North Star Metric into a KPI Tree, producing experimentable input metrics
-triggers:
-  - When the NSM is defined and needs to be broken down
-  - Growth strategy formulation Workflow
-  - User asks to "break down metrics"
-reads:
-  - docs/operations/GROWTH_STRATEGY.md
-  - docs/handoff/pm-to-growth.md
-writes:
-  - docs/operations/GROWTH_STRATEGY.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 2
 ---
-
 # KPI Tree — Metric Breakdown
+
+## When to use
+- When the NSM is defined and needs to be broken down
+- Growth strategy formulation Workflow
+- User asks to "break down metrics
+
+## Inputs
+- docs/operations/GROWTH_STRATEGY.md
+- docs/handoff/pm-to-growth.md
+
+## Outputs
+- docs/operations/GROWTH_STRATEGY.md
+- memory/knowledge-base.md
 
 ## Iron Rules
 - Each layer's metrics must be **experimentable**

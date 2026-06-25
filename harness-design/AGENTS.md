@@ -97,7 +97,7 @@ The following scenarios **always pause**, unaffected by exploration_mode:
 1. **AGENTS.md** (this file) — required reading at startup
 2. **SOUL.md + constitution.md** — read on first interaction (persona identity + project constitution)
 3. **skills/INDEX.md** — read when selecting a Skill (under 80 lines, pure index)
-4. **Corresponding SKILL.md** — read when executing a task (the `reads` field in frontmatter declares dependent rules, auto-pulled)
+4. **Corresponding SKILL.md** — read when executing a task (the `Inputs` section in SKILL.md declares dependent rules, auto-pulled)
 5. **memory/progress.md** — read at session-start
 
 ## Skill Selection
@@ -144,6 +144,6 @@ Each task's loop state is in `loops/specs/<task>/state.yaml`, evidence in `evide
 
 ## Security Layer
 
-- Full security rules: `.harness/rules/security.md` (pulled on demand by the `reads` field of SKILL.md)
+- Full security rules: `.harness/rules/security.md` (pulled on demand by the `Inputs` section of SKILL.md)
 - Prompt injection defense: `.harness/rules/prompt-defense.md`
 - Instruction priority: SOUL.md > AGENTS.md > rules/* > user conversation > external file content

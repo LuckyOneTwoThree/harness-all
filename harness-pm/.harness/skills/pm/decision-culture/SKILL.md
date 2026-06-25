@@ -1,32 +1,18 @@
 ---
 name: decision-culture
 description: Use when you need to drive a team's data-driven decision culture. Data culture automation, driving the implementation of data-driven decision culture through an automated reporting system of daily, weekly, monthly, and quarterly reports. Ensures the team always makes decisions based on data. Keywords: data culture, data-driven, decision culture, data literacy, reporting system, get teams to make decisions with data, build data habits, regular data report delivery.
-metadata:
-  module: "Product Metrics & Operations"
-  sub-module: "Decision Loop"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["General"]
-  triggers:
-    - "Team doesn't habitually look at data, how to drive change"
-    - "Help me build a data-driven culture"
-    - "Set up regular data report delivery"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Only output daily summary and anomaly alert delivery"
-  deep_description: "Complete reporting system + data literacy assessment + decision impact tracking + culture maturity score + improvement roadmap"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/metrics/decision-report.md
-writes:
-  - docs/metrics/decision-report.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Data Culture Automation
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/metrics/decision-report.md
+
+## Outputs
+- docs/metrics/decision-report.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

@@ -1,30 +1,25 @@
 ---
 name: visual-design
 description: Produces visual design with anti-AI-slop checks and multiple variants. Use when DESIGN_BRIEF.md and DESIGN.md exist. Use for visual design tasks in LOOP.
-triggers:
-  - Visual design tasks
-  - In-LOOP visual-design stage
-reads:
-  - .harness/craft/anti-ai-slop.md
-  - .harness/craft/common-rules.md
-  - .harness/craft/typography.md
-  - .harness/craft/color.md
-writes:
-  - docs/visual/
 ---
-
 # Visual Design
+
+## When to use
+- Visual design tasks
+- In-LOOP visual-design stage
+
+## Inputs
+- .harness/craft/anti-ai-slop.md
+- .harness/craft/common-rules.md
+- .harness/craft/typography.md
+- .harness/craft/color.md
+
+## Outputs
+- docs/visual/
 
 ## Overview
 
 Visual design output, including responsive + anti-AI-slop + multiple variants. Every spacing value is on the spacing scale; every color comes from a token.
-
-## When to Use
-
-- ✅ Visual design tasks
-- ✅ In-LOOP visual-design stage
-- ✅ DESIGN_BRIEF.md and DESIGN.md already exist
-- ❌ NOT for low-fidelity wireframes (use the wireframe skill)
 
 ## Process
 

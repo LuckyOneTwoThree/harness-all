@@ -1,32 +1,18 @@
 ---
 name: competitor-monitoring-report
 description: Used when summarizing competitor tracking data into a complete, deliverable monitoring report. Auto-generates competitor monitoring reports including competitor dynamics summary, feature change tracking, market strategy changes, threat assessment, and response recommendations. Keywords: competitor monitoring report, competitor dynamics, feature tracking, threat assessment, competitor response, competitor report, what are competitors doing.
-metadata:
-  module: "Product Monitoring & Iteration"
-  sub-module: "Issue Diagnosis"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "SaaS", "General"]
-  triggers:
-    - "What new moves have competitors made recently"
-    - "Help me generate a competitor monitoring report"
-    - "What features did competitors update"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output competitor dynamics summary and threat level"
-  deep_description: "Full report + competitor trend forecast + strategic impact reasoning + response strategy roadmap"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/discovery/market-analysis.md
-  - docs/monitoring/diagnosis-report.md
-writes:
-  - docs/monitoring/diagnosis-report.md
-  - memory/progress.md
 ---
-
 # Competitor Monitoring Report Generation
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/discovery/market-analysis.md
+- docs/monitoring/diagnosis-report.md
+
+## Outputs
+- docs/monitoring/diagnosis-report.md
+- memory/progress.md
 
 ## Core Principle
 

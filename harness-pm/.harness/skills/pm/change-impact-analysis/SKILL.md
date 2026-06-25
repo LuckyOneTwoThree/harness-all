@@ -1,32 +1,18 @@
 ---
 name: change-impact-analysis
 description: Used when analyzing the impact scope of PRD changes, design changes, or requirement changes. Automated change impact analysis, analyzing the impact of requirement changes on functionality, IA, user flows, prototypes, interaction specifications, and other dimensions, generating a change impact report and re-review recommendations. Keywords: change impact, requirement change, impact analysis, change review, PRD change.
-metadata:
-  module: "Product Ideation & Design"
-  sub-module: "Design Review"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "General"]
-  triggers:
-    - "Requirements changed, check the impact scope"
-    - "Analyze which modules this change will affect"
-    - "Requirements changed, help me evaluate the impact"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Execute change classification (L1-L4) and functional impact analysis, output change level and re-review necessity judgment"
-  deep_description: "Additionally includes prototype/interaction specification two-dimension impact analysis, version linkage update recommendations, design specification consistency assessment, design redo list"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/product/PRD.md
-writes:
-  - docs/product/PRD.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Requirement Change Impact Analysis Automation
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/product/PRD.md
+
+## Outputs
+- docs/product/PRD.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

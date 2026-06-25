@@ -1,29 +1,25 @@
 ---
 name: diagnosis-orchestrator
 description: Used when diagnosing product health or tracking competitor dynamics. Intelligent diagnosis orchestrator dispatching diagnosis-health, diagnosis-competition, competitor-monitoring-report, and product-sunset-plan sub-skills. Keywords: intelligent diagnosis, health score, competitor tracking, issue attribution, MTTR, competitor monitoring, product sunset, product diagnosis, issue troubleshooting.
-metadata:
-  module: "Product Monitoring & Iteration"
-  sub-module: "Issue Diagnosis"
-  type: "orchestrator"
-  version: "10.0"
-  domain_tags: ["General"]
-  triggers:
-    - "Diagnose product health"
-    - "Track competitor dynamics"
-    - "Troubleshoot product issues"
-    - "Evaluate whether to sunset a product"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/monitoring/diagnosis-report.md
-  - docs/monitoring/product-sunset-plan.md
-writes:
-  - output/phase-reports/diagnosis-orchestrator.json
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Intelligent Diagnosis Orchestrator
+
+## When to use
+- Diagnose product health
+- Track competitor dynamics
+- Troubleshoot product issues
+- Evaluate whether to sunset a product
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/monitoring/diagnosis-report.md
+- docs/monitoring/product-sunset-plan.md
+
+## Outputs
+- output/phase-reports/diagnosis-orchestrator.json
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principle
 

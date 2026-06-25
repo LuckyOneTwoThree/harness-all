@@ -1,34 +1,12 @@
 ---
 name: market-competitor-analysis
 description: Used when comprehensive competitive analysis, competitive research, or competitive positioning judgment is needed. Integrates competitor intelligence collection, four-quadrant positioning, and competitor reports. Keywords: competitive analysis, competitive research, competitor intelligence, four-quadrant, competitors.
-metadata:
-  module: "Product Discovery"
-  sub-module: "Market & Competition"
-  type: "pipeline"
-  version: "3.0"
-  domain_tags: ["Internet", "Consumer", "General"]
-  triggers:
-    - "Help me do competitive analysis"
-    - "How to do competitive research"
-    - "Help me map the competitive landscape"
-    - "Produce a competitive analysis report"
-    - "What new moves have competitors made recently"
-    - "Which are direct competitors, which are indirect"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Generate four-quadrant competitor classification and core competitor profiles, including executive summary and Top 1 strategy recommendation"
-  deep_description: "Additionally includes Feature Matrix comparison, user reputation cross-comparison, pricing strategy comparison, competitive moat assessment, market share estimation, inter-quadrant flow tracking"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/discovery/market-analysis.md
-writes:
-  - docs/discovery/market-analysis.md
-  - memory/progress.md
 ---
-
 # Comprehensive Competitive Analysis
+
+## Outputs
+- docs/discovery/market-analysis.md
+- memory/progress.md
 
 ## Core Principles
 

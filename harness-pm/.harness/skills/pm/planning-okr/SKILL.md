@@ -1,33 +1,14 @@
 ---
 name: planning-okr
 description: Use when you need to set quarterly/annual OKRs, decompose objectives, or define performance assessment criteria. OKR auto-generation. Generate Objectives and Key Results from strategic direction, including Objective generation, Key Results design, feasibility assessment, and OKR alignment check. Keywords: OKR, objective management, Key Results, objective decomposition, OKR alignment, setting objectives, breaking down objectives.
-metadata:
-  module: "Product Business & Strategy"
-  sub-module: "Strategic Planning & Roadmap"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["General"]
-  triggers:
-    - "Help me set quarterly OKRs"
-    - "How to break down objectives"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output OKRs and Key Results"
-  deep_description: "Full OKR + alignment validation + progress tracking mechanism + quarterly retrospective template"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/strategy/PRODUCT_STRATEGY.md
-  - docs/strategy/business-strategy.md
-writes:
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - docs/strategy/OKR.md
-  - okr.json
 ---
-
 # OKR Auto-Generation
+
+## Outputs
+- memory/progress.md
+- memory/knowledge-base.md
+- docs/strategy/OKR.md
+- okr.json
 
 ## Core Principles
 

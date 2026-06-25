@@ -1,27 +1,27 @@
 ---
 name: dashboard-design
 description: Grafana Dashboard generation and optimization, designing visualization panels by service / tier / role
-triggers:
-  - When a Grafana Dashboard needs to be generated
-  - When designing visualization after monitoring-setup deployment
-  - When a Dashboard needs optimization
-  - When the user requests "make a monitoring panel"
-  - When a new service goes live and needs a Dashboard
-reads:
-  - docs/infrastructure/OPS_STRATEGY.md
-  - rules/security.md
-  - loops/LOOP.md
-  - memory/knowledge-base.md
-writes:
-  - docs/monitoring/
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 2
 operation_tier: propose
 requires_approval: false
 ---
-
 # Dashboard Design — Grafana Dashboard Generation
+
+## When to use
+- When a Grafana Dashboard needs to be generated
+- When designing visualization after monitoring-setup deployment
+- When a Dashboard needs optimization
+- When the user requests "make a monitoring panel
+- When a new service goes live and needs a Dashboard
+
+## Inputs
+- docs/infrastructure/OPS_STRATEGY.md
+- rules/security.md
+- loops/LOOP.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/monitoring/
+- memory/knowledge-base.md
 
 ## Ground Rules
 

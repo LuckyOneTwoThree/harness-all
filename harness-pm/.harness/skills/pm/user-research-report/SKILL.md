@@ -1,31 +1,12 @@
 ---
 name: user-research-report
 description: Used when a complete user research report is needed. Auto-generates a user research report by integrating user voice analysis, behavior analysis, user modeling, and interview data, supplemented with research methodology notes and actionable recommendations, and outputs a structured Markdown report. Keywords: user research report, user study report, user insight report, research report, user analysis report, study report, user analysis, generate report.
-metadata:
-  module: "Product Discovery"
-  sub-module: "User Research"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["General"]
-  triggers:
-    - "Help me generate a user research report"
-    - "How to organize the user research findings"
-    - "Produce a user analysis report"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output research conclusions and recommendations"
-  deep_description: "Full report + research methodology reflection + in-depth insight analysis + action recommendation roadmap"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/discovery/user-research.md
-writes:
-  - docs/discovery/user-research.md
-  - memory/progress.md
 ---
-
 # User Research Report Auto-Generation
+
+## Outputs
+- docs/discovery/user-research.md
+- memory/progress.md
 
 ## Core Principles
 

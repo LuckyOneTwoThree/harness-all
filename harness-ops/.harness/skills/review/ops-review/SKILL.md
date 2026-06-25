@@ -1,29 +1,29 @@
 ---
 name: ops-review
 description: Ops review report, aggregating SLA/incidents/deployments/costs, producing the ops-to-pm.md handoff document
-triggers:
-  - During weekly/monthly/quarterly reviews
-  - When session-end detects closed incidents
-  - When the user requests "summarize ops progress"
-  - When ops-to-pm.md needs to be produced
-  - When ops-review-workflow triggers
-reads:
-  - memory/knowledge-base.md
-  - memory/progress.md
-  - loops/specs/*/state.yaml
-  - loops/specs/*/evidence.md
-  - FEATURES.md
-  - docs/handoff/ops-to-pm-template.md
-writes:
-  - docs/handoff/ops-to-pm.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 1
 operation_tier: inspect
 requires_approval: false
 ---
-
 # Ops Review — Ops Review Report
+
+## When to use
+- During weekly/monthly/quarterly reviews
+- When session-end detects closed incidents
+- When the user requests "summarize ops progress
+- When ops-to-pm.md needs to be produced
+- When ops-review-workflow triggers
+
+## Inputs
+- memory/knowledge-base.md
+- memory/progress.md
+- loops/specs/*/state.yaml
+- loops/specs/*/evidence.md
+- FEATURES.md
+- docs/handoff/ops-to-pm-template.md
+
+## Outputs
+- docs/handoff/ops-to-pm.md
+- memory/knowledge-base.md
 
 ## Ground Rules
 

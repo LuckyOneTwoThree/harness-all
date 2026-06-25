@@ -1,21 +1,21 @@
 ---
 name: aha-moment-identification
 description: Aha Moment identification and validation, finding core actions through behavior-retention correlation analysis
-triggers:
-  - When it's unclear what the user aha moment is
-  - User operations Workflow
-  - User asks to "find the aha moment"
-reads:
-  - docs/handoff/solo-to-growth.md
-  - memory/knowledge-base.md
-writes:
-  - docs/operations/aha-moment.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 2
 ---
-
 # Aha Moment Identification — Aha Moment Identification
+
+## When to use
+- When it's unclear what the user aha moment is
+- User operations Workflow
+- User asks to "find the aha moment
+
+## Inputs
+- docs/handoff/solo-to-growth.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/operations/aha-moment.md
+- memory/knowledge-base.md
 
 ## Iron Rules
 - Aha moment must be **validated with data**, not "I think users will like this"

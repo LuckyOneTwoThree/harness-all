@@ -1,31 +1,26 @@
 ---
 name: design-brief
 description: Guides agents through design requirement discovery. Use when starting a new design task or when requirements are unclear. Use when no DESIGN_BRIEF.md exists.
-triggers:
-  - New design task starting
-  - Requirements unclear
-  - No DESIGN_BRIEF.md
-reads:
-  - .harness/rules/security.md
-  - .harness/data/design/vibes.csv
-  - .harness/craft/anti-ai-slop.md
-  - docs/handoff/pm-to-design.md
-writes:
-  - docs/visual/DESIGN_BRIEF.md
 ---
-
 # Design Brief
+
+## When to use
+- New design task starting
+- Requirements unclear
+- No DESIGN_BRIEF.md
+
+## Inputs
+- .harness/rules/security.md
+- .harness/data/design/vibes.csv
+- .harness/craft/anti-ai-slop.md
+- docs/handoff/pm-to-design.md
+
+## Outputs
+- docs/visual/DESIGN_BRIEF.md
 
 ## Overview
 
 The entry skill for design tasks; forces requirement clarification and produces DESIGN_BRIEF.md. A 15-minute brief prevents hours of rework.
-
-## When to Use
-
-- ✅ New design task starting
-- ✅ Requirements unclear or ambiguous
-- ✅ No DESIGN_BRIEF.md
-- ❌ NOT for cases where DESIGN_BRIEF.md already exists and requirements are unchanged
 
 ## Process
 

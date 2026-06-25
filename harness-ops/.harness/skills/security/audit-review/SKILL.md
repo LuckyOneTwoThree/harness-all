@@ -1,27 +1,27 @@
 ---
 name: audit-review
 description: Audit log analysis, K8s audit log / Git history / operation record review to identify anomalous behavior
-triggers:
-  - During periodic security audits
-  - When a security incident is suspected
-  - During compliance checks
-  - When the user requests "review operation records"
-  - When security-audit-workflow triggers
-reads:
-  - docs/infrastructure/OPS_STRATEGY.md
-  - rules/security.md
-  - loops/LOOP.md
-  - memory/knowledge-base.md
-writes:
-  - loops/specs/<task-name>/evidence.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 1
 operation_tier: inspect
 requires_approval: false
 ---
-
 # Audit Review — Audit Log Analysis
+
+## When to use
+- During periodic security audits
+- When a security incident is suspected
+- During compliance checks
+- When the user requests "review operation records
+- When security-audit-workflow triggers
+
+## Inputs
+- docs/infrastructure/OPS_STRATEGY.md
+- rules/security.md
+- loops/LOOP.md
+- memory/knowledge-base.md
+
+## Outputs
+- loops/specs/<task-name>/evidence.md
+- memory/knowledge-base.md
 
 ## Ground Rules
 

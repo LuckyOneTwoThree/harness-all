@@ -1,34 +1,20 @@
 ---
 name: activation-aha
 description: Use when you need to identify and engineer Aha Moments. Aha Moment Auto-Engineering Pipeline analyzes retention data and behavior data to automatically identify Aha Moment candidates, measure reach rates, identify the shortest path, and output Onboarding optimization recommendations. Keywords: Aha Moment, activation moment, user activation, reach rate, Onboarding optimization, when users feel the product is good, experience core value, where is the delight.
-metadata:
-  module: "Product Growth & Operations"
-  sub-module: "Activation"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "SaaS", "General"]
-  triggers:
-    - "When do users feel the product is good to use"
-    - "How to find the aha moment"
-    - "How long for new users to experience core value"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output Aha moment and activation path"
-  deep_description: "Complete strategy + Aha moment quantitative validation + activation path optimization + activation funnel deep analysis"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/metrics/data-analysis-report.md
-writes:
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - docs/growth/growth-strategy.md
-  - output/metrics/aha-moment.json
-  - aha_moment.json
 ---
-
 # Aha Moment Auto-Engineering
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/metrics/data-analysis-report.md
+
+## Outputs
+- memory/progress.md
+- memory/knowledge-base.md
+- docs/growth/growth-strategy.md
+- output/metrics/aha-moment.json
+- aha_moment.json
 
 ## Core Principles
 

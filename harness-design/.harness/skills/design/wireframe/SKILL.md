@@ -1,30 +1,25 @@
 ---
 name: wireframe
 description: Produces low-fidelity wireframes for structure validation. Use before visual design. Use for prototype tasks in LOOP.
-triggers:
-  - Wireframe tasks
-  - In-LOOP wireframe stage
-  - Need to validate structure before visual design
-reads:
-  - docs/visual/DESIGN_BRIEF.md
-  - .harness/data/design/landing.csv
-  - docs/design-system/DESIGN.md
-writes:
-  - docs/prototype/wireframe.md
 ---
-
 # Wireframe
+
+## When to use
+- Wireframe tasks
+- In-LOOP wireframe stage
+- Need to validate structure before visual design
+
+## Inputs
+- docs/visual/DESIGN_BRIEF.md
+- .harness/data/design/landing.csv
+- docs/design-system/DESIGN.md
+
+## Outputs
+- docs/prototype/wireframe.md
 
 ## Overview
 
 Low-fidelity wireframes for fast structure validation. Black, white, and gray only; no visual treatment. Structure first, visuals second—avoid doing visual design on the wrong structure.
-
-## When to Use
-
-- ✅ Wireframe tasks
-- ✅ In-LOOP wireframe stage
-- ✅ Need to validate structure before visual design
-- ❌ NOT for high-fidelity visual design (use the visual-design skill)
 
 ## Process
 

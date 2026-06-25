@@ -1,20 +1,22 @@
 ---
 name: requesting-code-review
 description: Code Review — quality gatekeeping; review after completion, not while writing
-triggers:
-  - After verify passes
-  - Before a task is claimed complete
-  - Before merging a branch
-reads:
-  - rules/security.md
-  - constitution.md
-  - loops/specs/<feature>/spec.md
-  - loops/specs/<feature>/evidence.md
-writes:
-  - loops/specs/<feature>/iterations.log
 ---
-
 # Requesting Code Review — Code Review
+
+## When to use
+- After verify passes
+- Before a task is claimed complete
+- Before merging a branch
+
+## Inputs
+- rules/security.md
+- constitution.md
+- loops/specs/<feature>/spec.md
+- loops/specs/<feature>/evidence.md
+
+## Outputs
+- loops/specs/<feature>/iterations.log
 
 ## Iron Rule
 **Passing verify does not mean deliverable.** Tests passing only means "the feature works"; review means "the code is good".

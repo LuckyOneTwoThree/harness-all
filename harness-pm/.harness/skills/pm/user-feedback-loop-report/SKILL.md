@@ -1,31 +1,17 @@
 ---
 name: user-feedback-loop-report
 description: Used when summarizing user feedback handling into a complete, deliverable closed-loop report. Auto-generates user feedback loop reports including feedback source analysis, processing progress tracking, closure rate statistics, unresolved issues, and improvement suggestions. Keywords: user feedback loop, feedback report, feedback tracking, closure rate, VOC loop, feedback handling, is feedback handled, user opinions.
-metadata:
-  module: "Product Monitoring & Iteration"
-  sub-module: "Monitoring & Alerting"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "SaaS", "General"]
-  triggers:
-    - "How is user feedback handling going"
-    - "Help me generate a feedback loop report"
-    - "How is the feedback closure rate"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output closure rate and P0 unresolved list"
-  deep_description: "Full report + feedback trend forecast + root cause deep analysis + improvement roadmap"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-writes:
-  - docs/monitoring/feedback-loop.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # User Feedback Loop Report Generation
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+
+## Outputs
+- docs/monitoring/feedback-loop.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principle
 

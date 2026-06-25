@@ -1,21 +1,21 @@
 ---
 name: experiment-design
 description: Design experiment plans, including variables / control / primary metric / guardrail metrics / audience / split ratio
-triggers:
-  - When hypotheses have been ICE-ranked and an experiment plan needs to be designed
-  - PLAN phase of the growth experiment Loop, after ice-scoring
-reads:
-  - loops/specs/<experiment>/spec.md
-  - loops/LOOP.md
-  - rules/security.md
-writes:
-  - loops/specs/<experiment>/spec.md
-  - loops/specs/<experiment>/state.yaml
-quality_gates: []
-max_iterations: 3
 ---
-
 # Experiment Design — Experiment Design
+
+## When to use
+- When hypotheses have been ICE-ranked and an experiment plan needs to be designed
+- PLAN phase of the growth experiment Loop, after ice-scoring
+
+## Inputs
+- loops/specs/<experiment>/spec.md
+- loops/LOOP.md
+- rules/security.md
+
+## Outputs
+- loops/specs/<experiment>/spec.md
+- loops/specs/<experiment>/state.yaml
 
 ## Iron Rules
 - Each experiment must have exactly one **primary metric** — multiple primary metrics lead to confused conclusions

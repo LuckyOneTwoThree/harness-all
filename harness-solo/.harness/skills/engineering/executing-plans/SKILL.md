@@ -1,21 +1,23 @@
 ---
 name: executing-plans
 description: Execute the spec.md produced by writing-plans, advancing through the task sequence with checkpoints
-triggers:
-  - After writing-plans completes
-  - When spec.md is ready and coding is about to start
-  - When the user says "start executing" / "go" / "let's go"
-reads:
-  - loops/LOOP.md
-  - loops/specs/<feature>/spec.md
-  - loops/specs/<feature>/state.yaml
-  - docs/engineering/TECH_STACK.md
-writes:
-  - loops/specs/<feature>/state.yaml
-  - loops/specs/<feature>/iterations.log
 ---
-
 # Executing Plans — Plan Execution
+
+## When to use
+- After writing-plans completes
+- When spec.md is ready and coding is about to start
+- When the user says "start executing" / "go" / "let's go
+
+## Inputs
+- loops/LOOP.md
+- loops/specs/<feature>/spec.md
+- loops/specs/<feature>/state.yaml
+- docs/engineering/TECH_STACK.md
+
+## Outputs
+- loops/specs/<feature>/state.yaml
+- loops/specs/<feature>/iterations.log
 
 ## Iron Rule
 **Advance through the task sequence in spec.md; a checkpoint is mandatory after each task.** Do not skip tasks; do not batch changes across multiple tasks before verifying.

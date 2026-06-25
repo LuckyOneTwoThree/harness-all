@@ -1,28 +1,28 @@
 ---
 name: alerting-rules
 description: Alerting rule generation and tuning, defining alert thresholds based on SLOs to prevent alert storms
-triggers:
-  - When alerting rules need to be configured
-  - When alert storms need tuning
-  - When alerts need to be generated after SLO definition
-  - When configuring alerts after monitoring-setup deployment
-  - When the user requests "configure alerts"
-reads:
-  - docs/infrastructure/OPS_STRATEGY.md
-  - rules/security.md
-  - loops/LOOP.md
-  - memory/knowledge-base.md
-writes:
-  - docs/monitoring/
-  - loops/specs/<task-name>/spec.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 2
 operation_tier: propose
 requires_approval: false
 ---
-
 # Alerting Rules — Alerting Rule Generation and Tuning
+
+## When to use
+- When alerting rules need to be configured
+- When alert storms need tuning
+- When alerts need to be generated after SLO definition
+- When configuring alerts after monitoring-setup deployment
+- When the user requests "configure alerts
+
+## Inputs
+- docs/infrastructure/OPS_STRATEGY.md
+- rules/security.md
+- loops/LOOP.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/monitoring/
+- loops/specs/<task-name>/spec.md
+- memory/knowledge-base.md
 
 ## Ground Rules
 

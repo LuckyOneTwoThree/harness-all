@@ -1,21 +1,23 @@
 ---
 name: skill-maintenance
 description: Framework skill health check, detect empty directories, unregistered skills, missing frontmatter
-triggers:
-  - When the user says "check framework health" / "troubleshoot skill" / "skill index inconsistent"
-  - session-start optional invocation (report on anomalies)
-  - Validate consistency after adding/removing a skill
-reads:
-  - .harness/skills/INDEX.md
-  - .harness/templates/SKILL.md.template
-  - .harness/skills/pm/
-writes:
-  - .harness/skills/INDEX.md
-  - memory/knowledge-base.md
-  - memory/progress.md
 ---
-
 # Skill Maintenance — Skill Health Maintenance
+
+## When to use
+- When the user says "check framework health" / "troubleshoot skill" / "skill index inconsistent
+- session-start optional invocation (report on anomalies)
+- Validate consistency after adding/removing a skill
+
+## Inputs
+- .harness/skills/INDEX.md
+- .harness/templates/SKILL.md.template
+- .harness/skills/pm/
+
+## Outputs
+- .harness/skills/INDEX.md
+- memory/knowledge-base.md
+- memory/progress.md
 
 ## Core Principle
 **If you can't find a skill, it doesn't exist. If it's registered but has no SKILL.md, it's broken.**
@@ -68,7 +70,6 @@ Skills are the organs of the framework. This skill ensures all organs are in the
    For each SKILL.md check whether it contains:
    - `name:` and matches the directory name
    - `description:`
-   - `triggers:` or `metadata`
    - Missing any item → mark "frontmatter incomplete"
 
    For each workflow .md check whether it contains:

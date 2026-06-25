@@ -1,31 +1,31 @@
 ---
 name: infrastructure-as-code
 description: Terraform/Ansible IaC management, generating / planning / applying infrastructure code; plan can be auto-run, apply requires human confirmation
-triggers:
-  - When cloud resources need to be created/modified
-  - When terraform plan/apply needs to be executed
-  - During infrastructure drift detection
-  - When the user requests "configure a new environment"
-  - When infrastructure-setup-workflow triggers
-reads:
-  - docs/infrastructure/OPS_STRATEGY.md
-  - docs/infrastructure/
-  - rules/security.md
-  - loops/LOOP.md
-  - memory/knowledge-base.md
-writes:
-  - docs/infrastructure/
-  - loops/specs/<task-name>/spec.md
-  - loops/specs/<task-name>/state.yaml
-  - loops/specs/<task-name>/evidence.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 3
 operation_tier: propose
 requires_approval: true
 ---
-
 # Infrastructure as Code — Terraform/Ansible IaC Management
+
+## When to use
+- When cloud resources need to be created/modified
+- When terraform plan/apply needs to be executed
+- During infrastructure drift detection
+- When the user requests "configure a new environment
+- When infrastructure-setup-workflow triggers
+
+## Inputs
+- docs/infrastructure/OPS_STRATEGY.md
+- docs/infrastructure/
+- rules/security.md
+- loops/LOOP.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/infrastructure/
+- loops/specs/<task-name>/spec.md
+- loops/specs/<task-name>/state.yaml
+- loops/specs/<task-name>/evidence.md
+- memory/knowledge-base.md
 
 ## Ground Rules
 

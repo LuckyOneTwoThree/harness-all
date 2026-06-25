@@ -1,21 +1,21 @@
 ---
 name: keyword-research
 description: Keyword research, including seed word expansion / intent classification / difficulty assessment / priority ranking
-triggers:
-  - When SEO is needed but there's no keyword list
-  - PLAN phase of the SEO optimization Loop
-  - User asks to "research keywords"
-reads:
-  - memory/knowledge-base.md
-  - docs/handoff/pm-to-growth.md
-writes:
-  - docs/seo/keyword-research.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 2
 ---
-
 # Keyword Research — Keyword Research
+
+## When to use
+- When SEO is needed but there's no keyword list
+- PLAN phase of the SEO optimization Loop
+- User asks to "research keywords
+
+## Inputs
+- memory/knowledge-base.md
+- docs/handoff/pm-to-growth.md
+
+## Outputs
+- docs/seo/keyword-research.md
+- memory/knowledge-base.md
 
 ## Iron Rules
 - Keywords must be classified by **search intent** (informational / navigational / transactional); different intents map to different content forms

@@ -1,22 +1,24 @@
 ---
 name: receiving-code-review
 description: Receive and process code review feedback — triage + fix + reply
-triggers:
-  - After requesting-code-review returns an issue list
-  - When external code review feedback is received
-  - When the user points out code issues
-reads:
-  - rules/security.md
-  - loops/specs/<feature>/spec.md
-  - loops/specs/<feature>/evidence.md
-  - loops/specs/<feature>/iterations.log
-writes:
-  - loops/specs/<feature>/state.yaml
-  - loops/specs/<feature>/iterations.log
-  - loops/specs/<feature>/evidence.md
 ---
-
 # Receiving Code Review — Handling Review Feedback
+
+## When to use
+- After requesting-code-review returns an issue list
+- When external code review feedback is received
+- When the user points out code issues
+
+## Inputs
+- rules/security.md
+- loops/specs/<feature>/spec.md
+- loops/specs/<feature>/evidence.md
+- loops/specs/<feature>/iterations.log
+
+## Outputs
+- loops/specs/<feature>/state.yaml
+- loops/specs/<feature>/iterations.log
+- loops/specs/<feature>/evidence.md
 
 ## Iron Rule
 **Every piece of feedback must receive a response; none may be ignored.** Responding ≠ accepting, but you must clearly state "fix / won't fix / discuss".

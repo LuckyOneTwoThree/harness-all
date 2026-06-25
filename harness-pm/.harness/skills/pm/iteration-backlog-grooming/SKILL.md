@@ -1,34 +1,13 @@
 ---
 name: iteration-backlog-grooming
 description: Used when grooming and prioritizing the product Backlog. Backlog grooming tool responsible for issue priority assessment, technical debt impact analysis, and restructuring recommendations. Keywords: Backlog grooming, priority assessment, technical debt, requirement restructuring.
-metadata:
-  module: "Product Monitoring & Iteration"
-  sub-module: "Iteration Optimization"
-  type: "pipeline"
-  version: "2.0"
-  domain_tags: ["Internet", "Software", "General"]
-  triggers:
-    - "The requirement pool is messy, how to organize it"
-    - "How to prioritize the backlog"
-    - "Too many requirements, which to do first"
-    - "Need to insert a requirement, how to reorder"
-    - "How to re-prioritize"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Only output Backlog priority sorting suggestions"
-  deep_description: "Full grooming + technical debt impact analysis + dependency analysis + restructuring recommendations"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/monitoring/monitoring-config.md
-writes:
-  - docs/monitoring/iteration-plan.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Backlog Grooming & Priority Assessment 🤖
+
+## Outputs
+- docs/monitoring/iteration-plan.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

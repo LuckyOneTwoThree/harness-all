@@ -1,31 +1,27 @@
 ---
 name: iteration-orchestrator
 description: Used when planning iteration cycles or adjusting product priorities. Iteration Decision Commander that dispatches iteration-backlog-grooming and iteration-retrospective sub-skills. Keywords: iteration decision, Backlog optimization, priority adjustment, iteration retrospective, iteration planning, requirement restructuring, RICE scoring, iteration management. This orchestrator dispatches 2 sub-skills, responsible for Backlog grooming and iteration retrospective respectively.
-metadata:
-  module: "Product Monitoring & Iteration"
-  sub-module: "Iteration Optimization"
-  type: "orchestrator"
-  version: "11.0"
-  domain_tags: ["General"]
-  triggers:
-    - "Plan the next iteration"
-    - "Adjust priorities"
-    - "Optimize the Backlog"
-    - "Run an iteration retrospective"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/monitoring/iteration-plan.md
-  - docs/monitoring/iteration-retrospective.md
-  - docs/handoff/growth-to-pm.md
-  - docs/handoff/ops-to-pm.md
-writes:
-  - output/phase-reports/iteration-orchestrator.json
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Iteration Decision Commander
+
+## When to use
+- Plan the next iteration
+- Adjust priorities
+- Optimize the Backlog
+- Run an iteration retrospective
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/monitoring/iteration-plan.md
+- docs/monitoring/iteration-retrospective.md
+- docs/handoff/growth-to-pm.md
+- docs/handoff/ops-to-pm.md
+
+## Outputs
+- output/phase-reports/iteration-orchestrator.json
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

@@ -1,24 +1,24 @@
 ---
 name: content-review
 description: Content review and fact-checking, an independent Reviewer mode from creation, checking compliance / facts / brand / SEO
-triggers:
-  - After content-creation produces a draft
-  - Quality gate before content publishing
-  - User asks to "review this content"
-reads:
-  - docs/content/drafts/
-  - rules/security.md
-  - SOUL.md
-  - constitution.md
-writes:
-  - docs/content/drafts/<content-id>.review.md
-  - loops/specs/<content>/state.yaml
-  - loops/specs/<content>/iterations.log
-quality_gates: []
-max_iterations: 2
 ---
-
 # Content Review — Content Review
+
+## When to use
+- After content-creation produces a draft
+- Quality gate before content publishing
+- User asks to "review this content
+
+## Inputs
+- docs/content/drafts/
+- rules/security.md
+- SOUL.md
+- constitution.md
+
+## Outputs
+- docs/content/drafts/<content-id>.review.md
+- loops/specs/<content>/state.yaml
+- loops/specs/<content>/iterations.log
 
 ## Iron Rules
 - This skill is an **independent reviewer**; it does not modify content, only produces review opinions

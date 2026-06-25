@@ -1,29 +1,29 @@
 ---
 name: gitops-sync
 description: ArgoCD/Flux GitOps sync management, monitoring sync status, detecting drift, and managing Application CRDs
-triggers:
-  - When deploying via GitOps
-  - When ArgoCD/Flux sync is abnormal
-  - When creating/modifying Application CRDs
-  - When configuration drift is detected
-  - After deployment-pipeline generates a GitOps PR
-reads:
-  - docs/infrastructure/OPS_STRATEGY.md
-  - rules/security.md
-  - loops/LOOP.md
-  - memory/knowledge-base.md
-writes:
-  - docs/infrastructure/
-  - loops/specs/<task-name>/state.yaml
-  - loops/specs/<task-name>/evidence.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 2
 operation_tier: inspect
 requires_approval: false
 ---
-
 # GitOps Sync — ArgoCD/Flux Sync Management
+
+## When to use
+- When deploying via GitOps
+- When ArgoCD/Flux sync is abnormal
+- When creating/modifying Application CRDs
+- When configuration drift is detected
+- After deployment-pipeline generates a GitOps PR
+
+## Inputs
+- docs/infrastructure/OPS_STRATEGY.md
+- rules/security.md
+- loops/LOOP.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/infrastructure/
+- loops/specs/<task-name>/state.yaml
+- loops/specs/<task-name>/evidence.md
+- memory/knowledge-base.md
 
 ## Ground Rules
 

@@ -1,36 +1,13 @@
 ---
 name: product-proposal
 description: Use when you need to write a product project initiation proposal. Product project initiation proposal auto-generation, integrating all prior analysis results to generate a structured product project initiation document. Keywords: project initiation, product proposal, initiation document, business plan, product planning document, project application, project proposal.
-metadata:
-  module: "Product Business & Strategy"
-  sub-module: "Product Project Initiation"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["SaaS", "General"]
-  triggers:
-    - "Help me write a product project initiation document"
-    - "How to write a product proposal"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output the product proposal and core arguments"
-  deep_description: "Full proposal + business feasibility analysis + technical feasibility assessment + risk and mitigation plan"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/strategy/business-strategy.md
-  - docs/strategy/PRODUCT_STRATEGY.md
-  - docs/strategy/OKR.md
-  - docs/strategy/roadmap.md
-  - docs/strategy/positioning.md
-  - docs/strategy/stakeholder-analysis.md
-writes:
-  - docs/strategy/PRODUCT_STRATEGY.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Product Project Initiation Proposal Auto-Generation
+
+## Outputs
+- docs/strategy/PRODUCT_STRATEGY.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

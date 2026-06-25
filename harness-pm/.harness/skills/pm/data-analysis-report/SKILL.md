@@ -1,34 +1,13 @@
 ---
 name: data-analysis-report
 description: Use when producing a complete data analysis report. Data Insight Report Auto-Generation integrates funnel analysis, retention analysis, anomaly detection, and decision insight data, supplements trend interpretation and action recommendations, and outputs a structured Markdown report. Keywords: data analysis report, data insight report, operations report, data report, analysis report, produce a data report, help write operations analysis, summarize data situation.
-metadata:
-  module: "Product Metrics Operations"
-  sub-module: "Data Analysis"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["General"]
-  triggers:
-    - "Help me produce this month's data analysis report"
-    - "Summarize the recent data situation"
-    - "Generate an operations weekly report"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output data insights and key findings"
-  deep_description: "Full report + multi-dimensional cross-analysis + prediction model + decision recommendation roadmap"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/metrics/data-analysis-report.md
-  - docs/metrics/decision-report.md
-  - docs/metrics/metrics-system.md
-writes:
-  - docs/metrics/data-analysis-report.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Data Insight Report Auto-Generation
+
+## Outputs
+- docs/metrics/data-analysis-report.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

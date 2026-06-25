@@ -1,6 +1,6 @@
 # security.md — Security Red Lines
 
-> Security rules referenced across all Skills. The `reads` field in SKILL.md fetches this file on demand.
+> Security rules referenced across all Skills. The `Inputs` section in SKILL.md fetches this file on demand.
 > AGENTS.md has only a summary; this is the full rule set.
 
 ## Secret Management

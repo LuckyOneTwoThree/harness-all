@@ -1,31 +1,13 @@
 ---
 name: analysis-funnel
 description: Use when analyzing user conversion paths. Funnel Auto-Analysis, AI automatically executes full funnel calculation, multi-dimensional drill-down, drop-off node identification, and trend analysis. Keywords: funnel analysis, conversion analysis, drop-off node, conversion rate, user path, where users drop off, conversion too low, users can't complete the flow.
-metadata:
-  module: "Product Metrics Operations"
-  sub-module: "Data Analysis"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["E-commerce", "Internet", "General"]
-  triggers:
-    - "Registration flow conversion rate is too low, help me analyze"
-    - "At which step do users drop off the most"
-    - "Take a look at the payment conversion funnel"
-  interaction_mode: "ai_auto"
-execution_depth:
-  default: standard
-  quick_description: "Directly output funnel analysis and conversion bottlenecks"
-  deep_description: "Full analysis + funnel segment breakdown + conversion optimization simulation + multi-dimensional attribution analysis"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-writes:
-  - docs/metrics/data-analysis-report.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Funnel Auto-Analysis
+
+## Outputs
+- docs/metrics/data-analysis-report.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

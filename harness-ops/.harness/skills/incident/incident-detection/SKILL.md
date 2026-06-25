@@ -1,30 +1,30 @@
 ---
 name: incident-detection
 description: Incident detection and classification, receiving alerts/user feedback, classifying incident severity, and triggering the emergency response process
-triggers:
-  - When a Prometheus/Alertmanager alert is received
-  - When a user reports "production incident" or "service anomaly"
-  - When monitoring metrics fluctuate abnormally
-  - When error rate / latency suddenly spikes
-  - When session-start detects an in-progress incident LOOP
-reads:
-  - docs/infrastructure/OPS_STRATEGY.md
-  - rules/security.md
-  - loops/LOOP.md
-  - memory/knowledge-base.md
-  - loops/specs/*/state.yaml
-writes:
-  - loops/specs/<incident-id>/spec.md
-  - loops/specs/<incident-id>/state.yaml
-  - docs/incident/
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 1
 operation_tier: inspect
 requires_approval: false
 ---
-
 # Incident Detection — Incident Detection and Classification
+
+## When to use
+- When a Prometheus/Alertmanager alert is received
+- When a user reports "production incident" or "service anomaly
+- When monitoring metrics fluctuate abnormally
+- When error rate / latency suddenly spikes
+- When session-start detects an in-progress incident LOOP
+
+## Inputs
+- docs/infrastructure/OPS_STRATEGY.md
+- rules/security.md
+- loops/LOOP.md
+- memory/knowledge-base.md
+- loops/specs/*/state.yaml
+
+## Outputs
+- loops/specs/<incident-id>/spec.md
+- loops/specs/<incident-id>/state.yaml
+- docs/incident/
+- memory/knowledge-base.md
 
 ## Ground Rules
 

@@ -1,26 +1,26 @@
 ---
 name: growth-review
 description: Generate a growth review report (weekly / monthly / quarterly), summarizing metrics / experiments / insights, and produce a growth-to-pm handoff document
-triggers:
-  - During weekly / monthly / quarterly reviews
-  - When session-end detects completed experiments
-  - User asks to "summarize growth progress"
-  - When a growth-to-pm.md handoff document is needed
-reads:
-  - memory/knowledge-base.md
-  - memory/progress.md
-  - loops/specs/*/state.yaml
-  - loops/specs/*/evidence.md
-  - FEATURES.md
-  - docs/handoff/growth-to-pm-template.md
-writes:
-  - docs/handoff/growth-to-pm.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 1
 ---
-
 # Growth Review — Growth Review Report
+
+## When to use
+- During weekly / monthly / quarterly reviews
+- When session-end detects completed experiments
+- User asks to "summarize growth progress
+- When a growth-to-pm.md handoff document is needed
+
+## Inputs
+- memory/knowledge-base.md
+- memory/progress.md
+- loops/specs/*/state.yaml
+- loops/specs/*/evidence.md
+- FEATURES.md
+- docs/handoff/growth-to-pm-template.md
+
+## Outputs
+- docs/handoff/growth-to-pm.md
+- memory/knowledge-base.md
 
 ## Iron Rules
 - The report must be based on **actual data**, not "feels good"

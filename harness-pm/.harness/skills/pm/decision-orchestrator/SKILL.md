@@ -1,28 +1,24 @@
 ---
 name: decision-orchestrator
 description: Use when you need to transform data analysis results into decision actions. Data-driven decision commander, orchestrating decision-dace (DACE decision cycle + insight transformation) and decision-culture (data culture building), achieving a closed loop from data to decisions. Keywords: data decision, DACE cycle, data insights, decision framework, data culture, decision-dace, decision-culture, data-driven, decision support.
-metadata:
-  module: "Product Metrics & Operations"
-  sub-module: "Decision Loop"
-  type: "orchestrator"
-  version: "7.0"
-  domain_tags: ["General"]
-  triggers:
-    - "Make decisions based on data"
-    - "Build a data-driven decision mechanism"
-    - "Transform analysis results into actions"
-    - "Drive data culture building"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/metrics/decision-report.md
-writes:
-  - output/phase-reports/decision-orchestrator.json
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Data-driven Decision Commander
+
+## When to use
+- Make decisions based on data
+- Build a data-driven decision mechanism
+- Transform analysis results into actions
+- Drive data culture building
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/metrics/decision-report.md
+
+## Outputs
+- output/phase-reports/decision-orchestrator.json
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

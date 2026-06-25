@@ -1,20 +1,20 @@
 ---
 name: cohort-analysis
 description: Cohort analysis, including cohort retention matrix, horizontal/vertical comparison, and trend identification
-triggers:
-  - When retention needs to be analyzed
-  - Growth review report Workflow
-  - User asks to "run a Cohort analysis"
-reads:
-  - docs/handoff/solo-to-growth.md
-  - memory/knowledge-base.md
-writes:
-  - docs/operations/cohort-analysis.md
-quality_gates: []
-max_iterations: 1
 ---
-
 # Cohort Analysis — Cohort Analysis
+
+## When to use
+- When retention needs to be analyzed
+- Growth review report Workflow
+- User asks to "run a Cohort analysis
+
+## Inputs
+- docs/handoff/solo-to-growth.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/operations/cohort-analysis.md
 
 ## Iron Rules
 - Cohorts must be grouped by **sign-up time** — users who sign up at different times behave differently

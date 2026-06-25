@@ -1,24 +1,26 @@
 ---
 name: performance-optimization
 description: Performance Optimization — measure→identify→fix→verify→guard closed loop
-triggers:
-  - When the user reports a performance issue
-  - When performance benchmarks are not met
-  - During the optimize loop of LOOP
-  - When frontend Web Vitals metrics degrade
-reads:
-  - loops/LOOP.md
-  - rules/security.md
-  - constitution.md
-  - docs/product/PROJECT.md
-  - docs/engineering/TECH_STACK.md
-writes:
-  - loops/specs/<feature>/state.yaml
-  - loops/specs/<feature>/evidence.md
-  - loops/specs/<feature>/iterations.log
 ---
-
 # Performance Optimization — Performance Optimization
+
+## When to use
+- When the user reports a performance issue
+- When performance benchmarks are not met
+- During the optimize loop of LOOP
+- When frontend Web Vitals metrics degrade
+
+## Inputs
+- loops/LOOP.md
+- rules/security.md
+- constitution.md
+- docs/product/PROJECT.md
+- docs/engineering/TECH_STACK.md
+
+## Outputs
+- loops/specs/<feature>/state.yaml
+- loops/specs/<feature>/evidence.md
+- loops/specs/<feature>/iterations.log
 
 ## Iron Rule
 **Measure before optimize.** Optimization without profile data is guessing, and guessing leads to premature optimization — adding complexity without improving the real problem.

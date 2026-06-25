@@ -1,21 +1,21 @@
 ---
 name: pricing-strategy
 description: Pricing strategy recommendations, including value / cost / competitor perspectives + Van Westendorp price sensitivity
-triggers:
-  - When a new product needs pricing
-  - When existing pricing needs adjustment
-  - Monetization optimization Workflow
-  - User asks to "help us with pricing"
-reads:
-  - docs/handoff/pm-to-growth.md
-  - memory/knowledge-base.md
-writes:
-  - docs/operations/pricing-strategy.md
-quality_gates: []
-max_iterations: 2
 ---
-
 # Pricing Strategy — Pricing Strategy
+
+## When to use
+- When a new product needs pricing
+- When existing pricing needs adjustment
+- Monetization optimization Workflow
+- User asks to "help us with pricing
+
+## Inputs
+- docs/handoff/pm-to-growth.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/operations/pricing-strategy.md
 
 ## Iron Rules
 - Pricing must be **value-based**, not cost-plus

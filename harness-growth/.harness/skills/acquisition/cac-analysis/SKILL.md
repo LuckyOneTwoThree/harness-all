@@ -1,21 +1,21 @@
 ---
 name: cac-analysis
 description: CAC calculation and channel comparison, including LTV/CAC ratio and scaling inflation assessment
-triggers:
-  - When acquisition cost needs to be calculated
-  - Post-campaign performance evaluation
-  - Growth review reports
-  - User asks "calculate CAC"
-reads:
-  - memory/knowledge-base.md
-writes:
-  - docs/operations/cac-report.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 1
 ---
-
 # CAC Analysis — CAC Calculation and Analysis
+
+## When to use
+- When acquisition cost needs to be calculated
+- Post-campaign performance evaluation
+- Growth review reports
+- User asks "calculate CAC
+
+## Inputs
+- memory/knowledge-base.md
+
+## Outputs
+- docs/operations/cac-report.md
+- memory/knowledge-base.md
 
 ## Iron Rules
 - CAC must include **all acquisition costs** (ads + labor + tools), not just ad spend

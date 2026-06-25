@@ -1,32 +1,32 @@
 ---
 name: rollback
 description: Rollback operations and verification, supporting image revert, config revert, and database rollback to ensure fast business recovery
-triggers:
-  - When post-deployment health check fails
-  - When monitoring alerts indicate the new version is abnormal
-  - When the user requests "roll back to the previous version"
-  - When a canary release stage fails the health gate
-  - When incident-response triggers an emergency rollback
-reads:
-  - loops/specs/<task-name>/spec.md
-  - loops/specs/<task-name>/state.yaml
-  - docs/handoff/solo-to-ops.md
-  - rules/security.md
-  - loops/LOOP.md
-  - memory/knowledge-base.md
-writes:
-  - loops/specs/<task-name>/state.yaml
-  - loops/specs/<task-name>/evidence.md
-  - loops/specs/<task-name>/iterations.log
-  - docs/incident/
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 2
 operation_tier: mutate-staging
 requires_approval: true
 ---
-
 # Rollback — Rollback Operations and Verification
+
+## When to use
+- When post-deployment health check fails
+- When monitoring alerts indicate the new version is abnormal
+- When the user requests "roll back to the previous version
+- When a canary release stage fails the health gate
+- When incident-response triggers an emergency rollback
+
+## Inputs
+- loops/specs/<task-name>/spec.md
+- loops/specs/<task-name>/state.yaml
+- docs/handoff/solo-to-ops.md
+- rules/security.md
+- loops/LOOP.md
+- memory/knowledge-base.md
+
+## Outputs
+- loops/specs/<task-name>/state.yaml
+- loops/specs/<task-name>/evidence.md
+- loops/specs/<task-name>/iterations.log
+- docs/incident/
+- memory/knowledge-base.md
 
 ## Ground Rules
 

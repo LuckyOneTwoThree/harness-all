@@ -1,21 +1,21 @@
 ---
 name: paywall-optimization
 description: Paywall design and optimization, including timing / messaging / feature gating / A-B testing recommendations
-triggers:
-  - When paid conversion rate is low and needs optimization
-  - When a new product launches paid features
-  - Monetization optimization Workflow
-  - User asks to "optimize the paywall"
-reads:
-  - docs/operations/pricing-strategy.md
-  - memory/knowledge-base.md
-writes:
-  - docs/operations/paywall-spec.md
-quality_gates: []
-max_iterations: 2
 ---
-
 # Paywall Optimization — Paywall Optimization
+
+## When to use
+- When paid conversion rate is low and needs optimization
+- When a new product launches paid features
+- Monetization optimization Workflow
+- User asks to "optimize the paywall
+
+## Inputs
+- docs/operations/pricing-strategy.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/operations/paywall-spec.md
 
 ## Iron Rules
 - Paywall timing must come **after the user feels value** — showing it too early yields very low conversion

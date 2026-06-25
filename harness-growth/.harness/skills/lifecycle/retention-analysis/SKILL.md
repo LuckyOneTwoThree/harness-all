@@ -1,22 +1,22 @@
 ---
 name: retention-analysis
 description: Retention curve analysis, including Cohort matrix / natural cycle / plateau detection / RBM assessment
-triggers:
-  - When retention needs to be analyzed
-  - User operations Workflow
-  - Growth review report Workflow
-  - User asks to "analyze retention"
-reads:
-  - docs/handoff/solo-to-growth.md
-  - memory/knowledge-base.md
-writes:
-  - docs/operations/retention-analysis.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 1
 ---
-
 # Retention Analysis — Retention Curve Analysis
+
+## When to use
+- When retention needs to be analyzed
+- User operations Workflow
+- Growth review report Workflow
+- User asks to "analyze retention
+
+## Inputs
+- docs/handoff/solo-to-growth.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/operations/retention-analysis.md
+- memory/knowledge-base.md
 
 ## Iron Rules
 - Retention must use **Cohort analysis** — can't just look at total DAU/MAU

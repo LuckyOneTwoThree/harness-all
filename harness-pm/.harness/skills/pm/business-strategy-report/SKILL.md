@@ -1,35 +1,12 @@
 ---
 name: business-strategy-report
 description: Used when a complete business strategy planning document is needed. Auto-generates a business strategy planning report that integrates Business Model Canvas, SWOT, OKR, roadmap, positioning, and stakeholder data, supplements strategic reasoning and execution paths, and outputs a structured Markdown report. Keywords: business strategy report, strategic planning, business planning, strategy document, business analysis report, strategic planning document, business planning report.
-metadata:
-  module: "Product Business & Strategy"
-  sub-module: "Business Strategy"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["General"]
-  triggers:
-    - "Help me write a business strategy plan"
-    - "Produce a strategy report"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output strategic recommendations and priorities"
-  deep_description: "Complete report + strategic reasoning + competitive landscape analysis + execution roadmap"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/strategy/business-strategy.md
-  - docs/strategy/PRODUCT_STRATEGY.md
-  - docs/strategy/OKR.md
-  - docs/strategy/roadmap.md
-  - docs/strategy/positioning.md
-  - docs/strategy/stakeholder-analysis.md
-writes:
-  - docs/strategy/business-strategy.md
-  - memory/progress.md
 ---
-
 # Business Strategy Planning Report Auto-Generation
+
+## Outputs
+- docs/strategy/business-strategy.md
+- memory/progress.md
 
 ## Core Principles
 

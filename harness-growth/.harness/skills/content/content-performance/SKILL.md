@@ -1,25 +1,25 @@
 ---
 name: content-performance
 description: Analyze content performance (traffic/dwell/conversion/ROI), produce reuse recommendations, and feed back to the ideation stage
-triggers:
-  - When data is available after content is published
-  - MEASURE phase of the content marketing Loop
-  - User asks to "analyze content performance"
-reads:
-  - docs/handoff/solo-to-growth.md
-  - docs/content/published/
-  - memory/knowledge-base.md
-  - loops/specs/<content>/state.yaml
-writes:
-  - docs/content/performance-report.md
-  - memory/knowledge-base.md
-  - loops/specs/<content>/state.yaml
-  - loops/specs/<content>/iterations.log
-quality_gates: []
-max_iterations: 1
 ---
-
 # Content Performance — Content Performance Analysis
+
+## When to use
+- When data is available after content is published
+- MEASURE phase of the content marketing Loop
+- User asks to "analyze content performance
+
+## Inputs
+- docs/handoff/solo-to-growth.md
+- docs/content/published/
+- memory/knowledge-base.md
+- loops/specs/<content>/state.yaml
+
+## Outputs
+- docs/content/performance-report.md
+- memory/knowledge-base.md
+- loops/specs/<content>/state.yaml
+- loops/specs/<content>/iterations.log
 
 ## Iron Rules
 - Must analyze based on **actual data**, not "feels like it did well"

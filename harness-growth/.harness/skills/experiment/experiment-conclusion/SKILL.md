@@ -1,24 +1,24 @@
 ---
 name: experiment-conclusion
 description: Generate experiment conclusions and decision recommendations (full rollout / iterate / kill), and distill knowledge base entries
-triggers:
-  - After experiment data analysis is complete
-  - MEASURE phase of the growth experiment Loop, after experiment-analysis
-  - When an experiment retrospective report is needed
-reads:
-  - loops/specs/<experiment>/spec.md
-  - loops/specs/<experiment>/evidence.md
-  - memory/knowledge-base.md
-writes:
-  - loops/specs/<experiment>/evidence.md
-  - loops/specs/<experiment>/state.yaml
-  - memory/knowledge-base.md
-  - docs/handoff/growth-to-pm.md
-quality_gates: []
-max_iterations: 1
 ---
-
 # Experiment Conclusion — Experiment Conclusion and Distillation
+
+## When to use
+- After experiment data analysis is complete
+- MEASURE phase of the growth experiment Loop, after experiment-analysis
+- When an experiment retrospective report is needed
+
+## Inputs
+- loops/specs/<experiment>/spec.md
+- loops/specs/<experiment>/evidence.md
+- memory/knowledge-base.md
+
+## Outputs
+- loops/specs/<experiment>/evidence.md
+- loops/specs/<experiment>/state.yaml
+- memory/knowledge-base.md
+- docs/handoff/growth-to-pm.md
 
 ## Iron Rules
 - Conclusions must be based on **evidence**, not "I think it works"

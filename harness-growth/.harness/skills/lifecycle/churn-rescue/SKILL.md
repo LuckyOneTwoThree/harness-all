@@ -1,22 +1,22 @@
 ---
 name: churn-rescue
 description: Churn early-warning model design + win-back campaign design, with cost gating
-triggers:
-  - When user churn rate is high
-  - User operations Workflow
-  - User asks to "design a win-back strategy"
-reads:
-  - docs/operations/segments.md
-  - memory/knowledge-base.md
-  - rules/security.md
-writes:
-  - docs/operations/churn-rescue-plan.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 2
 ---
-
 # Churn Rescue — Churn Early Warning and Win-Back
+
+## When to use
+- When user churn rate is high
+- User operations Workflow
+- User asks to "design a win-back strategy
+
+## Inputs
+- docs/operations/segments.md
+- memory/knowledge-base.md
+- rules/security.md
+
+## Outputs
+- docs/operations/churn-rescue-plan.md
+- memory/knowledge-base.md
 
 ## Iron Rules
 - Win-back cost must be lower than user LTV/3 — otherwise it's not worth it

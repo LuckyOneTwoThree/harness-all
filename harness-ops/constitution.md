@@ -36,14 +36,15 @@ Changes to the following files must be explicitly authorized by the user:
 
 **Verification**: Obtain authorization via `AskUserQuestion` or explicit conversation before modification.
 
-### Principle 4: Skills Must Have Complete Frontmatter
+### Principle 4: Skills Must Have Minimal Frontmatter
 
 All `.harness/skills/*/*/SKILL.md` must include:
 - `name:` (consistent with the directory name)
 - `description:`
-- `triggers:`
-- `reads:`
-- `writes:`
+- `operation_tier:` (inspect / propose / mutate-staging / mutate-prod)
+- `requires_approval:` (true / false)
+
+The former `triggers` / `reads` / `writes` / `quality_gates` / `max_iterations` fields are no longer frontmatter fields — they are now body text sections ("When to use" / "Inputs" / "Outputs" / "Quality gates"). See `.harness/templates/SKILL.md.template`.
 
 **Verification**: `skill-maintenance` scans for missing frontmatter.
 

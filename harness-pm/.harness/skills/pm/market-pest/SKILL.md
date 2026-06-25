@@ -1,30 +1,12 @@
 ---
 name: market-pest
 description: Used when scanning the target market's policies and regulations, economic indicators, social trends, and technology dynamics. PEST auto-scan, outputs four-dimension trend summaries and impact assessments, tiered signal alerts, real-time alerts for major changes. Keywords: PEST analysis, policies and regulations, economic indicators, social trends, technology dynamics, environmental scanning, tiered signal alerts, external environment, policy impact, market trends.
-metadata:
-  module: "Product Discovery"
-  sub-module: "Market & Competition"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Finance", "Healthcare", "General"]
-  triggers:
-    - "What's changed in the market environment"
-    - "How do policies affect us"
-    - "Help me scan the external environment"
-  interaction_mode: "ai_auto"
-execution_depth:
-  default: standard
-  quick_description: "Directly output PEST analysis conclusions"
-  deep_description: "Full analysis + policy impact projection + trend forecasting + strategic response recommendations"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-writes:
-  - docs/discovery/market-analysis.md
-  - memory/progress.md
 ---
-
 # PEST Auto-Scan
+
+## Outputs
+- docs/discovery/market-analysis.md
+- memory/progress.md
 
 ## Core Principles
 

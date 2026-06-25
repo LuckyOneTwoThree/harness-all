@@ -1,33 +1,14 @@
 ---
 name: activation-onboarding
 description: Use when optimizing the user Onboarding flow. Onboarding Auto-Optimization Pipeline analyzes Onboarding data and user segments, automatically generates personalized guidance strategies, and designs A/B test plans. Keywords: Onboarding, new user guidance, guidance optimization, personalized guidance, user activation, onboarding tutorial, fast onboarding, guidance too long.
-metadata:
-  module: "Product Growth & Operations"
-  sub-module: "Activation"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "SaaS", "General"]
-  triggers:
-    - "The new user onboarding flow is too long"
-    - "How can we get users up to speed faster"
-    - "How to improve the onboarding tutorial"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output Onboarding flow and activation strategy"
-  deep_description: "Full strategy + activation funnel deep analysis + personalized Onboarding design + A/B test plan"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/growth/growth-strategy.md
-writes:
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - docs/growth/growth-strategy.md
-  - onboarding_plan.json
 ---
-
 # Onboarding Auto-Optimization
+
+## Outputs
+- memory/progress.md
+- memory/knowledge-base.md
+- docs/growth/growth-strategy.md
+- onboarding_plan.json
 
 ## Core Principles
 

@@ -1,22 +1,22 @@
 ---
 name: onpage-optimization
 description: On-page optimization recommendations, including IA / URL / internal links / content optimization / Schema markup
-triggers:
-  - After SERP analysis, when pages need optimization
-  - EXPERIMENT phase of the SEO optimization Loop
-  - User asks to "optimize this page's SEO"
-reads:
-  - docs/seo/keyword-research.md
-  - docs/seo/serp-analysis.md
-  - rules/security.md
-writes:
-  - docs/seo/onpage-optimization.md
-  - loops/specs/<seo>/state.yaml
-quality_gates: []
-max_iterations: 3
 ---
-
 # Onpage Optimization — On-Page Optimization
+
+## When to use
+- After SERP analysis, when pages need optimization
+- EXPERIMENT phase of the SEO optimization Loop
+- User asks to "optimize this page's SEO
+
+## Inputs
+- docs/seo/keyword-research.md
+- docs/seo/serp-analysis.md
+- rules/security.md
+
+## Outputs
+- docs/seo/onpage-optimization.md
+- loops/specs/<seo>/state.yaml
 
 ## Iron Rules
 - Optimization must be based on SERP analysis data, not "I think it should be this way"

@@ -1,20 +1,22 @@
 ---
 name: test-driven-development
 description: Test-Driven Development (TDD) — red→green→refactor
-triggers:
-  - Before writing new feature code
-  - Before modifying existing features
-  - When writing a reproduction test for a bug fix
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-writes:
-  - loops/specs/<feature>/state.yaml
-  - loops/specs/<feature>/evidence.md
-  - loops/specs/<feature>/iterations.log
 ---
-
 # Test-Driven Development — TDD
+
+## When to use
+- Before writing new feature code
+- Before modifying existing features
+- When writing a reproduction test for a bug fix
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+
+## Outputs
+- loops/specs/<feature>/state.yaml
+- loops/specs/<feature>/evidence.md
+- loops/specs/<feature>/iterations.log
 
 ## Iron Rule
 **No production code without a failing test.** A test that passes immediately = you are testing existing behavior, not new behavior.

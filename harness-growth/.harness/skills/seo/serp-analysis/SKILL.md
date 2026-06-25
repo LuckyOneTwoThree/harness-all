@@ -1,20 +1,20 @@
 ---
 name: serp-analysis
 description: Analyze SERP Top 10 competitor content to find content gaps and optimization opportunities
-triggers:
-  - After keyword research, when competitor content needs to be analyzed
-  - PLAN phase of the SEO optimization Loop
-  - User asks to "analyze competitor SERP"
-reads:
-  - docs/seo/keyword-research.md
-  - memory/knowledge-base.md
-writes:
-  - docs/seo/serp-analysis.md
-quality_gates: []
-max_iterations: 2
 ---
-
 # SERP Analysis — SERP Competitor Analysis
+
+## When to use
+- After keyword research, when competitor content needs to be analyzed
+- PLAN phase of the SEO optimization Loop
+- User asks to "analyze competitor SERP
+
+## Inputs
+- docs/seo/keyword-research.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/seo/serp-analysis.md
 
 ## Iron Rules
 - Analysis must be based on the **actual SERP**, not "I guess competitors will be like this"

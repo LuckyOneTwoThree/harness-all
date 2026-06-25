@@ -1,31 +1,17 @@
 ---
 name: product-sunset-plan
 description: Used when formulating a product or feature sunset plan. Auto-generates product sunset plans including sunset decision assessment, user migration plan, data disposal strategy, timeline, and communication plan. Keywords: product sunset, feature sunset, product retirement, Sunset, sunset plan, user migration, data disposal, feature sunset, service discontinuation.
-metadata:
-  module: "Product Monitoring & Iteration"
-  sub-module: "Issue Diagnosis"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "SaaS", "General"]
-  triggers:
-    - "How to sunset this feature"
-    - "How to arrange product service discontinuation"
-    - "What to do when retiring an old feature"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output sunset plan and risk list"
-  deep_description: "Full sunset plan + user migration plan + data archival strategy + impact assessment report"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-writes:
-  - docs/monitoring/product-sunset-plan.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Product Sunset Plan Generation
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+
+## Outputs
+- docs/monitoring/product-sunset-plan.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principle
 

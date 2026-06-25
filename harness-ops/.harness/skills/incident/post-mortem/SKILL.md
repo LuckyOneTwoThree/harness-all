@@ -1,29 +1,29 @@
 ---
 name: post-mortem
 description: Incident post-mortem report, summarizing timeline / root cause / impact / action items, and persisting to the knowledge base to prevent recurrence
-triggers:
-  - After a P0/P1 incident is recovered
-  - After the incident LOOP completes
-  - When the user requests "write a post-mortem report"
-  - When session-end detects a closed incident
-  - During periodic reviews of historical incidents
-reads:
-  - loops/specs/<incident-id>/spec.md
-  - loops/specs/<incident-id>/evidence.md
-  - loops/specs/<incident-id>/iterations.log
-  - memory/knowledge-base.md
-  - docs/handoff/ops-to-pm-template.md
-writes:
-  - docs/incident/<incident-id>-post-mortem.md
-  - docs/handoff/ops-to-pm.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 1
 operation_tier: inspect
 requires_approval: false
 ---
-
 # Post-Mortem — Incident Post-Mortem Report
+
+## When to use
+- After a P0/P1 incident is recovered
+- After the incident LOOP completes
+- When the user requests "write a post-mortem report
+- When session-end detects a closed incident
+- During periodic reviews of historical incidents
+
+## Inputs
+- loops/specs/<incident-id>/spec.md
+- loops/specs/<incident-id>/evidence.md
+- loops/specs/<incident-id>/iterations.log
+- memory/knowledge-base.md
+- docs/handoff/ops-to-pm-template.md
+
+## Outputs
+- docs/incident/<incident-id>-post-mortem.md
+- docs/handoff/ops-to-pm.md
+- memory/knowledge-base.md
 
 ## Ground Rules
 

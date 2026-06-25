@@ -1,31 +1,27 @@
 ---
 name: growth-orchestrator
 description: Use when you need to formulate a growth strategy or systematically drive growth. The Growth Strategy Orchestrator first diagnoses the growth model, then dispatches acquisition/activation/retention/monetization sub-orchestrators as needed. Keywords: growth strategy, growth model, AARRR, growth flywheel, growth system, user growth, growth bottleneck, growth diagnosis.
-metadata:
-  module: "Product Growth & Operations"
-  sub-module: "Growth Model"
-  type: "orchestrator"
-  version: "8.0"
-  domain_tags: ["E-commerce", "Social", "Gaming", "Education", "General"]
-  triggers:
-    - "Help me formulate a growth strategy"
-    - "User growth has hit a bottleneck"
-    - "Diagnose the growth issue"
-    - "Build a growth system"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/growth/growth-strategy.md
-  - docs/growth/gtm.md
-  - docs/growth/operations-manual.md
-writes:
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - output/phase-reports/growth-orchestrator.json
-  - output/approvals/growth-orchestrator/{stage-id}.approval.json
 ---
-
 # Growth Strategy Orchestrator
+
+## When to use
+- Help me formulate a growth strategy
+- User growth has hit a bottleneck
+- Diagnose the growth issue
+- Build a growth system
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/growth/growth-strategy.md
+- docs/growth/gtm.md
+- docs/growth/operations-manual.md
+
+## Outputs
+- memory/progress.md
+- memory/knowledge-base.md
+- output/phase-reports/growth-orchestrator.json
+- output/approvals/growth-orchestrator/{stage-id}.approval.json
 
 ## Core Principles
 

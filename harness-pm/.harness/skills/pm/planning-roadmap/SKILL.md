@@ -1,33 +1,14 @@
 ---
 name: planning-roadmap
 description: Use when you need to create a product roadmap, quarterly plan, release plan, or allocate resources. Roadmap auto-planning. Based on OKRs and strategic direction, plan Epic-level product roadmaps, perform Now/Next/Later tiering and RICE scoring for prioritization. Keywords: product roadmap, release planning, RICE scoring, quarterly planning, Epic planning, what features to build, schedule planning.
-metadata:
-  module: "Product Business & Strategy"
-  sub-module: "Strategic Planning & Roadmap"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["SaaS", "General"]
-  triggers:
-    - "Help me plan the product roadmap"
-    - "What should the next release include"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output the roadmap and milestones"
-  deep_description: "Full roadmap + dependency analysis + risk buffer design + multi-scenario roadmap"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/strategy/OKR.md
-  - docs/strategy/PRODUCT_STRATEGY.md
-writes:
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - docs/strategy/roadmap.md
-  - roadmap.json
 ---
-
 # Roadmap Auto-Planning
+
+## Outputs
+- memory/progress.md
+- memory/knowledge-base.md
+- docs/strategy/roadmap.md
+- roadmap.json
 
 ## Core Principles
 

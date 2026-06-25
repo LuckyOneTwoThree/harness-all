@@ -1,30 +1,26 @@
 ---
 name: monitoring-orchestrator
 description: Used when establishing a product monitoring system or handling anomaly alerts. Monitoring & alerting orchestrator that dispatches monitoring-alert-detection, monitoring-attribution, and user-feedback-loop-report sub-skills. Keywords: monitoring & alerting, anomaly detection, alert triage, monitoring system, health monitoring, monitoring dashboard, alert escalation, feedback loop, production alerts, system monitoring, anomaly attribution, root cause analysis.
-metadata:
-  module: "Product Monitoring & Iteration"
-  sub-module: "Monitoring & Alerting"
-  type: "orchestrator"
-  version: "9.0"
-  domain_tags: ["General"]
-  triggers:
-    - "Establish a product monitoring system"
-    - "Production anomaly alert"
-    - "Configure monitoring dashboards"
-    - "Handle production issues"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/monitoring/monitoring-config.md
-  - docs/monitoring/feedback-loop.md
-  - docs/handoff/ops-to-pm.md
-writes:
-  - output/phase-reports/monitoring-orchestrator.json
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Monitoring & Alerting Orchestrator
+
+## When to use
+- Establish a product monitoring system
+- Production anomaly alert
+- Configure monitoring dashboards
+- Handle production issues
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/monitoring/monitoring-config.md
+- docs/monitoring/feedback-loop.md
+- docs/handoff/ops-to-pm.md
+
+## Outputs
+- output/phase-reports/monitoring-orchestrator.json
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principle
 

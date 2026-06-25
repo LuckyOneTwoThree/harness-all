@@ -1,27 +1,27 @@
 ---
 name: cost-analysis
 description: Cloud cost analysis and optimization, identifying idle resources, over-provisioning, and reservable instances, producing cost reports
-triggers:
-  - During monthly cost audits
-  - When the user requests "cloud cost analysis"
-  - When cost grows abnormally
-  - When the optimization LOOP triggers
-  - On budget overrun alerts
-reads:
-  - docs/infrastructure/OPS_STRATEGY.md
-  - rules/security.md
-  - loops/LOOP.md
-  - memory/knowledge-base.md
-writes:
-  - loops/specs/<task-name>/evidence.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 1
 operation_tier: inspect
 requires_approval: false
 ---
-
 # Cost Analysis — Cloud Cost Analysis and Optimization
+
+## When to use
+- During monthly cost audits
+- When the user requests "cloud cost analysis
+- When cost grows abnormally
+- When the optimization LOOP triggers
+- On budget overrun alerts
+
+## Inputs
+- docs/infrastructure/OPS_STRATEGY.md
+- rules/security.md
+- loops/LOOP.md
+- memory/knowledge-base.md
+
+## Outputs
+- loops/specs/<task-name>/evidence.md
+- memory/knowledge-base.md
 
 ## Ground Rules
 

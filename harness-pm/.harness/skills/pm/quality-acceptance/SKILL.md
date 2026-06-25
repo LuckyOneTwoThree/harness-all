@@ -1,36 +1,13 @@
 ---
 name: quality-acceptance
 description: Used when generating acceptance execution plans and sign-off reports. Acceptance execution plan generation + sign-off report generation, generates acceptance execution plans based on Given-When-Then format acceptance criteria (P0/P1 failures block release), integrates acceptance execution plan, acceptance criteria, open issues and sign-off confirmation, produces a signable acceptance report. 🤖 AI generates plan + AI suggests human approval. Keywords: acceptance execution plan, acceptance testing, Given-When-Then, quality gate, release check, acceptance report, sign-off report, UAT report, acceptance confirmation.
-metadata:
-  module: "Product Monitoring & Iteration"
-  sub-module: "Quality Assurance"
-  type: "pipeline"
-  version: "3.1"
-  domain_tags: ["Internet", "General"]
-  triggers:
-    - "Run the acceptance tests automatically"
-    - "Help me execute the acceptance checks"
-    - "Check if it can pass the quality gate"
-    - "Generate the acceptance report"
-    - "Version is going to acceptance, help me produce the report"
-    - "Organize the acceptance results"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Only output P0 acceptance results"
-  deep_description: "Full report + regression test matrix + performance baseline comparison + security audit checklist"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/product/PRD.md
-  - docs/handoff/solo-to-pm.md
-writes:
-  - docs/monitoring/release-notes.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Acceptance Execution Plan Generation & Sign-off Report Generation
+
+## Outputs
+- docs/monitoring/release-notes.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

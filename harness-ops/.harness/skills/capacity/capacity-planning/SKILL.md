@@ -1,28 +1,28 @@
 ---
 name: capacity-planning
 description: Capacity planning recommendations, forecasting resource needs based on growth trends and planning scale-out in advance
-triggers:
-  - During quarterly capacity planning
-  - When business growth requires scale-out
-  - When resource utilization trends consistently high
-  - During capacity assessment before major campaigns or events
-  - When the user requests "capacity planning"
-reads:
-  - docs/infrastructure/OPS_STRATEGY.md
-  - rules/security.md
-  - loops/LOOP.md
-  - memory/knowledge-base.md
-writes:
-  - loops/specs/<task-name>/spec.md
-  - loops/specs/<task-name>/evidence.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 1
 operation_tier: inspect
 requires_approval: false
 ---
-
 # Capacity Planning — Capacity Planning Recommendations
+
+## When to use
+- During quarterly capacity planning
+- When business growth requires scale-out
+- When resource utilization trends consistently high
+- During capacity assessment before major campaigns or events
+- When the user requests "capacity planning
+
+## Inputs
+- docs/infrastructure/OPS_STRATEGY.md
+- rules/security.md
+- loops/LOOP.md
+- memory/knowledge-base.md
+
+## Outputs
+- loops/specs/<task-name>/spec.md
+- loops/specs/<task-name>/evidence.md
+- memory/knowledge-base.md
 
 ## Ground Rules
 

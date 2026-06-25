@@ -1,33 +1,19 @@
 ---
 name: validation-mvp
 description: Used when defining the MVP feature scope. MVP scope auto-definition tool that intelligently identifies Must Have, MUST NOT, and Nice to Have features based on the assumption map and resource constraints, and evaluates the MVP size ratio. Keywords: MVP scope, Minimum Viable Product, feature priority, resource constraints, minimal product, core features.
-metadata:
-  module: "Product Ideation & Design"
-  sub-module: "Solution Validation"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "Software", "General"]
-  triggers:
-    - "What features should the MVP include"
-    - "How to build the minimal product"
-    - "Which features can be deferred"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output MVP scope and validation plan"
-  deep_description: "Full solution + MVP scope optimization + validation metrics system + iteration evolution roadmap"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/product/PRD.md
-  - docs/handoff/design-to-solo.md
-writes:
-  - docs/product/PRD.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # MVP Scope Auto-Definition
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/product/PRD.md
+- docs/handoff/design-to-solo.md
+
+## Outputs
+- docs/product/PRD.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

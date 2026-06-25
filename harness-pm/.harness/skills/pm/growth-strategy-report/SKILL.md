@@ -1,32 +1,18 @@
 ---
 name: growth-strategy-report
 description: Use when you need to consolidate growth model diagnosis and stage optimization plans into a complete, deliverable growth strategy report. Growth Strategy Report auto-generation includes growth model evaluation, AARRR funnel diagnosis, leverage strategies, flywheel model, and execution roadmap. Keywords: growth strategy report, growth report, AARRR report, growth flywheel, growth roadmap, growth bottleneck, how to grow, growth plan. This report is a user-facing deliverable strategy document that integrates outputs from each growth sub-Skill to generate a complete growth strategy.
-metadata:
-  module: "Product Growth & Operations"
-  sub-module: "Growth Model"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "SaaS", "General"]
-  triggers:
-    - "Help me produce a growth strategy report"
-    - "What to do when growth hits a bottleneck"
-    - "How to formulate a growth plan"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output growth strategy and priority actions"
-  deep_description: "Complete report + growth model inference + channel mix optimization + growth experiment roadmap"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/growth/growth-strategy.md
-writes:
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - docs/growth/growth-strategy.md
 ---
-
 # Growth Strategy Report Generation
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/growth/growth-strategy.md
+
+## Outputs
+- memory/progress.md
+- memory/knowledge-base.md
+- docs/growth/growth-strategy.md
 
 ## Core Principles
 

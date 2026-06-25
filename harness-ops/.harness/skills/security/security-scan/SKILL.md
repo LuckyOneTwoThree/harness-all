@@ -1,27 +1,27 @@
 ---
 name: security-scan
 description: Trivy/kube-bench security scanning, image vulnerabilities/CIS benchmark/config audit, generating remediation recommendations
-triggers:
-  - When scanning images for vulnerabilities after build
-  - During periodic security audits
-  - During pre-deployment security checks
-  - When a new CVE is discovered and impact assessment is required
-  - When security-audit-workflow triggers
-reads:
-  - docs/infrastructure/OPS_STRATEGY.md
-  - rules/security.md
-  - loops/LOOP.md
-  - memory/knowledge-base.md
-writes:
-  - loops/specs/<task-name>/evidence.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 1
 operation_tier: inspect
 requires_approval: false
 ---
-
 # Security Scan — Security Scanning and Remediation Recommendations
+
+## When to use
+- When scanning images for vulnerabilities after build
+- During periodic security audits
+- During pre-deployment security checks
+- When a new CVE is discovered and impact assessment is required
+- When security-audit-workflow triggers
+
+## Inputs
+- docs/infrastructure/OPS_STRATEGY.md
+- rules/security.md
+- loops/LOOP.md
+- memory/knowledge-base.md
+
+## Outputs
+- loops/specs/<task-name>/evidence.md
+- memory/knowledge-base.md
 
 ## Ground Rules
 

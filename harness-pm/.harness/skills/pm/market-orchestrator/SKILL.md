@@ -1,29 +1,25 @@
 ---
 name: market-orchestrator
 description: Used when a complete market and competitive analysis workflow is required. Market & Competition Orchestrator, dispatches market-tam-som/pest/competitor-analysis. Keywords: market analysis, competitive analysis, TAM/SAM/SOM, PEST, competitive intelligence, four-quadrant, market size, industry analysis, competitors, competitive research.
-metadata:
-  module: "Product Discovery"
-  sub-module: "Market & Competition"
-  type: "orchestrator"
-  version: "9.0"
-  domain_tags: ["General"]
-  triggers:
-    - "Help me analyze the market"
-    - "See what competitors are doing"
-    - "Evaluate the market size"
-    - "Conduct competitive research"
-    - "Analyze industry trends"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - templates/orchestrator-protocol.md
-  - docs/discovery/market-analysis.md
-writes:
-  - output/phase-reports/market-orchestrator.json
-  - memory/progress.md
 ---
-
 # Market & Competition Orchestrator
+
+## When to use
+- Help me analyze the market
+- See what competitors are doing
+- Evaluate the market size
+- Conduct competitive research
+- Analyze industry trends
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- templates/orchestrator-protocol.md
+- docs/discovery/market-analysis.md
+
+## Outputs
+- output/phase-reports/market-orchestrator.json
+- memory/progress.md
 
 ## Core Principles
 

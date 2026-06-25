@@ -1,20 +1,20 @@
 ---
 name: channel-assessment
 description: Channel assessment, prioritizing channels based on Product-Channel Fit
-triggers:
-  - When acquisition channels need to be selected
-  - Acquisition campaign Workflow
-  - User asks to "assess channels"
-reads:
-  - docs/handoff/pm-to-growth.md
-  - memory/knowledge-base.md
-writes:
-  - docs/operations/channel-assessment.md
-quality_gates: []
-max_iterations: 1
 ---
-
 # Channel Assessment — Channel Assessment
+
+## When to use
+- When acquisition channels need to be selected
+- Acquisition campaign Workflow
+- User asks to "assess channels
+
+## Inputs
+- docs/handoff/pm-to-growth.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/operations/channel-assessment.md
 
 ## Iron Rules
 - Channel selection is based on **Product-Channel Fit** — whether the product form matches channel user behavior

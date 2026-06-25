@@ -1,31 +1,17 @@
 ---
 name: product-operations-manual
 description: Used when consolidating operations strategies and processes into a complete, deliverable product operations manual. Auto-generates product operations manuals including daily operations SOP, content operations standards, user operations strategy, activity operations templates, and emergency response procedures. Keywords: operations manual, operations SOP, content operations, user operations, activity operations, emergency response, operations process, daily operations, operations standards.
-metadata:
-  module: "Product Growth & Operations"
-  sub-module: "Growth Models"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "SaaS", "General"]
-  triggers:
-    - "How to write an operations manual"
-    - "How to standardize daily operations processes"
-    - "Help me organize operations SOP"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Directly output operations SOP and emergency response procedures"
-  deep_description: "Full manual + operations strategy deep analysis + scenario-based SOP + operations metrics system design"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-writes:
-  - docs/growth/operations-manual.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Product Operations Manual Generation
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+
+## Outputs
+- docs/growth/operations-manual.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principle
 

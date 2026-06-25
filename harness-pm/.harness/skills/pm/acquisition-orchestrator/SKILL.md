@@ -1,29 +1,25 @@
 ---
 name: acquisition-orchestrator
 description: Use when you need to evaluate acquisition channels or optimize the acquisition funnel. User Acquisition Orchestrator dispatches acquisition-analysis (Acquisition Analysis Integrated), achieving a closed loop from channel evaluation to funnel optimization. Keywords: user acquisition, acquisition channels, funnel optimization, channel evaluation, acquisition strategy, acquisition-analysis, user growth, acquisition.
-metadata:
-  module: "Product Growth & Operations"
-  sub-module: "Acquisition"
-  type: "orchestrator"
-  version: "7.0"
-  domain_tags: ["E-commerce", "Social", "Education", "General"]
-  triggers:
-    - "Evaluate the acquisition channels"
-    - "Optimize the acquisition funnel"
-    - "How to acquire new users"
-    - "Acquisition cost is too high"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/growth/growth-strategy.md
-writes:
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - output/phase-reports/acquisition-orchestrator.json
-  - output/approvals/acquisition-orchestrator/{stage-id}.approval.json
 ---
-
 # User Acquisition Orchestrator
+
+## When to use
+- Evaluate the acquisition channels
+- Optimize the acquisition funnel
+- How to acquire new users
+- Acquisition cost is too high
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/growth/growth-strategy.md
+
+## Outputs
+- memory/progress.md
+- memory/knowledge-base.md
+- output/phase-reports/acquisition-orchestrator.json
+- output/approvals/acquisition-orchestrator/{stage-id}.approval.json
 
 ## Core Principles
 

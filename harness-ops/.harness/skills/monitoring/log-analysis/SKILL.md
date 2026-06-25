@@ -1,27 +1,27 @@
 ---
 name: log-analysis
 description: Log query and analysis, generating LogQL/ES DSL queries, log pattern discovery and anomaly clustering
-triggers:
-  - When troubleshooting requires querying logs
-  - When root-cause-analysis needs log evidence
-  - When the user requests "query logs"
-  - When monitoring alerts need log correlation
-  - When log patterns need to be analyzed
-reads:
-  - loops/specs/<incident-id>/spec.md
-  - rules/security.md
-  - loops/LOOP.md
-  - memory/knowledge-base.md
-writes:
-  - loops/specs/<incident-id>/evidence.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 1
 operation_tier: inspect
 requires_approval: false
 ---
-
 # Log Analysis — Log Query and Analysis
+
+## When to use
+- When troubleshooting requires querying logs
+- When root-cause-analysis needs log evidence
+- When the user requests "query logs
+- When monitoring alerts need log correlation
+- When log patterns need to be analyzed
+
+## Inputs
+- loops/specs/<incident-id>/spec.md
+- rules/security.md
+- loops/LOOP.md
+- memory/knowledge-base.md
+
+## Outputs
+- loops/specs/<incident-id>/evidence.md
+- memory/knowledge-base.md
 
 ## Ground Rules
 

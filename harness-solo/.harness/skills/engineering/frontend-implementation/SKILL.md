@@ -1,26 +1,28 @@
 ---
 name: frontend-implementation
 description: Frontend Implementation — component decomposition/state management/styling engineering (not visual design)
-triggers:
-  - When implementing frontend components
-  - When selecting a state management approach
-  - When establishing the styling engineering
-  - When designing frontend architecture
-reads:
-  - constitution.md
-  - rules/security.md
-  - docs/engineering/TECH_STACK.md
-  - docs/handoff/design-to-solo.md
-  - docs/handoff/component-map.json
-  - docs/design-system/tokens.json
-  - docs/design-system/tokens.css
-  - docs/design-system/DESIGN.md
-  - docs/interaction/component-spec.md
-writes:
-  - loops/specs/<feature>/iterations.log
 ---
-
 # Frontend Implementation — Frontend Engineering
+
+## When to use
+- When implementing frontend components
+- When selecting a state management approach
+- When establishing the styling engineering
+- When designing frontend architecture
+
+## Inputs
+- constitution.md
+- rules/security.md
+- docs/engineering/TECH_STACK.md
+- docs/handoff/design-to-solo.md
+- docs/handoff/component-map.json
+- docs/design-system/tokens.json
+- docs/design-system/tokens.css
+- docs/design-system/DESIGN.md
+- docs/interaction/component-spec.md
+
+## Outputs
+- loops/specs/<feature>/iterations.log
 
 ## Iron Rule
 **Composition over configuration.** `<Card><CardHeader><CardTitle>` is better than `<Card title="..." headerVariant="large">`. Component composition > configuration explosion.

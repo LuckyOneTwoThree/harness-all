@@ -1,21 +1,23 @@
 ---
 name: systematic-debugging
 description: Systematic Debugging — root cause analysis rather than symptom patching
-triggers:
-  - When a test fails
-  - On a bug report
-  - When the verify stage finds an issue
-reads:
-  - loops/LOOP.md
-  - rules/security.md
-  - memory/knowledge-base.md
-writes:
-  - loops/specs/<feature>/state.yaml
-  - loops/specs/<feature>/iterations.log
-  - memory/knowledge-base.md
 ---
-
 # Systematic Debugging — Systematic Debugging
+
+## When to use
+- When a test fails
+- On a bug report
+- When the verify stage finds an issue
+
+## Inputs
+- loops/LOOP.md
+- rules/security.md
+- memory/knowledge-base.md
+
+## Outputs
+- loops/specs/<feature>/state.yaml
+- loops/specs/<feature>/iterations.log
+- memory/knowledge-base.md
 
 ## Iron Rule
 **Find the root cause, do not patch the symptom.** "Changing it until it runs" is not debugging; it is gambling.

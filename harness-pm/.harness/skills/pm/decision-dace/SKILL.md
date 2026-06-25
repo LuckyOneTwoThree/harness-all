@@ -1,38 +1,21 @@
 ---
 name: decision-dace
 description: Use when you need to execute a data-driven decision loop or transform data into actionable insights. DACE cycle automation, where Define/Analyze is automatically executed by AI, Conclude is AI-assisted human decision-making, and Execute is tracked by AI for execution effectiveness. The Analyze phase integrates insight transformation capabilities, transforming analysis results into narrative insights, decision recommendations, and decision boundary annotations. Keywords: DACE cycle, data decision, decision loop, data-driven, decision framework, decision cycle, data analysis loop, making decisions with data, decision process, how to use data to drive action, data insights, insight transformation, decision recommendations, narrative analysis, data story, can't understand data, turn data into human language, what the data says.
-metadata:
-  module: "Product Metrics & Operations"
-  sub-module: "Decision Loop"
-  type: "pipeline"
-  version: "2.0"
-  domain_tags: ["General"]
-  triggers:
-    - "Help me make a data decision using the DACE method"
-    - "How to do a complete loop from data to action"
-    - "Data was analyzed but no one executes, what to do"
-    - "What does this data say, help me interpret it"
-    - "Turn analysis results into a tellable story"
-    - "The data is too dry, help me transform it into actionable recommendations"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Only output decision recommendations and key rationale"
-  deep_description: "Complete analysis + decision tree + sensitivity analysis + counterfactual reasoning"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/strategy/OKR.md
-  - docs/metrics/experiment-report.md
-  - docs/metrics/data-analysis-report.md
-  - docs/metrics/decision-report.md
-writes:
-  - docs/metrics/decision-report.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # DACE Cycle Automation (with Insight Transformation)
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/strategy/OKR.md
+- docs/metrics/experiment-report.md
+- docs/metrics/data-analysis-report.md
+- docs/metrics/decision-report.md
+
+## Outputs
+- docs/metrics/decision-report.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

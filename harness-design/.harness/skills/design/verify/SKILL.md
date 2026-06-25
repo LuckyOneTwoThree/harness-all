@@ -1,35 +1,29 @@
 ---
 name: verify
 description: Performs quick in-LOOP verification against acceptance criteria and constitution. Use in every LOOP iteration. Use before design-lint.
-triggers:
-  - Every iteration in LOOP
-  - Before design-lint
-  - Quick verification needed
-reads:
-  - loops/specs/<task>/spec.md
-  - loops/specs/<task>/state.yaml
-  - constitution.md
-  - docs/visual/DESIGN_BRIEF.md
-  - docs/design-system/DESIGN.md
-writes:
-  - loops/specs/<task>/evidence.md
-  - loops/specs/<task>/state.yaml
-  - loops/specs/<task>/iterations.log
 ---
-
 # Verify
+
+## When to use
+- Every iteration in LOOP
+- Before design-lint
+- Quick verification needed
+
+## Inputs
+- loops/specs/<task>/spec.md
+- loops/specs/<task>/state.yaml
+- constitution.md
+- docs/visual/DESIGN_BRIEF.md
+- docs/design-system/DESIGN.md
+
+## Outputs
+- loops/specs/<task>/evidence.md
+- loops/specs/<task>/state.yaml
+- loops/specs/<task>/iterations.log
 
 ## Overview
 
 Quick in-LOOP check, run on every iteration. Checks "is the design correct", not "does the design follow the design system" (the latter is the responsibility of design-lint).
-
-## When to Use
-
-- ✅ Every iteration in LOOP
-- ✅ Before design-lint
-- ✅ Quick verification needed (not a deep review)
-- ❌ NOT for mechanical rule checks (use the design-lint skill)
-- ❌ NOT for human-level comprehensive review (use the design-review skill)
 
 ## Process
 

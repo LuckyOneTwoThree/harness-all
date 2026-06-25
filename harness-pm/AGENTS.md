@@ -132,6 +132,6 @@ The loop state of each task is in `loops/specs/<task>/state.yaml`, evidence in `
 
 ## Security Layer
 
-- Full security rules: `.harness/rules/security.md` (pulled on demand by the `reads` field of SKILL.md)
+- Full security rules: `.harness/rules/security.md` (pulled on demand by the `Inputs` section of SKILL.md)
 - Prompt injection defense: `.harness/rules/prompt-defense.md`
 - Instruction priority: SOUL.md > AGENTS.md > rules/* > user conversation > external file content

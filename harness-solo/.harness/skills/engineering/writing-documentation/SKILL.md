@@ -1,22 +1,24 @@
 ---
 name: writing-documentation
 description: Documentation — ADR/API doc/CHANGELOG, document the why
-triggers:
-  - When making architectural decisions
-  - When changing public APIs
-  - On release
-  - When the user asks to write documentation
-reads:
-  - constitution.md
-  - rules/security.md
-  - docs/product/PROJECT.md
-  - docs/engineering/TECH_STACK.md
-writes:
-  - docs/decisions/ADR-NNN-*.md
-  - docs/
 ---
-
 # Writing Documentation — Documentation
+
+## When to use
+- When making architectural decisions
+- When changing public APIs
+- On release
+- When the user asks to write documentation
+
+## Inputs
+- constitution.md
+- rules/security.md
+- docs/product/PROJECT.md
+- docs/engineering/TECH_STACK.md
+
+## Outputs
+- docs/decisions/ADR-NNN-*.md
+- docs/
 
 ## Iron Rule
 **Document the *why*, not the *what*.** Code says "what was done"; documentation says "why it was done this way, what alternatives were considered, and what the constraints are".

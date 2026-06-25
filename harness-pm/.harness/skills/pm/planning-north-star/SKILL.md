@@ -1,32 +1,14 @@
 ---
 name: planning-north-star
 description: Use when you need to determine product core metrics, OKR North Star Metric, or design a metric system. North Star Metric selection. AI assists in selecting the metric that best measures product success and user value. This is a human decision point — AI provides data support, humans make the final choice. Keywords: North Star Metric, core metric, metric selection, product success metric, NSM, key metric, what data to look at.
-metadata:
-  module: "Product Business & Strategy"
-  sub-module: "Strategic Planning & Roadmap"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["SaaS", "General"]
-  triggers:
-    - "What should our core metric be"
-    - "How do we measure product success"
-  interaction_mode: "human_ai_collaborate"
-execution_depth:
-  default: standard
-  quick_description: "Directly output recommended North Star Metric and input variables"
-  deep_description: "Full analysis + metric correlation matrix + gaming risk assessment + metric evolution roadmap"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/strategy/business-strategy.md
-writes:
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - docs/strategy/PRODUCT_STRATEGY.md
-  - output/metrics/north-star.json
 ---
-
 # North Star Metric Selection
+
+## Outputs
+- memory/progress.md
+- memory/knowledge-base.md
+- docs/strategy/PRODUCT_STRATEGY.md
+- output/metrics/north-star.json
 
 ## Core Principles
 

@@ -1,31 +1,12 @@
 ---
 name: business-model-canvas
 description: Triggered when designing or evaluating a product business model. Business Model Canvas auto-generation, transforms product discovery stage insights into a 9-block business canvas. Keywords: business model canvas, BMC, value proposition, revenue model, cost structure, how to make money, business model mapping.
-metadata:
-  module: "Product Business & Strategy"
-  sub-module: "Business Model Design"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["SaaS", "E-commerce", "General"]
-  triggers:
-    - "Help me clarify the business model"
-    - "How does our business model make money"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Generate 9-block canvas core elements (customer segments, value proposition, revenue streams, cost structure) and basic assumption list"
-  deep_description: "Additionally includes unit economics sensitivity analysis, assumption validation roadmap, inter-block linkage consistency check, long-term business model evolution projection"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/discovery/user-research.md
-  - docs/discovery/market-analysis.md
-writes:
-  - docs/strategy/business-strategy.md
-  - memory/progress.md
 ---
-
 # Business Model Canvas Auto-Generation
+
+## Outputs
+- docs/strategy/business-strategy.md
+- memory/progress.md
 
 ## Core Principles
 

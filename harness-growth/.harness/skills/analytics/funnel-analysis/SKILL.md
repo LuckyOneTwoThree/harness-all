@@ -1,20 +1,20 @@
 ---
 name: funnel-analysis
 description: Funnel analysis, including conversion rate, bottleneck localization, segment differences, and optimization recommendations
-triggers:
-  - When conversion funnel needs to be analyzed
-  - Growth review report Workflow
-  - User asks to "analyze the funnel"
-reads:
-  - docs/handoff/solo-to-growth.md
-  - memory/knowledge-base.md
-writes:
-  - docs/operations/funnel-analysis.md
-quality_gates: []
-max_iterations: 1
 ---
-
 # Funnel Analysis — Funnel Analysis
+
+## When to use
+- When conversion funnel needs to be analyzed
+- Growth review report Workflow
+- User asks to "analyze the funnel
+
+## Inputs
+- docs/handoff/solo-to-growth.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/operations/funnel-analysis.md
 
 ## Iron Rules
 - Funnels must be based on **actual event data**, not "estimates"

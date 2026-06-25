@@ -1,32 +1,26 @@
 ---
 name: component-design
 description: Designs atomic components (Button/Input/Card/Modal) with state machines, variants, and composition rules. Use when DESIGN.md exists and component design is needed. Use for component design tasks in LOOP.
-triggers:
-  - Component design tasks (Button/Input/Card/Modal, etc.)
-  - In-LOOP component stage
-  - design-system-setup workflow
-reads:
-  - docs/design-system/DESIGN.md
-  - docs/design-system/tokens.json
-  - .harness/craft/anti-ai-slop.md
-  - .harness/craft/common-rules.md
-writes:
-  - docs/design-system/components/
 ---
-
 # Component Design
+
+## When to use
+- Component design tasks (Button/Input/Card/Modal, etc.)
+- In-LOOP component stage
+- design-system-setup workflow
+
+## Inputs
+- docs/design-system/DESIGN.md
+- docs/design-system/tokens.json
+- .harness/craft/anti-ai-slop.md
+- .harness/craft/common-rules.md
+
+## Outputs
+- docs/design-system/components/
 
 ## Overview
 
 Atomic component design, producing state machines + variant tables + composition rules. Focus on the "atomic component" itself; page-level layout is the responsibility of visual-design.
-
-## When to Use
-
-- ✅ Designing core components (Button/Input/Card/Modal/Toast/Dialog, etc.)
-- ✅ In-LOOP component stage
-- ✅ DESIGN.md and tokens.json already exist
-- ❌ NOT for page-level visual design (use the visual-design skill)
-- ❌ NOT for low-fidelity wireframes (use the wireframe skill)
 
 ## Process
 

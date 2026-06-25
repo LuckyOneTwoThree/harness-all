@@ -1,31 +1,12 @@
 ---
 name: business-pricing
 description: Used when formulating or optimizing a product pricing strategy. Auto-analyzes pricing strategy with AI suggestions and human approval, analyzing competitor pricing, inferring user willingness to pay, and generating 3 differentiated pricing options. Keywords: pricing strategy, competitive analysis, willingness to pay, tier design, unit economics, how to charge, pricing options.
-metadata:
-  module: "Product Business & Strategy"
-  sub-module: "Business Model Design"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["SaaS", "E-commerce", "General"]
-  triggers:
-    - "How should we price the product"
-    - "How to design pricing options"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Generate a competitor pricing matrix overview and 1 recommended pricing option, including basic unit economics validation"
-  deep_description: "Additionally includes 3 complete pricing option comparisons, willingness-to-pay multi-method cross-inference, sensitivity analysis, pricing adjustment roadmap, and competitor pricing trend forecasting"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/strategy/business-strategy.md
-  - docs/discovery/market-analysis.md
-writes:
-  - docs/strategy/business-strategy.md
-  - memory/progress.md
 ---
-
 # Pricing Strategy Auto-Analysis
+
+## Outputs
+- docs/strategy/business-strategy.md
+- memory/progress.md
 
 ## Core Principles
 

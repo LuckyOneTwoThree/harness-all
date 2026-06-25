@@ -1,29 +1,25 @@
 ---
 name: retention-orchestrator
 description: Use when reducing churn rate or improving user engagement. User Retention Orchestrator dispatches retention-management (retention management integrated), achieving a closed loop from churn prevention to user reactivation. Keywords: user retention, churn prediction, tiered operations, engagement, retention strategy, retention-management, churn prevention, reactivation.
-metadata:
-  module: "Product Growth & Operations"
-  sub-module: "Retention"
-  type: "orchestrator"
-  version: "7.0"
-  domain_tags: ["E-commerce", "Social", "Gaming", "General"]
-  triggers:
-    - "User churn is severe"
-    - "Improve user retention rate"
-    - "Run a churn prediction"
-    - "Design tiered operation strategy"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/growth/growth-strategy.md
-writes:
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - output/phase-reports/retention-orchestrator.json
-  - output/approvals/retention-orchestrator/{stage-id}.approval.json
 ---
-
 # User Retention Orchestrator
+
+## When to use
+- User churn is severe
+- Improve user retention rate
+- Run a churn prediction
+- Design tiered operation strategy
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/growth/growth-strategy.md
+
+## Outputs
+- memory/progress.md
+- memory/knowledge-base.md
+- output/phase-reports/retention-orchestrator.json
+- output/approvals/retention-orchestrator/{stage-id}.approval.json
 
 ## Core Principles
 

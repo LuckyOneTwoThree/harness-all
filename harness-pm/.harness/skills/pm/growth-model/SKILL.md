@@ -1,33 +1,19 @@
 ---
 name: growth-model
 description: Use when you need to diagnose the product growth model. Growth Model Auto-Diagnosis Pipeline analyzes product features, user data, and business model to automatically match the optimal growth model (PLG/SLG/MLG/Hybrid), outputting a growth flywheel model, key constraints, and bottleneck analysis. Keywords: growth model, PLG, SLG, growth flywheel, growth diagnosis.
-metadata:
-  module: "Product Growth & Operations"
-  sub-module: "Growth Model"
-  type: "pipeline"
-  version: "2.0"
-  interaction_mode: "ai_suggest_human_approve"
-  triggers:
-    - "Diagnose the product's growth model"
-    - "Are we PLG or SLG"
-    - "How to build the growth flywheel"
-    - "Where is the growth bottleneck"
-execution_depth:
-  default: standard
-  quick_description: "Directly output growth model diagnosis and bottleneck localization"
-  deep_description: "Complete diagnosis + flywheel modeling + cold-start simulation + growth stage evolution roadmap"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/metrics/data-analysis-report.md
-writes:
-  - memory/progress.md
-  - memory/knowledge-base.md
-  - docs/growth/growth-strategy.md
-  - growth_model.json
 ---
-
 # Growth Model Auto-Diagnosis
+
+## Inputs
+- rules/security.md
+- loops/LOOP.md
+- docs/metrics/data-analysis-report.md
+
+## Outputs
+- memory/progress.md
+- memory/knowledge-base.md
+- docs/growth/growth-strategy.md
+- growth_model.json
 
 ## Core Principles
 

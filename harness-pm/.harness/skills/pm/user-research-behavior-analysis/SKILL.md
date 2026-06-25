@@ -1,30 +1,12 @@
 ---
 name: user-research-behavior-analysis
 description: Used when diagnosing funnel health, discovering Aha Moments, and analyzing feature usage depth from event data, funnel data, and heatmap data. Behavior data auto-analysis pipeline. Keywords: behavior analysis, funnel analysis, Aha Moment, feature usage analysis, anomaly detection, user churn, conversion rate, user behavior anomaly.
-metadata:
-  module: "Product Discovery"
-  sub-module: "User Research"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "SaaS", "General"]
-  triggers:
-    - "Where are users churning"
-    - "Why is the funnel conversion rate so low"
-    - "Are there any anomalies in user behavior"
-  interaction_mode: "ai_auto"
-execution_depth:
-  default: standard
-  quick_description: "Directly output behavior patterns and usage insights"
-  deep_description: "Full analysis + behavior sequence mining + user segmentation deep analysis + behavior prediction model"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-writes:
-  - docs/discovery/user-research.md
-  - memory/progress.md
 ---
-
 # Behavior Data Auto-Analysis
+
+## Outputs
+- docs/discovery/user-research.md
+- memory/progress.md
 
 ## Core Principles
 

@@ -1,6 +1,6 @@
 # security.md — Operations & Infrastructure Security Red Lines
 
-> Security rules referenced across all Skills. Pulled on demand by the `reads` field of SKILL.md.
+> Security rules referenced across all Skills. Pulled on demand by the `Inputs` section of SKILL.md.
 > AGENTS.md only has a summary; this is the full rule set.
 > Ops framework specific: secret leak prevention, destructive change interception, environment isolation.
 

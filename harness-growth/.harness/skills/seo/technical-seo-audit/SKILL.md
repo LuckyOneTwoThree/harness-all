@@ -1,21 +1,21 @@
 ---
 name: technical-seo-audit
 description: Technical SEO audit, including crawlability / Core Web Vitals / index status / mobile / security
-triggers:
-  - When SEO optimization needs a technical foundation check
-  - EXPERIMENT phase of the SEO optimization Loop
-  - User asks to "check technical SEO"
-  - When rankings drop abnormally
-reads:
-  - rules/security.md
-writes:
-  - docs/seo/technical-audit.md
-  - loops/specs/<seo>/state.yaml
-quality_gates: []
-max_iterations: 2
 ---
-
 # Technical SEO Audit — Technical SEO Audit
+
+## When to use
+- When SEO optimization needs a technical foundation check
+- EXPERIMENT phase of the SEO optimization Loop
+- User asks to "check technical SEO
+- When rankings drop abnormally
+
+## Inputs
+- rules/security.md
+
+## Outputs
+- docs/seo/technical-audit.md
+- loops/specs/<seo>/state.yaml
 
 ## Iron Rules
 - Audit must be based on **actual detection**, not "I guess it should be fine"

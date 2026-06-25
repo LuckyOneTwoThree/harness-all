@@ -1,28 +1,28 @@
 ---
 name: policy-as-code
 description: Kyverno/OPA policy generation, converting ops standards into machine-enforceable policy rules
-triggers:
-  - When K8s admission policies need to be configured
-  - When security compliance requires policy enforcement
-  - When OPS_STRATEGY.md defines standards that need to be enforced
-  - When resources are detected that do not conform to standards
-  - When the user requests "configure policies"
-reads:
-  - docs/infrastructure/OPS_STRATEGY.md
-  - rules/security.md
-  - loops/LOOP.md
-  - memory/knowledge-base.md
-writes:
-  - docs/infrastructure/
-  - loops/specs/<task-name>/spec.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 2
 operation_tier: propose
 requires_approval: false
 ---
-
 # Policy as Code — Kyverno/OPA Policy Generation
+
+## When to use
+- When K8s admission policies need to be configured
+- When security compliance requires policy enforcement
+- When OPS_STRATEGY.md defines standards that need to be enforced
+- When resources are detected that do not conform to standards
+- When the user requests "configure policies
+
+## Inputs
+- docs/infrastructure/OPS_STRATEGY.md
+- rules/security.md
+- loops/LOOP.md
+- memory/knowledge-base.md
+
+## Outputs
+- docs/infrastructure/
+- loops/specs/<task-name>/spec.md
+- memory/knowledge-base.md
 
 ## Ground Rules
 

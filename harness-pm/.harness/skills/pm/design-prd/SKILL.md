@@ -1,36 +1,13 @@
 ---
 name: design-prd
 description: Use when you need to generate a standardized PRD document. PRD auto-generation and management, generating standardized PRD documents based on requirements and creative solutions, providing input for subsequent IA, flow, and prototype design. Covers PRD-L/S/X three-tier layering, 9-section complete structure, and 4 quality gates. Keywords: PRD generation, product requirements document, requirements document auto-generation, PRD management, writing requirements documents, product documentation.
-metadata:
-  module: "Product Ideation & Design"
-  sub-module: "Product Design & Prototype"
-  type: "pipeline"
-  version: "3.3"
-  domain_tags: ["Internet", "Software", "General"]
-  triggers:
-    - "Help me write a PRD document"
-    - "Generate a product requirements document"
-    - "How to write a requirements document"
-  interaction_mode: "ai_suggest_human_approve"
-execution_depth:
-  default: standard
-  quick_description: "Generate a PRD-L level document, including core sections (background & objectives, feature specs, acceptance criteria) and basic quality checks"
-  deep_description: "Generate a PRD-X level document, additionally including upstream conflict decision records, self-correction loop logs, open issue management, version change traceability chain, and degradation plan impact assessment"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/discovery/insight.md
-  - docs/discovery/opportunity.md
-  - docs/strategy/PRODUCT_STRATEGY.md
-  - docs/strategy/OKR.md
-  - docs/product/PRD.md
-writes:
-  - docs/product/PRD.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # PRD Generator
+
+## Outputs
+- docs/product/PRD.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 This Skill is responsible for automatically converting upstream phase outputs (user insights, opportunity definition, ideation) into PRD documents that meet quality standards, providing structured input for subsequent product design (IA, flow, prototype). Requirements collection, understanding, and prioritization are built into design-prd's Step 1-3, eliminating the need for a separate requirements management phase. Supports PRD-L/S/X three-tier layering, automatically performs 4 quality gate checks to ensure document completeness, consistency, ambiguity elimination, and traceability.
 

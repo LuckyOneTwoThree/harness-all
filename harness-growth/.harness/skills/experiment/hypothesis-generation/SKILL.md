@@ -1,23 +1,23 @@
 ---
 name: hypothesis-generation
 description: Generate falsifiable growth hypotheses based on data insights and growth methodology, producing structured "if X, then Y, because Z" hypotheses
-triggers:
-  - When a growth experiment needs to be designed but there's no hypothesis yet
-  - After AARRR diagnosis identifies weak links
-  - After user feedback / data analysis identifies opportunities
-  - PLAN phase of the growth experiment Loop
-reads:
-  - memory/knowledge-base.md
-  - docs/handoff/pm-to-growth.md
-  - loops/LOOP.md
-writes:
-  - loops/specs/<experiment>/spec.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 3
 ---
-
 # Hypothesis Generation — Growth Hypothesis Generation
+
+## When to use
+- When a growth experiment needs to be designed but there's no hypothesis yet
+- After AARRR diagnosis identifies weak links
+- After user feedback / data analysis identifies opportunities
+- PLAN phase of the growth experiment Loop
+
+## Inputs
+- memory/knowledge-base.md
+- docs/handoff/pm-to-growth.md
+- loops/LOOP.md
+
+## Outputs
+- loops/specs/<experiment>/spec.md
+- memory/knowledge-base.md
 
 ## Iron Rules
 - Each hypothesis must be **falsifiable** — able to be overturned by experimental data

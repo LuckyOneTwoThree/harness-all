@@ -1,21 +1,21 @@
 ---
 name: nrr-analysis
 description: NRR breakdown and improvement plan, including reduce churn + expansion + upsell analysis
-triggers:
-  - When net retention revenue needs to be analyzed
-  - Monetization optimization Workflow
-  - Growth review report
-  - User asks to "analyze NRR"
-reads:
-  - memory/knowledge-base.md
-writes:
-  - docs/operations/nrr-report.md
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 1
 ---
-
 # NRR Analysis — NRR Analysis and Improvement
+
+## When to use
+- When net retention revenue needs to be analyzed
+- Monetization optimization Workflow
+- Growth review report
+- User asks to "analyze NRR
+
+## Inputs
+- memory/knowledge-base.md
+
+## Outputs
+- docs/operations/nrr-report.md
+- memory/knowledge-base.md
 
 ## Iron Rules
 - NRR must be **broken down** into three factors: churn / contraction / expansion — looking only at the total can't locate the problem

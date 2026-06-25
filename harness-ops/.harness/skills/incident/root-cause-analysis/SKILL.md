@@ -1,30 +1,30 @@
 ---
 name: root-cause-analysis
 description: Root cause analysis, correlating multi-source data (logs / metrics / traces / events) to identify the root cause of incidents
-triggers:
-  - When root cause needs to be identified after incident stop-the-bleeding
-  - During the DEBUG stage of the incident LOOP
-  - When recurring intermittent issues need deep investigation
-  - When monitoring alerts cannot be explained by known patterns
-  - When the user requests "analyze the incident cause"
-reads:
-  - loops/specs/<incident-id>/spec.md
-  - loops/specs/<incident-id>/state.yaml
-  - loops/specs/<incident-id>/iterations.log
-  - memory/knowledge-base.md
-  - rules/security.md
-  - loops/LOOP.md
-writes:
-  - loops/specs/<incident-id>/evidence.md
-  - loops/specs/<incident-id>/iterations.log
-  - memory/knowledge-base.md
-quality_gates: []
-max_iterations: 3
 operation_tier: inspect
 requires_approval: false
 ---
-
 # Root Cause Analysis — Root Cause Analysis
+
+## When to use
+- When root cause needs to be identified after incident stop-the-bleeding
+- During the DEBUG stage of the incident LOOP
+- When recurring intermittent issues need deep investigation
+- When monitoring alerts cannot be explained by known patterns
+- When the user requests "analyze the incident cause
+
+## Inputs
+- loops/specs/<incident-id>/spec.md
+- loops/specs/<incident-id>/state.yaml
+- loops/specs/<incident-id>/iterations.log
+- memory/knowledge-base.md
+- rules/security.md
+- loops/LOOP.md
+
+## Outputs
+- loops/specs/<incident-id>/evidence.md
+- loops/specs/<incident-id>/iterations.log
+- memory/knowledge-base.md
 
 ## Ground Rules
 

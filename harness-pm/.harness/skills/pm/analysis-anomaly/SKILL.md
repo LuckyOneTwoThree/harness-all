@@ -1,32 +1,13 @@
 ---
 name: analysis-anomaly
 description: Use when automatically detecting and attributing metric anomalies. Automated Data Analysis Engine, AI auto-executes 24/7 operation, responsible for metric health checks, anomaly detection, automated attribution, and insight push. Outputs a complete anomaly report when metric anomalies are detected. Keywords: anomaly detection, data analysis, automated attribution, metric monitoring, anomaly report, metric anomaly, data anomaly, anomaly alert, data has issues, metric suddenly dropped, data fluctuation. This skill is suitable for offline anomaly analysis scenarios, not for real-time monitoring.
-metadata:
-  module: "Product Metrics Operations"
-  sub-module: "Data Analysis"
-  type: "pipeline"
-  version: "2.1"
-  domain_tags: ["Internet", "SaaS", "General"]
-  triggers:
-    - "DAU suddenly dropped 30% today, help me check the cause"
-    - "Metric anomaly alert, help me with attribution analysis"
-    - "Data fluctuation is too large, see what went wrong"
-  interaction_mode: "ai_auto"
-execution_depth:
-  default: standard
-  quick_description: "Directly output anomaly diagnosis and root cause"
-  deep_description: "Full analysis + root cause inference chain + impact scope assessment + prevention mechanism design"
-reads:
-  - rules/security.md
-  - loops/LOOP.md
-  - docs/metrics/metrics-system.md
-writes:
-  - docs/metrics/data-analysis-report.md
-  - memory/progress.md
-  - memory/knowledge-base.md
 ---
-
 # Automated Data Analysis Engine
+
+## Outputs
+- docs/metrics/data-analysis-report.md
+- memory/progress.md
+- memory/knowledge-base.md
 
 ## Core Principles
 

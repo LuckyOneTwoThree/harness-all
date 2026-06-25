@@ -1,21 +1,21 @@
 ---
 name: content-distribution
 description: Adapt reviewed content into multi-channel distribution versions (blog/WeChat Official Account/social/email), repurposing one piece across channels
-triggers:
-  - After content-review passes
-  - EXPERIMENT phase of the content marketing Loop (distribution)
-  - User asks to "distribute this content"
-reads:
-  - docs/content/drafts/
-  - docs/handoff/solo-to-growth.md
-writes:
-  - docs/content/published/
-  - loops/specs/<content>/state.yaml
-quality_gates: []
-max_iterations: 2
 ---
-
 # Content Distribution — Multi-Channel Distribution
+
+## When to use
+- After content-review passes
+- EXPERIMENT phase of the content marketing Loop (distribution)
+- User asks to "distribute this content
+
+## Inputs
+- docs/content/drafts/
+- docs/handoff/solo-to-growth.md
+
+## Outputs
+- docs/content/published/
+- loops/specs/<content>/state.yaml
 
 ## Iron Rules
 - Each channel version must be **independently adapted**, not a simple copy-paste
