@@ -70,6 +70,50 @@ Append format:
 - Over-engineering in the green phase (YAGNI)
 - Adding new features during refactoring (mixing responsibilities)
 
+## Anti-Rationalization Table
+
+| Anti-pattern | Common excuse | Why it doesn't hold |
+|---|---|---|
+| Writing code first, adding tests later | "I already know how to implement it" | Tests written after the fact conform to the implementation and cannot validate the design |
+| Saying "should pass" without running | "The change is tiny" | Running a test costs ≤ 30 seconds; regression triage costs hours |
+| Over-engineering in Green | "I'll need this later anyway" | YAGNI — unused code is a liability, not an asset |
+| Skipping Refactor | "The feature works, ship it" | Tech debt compounds; the next change costs more |
+| Stopping after one test passes | "It's green, done" | Other tests may have regressed silently; run the full suite |
+| Mocking instead of using real code | "Mocks are faster" | You are testing the mock, not the code under test |
+| Writing multiple tests before any impl | "Batching is more efficient" | Violates small-step iteration; you cannot isolate which test drove which code |
+
+## Red Flags
+
+Stop immediately and reassess if you observe any of:
+- Test output shows `0 tests` or `0 passed` — the test was not collected by the runner
+- evidence.md contains the phrase "should pass" — you did not actually run the test
+- A new test passes on the first run without any implementation change — you are testing existing behavior, not new behavior
+- Refactor skipped because "it already works" — tech debt is accumulating now
+- Multiple tests written before any implementation — small-step iteration is broken
+- Implementation exceeds the scope of the failing test — you are gold-plating, not satisfying the spec
+
+## Good vs Bad
+
+A good failing test pins one behavior and fails for the right reason. A bad failing test is vague, passes for the wrong reason, or tests implementation details instead of behavior.
+
+<Good>
+```python
+def test_discount_rejects_negative_price():
+    cart = Cart()
+    with pytest.raises(ValueError):
+        cart.apply_discount(price=-10)
+```
+</Good>
+
+<Bad>
+```python
+def test_discount_works():
+    cart = Cart()
+    cart.apply_discount(price=-10)
+    assert cart.total >= 0  # passes even if the bug exists
+```
+</Bad>
+
 ## Relationship with LOOP
 This skill corresponds to the ACT phase of LOOP.
 - Red = write tests (input to ACT)

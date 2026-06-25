@@ -46,11 +46,15 @@ description: Requirements exploration and design refinement — a hard gate: no 
    - What counts as success? (acceptance criteria, described in testable terms)
    - What are we NOT doing? (explicit boundaries to avoid scope creep)
 
+   *Exit condition: each of the four questions above has a written answer, and the "NOT doing" list contains at least one explicit item.*
+
 2. **Constitution check**
    Read `constitution.md` and check whether the requirements violate the project constitution:
    - Will it introduce new dependencies? (zero-new-dependency principle; if needed, go through the `dependency-management` skill approval flow)
    - Does it involve APIs? (must have a test plan)
    - Does it involve schema changes? (must have a migration script, go through the `migration` skill)
+
+   *Exit condition: every checkbox above is answered yes/no; for each "yes", the corresponding approval or migration skill is queued (or already executed) and recorded in PROJECT.md.*
 
 3. **Technical feasibility**
    Assess whether the existing code can support the requirements:
@@ -61,6 +65,8 @@ description: Requirements exploration and design refinement — a hard gate: no 
      - Does the technical solution satisfy the engineering constraints in the summary? (e.g. "5GB export requires an async queue")
      - If you find a contradiction between an AC and a business constraint, **raise it proactively** instead of blindly implementing the AC
      - Write the business constraints into the technical solution section of PROJECT.md as architectural decision input
+
+   *Exit condition: the technical solution names a concrete tech stack and at least one implementation path (files/modules to add or reuse); known risks are listed, not hidden.*
 
 4. **Output the design document**
    Decide the write strategy based on the input source:
@@ -74,20 +80,35 @@ description: Requirements exploration and design refinement — a hard gate: no 
      - Technical solution (brief)
      - Out-of-scope items (boundaries)
 
+   *Exit condition: docs/product/PROJECT.md exists on disk and contains all four sections (feature description, AC-xxx, technical solution, out-of-scope) for the current feature.*
+
 5. **Hard gate check**
    Confirm item by item:
-   - [ ] Are the requirements clear? (can be stated in one sentence)
-   - [ ] Are the acceptance criteria testable? (not "easy to use", but "given input X, returns Y")
-   - [ ] Is the constitution satisfied?
-   - [ ] Has the user confirmed?
+   - [ ] Can the requirement be stated in one sentence (≤30 words, with no "and / or / etc." conjunctions)?
+   - [ ] Does the technical solution specify a concrete tech stack and at least one implementation path?
+   - [ ] Is the constitution satisfied (no unresolved violations)?
+   - [ ] Have all prohibited items in `rules/security.md` been scanned and confirmed absent?
 
    **If any item is not satisfied → stop and ask the user; do not proceed**
+
+   *Exit condition: all four checkboxes are ticked. If any checkbox cannot be ticked, the skill returns control to the user instead of advancing to writing-plans.*
 
 ## Prohibitions
 - Starting work before requirements are clear (the most common cause of mid-sized project failures)
 - Writing acceptance criteria as untestable descriptions like "the system should be easy to use"
 - Skipping the constitution check
 - Making requirement decisions on behalf of the user
+
+## Anti-Rationalization Table
+
+| Anti-pattern | Common excuse | Why it doesn't hold |
+|---|---|---|
+| Skipping brainstorming and jumping straight to code | "The requirements are simple" | Simple projects hide assumptions more easily; later changes cost exponentially more |
+| Not reading the handoff documents | "The user already told me" | Handoff docs carry AC numbers and design constraints; a conversation can drop or misread them |
+| Picking a tech stack without validation | "This library is popular" | Popular ≠ suitable; you must check compatibility, license, and maintenance status |
+| Continuing past the hard gate | "Good enough for now" | "Good enough" is not "passed"; an un-passed gate produces an untestable plan downstream |
+| Not writing the design document | "I'll keep it in my head" | writing-plans needs a doc input; memory drifts and is not queryable by downstream skills |
+| Replacing testable ACs with vibes | "Users will know it when they see it" | "Vibes" cannot be verified by LOOP, so the feature never reaches done |
 
 ## Relationship with LOOP
 This skill runs before the PLAN phase of LOOP and is the prerequisite gate for PLAN.

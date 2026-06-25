@@ -20,6 +20,8 @@ description: Frontend Implementation — component decomposition/state managemen
 - docs/design-system/tokens.css
 - docs/design-system/DESIGN.md
 - docs/interaction/component-spec.md
+- Reference/component-map-contract.md
+- Reference/state-management-matrix.md
 
 ## Outputs
 - loops/specs/<feature>/iterations.log
@@ -28,65 +30,18 @@ description: Frontend Implementation — component decomposition/state managemen
 **Composition over configuration.** `<Card><CardHeader><CardTitle>` is better than `<Card title="..." headerVariant="large">`. Component composition > configuration explosion.
 
 ## Positioning
-
 This skill is **engineering implementation**, not visual design:
 - Visual design (color/typography/branding) → handed off by harness-design via `docs/handoff/`
 - **This skill handles**: component structure, state management, styling engineering approach selection, three-state handling
 
 ## Consuming Design Assets (from harness-design)
-
-This skill has a hard dependency on harness-design outputs and reads them per the following contracts:
-
-### 1. component-map.json (explicit mapping layer, core contract)
-
-Read `docs/handoff/component-map.json` as the **single source of truth** for component implementation:
-
-```json
-{
-  "PrimaryButton": {
-    "designToken": "button.primary",
-    "engineeringComponent": "Button",
-    "props": { "variant": "primary", "size": "md" },
-    "states": ["default", "hover", "active", "disabled", "loading"],
-    "notes": "Primary action button, at most 1 per screen"
-  }
-}
-```
-
-**Consumption rules**:
-- `engineeringComponent` → engineering component name (e.g. `Button`), used directly as the code component name
-- `props` → contract for component props; all must be implemented
-- `states` → all states must be covered (none can be missing; a missing state is a design omission, feed it back to harness-design)
-- `designToken` → token name linked to tokens.json; hardcoded values are forbidden
-
-**Framework-agnostic constraint**: the props Type must match the framework in `docs/engineering/TECH_STACK.md`:
-- React → `ReactNode` / `JSX.Element`
-- Vue → `VNode` / `Slot`
-- Svelte → `Snippet` / `Component`
-- Native/Web Components → `HTMLElement` / `Slot`
-- If the Type in component-map.json does not match the project framework, mark it as "to be aligned with harness-design"
-
-### 2. tokens.json / tokens.css (design tokens)
-
-Read `docs/design-system/tokens.json` (structured) and `tokens.css` (directly importable) as the **source of spacing/color/type scale** for styling engineering:
-- spacing scale → arbitrary pixel values are forbidden; values must come from the scale
-- color token → use semantic tokens like `text-primary` / `bg-surface`; bare `#333` is forbidden
-- type scale → use the design system's font size scale; do not pick arbitrary values
-
-### 3. DESIGN.md (10-section design system definition)
-
-Read `docs/design-system/DESIGN.md` to understand the global constraints of the design system (Aesthetic Direction / Color System / Typography Scale / Layout Principles, etc., 10 sections in total).
-
-### 4. component-spec.md (interactive component spec)
-
-Read `docs/interaction/component-spec.md` to obtain the interaction behavior spec for components (gestures/animations/state transitions).
-
-### 5. design-to-solo.md (handoff notes)
-
-Read `docs/handoff/design-to-solo.md` to obtain:
-- Design AC-xxx checklist (e.g. "contrast ≥4.5:1", "no overflow at 375px") → flows into verify checks
-- Design asset paths (`docs/visual/<page>.md` / `docs/interaction/<page>.md`)
-- Open items (questions to confirm with design)
+This skill has a hard dependency on harness-design outputs. Read each asset per its contract; do not improvise.
+- **`docs/handoff/component-map.json`** — single source of truth for component implementation. Schema, consumption rules, framework Type alignment, and a worked example live in `Reference/component-map-contract.md`.
+- **`docs/design-system/tokens.json` / `tokens.css`** — spacing/color/type scale. Hardcoded values are forbidden; resolve every value through a token.
+- **`docs/design-system/DESIGN.md`** — global design system constraints (10 sections).
+- **`docs/interaction/component-spec.md`** — interaction behavior spec (gestures / animations / state transitions).
+- **`docs/handoff/design-to-solo.md`** — handoff notes: design AC-xxx checklist (flows into verify), asset paths, open items.
+When sources conflict, follow the priority order in `Reference/component-map-contract.md`. A contradiction is a handoff defect — feed it back to harness-design.
 
 ## Component Design
 
@@ -101,54 +56,22 @@ Read `docs/handoff/design-to-solo.md` to obtain:
 
 ### 3. Composition over Configuration
 ```tsx
-// ✓ Composition (recommended)
-<Card>
-  <CardHeader>
-    <CardTitle>Title</CardTitle>
-  </CardHeader>
-  <CardBody>Content</CardBody>
-</Card>
-
-// ✗ Configuration explosion (avoid)
-<Card title="Title" headerVariant="large" bodyPadding="md" showHeader={true}>
-  Content
-</Card>
+// Good — composition
+<Card><CardHeader><CardTitle>Title</CardTitle></CardHeader><CardBody>Content</CardBody></Card>
+// Bad — configuration explosion
+<Card title="Title" headerVariant="large" bodyPadding="md" showHeader={true}>Content</Card>
 ```
 
 ### 4. Colocate
-Everything related to a component lives in the same directory:
-```
-UserList/
-├── UserList.tsx        # implementation
-├── UserList.test.tsx   # tests
-├── UserList.stories.tsx # stories (if any)
-├── useUserData.ts      # related hook
-└── types.ts            # types
-```
+Everything related to a component lives in the same directory: `UserList/` contains `UserList.tsx` (impl), `UserList.test.tsx` (tests), `UserList.stories.tsx` (stories), `useUserData.ts` (hook), and `types.ts`.
 
 ## State Management Selection
-
-**Use the simplest solution; upgrade on demand**:
-
-| Scenario | Approach | When to use |
-|------|------|--------|
-| In-component UI state | `useState` | toggles, input values, tab switching |
-| Shared across 2-3 sibling components | Lifted state | lift to common parent |
-| Global read-heavy write-light | `Context` | theme / auth / locale |
-| Shareable / bookmarkable | URL state | filters / pagination / sorting |
-| Remote data + caching | React Query / SWR | API data (loading/error/cache) |
-| Complex global client state | Zustand / Redux | state frequently updated across many components |
-
-**Selection principles**:
-- Start with `useState`; upgrade only when insufficient
-- Avoid prop drilling beyond 3 levels (use Context or a state library)
-- Do not prematurely introduce Redux for "future possible needs"
+Use the simplest solution that fits; escalate on demand. The full selection matrix (6 scenarios with escalation triggers), applicability conditions, and Good/Bad code examples live in `Reference/state-management-matrix.md`. In short: start with `useState`, lift to a common parent for 2-3 siblings, escalate to Context / URL state / React Query / Zustand only when you can cite a concrete pain point — never "for future possible needs".
 
 ## Styling Engineering
 
 ### 1. Design system constraints
-- **spacing scale**: use the design system's spacing scale (e.g. increments of 0.25rem: 0.25 / 0.5 / 1 / 1.5 / 2 / 3 / 4)
-- **No arbitrary pixel values**: do not use `13px` / `2.3rem`; use values from the scale
+- **spacing scale**: use the design system's spacing scale (e.g. 0.25 / 0.5 / 1 / 1.5 / 2 / 3 / 4 rem); arbitrary values like `13px` / `2.3rem` are forbidden
 - **Semantic color tokens**: use `text-primary` / `bg-surface`; do not use bare `#333`
 - **Type scale**: use the design system's type scale; do not pick arbitrary values
 
@@ -158,30 +81,23 @@ UserList/
 - Retrofitting responsiveness later costs 3× as much; do it from the start
 
 ### 3. Avoid the AI default aesthetic
-- Purple everywhere, excessive gradients, `rounded-2xl` for everything, stock card grids, stacked shadows
-- These are "the generic look of AI-generated code", not "UI written by an engineer with strong design sense"
+- Purple everywhere, excessive gradients, `rounded-2xl` for everything, stock card grids, stacked shadows — these are "the generic look of AI-generated code", not "UI written by an engineer with strong design sense"
 - Visual specs are produced by harness-design; this skill implements per the spec
 
 ## Three-State Handling (mandatory)
-
 Every data-driven component must handle three states:
-
 ```tsx
 function UserList() {
   const { data, isLoading, error } = useUserData();
-
-  if (isLoading) return <Skeleton />;      // loading state
-  if (error) return <ErrorMessage error={error} />;  // error state
-  if (!data?.length) return <EmptyState />;  // empty state
-
-  return <ul>{data.map(user => <UserListItem key={user.id} user={user} />)}</ul>;
+  if (isLoading) return <Skeleton />;               // loading
+  if (error) return <ErrorMessage error={error} />; // error
+  if (!data?.length) return <EmptyState />;         // empty
+  return <ul>{data.map(u => <UserListItem key={u.id} user={u} />)}</ul>;
 }
 ```
-
 **Forbidden**: writing only the happy path and ignoring loading/error/empty.
 
 ## Accessibility (WCAG 2.1 AA baseline)
-
 - Every interactive element is keyboard reachable (traversable via Tab)
 - Controls without visible text have `aria-label`
 - Color is not the only state indicator (add icons/text)
@@ -189,15 +105,14 @@ function UserList() {
 - Use `<button>`, not `<div onClick>`
 
 ## Anti-Rationalization Table
-
-| Excuse | Rebuttal |
-|------|------|
-| "Write the component big first, split later" | 200 lines is a red line; split once exceeded |
-| "Responsive can wait" | Retrofitting later costs 3× as much |
-| "Accessibility is nice-to-have" | It is a legal requirement and an engineering quality standard in many places |
-| "Use Redux first to be safe" | Over-engineering; start with useState |
-| "Design isn't finalized, skip styles for now" | Use design system defaults; an unstyled UI leaves a bad impression |
-| "Skip the loading state for now" | Three states are mandatory, not optional |
+| Shortcut taken | Rationalization | Why it fails |
+|----------------|-----------------|--------------|
+| Write the component big, defer splitting | "I'll split it later." | 200 lines is a red line; split once exceeded. |
+| Defer responsive implementation | "Responsive can wait." | Retrofitting later costs 3× as much. |
+| Skip accessibility | "Accessibility is nice-to-have." | It is a legal requirement and an engineering quality standard in many places. |
+| Start with Redux | "Use Redux first to be safe." | Over-engineering; start with useState. |
+| Skip styles when design is unfinished | "Design isn't finalized, skip styles for now." | Use design system defaults; an unstyled UI leaves a bad impression. |
+| Skip the loading state | "Skip the loading state for now." | Three states are mandatory, not optional. |
 
 ## Prohibitions
 - Components > 200 lines without splitting
@@ -228,8 +143,8 @@ After implementation is complete, record in evidence.md:
 ```
 ## Frontend Implementation
 - Component structure: X components, max Y lines (≤200 ✓)
-- State management: chose <approach>, reason: <one sentence>
-- Three-state handling: loading ✓ / error ✓ / empty ✓
-- Accessibility: keyboard reachable ✓ / aria-label ✓ / alt ✓
-- Responsive: 320/768/1024/1440 four breakpoints ✓
+- State management: <approach>, reason: <one sentence>
+- Three-state: loading ✓ / error ✓ / empty ✓
+- Accessibility: keyboard ✓ / aria-label ✓ / alt ✓
+- Responsive: 320/768/1024/1440 ✓
 ```

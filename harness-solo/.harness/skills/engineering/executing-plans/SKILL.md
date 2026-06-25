@@ -7,7 +7,7 @@ description: Execute the spec.md produced by writing-plans, advancing through th
 ## When to use
 - After writing-plans completes
 - When spec.md is ready and coding is about to start
-- When the user says "start executing" / "go" / "let's go
+- When the user says "start executing" / "go" / "let's go"
 
 ## Inputs
 - loops/LOOP.md
@@ -20,7 +20,7 @@ description: Execute the spec.md produced by writing-plans, advancing through th
 - loops/specs/<feature>/iterations.log
 
 ## Iron Rule
-**Advance through the task sequence in spec.md; a checkpoint is mandatory after each task.** Do not skip tasks; do not batch changes across multiple tasks before verifying.
+**Advance through the task sequence in spec.md; a checkpoint is mandatory after each task.** Do not skip tasks; do not batch changes across multiple tasks before verifying. state.yaml is the single source of truth for the resume position — never rely on memory.
 
 ## Process
 
@@ -28,6 +28,7 @@ description: Execute the spec.md produced by writing-plans, advancing through th
    - Read `loops/specs/<feature>/spec.md` and confirm the task list (T1, T2, T3...)
    - Read `loops/specs/<feature>/state.yaml` to confirm which task to resume from (resumable from breakpoint)
    - Read `docs/engineering/TECH_STACK.md` to confirm the test/lint/build commands
+   - If any of the three is missing or stale, STOP and request the missing input before proceeding
 
 2. **Execute task by task** (each task goes through a small loop)
 
@@ -47,24 +48,34 @@ description: Execute the spec.md produced by writing-plans, advancing through th
    **2.3 Checkpoint (manual confirmation point)**
    - Report the completion status of this task to the user:
      ```
-     ✅ T<N> complete
+     T<N> complete
      - Files changed: [list]
      - Tests: [passed/total]
      - AC progress: AC-xxx ✓
      ```
    - Ask the user: "T<N> is complete, continue to T<N+1>?"
-   - User confirms → continue to the next task
-   - User requests adjustments → return to writing-plans to modify spec.md
+   - Branch by user response:
+     - **User confirms** → proceed to the next task
+     - **User requests adjustment** → return to writing-plans, modify spec.md, then resume from the affected task
+     - **User unresponsive (autonomous mode)** → check the verify result:
+       - verify **passed** → proceed to the next task; append a checkpoint line to `iterations.log`:
+         ```
+         [YYYY-MM-DD HH:MM] iter=<N> task=T<N> checkpoint=PASSED
+         ```
+       - verify **failed** → STOP, do not guess user intent, set `state.yaml` `status: blocked`, wait for human input
 
 3. **Failure Handling**
    - verify fails → invoke `systematic-debugging` to find the root cause → return to 2.1 and redo
    - Iteration limit exceeded (see the loop type table in LOOP.md) → stop and request human intervention
+   - Same task fails 3+ times → spec or approach is wrong; stop retrying and return to writing-plans
 
 4. **All Tasks Complete**
    - All T<N> complete + all ACs ✓ → exit this skill
    - Enter the `requesting-code-review` skill for the final review
 
 ## Checkpoint Strategy
+
+Choose the checkpoint cadence based on the user's presence and task granularity:
 
 | Scenario | Strategy |
 |------|------|
@@ -73,6 +84,8 @@ description: Execute the spec.md produced by writing-plans, advancing through th
 | User away (autonomous) | Execute continuously until verify fails or all tasks complete; record checkpoints in iterations.log |
 
 ## Division of Labor with Other Skills
+
+This skill schedules; it does not write code or run tests itself. Each collaborator owns one phase.
 
 | Skill | Responsibility | Timing |
 |-------|------|------|
@@ -87,6 +100,30 @@ description: Execute the spec.md produced by writing-plans, advancing through th
 - Starting without reading state.yaml (may repeat completed tasks)
 - Continuing to the next task after a verify failure (errors accumulate)
 - Task granularity exceeding 5 minutes without further breakdown (spec.md breakdown is inadequate; return to writing-plans)
+- Writing implementation code directly — this skill is a scheduler; code is written by the tdd skill
+- Updating state.yaml from memory instead of reading the raw file first
+- Guessing user intent in autonomous mode when verify fails (silent retry is forbidden)
+
+## Anti-Rationalization Table
+
+Each row below names a shortcut you may be tempted to take, the rationalization that makes it feel acceptable, and why it fails. When you catch yourself reaching for the rationalization, stop and follow the rule instead.
+
+| Shortcut taken | Rationalization | Why it fails |
+|----------------|-----------------|--------------|
+| Start executing without reading spec.md | "I remember the plan." | Memory is unreliable; spec.md is the single source of truth and plans drift between sessions. |
+| Skip the checkpoint because the task is small | "It's just a tiny task." | Small tasks can still drift from ACs; checkpoints are how drift gets caught before it compounds. |
+| Continue to the next task after a verify failure | "The next task might fix it." | Failures accumulate; the later the fix, the harder it is to localize the root cause. |
+| Write implementation code yourself | "It's faster than dispatching." | executing-plans is a scheduler; writing code is the tdd skill's job — violating this destroys the LOOP division of labor. |
+| Delay updating state.yaml | "I'll update it later." | The LOOP engine reads state.yaml to resume; a stale state equals lost progress and duplicated work. |
+| Guess user intent in autonomous mode | "They probably want me to keep going." | A failed verify is a hard stop; guessing intent silently violates the checkpoint contract. |
+
+## Red Flags
+Stop and reconcile immediately when any of these appear:
+- `iterations.log` shows the same task failing 3+ times — the spec or the approach is wrong; return to writing-plans or systematic-debugging instead of retrying.
+- `state.yaml` `stage` does not match the actual work being done — the engine has lost sync with reality; re-read state.yaml before any further action.
+- The user says "continue" twice in a row without reviewing the checkpoint output — confirm they actually read it before proceeding; silence is not consent.
+- An AC is marked `✓` in the checkpoint report but verify was never run — the mark is fabricated; rerun verify before continuing.
+- A single task takes more than 15 minutes of wall-clock time — the task granularity is too coarse; return to writing-plans to split it.
 
 ## Relationship with LOOP
 This skill is the **scheduler** of the LOOP cycle and does not write code itself:

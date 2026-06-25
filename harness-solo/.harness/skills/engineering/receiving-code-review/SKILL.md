@@ -89,6 +89,33 @@ description: Receive and process code review feedback — triage + fix + reply
 - Batch-accepting all feedback without thinking (some feedback may be wrong)
 - Claiming FIXED without running tests after a fix
 
+## Anti-Rationalization Table
+
+When you catch yourself thinking the excuse in column 2, read column 3 and resume the response.
+
+| Anti-pattern | Common Excuse | Why It Fails |
+|------|------|------|
+| Defensive response to feedback | "You don't understand my design" | Review is about finding problems, not denying your ability |
+| Accepting only Minor, rejecting Critical | "This Critical is not important" | Critical issues are by definition mandatory; you do not get to downgrade them |
+| Not updating evidence after a fix | "Fixed, that's enough" | No evidence = not fixed; the review closed loop requires a recorded trail |
+| Batch-accepting all feedback | "Whatever you say" | Blind acceptance = no thinking; it may introduce new problems |
+| Skipping the second-round review | "It's fixed, that's enough" | Fixes may introduce new problems; a second round is required to confirm |
+| Delaying the response | "When I have time" | Review feedback is time-sensitive; delay = blocking downstream work |
+| Marking FIXED without running tests | "The change is trivial" | Trivial changes still break things; tests are mandatory before claiming FIXED |
+| Rejecting feedback as "reviewer is wrong" | "They don't know this codebase" | Even a wrong comment points at something unclear; clarify before rejecting |
+| Reopening a "fixed" issue with a workaround | "I worked around it" | A workaround is not a fix; the root cause remains and will resurface |
+
+## Red Flags
+Stop and re-triage if you observe any of the following:
+- The same feedback is rejected 3+ times (you are likely defending instead of evaluating)
+- evidence.md has no review response record (the closed loop was never closed)
+- Critical feedback is not responded to within 24 hours
+- Tests fail after a fix but delivery continues
+- A second-round review finds a "fixed" issue has reappeared (the fix was never real)
+
+Any single red flag is sufficient grounds to halt delivery and re-enter the triage step.
+Do not override a red flag with "probably fine"; escalate it to a re-fix or to the user.
+
 ## Division of Labor with Other Skills
 
 | Skill | Responsibility | Timing |

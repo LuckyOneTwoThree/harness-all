@@ -10,9 +10,9 @@ description: Create new skills following the standard, supporting framework exte
 - When extending the framework
 
 ## Inputs
-- .harness/templates/SKILL.md.template
-- .harness/skills/INDEX.md
-- .harness/loops/LOOP.md
+- .harness/templates/SKILL.md.template (read-only, structural reference)
+- .harness/skills/INDEX.md (read-write)
+- .harness/loops/LOOP.md (read-only, schema reference)
 
 ## Outputs
 - .harness/skills/<category>/<new-skill-name>/SKILL.md
@@ -88,6 +88,50 @@ Criteria for creating a new skill:
 - **Minimal necessary**: fill in only the required fields in frontmatter (name+description); do not fill in for the sake of completeness
 - **Composable**: skills declare dependencies via Inputs/Outputs sections; do not hardcode invocations
 
+## Good vs Bad Skill Example
+
+A good skill states an inviolable rule with a **verifiable exit condition**. A bad skill states a value with no way to check compliance.
+
+<Good>
+```markdown
+## Iron Rule
+**No production code without a failing test.** A test that passes immediately
+= you are testing existing behavior, not new behavior.
+## Process
+1. Write a failing test → run it → confirm FAIL is visible
+2. Write minimal code → run it → confirm PASS is visible
+```
+Exit condition: the test runner's actual output (FAIL then PASS) is observable evidence.
+</Good>
+
+<Bad>
+```markdown
+## Principles
+Tests are important. Please write tests for your code and try to keep
+coverage high. Quality matters.
+```
+Exit condition: none. "Important" and "high" are not measurable.
+</Bad>
+
+The difference: the Good example gives the Agent a binary check on its own output. The Bad example is an abstract slogan every implementation can claim to satisfy.
+
+## Read-Only Inputs Annotation
+
+In the **Inputs** section, annotate each entry with its access mode so the Agent (and reviewers) can see at a glance which files are referenced vs modified:
+
+```
+## Inputs
+- loops/LOOP.md (read-only, schema reference)
+- loops/specs/<feature>/state.yaml (read-write)
+- rules/security.md (read-only, constraint reference)
+- docs/handoff/<source>-to-solo.md (read-only, then consumed)
+```
+
+Convention:
+- `(read-only[, ...])` — read for reference, must not be modified (default when no annotation)
+- `(read-only, then consumed)` — read-only, but the skill acts on its contents this session
+- `(read-write)` — the skill writes back; must also appear in **Outputs**
+
 ## Naming Conventions
 
 - lowercase-kebab-case: `test-driven-development`, not `TestDrivenDevelopment`
@@ -101,6 +145,16 @@ Criteria for creating a new skill:
 - Doing multiple things in one skill (violates single responsibility)
 - Hardcoding invocations of other skills (declare dependencies via Inputs/Outputs)
 - Not verifying after creation (the file may not have been written successfully)
+
+## Anti-Rationalization Table
+
+| Anti-pattern | Common excuse | Why it doesn't hold |
+|---|---|---|
+| Not updating INDEX.md | "I'll update it later" | INDEX.md is the routing entry; an unregistered skill is invisible to the Agent and cannot be discovered |
+| Letting a skill exceed 300 lines | "All of it is important" | Over 300 lines violates the constitution and fills the Agent's context window, pushing the Iron Rule out of focus |
+| Decorating with emoji | "It looks better" | Emoji adds visual noise without adding information; the framework is plain-text by convention |
+| Not testing a new skill | "I wrote it correctly" | Without a test run you do not know whether the Agent can actually follow the Process you wrote |
+| Skipping the read-only annotation | "It's obvious from context" | Without annotation, reviewers and the Agent cannot tell which inputs are safe to share vs which will be mutated |
 
 ## Relationship with LOOP
 This skill is a **meta skill**, not inside LOOP, used for the framework's own extension.
