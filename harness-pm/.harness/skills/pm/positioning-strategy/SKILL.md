@@ -4,6 +4,14 @@ description: Used when developing product positioning, differentiation strategy,
 ---
 # Product Positioning Strategy Development
 
+## When to use
+- Help me define product positioning
+- Write a positioning statement
+- Analyze our differentiation advantages
+- Where do we differ from competitors
+- Is our differentiation sustainable
+- Which users are not our target
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

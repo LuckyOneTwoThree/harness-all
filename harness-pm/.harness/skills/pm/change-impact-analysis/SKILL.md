@@ -4,6 +4,11 @@ description: Used when analyzing the impact scope of PRD changes, design changes
 ---
 # Requirement Change Impact Analysis Automation
 
+## When to use
+- Requirements changed, check the impact scope
+- Analyze which modules this change will affect
+- Requirements changed, help me evaluate the impact
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

@@ -4,6 +4,14 @@ description: Used when opportunity identification, opportunity assessment, or pr
 ---
 # Opportunity Definition — Opportunity Identification & Definition
 
+## When to use
+- Help me evaluate this product opportunity
+- Identify what product opportunities exist
+- Define the problem we need to solve
+- Generate an opportunity brief
+- Is this opportunity worth pursuing
+- Help me think about the problem from a different angle
+
 ## Outputs
 - docs/discovery/opportunity.md
 - memory/progress.md

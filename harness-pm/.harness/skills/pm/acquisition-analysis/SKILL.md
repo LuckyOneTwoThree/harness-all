@@ -4,6 +4,13 @@ description: Use when you need to evaluate acquisition channels or optimize the 
 ---
 # Acquisition Analysis Integrated
 
+## When to use
+- Which channel has the best user acquisition performance
+- Help me check the ROI of each channel
+- Registration-to-activation conversion rate is too low
+- Where in the funnel is the most drop-off
+- How to improve acquisition conversion rate
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

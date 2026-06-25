@@ -4,6 +4,11 @@ description: Used when designing a new A/B test experiment. A/B test auto-design
 ---
 # A/B Test Auto-Design
 
+## When to use
+- I want to validate if the new homepage improves conversion, help me design an AB test
+- How many samples does this feature change need
+- Help me design a traffic split experiment plan
+
 ## Outputs
 - docs/metrics/experiment-report.md
 - memory/progress.md

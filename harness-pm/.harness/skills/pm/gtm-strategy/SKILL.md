@@ -4,6 +4,11 @@ description: Used when developing a product go-to-market strategy. Auto-generate
 ---
 # Go-to-Market Strategy Document Generation
 
+## When to use
+- New product is about to launch, how to promote it
+- Help me make a launch plan
+- How to do product release strategy
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

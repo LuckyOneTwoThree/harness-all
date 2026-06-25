@@ -4,6 +4,11 @@ description: Use when analyzing and optimizing the payment conversion funnel. Pa
 ---
 # Payment Funnel Auto-Analysis
 
+## When to use
+- Why are users unwilling to pay
+- How to improve payment conversion rate
+- Where is the best place to put the paywall
+
 ## Outputs
 - memory/progress.md
 - memory/knowledge-base.md

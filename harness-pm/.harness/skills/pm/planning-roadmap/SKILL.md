@@ -4,6 +4,10 @@ description: Use when you need to create a product roadmap, quarterly plan, rele
 ---
 # Roadmap Auto-Planning
 
+## When to use
+- Help me plan the product roadmap
+- What should the next release include
+
 ## Outputs
 - memory/progress.md
 - memory/knowledge-base.md

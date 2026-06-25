@@ -4,6 +4,11 @@ description: Use when you need to consolidate growth model diagnosis and stage o
 ---
 # Growth Strategy Report Generation
 
+## When to use
+- Help me produce a growth strategy report
+- What to do when growth hits a bottleneck
+- How to formulate a growth plan
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

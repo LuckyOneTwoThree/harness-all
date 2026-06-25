@@ -4,6 +4,12 @@ description: Used when monitoring product metrics and detecting anomalies. Monit
 ---
 # Monitoring Alert Detection 🤖
 
+## When to use
+- Set up monitoring system
+- Configure alert rules
+- Metric anomaly detection
+- How to monitor core paths
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

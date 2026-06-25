@@ -4,6 +4,11 @@ description: Used when consolidating operations strategies and processes into a 
 ---
 # Product Operations Manual Generation
 
+## When to use
+- How to write an operations manual
+- How to standardize daily operations processes
+- Help me organize operations SOP
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

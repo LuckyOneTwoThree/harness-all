@@ -4,6 +4,14 @@ description: Use when reducing churn rate or improving user engagement. Retentio
 ---
 # Retention Management Integrated
 
+## When to use
+- Users keep churning, what should I do
+- How to spot users about to leave early
+- Churn rate is too high, how to reduce it
+- How to run differentiated operations for different users
+- How to improve user engagement
+- How to do user segmentation
+
 ## Outputs
 - memory/progress.md
 - memory/knowledge-base.md

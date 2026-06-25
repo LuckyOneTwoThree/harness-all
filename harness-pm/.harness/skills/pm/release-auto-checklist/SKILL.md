@@ -4,6 +4,11 @@ description: Used when generating a release checklist. Launch Checklist auto-gen
 ---
 # Launch Checklist Auto-Generation & Tracking
 
+## When to use
+- Help me list a checklist before launch
+- Generate a release Checklist
+- Organize what to check for launch
+
 ## Outputs
 - docs/monitoring/release-notes.md
 - memory/progress.md

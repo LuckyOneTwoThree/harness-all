@@ -4,6 +4,11 @@ description: Used when tracking competitor dynamics and formulating response str
 ---
 # Competitor Dynamics Tracking and Response 🤖
 
+## When to use
+- What to do when competitors update again
+- How to respond when opponent adds new feature
+- How to track competitor dynamics
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

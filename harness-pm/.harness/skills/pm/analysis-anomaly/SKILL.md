@@ -4,6 +4,11 @@ description: Use when automatically detecting and attributing metric anomalies. 
 ---
 # Automated Data Analysis Engine
 
+## When to use
+- DAU suddenly dropped 30% today, help me check the cause
+- Metric anomaly alert, help me with attribution analysis
+- Data fluctuation is too large, see what went wrong
+
 ## Outputs
 - docs/metrics/data-analysis-report.md
 - memory/progress.md

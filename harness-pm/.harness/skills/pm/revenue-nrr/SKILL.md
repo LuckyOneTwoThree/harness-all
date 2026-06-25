@@ -4,6 +4,11 @@ description: Use when tracking Net Revenue Retention. NRR Auto-Tracking and Earl
 ---
 # NRR Auto-Tracking and Early Warning
 
+## When to use
+- How to calculate Net Revenue Retention
+- How are existing customer renewals doing
+- How to view revenue retention trends
+
 ## Outputs
 - memory/progress.md
 - memory/knowledge-base.md

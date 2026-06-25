@@ -82,7 +82,7 @@ Skills are the organs of the framework. This skill ensures all organs are in the
 5. **Check Inputs/Outputs reasonableness**
    - If it involves state.yaml → must read `loops/LOOP.md`
    - If it involves security → must read `rules/security.md`
-   - If it involves docs/handoff/ → must be declared in reads or writes
+   - If it involves docs/handoff/ → must be declared in Inputs or Outputs
    - Not met → mark "dependency declaration missing"
 
 6. **Output health report**

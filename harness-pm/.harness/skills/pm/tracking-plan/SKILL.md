@@ -4,6 +4,11 @@ description: Use when you need to generate a tracking plan. Tracking plan auto-g
 ---
 # Tracking Plan Auto-Generation
 
+## When to use
+- This feature needs tracking
+- Help me produce a tracking plan
+- Organize what data needs to be collected
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

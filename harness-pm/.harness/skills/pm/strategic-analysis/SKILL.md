@@ -4,6 +4,15 @@ description: Used when product strategy analysis, competitive strategy judgment,
 ---
 # Strategic Analysis
 
+## When to use
+- Help me analyze strengths and weaknesses
+- What are our opportunities and threats
+- How should we expand the market
+- Where is the next growth direction
+- Is this industry worth entering
+- Analyze the industry competitive landscape
+- Do a strategic analysis
+
 ## Outputs
 - docs/strategy/PRODUCT_STRATEGY.md
 - memory/progress.md

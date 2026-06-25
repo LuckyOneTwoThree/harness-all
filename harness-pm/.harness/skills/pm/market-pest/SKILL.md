@@ -4,6 +4,11 @@ description: Used when scanning the target market's policies and regulations, ec
 ---
 # PEST Auto-Scan
 
+## When to use
+- What's changed in the market environment
+- How do policies affect us
+- Help me scan the external environment
+
 ## Outputs
 - docs/discovery/market-analysis.md
 - memory/progress.md

@@ -4,6 +4,13 @@ description: Used when grooming and prioritizing the product Backlog. Backlog gr
 ---
 # Backlog Grooming & Priority Assessment 🤖
 
+## When to use
+- The requirement pool is messy, how to organize it
+- How to prioritize the backlog
+- Too many requirements, which to do first
+- Need to insert a requirement, how to reorder
+- How to re-prioritize
+
 ## Outputs
 - docs/monitoring/iteration-plan.md
 - memory/progress.md

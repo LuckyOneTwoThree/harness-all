@@ -4,6 +4,12 @@ description: Used when attribution analysis is needed for monitoring anomalies. 
 ---
 # Anomaly Attribution Analysis 🤖
 
+## When to use
+- Alert root cause analysis
+- Anomaly attribution localization
+- Metric drop cause investigation
+- Impact scope assessment
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

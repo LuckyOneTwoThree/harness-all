@@ -4,6 +4,11 @@ description: Used when summarizing competitor tracking data into a complete, del
 ---
 # Competitor Monitoring Report Generation
 
+## When to use
+- What new moves have competitors made recently
+- Help me generate a competitor monitoring report
+- What features did competitors update
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

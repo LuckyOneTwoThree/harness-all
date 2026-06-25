@@ -4,6 +4,13 @@ description: Used when assisting with iteration retrospectives. Iteration retros
 ---
 # Iteration Retrospective & Adjustment 🤖
 
+## When to use
+- Need to retrospective this iteration
+- Sprint is over, how to summarize
+- How did the iteration go
+- Need to adjust the iteration plan, what to do
+- Need to insert a requirement, how to reorder
+
 ## Outputs
 - docs/monitoring/iteration-retrospective.md
 - memory/progress.md

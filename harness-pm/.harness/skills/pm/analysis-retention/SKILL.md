@@ -4,6 +4,11 @@ description: Use when analyzing user stickiness and churn risk. Retention Auto-A
 ---
 # Retention Auto-Analysis
 
+## When to use
+- New user 7-day retention is only 15%, help me analyze
+- When do users start churning
+- Help me find the Aha Moment
+
 ## Outputs
 - docs/metrics/data-analysis-report.md
 - memory/progress.md

@@ -4,6 +4,11 @@ description: Used when diagnosing funnel health, discovering Aha Moments, and an
 ---
 # Behavior Data Auto-Analysis
 
+## When to use
+- Where are users churning
+- Why is the funnel conversion rate so low
+- Are there any anomalies in user behavior
+
 ## Outputs
 - docs/discovery/user-research.md
 - memory/progress.md

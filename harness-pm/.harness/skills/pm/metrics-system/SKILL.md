@@ -4,6 +4,11 @@ description: Use when building a product metrics system. Metrics System Auto-Con
 ---
 # Metrics System Auto-Construction
 
+## When to use
+- Help me organize the product's core metrics
+- We need to define the North Star metric
+- Build a metrics system
+
 ## Outputs
 - memory/progress.md
 - memory/knowledge-base.md

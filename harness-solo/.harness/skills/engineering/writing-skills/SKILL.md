@@ -19,7 +19,7 @@ description: Create new skills following the standard, supporting framework exte
 - .harness/skills/INDEX.md
 
 ## Iron Rule
-**New skills must be created from the template, must be registered in INDEX.md, and must declare reads/writes.** No skill goes rogue.
+**New skills must be created from the template, must be registered in INDEX.md, and must declare Inputs/Outputs.** No skill goes rogue.
 
 ## When to Create a New Skill
 
@@ -48,22 +48,15 @@ Criteria for creating a new skill:
    ---
    name: <skill-name>                    # required, matches the directory name
    description: one-sentence description, used for INDEX.md reference  # required
-   triggers:                             # required, when to use
-     - scenario 1
-     - scenario 2
-   reads:                                # required, files it depends on
-     - loops/LOOP.md
-     - rules/security.md
-   writes:                               # required, files it produces
-     - loops/specs/<feature>/state.yaml
    ---
    ```
 
-   **reads/writes declaration rules**:
-   - `reads`: files this skill needs to read when executing (rules/loops/docs/specs)
-   - `writes`: files this skill modifies when executing (state.yaml/evidence.md/iterations.log/docs)
-   - If state.yaml is involved, you must read `loops/LOOP.md` (reference the schema)
-   - If security is involved, you must read `rules/security.md`
+   Then add body text sections for dependencies and outputs:
+   - **When to use**: list the scenarios that trigger this skill (replaces the former `triggers` field)
+   - **Inputs**: list files this skill needs to read when executing (rules/loops/docs/specs) — replaces the former `reads` field
+   - **Outputs**: list files this skill modifies when executing (state.yaml/evidence.md/iterations.log/docs) — replaces the former `writes` field
+   - If state.yaml is involved, you must include `loops/LOOP.md` in Inputs (reference the schema)
+   - If security is involved, you must include `rules/security.md` in Inputs
 
 4. **Write the body** (following the template structure)
 
@@ -78,9 +71,9 @@ Criteria for creating a new skill:
    - Keep INDEX.md within 30 lines (pure index principle)
 
 6. **Linkage check**
-   - If the new skill writes state.yaml → confirm it references the schema in LOOP.md
+   - If the new skill outputs state.yaml → confirm it references the schema in LOOP.md
    - If the new skill is inside LOOP → confirm related workflow files have been updated
-   - If the new skill involves handoff → confirm reads/writes declare docs/handoff/
+   - If the new skill involves handoff → confirm Inputs/Outputs declare docs/handoff/
 
 7. **Verify**
    - Use Read to confirm SKILL.md was created successfully
@@ -92,8 +85,8 @@ Criteria for creating a new skill:
 - **Single Responsibility**: one skill handles one thing
 - **Cross-platform**: do not depend on bash; prefer Agent tools
 - **Reference, don't repeat**: state.yaml schema references LOOP.md; do not redefine
-- **Minimal necessary**: fill in only the required fields in frontmatter; do not fill in for the sake of completeness
-- **Composable**: skills declare dependencies via reads/writes; do not hardcode invocations
+- **Minimal necessary**: fill in only the required fields in frontmatter (name+description); do not fill in for the sake of completeness
+- **Composable**: skills declare dependencies via Inputs/Outputs sections; do not hardcode invocations
 
 ## Naming Conventions
 
@@ -106,7 +99,7 @@ Criteria for creating a new skill:
 - Not creating from the template (inconsistent structure; hard for the Agent to parse)
 - Not registering in INDEX.md (the skill won't be discovered)
 - Doing multiple things in one skill (violates single responsibility)
-- Hardcoding invocations of other skills (declare dependencies via reads/writes)
+- Hardcoding invocations of other skills (declare dependencies via Inputs/Outputs)
 - Not verifying after creation (the file may not have been written successfully)
 
 ## Relationship with LOOP

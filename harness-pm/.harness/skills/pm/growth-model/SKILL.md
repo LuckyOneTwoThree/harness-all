@@ -4,6 +4,12 @@ description: Use when you need to diagnose the product growth model. Growth Mode
 ---
 # Growth Model Auto-Diagnosis
 
+## When to use
+- Diagnose the product's growth model
+- Are we PLG or SLG
+- How to build the growth flywheel
+- Where is the growth bottleneck
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

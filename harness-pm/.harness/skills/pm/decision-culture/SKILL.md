@@ -4,6 +4,11 @@ description: Use when you need to drive a team's data-driven decision culture. D
 ---
 # Data Culture Automation
 
+## When to use
+- Team doesn't habitually look at data, how to drive change
+- Help me build a data-driven culture
+- Set up regular data report delivery
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

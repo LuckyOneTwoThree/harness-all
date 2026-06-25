@@ -4,6 +4,11 @@ description: Use when you need to generate a standardized PRD document. PRD auto
 ---
 # PRD Generator
 
+## When to use
+- Help me write a PRD document
+- Generate a product requirements document
+- How to write a requirements document
+
 ## Outputs
 - docs/product/PRD.md
 - memory/progress.md

@@ -4,6 +4,11 @@ description: Used when executing canary release. Canary release auto-execution, 
 ---
 # Canary Release Auto-Execution
 
+## When to use
+- Do a canary release, start with 1% traffic
+- Help me do small traffic validation
+- Gradually increase traffic to full
+
 ## Outputs
 - docs/monitoring/release-notes.md
 - memory/progress.md

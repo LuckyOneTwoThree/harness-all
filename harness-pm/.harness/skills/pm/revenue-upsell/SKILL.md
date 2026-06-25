@@ -4,6 +4,11 @@ description: Use when optimizing upgrade conversion strategy. Upsell Automation 
 ---
 # Upsell Automation
 
+## When to use
+- How to get users to upgrade their plan
+- Which users are suitable for add-on recommendations
+- How to do cross-selling
+
 ## Outputs
 - memory/progress.md
 - memory/knowledge-base.md

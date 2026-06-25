@@ -4,6 +4,14 @@ description: Used when comprehensive competitive analysis, competitive research,
 ---
 # Comprehensive Competitive Analysis
 
+## When to use
+- Help me do competitive analysis
+- How to do competitive research
+- Help me map the competitive landscape
+- Produce a competitive analysis report
+- What new moves have competitors made recently
+- Which are direct competitors, which are indirect
+
 ## Outputs
 - docs/discovery/market-analysis.md
 - memory/progress.md

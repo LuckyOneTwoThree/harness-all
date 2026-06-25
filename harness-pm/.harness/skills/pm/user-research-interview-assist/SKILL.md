@@ -4,6 +4,11 @@ description: Used when designing user interview scripts, extracting insights aft
 ---
 # Interview Assist
 
+## When to use
+- Help me prepare an interview outline
+- How to synthesize insights after an interview
+- How to conduct a user interview
+
 ## Outputs
 - docs/discovery/user-research.md
 - memory/progress.md

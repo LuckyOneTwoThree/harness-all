@@ -4,6 +4,14 @@ description: Use when you need creative divergence, solution ideation, or creati
 ---
 # Creative Workshop
 
+## When to use
+- Help me brainstorm ideas
+- Innovate using the SCAMPER method
+- Think in reverse
+- Too many options, which one to choose
+- Let's brainstorm
+- Creative workshop
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

@@ -4,6 +4,11 @@ description: Used when evaluating the TAM/SAM/SOM size of the target market. Mar
 ---
 # Market Size Auto-Estimation
 
+## When to use
+- How big is this market
+- Help me estimate the market size
+- Where is our ceiling
+
 ## Outputs
 - docs/discovery/market-analysis.md
 - memory/progress.md

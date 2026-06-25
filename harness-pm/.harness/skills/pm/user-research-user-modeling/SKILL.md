@@ -4,6 +4,11 @@ description: Used when generating Persona, Empathy Map, and Journey Map from use
 ---
 # User Modeling Auto-Generation
 
+## When to use
+- Help me create user personas
+- How to map the user journey
+- What kind of users are they
+
 ## Outputs
 - docs/discovery/user-research.md
 - memory/progress.md

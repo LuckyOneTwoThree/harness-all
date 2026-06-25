@@ -4,6 +4,11 @@ description: Use when producing a complete data analysis report. Data Insight Re
 ---
 # Data Insight Report Auto-Generation
 
+## When to use
+- Help me produce this month's data analysis report
+- Summarize the recent data situation
+- Generate an operations weekly report
+
 ## Outputs
 - docs/metrics/data-analysis-report.md
 - memory/progress.md

@@ -4,6 +4,11 @@ description: Use when analyzing user conversion paths. Funnel Auto-Analysis, AI 
 ---
 # Funnel Auto-Analysis
 
+## When to use
+- Registration flow conversion rate is too low, help me analyze
+- At which step do users drop off the most
+- Take a look at the payment conversion funnel
+
 ## Outputs
 - docs/metrics/data-analysis-report.md
 - memory/progress.md

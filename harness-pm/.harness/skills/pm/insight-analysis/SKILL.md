@@ -4,6 +4,16 @@ description: Used when requirement insight analysis, requirement layering, root 
 ---
 # Insight Analysis — Requirement Insight Analysis
 
+## When to use
+- Help me analyze user requirements
+- Too many requirements, help me prioritize
+- Analyze requirements using the KANO model
+- Uncover users' deeper needs
+- What task are users really trying to accomplish
+- Why do users always complain about this feature
+- Which features are must-haves
+- Too many requirements, which one to do first
+
 ## Outputs
 - docs/discovery/insight.md
 - memory/progress.md

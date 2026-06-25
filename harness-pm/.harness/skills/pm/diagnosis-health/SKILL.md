@@ -4,6 +4,11 @@ description: Used when diagnosing product health. Automated product health diagn
 ---
 # Automated Product Health Diagnosis 🤖
 
+## When to use
+- Is the product healthy right now
+- Help me do a health check
+- How is the product status
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

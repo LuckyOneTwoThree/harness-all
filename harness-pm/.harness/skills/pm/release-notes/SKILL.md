@@ -4,6 +4,11 @@ description: Used when generating release notes, changelogs, or version announce
 ---
 # Version Release Notes Auto-Generation
 
+## When to use
+- Help me write version update notes
+- Generate release notes
+- What's new in this version, organize it
+
 ## Outputs
 - docs/monitoring/release-notes.md
 - memory/progress.md

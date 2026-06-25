@@ -4,6 +4,11 @@ description: Used when summarizing user feedback handling into a complete, deliv
 ---
 # User Feedback Loop Report Generation
 
+## When to use
+- How is user feedback handling going
+- Help me generate a feedback loop report
+- How is the feedback closure rate
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

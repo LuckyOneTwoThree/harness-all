@@ -4,6 +4,10 @@ description: Used when formulating or optimizing a product pricing strategy. Aut
 ---
 # Pricing Strategy Auto-Analysis
 
+## When to use
+- How should we price the product
+- How to design pricing options
+
 ## Outputs
 - docs/strategy/business-strategy.md
 - memory/progress.md

@@ -4,6 +4,10 @@ description: Used when a complete business strategy planning document is needed.
 ---
 # Business Strategy Planning Report Auto-Generation
 
+## When to use
+- Help me write a business strategy plan
+- Produce a strategy report
+
 ## Outputs
 - docs/strategy/business-strategy.md
 - memory/progress.md

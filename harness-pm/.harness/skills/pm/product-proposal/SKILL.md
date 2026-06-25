@@ -4,6 +4,10 @@ description: Use when you need to write a product project initiation proposal. P
 ---
 # Product Project Initiation Proposal Auto-Generation
 
+## When to use
+- Help me write a product project initiation document
+- How to write a product proposal
+
 ## Outputs
 - docs/strategy/PRODUCT_STRATEGY.md
 - memory/progress.md

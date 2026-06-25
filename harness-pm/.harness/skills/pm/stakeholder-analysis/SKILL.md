@@ -4,6 +4,14 @@ description: Used when stakeholder analysis, stakeholder alignment, or communica
 ---
 # Stakeholder Analysis
 
+## When to use
+- Help me map out the stakeholders
+- Who will influence this project
+- Help me develop a stakeholder management strategy
+- How to communicate with each party
+- Help me write a strategic brief for my boss
+- One-page strategy report
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

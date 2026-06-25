@@ -4,6 +4,11 @@ description: Used when assistance is needed for usability testing. Usability tes
 ---
 # Usability Testing Assistance
 
+## When to use
+- How to conduct usability testing
+- Help me design test tasks
+- How to run user experience testing
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

@@ -4,6 +4,11 @@ description: Use when optimizing the user Onboarding flow. Onboarding Auto-Optim
 ---
 # Onboarding Auto-Optimization
 
+## When to use
+- The new user onboarding flow is too long
+- How can we get users up to speed faster
+- How to improve the onboarding tutorial
+
 ## Outputs
 - memory/progress.md
 - memory/knowledge-base.md

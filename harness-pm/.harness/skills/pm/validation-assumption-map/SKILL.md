@@ -4,6 +4,11 @@ description: Used when extracting and evaluating product hypotheses. Assumption 
 ---
 # Assumption Map Auto-Generation
 
+## When to use
+- What hypotheses does the product have that are unvalidated
+- Help me map out hypotheses and risks
+- Which hypotheses might not hold
+
 ## Outputs
 - docs/product/PRD.md
 - memory/progress.md

@@ -4,6 +4,10 @@ description: Used when assessing the fit between value propositions and user nee
 ---
 # Value Proposition Fit Auto-Assessment
 
+## When to use
+- Is our value proposition right
+- Do users really need this feature
+
 ## Outputs
 - docs/strategy/business-strategy.md
 - memory/progress.md

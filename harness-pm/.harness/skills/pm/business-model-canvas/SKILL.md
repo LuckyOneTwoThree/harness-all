@@ -4,6 +4,10 @@ description: Triggered when designing or evaluating a product business model. Bu
 ---
 # Business Model Canvas Auto-Generation
 
+## When to use
+- Help me clarify the business model
+- How does our business model make money
+
 ## Outputs
 - docs/strategy/business-strategy.md
 - memory/progress.md

@@ -4,6 +4,10 @@ description: Use when you need to determine product core metrics, OKR North Star
 ---
 # North Star Metric Selection
 
+## When to use
+- What should our core metric be
+- How do we measure product success
+
 ## Outputs
 - memory/progress.md
 - memory/knowledge-base.md

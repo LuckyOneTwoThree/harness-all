@@ -4,6 +4,11 @@ description: Used when formulating a product or feature sunset plan. Auto-genera
 ---
 # Product Sunset Plan Generation
 
+## When to use
+- How to sunset this feature
+- How to arrange product service discontinuation
+- What to do when retiring an old feature
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

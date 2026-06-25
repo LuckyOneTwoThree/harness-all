@@ -4,6 +4,11 @@ description: Use when configuring a product metrics Dashboard. Dashboard Auto-Co
 ---
 # Dashboard Auto-Configuration
 
+## When to use
+- Help me build a data dashboard
+- Configure a monitoring panel
+- Create a Dashboard showing all key metrics
+
 ## Outputs
 - memory/progress.md
 - memory/knowledge-base.md

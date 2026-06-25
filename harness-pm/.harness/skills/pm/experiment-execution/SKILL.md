@@ -4,6 +4,14 @@ description: Used when executing A/B tests, analyzing results, and generating co
 ---
 # A/B Test Auto-Execution, Analysis & Reporting
 
+## When to use
+- AB test finished, help me analyze the results
+- Experiment data looks different, is it significant
+- Help me monitor a running experiment
+- Help me produce a complete AB test report
+- Experiment done, write a summary report
+- Organize experiment results into a presentable document
+
 ## Outputs
 - docs/metrics/experiment-report.md
 - memory/progress.md

@@ -4,6 +4,11 @@ description: Used when extracting sentiment, themes, and pain points from user r
 ---
 # Large-Scale User Voice Analysis
 
+## When to use
+- What are users complaining about
+- Help me analyze user feedback
+- How are the user reviews
+
 ## Outputs
 - docs/discovery/user-research.md
 - memory/progress.md

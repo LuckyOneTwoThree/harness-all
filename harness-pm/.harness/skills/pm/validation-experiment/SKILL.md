@@ -4,6 +4,11 @@ description: Used when designing validation experiment plans. Validation experim
 ---
 # Validation Experiment Auto-Design
 
+## When to use
+- How to validate this hypothesis
+- Help me design an A/B test
+- How to make an experiment plan
+
 ## Outputs
 - docs/metrics/experiment-report.md
 - memory/progress.md

@@ -4,6 +4,14 @@ description: Use when you need to execute a data-driven decision loop or transfo
 ---
 # DACE Cycle Automation (with Insight Transformation)
 
+## When to use
+- Help me make a data decision using the DACE method
+- How to do a complete loop from data to action
+- Data was analyzed but no one executes, what to do
+- What does this data say, help me interpret it
+- Turn analysis results into a tellable story
+- The data is too dry, help me transform it into actionable recommendations
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

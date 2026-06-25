@@ -4,6 +4,11 @@ description: Used when defining the MVP feature scope. MVP scope auto-definition
 ---
 # MVP Scope Auto-Definition
 
+## When to use
+- What features should the MVP include
+- How to build the minimal product
+- Which features can be deferred
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

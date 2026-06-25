@@ -4,6 +4,11 @@ description: Use when you need to identify and engineer Aha Moments. Aha Moment 
 ---
 # Aha Moment Auto-Engineering
 
+## When to use
+- When do users feel the product is good to use
+- How to find the aha moment
+- How long for new users to experience core value
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

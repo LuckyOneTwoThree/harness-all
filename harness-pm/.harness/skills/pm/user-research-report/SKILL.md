@@ -4,6 +4,11 @@ description: Used when a complete user research report is needed. Auto-generates
 ---
 # User Research Report Auto-Generation
 
+## When to use
+- Help me generate a user research report
+- How to organize the user research findings
+- Produce a user analysis report
+
 ## Outputs
 - docs/discovery/user-research.md
 - memory/progress.md

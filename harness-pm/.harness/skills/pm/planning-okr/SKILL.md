@@ -4,6 +4,10 @@ description: Use when you need to set quarterly/annual OKRs, decompose objective
 ---
 # OKR Auto-Generation
 
+## When to use
+- Help me set quarterly OKRs
+- How to break down objectives
+
 ## Outputs
 - memory/progress.md
 - memory/knowledge-base.md

@@ -4,6 +4,14 @@ description: Used when generating acceptance execution plans and sign-off report
 ---
 # Acceptance Execution Plan Generation & Sign-off Report Generation
 
+## When to use
+- Run the acceptance tests automatically
+- Help me execute the acceptance checks
+- Check if it can pass the quality gate
+- Generate the acceptance report
+- Version is going to acceptance, help me produce the report
+- Organize the acceptance results
+
 ## Outputs
 - docs/monitoring/release-notes.md
 - memory/progress.md
