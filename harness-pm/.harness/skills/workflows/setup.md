@@ -15,7 +15,7 @@ default_mode: skip
 | Dimension | new-product | **setup** |
 |------|-------------|----------|
 | Goal | Product work | Initialize project configuration |
-| Prerequisite | None | **install.sh executed** |
+| Prerequisite | None | **install.sh executed** (setup.md itself lives in .harness/, so reaching this workflow proves install.sh ran) |
 | LOOP | research→validate | **No LOOP (configuration-focused)** |
 | Output | Product documents | **Configuration files fully filled in** |
 
@@ -27,17 +27,19 @@ default_mode: skip
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ Check if install.sh has been executed   │
+│ Sanity-check config files are in place  │
 │                                         │
-│  - .harness/ directory exists?          │
 │  - AGENTS.md / SOUL.md / constitution.md│
-│    created from templates?              │
-│  - docs/ directory structure created?   │
+│    exist in project root?               │
+│  - docs/strategy/PRODUCT_STRATEGY.md    │
+│    exists?                              │
+│  - docs/product/PRD.md exists?          │
 │                                         │
-│  ★ If not executed → prompt user to     │
-│    run install.sh first                 │
+│  ★ If any missing → prompt to re-run    │
+│    install.sh or copy from              │
+│    .harness/templates/ manually         │
 └────────┬────────────────────────────────┘
-         │ Executed
+         │ All present
          ▼
 ┌─────────────────┐
 │ Fill in SOUL.md │  Persona + product preferences
@@ -107,7 +109,7 @@ default_mode: skip
 
 | Failure point | Handling |
 |--------|---------|
-| install.sh not executed | Prompt user to run install.sh first |
+| Config files missing (partial install) | Prompt to re-run install.sh or copy from .harness/templates/ manually |
 | Constitution clauses not verifiable | Help user rewrite as verifiable descriptions |
 | PRODUCT_STRATEGY metrics not quantifiable | Help user rewrite as quantifiable descriptions |
 

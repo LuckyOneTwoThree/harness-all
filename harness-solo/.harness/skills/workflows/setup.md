@@ -15,7 +15,7 @@ default_mode: skip
 | Dimension | new-feature | **setup** |
 |------|-------------|----------|
 | Goal | Implement features | Initialize project config |
-| Prerequisite | None | **install.sh has been executed** |
+| Prerequisite | None | **install.sh has been executed** (setup.md itself lives in .harness/, so reaching this workflow proves install.sh ran) |
 | LOOP | tdd→verify | **No LOOP (config-focused)** |
 | Output | Code | **Config files fully filled out** |
 
@@ -27,16 +27,19 @@ default_mode: skip
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ Check whether install.sh has been run   │
+│ Sanity-check config files are in place  │
 │                                         │
-│  - .harness/ directory exists?          │
 │  - AGENTS.md / SOUL.md / constitution.md│
-│    created from templates?              │
-│  - docs/product/PROJECT.md created?     │
+│    exist in project root?               │
+│  - docs/product/PROJECT.md exists?      │
+│  - docs/engineering/TECH_STACK.md       │
+│    exists?                              │
 │                                         │
-│  ★ If not run → prompt user to run install.sh first │
+│  ★ If any missing → prompt to re-run    │
+│    install.sh or copy from              │
+│    .harness/templates/ manually         │
 └────────┬────────────────────────────────┘
-         │ Already run
+         │ All present
          ▼
 ┌─────────────────┐
 │ Fill out        │  Persona + tech preferences
@@ -94,7 +97,7 @@ default_mode: skip
 
 | Failure Point | Handling |
 |--------|---------|
-| install.sh not executed | Prompt user to run install.sh first |
+| Config files missing (partial install) | Prompt to re-run install.sh or copy from .harness/templates/ manually |
 | Constitution clause not verifiable | Help the user rewrite it as a verifiable description |
 | PROJECT.md AC not testable | Help the user rewrite it as a testable description |
 | TECH_STACK.md commands don't run | Verify command correctness and fix |
