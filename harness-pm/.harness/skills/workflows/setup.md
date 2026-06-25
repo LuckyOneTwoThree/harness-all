@@ -41,7 +41,6 @@ default_mode: skip
          ▼
 ┌─────────────────┐
 │ Fill in SOUL.md │  Persona + product preferences
-│                 │  - [Username] replacement
 │                 │  - Product type preferences (SaaS/e-commerce/tools)
 │                 │  - Methodology preferences (JTBD/Kano/North Star)
 │                 │  - Tool preferences (Figma/Notion/Mixpanel)
@@ -98,8 +97,7 @@ default_mode: skip
 
 ## Key Checkpoints
 
-- [ ] AGENTS.md's [project name] replaced with the real project name? (Also PRODUCT_STRATEGY.md / PRD.md titles?)
-- [ ] [Username] in SOUL.md replaced? Product preferences filled?
+- [ ] SOUL.md's product preferences filled?
 - [ ] constitution.md clauses verifiable? (Not "product should be good", but "PRD must pass 4 gates")
 - [ ] PRODUCT_STRATEGY.md success metrics quantifiable? (Not "users like it", but "DAU > 10000")
 - [ ] PRD.md skeleton created?

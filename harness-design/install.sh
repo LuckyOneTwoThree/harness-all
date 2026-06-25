@@ -63,11 +63,11 @@ cp -r "$TEMPLATE_DIR/.harness" .harness
 # Copy AGENTS.md and SOUL.md templates (if they don't exist)
 if [ ! -f "AGENTS.md" ]; then
   cp "$TEMPLATE_DIR/.harness/templates/AGENTS.md.template" AGENTS.md
-  echo "  ✓ Created AGENTS.md (from template; please fill in [project name])"
+  echo "  ✓ Created AGENTS.md (from template)"
 fi
 if [ ! -f "SOUL.md" ]; then
   cp "$TEMPLATE_DIR/.harness/templates/SOUL.md.template" SOUL.md
-  echo "  ✓ Created SOUL.md (from template; please fill in [username] and design preferences)"
+  echo "  ✓ Created SOUL.md (from template; please fill in design preferences)"
 fi
 if [ ! -f "constitution.md" ]; then
   cp "$TEMPLATE_DIR/.harness/templates/constitution.md.template" constitution.md
@@ -114,7 +114,7 @@ echo "✓ Installation complete"
 echo ""
 echo "Next steps:"
 echo "  1. Edit constitution.md to fill in project-specific principles"
-echo "  2. Edit [username] and design preferences in SOUL.md"
+echo "  2. Edit design preferences in SOUL.md"
 echo "  3. Have the AI Agent read AGENTS.md to start working"
 echo ""
 echo "⚠️ Windows CRLF guidance:"

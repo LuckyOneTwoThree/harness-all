@@ -39,14 +39,8 @@ default_mode: skip
          │ Already run
          ▼
 ┌─────────────────┐
-│ Fill out        │  Project name
-│ AGENTS.md       │  - Replace [project name] in the title with the real name
-└────────┬────────┘
-         ▼
-┌─────────────────┐
 │ Fill out        │  Persona + tech preferences
-│ SOUL.md         │  - [username] replacement
-│                 │  - Tech stack preferences (frontend/backend/deploy/test)
+│ SOUL.md         │  - Tech stack preferences (frontend/backend/deploy/test)
 │                 │  - Coding style
 └────────┬────────┘
          ▼
@@ -90,8 +84,7 @@ default_mode: skip
 
 ## Key Checkpoints
 
-- [ ] AGENTS.md's [project name] replaced with the real project name? (Also PROJECT.md title?)
-- [ ] SOUL.md's [username] replaced? Tech preferences filled in?
+- [ ] SOUL.md's tech preferences filled in?
 - [ ] Are constitution.md clauses verifiable? (Not "code should be good", but "package.json dependencies diff review")
 - [ ] Are PROJECT.md's acceptance criteria testable? (Not "easy to use", but "input X returns Y")
 - [ ] Can TECH_STACK.md's test/build/lint commands run successfully?

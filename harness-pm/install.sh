@@ -49,11 +49,11 @@ echo "  ✓ Copied .harness/skills/pm/ (82 PM skills)"
 # Copy AGENTS.md and SOUL.md templates (if they don't exist)
 if [ ! -f "AGENTS.md" ]; then
   cp "$TEMPLATE_DIR/.harness/templates/AGENTS.md.template" AGENTS.md
-  echo "  ✓ Created AGENTS.md (from template; please fill in [project name])"
+  echo "  ✓ Created AGENTS.md (from template)"
 fi
 if [ ! -f "SOUL.md" ]; then
   cp "$TEMPLATE_DIR/.harness/templates/SOUL.md.template" SOUL.md
-  echo "  ✓ Created SOUL.md (from template; please fill in [username] and product preferences)"
+  echo "  ✓ Created SOUL.md (from template; please fill in product preferences)"
 fi
 if [ ! -f "constitution.md" ]; then
   cp "$TEMPLATE_DIR/.harness/templates/constitution.md.template" constitution.md
@@ -103,7 +103,7 @@ echo "✓ Installation complete"
 echo ""
 echo "Next steps:"
 echo "  1. Edit constitution.md to fill in project-specific principles"
-echo "  2. Edit [username] and product preferences in SOUL.md"
+echo "  2. Edit product preferences in SOUL.md"
 echo "  3. Have the AI Agent read AGENTS.md to start working"
 echo "  4. Run the setup workflow to guide filling in PRODUCT_STRATEGY.md"
 echo ""

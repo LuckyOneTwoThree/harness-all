@@ -67,11 +67,11 @@ cp -r "$TEMPLATE_DIR/.harness" .harness
 # Copy AGENTS.md and SOUL.md templates (if they don't exist)
 if [ ! -f "AGENTS.md" ]; then
   cp "$TEMPLATE_DIR/.harness/templates/AGENTS.md.template" AGENTS.md
-  echo "  ✓ Created AGENTS.md (from template; please fill in [project name])"
+  echo "  ✓ Created AGENTS.md (from template)"
 fi
 if [ ! -f "SOUL.md" ]; then
   cp "$TEMPLATE_DIR/.harness/templates/SOUL.md.template" SOUL.md
-  echo "  ✓ Created SOUL.md (from template; please fill in [ops lead] and tech preferences)"
+  echo "  ✓ Created SOUL.md (from template; please fill in tech preferences)"
 fi
 if [ ! -f "constitution.md" ]; then
   cp "$TEMPLATE_DIR/.harness/templates/constitution.md.template" constitution.md
@@ -114,7 +114,7 @@ echo "✓ Installation complete"
 echo ""
 echo "Next steps:"
 echo "  1. Edit constitution.md to fill in project-level ops principles (destructive change protection / monitoring first, etc.)"
-echo "  2. Edit [ops lead] and tech preferences in SOUL.md"
+echo "  2. Edit tech preferences in SOUL.md"
 echo "  3. Edit docs/infrastructure/OPS_STRATEGY.md to fill in architecture topology / deployment specs / monitoring matrix / disaster recovery plan"
 echo "  4. Have the AI Agent read AGENTS.md to start working"
 echo ""
