@@ -20,6 +20,12 @@ if [ -d ".harness" ]; then
   exit 1
 fi
 
+# Check git
+if ! command -v git >/dev/null 2>&1; then
+  echo "BLOCK: git not found; please install Git first"
+  exit 1
+fi
+
 # Detect if running from within the harness-all repo (local install)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -27,6 +33,7 @@ if [ -d "$SCRIPT_DIR/.harness" ]; then
   # Local install: script is inside harness-all/harness-pm/
   echo "→ Using local framework files from: $SCRIPT_DIR"
   TEMPLATE_DIR="$SCRIPT_DIR"
+  TEMP_DIR=""
 else
   # Remote install: clone from GitHub (for standalone single-framework use)
   echo "→ Cloning template repository..."
@@ -44,7 +51,6 @@ fi
 # Copy .harness/ to the current directory (including pm skills)
 echo "→ Copying .harness/ framework..."
 cp -r "$TEMPLATE_DIR/.harness" .harness
-echo "  ✓ Copied .harness/skills/pm/ (82 PM skills)"
 
 # Copy AGENTS.md and SOUL.md templates (if they don't exist)
 if [ ! -f "AGENTS.md" ]; then
@@ -62,7 +68,7 @@ fi
 
 # Create the docs/ directory structure (required by the PM framework)
 echo "→ Creating docs/ directory..."
-mkdir -p docs/discovery docs/strategy docs/product docs/metrics docs/growth docs/monitoring docs/project docs/handoff
+mkdir -p docs/discovery docs/strategy docs/product docs/metrics docs/growth docs/monitoring docs/handoff
 
 # Initialize PRODUCT_STRATEGY.md from template (if it doesn't exist)
 if [ ! -f "docs/strategy/PRODUCT_STRATEGY.md" ]; then
@@ -93,7 +99,7 @@ if [ ! -f ".harness/memory/progress.md" ]; then
   echo "  ✓ Initialized .harness/memory/progress.md"
 fi
 
-# Clean up the temporary directory (safe approach: validate path prefix before using rm -r)
+# Clean up the temporary directory (only in remote mode; local mode has no TEMP_DIR)
 if [ -n "$TEMP_DIR" ] && [ -d "$TEMP_DIR" ] && [[ "$TEMP_DIR" == .harness-pm-tmp-* ]]; then
     rm -r -- "$TEMP_DIR"
 fi
@@ -106,11 +112,6 @@ echo "  1. Edit constitution.md to fill in project-specific principles"
 echo "  2. Edit product preferences in SOUL.md"
 echo "  3. Have the AI Agent read AGENTS.md to start working"
 echo "  4. Run the setup workflow to guide filling in PRODUCT_STRATEGY.md"
-echo ""
-echo "Tips:"
-echo "  - The .harness/skills/pm/ directory contains 82 PM skills"
-echo "  - Tell the Agent 'I want to build a new product' to enter the new-product workflow"
-echo "  - Tell the Agent 'existing product needs iteration' to enter the iteration workflow"
 echo ""
 echo "⚠️ Windows CRLF guidance:"
 echo "  On Windows, core.autocrlf=true will turn .sh scripts into CRLF,"

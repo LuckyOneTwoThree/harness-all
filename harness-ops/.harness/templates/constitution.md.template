@@ -1,8 +1,18 @@
-# constitution.md — Project constitution
+# constitution.md — Project constitution (template)
 
-> **Role note**: This file is the project constitution for **your own project**.
-> Division of labor with AGENTS.md: AGENTS.md contains general work rules (the same for all projects), while constitution.md contains project-specific constraints.
+> **Role note**: This file is the constitution for **your own project**, constraining the operations behavior of this project.
+> It is a different file from the harness-ops framework repository's own constitution (the source file of `.harness/templates/constitution.md.template`) — that one constrains "developing the framework itself", while this one constrains "using the framework to operate your project".
+>
+> Non-negotiable principles unique to each project.
+> Division of labor with AGENTS.md: AGENTS.md contains general work rules (the same for all projects), while constitution.md contains project-specific constraints (different for each project).
 > Load timing: after AGENTS.md, read on first interaction.
+
+## How to use this file
+
+1. At project initiation, fill in the clauses below based on project characteristics
+2. Each clause must be **verifiable** (confirmable through inspection)
+3. The Agent must check whether tasks comply with the constitution during the PLAN phase
+4. On constitution conflicts, the constitution takes priority over the user's current instruction (unless the user explicitly says "modify the constitution")
 
 ## Project-specific principles
 

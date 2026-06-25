@@ -34,6 +34,7 @@ if [ -d "$SCRIPT_DIR/.harness" ]; then
   # Local install: script is inside harness-all/harness-growth/
   echo "→ Using local framework files from: $SCRIPT_DIR"
   TEMPLATE_DIR="$SCRIPT_DIR"
+  TEMP_DIR=""
 else
   # Remote install: clone from GitHub (for standalone single-framework use)
   echo "→ Cloning template repository..."
@@ -92,7 +93,7 @@ if [ ! -f ".harness/memory/progress.md" ]; then
   echo "  ✓ Initialized .harness/memory/progress.md"
 fi
 
-# Clean up the temporary directory (only in remote mode; safe approach: validate path prefix before using rm -r)
+# Clean up the temporary directory (only in remote mode; local mode has no TEMP_DIR)
 if [ -n "$TEMP_DIR" ] && [ -d "$TEMP_DIR" ] && [[ "$TEMP_DIR" == .harness-growth-tmp-* ]]; then
     rm -r -- "$TEMP_DIR"
 fi

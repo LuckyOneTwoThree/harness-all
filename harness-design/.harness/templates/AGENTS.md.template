@@ -59,13 +59,13 @@
 
 1. **AGENTS.md** (this file) — must-read at startup
 2. **SOUL.md + constitution.md** — read on first interaction (persona identity + project constitution)
-3. **skills/INDEX.md** — read when you need to select a Skill (under 40 lines, pure index)
+3. **skills/INDEX.md** — read when you need to select a Skill (under 80 lines, pure index)
 4. **Corresponding SKILL.md** — read when executing a task (the frontmatter `reads` field declares dependent rules, auto-fetched)
 5. **memory/progress.md** — read at session-start
 
 ## Skill selection
 
-When you need to select a Skill, read `.harness/skills/INDEX.md` (pure index, under 40 lines).
+When you need to select a Skill, read `.harness/skills/INDEX.md` (pure index, under 80 lines).
 Workflow orchestration (new design / iteration / redesign) is read on demand under `.harness/skills/workflows/`.
 
 ## Relationship with the harness family
@@ -84,7 +84,7 @@ harness-design is the **UI design** member of the harness family, focused on loo
 ## Project context
 
 - Design requirements are in `docs/visual/DESIGN_BRIEF.md` (create on demand: written by design-brief; skip if it does not exist)
-- The design system is in `docs/design-system/DESIGN_SYSTEM.md` (create on demand: fill in at project initiation; skip if it does not exist)
+- The design system is in `docs/design-system/DESIGN.md` (create on demand: fill in at project initiation; skip if it does not exist)
 - Design task progress is in `.harness/FEATURES.md`
 - Handoff documents are in `docs/handoff/` (from other harness family members; drop them in manually to be recognized)
 

@@ -54,13 +54,13 @@
 
 1. **AGENTS.md** (this file) — must-read at startup
 2. **SOUL.md + constitution.md** — read on first interaction (persona identity + project constitution)
-3. **skills/INDEX.md** — read when you need to select a Skill (under 40 lines, pure index)
+3. **skills/INDEX.md** — read when you need to select a Skill (under 80 lines, pure index)
 4. **Corresponding SKILL.md** — read when executing a task (the frontmatter `reads` field declares dependent rules, auto-fetched)
 5. **memory/progress.md** — read at session-start
 
 ## Skill selection
 
-When you need to select a Skill, read `.harness/skills/INDEX.md` (pure index, under 40 lines).
+When you need to select a Skill, read `.harness/skills/INDEX.md` (pure index, under 80 lines).
 Workflow orchestration (content production / SEO optimization / growth experiments) is read on demand under `.harness/skills/workflows/`.
 
 ## Relationship with the harness family
@@ -69,7 +69,7 @@ harness-growth is the **growth operations** member of the harness family, focuse
 
 | Family member | Responsibility | Handoff method |
 |---------|------|---------|
-| harness-pm | Product research / market / PRD | Consumes PM output, feeds back growth data |
+| harness-pm | Product research / market / PRD | Consumes `docs/handoff/pm-to-growth.md`, feeds back growth data |
 | harness-solo | Engineering development | Produces `docs/handoff/solo-to-growth.md` → consumed by this framework |
 | harness-design | UI / visual design (on demand) | Produces design specs → referenced by this framework |
 | **harness-growth (this framework)** | **Growth operations** | Produces `docs/handoff/growth-to-pm.md` → fed back to PM |

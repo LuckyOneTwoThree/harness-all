@@ -64,13 +64,13 @@
 
 1. **AGENTS.md** (this file) — must-read at startup
 2. **SOUL.md + constitution.md** — read on first interaction (persona identity + project constitution)
-3. **skills/INDEX.md** — read when you need to select a Skill (under 30 lines, pure index)
+3. **skills/INDEX.md** — read when you need to select a Skill (under 80 lines, pure index)
 4. **Corresponding SKILL.md** — read when executing a task (the frontmatter `reads` field declares dependent rules, auto-fetched)
 5. **memory/progress.md** — read at session-start
 
 ## Skill selection
 
-When you need to select a Skill, read `.harness/skills/INDEX.md` (pure index, under 30 lines).
+When you need to select a Skill, read `.harness/skills/INDEX.md` (pure index, under 80 lines).
 Workflow orchestration (new feature / bug fix) is read on demand under `.harness/skills/workflows/`.
 
 ## Relationship with the harness family
@@ -80,8 +80,8 @@ harness-solo is the **engineering development** member of the harness family, fo
 | Family member | Responsibility | Handoff method |
 |---------|------|---------|
 | harness-pm | Product research / market / PRD | Produces `docs/handoff/pm-to-solo.md` → consumed by this framework |
-| harness-solo (this framework) | Engineering development | Produces `docs/handoff/solo-to-growth.md` → handed off to growth |
-| harness-design | UI / visual design (on demand) | Produces design specs → implemented by this framework |
+| harness-solo (this framework) | Engineering development | Produces `docs/handoff/solo-to-growth.md` → growth; produces `docs/handoff/solo-to-ops.md` → ops; produces `docs/handoff/solo-to-pm.md` → PM |
+| harness-design | UI / visual design (on demand) | Produces `docs/handoff/design-to-solo.md` → consumed by this framework |
 | harness-growth | Content / SEO / data (on demand) | Consumes this framework's output |
 
 **Handoff protocol**: see handoff documents under the `docs/handoff/` directory. Drop them in manually and the brainstorming skill will recognize them.

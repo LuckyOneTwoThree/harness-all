@@ -1,5 +1,5 @@
 ---
-workflow_id: A
+workflow_id: H
 name: infrastructure-setup-workflow
 description: "Set up infrastructure through IaC generation, Kubernetes manifests, GitOps sync, and deployment verification"
 default_mode: deep

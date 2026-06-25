@@ -19,7 +19,7 @@ For example:
 ## Usage
 
 1. After completing its phase, the upstream framework generates a handoff document from the template and places it in this directory
-2. The downstream framework's design-brief skill will auto-detect and read the corresponding handoff document
+2. The downstream framework's session-start skill will auto-detect and read the corresponding handoff document
 3. You can also place files manually (e.g., copy a PRD from another project)
 
 ## Templates

@@ -46,6 +46,7 @@ if [ -d "$SCRIPT_DIR/.harness" ]; then
   # Local install: script is inside harness-all/harness-ops/
   echo "→ Using local framework files from: $SCRIPT_DIR"
   TEMPLATE_DIR="$SCRIPT_DIR"
+  TEMP_DIR=""
 else
   # Remote install: clone from GitHub (for standalone single-framework use)
   echo "→ Cloning template repository..."
@@ -75,7 +76,7 @@ if [ ! -f "SOUL.md" ]; then
 fi
 if [ ! -f "constitution.md" ]; then
   cp "$TEMPLATE_DIR/.harness/templates/constitution.md.template" constitution.md
-  echo "  ✓ Created constitution.md (from template; fill in project-level ops principles)"
+  echo "  ✓ Created constitution.md (from template)"
 fi
 
 # Create the docs/ directory structure (ops four domains + handoff protocol)
@@ -91,7 +92,7 @@ fi
 # Copy handoff document templates (if the template repository has them)
 if [ -d "$TEMPLATE_DIR/docs/handoff" ]; then
   cp -r "$TEMPLATE_DIR/docs/handoff/." docs/handoff/ 2>/dev/null || true
-  echo "  ✓ Copied docs/handoff/ handoff protocol documents (solo-to-ops / ops-to-pm)"
+  echo "  ✓ Copied docs/handoff/ handoff protocol documents"
 fi
 
 # Create runtime directories (not committed, but required at runtime)
@@ -104,7 +105,7 @@ if [ ! -f ".harness/memory/progress.md" ]; then
   echo "  ✓ Initialized .harness/memory/progress.md"
 fi
 
-# Clean up the temporary directory (only in remote mode; safe approach: validate path prefix before using rm -r)
+# Clean up the temporary directory (only in remote mode; local mode has no TEMP_DIR)
 if [ -n "$TEMP_DIR" ] && [ -d "$TEMP_DIR" ] && [[ "$TEMP_DIR" == .harness-ops-tmp-* ]]; then
     rm -r -- "$TEMP_DIR"
 fi
@@ -113,7 +114,7 @@ echo ""
 echo "✓ Installation complete"
 echo ""
 echo "Next steps:"
-echo "  1. Edit constitution.md to fill in project-level ops principles (destructive change protection / monitoring first, etc.)"
+echo "  1. Edit constitution.md to fill in project-specific principles"
 echo "  2. Edit tech preferences in SOUL.md"
 echo "  3. Edit docs/infrastructure/OPS_STRATEGY.md to fill in architecture topology / deployment specs / monitoring matrix / disaster recovery plan"
 echo "  4. Have the AI Agent read AGENTS.md to start working"

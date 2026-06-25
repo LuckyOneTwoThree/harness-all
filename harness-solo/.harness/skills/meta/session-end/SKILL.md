@@ -16,6 +16,7 @@ description: Session wrap-up, archive progress + write baseline + update board +
 - docs/handoff/handoff-template.md
 - docs/handoff/solo-to-growth-template.md
 - docs/handoff/solo-to-ops-template.md
+- docs/handoff/solo-to-pm-template.md
 
 ## Outputs
 - memory/progress.md
@@ -24,6 +25,7 @@ description: Session wrap-up, archive progress + write baseline + update board +
 - FEATURES.md
 - docs/handoff/solo-to-growth.md
 - docs/handoff/solo-to-ops.md
+- docs/handoff/solo-to-pm.md
 
 ## Core Rules
 Archiving must be performed before the session ends; "bare exit" is not allowed — the next session would lose context.
@@ -127,6 +129,25 @@ Archiving must be performed before the session ends; "bare exit" is not allowed 
    - If `solo-to-ops.md` already exists, append this delivery's content; do not overwrite history
    - The filename is fixed as `solo-to-ops.md`; do not split by date (downstream only reads the latest state)
 
+8. **Produce PM engineering-feedback handoff document** (optional, executed when conditions are met)
+   If this session surfaced **engineering feedback that should reach harness-pm** (e.g., technical constraints that affect product scope, user-feedback themes observed during implementation, suggested product adjustments), produce `docs/handoff/solo-to-pm.md` using the `docs/handoff/solo-to-pm-template.md` template:
+
+   **Trigger conditions** (any one met):
+   - The user explicitly requests "prepare engineering feedback to PM" or "handoff to PM"
+   - Implementation surfaced technical constraints that require PRD / scope adjustments
+   - Dev-side observations or early user signals warrant PM triage
+
+   **Produced content** (fill in per solo-to-pm-template.md):
+   - Engineering metrics & issues (LCP / INP / API response / test coverage / known bugs / tech debt)
+   - User feedback from implementation (themes + source + severity + suggested action)
+   - Technical constraints discovered (constraint + rationale + impact + suggested adjustment)
+   - Suggested product adjustments (suggestion + reason + priority + affected AC)
+
+   **Notes**:
+   - If this session has no engineering feedback for PM (pure deliverable, no constraints or feedback), skip this step
+   - If `solo-to-pm.md` already exists, append this session's feedback; do not overwrite history
+   - The filename is fixed as `solo-to-pm.md`; do not split by date (downstream only reads the latest state)
+
    **AC Format Validation** (handoff documents must pass)
    Run Acceptance Criteria format validation on the handoff documents produced in steps 6/7:
    - Scan the Acceptance Criteria in the handoff document and check that the numbering format is `AC-NNN` (e.g., AC-001, AC-002)
@@ -151,3 +172,4 @@ After session-end completes, progress.md must contain:
 - The actual result of the archiving operation (e.g., "progress.md cut from 250 lines to 45 lines, archived to archives/2026-06-20-1900-progress.md"; cannot just write "archived")
 - If step 6 was executed, record "produced solo-to-growth.md, containing X delivery items"
 - If step 7 was executed, record "produced solo-to-ops.md, containing artifact version / environment variables / database scripts / smoke tests / rollback plan"
+- If step 8 was executed, record "produced solo-to-pm.md, containing engineering metrics / user feedback / technical constraints / suggested product adjustments"

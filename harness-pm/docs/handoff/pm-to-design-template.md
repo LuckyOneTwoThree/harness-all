@@ -103,5 +103,5 @@ harness-design should prioritize:
 
 ## Downstream Framework Usage Notes
 
-harness-design's design-brief skill will auto-detect this file and read the AC-xxx list.
+harness-design's session-start skill will auto-detect this file and read the AC-xxx list.
 If not auto-detected, you can manually point the Agent to this file path to read it.

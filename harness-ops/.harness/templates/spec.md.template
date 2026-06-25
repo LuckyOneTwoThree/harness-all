@@ -1,4 +1,4 @@
-# Ops change ticket: [change name]
+# Ops change ticket: <change name>
 
 > Stored in `.harness/loops/specs/<task-name>/spec.md`. Defines the detailed plan for a single deployment or ops change.
 
@@ -38,7 +38,7 @@
 
 | Iteration | Time | Phase | Result | Key log / evidence |
 |-----|------|------|------|-------------|
-| 1 | 2026-XX-XX | PROVISION | Success | [image replacement complete] |
-| 1 | 2026-XX-XX | VERIFY | Failed | [new version OOM on startup, rollback triggered] |
-| 2 | 2026-XX-XX | PROVISION | Success | [re-released after raising memory Limit] |
-| 2 | 2026-XX-XX | VERIFY | Success | [dashboard metrics normal, release complete] |
+| 1 | YYYY-MM-DD | PROVISION | Success | [image replacement complete] |
+| 1 | YYYY-MM-DD | VERIFY | Failed | [new version OOM on startup, rollback triggered] |
+| 2 | YYYY-MM-DD | PROVISION | Success | [re-released after raising memory Limit] |
+| 2 | YYYY-MM-DD | VERIFY | Success | [dashboard metrics normal, release complete] |

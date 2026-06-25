@@ -1,6 +1,9 @@
-# Infrastructure and Ops Strategy (Ops Strategy)
+# harness-ops — Infrastructure and Ops Strategy
 
-> Fill in at project initiation. Defines the infrastructure architecture topology, selection criteria, CI/CD standards, and monitoring/alerting red lines.
+> Source: filled in by the user at project initiation, or guided by this framework's setup workflow.
+> Load timing: session-start / read by ops skills.
+> Positioning: establish the baseline at project initiation; append revision records when the strategy changes; do not delete confirmed strategies.
+> Division of labor with FEATURES.md: this file is the **strategy definition** (written at initiation), FEATURES.md is the **dynamic status board** (updated during deployment).
 > All SRE deployment actions (IaC, Pipeline) must align with the plan in this file.
 
 ## 1. Architecture topology and tech stack (Architecture & Tech Stack)
@@ -33,3 +36,9 @@ Define the core metrics that must be covered end-to-end across the system.
 - **Data backup strategy**: `[e.g., RDS daily full cold backup, incremental Binlog real-time archive. S3 data enables cross-AZ replication.]`
 - **AZ disaster recovery strategy**: `[e.g., core services must be deployed in at least 2 AZs (Availability Zones), with automatic traffic failover when an AZ goes down.]`
 - **Degradation plan**: `[e.g., during network-wide traffic peaks for big promotions, support one-click degradation of non-critical "comment system" and "recommendation feed".]`
+
+## Revision history
+
+| Date | Revision | Reason |
+|------|---------|------|
+| YYYY-MM-DD | Initial version | Project initiation |

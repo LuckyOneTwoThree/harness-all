@@ -1,5 +1,5 @@
 ---
-workflow_id: A
+workflow_id: G
 name: growth-strategy-workflow
 description: "Define growth strategy through North Star Metric, KPI Tree, AARRR diagnosis, and growth loop design"
 default_mode: deep

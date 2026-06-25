@@ -82,7 +82,7 @@ Bad AC examples (forbidden):
 
 | Phase | Goal | Output |
 |------|------|------|
-| M1 | Design system established | DESIGN_SYSTEM.md + tokens + base components |
+| M1 | Design system established | DESIGN.md + tokens + base components |
 | M2 | Core page design | D-001, D-002 complete |
 | M3 | Complete design + handoff | All tasks complete + design-to-solo.md |
 

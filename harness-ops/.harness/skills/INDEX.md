@@ -1,6 +1,6 @@
 # Skills Index — harness-ops
 
-> Pure index, within 80 lines. Read this file when selecting a Skill, then read the corresponding SKILL.md.
+> Pure index, under 80 lines. Read this file when selecting a Skill, then read the corresponding SKILL.md.
 > For workflow orchestration, see `workflows/`.
 
 ## Meta Skills (4, ✅ built)

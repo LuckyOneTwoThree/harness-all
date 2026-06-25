@@ -1,23 +1,21 @@
-# Ops workbench progress log (Progress Log)
+# Session progress log
 
-> This is short-term workbench memory, recording where the current deployment pipeline stands and whether there are unhandled alerts.
-> Read this file at the start of every session to understand where you left off last time.
+> append-only, maintained by session-start / session-end.
+> When it exceeds 200 lines, archive to archives/ following the session-end SKILL.md steps; keep the last complete session block.
+> First use: copy this file to .harness/memory/progress.md.
 
-## Active high-risk / core changes (Active Ops Tasks)
+## Session: YYYY-MM-DD HH:MM
 
-- `[e.g., currently rolling out v2.3 via blue-green, traffic is at 20% canary]`
-- `[e.g., investigating a DB CPU alert caused by a slow query]`
+### Task
+[Goal of this session, in one sentence]
 
-## Blocked or rolled-back changes (Blocked/Rollbacked)
+### Completed
+- [Completed items, with evidence]
 
-- `[e.g., a Terraform script attempted earlier failed due to missing IAM permissions, pending follow-up]`
-- `[e.g., yesterday's release was rolled back due to OOM, waiting for dev to fix]`
+### To continue
+- [Context to continue in the next session]
 
-## Today's to-do (To-Do)
-
-- `[ ]` Check `docs/handoff/solo-to-ops.md` to start a new delivery deployment.
-- `[ ]` Update `ops-to-pm.md` with this week's SLA report for the PM.
+### Evidence
+[verify output summary / deployment logs / monitoring metrics]
 
 ---
-
-> Tip: keep it concise; update this file at every session-end.
