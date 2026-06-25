@@ -62,10 +62,11 @@
 - **ops-review** — Ops review report + produce ops-to-pm.md
 - **sla-report** — SLA calculation and reporting
 
-## Workflows (7, ✅ all built)
+## Workflows (8, ✅ all built)
 
 > `default_mode`: deep = forced exploration / standard = pause at module boundaries / skip = direct execution (user can switch at any time)
 
+- **setup** — Project onboarding (config files skeleton) [skip]
 - **deployment-workflow** — Full deployment workflow [skip]
 - **incident-response-workflow** — Full incident response workflow [skip]
 - **infrastructure-setup-workflow** — Infrastructure setup [deep]

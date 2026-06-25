@@ -65,10 +65,11 @@
 ## Module 9 Growth Review (1 skill, ✅ built)
 - **growth-review** — Growth review report + produce growth-to-pm.md
 
-## Workflows (6 workflows, ✅ all built)
+## Workflows (7 workflows, ✅ all built)
 
 > `default_mode`: deep = mandatory exploration / standard = pause at module boundaries / skip = execute directly (user can switch at any time)
 
+- **setup** — Project onboarding (config files skeleton) [skip]
 - **growth-experiment-workflow** — Full growth experiment flow [standard]
 - **growth-review-workflow** — Growth review report [skip]
 - **content-marketing-workflow** — Full content marketing flow [standard]
