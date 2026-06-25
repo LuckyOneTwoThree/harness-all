@@ -216,7 +216,7 @@ Orchestrator SKILL.md files must include the following sections (in addition to 
 1. **Core Principles / Orchestration Philosophy** — The orchestrator's design philosophy and key rules
 2. **Responsibility Boundaries** (optional) — Explicit ✅/❌ lists of what the orchestrator does and does not do
 3. **Exception Handling** — Table of exception types and handling strategies (extends §5)
-4. **Orchestration Protocol** — Reference to this protocol: `Follows the [orchestrator-protocol.md](../../../templates/orchestrator-protocol.md) orchestration protocol.`
+4. **Orchestration Protocol** — Reference to this protocol: `Follows the orchestrator-protocol.md orchestration protocol.`
 5. **Pipeline** — YAML pipeline definition (see §6 for format)
 6. **Phase Execution Plan** — Detailed call blocks for each stage using the §3.3 call specification format
 7. **Phase Summary** — Post-pipeline output structure (see §6)

@@ -1,6 +1,8 @@
 #!/bin/bash
 # verify-harness.sh — Framework health check (optional fallback script)
-# Usage: bash verify-harness.sh
+# Usage: bash verify-harness.sh [framework-type]
+#   framework-type: pm | design | solo | growth | ops (default: auto-detect)
+#
 # Check .harness/ structural integrity and required file existence
 #
 # ⚠️ Cross-platform note: this script is an optional fallback, only executed when bash is available.
@@ -15,7 +17,29 @@ set -e
 
 HARNESS_DIR=".harness"
 
-echo "=== Harness Health Check ==="
+# ──────────────────────────────────────────
+# Auto-detect framework type from AGENTS.md or directory structure
+# ──────────────────────────────────────────
+FW_TYPE="${1:-}"
+
+if [ -z "$FW_TYPE" ]; then
+  # Auto-detect: look for domain skill directories
+  if [ -d ".harness/skills/engineering" ]; then
+    FW_TYPE="solo"
+  elif [ -d ".harness/skills/pm" ]; then
+    FW_TYPE="pm"
+  elif [ -d ".harness/skills/design" ]; then
+    FW_TYPE="design"
+  elif [ -d ".harness/skills/strategy" ]; then
+    FW_TYPE="growth"
+  elif [ -d ".harness/skills/deployment" ]; then
+    FW_TYPE="ops"
+  else
+    FW_TYPE="unknown"
+  fi
+fi
+
+echo "=== Harness Health Check (framework: $FW_TYPE) ==="
 
 errors=0
 
@@ -29,7 +53,9 @@ for d in "${RUNTIME_DIRS[@]}"; do
   mkdir -p "$d" 2>/dev/null
 done
 
-# Required files check
+# ──────────────────────────────────────────
+# Required files check (common to all frameworks)
+# ──────────────────────────────────────────
 REQUIRED_FILES=(
   "AGENTS.md"
   "SOUL.md"
@@ -53,22 +79,37 @@ for f in "${REQUIRED_FILES[@]}"; do
   fi
 done
 
-# Required directories check (skeleton; missing = error)
-REQUIRED_DIRS=(
+# ──────────────────────────────────────────
+# Required directories check (common skeleton)
+# ──────────────────────────────────────────
+REQUIRED_DIRS_COMMON=(
   ".harness/skills/workflows"
-  ".harness/skills/engineering"
   ".harness/skills/meta"
-  ".harness/hooks/guards"
   ".harness/loops/specs"
   ".harness/memory"
   ".harness/memory/archives"
-  ".harness/scripts"
   ".harness/templates"
   ".harness/rules"
 )
 
+# Framework-specific domain skill directory
+case "$FW_TYPE" in
+  pm)     REQUIRED_DIRS_DOMAIN=(".harness/skills/pm") ;;
+  design) REQUIRED_DIRS_DOMAIN=(".harness/skills/design") ;;
+  solo)   REQUIRED_DIRS_DOMAIN=(".harness/skills/engineering") ;;
+  growth) REQUIRED_DIRS_DOMAIN=(".harness/skills/strategy" ".harness/skills/content" ".harness/skills/seo" ".harness/skills/experiment" ".harness/skills/lifecycle" ".harness/skills/monetization" ".harness/skills/review" ".harness/skills/analytics" ".harness/skills/acquisition") ;;
+  ops)    REQUIRED_DIRS_DOMAIN=(".harness/skills/deployment" ".harness/skills/infrastructure" ".harness/skills/monitoring" ".harness/skills/incident" ".harness/skills/security" ".harness/skills/capacity" ".harness/skills/recovery" ".harness/skills/audit") ;;
+  *)      REQUIRED_DIRS_DOMAIN=() ;;
+esac
+
+# Solo-specific directories
+REQUIRED_DIRS_SOLO=(
+  ".harness/hooks/guards"
+  ".harness/scripts"
+)
+
 echo "→ Required directories check (skeleton)"
-for d in "${REQUIRED_DIRS[@]}"; do
+for d in "${REQUIRED_DIRS_COMMON[@]}" "${REQUIRED_DIRS_DOMAIN[@]}"; do
   if [ -d "$d" ]; then
     echo "  ✓ $d/"
   else
@@ -77,17 +118,38 @@ for d in "${REQUIRED_DIRS[@]}"; do
   fi
 done
 
-# Optional directories check (added on demand; missing = notice, no error)
-OPTIONAL_DIRS=(
+# Solo-only directories
+if [ "$FW_TYPE" = "solo" ]; then
+  for d in "${REQUIRED_DIRS_SOLO[@]}"; do
+    if [ -d "$d" ]; then
+      echo "  ✓ $d/"
+    else
+      echo "  ✗ missing: $d/"
+      errors=$((errors + 1))
+    fi
+  done
+fi
+
+# ──────────────────────────────────────────
+# Optional directories check
+# ──────────────────────────────────────────
+OPTIONAL_DIRS_COMMON=(
   ".harness/gates"
-  "docs/product"
-  "docs/engineering"
-  "docs/acceptance"
   "docs/handoff"
 )
 
+# Framework-specific optional docs directories
+case "$FW_TYPE" in
+  pm)     OPTIONAL_DIRS_DOMAIN=("docs/product" "docs/strategy" "docs/discovery" "docs/monitoring") ;;
+  design) OPTIONAL_DIRS_DOMAIN=("docs/visual" "docs/interaction" "docs/prototype" "docs/design-system") ;;
+  solo)   OPTIONAL_DIRS_DOMAIN=("docs/product" "docs/engineering" "docs/acceptance" "docs/decisions") ;;
+  growth) OPTIONAL_DIRS_DOMAIN=("docs/content" "docs/seo" "docs/experiment" "docs/operations") ;;
+  ops)    OPTIONAL_DIRS_DOMAIN=("docs/infrastructure" "docs/monitoring" "docs/incident" "docs/deployment") ;;
+  *)      OPTIONAL_DIRS_DOMAIN=() ;;
+esac
+
 echo "→ Optional directories check (on demand; missing does not error)"
-for d in "${OPTIONAL_DIRS[@]}"; do
+for d in "${OPTIONAL_DIRS_COMMON[@]}" "${OPTIONAL_DIRS_DOMAIN[@]}"; do
   if [ -d "$d" ]; then
     echo "  ✓ $d/"
   else
@@ -95,43 +157,48 @@ for d in "${OPTIONAL_DIRS[@]}"; do
   fi
 done
 
-# Guard scripts check
-echo "→ Guard scripts check"
-GUARDS=(
-  ".harness/hooks/guards/guard-secret.sh"
-  ".harness/hooks/guards/guard-bash.sh"
-  ".harness/hooks/guards/guard-sensitive-file.sh"
-  ".harness/hooks/guards/guard-commit-msg.sh"
-  ".harness/hooks/pre-commit.sh"
-  ".harness/hooks/pre-push.sh"
-)
-for g in "${GUARDS[@]}"; do
-  if [ -f "$g" ]; then
-    echo "  ✓ $g"
-  else
-    echo "  ✗ missing: $g"
-    errors=$((errors + 1))
-  fi
-done
+# ──────────────────────────────────────────
+# Solo-specific checks: guard scripts and utility scripts
+# ──────────────────────────────────────────
+if [ "$FW_TYPE" = "solo" ]; then
+  echo "→ Guard scripts check (solo only)"
+  GUARDS=(
+    ".harness/hooks/guards/guard-secret.sh"
+    ".harness/hooks/guards/guard-bash.sh"
+    ".harness/hooks/guards/guard-sensitive-file.sh"
+    ".harness/hooks/guards/guard-commit-msg.sh"
+    ".harness/hooks/pre-commit.sh"
+    ".harness/hooks/pre-push.sh"
+  )
+  for g in "${GUARDS[@]}"; do
+    if [ -f "$g" ]; then
+      echo "  ✓ $g"
+    else
+      echo "  ✗ missing: $g"
+      errors=$((errors + 1))
+    fi
+  done
 
-# Scripts check
-echo "→ Scripts check"
-SCRIPTS=(
-  ".harness/scripts/archive-progress.sh"
-  ".harness/scripts/entropy-check.sh"
-  ".harness/scripts/security-check.sh"
-  ".harness/scripts/verify-harness.sh"
-)
-for s in "${SCRIPTS[@]}"; do
-  if [ -f "$s" ]; then
-    echo "  ✓ $s"
-  else
-    echo "  ✗ missing: $s"
-    errors=$((errors + 1))
-  fi
-done
+  echo "→ Scripts check (solo only)"
+  SCRIPTS=(
+    ".harness/scripts/archive-progress.sh"
+    ".harness/scripts/entropy-check.sh"
+    ".harness/scripts/security-check.sh"
+    ".harness/scripts/verify-harness.sh"
+  )
+  for s in "${SCRIPTS[@]}"; do
+    if [ -f "$s" ]; then
+      echo "  ✓ $s"
+    else
+      echo "  ✗ missing: $s"
+      errors=$((errors + 1))
+    fi
+  done
+fi
 
+# ──────────────────────────────────────────
 # AGENTS.md line count check (constitution.md upper limit 150 lines)
+# ──────────────────────────────────────────
 echo "→ AGENTS.md line count check"
 if [ -f "AGENTS.md" ]; then
   agents_lines=$(wc -l < AGENTS.md | tr -d ' ')
@@ -147,9 +214,9 @@ fi
 
 echo ""
 if [ $errors -eq 0 ]; then
-  echo "✓ Harness health check passed"
+  echo "✓ Harness health check passed (framework: $FW_TYPE)"
   exit 0
 else
-  echo "✗ Found $errors issue(s)"
+  echo "✗ Found $errors issue(s) (framework: $FW_TYPE)"
   exit 1
 fi

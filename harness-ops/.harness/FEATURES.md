@@ -1,50 +1,29 @@
-# FEATURES.md — Feature board
+# FEATURES.md — Ops task status board
 
-> Records the overall progress of ops tasks and infrastructure buildout.
-> Batch updated by session-end (scans loops/specs/*/state.yaml).
+> Dynamic status tracking (updated during operations).
+> Division of labor with OPS_STRATEGY.md: OPS_STRATEGY.md is a static definition (written at project initiation), while this file is dynamic status (updated during operations).
+> Update trigger: after the verify skill passes, change the corresponding task status to done.
 
-## Skill build progress
+## Task status
 
-| Module | Total | Built | Status |
-|------|------|------|------|
-| Meta | 4 | 4 | ✅ Complete |
-| Module 1 Deployment & Delivery | 4 | 4 | ✅ Complete |
-| Module 2 Infrastructure | 4 | 4 | ✅ Complete |
-| Module 3 Monitoring & Observability | 4 | 4 | ✅ Complete |
-| Module 4 Incident Response | 4 | 4 | ✅ Complete |
-| Module 5 Security & Compliance | 4 | 4 | ✅ Complete |
-| Module 6 Capacity & Cost | 3 | 3 | ✅ Complete |
-| Module 7 Disaster Recovery & Backup | 3 | 3 | ✅ Complete |
-| Module 8 Ops Review | 2 | 2 | ✅ Complete |
-| **Total** | **32** | **32** | ✅ All complete |
+| ID | Task | Priority | Status | Last updated | Note |
+|------|------|--------|------|---------|------|
+| O-001 | Fill in infrastructure strategy document (OPS_STRATEGY.md) | P1 | pending | | |
+| O-002 | Set up CI/CD pipeline | P1 | pending | | |
+| O-003 | Deploy monitoring & alerting system | P1 | pending | | |
+| O-004 | Design disaster recovery drill plan | P2 | pending | | |
 
-## Workflow build progress
+## Status definitions
 
-| Workflow | Status |
-|----------|------|
-| deployment-workflow | ✅ Built |
-| incident-response-workflow | ✅ Built |
-| infrastructure-setup-workflow | ✅ Built |
-| monitoring-deployment-workflow | ✅ Built |
-| security-audit-workflow | ✅ Built |
-| disaster-recovery-workflow | ✅ Built |
-| ops-review-workflow | ✅ Built |
+- `pending` — not started
+- `in_progress` — in progress (corresponding loops/specs/ has state.yaml)
+- `review` — verify passed, awaiting ops review
+- `done` — fully complete (ops review passed)
+- `blocked` — blocked (explain the reason)
 
-## In Progress
+## Update rules
 
-| ID | Task | Loop type | Status | Last updated |
-|----|------|---------|------|---------|
-| - | - | - | - | - |
-
-## Completed
-
-| ID | Task | Loop type | Completion date | Note |
-|----|------|---------|---------|------|
-| - | - | - | - | - |
-
-## To Plan
-
-- [ ] Fill in infrastructure strategy document (OPS_STRATEGY.md)
-- [ ] Set up CI/CD pipeline
-- [ ] Deploy monitoring & alerting system
-- [ ] Design disaster recovery drill plan
+1. **Start task**: change status to `in_progress`, create `loops/specs/<task>/`
+2. **verify passed**: change status to `review`
+3. **Ops review passed**: change status to `done`
+4. **session-end batch update**: scan tasks with status:done in `loops/specs/*/state.yaml`, batch sync to this file

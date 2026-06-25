@@ -261,6 +261,74 @@ for fw in "${FRAMEWORKS[@]}"; do
 done
 
 # ──────────────────────────────────────────
+# 10. Check domain SKILL.md frontmatter coverage (quality_gates + max_iterations)
+# ──────────────────────────────────────────
+echo "▶ Checking domain SKILL.md frontmatter coverage..."
+
+for fw in "${FRAMEWORKS[@]}"; do
+  SKILLS_DIR="$ROOT_DIR/$fw/.harness/skills"
+  if [ ! -d "$SKILLS_DIR" ]; then
+    continue
+  fi
+
+  TOTAL_DOMAIN=0
+  HAS_QG=0
+  HAS_MI=0
+
+  # Find all domain SKILL.md files (exclude meta/ and workflows/)
+  while IFS= read -r skill_file; do
+    TOTAL_DOMAIN=$((TOTAL_DOMAIN + 1))
+    if grep -q "quality_gates:" "$skill_file"; then
+      HAS_QG=$((HAS_QG + 1))
+    fi
+    if grep -q "max_iterations:" "$skill_file"; then
+      HAS_MI=$((HAS_MI + 1))
+    fi
+  done < <(find "$SKILLS_DIR" -name "SKILL.md" -not -path "*/meta/*" -not -path "*/workflows/*" 2>/dev/null)
+
+  if [ "$TOTAL_DOMAIN" -gt 0 ]; then
+    QG_PCT=$((HAS_QG * 100 / TOTAL_DOMAIN))
+    MI_PCT=$((HAS_MI * 100 / TOTAL_DOMAIN))
+    if [ "$QG_PCT" -lt 100 ] || [ "$MI_PCT" -lt 100 ]; then
+      echo "  ⚠ $fw: quality_gates=${HAS_QG}/${TOTAL_DOMAIN} (${QG_PCT}%), max_iterations=${HAS_MI}/${TOTAL_DOMAIN} (${MI_PCT}%)"
+    else
+      echo "  ✓ $fw: quality_gates=${HAS_QG}/${TOTAL_DOMAIN} (100%), max_iterations=${HAS_MI}/${TOTAL_DOMAIN} (100%)"
+    fi
+  fi
+done
+
+# ──────────────────────────────────────────
+# 11. Check domain SKILL.md line count (constitution Principle 5: ≤300 lines)
+# ──────────────────────────────────────────
+echo "▶ Checking domain SKILL.md line count (≤300 lines)..."
+
+for fw in "${FRAMEWORKS[@]}"; do
+  SKILLS_DIR="$ROOT_DIR/$fw/.harness/skills"
+  if [ ! -d "$SKILLS_DIR" ]; then
+    continue
+  fi
+
+  OVER_LIMIT=0
+
+  while IFS= read -r skill_file; do
+    LINES=$(wc -l < "$skill_file" 2>/dev/null || echo 0)
+    if [ "$LINES" -gt 300 ]; then
+      REL_PATH="${skill_file#$ROOT_DIR/$fw/}"
+      if [ "$OVER_LIMIT" -eq 0 ]; then
+        echo "  ✗ $fw: SKILL.md exceeds 300 lines:"
+      fi
+      echo "    - ${REL_PATH}: ${LINES} lines"
+      OVER_LIMIT=$((OVER_LIMIT + 1))
+      DIFF_COUNT=$((DIFF_COUNT + 1))
+    fi
+  done < <(find "$SKILLS_DIR" -name "SKILL.md" -not -path "*/meta/*" -not -path "*/workflows/*" 2>/dev/null)
+
+  if [ "$OVER_LIMIT" -eq 0 ]; then
+    echo "  ✓ $fw: all domain SKILL.md ≤ 300 lines"
+  fi
+done
+
+# ──────────────────────────────────────────
 # Result summary
 # ──────────────────────────────────────────
 echo ""
