@@ -83,6 +83,7 @@ harness-design is the **UI design** member of the harness family, focused on loo
 
 ## Project context
 
+- **PRD (upstream from harness-pm)**: `docs/product/PRD.md` + `docs/product/prd.json` — full product requirements document + machine-consumable structured data (pages/entities/user_flows/NFR). Read sections 3.2.3 (interaction logic), 3.2.4 (state design), 3.2.5 (data model), 5.1 (performance) directly as design input.
 - Design requirements are in `docs/visual/DESIGN_BRIEF.md` (create on demand: written by design-brief; skip if it does not exist)
 - The design system is in `docs/design-system/DESIGN.md` (create on demand: fill in at project initiation; skip if it does not exist)
 - Design task progress is in `.harness/FEATURES.md`

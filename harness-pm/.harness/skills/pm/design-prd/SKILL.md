@@ -43,7 +43,7 @@ See detailed descriptions in each section below.
 
 | Tier | Trigger Condition | Document Size | Review Process | Decision Authority |
 |------|----------|----------|----------|--------|
-| **PRD-L (Light)** | Effort < 2 person-days | 200-500 words | PM self-review | PM unilateral decision |
+| **PRD-L (Light)** | Effort < 2 person-days | 500-1500 words | PM self-review | PM unilateral decision |
 | **PRD-S (Standard)** | 2 person-days ≤ Effort ≤ 20 person-days | 1500-3000 words | Requirements Review meeting | Product committee decision |
 | **PRD-X (eXtensive)** | Effort > 20 person-days OR cross 3+ teams | 3000-8000 words | Multi-round review | Cross-department review + management approval |
 
@@ -312,15 +312,17 @@ Round N correction:
 
 ### 6.2 Downstream Driving
 
-| Downstream Party | Driving Content | Deliverable | Consumption Source |
-|--------|----------|--------|----------|
-| **UI/Frontend** | Interaction logic, state design, page specs, data model | Component intent description + page data requirements | prd.json.pages[] + prd.json.user_flows[] |
-| **Backend Architecture** | Feature specs, interface definition, data entities, boundary conditions | API contract input + data model input | prd.json.features[] + prd.json.entities[] |
-| **Development** | Feature specs, interface definition, boundary conditions | Technical design document | prd.md + prd.json |
-| **Design** | Interaction logic, state design, page specs | Design specification document | prd.md + prd.json.pages[] |
-| **Testing** | Acceptance criteria, test cases, environment requirements | Test plan | prd.json.features[].acceptance_criteria[] |
-| **Operations** | Release strategy, operations readiness, effectiveness evaluation | Operations plan | prd.md |
-| **Monitoring** | Observability requirements, tracking plan | Monitoring dashboard | prd.json.non_functional_requirements |
+| Downstream Party | Driving Content | Deliverable | Consumption Source | Handoff Path |
+|--------|----------|--------|----------|----------|
+| **UI/Frontend** | Interaction logic, state design, page specs, data model | Component intent description + page data requirements | prd.json.pages[] + prd.json.user_flows[] | pm-to-design.md → design-brief reads PRD.md + prd.json directly |
+| **Backend Architecture** | Feature specs, interface definition, data entities, boundary conditions | API contract input + data model input | prd.json.features[] + prd.json.entities[] | pm-to-solo.md → brainstorming reads PRD.md + prd.json directly |
+| **Development** | Feature specs, interface definition, boundary conditions | Technical design document | prd.md + prd.json | pm-to-solo.md → brainstorming → writing-plans |
+| **Design** | Interaction logic, state design, page specs | Design specification document | prd.md + prd.json.pages[] | pm-to-design.md → design-brief reads PRD sections 3.2.3-3.2.5 + 5.1 |
+| **Testing** | Acceptance criteria, test cases, environment requirements | Test plan | prd.json.features[].acceptance_criteria[] | pm-to-solo.md → writing-plans writes AC-xxx into spec.md |
+| **Operations** | Release strategy, operations readiness, effectiveness evaluation | Operations plan | prd.md | pm-to-ops.md (if applicable) |
+| **Monitoring** | Observability requirements, tracking plan | Monitoring dashboard | prd.json.non_functional_requirements | pm-to-ops.md (if applicable) |
+
+> **Handoff protocol**: handoff documents (pm-to-design.md, pm-to-solo.md) carry PRD.md + prd.json paths + AC-xxx list. Downstream skills (design-brief, brainstorming) read PRD directly for full context, not just the AC list. See [docs/handoff/](docs/handoff/) templates for the consumption contract.
 
 ### 6.3 Data Flow Diagram
 
@@ -363,6 +365,7 @@ Round N correction:
 | Output Item | Format | Path | Description |
 |--------|------|------|------|
 | PRD document | Markdown | `docs/product/PRD.md` | Overwrites the file, including complete PRD content, quality gate results, and items requiring human confirmation |
+| PRD structured data | JSON | `docs/product/prd.json` | Machine-consumable version; 7 top-level arrays (features/pages/entities/user_flows/non_functional_requirements/tracking_plan/traceability); consumed by downstream design-brief and brainstorming skills |
 
 **Complete output data structure and template**: See [Reference/output-schema.md](Reference/output-schema.md)
 
@@ -387,6 +390,8 @@ prd.json contains 7 top-level arrays: features, pages, entities, user_flows, non
 
 ### Output Validation Rules
 
+**PRD-S/X (full 9-section) validation**:
+
 - [ ] 9-section structure complete: PRD-S complete 9-section structure all exist
 - [ ] Traceability chain connected: Traceability chain from OKR to acceptance criteria is complete
 - [ ] Gates passed: All 4 quality gates passed
@@ -401,6 +406,19 @@ prd.json contains 7 top-level arrays: features, pages, entities, user_flows, non
 - [ ] prd.json NFR completeness: All 4 dimension arrays of non_functional_requirements are non-empty
 - [ ] prd.json feature driving information completeness: Each P0/P1 feature's driven_by field is non-empty, clearly linked to North Star Metric or OKR
 - [ ] prd.json feature priority and metric correlation consistency: feature.priority is positively correlated with driven_by.expected_lift
+
+**PRD-L (lightweight) validation** (relaxed rules — see [Reference/prd-structure.md](Reference/prd-structure.md#prd-l-prdjson-requirements) for full table):
+
+- [ ] Simplified structure complete: Merged sections (Constraints & Requirements / Release & Appendix) exist; deleted sections (Tracking plan, Performance/Security acceptance) absent
+- [ ] Traceability chain connected: traceability[] is non-empty (mandatory at all tiers)
+- [ ] Gates passed: All 4 quality gates passed (ambiguity/consistency checks still apply)
+- [ ] prd.json features[]: Non-empty, acceptance_criteria[] only Happy Path (boundary/exception optional)
+- [ ] prd.json pages[]: Non-empty, only page name + primary data source (1 line per page)
+- [ ] prd.json entities[]: Non-empty, fields[] only core fields (id/name/status + 1-2 business fields); relationships[] can be empty
+- [ ] prd.json user_flows[]: Can be empty (PRD-L scope is simple enough)
+- [ ] prd.json non_functional_requirements[]: Only performance + security (2 dimensions required, observability/availability optional)
+- [ ] prd.json tracking_plan[]: Can be empty
+- [ ] prd.json and prd.md consistency: Feature names and priorities consistent
 
 ## Decision Rules (Detailed)
 

@@ -8,8 +8,32 @@ The following is the standard structure for PRD-S (Standard); PRD-L and PRD-X ar
 
 - **Keep**: Section 1 (Meta information), Section 2.1-2.2 (Problem description + Objective definition), Section 3.2.1-3.2.2 (Feature list + User stories, only Must/Should), Section 7.1 (Functional acceptance, only Happy Path)
 - **Merge**: Section 4+5 merged into one "Constraints & Requirements" section, Section 8+9 merged into one "Release & Appendix" section
-- **Delete**: Section 3.2.5-3.2.6 (Data model/Interface definition), Section 6 (Tracking plan), Section 7.2-7.3 (Performance/Security acceptance)
-- **Target size**: 200-500 words, 3-5 core user stories
+- **Simplify (not delete)**: Section 3.2.3-3.2.6 are simplified to lightweight versions — see "PRD-L Simplified Sections" below
+- **Delete**: Section 6 (Tracking plan), Section 7.2-7.3 (Performance/Security acceptance)
+- **Target size**: 500-1500 words, 3-5 core user stories
+
+#### PRD-L Simplified Sections (downstream must consume)
+
+> Rationale: downstream UI/Backend still need minimal structural data. Full deletion breaks the handoff chain; simplified versions keep the contract intact without overloading a lightweight PRD.
+
+| Section | PRD-S (full) | PRD-L (simplified) |
+|---------|------|----------|
+| 3.2.3 Interaction logic | Full page flow + feedback table | Single-line per page: `[Page A] → action → [Page B]` |
+| 3.2.4 State design | 5-state table | Only list states that have special handling (1-3 items max) |
+| 3.2.5 Data model | Full entity fields + ER diagram | Entity name + core fields only (id, name, status + 1-2 business fields); no ER diagram |
+| 3.2.6 Interface definition | Full API detail template | API name + method + path only (no request/response schema) |
+
+#### PRD-L prd.json Requirements
+
+| Array | PRD-S requirement | PRD-L requirement |
+|-------|------|----------|
+| features[] | Non-empty, full acceptance_criteria[] | Non-empty, acceptance_criteria[] only Happy Path |
+| pages[] | Non-empty, data_requirements[] complete | Non-empty, only page name + primary data source (1 line) |
+| entities[] | Non-empty, fields[] + relationships[] complete | Non-empty, fields[] only core fields (id/name/status + 1-2 business fields) |
+| user_flows[] | Non-empty | Can be empty (PRD-L scope is simple enough) |
+| non_functional_requirements[] | All 4 dimensions non-empty | Only performance + security (2 dimensions) |
+| tracking_plan[] | Non-empty | Can be empty |
+| traceability[] | Non-empty | Non-empty (traceability chain is mandatory at all tiers) |
 
 ### PRD-X (eXtensive) Adjustment Rules
 

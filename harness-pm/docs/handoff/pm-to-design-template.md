@@ -34,6 +34,7 @@
 ## PRD Path and Acceptance Criteria
 
 **PRD document**: `docs/product/PRD.md`
+**PRD structured data**: `docs/product/prd.json` (machine-consumable; contains pages[], entities[], user_flows[] for design consumption)
 
 **Acceptance criteria list (AC-xxx)**:
 
@@ -44,6 +45,17 @@
 - [ ] AC-001: <Given-When-Then or testable description>
 - [ ] AC-002: <testable description>
 - [ ] AC-003: <testable description>
+
+## Design-Consumable PRD Sections
+
+> harness-design's design-brief should read these PRD sections as direct input (not just the AC-xxx list):
+
+| PRD section | What design consumes | Where in prd.json |
+|------|------|------|
+| 3.2.3 Interaction logic | Page flow, feedback requirements | `pages[].flow` + `user_flows[]` |
+| 3.2.4 State design | Empty/loading/error/partial/permission states | `pages[].states[]` |
+| 3.2.5 Data model | Entities + fields (for form and component design) | `entities[]` |
+| 5.1 Performance requirements | Page load time, responsiveness targets | `non_functional_requirements.performance[]` |
 
 ## Style Keywords
 

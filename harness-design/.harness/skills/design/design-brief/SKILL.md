@@ -14,6 +14,8 @@ description: Guides agents through design requirement discovery. Use when starti
 - .harness/data/design/vibes.csv
 - .harness/craft/anti-ai-slop.md
 - docs/handoff/pm-to-design.md
+- docs/product/PRD.md (read-only; sections 3.2.3 interaction logic, 3.2.4 state design, 3.2.5 data model, 5.1 performance)
+- docs/product/prd.json (read-only; pages[], entities[], user_flows[] for structured design input)
 
 ## Outputs
 - docs/visual/DESIGN_BRIEF.md
@@ -35,6 +37,16 @@ ASSUMPTIONS I'M MAKING:
 3. Target modern browsers
  Correct me now or I'll proceed with these.
 ```
+
+### 0.5 Read PRD Directly (Upstream Requirement Source)
+
+Before consuming the handoff's AC-xxx list, read the PRD itself for full context:
+- Read `docs/product/PRD.md` sections 3.2.3 (interaction logic), 3.2.4 (state design), 3.2.5 (data model), 5.1 (performance)
+- Read `docs/product/prd.json` arrays: `pages[]` (page list + flows), `entities[]` (for form/component design), `user_flows[]` (for flow diagrams)
+- If prd.json is absent (PRD-L might not produce all arrays), fall back to PRD.md narrative
+- These sections provide the structural foundation that handoff AC-xxx alone cannot convey
+
+*Exit condition: PRD sections read and understood; key pages/entities/states are noted for design exploration.*
 
 ### 1.5 Review and Strip Overreach ACs (Push-back Mechanism)
 

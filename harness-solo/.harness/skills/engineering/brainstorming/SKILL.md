@@ -15,6 +15,8 @@ description: Requirements exploration and design refinement — a hard gate: no 
 - docs/handoff/pm-to-solo.md
 - docs/handoff/design-to-solo.md
 - docs/handoff/component-map.json
+- docs/product/PRD.md (read-only; sections 3.2.1 feature list, 3.2.5 data model, 3.2.6 interface definition, 4.2 tech constraints, 5 NFR, 7.1 acceptance criteria)
+- docs/product/prd.json (read-only; features[], entities[], non_functional_requirements[], features[].acceptance_criteria[] for structured engineering input)
 - docs/product/PROJECT.md
 
 ## Outputs
@@ -32,10 +34,15 @@ description: Requirements exploration and design refinement — a hard gate: no 
    - If any of these exists, **read it first** as the source of requirements
    - **When reading pm-to-solo.md, you must also read the "Business Context Summary" section** to understand the business constraints behind the ACs
    - After reading, jump to step 3 of the process (technical solution exploration), skipping the requirements exploration in steps 1-2
-2. **Product documentation**: If `docs/product/PROJECT.md` exists and is filled in, read it as the requirements input
+2. **PRD direct read** (primary requirements source from harness-pm):
+   - `docs/product/PRD.md` — full PRD document (sections: feature list, data model, interface definition, tech constraints, NFR, acceptance criteria)
+   - `docs/product/prd.json` — structured data (features[], entities[], non_functional_requirements[], features[].acceptance_criteria[])
+   - If handoff documents reference PRD paths, **read PRD sections directly** for full context that handoff AC-xxx alone cannot convey (especially data model for ER design, NFR for architecture decisions)
+   - If PRD.md does not exist (early-stage project without harness-pm), fall back to PROJECT.md or user conversation
+3. **Product documentation**: If `docs/product/PROJECT.md` exists and is filled in, read it as the requirements input
    - PROJECT.md is the static requirements definition (written at project kickoff); FEATURES.md is the dynamic status dashboard (updated during development)
    - After reading, jump to step 2 of the process (constitution check), skipping the requirements exploration in step 1
-3. **User conversation**: If none of the above exist, explore requirements with the user in a structured way following the process below
+4. **User conversation**: If none of the above exist, explore requirements with the user in a structured way following the process below
 
 ## Process
 
@@ -70,7 +77,7 @@ description: Requirements exploration and design refinement — a hard gate: no 
 
 4. **Output the design document**
    Decide the write strategy based on the input source:
-   - **With handoff documents**: Extract requirements from the handoff documents and write them to `docs/product/PROJECT.md` (PROJECT.md is always maintained by brainstorming; harness-pm produces handoff documents, not PROJECT.md). Also supplement the technical solution in the "open items" section of the handoff document or in a separate `docs/engineering/TECH_NOTES.md`
+   - **With handoff documents + PRD**: Extract requirements from the handoff documents and PRD (PRD.md + prd.json), synthesize them into `docs/product/PROJECT.md`. PROJECT.md is the engineering-facing requirements doc maintained by solo (synthesized from PRD + handoff + constitution check); harness-pm produces PRD.md/prd.json as upstream input, solo's brainstorming translates them into PROJECT.md for engineering use. Also supplement the technical solution in the "open items" section of the handoff document or in a separate `docs/engineering/TECH_NOTES.md`
    - **Without handoff documents**: Write the confirmed requirements to `docs/product/PROJECT.md`
      - If the `docs/product/` directory does not exist, create it with a tool (do not use `mkdir -p`; use the Agent tool for cross-platform support)
      - If the file does not exist, create it; if it exists, append/update the corresponding feature rows (append a revision record)

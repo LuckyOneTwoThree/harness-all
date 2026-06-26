@@ -55,6 +55,7 @@ Context must be loaded before the session starts; working in an "amnesic" state 
    Scan the `docs/handoff/` directory for documents from other harness family members.
    - If a `<source>-to-solo.md` file exists, report: "Found handoff document X (from harness-<source>), consume it this session?"
    - Handoff documents may contain PRD paths, AC numbers, key decisions, and open items — these are inputs brainstorming cannot skip
+   - If handoff references `docs/product/PRD.md` or `docs/product/prd.json`, verify these files exist and report their presence (these are the primary requirements source from harness-pm)
    - If unconsumed handoff documents exist, remind the user to prioritize them
    - Verify: you have explicitly checked the directory, not assumed "user will tell me"
 

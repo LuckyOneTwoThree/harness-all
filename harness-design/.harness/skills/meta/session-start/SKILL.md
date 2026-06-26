@@ -43,6 +43,7 @@ Context must be loaded before the session begins; working with "amnesia" is not 
    Scan the `docs/handoff/` directory:
    - If `pm-to-design.md` exists, report to the user: "Found handoff document (from harness-pm). Consume it in this session?"
    - Handoff documents may include PRD paths, key decisions, and open items; they are important input for design-brief
+   - If handoff references `docs/product/PRD.md` or `docs/product/prd.json`, verify these files exist and report their presence (these are the primary requirements source from harness-pm, containing pages/entities/user_flows for design)
    - If unconsumed handoff documents exist, remind the user to prioritize them
 
 6. **Confirm task scope**

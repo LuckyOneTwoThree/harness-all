@@ -69,7 +69,7 @@ description: Task breakdown — output an executable spec.md
    ```
 
    **AC source notes**:
-   - Engineering AC (AC-xxx): from the PRD or brainstorming; describes feature behavior
+   - Engineering AC (AC-xxx): from the PRD (`docs/product/PRD.md` Section 7.1) or `docs/product/prd.json` `features[].acceptance_criteria[]` or brainstorming; describes feature behavior
    - Design AC (DAC-xxx): from `docs/handoff/design-to-solo.md`; describes visual/interaction constraints
    - If there is no design-to-solo.md, skip the Design AC section
    - DAC numbering follows the AC-xxx numbering in design-to-solo.md, with a D prefix to distinguish the source

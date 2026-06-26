@@ -88,7 +88,8 @@ harness-solo is the **engineering development** member of the harness family, fo
 
 ## Project context
 
-- When you need to understand the project, read `docs/product/PROJECT.md` (create on demand: produced by harness-pm or written by this framework's brainstorming; skip if it does not exist)
+- **PRD (upstream from harness-pm)**: `docs/product/PRD.md` + `docs/product/prd.json` — full product requirements document + machine-consumable structured data (features/pages/entities/NFR/acceptance criteria). Read directly as the primary requirements source when starting a new feature.
+- **PROJECT.md (engineering-facing)**: `docs/product/PROJECT.md` — engineering requirements synthesized from PRD + handoff + constitution check by brainstorming. Read when you need the engineering-adapted view of requirements.
 - Tech stack decisions are in `docs/engineering/TECH_STACK.md` (create on demand: fill in at project initiation; skip if it does not exist)
 - Feature progress is in `.harness/FEATURES.md`
 - Handoff documents are in `docs/handoff/` (from other harness family members; drop them in manually to be recognized)

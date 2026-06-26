@@ -25,6 +25,7 @@
 ## PRD Path and Acceptance Criteria
 
 **PRD document**: `docs/product/PRD.md`
+**PRD structured data**: `docs/product/prd.json` (machine-consumable; contains features[], entities[], non_functional_requirements[] for engineering consumption)
 
 **Acceptance criteria list (AC-xxx)**:
 
@@ -35,6 +36,19 @@
 - [ ] AC-001: <Given-When-Then or testable description>
 - [ ] AC-002: <testable description>
 - [ ] AC-003: <testable description>
+
+## Engineering-Consumable PRD Sections
+
+> harness-solo's brainstorming should read these PRD sections as direct input (not just the AC-xxx list):
+
+| PRD section | What engineering consumes | Where in prd.json |
+|------|------|------|
+| 3.2.1 Feature list | MoSCoW priorities, feature dependencies | `features[].priority` + `features[].dependencies` |
+| 3.2.5 Data model | Entities, fields, relationships (for ER design + migration) | `entities[]` |
+| 3.2.6 Interface definition | API contract input (method/path/params/response) | `features[].api_endpoints[]` (advisory; final API design by solo) |
+| 4.2 Technical constraints | Architecture constraints, known tech debt | (in prd.md Section 4.2) |
+| 5.1-5.4 NFR | Performance, availability, security, observability targets | `non_functional_requirements[]` |
+| 7.1 Functional acceptance | AC-xxx (Happy Path + boundary + exception) | `features[].acceptance_criteria[]` |
 
 ## Business Context Digest
 
