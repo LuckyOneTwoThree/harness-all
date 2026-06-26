@@ -38,7 +38,6 @@
 | Field Path | Type | Required | Description |
 |----------|------|------|------|
 | prd_id | string | Yes | PRD unique identifier |
-| level | enum(L,S,X) | Yes | PRD tier |
 | metadata | object | Yes | Meta information |
 | metadata.product_name | string | Yes | Product name |
 | metadata.version | string | Yes | Version number |
@@ -133,13 +132,12 @@ PRD version: v{version}
 
 ### 8.4 prd.json Complete Schema
 
-prd.json is the machine-consumable version of the PRD, provided for programmatic consumption by downstream Backend/UI Skills, ensuring that core information such as features, pages, entities, and user flows can be automatically parsed and aligned. It contains 7 top-level arrays: features, pages, entities, user_flows, non_functional_requirements, tracking_plan, traceability.
+prd.json is the machine-consumable version of the PRD, provided for programmatic consumption by downstream Backend/UI Skills, ensuring that core information such as features, pages, entities, and user flows can be automatically parsed and aligned. It contains 7 top-level arrays: features, pages, entities, user_flows, non_functional_requirements, tracking_plan, traceability. All projects use the same complete schema — no tiering.
 
 ```json
 {
   "prd_id": "string",
   "version": "string",
-  "level": "L | S | X",
   "status": "draft | in_review | approved | released",
   "meta": {
     "title": "string",
@@ -243,7 +241,14 @@ prd.json is the machine-consumable version of the PRD, provided for programmatic
           "path": "string",
           "description": "string"
         }
-      ]
+      ],
+      "migration": {
+        "from_version": "string | null",
+        "to_version": "string",
+        "strategy": "expand_and_contract | dual_write | big_bang",
+        "rollback": "string",
+        "required": "boolean"
+      }
     }
   ],
   "user_flows": [
@@ -277,12 +282,41 @@ prd.json is the machine-consumable version of the PRD, provided for programmatic
         "target": "string"
       }
     ],
+    "capacity_forecast": [
+      {
+        "time_horizon": "T0 | +3m | +6m | +12m",
+        "expected_dau_mau": "string",
+        "peak_qps": "string",
+        "storage_growth": "string",
+        "bandwidth": "string",
+        "resource_action": "string"
+      }
+    ],
     "availability": [
       {
         "requirement": "string",
         "metric": "string",
         "target": "string",
         "measurement": "string"
+      }
+    ],
+    "slo_targets": [
+      {
+        "slo": "availability | latency_p99 | error_rate",
+        "target": "string",
+        "measurement_window": "string",
+        "error_budget_policy": "string",
+        "owner": "PM | Ops"
+      }
+    ],
+    "dr_targets": [
+      {
+        "scenario": "single_az_failure | region_failure | data_corruption",
+        "rpo": "string",
+        "rto": "string",
+        "backup_strategy": "string",
+        "failover_mechanism": "string",
+        "dr_drill_frequency": "string"
       }
     ],
     "security": [
@@ -319,8 +353,48 @@ prd.json is the machine-consumable version of the PRD, provided for programmatic
     "validation": {
       "coverage_target": "number",
       "data_delay_threshold": "string"
-    }
+    },
+    "experiment_hypothesis_ref": [
+      {
+        "feature_id": "string",
+        "hypothesis": "string",
+        "primary_metric": "string",
+        "expected_lift": "string",
+        "guardrail_metric": "string",
+        "min_sample_size": "string",
+        "min_run_duration": "string",
+        "required": "boolean"
+      }
+    ]
   },
+  "dependencies_to_introduce": [
+    {
+      "name": "string",
+      "version": "string",
+      "license": "MIT | Apache-2.0 | BSD | other",
+      "purpose": "string",
+      "justification": "string",
+      "maintainer_health": "active | archived | unknown"
+    }
+  ],
+  "environment_diffs": [
+    {
+      "config_key": "string",
+      "dev": "string",
+      "staging": "string",
+      "prod": "string",
+      "notes": "string"
+    }
+  ],
+  "error_code_table": [
+    {
+      "http_status": "number",
+      "error_code": "string",
+      "error_message": "string",
+      "trigger_condition": "string",
+      "recovery_guidance": "string"
+    }
+  ],
   "traceability": [
     {
       "feature_id": "string",

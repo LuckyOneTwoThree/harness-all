@@ -84,15 +84,7 @@
 
 > If not yet produced, fill in "To be supplemented".
 >
-> ⚠️ **PRD-L projects (mandatory rule)**: If this PRD is tier L (Effort < 2 person-days), the PRD itself does NOT include a tracking plan (Section 6 is deleted). However, if this project will be handed off to harness-growth, you MUST fill in at least 3-5 core events in the table below — growth's funnel-analysis / cohort-analysis / experiment-design skills depend on event definitions and cannot work without them.
->
-> | Event name | Trigger timing | Key properties | Associated metric |
-> |--------|----------|------|----------|
-> | <e.g., user_signup> | <after account created> | <source, channel> | <signup conversion rate> |
-> | <e.g., feature_used> | <first action in feature X> | <feature_id, duration> | <feature adoption rate> |
-> | <e.g., purchase_completed> | <after payment success> | <amount, product_id> | <revenue per user> |
->
-> If this PRD-L project will NOT be handed off to growth, you can skip this table.
+> **Note**: the unified PRD always includes Section 6 (Tracking Plan) and Section 6.3 (Experiment Hypothesis Reference). If this project will be handed off to harness-growth, ensure the experiment_hypothesis_ref in prd.json is filled — growth's funnel-analysis / cohort-analysis / experiment-design skills depend on event definitions and hypotheses.
 
 ## Design Assets (if any, from harness-design)
 

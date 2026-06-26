@@ -1,6 +1,6 @@
 ---
 name: design-prd
-description: Use when you need to generate a standardized PRD document. PRD auto-generation and management, generating standardized PRD documents based on requirements and creative solutions, providing input for subsequent IA, flow, and prototype design. Covers PRD-L/S/X three-tier layering, 9-section complete structure, and 4 quality gates. Keywords: PRD generation, product requirements document, requirements document auto-generation, PRD management, writing requirements documents, product documentation.
+description: Use when you need to generate a standardized PRD document. PRD auto-generation and management, generating standardized PRD documents based on requirements and creative solutions, providing input for subsequent IA, flow, and prototype design. Uses a single unified most-complete 9-section structure and 4 quality gates. Keywords: PRD generation, product requirements document, requirements document auto-generation, PRD management, writing requirements documents, product documentation.
 ---
 # PRD Generator
 
@@ -14,21 +14,20 @@ description: Use when you need to generate a standardized PRD document. PRD auto
 - memory/progress.md
 - memory/knowledge-base.md
 
-This Skill is responsible for automatically converting upstream phase outputs (user insights, opportunity definition, ideation) into PRD documents that meet quality standards, providing structured input for subsequent product design (IA, flow, prototype). Requirements collection, understanding, and prioritization are built into design-prd's Step 1-3, eliminating the need for a separate requirements management phase. Supports PRD-L/S/X three-tier layering, automatically performs 4 quality gate checks to ensure document completeness, consistency, ambiguity elimination, and traceability.
+This Skill is responsible for automatically converting upstream phase outputs (user insights, opportunity definition, ideation) into PRD documents that meet quality standards, providing structured input for subsequent product design (IA, flow, prototype). Requirements collection, understanding, and prioritization are built into design-prd's Step 1-3, eliminating the need for a separate requirements management phase. Uses a single unified most-complete 9-section structure, automatically performs 4 quality gate checks to ensure document completeness, consistency, ambiguity elimination, and traceability.
 
 ## Core Principles
 1. Quality gates cannot be bypassed — The 4 gates are the bottom line of PRD quality, never skipped under any circumstances
-2. Tiering matches complexity — PRD-L/S/X correspond to different complexities, avoiding over- or under-engineering
+2. Single unified most-complete structure — One PRD structure for all projects; no tiering/simplification, ensuring downstream consumers (design/engineering/growth) always get full contract data
 3. Traceability chain must be connected — Each feature point can be traced back to upstream outputs and business objectives
-4. Human decision authority takes precedence — When AI judgment confidence < 0.7, human confirmation is mandatory; PM can override AI tiering
+4. Human decision authority takes precedence — When AI judgment confidence < 0.7, human confirmation is mandatory
 
 ## Execution Steps
 
-1. [Core] Determine PRD tier level (L/S/X) — Automatically tier based on Effort estimation and team count; PM can override
-2. [Core] Generate PRD document according to the corresponding tier structure — PRD-L uses a simplified template, PRD-S uses the complete 9-section structure, PRD-X uses the enhanced 9-section structure
-3. [Core] Execute 4 quality gate checks — Completeness/Consistency/Ambiguity elimination/Traceability; auto-correct if failed
-4. [Conditional] Version lifecycle management — Create→Review→Finalize→Change; record change log for each change
-5. [Conditional] Upstream/downstream handoff — Ensure PRD is traceable to upstream requirements, downstream design can directly consume PRD output
+1. [Core] Generate PRD document using the unified complete 9-section structure — No tiering; all projects use the same most-complete structure, ensuring downstream consumers always get full contract data
+2. [Core] Execute 4 quality gate checks — Completeness/Consistency/Ambiguity elimination/Traceability; auto-correct if failed
+3. [Conditional] Version lifecycle management — Create→Review→Finalize→Change; record change log for each change
+4. [Conditional] Upstream/downstream handoff — Ensure PRD is traceable to upstream requirements, downstream design can directly consume PRD output
 
 **Key Output Requirements**:
 - **entities[].fields must be complete**: Each entity must contain at least an identifier field (id), a name field, a status field, and business core fields. Field granularity should be at the "backend can directly use for ER model design" level; cannot only provide entity names without fields
@@ -37,37 +36,9 @@ This Skill is responsible for automatically converting upstream phase outputs (u
 
 See detailed descriptions in each section below.
 
-## 1. PRD Tiering System
+## 1. PRD Complete 9-Section Structure
 
-### 1.1 Tier Definition
-
-| Tier | Trigger Condition | Document Size | Review Process | Decision Authority |
-|------|----------|----------|----------|--------|
-| **PRD-L (Light)** | Effort < 2 person-days | 500-1500 words | PM self-review | PM unilateral decision |
-| **PRD-S (Standard)** | 2 person-days ≤ Effort ≤ 20 person-days | 1500-3000 words | Requirements Review meeting | Product committee decision |
-| **PRD-X (eXtensive)** | Effort > 20 person-days OR cross 3+ teams | 3000-8000 words | Multi-round review | Cross-department review + management approval |
-
-### 1.2 Automatic Tiering Rules
-
-```
-Tiering decision algorithm:
-1. Extract Effort estimation from upstream output (unit: person-days)
-2. Count the number of teams involved (development, design, testing, operations, etc.)
-3. Apply the tiering decision tree:
-   IF Effort < 2 AND team count ≤ 1 THEN PRD-L
-   ELSE IF Effort <= 20 AND team count ≤ 3 THEN PRD-S
-   ELSE PRD-X
-```
-
-### 1.3 Human Can Override AI Judgment
-
-- PM can manually specify the tier level without following the automatic judgment
-- When overriding, the override reason must be recorded in the document metadata
-- When automatic judgment confidence < 0.7, human confirmation is mandatory
-
-## 2. PRD-S Complete 9-Section Structure
-
-The following is the standard structure for PRD-S (Standard); PRD-L and PRD-X are adjusted proportionally on this basis.
+All projects use the same unified most-complete 9-section structure. No tiering/simplification — this ensures downstream consumers (design-brief, brainstorming, growth, ops) always receive full contract data.
 
 **Complete structure definition**: See [Reference/prd-structure.md](Reference/prd-structure.md)
 
@@ -85,7 +56,7 @@ The following is the standard structure for PRD-S (Standard); PRD-L and PRD-X ar
 | Section 8 | Release & Operations | Gradual rollout plan, Feature Flag, rollback plan, operations readiness |
 | Section 9 | Appendix | Glossary, change log, open issues, related document index |
 
-## 3. Quality Gates
+## 2. Quality Gates
 
 ### Gate 1: Completeness Check
 
@@ -158,9 +129,9 @@ Strategic objectives → OKR → Key Results → Primary metrics → Functional 
 - Prompt missing traceability paths
 - Require supplementing upstream evidence
 
-## 4. Version Lifecycle [Conditional]
+## 3. Version Lifecycle [Conditional]
 
-### 4.1 Version State Machine
+### 3.1 Version State Machine
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -176,7 +147,7 @@ Strategic objectives → OKR → Key Results → Primary metrics → Functional 
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### 4.2 Version Definition
+### 3.2 Version Definition
 
 | Version | Trigger Condition | Change Authority | Review Requirement |
 |------|----------|----------|----------|
@@ -187,7 +158,7 @@ Strategic objectives → OKR → Key Results → Primary metrics → Functional 
 | v1.x | Change during development | Dev + PM | Change review |
 | v2.0 | Major version update after release | PM | Retrospective review |
 
-### 4.3 State Transitions
+### 3.3 State Transitions
 
 | Current State | Transition Action | Next State | Trigger Condition |
 |----------|----------|----------|----------|
@@ -197,9 +168,9 @@ Strategic objectives → OKR → Key Results → Primary metrics → Functional 
 | Finalized | Trigger change | Dev Change | Adjustment needed during development phase |
 | Released | Publish update | Archived | New version released |
 
-## 5. Execution Decision Logic [Conditional]
+## 4. Execution Decision Logic [Conditional]
 
-### 5.1 Generation Order Dependency Graph
+### 4.1 Generation Order Dependency Graph
 
 **Topological Sort Rules**:
 ```
@@ -215,7 +186,7 @@ Generation priority (high to low):
 9. Appendix (Section 9) - depends on all other Sections
 ```
 
-### 5.2 Upstream Conflict Decision Rules
+### 4.2 Upstream Conflict Decision Rules
 
 **Conflict Types and Handling Strategies**:
 
@@ -241,7 +212,7 @@ Escalation path:
 4. Update PRD
 ```
 
-### 5.3 Upstream Data Incomplete Handling
+### 4.3 Upstream Data Incomplete Handling
 
 **Missing Level Definition**:
 
@@ -273,7 +244,7 @@ L2 handling:
 4. Require re-input
 ```
 
-### 5.4 Self-Correction Loop
+### 4.4 Self-Correction Loop
 
 **Trigger Conditions**:
 - Gate check failure
@@ -296,9 +267,9 @@ Round N correction:
 5. If passed, end; otherwise enter round N+1
 ```
 
-## 6. Upstream/Downstream Handoff [Conditional]
+## 5. Upstream/Downstream Handoff [Conditional]
 
-### 6.1 Upstream Consumption
+### 5.1 Upstream Consumption
 
 | Phase | Output Artifact | Consumption Method |
 |------|--------|----------|
@@ -310,7 +281,7 @@ Round N correction:
 | **Design** | Prototypes, flow diagrams, information architecture | Reference interaction logic, page specs |
 | **Metrics** | Metric system, tracking plan | Direct reference or supplement |
 
-### 6.2 Downstream Driving
+### 5.2 Downstream Driving
 
 | Downstream Party | Driving Content | Deliverable | Consumption Source | Handoff Path |
 |--------|----------|--------|----------|----------|
@@ -319,12 +290,14 @@ Round N correction:
 | **Development** | Feature specs, interface definition, boundary conditions | Technical design document | prd.md + prd.json | pm-to-solo.md → brainstorming → writing-plans |
 | **Design** | Interaction logic, state design, page specs | Design specification document | prd.md + prd.json.pages[] | pm-to-design.md → design-brief reads PRD sections 3.2.3-3.2.5 + 5.1 |
 | **Testing** | Acceptance criteria, test cases, environment requirements | Test plan | prd.json.features[].acceptance_criteria[] | pm-to-solo.md → writing-plans writes AC-xxx into spec.md |
-| **Operations** | Release strategy, operations readiness, effectiveness evaluation | Operations plan | prd.md | pm-to-ops.md (if applicable) |
-| **Monitoring** | Observability requirements, tracking plan | Monitoring dashboard | prd.json.non_functional_requirements | pm-to-ops.md (if applicable) |
+| **Growth** | Tracking plan, success metrics, experiment hypothesis | Growth strategy + experiment design | prd.json.tracking_plan + prd.json.goals[] | pm-to-solo.md → solo-to-growth.md (growth does NOT read PRD directly) |
+| **Operations** | Release strategy, observability, DR targets, capacity forecast | OPS_STRATEGY.md (self-produced by ops) | (ops does NOT read PRD directly; ops consumes solo-to-ops.md + self-produced OPS_STRATEGY.md) | pm-to-solo.md → solo-to-ops.md |
 
-> **Handoff protocol**: handoff documents (pm-to-design.md, pm-to-solo.md) carry PRD.md + prd.json paths + AC-xxx list. Downstream skills (design-brief, brainstorming) read PRD directly for full context, not just the AC list. See [docs/handoff/](docs/handoff/) templates for the consumption contract.
+> **Handoff protocol**: handoff documents (pm-to-design.md, pm-to-solo.md) carry PRD.md + prd.json paths + AC-xxx list. Direct consumers (design-brief, brainstorming) read PRD directly for full context. Indirect consumers (growth, ops) consume handoff documents, not PRD itself. See [docs/handoff/](docs/handoff/) templates for the consumption contract.
+>
+> **Observability boundary note**: PRD Section 5.4 defines observability requirements from the PM perspective (what to measure, alert thresholds). The actual monitoring dashboard implementation, SLO alerting rules, and runbook authoring are ops-domain responsibilities, driven by OPS_STRATEGY.md (self-produced by ops based on solo-to-ops.md handoff + PRD NFR as reference input).
 
-### 6.3 Data Flow Diagram
+### 5.3 Data Flow Diagram
 
 ```
 [Insight Analysis output] → [Opportunity Definition output] → [Ideation output]
@@ -390,35 +363,22 @@ prd.json contains 7 top-level arrays: features, pages, entities, user_flows, non
 
 ### Output Validation Rules
 
-**PRD-S/X (full 9-section) validation**:
+**Unified PRD validation** (all projects use the same full 9-section structure):
 
-- [ ] 9-section structure complete: PRD-S complete 9-section structure all exist
+- [ ] 9-section structure complete: All 9 sections of the unified complete structure exist
 - [ ] Traceability chain connected: Traceability chain from OKR to acceptance criteria is complete
 - [ ] Gates passed: All 4 quality gates passed
 - [ ] No residual ambiguity: No fuzzy quantifiers and dangling references
 - [ ] prd.json completeness: features/pages/entities/user_flows four arrays are all non-empty
-- [ ] prd.json entities field completeness: Each entity's fields array is non-empty and contains at least core fields (id/name/status, etc.), relationships array is non-empty
+- [ ] prd.json entities field completeness: Each entity's fields array is non-empty and contains at least core fields (id/name/status, etc.), relationships array is non-empty; migration field present when entity evolves from existing data
 - [ ] prd.json pages data requirements completeness: Each page's data_requirements array is non-empty, clearly annotates data source (api/local/cache) and required fields
 - [ ] prd.json reference consistency: page_id in feature.related_pages exists in pages[], entity_id in feature.related_entities exists in entities[]
 - [ ] prd.json traceability chain complete: Each feature has a corresponding traceability entry
 - [ ] prd.json and prd.md consistency: Feature point names, priorities, and acceptance criteria in prd.json are consistent with prd.md
-- [ ] prd.json tracking_plan completeness: tracking_plan.events is non-empty, each event's properties is non-empty
-- [ ] prd.json NFR completeness: All 4 dimension arrays of non_functional_requirements are non-empty
+- [ ] prd.json tracking_plan completeness: tracking_plan.events is non-empty, each event's properties is non-empty; experiment_hypothesis_ref present for growth-bound projects
+- [ ] prd.json NFR completeness: All 4 dimension arrays of non_functional_requirements are non-empty; slo_targets, capacity_forecast, dr_targets present for production-grade projects
 - [ ] prd.json feature driving information completeness: Each P0/P1 feature's driven_by field is non-empty, clearly linked to North Star Metric or OKR
 - [ ] prd.json feature priority and metric correlation consistency: feature.priority is positively correlated with driven_by.expected_lift
-
-**PRD-L (lightweight) validation** (relaxed rules — see [Reference/prd-structure.md](Reference/prd-structure.md#prd-l-prdjson-requirements) for full table):
-
-- [ ] Simplified structure complete: Merged sections (Constraints & Requirements / Release & Appendix) exist; deleted sections (Tracking plan, Performance/Security acceptance) absent
-- [ ] Traceability chain connected: traceability[] is non-empty (mandatory at all tiers)
-- [ ] Gates passed: All 4 quality gates passed (ambiguity/consistency checks still apply)
-- [ ] prd.json features[]: Non-empty, acceptance_criteria[] only Happy Path (boundary/exception optional)
-- [ ] prd.json pages[]: Non-empty, only page name + primary data source (1 line per page)
-- [ ] prd.json entities[]: Non-empty, fields[] only core fields (id/name/status + 1-2 business fields); relationships[] can be empty
-- [ ] prd.json user_flows[]: Can be empty (PRD-L scope is simple enough)
-- [ ] prd.json non_functional_requirements[]: Only performance + security (2 dimensions required, observability/availability optional)
-- [ ] prd.json tracking_plan[]: Can be empty
-- [ ] prd.json and prd.md consistency: Feature names and priorities consistent
 
 ## Decision Rules (Detailed)
 
@@ -518,7 +478,7 @@ prd.json contains 7 top-level arrays: features, pages, entities, user_flows, non
 | ideation_outputs missing | Solution design section annotated "Pending supplementation", generate feature list based on user description | Section 3 feature specs simplified | Ask user to provide feature solution descriptions or upload ideation phase output files |
 | design_outputs missing | Interaction logic and state design annotated "Pending supplementation" | Section 3.2 interaction logic simplified | Ask user to provide interaction design descriptions or upload design phase output files |
 | metrics_outputs missing | Tracking plan annotated "Pending supplementation" | Section 6 content simplified | Ask user to provide core metrics and tracking requirements or upload metrics phase output files |
-| All upstream missing | Generate simplified PRD-L (200-500 words) based on user verbal description, with built-in requirements collection, understanding, and prioritization | Output PRD-L level document | Ask user to provide product requirements description, core features, and target users |
+| All upstream missing | Generate a baseline PRD (unified complete structure, content fields annotated "AI-inferred, pending confirmation") based on user verbal description, with built-in requirements collection, understanding, and prioritization | Output unified complete PRD with low-confidence annotations | Ask user to provide product requirements description, core features, and target users |
 
 ### Data Acquisition Instructions
 

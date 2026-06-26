@@ -1,16 +1,15 @@
 # PRD Generator Example Data
 
-> This document provides a complete prd.json example for the design-prd Skill, for reference by downstream Backend/UI Skills for programmatic consumption. The example scenario is a PRD-S level complete artifact for the "Course Recommendation Feature".
+> This document provides a complete prd.json example for the design-prd Skill, for reference by downstream Backend/UI Skills for programmatic consumption. The example scenario is a unified complete PRD artifact for the "Course Recommendation Feature".
 
 ## Complete prd.json Example
 
-Scenario: An online learning platform's "Course Recommendation Feature" PRD-S level document, containing real data for all 7 top-level arrays (features, pages, entities, user_flows, non_functional_requirements, tracking_plan, traceability).
+Scenario: An online learning platform's "Course Recommendation Feature" unified complete PRD, containing real data for all 7 top-level arrays (features, pages, entities, user_flows, non_functional_requirements, tracking_plan, traceability) plus the extended fields (dependencies_to_introduce, environment_diffs, error_code_table).
 
 ```json
 {
   "prd_id": "PRDS-2025-06-001",
   "version": "v1.0",
-  "level": "S",
   "status": "approved",
   "meta": {
     "title": "Course Recommendation Feature PRD",
@@ -293,7 +292,14 @@ Scenario: An online learning platform's "Course Recommendation Feature" PRD-S le
           "path": "/api/v1/recommend/feedback",
           "description": "Submit recommendation feedback (not interested, etc.)"
         }
-      ]
+      ],
+      "migration": {
+        "from_version": "v1.2 (course table without match_score column)",
+        "to_version": "v1.3 (add match_score + recommend_reason columns)",
+        "strategy": "expand_and_contract",
+        "rollback": "Drop match_score and recommend_reason columns; recommendation service falls back to unranked list",
+        "required": true
+      }
     },
     {
       "entity_id": "E002",
@@ -375,7 +381,14 @@ Scenario: An online learning platform's "Course Recommendation Feature" PRD-S le
           "path": "/api/v1/users/:userId/preferences",
           "description": "Update learner preferences (career direction, interest tags)"
         }
-      ]
+      ],
+      "migration": {
+        "from_version": null,
+        "to_version": "v1.0",
+        "strategy": "expand_and_contract",
+        "rollback": "N/A — greenfield preference fields, no rollback needed",
+        "required": false
+      }
     }
   ],
   "user_flows": [
@@ -439,6 +452,24 @@ Scenario: An online learning platform's "Course Recommendation Feature" PRD-S le
         "target": "≤1.5s"
       }
     ],
+    "capacity_forecast": [
+      {
+        "time_horizon": "T0",
+        "expected_dau_mau": "10k DAU",
+        "peak_qps": "200 read / 20 write",
+        "storage_growth": "+500MB/month",
+        "bandwidth": "50Mbps",
+        "resource_action": "initial provision: 2x app replicas, 1x redis"
+      },
+      {
+        "time_horizon": "+6m",
+        "expected_dau_mau": "50k DAU",
+        "peak_qps": "1000 read / 100 write",
+        "storage_growth": "+2.5GB/month",
+        "bandwidth": "250Mbps",
+        "resource_action": "scale to 5x app replicas, add redis cluster"
+      }
+    ],
     "availability": [
       {
         "requirement": "Recommendation service availability",
@@ -451,6 +482,40 @@ Scenario: An online learning platform's "Course Recommendation Feature" PRD-S le
         "metric": "Degradation trigger time",
         "target": "Degrade to popular courses within 3 seconds when recommendation service is abnormal",
         "measurement": "Fault drill verification"
+      }
+    ],
+    "slo_targets": [
+      {
+        "slo": "availability",
+        "target": "99.9%",
+        "measurement_window": "rolling 30 days",
+        "error_budget_policy": "burn rate > 2x → freeze non-critical deploys",
+        "owner": "PM + Ops"
+      },
+      {
+        "slo": "latency_p99",
+        "target": "< 500ms",
+        "measurement_window": "rolling 7 days",
+        "error_budget_policy": "burn rate > 2x → page on-call",
+        "owner": "Ops"
+      }
+    ],
+    "dr_targets": [
+      {
+        "scenario": "single_az_failure",
+        "rpo": "0",
+        "rto": "< 5min",
+        "backup_strategy": "synchronous replication to standby AZ",
+        "failover_mechanism": "auto-failover via health check",
+        "dr_drill_frequency": "quarterly"
+      },
+      {
+        "scenario": "data_corruption",
+        "rpo": "< 1h",
+        "rto": "< 2h",
+        "backup_strategy": "PITR snapshot every 1 hour",
+        "failover_mechanism": "restore from backup + replay WAL",
+        "dr_drill_frequency": "annual"
       }
     ],
     "security": [
@@ -553,8 +618,84 @@ Scenario: An online learning platform's "Course Recommendation Feature" PRD-S le
     "validation": {
       "coverage_target": 0.95,
       "data_delay_threshold": "T+1 day"
-    }
+    },
+    "experiment_hypothesis_ref": [
+      {
+        "feature_id": "F001",
+        "hypothesis": "Adding personalized recommendation reasons will increase learner trust and click-through rate",
+        "primary_metric": "recommend_click CTR",
+        "expected_lift": "+13pp (from 12% to 25%)",
+        "guardrail_metric": "recommend_feedback (not-interested rate) ≤ 5%",
+        "min_sample_size": "10k users per arm",
+        "min_run_duration": "14 days",
+        "required": true
+      }
+    ]
   },
+  "dependencies_to_introduce": [
+    {
+      "name": "redis",
+      "version": "7.2",
+      "license": "BSD-3-Clause",
+      "purpose": "Cache recommendation results to reduce DB load",
+      "justification": "Existing MySQL cannot handle the read QPS forecast; redis is the standard cache layer",
+      "maintainer_health": "active"
+    },
+    {
+      "name": "scikit-learn",
+      "version": "1.4",
+      "license": "BSD-3-Clause",
+      "purpose": "Recommendation model (collaborative filtering)",
+      "justification": "No existing ML library in the project; scikit-learn is the de-facto standard for tabular ML",
+      "maintainer_health": "active"
+    }
+  ],
+  "environment_diffs": [
+    {
+      "config_key": "RECOMMEND_CACHE_TTL",
+      "dev": "60s",
+      "staging": "300s",
+      "prod": "600s",
+      "notes": "dev uses short TTL for fast iteration; prod uses long TTL for cost savings"
+    },
+    {
+      "config_key": "RECOMMEND_FALLBACK_ENABLED",
+      "dev": "false",
+      "staging": "true",
+      "prod": "true",
+      "notes": "disable fallback in dev to catch recommendation service errors early"
+    }
+  ],
+  "error_code_table": [
+    {
+      "http_status": 400,
+      "error_code": "INVALID_COURSE_ID",
+      "error_message": "Course ID format is incorrect",
+      "trigger_condition": "courseId param is not a valid UUID",
+      "recovery_guidance": "Prompt user to re-enter or return to recommendation homepage"
+    },
+    {
+      "http_status": 401,
+      "error_code": "UNAUTHORIZED",
+      "error_message": "Please log in first",
+      "trigger_condition": "JWT token expired or missing",
+      "recovery_guidance": "Redirect to login page"
+    },
+    {
+      "http_status": 429,
+      "error_code": "RECOMMEND_RATE_LIMITED",
+      "error_message": "Too many recommendation requests, please try later",
+      "trigger_condition": "User exceeds 60 recommendation requests per minute",
+      "recovery_guidance": "Show retry countdown"
+    },
+    {
+      "http_status": 503,
+      "error_code": "RECOMMEND_SERVICE_UNAVAILABLE",
+      "error_message": "Recommendation service is temporarily unavailable, showing popular courses",
+      "trigger_condition": "Recommendation service is down or timed out",
+      "recovery_guidance": "Auto-fallback to popular courses; retry after 30s"
+    }
+  ],
   "traceability": [
     {
       "feature_id": "F001",
@@ -580,16 +721,19 @@ Scenario: An online learning platform's "Course Recommendation Feature" PRD-S le
 
 ## Example Notes
 
-### 7 Top-level Arrays Coverage
+### Coverage Summary
 
 | Top-level Array | Example Count | Description |
 |----------|----------|------|
 | features | 2 | Personalized Recommendation (must), Learning Path Recommendation (should) |
 | pages | 2 | Recommendation Homepage, Course Detail Page |
-| entities | 2 | Course, User, both include complete fields and relationships |
+| entities | 2 | Course, User — both include complete fields, relationships, api_endpoints, and migration plan |
 | user_flows | 1 | View Recommended Courses (with 4 steps and 2 alternative paths) |
-| non_functional_requirements | 4 dimensions | performance (2), availability (2), security (2), observability (2) |
-| tracking_plan | 3 events | recommend_click, course_view, recommend_feedback |
+| non_functional_requirements | 7 dimensions | performance (2), capacity_forecast (2), availability (2), slo_targets (2), dr_targets (2), security (2), observability (2) |
+| tracking_plan | 3 events + 1 hypothesis | recommend_click, course_view, recommend_feedback + experiment_hypothesis_ref for F001 |
+| dependencies_to_introduce | 2 | redis (cache), scikit-learn (ML model) |
+| environment_diffs | 2 | RECOMMEND_CACHE_TTL, RECOMMEND_FALLBACK_ENABLED |
+| error_code_table | 4 | 400 INVALID_COURSE_ID, 401 UNAUTHORIZED, 429 RATE_LIMITED, 503 SERVICE_UNAVAILABLE |
 | traceability | 3 trace relationships | Feature→Goal, Feature→Opportunity Definition, Feature→OKR |
 
 ### Reference Consistency Self-check

@@ -1,46 +1,8 @@
-# PRD-S Complete 9-Section Structure Reference
+# PRD Complete 9-Section Structure Reference
 
-> This document is split from design-prd SKILL.md, containing the standard structure definition of PRD-S (Standard). PRD-L and PRD-X are adjusted proportionally on this basis.
+> This document is split from design-prd SKILL.md, containing the standard structure definition of the unified PRD. All projects use this same most-complete structure — no tiering/simplification, ensuring downstream consumers (design/engineering/growth/ops) always receive full contract data.
 
-The following is the standard structure for PRD-S (Standard); PRD-L and PRD-X are adjusted proportionally on this basis.
-
-### PRD-L (Light) Adjustment Rules
-
-- **Keep**: Section 1 (Meta information), Section 2.1-2.2 (Problem description + Objective definition), Section 3.2.1-3.2.2 (Feature list + User stories, only Must/Should), Section 7.1 (Functional acceptance, only Happy Path)
-- **Merge**: Section 4+5 merged into one "Constraints & Requirements" section, Section 8+9 merged into one "Release & Appendix" section
-- **Simplify (not delete)**: Section 3.2.3-3.2.6 are simplified to lightweight versions — see "PRD-L Simplified Sections" below
-- **Delete**: Section 6 (Tracking plan), Section 7.2-7.3 (Performance/Security acceptance)
-- **Target size**: 500-1500 words, 3-5 core user stories
-
-#### PRD-L Simplified Sections (downstream must consume)
-
-> Rationale: downstream UI/Backend still need minimal structural data. Full deletion breaks the handoff chain; simplified versions keep the contract intact without overloading a lightweight PRD.
-
-| Section | PRD-S (full) | PRD-L (simplified) |
-|---------|------|----------|
-| 3.2.3 Interaction logic | Full page flow + feedback table | Single-line per page: `[Page A] → action → [Page B]` |
-| 3.2.4 State design | 5-state table | Only list states that have special handling (1-3 items max) |
-| 3.2.5 Data model | Full entity fields + ER diagram | Entity name + core fields only (id, name, status + 1-2 business fields); no ER diagram |
-| 3.2.6 Interface definition | Full API detail template | API name + method + path only (no request/response schema) |
-
-#### PRD-L prd.json Requirements
-
-| Array | PRD-S requirement | PRD-L requirement |
-|-------|------|----------|
-| features[] | Non-empty, full acceptance_criteria[] | Non-empty, acceptance_criteria[] only Happy Path |
-| pages[] | Non-empty, data_requirements[] complete | Non-empty, only page name + primary data source (1 line) |
-| entities[] | Non-empty, fields[] + relationships[] complete | Non-empty, fields[] only core fields (id/name/status + 1-2 business fields) |
-| user_flows[] | Non-empty | Can be empty (PRD-L scope is simple enough) |
-| non_functional_requirements[] | All 4 dimensions non-empty | Only performance + security (2 dimensions) |
-| tracking_plan[] | Non-empty | Can be empty |
-| traceability[] | Non-empty | Non-empty (traceability chain is mandatory at all tiers) |
-
-### PRD-X (eXtensive) Adjustment Rules
-
-- **Keep**: All 9 sections of PRD-S
-- **Enhance**: Section 3.2.2 add exception flow user stories for each feature point, Section 3.2.5 data model add ER diagram, Section 3.2.6 interface definition add error code table, Section 5 add disaster recovery plan, Section 8.1 add AB test plan
-- **Add**: Section 3.3 Technical solution assessment (multi-solution comparison matrix), Section 5.5 Compliance requirements (GDPR/CCPA, etc.), Section 8.4 Internationalization plan
-- **Target size**: 3000-8000 words, 10+ user stories with complete exception flows
+The following is the unified complete 9-section structure for all PRDs. The structure incorporates all fields previously distributed across PRD-L/S/X tiers into a single most-complete version: data-model migration, SLO targets, capacity forecast, disaster-recovery targets, dependencies to introduce, environment diffs, error code table, and experiment hypothesis reference are all first-class fields.
 
 ### Section 1: Meta Information (Meta)
 
@@ -214,6 +176,17 @@ Entity A (1:N) → Entity B
 Entity C (N:1) → Entity D
 ```
 
+**Entity Migration Plan** (required when an entity evolves from existing data — greenfield entities may mark "N/A")
+
+> Rationale: downstream engineering (solo brainstorming) and ops (migration runbook) both need to know how to move from the current schema to the target schema. Without this field, migration becomes an ad-hoc engineering decision, risking data loss.
+
+| Entity | from_version | to_version | strategy | rollback |
+|--------|----------|----------|----------|----------|
+| | | | expand-and-contract / dual-write / big-bang | rollback steps |
+
+- **strategy** options: `expand-and-contract` (preferred, zero-downtime) / `dual-write` (migration window) / `big-bang` (downtime required, must justify)
+- **rollback**: must include a concrete rollback procedure (e.g., "drop new column, restore from snapshot taken at step N")
+
 ##### 3.2.6 Interface Definition
 
 **API Interface List**
@@ -240,6 +213,22 @@ Response Example:
 }
 ```
 
+**Error Code Table** (required for all user-facing APIs)
+
+> Rationale: downstream engineering (solo) needs the error code contract to implement error handling; frontend needs it to render user-friendly error messages; growth needs it to attribute funnel drop-offs. Without a defined error code table, each layer invents its own codes, breaking cross-layer consistency.
+
+| HTTP Status | error_code | error_message (user-facing) | Trigger condition | Recovery guidance |
+|----------|------------|--------------------------|----------|----------|
+| 400 | INVALID_PARAM | "Parameter format is incorrect" | Request param validation failed | Prompt user to re-enter |
+| 401 | UNAUTHORIZED | "Please log in first" | Token expired or missing | Redirect to login |
+| 403 | FORBIDDEN | "No permission to perform this operation" | Authorization check failed | Show permission application entry |
+| 404 | NOT_FOUND | "Resource does not exist" | Resource deleted or never existed | Return to list page |
+| 409 | CONFLICT | "Resource already exists" | Uniqueness constraint violated | Prompt user to deduplicate |
+| 429 | RATE_LIMITED | "Too many operations, please try later" | Rate limit hit | Show retry countdown |
+| 500 | INTERNAL_ERROR | "Service exception, please retry" | Unhandled server error | Auto-retry + report to ops |
+
+> Project-specific error codes (e.g., BUSINESS_RULE_VIOLATION, INSUFFICIENT_BALANCE) should be appended below the standard set.
+
 ### Section 4: Boundaries & Constraints
 
 #### 4.1 Explicitly Not Doing
@@ -256,6 +245,22 @@ Response Example:
 | **Security constraint** | | |
 | **Compatibility constraint** | | |
 | **Technical debt** | | |
+
+**Dependencies to Introduce** (new third-party packages/services this PRD requires — must be declared here, not silently added by engineering)
+
+> Rationale: every new dependency increases supply-chain risk, maintenance burden, and bundle size. Declaring them in the PRD forces an explicit cost-benefit decision before engineering starts, and gives ops a heads-up for license/vulnerability scanning.
+
+| Dependency | Version | License | Purpose | Justification (why not existing/internal?) | Maintainer health |
+|----------|------|--------|---------|---------------------|----------|
+| | | MIT/Apache-2.0/BSD/... | | | active/archived/... |
+
+**Environment Differences** (config/values that differ between dev/staging/prod — must be explicit so engineering and ops don't guess)
+
+> Rationale: "works on my machine" failures are almost always caused by undeclared environment diffs. Making them a first-class PRD field forces PM + engineering to enumerate them up front.
+
+| Config key | dev | staging | prod | Notes |
+|----------|----------|----------|----------|----------|
+| | | | | e.g., feature flag default, rate limit, log level |
 
 #### 4.3 Known Limitations
 
@@ -274,6 +279,17 @@ Response Example:
 | Concurrent users | Support N users online simultaneously | | |
 | Error rate | < 0.1% | | |
 
+**Capacity Forecast** (required for production-grade projects — predicts resource growth so ops can provision ahead of demand)
+
+> Rationale: without a capacity forecast, ops provisions reactively (after incidents), leading to either over-provisioning (wasted cost) or under-provisioning (incidents). PM owns this because the forecast depends on business growth assumptions only PM can make.
+
+| Time horizon | Expected DAU/MAU | Peak QPS (read/write) | Storage growth | Bandwidth | Resource action |
+|----------|----------|----------|----------|----------|----------|
+| Launch (T0) | | | | | initial provision |
+| +3 months | | | | | scale-up trigger |
+| +6 months | | | | | capacity review |
+| +12 months | | | | | architecture review |
+
 #### 5.2 Availability Requirements
 
 | Requirement Item | Specific Metric | Test Method |
@@ -281,6 +297,26 @@ Response Example:
 | Success rate | ≥ 99.5% | |
 | Fault tolerance | Support automatic retry N times | |
 | Degradation strategy | Core features available in degraded mode | |
+
+**SLO Targets** (Service Level Objectives — the measurable availability promise to users; distinct from the loose "success rate" above)
+
+> Rationale: SLO is the contract between the product and its users (e.g., "API will be available 99.9% of the time, measured monthly"). Without explicit SLO targets, ops has no objective threshold for paging, and incident severity becomes subjective. PM owns SLO because it's a product promise with cost tradeoffs (higher SLO = more redundancy cost).
+
+| SLO | Target | Measurement window | Error budget consumption policy | Owner |
+|----------|--------|----------|----------|----------|
+| Availability | 99.9% | rolling 30 days | burn rate > 2x → freeze deploys | PM + Ops |
+| Latency (p99) | < 500ms | rolling 7 days | burn rate > 2x → page on-call | Ops |
+| Error rate | < 0.1% | rolling 1 hour | threshold breach → auto-rollback | Ops |
+
+**Disaster Recovery Targets** (required for production-grade projects — defines RPO/RTO so ops can design the DR architecture)
+
+> Rationale: RPO (Recovery Point Objective) and RTO (Recovery Time Objective) drive the entire DR architecture (backup frequency, multi-region, failover automation). Without them, ops either over-engineers (wasted cost) or under-engineers (data loss / prolonged outage). PM owns RPO/RTO because they are business-risk decisions, not technical ones.
+
+| Scenario | RPO (max data loss) | RTO (max downtime) | Backup strategy | Failover mechanism | DR drill frequency |
+|----------|----------|----------|----------|----------|----------|
+| Single-AZ failure | 0 | < 5min | synchronous replication | auto-failover | quarterly |
+| Region failure | < 15min | < 30min | async snapshot every 15min | manual DNS switchback | semi-annual |
+| Data corruption | < 1h | < 2h | PITR backup | restore from backup | annual |
 
 #### 5.3 Security Requirements
 
@@ -298,6 +334,8 @@ Response Example:
 | **Metrics** | | |
 | **Logs** | | |
 | **Traces** | | |
+
+> **Consumption boundary**: This section defines observability requirements from the **PM perspective** (what to measure, what alert thresholds matter to the product). The actual implementation — dashboard layout, alerting rule syntax, runbook authoring, log aggregation pipeline, trace sampling rate — is the **ops domain**, driven by `OPS_STRATEGY.md` (self-produced by ops using this section + solo-to-ops.md handoff as reference input). PM must NOT prescribe specific monitoring tooling (e.g., "use Prometheus" / "use Datadog") here; that is an ops architecture decision.
 
 ### Section 6: Tracking Plan
 
@@ -325,6 +363,16 @@ Response Example:
 - **Validation method**: QA testing + data callback validation
 - **Validation timing**: Completed synchronously during the feature acceptance phase
 - **Data quality monitoring**: Tracking coverage > 95%, data delay < 5min
+
+#### 6.3 Experiment Hypothesis Reference (required for projects handed off to growth)
+
+> Rationale: growth's `experiment-design` skill cannot design an A/B test without a hypothesis linking the feature change to an expected metric lift. If the PRD doesn't capture the hypothesis, growth has to reverse-engineer it from the feature list, which is unreliable. PM owns the hypothesis because it encodes the product's causal belief ("if we ship X, metric Y will lift by Z%").
+
+| Feature ID | Hypothesis | Primary metric (expected lift) | Guardrail metric (must not degrade) | Min sample size | Min run duration |
+|----------|----------|----------|----------|----------|----------|
+| F-001 | "Adding one-click checkout will reduce checkout friction" | checkout completion rate +5% | cart abandonment rate ≤ baseline | 10k users per arm | 14 days |
+
+> If this project will NOT be handed off to growth (e.g., pure infrastructure / internal tooling), mark "N/A — not growth-bound".
 
 ### Section 7: Acceptance Criteria
 
@@ -375,6 +423,8 @@ Then {runs normally within constraints}
 | Data encryption test | | |
 
 ### Section 8: Release & Operations
+
+> **Section positioning**: This section describes release and operations readiness from the **PM perspective** — the rollout plan, feature-flag defaults, rollback triggers, and operational handoff items that PM owns as part of the product launch contract. The actual operations architecture — deployment pipeline, canary automation, runbook authoring, on-call rotation, incident response — is the **ops domain**, driven by `OPS_STRATEGY.md` (self-produced by ops). PM must NOT prescribe specific deployment tooling (e.g., "use ArgoCD" / "use Spinnaker") or ops staffing decisions here.
 
 #### 8.1 Release Strategy
 
