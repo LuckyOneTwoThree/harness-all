@@ -32,11 +32,13 @@ The canonical schema, consumption rules, and worked example for `docs/handoff/co
 
 ## Consumption Rules
 
-1. **`engineeringComponent` is the source name.** Use it verbatim as the code component name. Do not translate, abbreviate, or alias it to fit a local naming convention.
-2. **`props` is a contract, not a suggestion.** Every prop in the map must be implemented by the engineering component. If a prop is impractical for the framework, raise it with harness-design rather than dropping it silently.
-3. **`states` is exhaustive.** Every listed state must be handled (default / hover / active / disabled / loading / etc.). A missing state is a design omission, not an engineering shortcut — feed it back to harness-design.
-4. **`designToken` links to `tokens.json`.** Hardcoded color/spacing values are forbidden; resolve every value through the token path. Bare `#333` or `13px` is a violation.
-5. **Framework-agnostic Type alignment.** The `props` Type must match the framework declared in `docs/engineering/TECH_STACK.md`:
+1. **JSON key (`<DesignComponentName>`) is the lookup key for Contract lines.** In `spec.md`, the `Contract: component-map.json#<Component>` line uses the JSON top-level key (e.g. `PrimaryButton`) verbatim as `<Component>`. Do NOT use `engineeringComponent` in the Contract line — it is the code component name, not the lookup key. When `engineeringComponent` differs from the JSON key (e.g. JSON key `PrimaryButton` vs `engineeringComponent: "Button"`), the Contract line must still reference the JSON key.
+
+2. **`engineeringComponent` is the code component name.** Use it verbatim as the code component name in implementation. Do not translate, abbreviate, or alias it to fit a local naming convention.
+3. **`props` is a contract, not a suggestion.** Every prop in the map must be implemented by the engineering component. If a prop is impractical for the framework, raise it with harness-design rather than dropping it silently.
+4. **`states` is exhaustive.** Every listed state must be handled (default / hover / active / disabled / loading / etc.). A missing state is a design omission, not an engineering shortcut — feed it back to harness-design.
+5. **`designToken` links to `tokens.json`.** Hardcoded color/spacing values are forbidden; resolve every value through the token path. Bare `#333` or `13px` is a violation.
+6. **Framework-agnostic Type alignment.** The `props` Type must match the framework declared in `docs/engineering/TECH_STACK.md`:
 
    | Framework | Allowed Types |
    |-----------|---------------|

@@ -323,7 +323,7 @@ docs/handoff/
 
 | Data File | Purpose | Structure |
 |---------|------|------|
-| `component-map.json` | Design → Solo explicit mapping layer | `{ "<DesignComponentName>": { designToken, engineeringComponent, props, states, notes } }` |
+| `component-map.json` | Design → Solo explicit mapping layer | `{ "<DesignComponentName>": { designToken, engineeringComponent, props, states, usedBy?, notes } }` |
 
 ### Contract Document Write Access Rules
 

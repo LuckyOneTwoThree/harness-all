@@ -101,7 +101,7 @@ Produce `docs/engineering/ENGINEERING_PLAN.md` based on the `ENGINEERING_PLAN-te
 For each shared infrastructure module in ENGINEERING_PLAN.md Section 3 (in priority order):
 
 - Run a mini new-feature workflow for the infrastructure module:
-  - writing-plans (produce spec.md for the module, e.g., `loops/specs/<product-task>-infra-<NNN>/spec.md`)
+  - writing-plans (produce spec.md for the module, e.g., `loops/specs/<NNN>-<product-name>-infra-<module-name>/spec.md`)
   - LOOP(tdd → verify) [feature type, max 5]
   - code-review (gate outside LOOP)
 - Output: functional shared infrastructure module + tests
@@ -177,7 +177,7 @@ Update `memory/progress.md` and archive the session.
 | Source code for all features | Phase 2 outputs (one per feature) |
 | loops/specs/<product-task>/state.yaml | Product-level loop state |
 | loops/specs/<product-task>/product-review-evidence.md | Product-level review evidence |
-| loops/specs/<product-task>-infra-<NNN>/ | Per-infrastructure-module loop artifacts |
+| loops/specs/<NNN>-<product-name>-infra-<module-name>/ | Per-infrastructure-module loop artifacts (spec.md + state.yaml + evidence.md + iterations.log) |
 | loops/specs/<product-task>-<feature-name>/ | Per-feature loop artifacts (spec.md + state.yaml + evidence.md + iterations.log) |
 | docs/handoff/solo-to-growth.md | Product-level handoff to growth |
 | docs/handoff/solo-to-ops.md | Product-level handoff to ops |
@@ -214,7 +214,7 @@ Update `memory/progress.md` and archive the session.
 |-----------|------------|----------------------|
 | Scope | Single feature | Entire product (all features) |
 | Planning | None (jumps to brainstorming) | ENGINEERING_PLAN.md (feature inventory + shared infrastructure + dependency graph) |
-| Engineering foundation | Assumes exists (no gate) | Hard gate (triggers setup if missing) |
+| Engineering foundation | Hard gate (triggers setup if missing) | Hard gate (triggers setup if missing) |
 | Shared infrastructure | Not handled | Phase 1 dedicated implementation |
 | Per-feature LOOP | tdd → verify → code-review | Drives new-feature's LOOP per feature |
 | Cross-feature consistency | None | product-engineering-review skill |

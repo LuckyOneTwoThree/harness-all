@@ -110,7 +110,7 @@ Before brainstorming, verify the engineering foundation exists:
 
 ## Task Granularity
 
-`<feature>` in `loops/specs/<feature>/` is feature-level or infrastructure-level. Use `<NNN>-<feature-name>` (e.g., `001-user-auth`) for feature tasks, `<NNN>-infra-<module-name>` (e.g., `002-infra-api-client`) for shared infrastructure tasks. For product-level multi-feature implementation, use `new-product-engineering` workflow instead, which uses `<NNN>-<product-name>` at product level and `<NNN>-<product-name>-<feature-name>` per feature. See LOOP.md "Task Granularity" section for full rules.
+`<feature>` in `loops/specs/<feature>/` is feature-level or infrastructure-level. Use `<NNN>-<feature-name>` (e.g., `001-user-auth`) for feature tasks, `<NNN>-infra-<module-name>` (e.g., `002-infra-api-client`) for standalone infrastructure tasks. For product-level multi-feature implementation, use `new-product-engineering` workflow instead, which uses `<NNN>-<product-name>` at product level, `<NNN>-<product-name>-<feature-name>` per feature, and `<NNN>-<product-name>-infra-<module-name>` per infrastructure module (nested). See LOOP.md "Task Granularity" section for full rules.
 
 ## Key Checkpoints
 

@@ -161,7 +161,7 @@ harness-pm → pm-to-design.md → harness-design → design-to-solo.md → harn
 
 ### harness-design — "做得好看且好用"
 
-视觉设计、交互设计、设计系统、原型输出。18 个 skill。特色：**Push-back 反越界** — 设计 Agent 有权拒绝 PM 硬编码的 UI 指令。**反 AI 味** — 禁用 Inter/紫色渐变/Lorem ipsum。
+视觉设计、交互设计、设计系统、原型输出。19 个 skill。特色：**Push-back 反越界** — 设计 Agent 有权拒绝 PM 硬编码的 UI 指令。**反 AI 味** — 禁用 Inter/紫色渐变/Lorem ipsum。
 
 核心产出：`DESIGN.md` / `tokens.json` / `design-to-solo.md` / `component-map.json`
 

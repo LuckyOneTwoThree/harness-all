@@ -97,7 +97,7 @@ Why designed this way?
 
 | Granularity | Naming Pattern | Example | Used by workflow | State directory |
 |-------------|----------------|---------|------------------|-----------------|
-| Infrastructure-level | `<NNN>-infra-<module-name>` | `002-infra-api-client` | new-feature (infrastructure task), new-product-engineering Phase 1 | `loops/specs/002-infra-api-client/` |
+| Infrastructure-level | `<NNN>-infra-<module-name>` (standalone) / `<NNN>-<product-name>-infra-<module-name>` (nested under a product-level task) | `002-infra-api-client` / `002-shopping-app-infra-api-client` | new-feature (standalone infrastructure task), new-product-engineering Phase 1 (nested) | `loops/specs/002-infra-api-client/` / `loops/specs/002-shopping-app-infra-api-client/` |
 | Feature-level | `<NNN>-<feature-name>` | `001-user-auth` | new-feature (feature task), new-product-engineering Phase 2 | `loops/specs/001-user-auth/` |
 | Product-level | `<NNN>-<product-name>` | `001-shopping-app` | new-product-engineering | `loops/specs/001-shopping-app/` (product) + `loops/specs/001-shopping-app-auth/` (per feature) |
 

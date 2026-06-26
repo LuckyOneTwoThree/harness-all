@@ -73,12 +73,14 @@ description: Task breakdown — output an executable spec.md
 
    ```markdown
    - [ ] T1: Implement Button component
-         - Contract: component-map.json#Button
+         - Contract: component-map.json#PrimaryButton
+         - engineeringComponent: Button (code component name)
          - Props: variant, size (per component-map.json)
          - States: default, hover, active, disabled, loading
          - usedBy: P01, P02, P03 (high-reuse, implement first)
    - [ ] T2: Implement LoginForm composition
          - Contract: component-map.json#LoginForm
+         - engineeringComponent: LoginForm (code component name)
          - Props: onSubmit, initialvalues (per component-map.json)
          - States: default, submitting, error
    - [ ] T3: Wire login API endpoint (backend, no contract)
@@ -86,8 +88,9 @@ description: Task breakdown — output an executable spec.md
 
    **How to fill the contract reference**:
    - Read `docs/handoff/component-map.json`
-   - For each component this feature will implement, look up its entry by `engineeringComponent` name
-   - Copy the `props` keys, `states` values, and `usedBy` (if present) into the task description
+   - For each component this feature will implement, look up its entry by JSON key (the `<DesignComponentName>` that is the top-level key of the JSON object, e.g. `PrimaryButton`)
+   - The `Contract: component-map.json#<DesignComponentName>` line uses that JSON key verbatim as `<Component>`
+   - Copy the `props` keys, `states` values, `engineeringComponent` (use verbatim as code component name), and `usedBy` (if present) into the task description
    - If a component is not yet in component-map.json, this is a handoff defect — feed it back to harness-design before proceeding
 
    **AC source notes**:

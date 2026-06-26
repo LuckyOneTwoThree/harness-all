@@ -195,7 +195,7 @@ Update `memory/progress.md` and archive the session.
 |-----------|-----------|-------------------|
 | Scope | Single page | Entire product (all pages) |
 | Planning | None (jumps to wireframe) | DESIGN_PLAN.md (page inventory + shared components + flows) |
-| Design system | Assumes exists (no gate) | Hard gate (triggers onboarding/setup if missing) |
+| Design system | Hard gate (triggers onboarding/setup if missing) | Hard gate (triggers onboarding/setup if missing) |
 | Per-page LOOP | 3 LOOPs (wireframe/visual/interaction) | Drives new-design's 3 LOOPs per page |
 | Cross-page consistency | None | product-design-review skill |
 | Handoff | Single page design-to-solo.md | Product-level design-to-solo.md (with Page Inventory + reuse matrix + consistency report) |
