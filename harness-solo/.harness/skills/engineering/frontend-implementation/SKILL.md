@@ -122,6 +122,7 @@ function UserList() {
 | Start with Redux | "Use Redux first to be safe." | Over-engineering; start with useState. |
 | Skip styles when design is unfinished | "Design isn't finalized, skip styles for now." | Use design system defaults; an unstyled UI leaves a bad impression. |
 | Skip the loading state | "Skip the loading state for now." | Three states are mandatory, not optional. |
+| Guess the component contract when the named component is not a key in component-map.json | "The component name is close enough; I can infer the props/states." | A `#<Component>` name that does not match any JSON key (DesignComponentName) in component-map.json is a handoff defect. Guessing produces a fabricated contract that silently diverges from design and verify cannot catch it. STOP and feed back to harness-design; do not guess. |
 
 ## Prohibitions
 - Components > 200 lines without splitting

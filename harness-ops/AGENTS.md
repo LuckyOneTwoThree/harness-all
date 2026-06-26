@@ -90,7 +90,7 @@ The following scenarios **always pause**, regardless of exploration_mode:
 When selecting a Skill, read `.harness/skills/INDEX.md` (pure index, within 80 lines).
 Workflow orchestration (deployment / infrastructure / monitoring / incident response / security audit / disaster recovery / ops review) is read on demand under `.harness/skills/workflows/`.
 
-All are now built out (32 skills = 28 domain + 4 meta, + 7 workflows):
+All are now built out (32 skills = 28 domain + 4 meta, + 8 workflows):
 
 - **Module 1 Deployment & Delivery** (4 skills): deployment-pipeline / release-strategy / rollback / deployment-verify
 - **Module 2 Infrastructure** (4 skills): infrastructure-as-code / kubernetes-manifest / helm-management / gitops-sync
@@ -101,7 +101,7 @@ All are now built out (32 skills = 28 domain + 4 meta, + 7 workflows):
 - **Module 7 Disaster Recovery & Backup** (3 skills): backup-management / recovery-drill / disaster-recovery-plan
 - **Module 8 Ops Review** (2 skills): ops-review / sla-report
 - **Meta** (4 skills): session-start / session-end / skill-maintenance / memory-maintenance
-- **Workflows** (7): deployment / incident-response / infrastructure-setup / monitoring-deployment / security-audit / disaster-recovery / ops-review
+- **Workflows** (8): setup / deployment / incident-response / infrastructure-setup / monitoring-deployment / security-audit / disaster-recovery / ops-review
 
 **Operation Tiers** (ops-specific, see the `operation_tier` field in frontmatter):
 - `inspect` — read-only inspection, fully automated by Agent (deployment-verify / log-analysis / security-scan / audit-review / cost-analysis / sla-report / incident-detection / root-cause-analysis / post-mortem / resource-right-sizing / capacity-planning / ops-review / gitops-sync)

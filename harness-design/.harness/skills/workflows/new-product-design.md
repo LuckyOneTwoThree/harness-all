@@ -28,13 +28,16 @@ default_mode: deep
 
 ```
 session-start
-  → design-brief (hard gate, product-level)
+  → design-brief (product-level, confirm page inventory)
   → Design System Gate (hard gate)
   → Product-level PLAN (produce DESIGN_PLAN.md)
-  → [Phase 1] Shared Components LOOP (if not in design system)
-  → [Phase 2] Per-page LOOPs (drive new-design for each page, by priority + dependency)
+  → [Phase 1] Shared Components LOOP (conditional, skip if all exist)
+      └─ PC1: after all shared components complete
+  → [Phase 2] Per-page new-design LOOPs (by priority + preference)
+      └─ PC2: at P0 milestone
   → product-design-review (product-level consistency gate)
-  → design-handoff (product-level handoff)
+      └─ PC3: full cross-page check runs as part of review
+  → Product-level Handoff (design-to-solo.md + component-map.json, product-level)
   → session-end
 ```
 
@@ -80,10 +83,12 @@ Produce `docs/visual/DESIGN_PLAN.md` based on the `DESIGN_PLAN-template.md`:
    - **Section 1 Product Overview**: from DESIGN_BRIEF
    - **Section 2 Page Inventory**: enumerate all pages to design this round, assign Page IDs (P01/P02/...), set priority (P0/P1/P2), set dependencies
    - **Section 3 Shared Component Inventory**: extract from DESIGN.md Section 10 Semantic Vocabulary, map which pages use which components
-   - **Section 4 Product User Flows**: cross-page flows with entry/exit/checkpoints
-   - **Section 5 Design Execution Order**: shared components first, then pages by priority + dependency
-   - **Section 6 Cross-Page Consistency Constraints**: hard rules checked by product-design-review
-   - **Section 7 Design System Dependency**: confirm gate passed
+   - **Section 4 Page Dependency Graph**: page-level soft dependencies (preferred design order); unlike solo's hard dependencies, no topological sort required
+   - **Section 5 Product User Flows**: cross-page flows with entry/exit/checkpoints
+   - **Section 6 Design Execution Order**: shared components first, then pages by priority + dependency
+   - **Section 7 Integration Checkpoints**: periodic cross-page consistency checks (PC1-PC3) during Phase 1/2
+   - **Section 8 Cross-Page Consistency Constraints**: hard rules checked by product-design-review
+   - **Section 9 Design System Dependency**: confirm gate passed
 5. Initialize product-level `loops/specs/<product-task>/state.yaml` (stage=plan, iteration=0, status=running, substage=product-plan)
 6. User confirms DESIGN_PLAN.md before per-page work begins (👤 human decision point)
 
@@ -101,7 +106,7 @@ If all shared components already exist in the design system (e.g., design-system
 
 ### 6. Phase 2: Per-page LOOPs (drive new-design for each page)
 
-For each page in DESIGN_PLAN.md Section 5 execution order:
+For each page in DESIGN_PLAN.md Section 6 execution order:
 
 1. Read DESIGN_PLAN.md entry for this page (Page ID, priority, dependencies, expected AC)
 2. Drive the `new-design` workflow for this single page:
@@ -109,7 +114,7 @@ For each page in DESIGN_PLAN.md Section 5 execution order:
    - PLAN (inline, initialize page-level `loops/specs/<product-task>-<page-name>/state.yaml`)
    - LOOP(wireframe → verify → design-lint) [wireframe, max 5]
    - LOOP(visual-design → verify → design-lint) [visual-design, max 5]
-   - LOOP(interaction-design → verify → design-lint) [interaction-design, max 5] — conditional per design-iteration's trigger rules
+   - LOOP(interaction-design → verify → design-lint) [interaction-design, max 5] — conditional per new-design's interaction-design LOOP trigger rules
    - design-review (gate outside LOOP, per-page)
    - accessibility-audit (gate outside LOOP, per-page)
 3. After each page completes, update DESIGN_PLAN.md Section 2 Status column (pending → done)
@@ -121,7 +126,7 @@ For each page in DESIGN_PLAN.md Section 5 execution order:
 
 ### 7. product-design-review (product-level consistency gate)
 
-After all pages in DESIGN_PLAN.md Section 2 reach Status = done:
+After all pages in DESIGN_PLAN.md Section 2 reach Status = done or skipped:
 
 - Run the `product-design-review` skill
 - Inputs: DESIGN_PLAN.md + all per-page outputs (visual/interaction/prototype) + component-map.json (with usedBy) + tokens.json
@@ -171,7 +176,7 @@ Update `memory/progress.md` and archive the session.
 - DESIGN_PLAN.md produced and user-confirmed
 - Design system gate passed
 - All shared components designed (Phase 1, if run)
-- All pages in DESIGN_PLAN.md Section 2 reach Status = done (each page passed its own verify + lint + design-review + accessibility-audit)
+- All pages in DESIGN_PLAN.md Section 2 reach Status = done or skipped (each non-skipped page passed its own verify + lint + design-review + accessibility-audit; skipped pages must be acknowledged in Open Items)
 - product-design-review passed (no open Critical findings)
 - design-handoff completed (design-to-solo.md + component-map.json + Pre-Delivery Checklist)
 - Product-level state.yaml status = done

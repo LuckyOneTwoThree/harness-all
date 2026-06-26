@@ -30,13 +30,15 @@ default_mode: deep
 
 ```
 session-start
-  → brainstorming (product-level, confirm feature inventory)
   → Engineering Foundation Gate (hard gate)
+  → brainstorming (product-level, confirm feature inventory)
   → Product-level PLAN (produce ENGINEERING_PLAN.md)
   → [Phase 1] Shared Infrastructure LOOP (auth/API client/state management/utils)
+      └─ IC1: after all infra modules complete
   → [Phase 2] Per-feature LOOPs (drive new-feature for each feature, by topological sort)
-  → [Phase 3] Integration Checkpoints (periodic cross-feature checks)
+      └─ IC2-IC4: at milestone points during Phase 2
   → product-engineering-review (product-level consistency gate)
+      └─ IC5: full integration test runs as part of review
   → Product-level Handoff (solo-to-growth.md + solo-to-ops.md, product-level)
   → session-end
 ```
@@ -54,19 +56,7 @@ session-start
 
 Read `memory/progress.md` to restore context.
 
-### 2. brainstorming (product-level)
-
-- Run the `brainstorming` skill at product level
-- Confirm feature inventory from upstream sources:
-  - `docs/handoff/pm-to-solo.md` (product requirements + AC-xxx)
-  - `docs/handoff/design-to-solo.md` (design handoff + DAC-xxx, if frontend is involved)
-  - `docs/handoff/component-map.json` (component contract, if frontend is involved)
-  - `docs/visual/DESIGN_PLAN.md` (product-level design plan — page inventory maps to feature inventory)
-  - `docs/product/PRD.md` (feature list, data model, interface definitions)
-- Update `docs/product/PROJECT.md` if scope changes
-- Hard gate: do not proceed if product requirements are ambiguous
-
-### 3. Engineering Foundation Gate (hard gate)
+### 2. Engineering Foundation Gate (hard gate)
 
 Check whether engineering foundation exists:
 
@@ -76,6 +66,17 @@ Check whether engineering foundation exists:
   - Option A: run `setup` workflow first (initialize config files)
   - Option B: user confirms they will provide config externally, then proceed
 - **Hard gate rationale**: brainstorming / writing-plans / executing-plans / verify all depend on TECH_STACK.md for test/build/lint commands. Proceeding without it causes silent failures — commands cannot run, verify cannot validate.
+
+### 3. brainstorming (product-level)
+
+- Run the `brainstorming` skill at product level
+- Confirm feature inventory from upstream sources:
+  - `docs/handoff/pm-to-solo.md` (product requirements + AC-xxx)
+  - `docs/handoff/design-to-solo.md` (design handoff + DAC-xxx, if frontend is involved; contains Product Design Plan Reference section that indirectly carries DESIGN_PLAN.md's page inventory)
+  - `docs/handoff/component-map.json` (component contract, if frontend is involved)
+  - `docs/product/PRD.md` (feature list, data model, interface definitions)
+- Update `docs/product/PROJECT.md` if scope changes
+- Hard gate: do not proceed if product requirements are ambiguous
 
 ### 4. Product-level PLAN
 
@@ -142,7 +143,7 @@ If an integration checkpoint fails, pause the product workflow, report to user. 
 
 ### 8. product-engineering-review (product-level consistency gate)
 
-After all features in ENGINEERING_PLAN.md Section 2 reach Status = done:
+After all features in ENGINEERING_PLAN.md Section 2 reach Status = done or skipped:
 
 - Run the `product-engineering-review` skill
 - Inputs: ENGINEERING_PLAN.md + all per-feature outputs + source code + lockfile + migrations
@@ -187,7 +188,7 @@ Update `memory/progress.md` and archive the session.
 - ENGINEERING_PLAN.md produced and user-confirmed
 - Engineering foundation gate passed
 - All shared infrastructure implemented (Phase 1) + IC1 passed
-- All features in ENGINEERING_PLAN.md Section 2 reach Status = done (each feature passed its own tdd → verify → code-review)
+- All features in ENGINEERING_PLAN.md Section 2 reach Status = done or skipped (each non-skipped feature passed its own tdd → verify → code-review; skipped features must be acknowledged in Open Items)
 - All integration checkpoints (IC1-IC5) passed
 - product-engineering-review passed (no open Critical findings)
 - Product-level handoff completed (solo-to-growth.md + solo-to-ops.md)

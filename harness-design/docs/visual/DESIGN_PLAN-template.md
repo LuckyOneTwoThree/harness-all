@@ -14,7 +14,7 @@
 
 ## 2. Page Inventory
 
-> Lists all pages to be designed this round, with priority and dependencies. Drives the execution order in Section 5.
+> Lists all pages to be designed this round, with priority and dependencies. Drives the execution order in Section 6.
 
 | Page ID | Page Name | Priority | Depends On | Visual Draft | Interaction Draft | Wireframe | Status |
 |---------|-----------|----------|------------|---------------|-------------------|-----------|--------|
@@ -48,7 +48,23 @@
 - Pages must reuse shared components; re-creating variants with the same semantics is prohibited (enforced by design-lint L006-L008)
 - Page-specific components (used by only one page) are designed within that page's LOOP
 
-## 4. Product User Flows
+## 4. Page Dependency Graph
+
+> Page-level dependency relationships. Unlike solo's ENGINEERING_PLAN hard dependencies (code-level imports / API calls / shared data model), page dependencies here are **soft dependencies** — page B may *prefer* that page A's structure be finalized first, but can be designed independently when necessary. No topological sort required; order pages by priority + preference (see Section 6).
+
+```
+P01 (Home) ──────┐
+P02 (Login) ─────┼─→ P03 (Dashboard) ─→ P04 (Settings)
+                 │
+                 └─ (P03 prefers P02 login flow finalized first)
+```
+
+**Dependency rules**:
+- Soft dependency (preferred order): UI consistency / flow coherence — does not block start, but may cause rework (e.g., page B reuses page A's header structure)
+- Pages with no dependencies can be designed in parallel
+- Contrast with solo: solo's feature dependencies are hard (code-level), require topological sort; design's page dependencies are soft, sorted by priority + preference
+
+## 5. Product User Flows
 
 > Cross-page user flows. Each flow must be navigable end-to-end; broken flows are caught by product-design-review.
 
@@ -76,7 +92,7 @@ Dashboard (P03) → Click avatar → Settings (P04) → Modify → Save → Dash
 - **Exit**: Return to dashboard with save confirmation
 - **Critical checkpoints**: Unsaved changes warning, save success feedback
 
-## 5. Design Execution Order
+## 6. Design Execution Order
 
 > Defines the design sequence. Shared components first, then pages by priority + dependency.
 
@@ -98,32 +114,44 @@ Dashboard (P03) → Click avatar → Settings (P04) → Modify → Save → Dash
 ### Phase 4: Cross-Page Consistency Review
 - [ ] Run product-design-review skill (navigation/flow/component-reuse/token consistency)
 
-## 6. Cross-Page Consistency Constraints
+## 7. Integration Checkpoints
+
+> Periodic cross-page consistency checks during Phase 1/2, not just at the end. Named PC1-PC3 (Page Consistency). Mirrors solo's IC1-IC5 integration checkpoints; design's checkpoints focus on visual / flow / component consistency rather than code integration. Defined here and referenced by the new-product-design workflow's Orchestration.
+
+| Checkpoint | Trigger | Checks |
+|------------|---------|--------|
+| PC1 | After all shared components complete (end of Phase 1) | Shared components cover all page references in Section 2; component-map.json usedBy matches Section 3 |
+| PC2 | After P0 pages complete (P0 milestone in Phase 2) | Navigation structure consistent across P0 pages; cross-page user flows in Section 5 pre-checked as navigable |
+| PC3 | After all pages complete (runs as part of product-design-review) | Full cross-page consistency check — input to product-design-review; covers navigation / flow / component-reuse / token / responsive / interaction |
+
+**On checkpoint failure**: pause the product design workflow, report to user. The failing page's LOOP must be revisited before continuing.
+
+## 8. Cross-Page Consistency Constraints
 
 > Hard constraints checked by product-design-review. Each page's design-review must also check these.
 
 | Constraint | Rule | Check Method |
 |------------|------|---------------|
 | Navigation consistency | Header/Footer structure identical across all pages, only active state differs | Grep all docs/visual/*.md for nav structure |
-| Flow completeness | Each flow in Section 4 must be navigable end-to-end | Manual walkthrough + flow.md diagram |
+| Flow completeness | Each flow in Section 5 must be navigable end-to-end | Manual walkthrough + flow.md diagram |
 | Component reuse | Shared components (Section 3) must not be re-implemented per page | Cross-reference component-map.json usedBy |
 | Token consistency | All pages use tokens from the same tokens.json, no hardcoded hex | design-lint L001-L005 per page + product-level Grep |
 | Responsive consistency | Breakpoint behavior consistent across pages (e.g., all use mobile-first) | Review docs/visual/*.md responsive sections |
 | Interaction consistency | Same component has same motion params across pages (e.g., Button hover 150ms) | Review docs/interaction/*.md motion sections |
 
-## 7. Design System Dependency
+## 9. Design System Dependency
 
 - [ ] `docs/design-system/DESIGN.md` exists → proceed
 - [ ] `docs/design-system/DESIGN.md` missing → trigger design-onboarding or design-system-setup first (hard gate)
 
-## 8. Key Decisions
+## 10. Key Decisions
 
 | Decision | Rationale | Impact Scope |
 |----------|-----------|--------------|
 | <e.g., Use 12-column grid> | <aligns with design system> | <all pages> |
 | <e.g., Skip dark mode in MVP> | <scope constraint> | <all pages> |
 
-## 9. Open Items
+## 11. Open Items
 
 - TBD 1: <e.g., are empty states in scope?>
 - TBD 2: <e.g., internationalization layout considerations?>

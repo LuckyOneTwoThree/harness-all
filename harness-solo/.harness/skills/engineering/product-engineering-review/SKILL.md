@@ -17,6 +17,7 @@ description: Performs product-level cross-feature consistency review after all f
 - Source code (all features combined)
 - package.json / lockfile (or equivalent dependency manifest)
 - Database migration files / ORM entity definitions (if backend is involved)
+- List of skipped features (entries with Status = skipped in ENGINEERING_PLAN.md Section 2)
 
 ## Outputs
 - loops/specs/<product-task>/product-review-evidence.md
@@ -26,6 +27,8 @@ description: Performs product-level cross-feature consistency review after all f
 Product-level cross-feature consistency review. Single-feature verify checks one feature in isolation; product-engineering-review checks whether all features work together as a coherent product. Catches: API contract mismatches, dependency conflicts, data model conflicts, config naming drift, shared module duplication, integration failures.
 
 Only checks **hard consistency that causes runtime/integration failures**. Does NOT check soft consistency (code style — handled by lint; state management strategy — bounded mixing is acceptable).
+
+**Handling of skipped features**: Features with Status = skipped in ENGINEERING_PLAN.md Section 2 do not participate in the consistency checks below (they have no implementation to verify). However, skipping a feature may break cross-feature user flows, leave shared infrastructure under-exercised, or break the dependency chain for downstream features. For each skipped feature, the review must record a risk note in the review evidence (e.g., "Cross-feature flow Y cannot be verified because F02 was skipped", "F04 depends on F02 which was skipped — F04 cannot have reached Status = done legitimately"). These risk notes do not block the review by themselves, but every skipped feature must appear in the evidence with an explicit risk assessment.
 
 ## Process
 

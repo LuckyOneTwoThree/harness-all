@@ -103,6 +103,44 @@ Issues for harness-ops to handle or confirm with harness-solo:
 - TBD 1: <issue description>
 - TBD 2: <issue description>
 
+## Product-Level Engineering Summary (product-level handoff only)
+
+> Product-level handoff only (new-product-engineering workflow). Single-feature handoff (new-feature) omits this section.
+> Aggregates deployment-relevant info across all features, so harness-ops can deploy/rollback the whole product rather than per-feature. Supersedes the per-feature Environment Variables List above for product-level deployment.
+
+### Full Dependency List (aggregated across features)
+
+| Dependency | Version | Source features | Notes |
+|------------|---------|-----------------|-------|
+| <dep 1> | <x.y.z> | F01, F02, F03 | <purpose> |
+| <dep 2> | <x.y.z> | F02, F03 | <purpose> |
+
+> Aggregated from each feature's package.json / lockfile. Verified conflict-free by product-engineering-review.
+
+### Integration Test Results (IC1-IC5)
+
+| Checkpoint | Status | Notes |
+|------------|--------|-------|
+| IC1 (after Phase 1) | ✓ Pass | Shared infrastructure compiles + unit tests pass |
+| IC2-IC4 (during Phase 2) | ✓ Pass | Cross-feature user flows work at milestones |
+| IC5 (after all features) | ✓ Pass | Full integration test + product-engineering-review |
+
+> Full evidence: `loops/specs/<product-task>/product-review-evidence.md`
+
+### Environment Variable List (aggregated across features)
+
+| Variable name | Source features | Sensitive? | Notes |
+|--------|---------|---------|------|
+| <KEY_1> | F01, F02 | Yes | <purpose> |
+| <KEY_2> | F03 | No | <purpose> |
+
+> Aggregated from each feature's env requirements. For product-level deployment, use this aggregated list rather than per-feature Environment Variables List above.
+
+### Engineering Plan Reference
+
+- **Path**: `docs/engineering/ENGINEERING_PLAN.md`
+- **Contents**: Feature Inventory / Shared Infrastructure / Dependency Graph / Implementation Execution Order / Integration Checkpoints / Cross-Feature Consistency Constraints
+
 ## Suggested Next Steps
 
 harness-ops should prioritize:

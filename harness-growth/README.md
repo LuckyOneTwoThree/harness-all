@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-cross--platform-green.svg)](#cross-platform-compatibility)
 [![Principles](https://img.shields.io/badge/principles-Growth%204-orange.svg)](#growth-four-principles-in-detail)
-[![Workflows](https://img.shields.io/badge/workflows-6%2F6-brightgreen.svg)](#workflows-in-detail)
+[![Workflows](https://img.shields.io/badge/workflows-7-brightgreen.svg)](#workflows-in-detail)
 [![Skills](https://img.shields.io/badge/skills-40-brightgreen.svg)](#core-features)
 
 **[Quick Start](#quick-start)** · **[Directory Structure](#directory-structure)**
@@ -72,8 +72,9 @@ Categorized by AARRR + supporting layer:
 
 See `.harness/skills/INDEX.md` for the full index.
 
-### Workflows (6, ✅ all built)
+### Workflows (7, ✅ all built)
 
+- **setup** [skip] (✅): Project kickoff guidance — guide filling in SOUL/constitution/GROWTH_STRATEGY
 - **growth-experiment-workflow** (✅): hypothesis-generation → ice-scoring → experiment-design → sample-size-calc → [execute] → experiment-analysis → experiment-conclusion
 - **growth-review-workflow** (✅): data analysis → aarr-diagnosis → growth-review
 - **content-marketing-workflow** (✅): content-ideation → content-creation → content-review[quality gate] → content-distribution → [publish] → content-performance
@@ -162,7 +163,7 @@ harness-growth/
 │   │   ├── monetization/              # Monetization skills (3)
 │   │   ├── analytics/                 # Data analysis skills (3)
 │   │   ├── review/                    # Growth review skills (1)
-│   │   └── workflows/                 # Workflows (6)
+│   │   └── workflows/                 # Workflows (7)
 │   └── templates/                     # Document templates
 └── docs/
     ├── content/                       # Content assets

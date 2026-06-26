@@ -28,8 +28,9 @@ Product research / UI design / engineering development / growth operations are h
 - **Module 7 Disaster Recovery & Backup** (3): backup-management / recovery-drill / disaster-recovery-plan
 - **Module 8 Ops Review** (2): ops-review / sla-report
 
-## Workflows (7)
+## Workflows (8)
 
+- **setup** [skip] — Project kickoff guidance — guide filling in SOUL/constitution/OPS_STRATEGY
 - **deployment-workflow** — Full deployment flow: solo-to-ops → IaC plan → provision → verify → ops-to-pm
 - **incident-response-workflow** — Full incident flow: detect → mitigate → verify → root-cause → post-mortem
 - **infrastructure-setup-workflow** — Infrastructure setup: IaC → K8s → Helm → GitOps → verify
@@ -71,7 +72,7 @@ harness-ops/
 │   │   ├── capacity/      # Capacity & cost skills (3)
 │   │   ├── recovery/      # Disaster recovery & backup skills (3)
 │   │   ├── review/        # Ops review skills (2)
-│   │   └── workflows/     # Workflows (7)
+│   │   └── workflows/     # Workflows (8)
 │   ├── rules/             # Security rules and defense
 │   ├── memory/            # Cross-session memory (7 knowledge base tables)
 │   └── templates/         # Project templates

@@ -97,6 +97,8 @@ default_mode: deep
 └─────────────────┘
 ```
 
+See ASCII diagram above for node sequence. Each node delegates to its corresponding SKILL.md for detailed steps. Key nodes: session-start (load context) → Engineering Foundation Gate → brainstorming (hard gate) → writing-plans → LOOP(executing-plans/tdd/verify/systematic-debugging) → requesting-code-review → session-end (archive + update FEATURES.md).
+
 ## Engineering Foundation Gate (hard gate)
 
 Before brainstorming, verify the engineering foundation exists:
@@ -120,6 +122,16 @@ Before brainstorming, verify the engineering foundation exists:
 - [ ] Did verify show actual output? (Not "should pass")
 - [ ] Did code-review pass?
 - [ ] Did session-end execute the archive steps? (Per SKILL.md steps 4.1-4.2)
+
+## Interaction Points
+
+| Point | Type | Mode-dependent? |
+|------|------|-----------------|
+| brainstorming assumptions confirmation | 👤 human decision | Always pause |
+| Engineering Foundation Gate resolution | 👤 human decision | Always pause |
+| spec.md confirmation | 👤 human decision | Always pause |
+| code-review Critical findings | 👤 human decision | Always pause |
+| Module boundary pauses | ⏸ exploration dialog | Controlled by exploration_mode |
 
 ## Failure Handling
 

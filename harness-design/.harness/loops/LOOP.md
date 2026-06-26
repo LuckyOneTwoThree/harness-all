@@ -228,6 +228,20 @@ last_error_at: "2026-06-20T14:35:00"
 started_at: "2026-06-20T14:30:00"
 ```
 
+### Product-level state.yaml (additional fields)
+
+The basic schema above applies to a single page/component task. Product-level workflows (`new-product-design`) need to track the "currently executing page" and "completion status of all pages". To avoid overloading the `substage` field (whose original semantics is the sub-stage within a single task, e.g., visual/interaction/wireframe/component), the following dedicated fields are added to the **product-level** state.yaml only:
+
+```yaml
+# Product-level additional fields (only present in product-level state.yaml)
+current_nested_task: "<NNN>-<product-name>-<page-name>"  # Currently executing nested sub-task, e.g. "001-shopping-app-login"; only used by product-level workflows
+nested_progress: "<progress overview>"                    # Nested sub-task progress overview, e.g. "P01:done, P02:running, P03:pending"
+```
+
+**Notes**:
+- The `substage` field restores its original semantics (visual/interaction/wireframe/component sub-stages) and is no longer used to track nested sub-tasks (e.g., do not write `substage: page-P03`)
+- On session resume for a product-level task: read `current_nested_task` to locate the current page, then read that page's state.yaml for the LOOP position
+
 ## Verification Protocol (original verification.md content)
 
 ### Inside-LOOP Checks (VERIFY + LINT)

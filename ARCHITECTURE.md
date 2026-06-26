@@ -538,7 +538,7 @@ PLAN → EXPERIMENT → MEASURE → Pass? DONE : Back to EXPERIMENT/PLAN
 - `docs/experiment/` — Experiment records
 - `docs/handoff/growth-to-pm.md` — Feedback to PM
 
-**Workflows** (6): growth-experiment / growth-review / content-marketing / seo-optimization / lifecycle-operations / growth-strategy
+**Workflows** (7): setup / growth-experiment / growth-review / content-marketing / seo-optimization / lifecycle-operations / growth-strategy
 
 ### 5.5 harness-ops (Operations & Infrastructure Framework)
 
@@ -579,7 +579,7 @@ PLAN → PROVISION/DEPLOY → VERIFY → Pass? DONE : On failure ROLLBACK and re
 - `docs/incident/` — Incident troubleshooting and ticket records
 - `docs/handoff/ops-to-pm.md` — SLA report + incident post-mortem feedback to PM
 
-**Workflows** (7): deployment / incident-response / infrastructure-setup / monitoring-deployment / security-audit / disaster-recovery / ops-review
+**Workflows** (8): setup / deployment / incident-response / infrastructure-setup / monitoring-deployment / security-audit / disaster-recovery / ops-review
 
 **Signature Mechanisms**:
 - **Semi-automated Architecture**: Agent proposes + human approves + GitOps executes. A fully autonomous ops Agent is infeasible within 3-5 years, but a semi-automated framework is feasible and high-value
@@ -980,11 +980,11 @@ If multiple people + multiple Agents collaborate:
 - ✅ harness-pm's AGENTS.md docs/design/ ownership violation corrected (5 overreaching entries deleted, responsibility boundary description added)
 - ✅ Cross-framework contract anti-overreach guardrails deployed (PM side adds UI gate interception + Design side granted Push-back cleanup rewrite right)
 - ✅ harness-design's skill count corrected (design skill mislabeled 13, actually 14, total 18)
-- ✅ harness-growth's growth skill and workflow built (40 skills + 6 workflows)
+- ✅ harness-growth's growth skill and workflow built (40 skills + 7 workflows)
 
 ### 10.3 Mid-term Evolution (v3.0, 1-2 months)
 
-- ✅ harness-ops built (P0, ops framework, 32 skills + 7 workflows, semi-automated architecture)
+- ✅ harness-ops built (P0, ops framework, 32 skills + 8 workflows, semi-automated architecture)
 - 📋 harness-data built (P1, data pipeline framework)
 - 📋 Contract document versioning (support historical tracing, without breaking "only read latest" principle)
 - 📋 Cross-framework loop type mapping description (design's visual-design → solo's feature)
@@ -1135,7 +1135,7 @@ harness-all is a multi-Agent framework family with **Independence First, Contrac
 
 **Current Status**:
 - 4 core frameworks all built (pm/design/solo/growth)
-- 1 P0 extension framework built (ops, 32 skills + 7 workflows, semi-automated architecture)
+- 1 P0 extension framework built (ops, 32 skills + 8 workflows, semi-automated architecture)
 - Contract document system connected (pm→design→solo→growth→pm closed loop + solo→ops→pm closed loop)
 - AC numbering system aligned cross-framework
 - LOOP engine unified specification

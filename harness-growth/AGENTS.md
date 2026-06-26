@@ -103,7 +103,7 @@ The following scenarios **always pause**, unaffected by exploration_mode:
 When you need to select a Skill, read `.harness/skills/INDEX.md` (pure index, under 80 lines).
 Workflow orchestration (growth experiments / content marketing / SEO optimization / user operations / growth strategy / growth review) is read on demand under `.harness/skills/workflows/`.
 
-All are now complete (40 skills + 6 workflows), across 9 modules (Strategy / Experiment / Content / SEO / User Operations / Acquisition / Monetization / Data Analysis / Review). See INDEX.md for details.
+All are now complete (40 skills + 7 workflows), across 9 modules (Strategy / Experiment / Content / SEO / User Operations / Acquisition / Monetization / Data Analysis / Review). See INDEX.md for details.
 
 ## Relationship with the harness Family
 

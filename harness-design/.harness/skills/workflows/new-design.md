@@ -99,7 +99,14 @@ visual-design → verify → design-lint
 - verify or design-lint failure → back to visual-design, iteration +1
 - More than 5 iterations → request human intervention
 
-### 7. LOOP 3: interaction-design (max 5)
+### 7. LOOP 3: interaction-design (max 5, conditional)
+
+**Conditional trigger**: interaction-design LOOP runs only when at least one of the following is met (run if any):
+- AC-xxx contains interaction-related acceptance criteria (states / motion / keyboard navigation / touch targets)
+- The page involves interactive components (Button / Input / Modal / Dropdown / Toast, etc.)
+- The page involves motion parameters (duration / easing / state transitions)
+
+If the AC only involves static visuals (color / spacing / typography / layout) and the page has no interactive components, skip the interaction-design LOOP and proceed directly to step 8 (design-review).
 
 ```
 interaction-design → verify → design-lint
@@ -150,3 +157,13 @@ Update `memory/progress.md` and archive the session.
 - accessibility-audit passed
 - evidence.md contains a review conclusion of "passed"
 - state.yaml status=done
+
+## Interaction Points
+
+| Point | Type | Mode-dependent? |
+|------|------|-----------------|
+| design-brief assumptions confirmation | 👤 human decision | Always pause |
+| Design System Gate resolution | 👤 human decision | Always pause |
+| visual variant selection | 👤 human decision | Always pause |
+| design-review Critical findings | 👤 human decision | Always pause |
+| Module boundary pauses | ⏸ exploration dialog | Controlled by exploration_mode |

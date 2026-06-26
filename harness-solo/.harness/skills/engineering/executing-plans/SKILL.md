@@ -39,6 +39,8 @@ description: Execute the spec.md produced by writing-plans, advancing through th
 
    Before dispatching, inspect the task description to decide the route:
 
+   - **Mixed-task handling (split failure — STOP and return to writing-plans)**: If a task description simultaneously contains both frontend component implementation and backend logic (e.g., "Implement LoginForm composition + wire login API endpoint"), this is a writing-plans-stage split failure. When executing-plans encounters such a task, STOP and return to writing-plans, requiring it to be split into two independent tasks: the frontend component task with a `Contract:` line, and the backend logic task without a `Contract:` line. Identification signals: the task description uses "and" to join frontend and backend work, OR the task contains a `Contract:` line but its description contains backend keywords (API/endpoint/migration/query/schema).
+
    - **Frontend component task** — task description contains a `Contract: component-map.json#<Component>` line:
      1. Invoke the `frontend-implementation` skill first — it reads `docs/handoff/component-map.json` for the named component's props/states/usedBy, and produces structure/styling/state guidance for that component.
      2. Then invoke the `test-driven-development` skill: red (failing test for component behavior per the contract) → green (minimal implementation following frontend-implementation's guidance) → refactor.
@@ -139,6 +141,7 @@ Stop and reconcile immediately when any of these appear:
 - A single task takes more than 15 minutes of wall-clock time — the task granularity is too coarse; return to writing-plans to split it.
 - A task with a `Contract: component-map.json#<Component>` line is dispatched directly to tdd without frontend-implementation — the contract is being ignored; redo the task via frontend-implementation first.
 - frontend-implementation is invoked but `docs/handoff/component-map.json` does not exist — handoff defect; STOP and request it from harness-design rather than guessing the contract.
+- The `#<Component>` name in a `Contract:` line is not present as a JSON key in component-map.json (DesignComponentName mismatch) — handoff defect; STOP and request harness-design to fill it in rather than guessing the component's props/states.
 
 ## Relationship with LOOP
 This skill is the **scheduler** of the LOOP cycle and does not write code itself:

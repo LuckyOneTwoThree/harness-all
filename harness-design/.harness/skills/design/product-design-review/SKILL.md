@@ -18,6 +18,7 @@ description: Performs product-level cross-page consistency review after all page
 - docs/design-system/tokens.json
 - docs/handoff/component-map.json
 - loops/specs/<task>/evidence.md (per-page review evidence)
+- List of skipped pages (entries with Status = skipped in DESIGN_PLAN.md Section 2)
 
 ## Outputs
 - loops/specs/<task>/product-review-evidence.md
@@ -25,6 +26,8 @@ description: Performs product-level cross-page consistency review after all page
 ## Overview
 
 Product-level cross-page consistency review. Single-page design-review checks one page in isolation; product-design-review checks whether all pages work together as a coherent product. Catches: broken user flows, navigation inconsistency, component duplication, token drift, responsive inconsistency, interaction inconsistency.
+
+**Handling of skipped pages**: Pages with Status = skipped in DESIGN_PLAN.md Section 2 do not participate in the consistency checks below (they have no per-page outputs to compare). However, skipping a page may break cross-page user flows or leave shared components under-specified. For each skipped page, the review must record a risk note in the review evidence (e.g., "Flow X cannot be fully traced because P03 was skipped", "Component Button usedBy lists P03 which was skipped — reuse coverage incomplete"). These risk notes do not block the review by themselves, but every skipped page must appear in the evidence with an explicit risk assessment.
 
 ## Process
 

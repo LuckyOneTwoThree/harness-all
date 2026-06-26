@@ -68,6 +68,30 @@ Issues for harness-pm to handle or confirm with harness-solo:
 - TBD 1: <issue description>
 - TBD 2: <issue description>
 
+## Product-Level Engineering Feedback (product-level handoff only)
+
+> Product-level handoff only (new-product-engineering workflow). Single-feature handoff (new-feature) omits this section.
+> Aggregates engineering feedback across all features, so harness-pm sees product-wide technical constraints and suggested adjustments rather than per-feature signals.
+
+### Cross-Feature Engineering Metrics (aggregated)
+
+| Metric | Aggregated value | Target | Notes |
+|--------|--------|--------|------|
+| Test coverage (product-wide) | <XX%> | <80%> | Aggregated across all features |
+| <cross-feature constraint> | — | — | <impact scope> |
+
+### Aggregated Suggested Product Adjustments
+
+| Suggestion | Affected features | Reason | Priority | Affects AC |
+|--------|---------|---------|--------|--------|
+| <adjustment> | F0x, F0y | <reason> | High/Medium/Low | AC-xxx |
+
+> Aggregated from each feature's implementation feedback. Supersedes per-feature suggestions for product-level roadmap decisions.
+
+### Product Review Reference
+
+- **Full review evidence**: `loops/specs/<product-task>/product-review-evidence.md`
+
 ## Suggested Next Steps
 
 harness-pm should prioritize:

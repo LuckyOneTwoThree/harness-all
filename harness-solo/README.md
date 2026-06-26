@@ -213,9 +213,10 @@ install.sh execution → Guide filling SOUL/constitution/PROJECT/TECH_STACK → 
 ### new-product-engineering (Product-Level Multi-Feature Engineering)
 
 ```
-session-start → brainstorming (product-level) → Engineering Foundation Gate → Product-level PLAN (ENGINEERING_PLAN.md)
-→ [Phase 1] Shared Infrastructure LOOP → [Phase 2] Per-feature new-feature LOOPs (topological sort)
-→ [Phase 3] Integration Checkpoints → product-engineering-review → Product-level Handoff → session-end
+session-start → Engineering Foundation Gate (hard gate) → brainstorming (product-level) → Product-level PLAN (ENGINEERING_PLAN.md)
+→ [Phase 1] Shared Infrastructure LOOP (IC1 after all infra modules)
+→ [Phase 2] Per-feature new-feature LOOPs (topological sort; IC2-IC4 at milestones)
+→ product-engineering-review (IC5 runs as part of review) → Product-level Handoff → session-end
 ```
 
 Use this when implementing an entire product with multiple features that must work together. It plans feature inventory + shared infrastructure + dependency graph first, then drives per-feature new-feature LOOPs, and finishes with cross-feature consistency review. For single-feature work, use `new-feature` instead.

@@ -123,14 +123,18 @@ Issues for harness-solo to handle or confirm with harness-design:
 ## Product Design Plan Reference
 
 > Product-level handoff only (new-product-design workflow). For reference only; engineering does not directly consume this document, but it is the source of truth for page inventory, shared component inventory, and cross-page user flows. If any ambiguity arises about page scope or flow, consult this document first.
+>
+> **Inline carry note**: design-to-solo.md already carries DESIGN_PLAN.md's key content inline — Page List / Component List / Interaction Flows / Cross-Page Consistency Report are all present in the earlier sections of this file. Engineering can obtain the information it needs via those sections, with no need to read DESIGN_PLAN.md directly. If finer granularity is required (e.g., the full wireframe path), it may be indirectly consulted via the Path below — but this consultation is optional, not mandatory.
 
 - **Path**: `docs/visual/DESIGN_PLAN.md`
 - **Contents**:
   - Section 2 Page Inventory (full list with priority + dependencies)
   - Section 3 Shared Component Inventory (with usedBy mapping)
-  - Section 4 Product User Flows (cross-page flows with checkpoints)
-  - Section 5 Design Execution Order (informational; engineering need not follow)
-  - Section 6 Cross-Page Consistency Constraints (hard constraints, same as Cross-Page Consistency Report above)
+  - Section 4 Page Dependency Graph (soft dependencies; informational)
+  - Section 5 Product User Flows (cross-page flows with checkpoints)
+  - Section 6 Design Execution Order (informational; engineering need not follow)
+  - Section 7 Integration Checkpoints (PC1-PC3; informational)
+  - Section 8 Cross-Page Consistency Constraints (hard constraints, same as Cross-Page Consistency Report above)
 
 ## Suggested Next Steps
 

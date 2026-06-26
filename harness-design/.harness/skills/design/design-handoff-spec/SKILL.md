@@ -44,6 +44,13 @@ Engineering-consumable structured handoff. Turns "design to code" from "magic ex
 
 ## Process
 
+### 0. Confirm Tech Stack (source of truth alignment)
+
+Before generating any handoff artifacts, confirm the tech stack source of truth to keep the harness family aligned:
+- Read `docs/engineering/TECH_STACK.md` (if it exists) — this is the single source of truth for tech stack across the harness family
+- If `docs/engineering/TECH_STACK.md` does not exist, fall back to the tech stack field declared in `docs/handoff/pm-to-solo.md`
+- Ensure `docs/visual/DESIGN_BRIEF.md` mirrors `TECH_STACK.md`'s framework declaration; if DESIGN_BRIEF.md diverges, align it to TECH_STACK.md before proceeding (the component-map.json Type declarations in step 5 depend on this alignment)
+
 ### 1. Determine Mode
 
 - If `docs/visual/DESIGN_PLAN.md` exists AND `loops/specs/<product-task>/product-review-evidence.md` exists → **product-level mode**
@@ -147,7 +154,7 @@ Write to `docs/interaction/component-spec.md`:
 
 **Core innovation** (from Stitch): explicit mapping from design components to engineering components, version-controllable.
 
-**Framework-agnostic constraint**: The Type declaration of props must match the Tech Stack defined in `docs/visual/DESIGN_BRIEF.md`.
+**Framework-agnostic constraint**: The Type declaration of props must match the framework declared in `docs/engineering/TECH_STACK.md` (the single source of truth for tech stack across the harness family; DESIGN_BRIEF.md should mirror TECH_STACK.md's framework declaration).
 - React project → `ReactNode` / `JSX.Element`
 - Vue project → `VNode` / `Slot`
 - Svelte project → `Snippet` / `Component`
