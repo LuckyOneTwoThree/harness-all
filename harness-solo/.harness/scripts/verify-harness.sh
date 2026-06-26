@@ -197,7 +197,7 @@ if [ "$FW_TYPE" = "solo" ]; then
 fi
 
 # ──────────────────────────────────────────
-# AGENTS.md line count check (constitution.md upper limit 150 lines)
+# AGENTS.md line count check (constitution.md: AGENTS.md ≤ 150 lines)
 # ──────────────────────────────────────────
 echo "→ AGENTS.md line count check"
 if [ -f "AGENTS.md" ]; then

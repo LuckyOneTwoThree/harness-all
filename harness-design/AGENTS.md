@@ -129,6 +129,7 @@ harness-design is the **UI Design** member of the harness family, focused on loo
 - Design system is in `docs/design-system/DESIGN.md` (created on demand: filled in at project kickoff, skipped if absent)
 - Design task progress is in `.harness/FEATURES.md`
 - Handoff documents are in `docs/handoff/` (from other harness family members; drop in manually to be recognized)
+- Tech stack decisions from harness-solo are in `docs/engineering/TECH_STACK.md` (design-handoff-spec reads this as single source of truth for component-map.json props Type matching)
 
 ## Project Constitution (constitution.md)
 

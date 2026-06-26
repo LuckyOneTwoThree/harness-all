@@ -42,7 +42,7 @@
 ┌─────────────────────────────────────────────────────────────┐
 │  Framework Layer (Current focus)                             │
 │  harness-pm / harness-design / harness-solo / harness-growth │
-│  + Extension frameworks (ops/data/qa/security, built on demand) │
+│  + Extension frameworks (data/qa/security, built on demand); ops ✅ Built │
 └─────────────────────────────────────────────────────────────┘
                           ↕ Load chain
 ┌─────────────────────────────────────────────────────────────┐
@@ -211,6 +211,7 @@ docs/handoff/
 ├── pm-to-solo-template.md       # PM → Solo template (not a contract document)
 ├── pm-to-growth-template.md     # PM → Growth template (not a contract document)
 ├── design-to-solo-template.md   # Design → Solo template (not a contract document)
+├── solo-to-pm-template.md       # Solo → PM template (not a contract document)
 ├── solo-to-growth-template.md   # Solo → Growth template (not a contract document)
 ├── solo-to-ops-template.md      # Solo → Ops template (not a contract document)
 ├── ops-to-pm-template.md        # Ops → PM template (not a contract document)
@@ -337,8 +338,11 @@ Handoff documents enforce **Write Access Unidirectional Isolation**:
 | pm-to-design.md | harness-pm | harness-design |
 | pm-to-growth.md | harness-pm | harness-growth |
 | design-to-solo.md | harness-design | harness-solo |
+| design-to-pm.md | harness-design | harness-pm |
+| component-map.json | harness-design | harness-solo |
 | solo-to-growth.md | harness-solo | harness-growth |
 | solo-to-ops.md | harness-solo | harness-ops |
+| solo-to-pm.md | harness-solo | harness-pm |
 | growth-to-pm.md | harness-growth | harness-pm |
 | ops-to-pm.md | harness-ops | harness-pm |
 
@@ -496,9 +500,6 @@ PLAN → ACT → VERIFY → Pass? DONE : Back to PLAN/ACT
 - **Entropy Check**: verify checks file growth rate / LOC growth rate / dependency bloat / TODO backlog
 - **git hooks**: pre-commit (secret/sensitive file/commit-msg check) + pre-push
 
-**Known Issues and Optimization Directions**:
-- ⚠️ ARCHITECTURE.md has been deleted (by user manually); will be rebuilt per this plan
-
 ### 5.4 harness-growth (Operations & Growth Framework)
 
 **Positioning**: "Make it used" — content production, SEO, user operations, growth experiments
@@ -614,7 +615,7 @@ PLAN → PROVISION/DEPLOY → VERIFY → Pass? DONE : On failure ROLLBACK and re
 | `.harness/skills/meta/` | 4 meta skills | ✅ |
 | `.harness/rules/security.md` | Security red lines | ✅ |
 | `.harness/rules/prompt-defense.md` | Prompt injection defense | ✅ |
-| `.harness/memory/progress.md` | Session progress log | ✅ |
+| `.harness/memory/progress.md` | Session progress log (runtime file, install.sh creates, git ignored) | ✅ |
 | `.harness/memory/knowledge-base.md` | Cross-session knowledge base | ✅ |
 | `.harness/FEATURES.md` | Dynamic task status board | ✅ |
 | `.harness/VERSION` | Framework version | ✅ |
@@ -792,10 +793,13 @@ All frameworks must follow:
     "engineeringComponent": "<EngineeringComponentName>",
     "props": { "<key>": "<Type>" },
     "states": ["default", "hover", "..."],
+    "usedBy": ["<PageID>", "..."],
     "notes": "<description>"
   }
 }
 ```
+
+- `usedBy` (optional, array of page IDs): pages that use this component; single-page mode may leave empty or list the current page ID.
 
 **Framework-Agnostic Constraint**: props Type must match the framework in `docs/engineering/TECH_STACK.md`:
 - React → `ReactNode` / `JSX.Element`
@@ -850,7 +854,7 @@ All frameworks must follow:
 | Smoke Test | ✅ | Checkpoints to verify deployment success |
 | Rollback Plan | ✅ | Degradation or code rollback measures on error |
 
-**Consumer**: harness-ops's deployment-pipeline / infrastructure-as-code skill
+**Consumer**: harness-ops's deployment-workflow / infrastructure-as-code skill
 
 ### 7.8 Ops → PM Contract
 
@@ -969,24 +973,24 @@ If multiple people + multiple Agents collaborate:
 - ✅ AC numbering system aligned cross-framework (AC-xxx / DAC-xxx)
 - ✅ LOOP engine unified specification (state.yaml + checkpoint resume + cap protection)
 - ✅ Foundation layer unified (AGENTS/SOUL/constitution/security/meta skill)
+- ✅ harness-ops built (P0, ops framework, 32 skills + 8 workflows, semi-automated architecture)
 
 ### 10.2 Short-term Optimization (v2.1, within 1-2 weeks)
 
 - ✅ harness-pm's 5 overreaching design skills deleted + design-orchestrator split into prd-orchestrator (kept PRD + change impact analysis; visual/interaction moved to harness-design)
 - ✅ harness-pm's 5 deprecated shell orchestrators deleted (insight/positioning/ideation/opportunity/stakeholder)
 - ✅ harness-pm's PRD adds ac_id field, aligned with design-brief AC-xxx
-- ✅ harness-solo's README skill count corrected (engineering skill mislabeled 17, actually 16, total 20)
+- ✅ harness-solo's README skill count corrected (engineering skill mislabeled 17, actually 17, total 21)
 - ✅ harness-solo's install.sh adds Node.js check
 - ✅ harness-pm's core handoff templates filled in (pm-to-solo-template / pm-to-growth-template)
 - ✅ harness-solo's core handoff templates filled in (solo-to-growth-template / solo-to-ops-template)
 - ✅ harness-pm's AGENTS.md docs/design/ ownership violation corrected (5 overreaching entries deleted, responsibility boundary description added)
 - ✅ Cross-framework contract anti-overreach guardrails deployed (PM side adds UI gate interception + Design side granted Push-back cleanup rewrite right)
-- ✅ harness-design's skill count corrected (design skill mislabeled 13, actually 14, total 18)
+- ✅ harness-design's skill count corrected (design skill mislabeled 13, actually 15, total 19)
 - ✅ harness-growth's growth skill and workflow built (40 skills + 7 workflows)
 
 ### 10.3 Mid-term Evolution (v3.0, 1-2 months)
 
-- ✅ harness-ops built (P0, ops framework, 32 skills + 8 workflows, semi-automated architecture)
 - 📋 harness-data built (P1, data pipeline framework)
 - 📋 Contract document versioning (support historical tracing, without breaking "only read latest" principle)
 - 📋 Cross-framework loop type mapping description (design's visual-design → solo's feature)

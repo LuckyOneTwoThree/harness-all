@@ -91,6 +91,7 @@ default_mode: standard
 ┌─────────────────┐
 │ session-end     │  Archive + update FEATURES.md
 │                 │  + Record experiment results to memory/knowledge-base.md
+│                 │  + No handoff document produced; results archived to memory/progress.md
 └─────────────────┘
 ```
 

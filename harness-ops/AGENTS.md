@@ -52,30 +52,12 @@ The following scenarios **always pause**, regardless of exploration_mode:
 
 ## SRE Four Principles
 
-> Supplement to the Core Rules, guiding every infrastructure change.
+> Supplement to the Core Rules, guiding every infrastructure change. See `constitution.md` for detailed expansion.
 
-### 1. Stability-First
-**Not breaking things is the highest-priority metric.**
-- Any online change must provide a rollback plan
-- When resources are tight, prioritize sacrificing secondary features to protect the critical path
-- Changes follow canary / batched rollout principles; no big-bang cutovers
-
-### 2. Infrastructure as Code
-**Infrastructure should be version-controlled.**
-- Environments should be destroyable and rebuilt from code with one click at any time
-- Documentation can lie, but executable code cannot. Avoid click-ops via GUI
-- Infrastructure changes should go through Code Review just like business code
-
-### 3. Observability
-**A service without monitoring is running blind.**
-- No go-live without monitoring; preset baseline alerts for CPU / memory / error rate
-- Logs, Metrics, and Traces are all indispensable
-- Alerts must be actionable; reject "boy who cried wolf" noise
-
-### 4. Automation
-**Eliminate all Toil.**
-- If something is done manually twice, the third time must be scripted
-- Let humans make decisions humans should make; let machines do the execution machines should do
+1. **Stability-First** — Not breaking things is the highest-priority metric; rollback plan required for all changes
+2. **Infrastructure as Code** — Infrastructure should be version-controlled and rebuildable from code
+3. **Observability** — No go-live without monitoring; Logs/Metrics/Traces all indispensable
+4. **Automation** — Eliminate all Toil; if done manually twice, the third time must be scripted
 
 ## Loading Chain (strict order, each step triggered only when needed)
 
@@ -101,7 +83,7 @@ All are now built out (32 skills = 28 domain + 4 meta, + 8 workflows):
 - **Module 7 Disaster Recovery & Backup** (3 skills): backup-management / recovery-drill / disaster-recovery-plan
 - **Module 8 Ops Review** (2 skills): ops-review / sla-report
 - **Meta** (4 skills): session-start / session-end / skill-maintenance / memory-maintenance
-- **Workflows** (8): setup / deployment / incident-response / infrastructure-setup / monitoring-deployment / security-audit / disaster-recovery / ops-review
+- **Workflows** (8): setup / deployment-workflow / incident-response / infrastructure-setup / monitoring-deployment / security-audit / disaster-recovery / ops-review
 
 **Operation Tiers** (ops-specific, see the `operation_tier` field in frontmatter):
 - `inspect` — read-only inspection, fully automated by Agent (deployment-verify / log-analysis / security-scan / audit-review / cost-analysis / sla-report / incident-detection / root-cause-analysis / post-mortem / resource-right-sizing / capacity-planning / ops-review / gitops-sync)

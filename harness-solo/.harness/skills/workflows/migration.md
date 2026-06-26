@@ -5,7 +5,7 @@ description: "Migrate code, frameworks, or APIs through incremental replacement 
 default_mode: standard
 ---
 
-# Workflow E: Code Migration
+# Workflow migration
 
 > Applicable scenario: Framework/library major version upgrades, API migrations, data migrations, removing deprecated code
 > Core mode: migration (build replacement → incremental migration → verify zero usage → remove) + LOOP (refactor loop guards no regression)

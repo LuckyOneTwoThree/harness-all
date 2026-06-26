@@ -29,6 +29,10 @@ For example:
 
 Copy and fill in based on actual conditions.
 
+## Data Files
+
+- `component-map.json`: Design → Solo machine-readable contract carrier example. It explicitly maps each design component to its engineering counterpart (`designToken` / `engineeringComponent` / `props` / `states` / `usedBy` / `notes`), serving as the single source of truth for frontend implementation. Unlike Markdown contract documents, it is structured JSON intended for programmatic consumption by the Solo framework's implementation skill.
+
 ## Write Access
 
 Contract documents follow one-way write permission isolation (per ARCHITECTURE.md §4.3). Only the source framework may write/modify a contract document; consumers read-only. Templates are scaffolds and do not participate in cross-framework flow until instantiated.

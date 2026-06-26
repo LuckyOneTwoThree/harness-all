@@ -93,8 +93,8 @@ Skills are the organs of the framework. This skill ensures that all organs are i
    | Check item | Status | Details |
    |------------|--------|---------|
    | Meta skills | ✓ / ✗ | 4/4 exist |
-   | Workflows | ✓ / ✗ | 7/7 exist |
-   | Workflow frontmatter | ✓ / ✗ | 7/7 have workflow_id+name+default_mode |
+   | Workflows | ✓ / ✗ | 8/8 exist |
+   | Workflow frontmatter | ✓ / ✗ | 8/8 have workflow_id+name+default_mode |
    | Ops skills | ✓ / ✗ | 28/28 skills exist |
    | frontmatter | ✓ / ✗ | [issue list or "none"] |
    ```

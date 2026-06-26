@@ -128,6 +128,7 @@ interaction-design → verify → design-lint
 
 - Based on the iterated visual design, update component states/motion parameters
 - verify/design-lint failure → back to interaction-design, iteration +1
+- More than 5 iterations → request human intervention
 
 ### 7. design-review (gate outside LOOP)
 

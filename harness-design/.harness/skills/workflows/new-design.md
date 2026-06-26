@@ -59,7 +59,7 @@ Check whether a design system exists before any wireframe/visual work:
 - [ ] If missing or incomplete → **refuse to proceed**, prompt user with options:
   - Option A: run `design-onboarding` workflow first (fast skeleton)
   - Option B: run `design-system-setup` workflow first (full system)
-  - Option C: run `new-product-design` workflow instead (it includes this gate and handles multi-page)
+  - Option C: user provides an external design system, then continue
 - **Hard gate rationale**: `wireframe` and `visual-design` skills require `docs/design-system/DESIGN.md` as input (see their SKILL.md Inputs). Proceeding without it causes silent failures — the skills will produce output disconnected from the design system, breaking token/component consistency.
 
 ### 4. PLAN (inline, no standalone skill)
@@ -118,6 +118,7 @@ interaction-design → verify → design-lint
 - **verify**: AC check + keyboard navigation check
 - **design-lint**: Mechanical rule check
 - Failure → back to interaction-design, iteration +1
+- More than 5 iterations → request human intervention
 
 ### 8. design-review (gate outside LOOP)
 

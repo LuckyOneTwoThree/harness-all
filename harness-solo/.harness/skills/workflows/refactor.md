@@ -5,7 +5,7 @@ description: "Refactor existing code to improve structure without changing exter
 default_mode: deep
 ---
 
-# Workflow C: Refactoring
+# Workflow refactor
 
 > Applicable scenario: Improve existing code structure without changing external behavior
 > Core mode: brainstorming to confirm boundaries → LOOP (tdd safety net + verify no regression) → code-review

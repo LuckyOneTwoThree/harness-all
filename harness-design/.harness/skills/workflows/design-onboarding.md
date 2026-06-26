@@ -43,7 +43,7 @@ Read `memory/progress.md` to restore context.
 - Anti AI-Slop fields
 - Output `docs/visual/DESIGN_BRIEF.md` (with AC-xxx)
 
-**Hard gate**: If DESIGN_BRIEF.md is not generated or is incomplete, do not proceed to the next step.
+**Hard gate**: If DESIGN_BRIEF.md is not generated or is incomplete, do not proceed to the next step. On failure → return to design-brief to re-explore, or terminate with session-end.
 
 ### 3. design-recommendation
 

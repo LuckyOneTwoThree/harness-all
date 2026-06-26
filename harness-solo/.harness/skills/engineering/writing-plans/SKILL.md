@@ -14,9 +14,9 @@ description: Task breakdown — output an executable spec.md
 - constitution.md
 - rules/security.md
 - docs/product/PROJECT.md
-- docs/handoff/pm-to-solo.md
-- docs/handoff/design-to-solo.md
-- docs/handoff/component-map.json
+- docs/handoff/pm-to-solo.md (optional, conditional on upstream handoff)
+- docs/handoff/design-to-solo.md (optional, conditional on upstream handoff)
+- docs/handoff/component-map.json (optional, conditional on upstream handoff)
 
 ## Outputs
 - loops/specs/<feature>/spec.md

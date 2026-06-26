@@ -5,7 +5,7 @@ description: "Develop new features through brainstorming, TDD-driven LOOPs, and 
 default_mode: deep
 ---
 
-# Workflow A: New Feature Development
+# Workflow new-feature
 
 > Applicable scenario: Develop new features, add new modules, implement new requirements
 > Core mode: Engineering Foundation gate → brainstorming hard gate → LOOP iterative validation → code-review final review

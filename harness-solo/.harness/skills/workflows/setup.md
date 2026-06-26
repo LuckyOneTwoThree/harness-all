@@ -5,7 +5,7 @@ description: "Initialize a new harness-solo project by guiding users through fil
 default_mode: skip
 ---
 
-# Workflow G: Project Onboarding
+# Workflow setup
 
 > Applicable scenario: A new project using harness-solo for the first time, needs to initialize config files
 > Core mode: Guide the user in filling out constitution.md / SOUL.md / PROJECT.md / TECH_STACK.md

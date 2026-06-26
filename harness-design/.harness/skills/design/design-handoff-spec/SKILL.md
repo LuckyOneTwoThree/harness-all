@@ -104,6 +104,8 @@ Read approved design outputs:
 |--------------|-----------|--------|---------------|-------|
 | C01 | Button | default, hover, active, disabled, loading | P01, P02, P03 | Primary CTA |
 
+> In single-page mode, leave the "Used By Pages" column empty or fill it with the current page's Page ID.
+
 ## Acceptance Criteria (AC-xxx)
 > Reuses the acceptance_criteria numbering from the harness-pm PRD; do not renumber.
 > Acceptance points added during the design stage use the DAC-xxx prefix (D = Design-derived).
@@ -116,7 +118,7 @@ Read approved design outputs:
 <entry/exit/checkpoints>
 
 ## Cross-Page Consistency Report (product-level only)
-| Dimension | Status | Notes |
+| Consistency Dimension | Status | Notes |
 | Navigation consistency | ✓/✗ | ... |
 | User flow completeness | ✓/✗ | ... |
 | Component reuse | ✓/✗ | ... |

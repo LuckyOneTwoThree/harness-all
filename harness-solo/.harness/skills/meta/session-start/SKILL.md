@@ -13,7 +13,7 @@ description: Session start, load context to restore working state
 - constitution.md
 - memory/progress.md
 - memory/knowledge-base.md
-- FEATURES.md
+- .harness/FEATURES.md
 - loops/specs/*/state.yaml
 - docs/handoff/
 

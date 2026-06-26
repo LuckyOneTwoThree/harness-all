@@ -12,9 +12,9 @@ description: Requirements exploration and design refinement — a hard gate: no 
 ## Inputs
 - constitution.md
 - rules/security.md
-- docs/handoff/pm-to-solo.md
-- docs/handoff/design-to-solo.md
-- docs/handoff/component-map.json
+- docs/handoff/pm-to-solo.md (optional, conditional on upstream handoff)
+- docs/handoff/design-to-solo.md (optional, conditional on upstream handoff)
+- docs/handoff/component-map.json (optional, conditional on upstream handoff)
 - docs/product/PRD.md (read-only; sections 3.2.1 feature list, 3.2.5 data model, 3.2.6 interface definition, 4.2 tech constraints, 5 NFR, 7.1 acceptance criteria)
 - docs/product/prd.json (read-only; features[], entities[], non_functional_requirements[], features[].acceptance_criteria[] for structured engineering input)
 - docs/product/PROJECT.md

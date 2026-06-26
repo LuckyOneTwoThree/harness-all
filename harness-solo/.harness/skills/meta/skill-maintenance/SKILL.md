@@ -95,7 +95,7 @@ Skills are the organs of the framework. This skill ensures that all organs are i
    | INDEX consistency | ✓ / ✗ | X registered, Y actual |
    | Empty directories | ✓ / ✗ | [list or "none"] |
    | frontmatter | ✓ / ✗ | [issue list or "none"] |
-   | Workflow frontmatter | ✓ / ✗ | 7/7 have workflow_id+name+default_mode |
+   | Workflow frontmatter | ✓ / ✗ | 8/8 have workflow_id+name+default_mode |
    | Inputs/Outputs | ✓ / ✗ | [issue list or "none"] |
    ```
 

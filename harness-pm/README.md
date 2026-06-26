@@ -10,7 +10,7 @@
 [![Platform](https://img.shields.io/badge/platform-cross--platform-green.svg)](#cross-platform-compatibility)
 [![Principles](https://img.shields.io/badge/principles-PM%204-orange.svg)](#product-four-principles-in-detail)
 [![Workflows](https://img.shields.io/badge/workflows-10-purple.svg)](#workflows-in-detail)
-[![Skills](https://img.shields.io/badge/skills-82-red.svg)](#core-features)
+[![Skills](https://img.shields.io/badge/skills-86-red.svg)](#core-features)
 
 **[Quick Start](#quick-start)** · **[Directory Structure](#directory-structure)**
 
@@ -160,7 +160,7 @@ harness-pm/
 │   ├── skills/
 │   │   ├── INDEX.md                   # Skill index (within 80 lines)
 │   │   ├── meta/                      # 4 meta skills
-│   │   ├── pm/                        # 82 PM skills (7 modules, flat organization)
+│   │   ├── pm/                        # 82 PM skills (7 modules, flat organization; selected skills include Reference/ subdirs)
 │   │   └── workflows/                 # 10 workflows
 │   └── templates/                     # Document templates
 └── docs/                              # Human-readable docs (produced directly by skills)

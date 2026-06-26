@@ -78,7 +78,7 @@ harness-solo is the **engineering development** member of the harness family, fo
 | Family member | Responsibility | Handoff method |
 |---------|------|---------|
 | harness-pm | Product research / market / PRD | Produces `docs/handoff/pm-to-solo.md` → consumed by this framework |
-| harness-solo (this framework) | Engineering development | Produces `docs/handoff/solo-to-growth.md` → handed off to growth |
+| harness-solo (this framework) | Engineering development | Produces `docs/handoff/solo-to-growth.md` → handed off to growth; produces `docs/handoff/solo-to-pm.md` (engineering feedback, on demand) |
 | harness-design | UI / visual design (on demand) | Produces design specs → implemented by this framework |
 | harness-growth | Content / SEO / data (on demand) | Consumes this framework's output |
 | harness-ops | Ops / deployment / monitoring | Consumes `docs/handoff/solo-to-ops.md` from this framework; produces `docs/handoff/ops-to-pm.md` (SLA + incident review) |

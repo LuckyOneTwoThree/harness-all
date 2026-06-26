@@ -5,7 +5,7 @@ description: "Optimize performance through measurement, bottleneck identificatio
 default_mode: standard
 ---
 
-# Workflow D: Performance Optimization
+# Workflow optimize
 
 > Applicable scenario: Users report performance issues, benchmarks not met, Web Vitals degraded
 > Core mode: performance-optimization (measure→fix→verify→guard) + LOOP (optimize loop)

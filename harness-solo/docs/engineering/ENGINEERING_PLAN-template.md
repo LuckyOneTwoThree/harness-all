@@ -38,6 +38,8 @@
 
 **Complexity**: S (≤1 day) / M (1-3 days) / L (3+ days) — rough estimate for sequencing, not commitment.
 
+**Status**: `pending` / `done` / `skipped` — `pending` (not yet started), `done` (passed its own tdd → verify → code-review), `skipped` (deferred this round; must be acknowledged in Section 10 Open Items, and dependent features cannot start).
+
 ## 3. Shared Infrastructure
 
 > Modules shared across multiple features. Implemented first (Phase 1) so features can depend on them. Unlike design's shared components (which can be stubbed), shared infrastructure must be functional before features start.

@@ -92,7 +92,9 @@ Produce `docs/engineering/ENGINEERING_PLAN.md` based on the `ENGINEERING_PLAN-te
    - **Section 6 Integration Checkpoints**: define periodic integration checks (after Phase 1, after P0 features, after all features)
    - **Section 7 Cross-Feature Consistency Constraints**: hard rules checked by product-engineering-review
    - **Section 8 Engineering Foundation Dependency**: confirm gate passed
-3. Initialize product-level `loops/specs/<product-task>/state.yaml` (stage=plan, iteration=0, status=running, substage=product-plan)
+   - **Section 9 Key Decisions**: record major engineering decisions made during planning (e.g., state management library, API style, feature-flag strategy) with rationale and impact scope
+   - **Section 10 Open Items**: list unresolved TBDs discovered during planning (e.g., uncertain scope items, pending technical questions) to be resolved before/during implementation
+3. Initialize product-level `loops/specs/<product-task>/state.yaml` (stage=plan, iteration=0, status=running; set status: planning during ENGINEERING_PLAN.md production)
 4. User confirms ENGINEERING_PLAN.md before per-feature work begins (👤 human decision point)
 
 > **Task naming**: Product-level task uses `<NNN>-<product-name>` (e.g., `001-shopping-app`). Per-feature tasks use `<NNN>-<product-name>-<feature-name>` (e.g., `001-shopping-app-auth`). See LOOP.md task granularity section.
@@ -158,6 +160,8 @@ After all features in ENGINEERING_PLAN.md Section 2 reach Status = done or skipp
 
 ### 9. Product-level Handoff
 
+> **Division of labor with session-end**: The actual handoff document writing is executed by session-end (steps 6-8). Step 9 only prepares the product-level aggregated content (cross-feature summaries, shared infrastructure list, aggregated tracking events / env vars / dependency list) for session-end to consume — it does not write the handoff files itself.
+
 Run the handoff skills at product level:
 
 - Generate `docs/handoff/solo-to-growth.md` (product-level, includes Feature Inventory implementation summary + shared infrastructure list + tracking event list aggregated across features)
@@ -182,6 +186,15 @@ Update `memory/progress.md` and archive the session.
 | loops/specs/<product-task>-<feature-name>/ | Per-feature loop artifacts (spec.md + state.yaml + evidence.md + iterations.log) |
 | docs/handoff/solo-to-growth.md | Product-level handoff to growth |
 | docs/handoff/solo-to-ops.md | Product-level handoff to ops |
+
+## Failure Handling
+
+| Failure Point | Handling |
+|--------|---------|
+| Shared infrastructure LOOP fails (Phase 1) | Pause the entire product workflow; infrastructure is a hard dependency for all features. Fix and re-run IC1 before any feature starts |
+| Per-feature LOOP fails or hits hard circuit breaker (Phase 2) | Pause the product workflow, report to user. Options: fix the feature and resume, or mark it "skipped" in ENGINEERING_PLAN.md (dependent features cannot start) |
+| Integration checkpoint (IC1-IC5) fails | Pause the product workflow, report to user. The failing feature's LOOP must be revisited before continuing |
+| product-engineering-review fails (Critical finding) | Return to the specific feature's LOOP for fix, then re-run product-engineering-review. Nit findings: record and proceed |
 
 ## Exit Criteria
 

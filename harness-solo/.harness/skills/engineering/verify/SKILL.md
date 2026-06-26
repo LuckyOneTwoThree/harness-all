@@ -13,9 +13,9 @@ description: Delivery Verification — mandatory comprehensive check before clai
 - loops/LOOP.md
 - rules/security.md
 - constitution.md
-- docs/handoff/pm-to-solo.md
-- docs/handoff/design-to-solo.md
-- docs/handoff/component-map.json
+- docs/handoff/pm-to-solo.md (optional, conditional on upstream handoff)
+- docs/handoff/design-to-solo.md (optional, conditional on upstream handoff)
+- docs/handoff/component-map.json (optional, conditional on upstream handoff)
 - loops/specs/<feature>/spec.md
 - Reference/security-patterns.md
 - Reference/evidence-template.md

@@ -5,7 +5,7 @@ description: "Release a version through prerequisite checks, CHANGELOG updates, 
 default_mode: skip
 ---
 
-# Workflow F: Release
+# Workflow release
 
 > Applicable scenario: Version release, CHANGELOG update, tagging, building release artifacts
 > Core mode: verify full validation → writing-documentation update CHANGELOG → tag → build release artifacts

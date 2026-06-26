@@ -83,6 +83,33 @@ Workflows with `default_mode: deep` (e.g., infrastructure-setup-workflow / secur
 
 **Verification**: Check the `exploration_mode` field in `state.yaml` before workflow execution; in `deep` mode, block the PLAN→PROVISION transition if current-state assessment is not complete.
 
+## SRE Four Principles (Detailed Reference)
+
+> Detailed expansion of the SRE Four Principles in AGENTS.md; supplements the Core Rules and guides every infrastructure change.
+
+### 1. Stability-First
+**Not breaking things is the highest-priority metric.**
+- Any online change must provide a rollback plan
+- When resources are tight, prioritize sacrificing secondary features to protect the critical path
+- Changes follow canary / batched rollout principles; no big-bang cutovers
+
+### 2. Infrastructure as Code
+**Infrastructure should be version-controlled.**
+- Environments should be destroyable and rebuilt from code with one click at any time
+- Documentation can lie, but executable code cannot. Avoid click-ops via GUI
+- Infrastructure changes should go through Code Review just like business code
+
+### 3. Observability
+**A service without monitoring is running blind.**
+- No go-live without monitoring; preset baseline alerts for CPU / memory / error rate
+- Logs, Metrics, and Traces are all indispensable
+- Alerts must be actionable; reject "boy who cried wolf" noise
+
+### 4. Automation
+**Eliminate all Toil.**
+- If something is done manually twice, the third time must be scripted
+- Let humans make decisions humans should make; let machines do the execution machines should do
+
 ## Constitution Checkpoints (checked at PLAN stage)
 
 - [ ] Does the current change introduce runtime dependencies?

@@ -81,7 +81,6 @@ Generate deliverables:
 - Generate `docs/interaction/component-spec.md` (component props/states/variants table)
 - Generate `docs/handoff/component-map.json` (explicit mapping layer, Stitch's core innovation)
 - Generate `docs/prototype/flow.md` (interaction flow diagram)
-- Copy `docs/design-system/tokens.json` + `tokens.css` to the handoff directory
 
 Run the Pre-Delivery Checklist (6 items):
 

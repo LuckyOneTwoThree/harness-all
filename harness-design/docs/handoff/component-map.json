@@ -10,6 +10,7 @@
       "children": "ReactNode"
     },
     "states": ["default", "hover", "active", "disabled", "loading"],
+    "usedBy": ["P01", "P02", "P03"],
     "notes": "React project primary action button; at most one primary variant per screen. children type is ReactNode, matching Tech Stack = React in DESIGN_BRIEF.md. Touch target >= 44px (accessibility hard constraint)."
   },
   "Card": {
@@ -19,11 +20,12 @@
       "variant": "product | default",
       "elevation": "sm | md | lg",
       "selected": "boolean",
-      "header": "VNode",
-      "default": "VNode"
+      "header": "ReactNode",
+      "children": "ReactNode"
     },
     "states": ["default", "hover", "selected"],
-    "notes": "Vue project product list card; supports selected state. header/default slot type is VNode, matching Tech Stack = Vue in DESIGN_BRIEF.md. Hover state has a 200ms transition animation (ease-out)."
+    "usedBy": ["P02", "P03"],
+    "notes": "React project product list card; supports selected state. header/children type is ReactNode, matching Tech Stack = React in DESIGN_BRIEF.md. Hover state has a 200ms transition animation (ease-out)."
   },
   "Modal": {
     "designToken": "modal.dialog",
@@ -33,11 +35,12 @@
       "title": "string",
       "size": "sm | md | lg | fullscreen",
       "closable": "boolean",
-      "trigger": "Snippet",
-      "children": "Snippet"
+      "trigger": "ReactNode",
+      "children": "ReactNode"
     },
     "states": ["closed", "opening", "open", "closing"],
-    "notes": "Svelte project modal dialog. trigger/children type is Snippet (Svelte 5 syntax), matching Tech Stack = Svelte in DESIGN_BRIEF.md. Must support ESC key close + focus trap (accessibility)."
+    "usedBy": ["P01", "P03"],
+    "notes": "React project modal dialog. trigger/children type is ReactNode, matching Tech Stack = React in DESIGN_BRIEF.md. Must support ESC key close + focus trap (accessibility)."
   },
   "Navigation": {
     "designToken": "nav.main",
@@ -46,9 +49,10 @@
       "items": "Array<{ label: string; href: string; active?: boolean }>",
       "orientation": "horizontal | vertical",
       "sticky": "boolean",
-      "container": "HTMLElement"
+      "container": "ReactNode"
     },
     "states": ["default", "item-hover", "item-active", "scrolled"],
-    "notes": "Native Web Components project main navigation. container type is HTMLElement, matching Tech Stack = Vanilla/Web Components in DESIGN_BRIEF.md. Keyboard navigation must support Tab/Arrow keys, conforming to the WAI-ARIA Menu pattern."
+    "usedBy": ["P01", "P02", "P03"],
+    "notes": "React project main navigation. container type is ReactNode, matching Tech Stack = React in DESIGN_BRIEF.md. Keyboard navigation must support Tab/Arrow keys, conforming to the WAI-ARIA Menu pattern."
   }
 }

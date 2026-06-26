@@ -174,6 +174,16 @@ Write to `docs/visual/DESIGN_BRIEF.md`, format below.
 - Entering design without identifying the product type
 - Missing the Anti AI-Slop field
 
+## Hard Gate (5 checks)
+
+DESIGN_BRIEF.md is treated as passed only when ALL of the following are satisfied; otherwise the workflow does not proceed:
+
+1. **Requirements clear** — the 4 requirement elements (Product Type / Target Audience / Style Keywords / Tech Stack) are explicit, not vague
+2. **ACs testable** — every AC-xxx contains a specific value / condition / state and is verifiable
+3. **Constitution compliant** — no violation of `constitution.md` (WCAG 2.1 AA, mobile-first, design-system-first, etc.)
+4. **User confirmed** — Assumptions are explicitly listed and the user has confirmed them (evidence: conversation record)
+5. **Technically feasible** — Tech Stack and token recommendations are implementable within the project's engineering constraints
+
 ## Verification
 
 - [ ] DESIGN_BRIEF.md contains the 4 elements (evidence: file exists and fields are complete)

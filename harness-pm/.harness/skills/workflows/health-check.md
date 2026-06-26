@@ -74,6 +74,7 @@ default_mode: skip
 │ session-end     │  Archive health report
 │                 │  + Update memory/baseline.json
 │                 │  + Record to memory/knowledge-base.md
+│                 │  + No handoff document produced; results archived to memory/progress.md
 └─────────────────┘
 ```
 

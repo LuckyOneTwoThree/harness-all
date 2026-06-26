@@ -12,7 +12,7 @@ description: Session wrap-up, archive progress + write baseline + update board +
 ## Inputs
 - memory/progress.md
 - loops/specs/*/state.yaml
-- FEATURES.md
+- .harness/FEATURES.md
 - docs/handoff/handoff-template.md
 - docs/handoff/solo-to-growth-template.md
 - docs/handoff/solo-to-ops-template.md

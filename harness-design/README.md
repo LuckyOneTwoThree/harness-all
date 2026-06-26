@@ -176,7 +176,7 @@ harness-design/
 │   ├── loops/
 │   │   └── LOOP.md                    # Cycle engine definition
 │   ├── memory/
-│   │   ├── progress.md                # Session progress log
+│   │   ├── progress.md                # Session progress log (runtime-created)
 │   │   └── knowledge-base.md          # Cross-session knowledge base
 │   ├── rules/
 │   │   ├── security.md                # Security red lines

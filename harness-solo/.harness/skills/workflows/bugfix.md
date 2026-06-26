@@ -5,7 +5,7 @@ description: "Fix production bugs through systematic debugging, root cause analy
 default_mode: standard
 ---
 
-# Workflow B: Bug Fix
+# Workflow bugfix
 
 > Applicable scenario: Fix production bugs, test failures, feature anomalies
 > Core mode: systematic-debugging to find root cause → LOOP iterative fix → code-review

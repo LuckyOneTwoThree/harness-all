@@ -89,6 +89,8 @@ Produce `docs/visual/DESIGN_PLAN.md` based on the `DESIGN_PLAN-template.md`:
    - **Section 7 Integration Checkpoints**: periodic cross-page consistency checks (PC1-PC3) during Phase 1/2
    - **Section 8 Cross-Page Consistency Constraints**: hard rules checked by product-design-review
    - **Section 9 Design System Dependency**: confirm gate passed
+   - **Section 10 Key Decisions**: record major design decisions and their rationale
+   - **Section 11 Open Items**: list unresolved questions and follow-ups
 5. Initialize product-level `loops/specs/<product-task>/state.yaml` (stage=plan, iteration=0, status=running, substage=product-plan)
 6. User confirms DESIGN_PLAN.md before per-page work begins (👤 human decision point)
 
@@ -101,6 +103,7 @@ Produce `docs/visual/DESIGN_PLAN.md` based on the `DESIGN_PLAN-template.md`:
 For each shared component (in priority order):
 - Run `component-design` → `verify` → `design-lint` LOOP (loop type: `component`, max 5)
 - Output: `docs/design-system/components/<Component>.md`
+- Single component exceeding 5 iterations → pause the product workflow and report to the user; the user may choose to fix or skip that component
 
 If all shared components already exist in the design system (e.g., design-system-setup was run before), skip this phase.
 

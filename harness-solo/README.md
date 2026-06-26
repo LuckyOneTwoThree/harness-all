@@ -137,8 +137,10 @@ harness-solo/
 ├── .harness/
 │   ├── VERSION
 │   ├── FEATURES.md                    # Dynamic feature status board
+│   ├── craft/                         # Engineering craft notes (Karpathy principles, etc.)
 │   ├── gates/                         # External check gates (reserved)
 │   ├── hooks/                         # git hooks (pre-commit/pre-push)
+│   │   └── guards/                    # Guard scripts (bash/commit-msg/secret/sensitive-file)
 │   ├── loops/
 │   │   └── LOOP.md                    # Cycle engine definition
 │   ├── memory/
@@ -170,14 +172,15 @@ harness-solo/
 │       └── progress.md.template
 └── docs/
     ├── product/                       # Product requirements (PROJECT.md)
-    ├── engineering/                   # Tech docs (TECH_STACK.md, etc.)
-    ├── acceptance/                    # Acceptance documents
-    ├── decisions/                     # Architecture Decision Records (ADR)
+    ├── engineering/                   # Tech docs (TECH_STACK.md, ENGINEERING_PLAN-template.md, etc.)
+    ├── acceptance/                    # Acceptance documents (install.sh creates)
+    ├── decisions/                     # Architecture Decision Records (ADR) (install.sh creates)
     └── handoff/                       # harness family handoff documents
         ├── README.md
         ├── handoff-template.md
         ├── solo-to-growth-template.md
-        └── solo-to-ops-template.md
+        ├── solo-to-ops-template.md
+        └── solo-to-pm-template.md
 ```
 
 ## Document System
@@ -282,7 +285,7 @@ session-start → Pre-release checks (hard gate) → writing-documentation(CHANG
 current_task: 001-todo-cli
 iteration: 2
 stage: act          # plan / act / verify / debug
-status: running     # running / done / needs-human / blocked
+status: running     # running / done / needs-human / blocked / retrying / failed
 started_at: "2026-06-21T14:30:00"
 
 # Optional (on failure)
@@ -291,6 +294,12 @@ last_error_at: "2026-06-21T14:45:00"
 
 # Optional (sub-stage, used for optimize/migration)
 substage: "measure"
+
+# Optional (exploration mode, see AGENTS.md)
+exploration_mode: standard   # deep / standard / skip
+
+# Optional (over-limit protection)
+hard_limit_reached: false
 ```
 
 ### Checkpoint Resume
@@ -319,6 +328,7 @@ harness-solo is the **engineering development** member of the harness family, fo
 | **harness-solo (this framework)** | **Engineering development** | Produces `docs/handoff/solo-to-growth.md` → handed to growth |
 | harness-design | UI/visual design (on demand) | Produces design artifacts → implemented by this framework |
 | harness-growth | Content/SEO/data (on demand) | Consumes this framework's output |
+| harness-ops | Ops/deployment/monitoring (on demand) | Consumes `docs/handoff/solo-to-ops.md` from this framework; produces `docs/handoff/ops-to-pm.md` (SLA + incident review) |
 
 ## Karpathy Principles in Detail
 

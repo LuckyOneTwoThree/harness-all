@@ -68,7 +68,7 @@ Criteria for creating a new skill:
 
 5. **Register in INDEX.md**
    - Append a line under the corresponding category: `- **<skill-name>** — <one-sentence description>`
-   - Keep INDEX.md within 30 lines (pure index principle)
+   - Keep INDEX.md under 80 lines (pure index principle)
 
 6. **Linkage check**
    - If the new skill outputs state.yaml → confirm it references the schema in LOOP.md
