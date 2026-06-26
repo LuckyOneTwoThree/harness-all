@@ -12,7 +12,7 @@ description: Performs product-level cross-feature consistency review after all f
 ## Inputs
 - docs/engineering/ENGINEERING_PLAN.md
 - docs/engineering/TECH_STACK.md
-- docs/product/FEATURES.md (status board)
+- .harness/FEATURES.md (status board)
 - All per-feature artifacts: loops/specs/<feature>/{spec.md, evidence.md}
 - Source code (all features combined)
 - package.json / lockfile (or equivalent dependency manifest)

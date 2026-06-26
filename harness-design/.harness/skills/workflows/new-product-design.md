@@ -104,6 +104,15 @@ For each shared component (in priority order):
 
 If all shared components already exist in the design system (e.g., design-system-setup was run before), skip this phase.
 
+**PC1: Post-Phase-1 Integration Checkpoint** (operationalizes the PC1 node in the Orchestration diagram)
+
+- **Trigger**: All shared components listed in DESIGN_PLAN.md Section 3 are complete — either newly designed in this phase, or pre-existing (when Phase 1 was skipped, PC1 still runs to verify consistency with planned usage before per-page work begins).
+- **Check items**:
+  - Component consistency: each shared component's states/variants in `docs/design-system/components/<Component>.md` match the usage declared in DESIGN_PLAN.md Section 3 (no missing states, no undeclared variants)
+  - Token consistency: component styles reference tokens defined in `docs/design-system/tokens.json` (no hardcoded hex/durations; the same component uses the same token names)
+- **On pass**: record PC1 result in `loops/specs/<product-task>/pc1-evidence.md`, proceed to Phase 2
+- **On failure**: pause the workflow and report to the user with the specific component/token mismatch. Do not start Phase 2 per-page LOOPs until PC1 passes — per-page work would otherwise inherit inconsistent shared components and propagate the inconsistency across all pages.
+
 ### 6. Phase 2: Per-page LOOPs (drive new-design for each page)
 
 For each page in DESIGN_PLAN.md Section 6 execution order:
@@ -119,6 +128,15 @@ For each page in DESIGN_PLAN.md Section 6 execution order:
    - accessibility-audit (gate outside LOOP, per-page)
 3. After each page completes, update DESIGN_PLAN.md Section 2 Status column (pending → done)
 4. Update product-level state.yaml substage (e.g., `substage: page-P03`)
+
+**PC2: P0 Milestone Integration Checkpoint** (operationalizes the PC2 node in the Orchestration diagram)
+
+- **Trigger**: All P0-priority pages in DESIGN_PLAN.md Section 2 reach Status = done (each P0 page passed its own verify + lint + design-review + accessibility-audit). P1/P2 pages may still be pending. Runs once per product workflow, at the P0 milestone — not after every single page.
+- **Check items**:
+  - Cross-page navigation: navigation structure (header/footer/routing) is consistent across all P0 pages; no broken cross-page links; auth/route guards match the user flows in DESIGN_PLAN.md Section 5
+  - Flow integrity: every user flow in DESIGN_PLAN.md Section 5 that traverses only P0 pages is navigable end-to-end (entry → critical checkpoints → exit); no dead-ends or unreachable states
+- **On pass**: record PC2 result in `loops/specs/<product-task>/pc2-evidence.md`, continue with P1/P2 pages
+- **On failure**: pause the workflow and report to the user with the specific navigation/flow gap. Do not start P1/P2 pages until PC2 passes — P1/P2 work would otherwise build on a broken P0 foundation, and the same gap would be re-discovered (more expensively) at PC3.
 
 **Interruption handling**: If a per-page LOOP fails or hits hard circuit breaker, pause the entire product workflow, report to user. User can: fix the page and resume, or skip the page and continue with others (mark as "skipped" in DESIGN_PLAN.md).
 

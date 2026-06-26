@@ -49,26 +49,8 @@ description: Used when defining the MVP feature scope. MVP scope auto-definition
 | Resource constraints | JSON | ○ | User-provided | Time, staffing, and budget constraints |
 
 ### Input Format
-```json
-{
-  "solution_design": {
-    "features": [
-      {
-        "id": "F001",
-        "name": "Feature name",
-        "description": "Feature description",
-        "effort_estimate": "Effort estimate"
-      }
-    ]
-  },
-  "assumption_map": [...],
-  "resource_constraints": {
-    "timeline_weeks": 8,
-    "team_size": 4,
-    "budget": "Budget limit"
-  }
-}
-```
+
+> See [Reference/examples.md](./Reference/examples.md#input-format) for the input format JSON schema.
 
 ## Execution Steps
 
@@ -82,26 +64,7 @@ description: Used when defining the MVP feature scope. MVP scope auto-definition
 3. Identify features linked to these hypotheses
 4. Mark as Must Have
 
-**Output Format**:
-```json
-{
-  "core_hypothesis": [
-    {
-      "id": "A001",
-      "description": "Hypothesis description",
-      "risk_score": 20
-    }
-  ],
-  "must_have": [
-    {
-      "feature": "Feature name",
-      "linked_assumption": "Linked highest-risk assumption",
-      "effort_estimate": "Effort estimate",
-      "rationale": "Reason for must-include"
-    }
-  ]
-}
-```
+> See [Reference/examples.md](./Reference/examples.md#step-1-core-hypothesis-must-have-output-format) for the `core_hypothesis` and `must_have` output format JSON.
 
 ### Step 2: Cut Feature Identification [Core]
 
@@ -115,17 +78,7 @@ description: Used when defining the MVP feature scope. MVP scope auto-definition
 | Over-polished | High-fidelity design not necessary for MVP | Heavy investment in interaction animations |
 | Over-configured | Complex configuration items not necessary for validation | Multi-dimensional custom settings |
 
-**Output Format**:
-```json
-{
-  "cut_features": [
-    {
-      "feature": "Feature name",
-      "rationale": "Reason for exclusion (interferes with core hypothesis validation)"
-    }
-  ]
-}
-```
+> See [Reference/examples.md](./Reference/examples.md#step-2-cut-features-output-format) for the `cut_features` output format JSON.
 
 ### Step 3: Nice to Have Classification [Core]
 
@@ -136,18 +89,7 @@ description: Used when defining the MVP feature scope. MVP scope auto-definition
 2. Features linked to medium-risk assumptions → P2
 3. Features linked to low-risk assumptions → P3
 
-**Output Format**:
-```json
-{
-  "nice_to_have": [
-    {
-      "feature": "Feature name",
-      "priority": "P1/P2/P3",
-      "target_version": "v2.0/v3.0"
-    }
-  ]
-}
-```
+> See [Reference/examples.md](./Reference/examples.md#step-3-nice-to-have-output-format) for the `nice_to_have` output format JSON.
 
 ### Step 4: MVP Size Assessment [Core]
 
@@ -177,21 +119,7 @@ MVP ratio = Must Have effort / Full solution effort × 100%
 3. Ensure total weeks ≤ 2 (MVP time redline)
 4. Break down milestone checkpoints
 
-**Output Format**:
-```json
-{
-  "timeline": {
-    "total_weeks": 2,
-    "milestones": [
-      {
-        "name": "Milestone name",
-        "week": 1,
-        "deliverables": ["Deliverable 1", "Deliverable 2"]
-      }
-    ]
-  }
-}
-```
+> See [Reference/examples.md](./Reference/examples.md#step-5-timeline-output-format) for the `timeline` output format JSON.
 
 ### Step 6: Resource Estimation [Core]
 
@@ -202,22 +130,7 @@ MVP ratio = Must Have effort / Full solution effort × 100%
 2. Derive team configuration from timeline.total_weeks
 3. Assess whether external resource support is needed
 
-**Output Format**:
-```json
-{
-  "resource_estimate": {
-    "team_size": 3,
-    "roles": [
-      {
-        "role": "Role name",
-        "count": 1,
-        "rationale": "Configuration rationale"
-      }
-    ],
-    "external_dependencies": []
-  }
-}
-```
+> See [Reference/examples.md](./Reference/examples.md#step-6-resource-estimate-output-format) for the `resource_estimate` output format JSON.
 
 ### Step 7: Success Criteria and Risk Mitigation [Core]
 
@@ -233,26 +146,7 @@ MVP ratio = Must Have effort / Full solution effort × 100%
 2. Develop mitigation measures for each risk
 3. Assess risk impact level
 
-**Output Format**:
-```json
-{
-  "success_criteria": [
-    {
-      "criterion": "Success criterion description",
-      "metric": "Quantitative metric",
-      "target_value": "Target value",
-      "linked_hypothesis": "Linked hypothesis ID"
-    }
-  ],
-  "risk_mitigation": [
-    {
-      "risk": "Risk description",
-      "impact": "high/medium/low",
-      "mitigation": "Mitigation measure"
-    }
-  ]
-}
-```
+> See [Reference/examples.md](./Reference/examples.md#step-7-success-criteria-risk-mitigation-output-format) for the `success_criteria` and `risk_mitigation` output format JSON.
 
 ### Step 8: Go/No-Go Decision Framework [Core]
 
@@ -264,25 +158,7 @@ MVP ratio = Must Have effort / Full solution effort × 100%
 3. Include at least 2 metrics and corresponding thresholds
 4. Metrics do not redefine indicators; they reference success_criteria via linked_criterion
 
-**Output Format**:
-```json
-{
-  "go_no_go": {
-    "metrics": [
-      {
-        "name": "Metric name",
-        "linked_criterion": "Linked success_criteria index",
-        "description": "Metric description"
-      }
-    ],
-    "thresholds": {
-      "go": "Go condition description",
-      "no_go": "No-Go condition description",
-      "needs_more_data": "Needs more data condition description"
-    }
-  }
-}
-```
+> See [Reference/examples.md](./Reference/examples.md#step-8-gono-go-decision-framework-output-format) for the `go_no_go` output format JSON.
 
 ### Output Depth Tiers
 
@@ -297,38 +173,9 @@ MVP ratio = Must Have effort / Full solution effort × 100%
 **Storage Path**: `docs/product/PRD.md ("MVP Plan" section)`
 **Output File**: mvp_definition.json
 
-```json
-{
-  "mvp_scope": {
-    "core_hypothesis": [
-      { "id": "A001", "description": "Hypothesis description", "risk_score": 20 }
-      // ... same structure extensible
-    ],
-    "must_have": [
-      { "feature": "Feature name", "linked_assumption": "Linked hypothesis ID", "effort_estimate": 8, "rationale": "Reason for must-include" }
-      // ... same structure extensible
-    ],
-    "nice_to_have": [
-      { "feature": "Feature name", "priority": "P1", "target_version": "v2.0" }
-      // ... same structure extensible
-    ],
-    "cut_features": [
-      { "feature": "Feature name", "rationale": "Exclusion reason" }
-      // ... same structure extensible
-    ],
-    "timeline": { "total_weeks": 2, "milestones": [{ /* same as Step 5 structure */ }] },
-    "resource_estimate": { "team_size": 3, "roles": [{ /* same as Step 6 structure */ }], "external_dependencies": [] },
-    "success_criteria": [{ /* same as Step 7 structure */ }],
-    "risk_mitigation": [{ /* same as Step 7 structure */ }],
-    "effort_summary": { "mvp_total": 24, "full_solution_total": 60, "mvp_ratio": "40%" },
-    "go_no_go": { "metrics": [{ /* same as Step 8 structure */ }], "thresholds": { "go": "...", "no_go": "...", "needs_more_data": "..." } }
-  },
-  "approval_status": "pending|approved|needs_discussion",
-  "recommendation": "AI recommendation notes"
-}
-```
+> See [Reference/examples.md](./Reference/examples.md#output-file-mvp_definitionjson) for the complete `mvp_definition.json` output example.
 
-**Output Validation Rules**: See the Output Validation Rules section below
+**Output Validation Rules**: See [Reference/output-schema.md](./Reference/output-schema.md#output-validation-rules) for field-level validation rules.
 
 ## Decision Rules
 
@@ -363,104 +210,14 @@ MVP ratio = Must Have effort / Full solution effort × 100%
 
 ## Degradation Strategy
 
-| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Notes |
-|---------------|---------|---------|------------|
-| Assumption map missing | User describes key hypotheses, define MVP | Lacks structured hypothesis data, MVP scope may be less precise | Ask user to provide key hypothesis list and validation priority or upload assumption map file |
-| Solution design data missing | User describes solution, define MVP | Lacks solution data, feature cuts may be less reasonable | Ask user to provide feature solution description and core feature list or upload ideation output file |
-| Resource constraint data missing | User describes resource constraints, define MVP | Lacks resource constraint data, timeline may be less reasonable | Ask user to provide team size, available timeline, and tech stack resource constraints |
-| Assumption map + solution design + resource constraints all missing | User describes hypotheses and solution, define MVP | Overall confidence reduced, MVP scope may be incomplete | Ask user to provide key hypotheses, feature solution, and resource constraint descriptions |
-| All upstream files missing | Prompt user to run preceding stages first, or define MVP based on user description | Output is only a basic MVP framework | Ask user to provide core hypotheses, minimum feature set, and resource constraints |
-
-## Output Validation Rules
-
-| Field Path | Type | Required | Description |
-|----------|------|------|------|
-| mvp_scope | object | Yes | MVP scope definition |
-| mvp_scope.core_hypothesis | array | Yes | Core hypothesis list |
-| mvp_scope.must_have | array | Yes | Must Have feature list |
-| mvp_scope.nice_to_have | array | Yes | Nice to Have feature list |
-| mvp_scope.cut_features | array | Yes | Cut feature list |
-| mvp_scope.timeline | object | Yes | Timeline |
-| mvp_scope.timeline.total_weeks | number | Yes | Total weeks (≤2; when exceeded, human_override: true required) |
-| mvp_scope.timeline.milestones | array | Yes | Milestone list |
-| mvp_scope.resource_estimate | object | Yes | Resource estimate |
-| mvp_scope.effort_summary | object | Yes | Effort summary |
-| mvp_scope.effort_summary.mvp_total | number | Yes | MVP total effort |
-| mvp_scope.effort_summary.full_solution_total | number | Yes | Full solution total effort |
-| mvp_scope.effort_summary.mvp_ratio | string | Yes | MVP ratio |
-| mvp_scope.success_criteria | array | Yes | Success criteria |
-| mvp_scope.risk_mitigation | array | Yes | Risk mitigation measures |
-| mvp_scope.go_no_go | object | Yes | Go/No-Go decision framework |
-| mvp_scope.go_no_go.metrics | array | Yes | Decision metrics |
-| mvp_scope.go_no_go.thresholds | object | Yes | Threshold definitions |
-| human_override | boolean | Yes | Human override flag (default false; must be true when total_weeks > 2) |
+> See [Reference/output-schema.md](./Reference/output-schema.md#degradation-strategy) for the upstream file missing degradation plan.
 
 ## Upstream Change Response
 
-### Upstream Change Impact
-
-| Upstream Change | Impact Scope | Response Strategy |
-|----------|----------|----------|
-| Assumption map change (hypothesis add/remove or risk score change) | Core hypotheses, Must Have features | Mark affected hypotheses and features; recommend human confirm whether to redefine MVP |
-| Solution design change | Feature list, cut decisions | Mark affected features; recommend human confirm whether to adjust MVP scope |
-| Resource constraint change | Timeline, resource estimate | Mark affected timeline; recommend human confirm whether to adjust MVP scope |
-| Experiment result update | Core hypothesis validation status | Mark affected hypotheses; recommend human confirm whether to adjust MVP strategy |
-
-### Downstream Notification Mechanism
-
-| MVP Scope Change Type | Notification Scope | Notification Method |
-|----------------|----------|----------|
-| Must Have feature add/remove | validation-experiment, validation-usability | Mark feature change, trigger experiment design and usability test update |
-| Timeline change | validation-experiment | Mark timeline change, trigger experiment cycle adjustment |
-| Success criteria change | validation-experiment | Mark criteria change, trigger experiment metric update |
-| Go/No-Go decision change | All downstream Skills | Mark decision change, trigger full-flow update |
+> See [Reference/output-schema.md](./Reference/output-schema.md#upstream-change-response) for the upstream change impact table and downstream notification mechanism table.
 
 ---
 
 ## Usage Example
 
-**Highest-risk hypothesis in the assumption map**:
-- A001: Users feel recommended content matches their interests (risk score: 20)
-
-**Features in the solution design**:
-- F001: Intelligent recommendation algorithm
-- F002: Recommendation result display
-- F003: Favorites feature
-- F004: Share feature
-- F005: High-fidelity animations
-
-**AI Analysis**:
-```
-Core Hypothesis:
-- A001: Users feel recommended content matches their interests (risk score: 20)
-
-Must Have:
-- F001 Intelligent recommendation algorithm (directly validates A001)
-- F002 Recommendation result display (required to validate A001)
-
-Cut Features:
-- F005 High-fidelity animations (interferes with core validation, not necessary for MVP)
-
-Nice to Have:
-- F003 Favorites feature (P2, v2.0)
-- F004 Share feature (P3, v3.0)
-
-Timeline:
-- Total 2 weeks; Week 1 complete core algorithm, Week 2 complete display and validation
-
-Resource Estimate:
-- 3 people: 1 backend + 1 frontend + 1 data
-
-Success Criteria:
-- Recommendation match rate ≥ 60% (linked to A001)
-
-Risk Mitigation:
-- Insufficient algorithm accuracy (high) → Degrade to rule-based recommendations
-
-Go/No-Go:
-- metrics: recommendation match rate, user click-through rate
-- Go: match rate ≥ 60% and click-through rate ≥ 30%
-- No-Go: match rate < 40% or click-through rate < 15%
-
-MVP Ratio: 40% ✅ Ideal
-```
+> See [Reference/examples.md](./Reference/examples.md#usage-example) for a complete worked example: Intelligent Recommendation Feature MVP definition, including core hypothesis, Must Have/Cut/Nice to Have features, timeline, resource estimate, success criteria, risk mitigation, and Go/No-Go decision.

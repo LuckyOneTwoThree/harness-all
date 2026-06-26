@@ -201,6 +201,8 @@ Each framework must be able to **independently complete its domain work** withou
 
 Frameworks collaborate via contract documents under `docs/handoff/`. Each document has a clear **source framework** and **target framework**.
 
+> The following is a logical view of all contract documents and templates across the harness family. Physically, each framework's `docs/handoff/` directory only contains its own produced templates + the generic handoff-template.md + README.md; contract documents (`*.md` without `-template` suffix) are runtime products generated during workflow execution.
+
 ```
 docs/handoff/
 ├── README.md                    # Handoff protocol description
@@ -296,8 +298,8 @@ docs/handoff/
 **AC flow and anti-corruption rules**:
 - harness-pm's PRD produces `AC-xxx` (with `ac_id` field), the sole source of ACs. At production time it is intercepted by the **UI Directive Overreach Gate**, strictly forbidding PM from describing specific UI layouts here.
 - harness-design's design-brief reuses PRD's `AC-xxx` numbering. At this stage the **Review and Stripping Mechanism (Push-back)** is executed: if upstream ACs are found to violate rules by including specific UI, the design Agent exercises its right to refuse, strips them, and rewrites them as pure business/UX intent, records them in `[AC Cleanup Record]`, and supplements visual acceptance criteria within the design domain.
-- harness-design's design-to-solo.md carries the cleaned design ACs (still `AC-xxx`, consistent with PRD numbering).
-- harness-solo's writing-plans converts design ACs to `DAC-xxx` (D prefix to distinguish source, avoiding confusion with engineering ACs).
+- harness-design's design-to-solo.md carries both `AC-xxx` (reused from PRD) and `DAC-xxx` (design-added).
+- harness-solo's writing-plans consumes both as-is, no conversion.
 - harness-solo's verify checks both `AC-xxx` (pure engineering) and `DAC-xxx` (design mapping) to ensure design constraints are not lost at the engineering layer.
 
 **Why DAC-xxx is needed**: The same spec.md may contain both `AC-001` (engineering requirement from PRD) and `DAC-001` (design constraint from design-to-solo.md). The D prefix avoids numbering collisions while making source traceable.

@@ -75,20 +75,7 @@ description: Used when attribution analysis is needed for monitoring anomalies. 
 
 **Output**:
 
-```yaml
-alert_validation:
-  alert_id: ALT-001
-  is_real: true | false
-  confidence: 0.0-1.0
-  validation_checks:
-    - check: data_source_health
-      passed: true | false
-      detail: "Data source reporting normally, latest data point 2026-06-15T10:04:00Z"
-    - check: threshold_config
-      passed: true | false
-      detail: "Threshold config meets SLA requirements"
-  false_positive_reason: null | "Collection agent offline caused data gap triggering false alert"
-```
+> See [Reference/execution-step-output-examples.md](./Reference/execution-step-output-examples.md) § "Step 1.1" for the alert_validation YAML (alert_id, is_real, confidence, validation_checks, false_positive_reason).
 
 #### 1.2 Root Cause Pattern Matching [Core]
 
@@ -119,47 +106,13 @@ alert_validation:
 
 **5 Why Output Format**:
 
-```yaml
-root_cause:
-  why_chain:
-    - question: "Why did the order service response time out?"
-      answer: "Database connection pool exhausted"
-      evidence: "Connection pool utilization 100%, active connections 50/50"
-    - question: "Why was the database connection pool exhausted?"
-      answer: "Slow queries held connections for too long"
-      evidence: "Slow query log shows 3 SQL statements with execution time >5s, average connection hold 120s"
-    - question: "Why did slow queries increase?"
-      answer: "The new order query interface was not indexed"
-      evidence: "EXPLAIN shows full table scan; the corresponding interface went live on 2026-06-14"
-    # ... same structure extensible to 3-5 layers
-  root_cause_summary: "The new order query interface lacked indexes, causing slow queries that exhausted the database connection pool and led to service timeout"
-  root_cause_category: code_defect | resource_exhaustion | config_error | dependency_failure | traffic_anomaly
-  confidence: 0.0-1.0
-  evidence_list:
-    - type: metric | log | trace | change_record
-      content: "Connection pool utilization monitoring data"
-      source: "APM system"
-```
+> See [Reference/execution-step-output-examples.md](./Reference/execution-step-output-examples.md) § "Step 1.3" for the root_cause YAML (why_chain with question/answer/evidence, root_cause_summary, root_cause_category, confidence, evidence_list).
 
 #### 1.4 Candidate Root Cause Ranking [Conditional]
 
 **When multiple candidate root causes exist**:
 
-```yaml
-candidate_root_causes:
-  - rank: 1
-    summary: "Database connection pool exhausted"
-    confidence: 0.85
-    evidence_count: 5
-    supporting_factors: ["Connection pool monitoring", "Slow query log"]
-  - rank: 2
-    summary: "Network jitter"
-    confidence: 0.45
-    evidence_count: 2
-    supporting_factors: ["Network latency fluctuation"]
-  needs_human_investigation: true | false
-  investigation_hint: "Top 2 candidate confidence is close; recommend investigating the network layer"
-```
+> See [Reference/execution-step-output-examples.md](./Reference/execution-step-output-examples.md) § "Step 1.4" for the candidate_root_causes YAML (rank, summary, confidence, evidence_count, supporting_factors, needs_human_investigation).
 
 ### Step 2: Impact Assessment [Core]
 
@@ -179,43 +132,13 @@ candidate_root_causes:
 
 **Output**:
 
-```yaml
-impact_scope:
-  level: critical | major | minor | negligible
-  affected_users:
-    count: 5000
-    percentage: 15%
-  affected_features:
-    - feature_name: Order Creation
-      availability: 95%
-      impact_duration: 30m
-  business_metrics:
-    - metric: order_conversion_rate
-      impact: -20%
-      baseline: 5.2%
-      current: 4.16%
-      duration: 30m
-  revenue_impact:
-    estimated_loss: 50000
-    currency: CNY
-    confidence: 80%
-    calculation_basis: "Historical average order volume × impact duration × average order value"
-  reputation_impact:
-    complaints: 12
-    sentiment: negative
-```
+> See [Reference/execution-step-output-examples.md](./Reference/execution-step-output-examples.md) § "Step 2.1" for the impact_scope YAML (level, affected_users, affected_features, business_metrics, revenue_impact, reputation_impact).
 
 #### 2.2 Impact Scope Dynamic Tracking [Conditional]
 
 **When the impact scope continues to expand**:
 
-```yaml
-impact_trend:
-  trend: expanding | stable | shrinking
-  growth_rate_per_10min: 20%
-  auto_escalation_triggered: true | false
-  escalation_reason: "Affected user growth ≥ 20%/10 minutes, auto-escalate severity"
-```
+> See [Reference/execution-step-output-examples.md](./Reference/execution-step-output-examples.md) § "Step 2.2" for the impact_trend YAML (trend, growth_rate_per_10min, auto_escalation_triggered).
 
 ### Step 3: Remediation Suggestions [Core]
 
@@ -235,55 +158,19 @@ impact_trend:
 
 **Output**:
 
-```yaml
-remediation:
-  immediate_actions:
-    - step: Scale database connection pool to 100
-      command: kubectl scale deploy order-db --replicas=3 | Adjust connection pool config
-      automated: true | false
-      rollback_command: kubectl scale deploy order-db --replicas=1
-      expected_effect: "Connection pool utilization drops below 60%"
-      risk_level: low | medium | high
-    - step: Add index for order query interface
-      command: "CREATE INDEX idx_order_query ON orders(user_id, created_at)"
-      automated: false
-      rollback_command: "DROP INDEX idx_order_query ON orders"
-      expected_effect: "Query execution time drops from 5s to 100ms"
-      risk_level: low
-  estimated_resolution_time: 30
-```
+> See [Reference/execution-step-output-examples.md](./Reference/execution-step-output-examples.md) § "Step 3.1" for the remediation YAML (immediate_actions with step/command/rollback_command/expected_effect/risk_level, estimated_resolution_time).
 
 #### 3.2 Long-term Fix Plan [Deep]
 
 **Output**:
 
-```yaml
-long_term_fixes:
-  - description: Optimize connection pool config and slow query monitoring
-    priority: P0 | P1 | P2 | P3
-    effort: 8
-    effort_unit: hours
-    owner: To be assigned
-    preventive: true | false
-    action_items:
-      - "Establish slow query auto-alert mechanism; auto-notify when execution time > 1s"
-      - "Add SQL index check item to code review"
-      - "Include connection pool config in capacity planning"
-```
+> See [Reference/execution-step-output-examples.md](./Reference/execution-step-output-examples.md) § "Step 3.2" for the long_term_fixes YAML (description, priority, effort, owner, preventive, action_items).
 
 #### 3.3 Human Escalation Decision [Conditional]
 
 **Output**:
 
-```yaml
-needs_human_escalation: true | false
-escalation_reason: "Root cause candidates ≥ 3, need manual investigation to confirm"
-escalation_target: "Backend team / DBA / SRE"
-escalation_payload:
-  - alert_id: ALT-001
-  - top_candidates: ["Database connection pool exhausted", "Network jitter", "Slow dependency service"]
-  - evidence_summary: "See attribution report for details"
-```
+> See [Reference/execution-step-output-examples.md](./Reference/execution-step-output-examples.md) § "Step 3.3" for the needs_human_escalation YAML (escalation_reason, escalation_target, escalation_payload).
 
 ### Step 4: Retrospective Suggestions [Deep]
 
@@ -291,21 +178,7 @@ escalation_payload:
 
 **Output**:
 
-```yaml
-postmortem_suggestion:
-  triggered: true | false
-  trigger_condition: "Auto-triggered after P0 anomaly recovery"
-  deadline: "Generate retrospective report within 24 hours"
-  review_scope:
-    - timeline_reconstruction: "Complete timeline of anomaly occurrence → detection → response → recovery"
-    - root_cause_analysis: "5 Why chain and evidence review"
-    - response_assessment: "Response timeliness, decision quality, communication efficiency"
-    - prevention_measures: "Prevention plan for similar issues"
-  action_items:
-    - description: "Establish SQL change automated check pipeline"
-      priority: P1
-      deadline: 2026-07-01
-```
+> See [Reference/execution-step-output-examples.md](./Reference/execution-step-output-examples.md) § "Step 4" for the postmortem_suggestion YAML (triggered, trigger_condition, deadline, review_scope, action_items).
 
 ## Output
 
@@ -319,45 +192,9 @@ postmortem_suggestion:
 | standard | Full attribution analysis (current default) | Full artifact, including all Step 1-3 outputs |
 | deep | Full attribution + deep reasoning + retrospective suggestions | Full artifact + 5 Why deep chain + long-term fix plan + retrospective process |
 
-**Output Schema**:
+**Output Schema** and output file structure:
 
-```json
-{
-  "type": "object",
-  "required": ["alert_id", "root_cause", "impact_scope", "remediation"],
-  "properties": {
-    "alert_id": {"type": "string", "description": "Alert ID, linked to monitoring-alert-detection output"},
-    "timestamp": {"type": "string", "description": "Attribution analysis time"},
-    "alert_validation": {"type": "object", "description": "Alert authenticity confirmation, including is_real/confidence/validation_checks"},
-    "root_cause": {"type": "object", "description": "Root cause analysis, including 5 Why chain, summary, category, and confidence"},
-    "candidate_root_causes": {"type": "array", "description": "Candidate root cause ranking list, output when root cause is uncertain"},
-    "impact_scope": {"type": "object", "description": "Impact scope, including level, affected users, features, and business metrics"},
-    "impact_trend": {"type": "object", "description": "Impact trend, including trend direction and growth rate"},
-    "remediation": {"type": "object", "description": "Remediation suggestions, including immediate action list and estimated resolution time"},
-    "long_term_fixes": {"type": "array", "description": "Long-term fix plan list"},
-    "needs_human_escalation": {"type": "boolean", "description": "Whether human escalation is needed"},
-    "postmortem_suggestion": {"type": "object", "description": "Retrospective suggestions, including trigger condition, scope, and action items"},
-    "report_id": {"type": "string", "description": "Attribution report unique identifier"},
-    "generated_at": {"type": "string", "description": "Generation time"}
-  }
-}
-```
-
-```
-├── monitoring-attribution.json
-├── monitoring-attribution.md
-├── anomaly/
-│   ├── ALT-001/
-│   │   ├── alert_validation.md
-│   │   ├── root_cause.md
-│   │   ├── impact_assessment.md
-│   │   ├── remediation.md
-│   │   └── needs_human_escalation.yaml
-│   └── attribution_summary.md
-└── postmortem/
-    └── ALT-001/
-        └── postmortem_report.md
-```
+> See [Reference/output-schema.md](./Reference/output-schema.md) for the output JSON schema (alert_id, root_cause, impact_scope, remediation, etc.) and the output file tree (monitoring-attribution.json/.md, anomaly/, postmortem/).
 
 ## Decision Rules
 

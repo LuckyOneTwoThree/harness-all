@@ -49,7 +49,8 @@ Archiving must be performed before the session ends; "bare exit" is not allowed 
    Compute current project metrics and write them to `.harness/memory/baseline.json`:
    ```json
    {
-     "timestamp": "YYYY-MM-DDTHH:MM:SSZ",
+     "version": 1,
+     "captured_at": "YYYY-MM-DD HH:MM",
      "files": <file count>,
      "loc": <lines of code>,
      "deps": <dependency count>,

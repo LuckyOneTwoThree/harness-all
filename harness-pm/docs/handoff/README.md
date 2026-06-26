@@ -44,3 +44,9 @@ Copy and fill in based on actual conditions.
 ### Consumed (downstream hands off to pm)
 - `solo-to-pm.md` — Engineering feedback (implemented features / technical constraints / open issues)
 - `growth-to-pm.md` — Growth data feedback (experiment results / user feedback)
+- `ops-to-pm.md` — Ops feedback (SLA summary / incident notices / ops recommendations)
+- `design-to-pm.md` — Design feedback (on demand)
+
+## Write Access
+
+Contract documents follow one-way write permission isolation (per ARCHITECTURE.md §4.3). Only the source framework may write/modify a contract document; consumers read-only. Templates are scaffolds and do not participate in cross-framework flow until instantiated.

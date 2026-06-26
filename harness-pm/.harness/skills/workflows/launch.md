@@ -70,6 +70,7 @@ default_mode: skip
 │ session-end     │  Archive + update FEATURES.md (status → launched)
 │                 │  + Record release info to progress.md
 │                 │  + Output docs/handoff/pm-to-solo.md (monitoring config handoff)
+│                 │  + Conditional: when involves design requirements → also produce pm-to-design.md; when involves growth strategy → also produce pm-to-growth.md
 └─────────────────┘
 ```
 

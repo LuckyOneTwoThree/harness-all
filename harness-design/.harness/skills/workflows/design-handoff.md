@@ -56,6 +56,22 @@ Verify the 4 prerequisite checks item by item:
 
 If any is not satisfied → stop, return to the preceding workflow to complete the reviews.
 
+**Product-level mode branch** (when the preceding workflow is `new-product-design`):
+
+Product-level handoff does not have a single `<task>` — it spans multiple per-page tasks plus one product-task. The single-task checks above must be aggregated as follows:
+
+- **Per-page tasks**: for each per-page task `<product-task>-<page-name>` listed in `docs/visual/DESIGN_PLAN.md` Section 2 (Status = done), verify:
+  - `loops/specs/<product-task>-<page-name>/lint-report.md` has no error-level violations
+  - `loops/specs/<product-task>-<page-name>/evidence.md` contains a "passed" design-review conclusion
+  - `loops/specs/<product-task>-<page-name>/state.yaml` status is not failed
+  - (Skipped pages — Status = skipped — are exempt; they must already be acknowledged in the handoff's Open Items section.)
+- **Product-task**: verify the product-level consistency gate passed:
+  - `loops/specs/<product-task>/product-review-evidence.md` contains a "passed" conclusion with no open Critical findings
+  - `loops/specs/<product-task>/state.yaml` status is not failed
+- **Accessibility**: `docs/visual/accessibility-report.md` has no Critical failures (this report is product-level in product-level mode, covering all pages)
+
+If any per-page task or the product-task check is not satisfied → stop, return to `new-product-design` to complete the missing reviews. Do not generate a partial handoff that silently omits un-reviewed pages.
+
 ### 3. design-handoff-spec
 
 Generate deliverables:

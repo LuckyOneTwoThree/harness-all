@@ -226,6 +226,7 @@ default_mode: deep
 │ session-end     │  Archive + baseline + update FEATURES.md
 │                 │  + Output docs/handoff/pm-to-solo.md
 │                 │    (PRD + design spec + tracking plan handoff to engineering)
+│                 │  + Conditional: when involves design requirements → also produce pm-to-design.md; when involves growth strategy → also produce pm-to-growth.md
 │                 │  + Prompt next step: enter launch after engineering complete
 └─────────────────┘
 ```

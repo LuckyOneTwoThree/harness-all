@@ -56,7 +56,7 @@ PLAN → EXPERIMENT → MEASURE → Pass? DONE : Back to EXPERIMENT/PLAN
 
 **Meta skills** : session-start / session-end / skill-maintenance / memory-maintenance
 
-### Domain Skills (9 modules, 36 skills, ✅ all built)
+### Domain Skills (9 modules, 36 domain skills (+ 4 meta = 40 total), ✅ all built)
 
 Categorized by AARRR + supporting layer:
 

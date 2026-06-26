@@ -37,28 +37,7 @@ description: Used when generating Persona, Empathy Map, and Journey Map from use
 
 ### Input Format
 
-```json
-{
-  "voice_analysis_path": "docs/discovery/user-research.md (append \"User Voice Analysis\" section)
-  "behavior_analysis_path": "docs/discovery/user-research.md (append \"User Behavior Analysis\" section)
-  "survey_data": {
-    "available": "boolean",
-    "location": "string",
-    "sample_size": "number"
-  },
-  "modeling_config": {
-    "max_personas": "number",
-    "min_confidence_threshold": "number",
-    "journey_stages": ["string"],
-    "include_emotional_arc": "boolean"
-  }
-}
-```
-
-**Input dependencies**:
-- `voice-analysis.json`: Provides user voice insights, pain points, themes, segments
-- `behavior-analysis.json`: Provides behavior insights, funnel, paths, Aha Moment
-- Survey data (optional): Supplements demographic and attitudinal data
+> See [Reference/examples.md](./Reference/examples.md#input-format) for the input format JSON schema and input dependencies.
 
 ---
 
@@ -143,311 +122,42 @@ description: Used when generating Persona, Empathy Map, and Journey Map from use
 
 Output file: `docs/discovery/user-research.md (append "User Persona" section)`
 
-**Output Schema**:
+**Output Schema & Validation Rules**: See [Reference/output-schema.md](./Reference/output-schema.md#personajson-output-schema) for the persona.json JSON schema and field-level validation rules.
 
-```json
-{
-  "type": "object",
-  "required": ["personas", "metadata"],
-  "properties": {
-    "personas": {"type": "array", "description": "Persona list, including goals, behaviors, pain points, and JTBD"},
-    "metadata": {"type": "object", "description": "Metadata, including timestamp, sources, and clustering quality score"}
-  }
-}
-```
-
-**Output validation rules**:
-
-| Field path | Type | Required | Description |
-|----------|------|------|------|
-| personas | array | Yes | Persona list, cannot be empty |
-| personas[].id | string | Yes | Persona unique identifier |
-| personas[].name | string | Yes | Persona name |
-| personas[].core_goals | array | Yes | Core goals list, each item must contain goal, confidence, data_source |
-| personas[].core_goals[].data_source | string | Yes | Data source enum: voice/behavior/survey/inferred |
-| personas[].core_goals[].confidence | number | Yes | Goal confidence, 0-1 |
-| personas[].key_behaviors | array | Yes | Key behaviors list, each item must contain behavior, confidence, data_source |
-| personas[].key_behaviors[].data_source | string | Yes | Data source enum: voice/behavior/survey/inferred |
-| personas[].core_pain_points | array | Yes | Core pain points list, each item must contain pain_point, severity, confidence, data_source |
-| personas[].core_pain_points[].severity | string | Yes | Pain point severity enum: P0/P1/P2/P3 |
-| personas[].core_pain_points[].evidence_ref | string | Yes | Evidence reference source |
-| personas[].representative_quotes | array | Yes | Representative quotes list, each Persona ≥3 |
-| personas[].size_ratio | number | Yes | Size ratio, 0-1 |
-| personas[].confidence | number | Yes | Persona overall confidence, 0-1 |
-| personas[].jobs_to_be_done.functional_job | object | Yes | Functional Job, must contain description, confidence |
-| personas[].jobs_to_be_done.emotional_job | object | Yes | Emotional Job, must contain description, confidence |
-| personas[].jobs_to_be_done.social_job | object | Yes | Social Job, must contain description, confidence |
-| personas[].low_confidence_fields | string[] | Yes | Low-confidence field list |
-| metadata.analysis_timestamp | string | Yes | Analysis timestamp |
-| metadata.input_sources | string[] | Yes | Input source list |
-| metadata.clustering_quality_score | number | Yes | Clustering quality score, 0-1 |
-| metadata.confidence_overall | number | Yes | Overall confidence, 0-1 |
-
-```json
-{
-  "personas": [
-    {
-      "id": "string",
-      "name": "string",
-      "core_goals": [
-        {
-          "goal": "string",
-          "confidence": "number",
-          "data_source": "voice|behavior|survey|inferred"
-        }
-      ],
-      "key_behaviors": [
-        {
-          "behavior": "string",
-          "confidence": "number",
-          "data_source": "voice|behavior|survey|inferred"
-        }
-      ],
-      "core_pain_points": [
-        {
-          "pain_point": "string",
-          "severity": "P0|P1|P2|P3",
-          "confidence": "number",
-          "data_source": "voice|behavior|survey|inferred",
-          "evidence_ref": "string"
-        }
-      ],
-      "representative_quotes": [
-        {
-          "quote": "string",
-          "source": "string",
-          "sentiment": "string"
-        }
-      ],
-      "size_ratio": "number",
-      "confidence": "number",
-      "jobs_to_be_done": {
-        "functional_job": {
-          "description": "string",
-          "confidence": "number"
-        },
-        "emotional_job": {
-          "description": "string",
-          "confidence": "number"
-        },
-        "social_job": {
-          "description": "string",
-          "confidence": "number"
-        }
-      },
-      "low_confidence_fields": ["string"]
-    }
-  ],
-  "metadata": {
-    "analysis_timestamp": "string",
-    "input_sources": ["string"],
-    "clustering_quality_score": "number",
-    "confidence_overall": "number"
-  }
-}
-```
+**Output Example**: See [Reference/examples.md](./Reference/examples.md#personajson-example) for a populated persona.json example.
 
 ### empathy-map.json
 
 Output file: `docs/discovery/user-research.md (append "User Persona" section)`
 
-**Output Schema**:
+**Output Schema & Validation Rules**: See [Reference/output-schema.md](./Reference/output-schema.md#empathy-mapjson-output-schema) for the empathy-map.json JSON schema and field-level validation rules.
 
-```json
-{
-  "type": "object",
-  "required": ["empathy_maps"],
-  "properties": {
-    "empathy_maps": {"type": "array", "description": "Empathy map list, including Says/Thinks/Does/Feels four quadrants"}
-  }
-}
-```
-
-**Output validation rules**:
-
-| Field path | Type | Required | Description |
-|----------|------|------|------|
-| empathy_maps | array | Yes | Empathy map list, cannot be empty |
-| empathy_maps[].persona_id | string | Yes | Linked Persona ID |
-| empathy_maps[].persona_name | string | Yes | Linked Persona name |
-| empathy_maps[].says | array | Yes | Says quadrant, each item must contain content, source, confidence, ≥2 items |
-| empathy_maps[].thinks | array | Yes | Thinks quadrant, each item must contain content, inference_basis, confidence, ≥2 items |
-| empathy_maps[].does | array | Yes | Does quadrant, each item must contain content, source, confidence, ≥2 items |
-| empathy_maps[].feels | array | Yes | Feels quadrant, each item must contain emotion, intensity, inference_basis, confidence, ≥2 items |
-
-```json
-{
-  "empathy_maps": [
-    {
-      "persona_id": "string",
-      "persona_name": "string",
-      "says": [
-        {
-          "content": "string",
-          "source": "string",
-          "confidence": "number"
-        }
-      ],
-      "thinks": [
-        {
-          "content": "string",
-          "inference_basis": "string",
-          "confidence": "number"
-        }
-      ],
-      "does": [
-        {
-          "content": "string",
-          "source": "string",
-          "confidence": "number"
-        }
-      ],
-      "feels": [
-        {
-          "emotion": "string",
-          "intensity": "number",
-          "inference_basis": "string",
-          "confidence": "number"
-        }
-      ]
-    }
-  ]
-}
-```
+**Output Example**: See [Reference/examples.md](./Reference/examples.md#empathy-mapjson-example) for a populated empathy-map.json example.
 
 ### journey-map.json
 
 Output file: `docs/discovery/user-research.md (append "User Persona" section)`
 
-**Output Schema**:
+**Output Schema & Validation Rules**: See [Reference/output-schema.md](./Reference/output-schema.md#journey-mapjson-output-schema) for the journey-map.json JSON schema and field-level validation rules.
 
-```json
-{
-  "type": "object",
-  "required": ["journey_maps"],
-  "properties": {
-    "journey_maps": {"type": "array", "description": "User journey map list, including stages, emotion curve, and opportunities"}
-  }
-}
-```
-
-**Output validation rules**:
-
-| Field path | Type | Required | Description |
-|----------|------|------|------|
-| journey_maps | array | Yes | Journey map list, cannot be empty |
-| journey_maps[].persona_id | string | Yes | Linked Persona ID |
-| journey_maps[].persona_name | string | Yes | Linked Persona name |
-| journey_maps[].stages | array | Yes | Journey stage list, must cover core stages |
-| journey_maps[].stages[].stage_name | string | Yes | Stage name |
-| journey_maps[].stages[].user_behaviors | string[] | Yes | User behavior list |
-| journey_maps[].stages[].touchpoints | string[] | Yes | Touchpoint list |
-| journey_maps[].stages[].emotion_score | number | Yes | Emotion score |
-| journey_maps[].stages[].emotion_confidence | number | Yes | Emotion confidence, 0-1 |
-| journey_maps[].stages[].pain_points | string[] | Yes | Pain point list |
-| journey_maps[].stages[].opportunities | string[] | Yes | Opportunity list |
-| journey_maps[].emotional_arc | object | Yes | Emotional arc, must contain high_points, low_points, overall_trend |
-
-```json
-{
-  "journey_maps": [
-    {
-      "persona_id": "string",
-      "persona_name": "string",
-      "stages": [
-        {
-          "stage_name": "string",
-          "user_behaviors": ["string"],
-          "touchpoints": ["string"],
-          "emotion_score": "number",
-          "emotion_confidence": "number",
-          "pain_points": ["string"],
-          "opportunities": ["string"]
-        }
-      ],
-      "emotional_arc": {
-        "high_points": ["string"],
-        "low_points": ["string"],
-        "overall_trend": "string"
-      }
-    }
-  ]
-}
-```
+**Output Example**: See [Reference/examples.md](./Reference/examples.md#journey-mapjson-example) for a populated journey-map.json example.
 
 ---
 
 ## Decision Rules
 
-| Condition | Action |
-|------|------|
-| Persona overall confidence < 0.5 | Escalate to human validation, mark "needs manual confirmation", do not automatically proceed to subsequent flows |
-| Emotional Job inference confidence < 0.5 | Escalate to human validation, mark "emotional need inference pending confirmation" |
-| Social Job inference confidence < 0.5 | Escalate to human validation, mark "social need inference pending confirmation" |
-| Two Personas have insufficient distinctiveness (trait overlap > 70%) | Merge into 1 Persona or mark "needs manual judgment on whether to split" |
-| Clustering quality score < 0.4 | Mark "poor clustering quality", recommend adjusting clustering parameters or supplementing data |
-
----
+> See [Reference/decision-tables.md](./Reference/decision-tables.md#decision-rules) for the decision rules table (Persona confidence thresholds, distinctiveness checks, clustering quality).
 
 ## Quality Checks
 
-### P0 Checks (must pass for quick/standard/deep)
-
-- [ ] At least 1 Persona with confidence ≥ 0.7 (satisfied)
-- [ ] Each Persona has data support (each field annotated with data source)
-
-### P1 Checks (must pass for standard/deep)
-
-- [ ] Distinctiveness between Personas (trait overlap < 70%)
-- [ ] Representative quotes (each Persona ≥ 3 quotes)
-- [ ] Empathy Map four quadrants complete (each quadrant ≥ 2 items)
-- [ ] Journey Map stages complete (covers core stages)
-- [ ] All outputs annotated with confidence (100%)
-
-### P2 Checks (only deep must pass)
-
-- [ ] Extended analysis complete (deep inference and roadmap generated)
-- [ ] Decision records complete (key decisions have rationale and alternatives)
+> See [Reference/decision-tables.md](./Reference/decision-tables.md#quality-checks) for the detailed P0 / P1 / P2 quality check items.
 
 ---
 
 ## Degradation Strategy
 
-When upstream files do not exist, this Skill can still execute independently:
-
-| Missing upstream input | Degradation plan | Output impact | Data acquisition instructions |
-|---------------|---------|---------|------------|
-| voice-analysis.json | Infer Persona based on user-described target user traits, annotate "lacks voice data support" | Persona voice traits and pain points based on inference, representative_quotes missing, core_pain_points confidence reduced | Ask user to provide user feedback text or upload voice-analysis.json file |
-| behavior-analysis.json | Infer Persona based on user-described user behavior, annotate "lacks behavior data support" | Persona behavior traits and Aha Moment based on inference, key_behaviors confidence reduced, Journey Map behavior data missing | Ask user to provide behavior event logs or upload behavior-analysis.json file |
-| voice-analysis.json + behavior-analysis.json | User provides target user description → infer Persona based on description, overall confidence reduced | personas overall confidence reduced, data_source mostly inferred, low_confidence_fields increased | Ask user to provide user feedback text and behavior event logs |
-| All upstream files missing | Prompt user to execute preceding stages first, or execute lightweight Persona inference based on user's verbal description | Output is purely inferred Persona, confidence_overall capped at 0.3, all fields annotated as inferred | Ask user to provide target user trait description, behavior patterns, and core pain points |
-| If user does not provide survey_data | Skip steps related to this input, Persona demographic information based on inference, annotate "lacks survey data" | Demographic field data_source is inferred, confidence reduced | Ask user to provide user survey data (including demographics, usage habits, etc.) |
-| If user does not provide modeling_config | Skip steps related to this input, use default modeling configuration (max Persona count: 4, confidence threshold: 0.5) | Using default configuration, Persona count and threshold may be suboptimal | Ask user to provide modeling parameters such as max Persona count and confidence threshold |
-
-## Data Acquisition Instructions
-
-This Skill requires user voice analysis and behavior analysis data. Please provide via one of the following methods:
-  1. Directly paste user description text (target user traits, behavior patterns, etc.)
-  2. Upload voice-analysis.json / behavior-analysis.json files
-  3. Provide data file paths
-- AI is not responsible for external data collection, only for analysis
-
----
+> See [Reference/decision-tables.md](./Reference/decision-tables.md#degradation-strategy) for the upstream file missing degradation plan and data acquisition instructions.
 
 ## Upstream Change Response
 
-### Upstream Change Impact
-
-| Upstream Skill | Change type | Impact scope | Response action |
-|-----------|---------|---------|---------|
-| user-research-voice-analysis | voice-analysis.json structure change | User segments, pain points, theme data format changes | Check input field mapping, adapt to new structure, mark "upstream data format anomaly" if incompatible |
-| user-research-voice-analysis | voice-analysis.json content update | Pain point severity, sentiment distribution, segment results change | Re-execute clustering and Persona generation, annotate "rebuilt based on updated data" |
-| user-research-behavior-analysis | behavior-analysis.json structure change | Behavior segments, Aha Moment, feature usage data format changes | Check input field mapping, adapt to new structure, mark "upstream data format anomaly" if incompatible |
-| user-research-behavior-analysis | behavior-analysis.json content update | Funnel, paths, anomaly detection results change | Re-execute clustering and Persona generation, annotate "rebuilt based on updated data" |
-
-### Downstream Notification Mechanism
-
-| Downstream Skill | Notification trigger condition | Notification method | Notification content |
-|-----------|------------|---------|---------|
-| user-research-interview-assist | persona.json update complete | Write to output file | Notify that Persona data is ready and can be used for interview script design |
-| user-research-report | persona.json / empathy-map.json / journey-map.json update complete | Write to output file | Notify that user modeling data is ready and can be used for report generation |
+> See [Reference/decision-tables.md](./Reference/decision-tables.md#upstream-change-response) for the upstream change impact table and downstream notification mechanism table.

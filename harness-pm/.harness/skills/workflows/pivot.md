@@ -154,6 +154,7 @@ default_mode: deep
 │ session-end     │  Archive + update FEATURES.md
 │                 │  + Output docs/handoff/pm-to-solo.md (strategic change handoff)
 │                 │  + Notify harness family members of strategic adjustment
+│                 │  + Conditional: when involves design requirements → also produce pm-to-design.md; when involves growth strategy → also produce pm-to-growth.md
 └─────────────────┘
 ```
 

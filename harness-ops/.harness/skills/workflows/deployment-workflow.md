@@ -83,7 +83,7 @@ default_mode: skip
 
 | Gate | Checks | On Failure |
 |--------|---------|-----------|
-| Prerequisite hard gate | solo-to-ops.md fields complete (6 required fields) | Require solo to complete, do not start deployment |
+| Prerequisite hard gate | solo-to-ops.md fields complete (5 required fields) | Require solo to complete, do not start deployment |
 | staging validation | Health check + smoke test + monitoring stable | Auto-rollback staging, analyze cause |
 | Human approval gate | Human reviews GitOps PR | Reject then terminate, record reason |
 | Each canary stage | Error rate <1% + normal latency + stable business metrics | Auto-rollback to previous stage |

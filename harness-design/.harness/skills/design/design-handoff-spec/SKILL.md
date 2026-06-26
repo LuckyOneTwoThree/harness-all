@@ -79,10 +79,17 @@ Read approved design outputs:
 ```markdown
 # Design Handoff: <Project Name>
 
-## Design System
-- DESIGN.md path: docs/design-system/DESIGN.md
-- tokens.json path: docs/design-system/tokens.json
-- tokens.css path: docs/design-system/tokens.css
+## Phase Summary
+<One-sentence summary of what was done in this phase. e.g., Completed V1 visual design + interaction design + component mapping, including 3 core pages>
+
+## Design System Assets
+| Asset | Path | Notes |
+|------|------|------|
+| Design system | docs/design-system/DESIGN.md | Color / typography / spacing / shadow / radius / breakpoints (10-segment standard format) |
+| Design tokens (JSON) | docs/design-system/tokens.json | Machine-readable token definitions |
+| Design tokens (CSS) | docs/design-system/tokens.css | CSS variables for direct engineering consumption |
+| Component spec | docs/interaction/component-spec.md | Component Props/States table |
+| Component map | docs/handoff/component-map.json | Explicit mapping from design components to engineering components |
 
 ## Page List
 | Page ID | Page | Priority | Depends On | Visual draft | Interaction draft | Wireframe |
@@ -117,11 +124,34 @@ Read approved design outputs:
 | Responsive consistency | ✓/✗ | ... |
 | Interaction consistency | ✓/✗ | ... |
 
-## Product Design Plan Reference (product-level only)
-- Path: docs/visual/DESIGN_PLAN.md
+## Key Decisions
+| Decision | Rationale | Impact scope |
+|------|------|---------|
+| <decision> | <rationale> | <scope> |
 
 ## Notes
 <Points engineering should be aware of during implementation>
+
+## Open Items
+Issues for harness-solo to handle or confirm with harness-design:
+- TBD 1: <issue description>
+
+## Product Design Plan Reference (product-level only)
+- Path: docs/visual/DESIGN_PLAN.md
+
+## Suggested Next Steps
+harness-solo should prioritize:
+1. Run the brainstorming skill, consume this file + component-map.json
+2. Run the writing-plans skill, write AC-xxx + DAC-xxx into spec.md
+3. Run the frontend-implementation skill, implement components per component-map.json
+
+## Risk Notes
+| Risk | Level | Mitigation |
+|------|------|---------|
+| <risk> | High/Medium/Low | <action> |
+
+## Downstream Framework Usage Notes
+harness-solo's brainstorming / writing-plans / frontend-implementation / verify skills will auto-detect this file and read the AC-xxx + DAC-xxx list and component-map.json.
 ```
 
 ### 4. Generate component-spec.md (Component Specification)
@@ -234,6 +264,13 @@ From UI UX Pro Max:
 
 **Common (both modes)**:
 - [ ] design-to-solo.md generated (evidence: file exists)
+- [ ] design-to-solo.md contains Phase Summary section (evidence: section exists with one-sentence phase summary)
+- [ ] design-to-solo.md contains Key Decisions section (evidence: section exists with Decision/Rationale/Impact scope table)
+- [ ] design-to-solo.md contains Open Items section (evidence: section exists with TBD items or "None")
+- [ ] design-to-solo.md contains Suggested Next Steps section (evidence: section exists with prioritized next-step list)
+- [ ] design-to-solo.md contains Risk Notes section (evidence: section exists with Risk/Level/Mitigation table)
+- [ ] design-to-solo.md contains Downstream Framework Usage Notes section (evidence: section exists describing harness-solo auto-detection)
+- [ ] design-to-solo.md Design System Assets section lists 5 assets (evidence: table contains DESIGN.md / tokens.json / tokens.css / component-spec.md / component-map.json rows)
 - [ ] component-map.json generated (evidence: JSON valid + contains states field)
 - [ ] component-spec.md generated (evidence: file contains Props/States tables)
 - [ ] flow.md generated (evidence: file contains key flows)

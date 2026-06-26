@@ -81,7 +81,7 @@ harness-solo is the **engineering development** member of the harness family, fo
 | harness-solo (this framework) | Engineering development | Produces `docs/handoff/solo-to-growth.md` → handed off to growth |
 | harness-design | UI / visual design (on demand) | Produces design specs → implemented by this framework |
 | harness-growth | Content / SEO / data (on demand) | Consumes this framework's output |
-| harness-ops | Ops / deployment / monitoring | Produces `docs/handoff/solo-to-ops.md` → consumed by this framework to execute deployment |
+| harness-ops | Ops / deployment / monitoring | Consumes `docs/handoff/solo-to-ops.md` from this framework; produces `docs/handoff/ops-to-pm.md` (SLA + incident review) |
 
 **Handoff protocol**: See the handoff documents under the `docs/handoff/` directory. Drop them in manually and they will be recognized by the brainstorming skill.
 

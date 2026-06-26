@@ -8,7 +8,6 @@
 
 - **Reporting period**: `[YYYY-MM-DD to YYYY-MM-DD]`
 - **Core path availability**: `[e.g., 99.99%]`
-- **Resource utilization and cost**: `[e.g., estimated cloud bill this month $500, CPU utilization 40%]`
 
 ## 2. Incidents (Incidents)
 
@@ -18,7 +17,13 @@ _If no P0/P1 incidents occurred, fill in "None"_
 - **Root Cause**: `[why it happened, e.g., upstream API change caused deserialization failure]`
 - **Remediation and improvement plan**: `[how it was resolved, how to prevent it in the future]`
 
-## 3. Ops Recommendations to Business (Ops Recommendations)
+## 3. Cost Optimization
+
+- **Resource utilization trends**: `[e.g., CPU utilization 40%, memory 55%, estimated cloud bill this month $500]`
+- **Cost reduction recommendations**: `[e.g., idle reserved instances can be released; low-traffic environments can be downgraded]`
+- **Budget variance**: `[e.g., actual spend vs. budget this month, variance % and key drivers]`
+
+## 4. Ops Recommendations to Business (Ops Recommendations)
 
 - `[e.g., historical order table queries are extremely slow causing database CPU spikes; recommend PM plan a "hot-cold data separation" requirement in the next version]`
 - `[e.g., the current system has a single-point-of-failure risk; request a project to be initiated for multi-AZ disaster recovery refactoring]`

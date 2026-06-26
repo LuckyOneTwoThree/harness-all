@@ -46,34 +46,7 @@ description: Use when you need to evaluate acquisition channels or optimize the 
 
 ## 19 Acquisition Channels List
 
-### Paid Acquisition Channels
-1. **Search Ads (SEM)** - Google Ads, Baidu PPC
-2. **Social Ads** - Facebook/Instagram Ads, LinkedIn Ads, WeChat Moments Ads
-3. **Display Ads** - DSP ads, native ads
-4. **Video Ads** - YouTube Ads, Douyin/Kuaishou Ads
-5. **App Store Ads** - Apple Search Ads, Google Play Ads
-
-### Organic Acquisition Channels
-6. **SEO/SEM Organic** - Search engine organic ranking
-7. **Content Marketing** - Blog posts, white papers, case studies
-8. **Social Media Organic** - Weibo, Xiaohongshu, Douyin organic content
-9. **Community Operations** - Zhihu, Tieba, industry forums
-10. **Viral Spread** - User sharing, word-of-mouth
-
-### Partnership Acquisition Channels
-11. **Affiliate Marketing** - Partner referral commissions
-12. **Channel Distribution** - Dealer/agent networks
-13. **Platform Partnerships** - App marketplace featuring, platform premieres
-14. **Cross-industry Collaboration** - Brand co-branding events
-
-### Sales Acquisition Channels
-15. **SDR Outbound** - Telesales team proactive outreach
-16. **Offline Events** - Industry exhibitions, offline salons
-17. **Sales Referrals** - Sales lead referrals
-
-### Other Channels
-18. **Existing User Reach** - Email marketing, push notifications, SMS
-19. **PR/Brand** - Media coverage, brand events
+> See [Reference/acquisition-channels-list.md](./Reference/acquisition-channels-list.md) for the full list of 19 acquisition channels across 5 categories (Paid, Organic, Partnership, Sales, Other).
 
 ## Execution Steps
 
@@ -244,149 +217,13 @@ Design A/B tests for optimization plans:
 
 **Output files**: acquisition-analysis.json, acquisition-analysis.md
 
-**Output Schema**:
+**Output Schema**, full JSON example, and A/B test design template:
 
-```json
-{
-  "type": "object",
-  "required": ["channel_assessment", "funnel_analysis", "optimization_suggestions"],
-  "properties": {
-    "channel_assessment": {"type": "object", "description": "Channel evaluation results, including channel details, tiering, and summary metrics"},
-    "funnel_analysis": {"type": "object", "description": "Funnel analysis, including stage data and key drop-off nodes"},
-    "optimization_suggestions": {"type": "array", "description": "List of optimization recommendations, including priority, issue, plan, and expected lift"},
-    "ab_test_designs": {"type": "array", "description": "List of A/B test design plans"}
-  }
-}
-```
-
-`acquisition_analysis`
-```json
-{
-  "channel_assessment": {
-    "channels": [
-      {
-        "name": "Education Industry Exhibition",
-        "scale": "Annual reach of 50,000+ education institution decision makers",
-        "volume": 10000,
-        "conversion_rate": 0.035,
-        "cost_per_acquisition": 45.00,
-        "roi": 2.5,
-        "quality_score": 0.85,
-        "classification": "primary|test|observation"
-      }
-    ],
-    "primary_channels": ["Education Industry Exhibition", "SEO/SEM Organic", "Content Marketing"],
-    "test_channels": ["Social Ads", "Community Operations", "Affiliate Marketing"],
-    "observation_channels": ["PR/Brand", "Cross-industry Collaboration", "Video Ads"],
-    "total_new_users": 50000,
-    "blended_cac": 35.00,
-    "blended_roi": 2.2
-  },
-  "funnel_analysis": {
-    "stages": [
-      {
-        "name": "Registration",
-        "volume": 100000,
-        "conversion_rate": 0.05,
-        "drop_off_rate": 0.95,
-        "avg_time_spent": 30
-      }
-    ],
-    "critical_drop_off": {
-      "from_stage": "Visit",
-      "to_stage": "Registration",
-      "drop_off_rate": 0.85,
-      "impact_score": 0.9
-    }
-  },
-  "optimization_suggestions": [
-    {
-      "priority": 1,
-      "stage": "Visit→Registration",
-      "issue": "Registration form has too many fields, education institution users have low willingness to fill out",
-      "solution": "Simplify registration form to 3 required fields, support WeChat scan one-click registration",
-      "expected_improvement": "Expected 15% conversion rate lift",
-      "effort": "medium"
-    }
-  ],
-  "ab_test_designs": [
-    {
-      "test_id": "TEST_001",
-      "hypothesis": "Simplifying the registration flow can reduce visit-to-registration drop-off",
-      "control": "Current 6-field registration form",
-      "treatment": "3-field simplified registration form + WeChat scan registration",
-      "primary_metric": "Visit→Registration conversion rate",
-      "secondary_metrics": ["Registration completion time", "Post-registration activation rate"],
-      "min_sample_size": 10000,
-      "estimated_duration": "7 days"
-    }
-  ]
-}
-```
-
-## A/B Test Design Template
-
-```yaml
-test_id: "ACQ_TEST_{seq}"
-name: "Test name"
-hypothesis: "If...then... hypothesis"
-variants:
-  control: "Control group plan description"
-  treatment: "Treatment group plan description"
-metrics:
-  primary: "Primary metric"
-  secondary: ["List of secondary metrics"]
-  guardrail: ["Guardrail metrics"]
-design:
-  min_sample_per_variant: 1000
-  runtime_days: 7
-  mde: 0.05
-success_criteria:
-  - primary_metric_lift: ">=5%"
-  - guardrail_metrics: "No significant decline"
-```
+> See [Reference/output-schema-and-example.md](./Reference/output-schema-and-example.md) for the output JSON schema (channel_assessment, funnel_analysis, optimization_suggestions, ab_test_designs), a complete acquisition_analysis example, and the A/B test YAML template.
 
 ## Output Validation Rules
 
-| Field Path | Type | Required | Description |
-|----------|------|------|------|
-| channel_assessment | object | Yes | Channel evaluation results, must contain channels/primary_channels/test_channels/observation_channels |
-| channel_assessment.channels | array | Yes | Channel evaluation details list, each item must contain name/scale/conversion_rate/roi/classification |
-| channel_assessment.channels[].name | string | Yes | Channel name, cannot be empty |
-| channel_assessment.channels[].scale | string | Yes | Channel scale description |
-| channel_assessment.channels[].volume | number | No | Channel user volume |
-| channel_assessment.channels[].conversion_rate | number | Yes | Conversion rate, range 0-1 |
-| channel_assessment.channels[].cost_per_acquisition | number | No | Cost per acquisition |
-| channel_assessment.channels[].quality_score | number | No | Quality score, range 0-1 |
-| channel_assessment.channels[].classification | string | Yes | Channel tier, only primary/test/observation allowed |
-| channel_assessment.channels[].roi | number | Yes | Channel ROI, must be calculated based on LTV |
-| channel_assessment.primary_channels | array | Yes | Primary channel name list, at least 1 channel |
-| channel_assessment.test_channels | array | Yes | Test channel name list |
-| channel_assessment.observation_channels | array | Yes | Observation channel name list |
-| channel_assessment.total_new_users | number | Yes | Total new users, must be >0 |
-| channel_assessment.blended_cac | number | Yes | Blended CAC, must be >0 |
-| channel_assessment.blended_roi | number | Yes | Blended ROI |
-| funnel_analysis | object | Yes | Funnel analysis, must contain stages and critical_drop_off |
-| funnel_analysis.stages | array | Yes | Stage data, each item must contain name/volume/conversion_rate/drop_off_rate |
-| funnel_analysis.stages[].name | string | Yes | Stage name, cannot be empty |
-| funnel_analysis.stages[].volume | number | Yes | Stage user volume, must be ≥0 |
-| funnel_analysis.stages[].conversion_rate | number | Yes | Conversion rate, range 0-1 |
-| funnel_analysis.stages[].drop_off_rate | number | Yes | Drop-off rate, range 0-1 |
-| funnel_analysis.critical_drop_off | object | Yes | Critical drop-off node, must contain from_stage/to_stage/drop_off_rate/impact_score |
-| funnel_analysis.critical_drop_off.from_stage | string | Yes | Drop-off start stage |
-| funnel_analysis.critical_drop_off.to_stage | string | Yes | Drop-off target stage |
-| funnel_analysis.critical_drop_off.drop_off_rate | number | Yes | Drop-off rate, range 0-1 |
-| funnel_analysis.critical_drop_off.impact_score | number | Yes | Impact score, range 0-1 |
-| optimization_suggestions | array | Yes | Optimization recommendations list, each item must contain priority/stage/issue/solution/expected_improvement |
-| optimization_suggestions[].priority | number | Yes | Priority, starting from 1 |
-| optimization_suggestions[].stage | string | Yes | Target stage, cannot be empty |
-| optimization_suggestions[].issue | string | Yes | Issue description, cannot be empty |
-| optimization_suggestions[].solution | string | Yes | Solution, cannot be empty |
-| optimization_suggestions[].expected_improvement | string | Yes | Expected improvement |
-| ab_test_designs | array | No | A/B test design plans list, each item must contain test_id/hypothesis/primary_metric |
-| ab_test_designs[].test_id | string | Yes | Test ID, cannot be empty |
-| ab_test_designs[].hypothesis | string | Yes | Test hypothesis, cannot be empty |
-| ab_test_designs[].primary_metric | string | Yes | Primary metric, cannot be empty |
+> See [Reference/output-validation-rules.md](./Reference/output-validation-rules.md) for the full field validation rules table covering channel_assessment, funnel_analysis, optimization_suggestions, and ab_test_designs.
 
 ## Decision Rules
 

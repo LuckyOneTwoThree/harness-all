@@ -34,43 +34,7 @@ description: Triggered when designing or evaluating a product business model. Bu
 | product_context | JSON | Yes | user-research-user-modeling / opportunity-definition | Discovery stage output: user persona, problem statement, opportunity definition |
 | market_data | JSON | Yes | market-competitor-analysis | Market data: competitor business models, market size, industry benchmarks |
 
-### Required Inputs
-
-**product_context (from discovery stage):**
-```json
-{
-  "persona_summary": "Target user persona summary, including user characteristics, needs, pain points",
-  "problem_statement": "User problem statement, clarifying the core problem to solve",
-  "opportunity_definition": "Business opportunity definition, including market size, opportunity description"
-}
-```
-
-**market_data (market data):**
-```json
-{
-  "competitor_business_models": [
-    {
-      "competitor_name": "Competitor name",
-      "business_model_type": "Competitor business model type",
-      "key_elements": {
-        "value_proposition": "Competitor value proposition",
-        "revenue_model": "Competitor revenue model",
-        "pricing": "Competitor pricing"
-      }
-    }
-  ],
-  "market_size": {
-    "tam": "Total Addressable Market",
-    "sam": "Serviceable Available Market",
-    "som": "Serviceable Obtainable Market"
-  },
-  "industry_benchmarks": {
-    "typical_margin": "Industry typical profit margin",
-    "typical_pricing": "Industry typical pricing range",
-    "customer_acquisition_cost": "Industry customer acquisition cost benchmark"
-  }
-}
-```
+> See [Reference/examples.md](./Reference/examples.md) for input JSON examples (product_context, market_data).
 
 ## Execution Steps
 
@@ -83,20 +47,7 @@ description: Triggered when designing or evaluating a product business model. Bu
 2. Divide segments by need priority and reachability
 3. Define core characteristics for each segment
 
-**Output format**:
-```json
-{
-  "customer_segments": [
-    {
-      "segment_id": "segment-1",
-      "name": "Small and medium training institutions",
-      "characteristics": ["Student scale 50-500", "Has online transformation needs"],
-      "primary_pains": ["Lack technical capability to build online teaching platforms"],
-      "priority": "high/medium/low"
-    }
-  ]
-}
-```
+> See [Reference/examples.md](./Reference/examples.md) → "Step 1: Customer Segments Output" for output format.
 
 **Acceptance criteria**:
 - At least 2 differentiated customer segments identified
@@ -113,22 +64,7 @@ description: Triggered when designing or evaluating a product business model. Bu
 3. Design value propositions that address key pain points
 4. Define Pain Relievers and Gain Creators
 
-**Output format**:
-```json
-{
-  "value_propositions": [
-    {
-      "proposition_id": "vp-1",
-      "headline": "AI-driven personalized teaching SaaS platform",
-      "description": "Provides out-of-the-box online teaching solutions for training institutions through AI adaptive learning engine",
-      "target_segment": "segment-1",
-      "pain_relievers": ["Lower technical barriers for training institutions to go online", "Improve student learning efficiency and completion rate"],
-      "gain_creators": ["Training institution operating costs reduced by 40%", "Student completion rate increased to 85%"],
-      "differentiation": "AI adaptive learning engine dynamically adjusts teaching paths, distinct from static course platforms"
-    }
-  ]
-}
-```
+> See [Reference/examples.md](./Reference/examples.md) → "Step 2: Value Propositions Output" for output format.
 
 **Acceptance criteria**:
 - Each customer segment has at least 1 value proposition
@@ -139,29 +75,7 @@ description: Triggered when designing or evaluating a product business model. Bu
 
 **Task**: Based on product characteristics and market benchmarks, automatically match potential revenue model types.
 
-**Decision tree logic**:
-
-```
-Start
-  │
-  ├─ Product form = Physical goods?
-  │     └─ Yes → Checkpoint: Need subscription service?
-  │           ├─ Yes → Revenue model = Subscription + One-time purchase
-  │           └─ No → Revenue model = One-time sales
-  │
-  ├─ Product form = Software/Digital service?
-  │     └─ Yes → Checkpoint: User usage frequency?
-  │           ├─ High frequency (>1 time/week) → Revenue model = Subscription
-  │           ├─ Medium frequency (1 time/month) → Revenue model = Usage-based billing
-  │           └─ Low frequency (<1 time/month) → Revenue model = Project-based/One-time
-  │
-  ├─ Product form = Platform service?
-  │     └─ Yes → Revenue model = Platform commission/revenue share
-  │
-  └─ Multi-sided market?
-        ├─ Yes → Revenue model = Subscription + Platform commission
-        └─ No → Select based on product form
-```
+> See [Reference/decision-tables.md](./Reference/decision-tables.md) → "Revenue Model Decision Tree (Step 3a)" for decision tree logic.
 
 **Step 3b: Multi-option Revenue Model Generation** [Conditional]
 
@@ -172,35 +86,7 @@ Start
 2. Generate at least 1 alternative revenue model (consider hybrid models)
 3. Analyze strengths and risks of each model
 
-**Output format**:
-```json
-{
-  "revenue_models": [
-    {
-      "model_id": "rm-1",
-      "type": "SaaS Subscription",
-      "description": "Monthly/annual subscription with tiered pricing based on institution student count",
-      "pricing_structure": {
-        "base_price": "2980",
-        "unit": "yuan/institution/month",
-        "tiers": ["Basic: 50 or fewer students 2980 yuan/month", "Professional: 200 or fewer students 6980 yuan/month"]
-      },
-      "pros": ["Predictable revenue, stable cash flow", "Natural revenue growth as customer scale grows"],
-      "cons": ["Higher initial acquisition cost", "Requires continuous product iteration investment"],
-      "risk_level": "low/medium/high"
-    },
-    {
-      "model_id": "rm-2",
-      "type": "Usage-based + Subscription hybrid",
-      "description": "Basic subscription + overage billing based on AI call volume",
-      "pricing_structure": {...},
-      "pros": [...],
-      "cons": [...],
-      "risk_level": "low/medium/high"
-    }
-  ]
-}
-```
+> See [Reference/examples.md](./Reference/examples.md) → "Step 3b: Revenue Models Output" for output format.
 
 **Acceptance criteria**:
 - At least 2 revenue model options generated
@@ -217,32 +103,7 @@ Start
 3. Estimate the magnitude and proportion of each cost item
 4. Compare with industry benchmarks
 
-**Output format**:
-```json
-{
-  "cost_structure": {
-    "fixed_costs": [
-      {
-        "item": "R&D team salaries",
-        "estimated_monthly": "800000",
-        "category": "Personnel/Infrastructure/Operations"
-      }
-    ],
-    "variable_costs": [
-      {
-        "item": "AI computing call fees",
-        "unit_cost": "0.5 yuan per inference call",
-        "driver": "Active student count × per-capita AI interaction count"
-      }
-    ],
-    "unit_economics": {
-      "target_cac": "5000 yuan/institution",
-      "target_ltv": "80000 yuan",
-      "ltv_cac_ratio": "16:1"
-    }
-  }
-}
-```
+> See [Reference/examples.md](./Reference/examples.md) → "Step 4: Cost Structure Output" for output format.
 
 **Acceptance criteria**:
 - Main cost items identified
@@ -259,21 +120,7 @@ Start
 3. Design online/offline channel mix
 4. Plan channel priority
 
-**Output format**:
-```json
-{
-  "channels": [
-    {
-      "channel_id": "ch-1",
-      "name": "Education industry exhibitions and community operations",
-      "type": "direct/indirect",
-      "phase": "awareness/evaluation/purchase/delivery",
-      "cost_efficiency": "high/medium/low",
-      "priority": 1
-    }
-  ]
-}
-```
+> See [Reference/examples.md](./Reference/examples.md) → "Step 5: Channels Output" for output format.
 
 **Acceptance criteria**:
 - Covers all stages of customer journey
@@ -302,33 +149,7 @@ Start
 2. Strategic alliances
 3. Joint venture partners
 
-**Output format**:
-```json
-{
-  "key_activities": [
-    {
-      "activity": "AI learning engine algorithm optimization",
-      "type": "creation/delivery/platform",
-      "priority": "high/medium/low"
-    }
-  ],
-  "key_resources": [
-    {
-      "resource": "Adaptive learning algorithm engine",
-      "type": "physical/intellectual/human/financial",
-      "ownership": "self-built/outsourced/partnership"
-    }
-  ],
-  "key_partners": [
-    {
-      "partner": "Vocational college content partner",
-      "type": "supplier/strategic/joint_venture",
-      "purpose": "Obtain authoritative course content licensing",
-      "dependency": "Dependency level"
-    }
-  ]
-}
-```
+> See [Reference/examples.md](./Reference/examples.md) → "Step 6: Key Activities/Resources/Partners Output" for output format.
 
 **Acceptance criteria**
 - Key activities cover the full value creation process
@@ -344,19 +165,7 @@ Start
 2. Determine the mix of self-service/assisted service/community service
 3. Plan customer relationship evolution path
 
-**Output format**:
-```json
-{
-  "customer_relationships": [
-    {
-      "segment_id": "segment-1",
-      "relationship_type": "personal_assistance/dedicated_assistance/self_service/automated_service/community",
-      "description": "Self-service + Customer Success Manager assistance",
-      "touchpoints": ["Online help center and knowledge base", "Dedicated Customer Success Manager monthly check-in"]
-    }
-  ]
-}
-```
+> See [Reference/examples.md](./Reference/examples.md) → "Step 7: Customer Relationships Output" for output format.
 
 **Acceptance criteria**:
 - Each customer segment has a corresponding relationship type
@@ -369,147 +178,7 @@ Start
 
 **Output files**: bmc.json, assumptions.json
 
-### Output Validation Rules
-
-| Field Path | Type | Required | Description |
-|----------|------|------|------|
-| bmc.customer_segments | array | Yes | Customer segments list, at least 2 |
-| bmc.customer_segments[].segment_name | string | Yes | Customer group name, cannot be empty |
-| bmc.customer_segments[].characteristics | string[] | Yes | Group characteristics list, cannot be empty |
-| bmc.value_propositions | array | Yes | Value propositions list, at least 1 |
-| bmc.value_propositions[].proposition | string | Yes | Value proposition description, cannot be empty |
-| bmc.value_propositions[].pain_addressed | string | Yes | Pain point addressed, cannot be empty |
-| bmc.value_propositions[].gain_created | string | No | Gain created |
-| bmc.channels | array | Yes | Covers all stages of customer journey |
-| bmc.channels[].channel_name | string | Yes | Channel name, cannot be empty |
-| bmc.channels[].type | string | Yes | Channel type, enum: direct/indirect/partner |
-| bmc.channels[].phase | string | Yes | Channel phase, enum: awareness/evaluation/purchase/delivery/after_sales |
-| bmc.customer_relationships | array | Yes | Each segment has a corresponding relationship type |
-| bmc.customer_relationships[].type | string | Yes | Relationship type, enum: personal/automated/community/self_service |
-| bmc.customer_relationships[].segment | string | Yes | Corresponding customer group, cannot be empty |
-| bmc.revenue_streams | array | Yes | Revenue streams list, at least 1 |
-| bmc.revenue_streams[].stream_name | string | Yes | Revenue stream name, cannot be empty |
-| bmc.revenue_streams[].pricing_model | string | Yes | Pricing model, enum: subscription/transaction/freemium/advertising/licensing |
-| bmc.revenue_streams[].estimated_amount | string | No | Estimated amount range |
-| bmc.revenue_streams[].target_segment | string | No | Corresponding customer group |
-| bmc.key_resources | array | Yes | Covers physical/intellectual/human/financial |
-| bmc.key_resources[].resource | string | Yes | Core resource description, cannot be empty |
-| bmc.key_resources[].type | string | Yes | Resource type, enum: physical/intellectual/human/financial |
-| bmc.key_activities | array | Yes | Covers full value creation process |
-| bmc.key_activities[].activity | string | Yes | Core activity description, cannot be empty |
-| bmc.key_activities[].type | string | Yes | Activity type, enum: production/problem_solving/platform/network |
-| bmc.key_partnerships | array | Yes | Includes suppliers/strategic alliances/joint venture partners |
-| bmc.key_partnerships[].partner | string | Yes | Partner name, cannot be empty |
-| bmc.key_partnerships[].type | string | Yes | Partnership type, enum: strategic_alliance/joint_venture/buyer_supplier |
-| bmc.key_partnerships[].purpose | string | Yes | Partnership purpose, cannot be empty |
-| bmc.cost_structure | array | Yes | Cost structure list, at least 1 |
-| bmc.cost_structure[].cost_item | string | Yes | Cost item name, cannot be empty |
-| bmc.cost_structure[].type | string | Yes | Cost type, enum: fixed/variable |
-| bmc.cost_structure[].estimated_range | string | No | Estimated cost range |
-| bmc.cost_structure[].category | string | No | Cost category, enum: infrastructure/marketing/operations/personnel |
-| metadata.confidence | number | Yes | Between 0-1, overall confidence |
-| metadata.requires_human_review | boolean | Yes | Whether human review is needed |
-| assumptions[].assumption_id | string | Yes | Assumption unique identifier |
-| assumptions[].description | string | Yes | Assumption description, cannot be empty |
-| assumptions[].related_bmc_element | string | Yes | Related canvas element path |
-| assumptions[].validation_method | string | No | Validation method |
-| assumptions[].priority | string | Yes | critical/high/medium/low |
-| assumptions[].confidence | number | Yes | Between 0-1, assumption confidence |
-
-### Complete Business Canvas JSON
-
-```json
-{
-  "bmc": {
-    "customer_segments": [
-      {
-        "segment_name": "string - Customer group name",
-        "description": "string - Group description",
-        "characteristics": ["string - Group characteristics"]
-      }
-    ],
-    "value_propositions": [
-      {
-        "proposition": "string - Value proposition",
-        "target_segment": "string - Corresponding customer group",
-        "pain_addressed": "string - Pain point addressed",
-        "gain_created": "string - Gain created"
-      }
-    ],
-    "channels": [
-      {
-        "channel_name": "string - Channel name",
-        "type": "direct|indirect|partner",
-        "phase": "awareness|evaluation|purchase|delivery|after_sales"
-      }
-    ],
-    "customer_relationships": [
-      {
-        "type": "personal|automated|community|self_service",
-        "segment": "string - Corresponding customer group",
-        "description": "string - Relationship description"
-      }
-    ],
-    "revenue_streams": [
-      {
-        "stream_name": "string - Revenue stream name",
-        "pricing_model": "subscription|transaction|freemium|advertising|licensing",
-        "estimated_amount": "string - Estimated amount range",
-        "target_segment": "string - Corresponding customer group"
-      }
-    ],
-    "key_resources": [
-      {
-        "resource": "string - Core resource",
-        "type": "physical|intellectual|human|financial"
-      }
-    ],
-    "key_activities": [
-      {
-        "activity": "string - Core activity",
-        "type": "production|problem_solving|platform|network"
-      }
-    ],
-    "key_partnerships": [
-      {
-        "partner": "string - Partner",
-        "type": "strategic_alliance|joint_venture|buyer_supplier",
-        "purpose": "string - Partnership purpose"
-      }
-    ],
-    "cost_structure": [
-      {
-        "cost_item": "string - Cost item",
-        "type": "fixed|variable",
-        "estimated_range": "string - Estimated cost range",
-        "category": "infrastructure|marketing|operations|personnel"
-      }
-    ]
-  },
-  "metadata": {
-    "generated_at": "2026-06-15T10:30:00Z",
-    "confidence": "0.78",
-    "requires_human_review": true
-  }
-}
-```
-
-### Assumption List
-
-```json
-{
-  "assumptions": [
-    {
-      "assumption_id": "string - Assumption ID",
-      "description": "string - Assumption description",
-      "related_bmc_element": "string - Related canvas element (e.g., customer_segments.0)",
-      "validation_method": "string - Validation method",
-      "priority": "critical|high|medium|low",
-      "confidence": 0.0
-    }
-  ]
-}
-```
+> See [Reference/schema.md](./Reference/schema.md) for output validation rules, complete Business Canvas JSON schema, and assumption list JSON.
 
 ## Decision Rules
 
@@ -560,14 +229,9 @@ Start
 
 ## Degradation Strategy
 
-When upstream files do not exist, this Skill can still execute independently:
+When upstream files do not exist, this Skill can still execute independently.
 
-| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Notes |
-|---------------|---------|---------|------------|
-| product_context missing | User provides product description and target users → generate BMC based on description | Customer segments and value propositions lack discovery stage data support, overall confidence drops from 0.8 to 0.5, related canvas blocks confidence ≤ 0.4, annotate needs_human_validation: true | Require user to provide product concept, target user persona, and core pain point description |
-| market_data missing | User provides competitor and industry info → infer market size and competitor models based on description | Revenue model and cost structure lack market benchmark data, pricing reference missing, related canvas blocks confidence ≤ 0.4 | Require user to provide competitor business models, industry typical pricing, and market size data |
-| product_context + market_data both missing | User provides product description and target users → generate BMC based on description | Each module's overall confidence drops from 0.8 to 0.5, more assumption items, related canvas blocks confidence ≤ 0.3, annotate auto_filled: true | Require user to provide product description, target user persona, competitor info, and industry pricing reference |
-| All upstream files missing | Prompt user to execute prior stages first, or generate BMC directly based on user-provided product description and target users | Overall confidence drops from 0.8 to 0.3, most content is assumption inference, related canvas blocks confidence ≤ 0.3, annotate auto_filled: true | Require user to provide product concept, target users, value proposition, or upload persona.json/opportunity-definition.json files |
+> See [Reference/decision-tables.md](./Reference/decision-tables.md) → "Degradation Strategy" for the full degradation table (missing input scenarios, impact, and data acquisition notes).
 
 ## Data Acquisition Notes
 
@@ -581,23 +245,7 @@ This Skill requires discovery stage output data (Persona, opportunity brief, etc
 
 ## Upstream Change Response
 
-### Upstream Change Impact Table
-
-| Upstream Change | Impact Scope | Response Strategy |
-|----------|----------|----------|
-| persona.json user persona update | Customer segments, customer relationships modules need re-population | Re-execute Step 1 and Step 7, annotate change source |
-| opportunity-definition update | Value proposition, revenue model may need adjustment | Re-evaluate value proposition priority, check revenue model match |
-| competitor-analysis competitor data update | Value proposition differentiation, revenue model pricing reference | Re-execute Step 2 and Step 3, update competitor benchmarking data |
-| Market size data change | Revenue expectations and cost structure | Recalculate unit economics indicators, update market size assumptions |
-
-### Downstream Notification Mechanism Table
-
-| Change Type | Impact Scope | Notification Method |
-|----------|----------|----------|
-| Customer segment adjustment | business-value-fit, business-pricing | Output file version number + change summary |
-| Value proposition change | business-value-fit, positioning-strategy | Output file version number + change summary |
-| Revenue model change | business-pricing | Output file version number + change summary |
-| Cost structure change | business-pricing, business-strategy-report | Output file version number + change summary |
+> See [Reference/decision-tables.md](./Reference/decision-tables.md) → "Upstream Change Impact Table" and "Downstream Notification Mechanism Table" for change impact and notification details.
 
 ---
 

@@ -34,8 +34,6 @@ This Skill is responsible for automatically converting upstream phase outputs (u
 - **pages[].data_requirements must be complete**: Each page must explicitly specify what data is needed, data operation types (read/create/update/delete), which entity it relates to, and which fields are needed. This is the direct input for UI page generation and API design
 - **entities[].api_endpoints is advisory**: What PRD defines is business operation requirements (e.g., "users need to view the course list"); specific API paths are designed by api-design-spec
 
-See detailed descriptions in each section below.
-
 ## 1. PRD Complete 9-Section Structure
 
 All projects use the same unified most-complete 9-section structure. No tiering/simplification — this ensures downstream consumers (design-brief, brainstorming, growth, ops) always receive full contract data.
@@ -131,141 +129,11 @@ Strategic objectives → OKR → Key Results → Primary metrics → Functional 
 
 ## 3. Version Lifecycle [Conditional]
 
-### 3.1 Version State Machine
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                                                             │
-│   v0.1 AI draft  →  v0.2 PM refinement  →  v0.3 Review revision │
-│       ↓                ↓               ↓                    │
-│   Auto-generated    Manual revision    Review feedback       │
-│                                                             │
-│   v1.0 Finalized  →  v1.x Dev change  →  v2.0 Release update │
-│       ↓               ↓               ↓                    │
-│   Review passed    Adjusted during dev  Post-release retrospective │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### 3.2 Version Definition
-
-| Version | Trigger Condition | Change Authority | Review Requirement |
-|------|----------|----------|----------|
-| v0.1 | AI auto-generated | AI | None |
-| v0.2 | PM first revision | PM | None |
-| v0.3 | Post-review revision | PM + reviewer | None |
-| v1.0 | Review passed and finalized | Change committee | Full review |
-| v1.x | Change during development | Dev + PM | Change review |
-| v2.0 | Major version update after release | PM | Retrospective review |
-
-### 3.3 State Transitions
-
-| Current State | Transition Action | Next State | Trigger Condition |
-|----------|----------|----------|----------|
-| Draft | Submit for review | In Review | All 4 gates passed |
-| In Review | Review passed | Finalized | Review committee approved |
-| In Review | Review not passed | Review Revision | Blocking items exist |
-| Finalized | Trigger change | Dev Change | Adjustment needed during development phase |
-| Released | Publish update | Archived | New version released |
+> See [Reference/decision-tables.md](Reference/decision-tables.md#version-lifecycle) for the version state machine diagram, version definition table, and state transitions table.
 
 ## 4. Execution Decision Logic [Conditional]
 
-### 4.1 Generation Order Dependency Graph
-
-**Topological Sort Rules**:
-```
-Generation priority (high to low):
-1. Meta information (Section 1) - no dependencies
-2. Background & objectives (Section 2) - depends on upstream exploration output
-3. Solution design (Section 3) - depends on Section 2 and design output
-4. Boundaries & constraints (Section 4) - depends on Section 3
-5. Non-functional requirements (Section 5) - depends on Section 3
-6. Tracking plan (Section 6) - depends on Section 3
-7. Acceptance criteria (Section 7) - depends on Section 2, 3
-8. Release & operations (Section 8) - depends on Section 7
-9. Appendix (Section 9) - depends on all other Sections
-```
-
-### 4.2 Upstream Conflict Decision Rules
-
-**Conflict Types and Handling Strategies**:
-
-| Conflict Type | Decision Rule | Handling Strategy | Escalation Condition |
-|----------|----------|----------|----------|
-| **Objective conflict** | Two OKRs in opposite directions | Priority arbitration | KPI impact > 10% |
-| **Solution conflict** | Multiple solutions point to different implementations | Solution comparison scoring | Major architecture adjustment |
-| **Metric conflict** | Metric optimization directions contradict | Guardrail metric constraints | Guardrail metric breached |
-| **Priority conflict** | Feature priority ranking contradicts | MoSCoW re-prioritization | MVP scope change > 30% |
-
-**Escalation Decision Matrix**:
-```
-Escalation thresholds:
-- Number of sources ≥ 2 and conclusions inconsistent
-- MVP scope change > 30%
-- Involves security compliance issues
-- Involves major technical debt
-
-Escalation path:
-1. Record conflict details
-2. Convene stakeholder meeting
-3. Produce decision minutes
-4. Update PRD
-```
-
-### 4.3 Upstream Data Incomplete Handling
-
-**Missing Level Definition**:
-
-| Level | Definition | Handling Method |
-|------|------|----------|
-| **L0** | Fields complete, but content is empty | AI supplements description, annotates low confidence |
-| **L1** | Some fields missing | Fill with template, mark as pending confirmation |
-| **L2** | Core fields completely missing | Interrupt process, force supplementation |
-
-**Missing Handling Flow**:
-```
-Detect missing → Determine level → Apply strategy → Output result
-
-L0 handling:
-1. Annotate "AI supplemented, pending confirmation"
-2. Provide confidence score
-3. Generate confirmation question list
-
-L1 handling:
-1. Annotate "Pending supplementation"
-2. Fill with default values or template
-3. Block related downstream generation
-4. Generate supplementation list
-
-L2 handling:
-1. Annotate "Missing core input"
-2. Output interruption report
-3. Specify missing fields
-4. Require re-input
-```
-
-### 4.4 Self-Correction Loop
-
-**Trigger Conditions**:
-- Gate check failure
-- Human feedback correction
-- Upstream data update
-
-**Loop Limits**:
-- Maximum self-correction rounds: 2
-- Per-round timeout: 3 minutes
-- Logical contradiction issues do not enter the self-correction loop; directly tag for manual review
-- After exceeding limits, output problem report, human intervention
-
-**Self-Correction Flow**:
-```
-Round N correction:
-1. Analyze failure cause
-2. Generate correction plan
-3. Apply correction
-4. Re-execute gate check
-5. If passed, end; otherwise enter round N+1
-```
+> See [Reference/decision-tables.md](Reference/decision-tables.md#execution-decision-logic) for the generation order dependency graph, upstream conflict decision rules, upstream data incomplete handling (L0/L1/L2), and self-correction loop flow.
 
 ## 5. Upstream/Downstream Handoff [Conditional]
 
@@ -382,126 +250,16 @@ prd.json contains 7 top-level arrays: features, pages, entities, user_flows, non
 
 ## Decision Rules (Detailed)
 
-### 9.1 Gate Pass Rules
-
-**Hard Conditions**:
-- All 4 gates must pass
-- Failure of any gate blocks entry into the development phase
-
-**Gate Status Mapping**:
-| Gate Status | Enter Development | Finalize | Release |
-|----------|----------|------|------|
-| All passed | ✓ | ✓ | ✓ |
-| Gate 1 failed | ✗ | ✗ | ✗ |
-| Gate 2 failed | ✗ | ✗ | ✗ |
-| Gate 3 failed | Human confirmation required | Human confirmation required | ✗ |
-| Gate 4 failed | Supplementation required | Supplementation required | ✗ |
-
-### 9.2 Conflict Escalation Rules
-
-**Situations Requiring Escalation**:
-1. **Source conflict**: Requirements involve ≥ 2 upstream sources, and conclusions are inconsistent
-2. **Scope change**: MVP scope change > 30%
-3. **Security compliance**: Involves user privacy, security compliance, financial regulation, and other sensitive areas
-4. **Resource overrun**: Requirement resource consumption exceeds 50% of the original plan
-5. **Technical risk**: Solution involves major technical architecture adjustment
-
-**Escalation Process**:
-```
-1. Identify escalation trigger conditions
-2. Generate escalation report (conflict details + stakeholder positions + impact analysis)
-3. Determine escalation level (PM/Product committee/Management)
-4. Convene decision meeting
-5. Produce decision minutes
-6. Update PRD
-```
-
-### 9.3 Open Issue Management [Deep]
-
-**Open Issue Status**:
-- **Open**: Unresolved
-- **In Progress**: Being handled
-- **Resolved**: Resolved
-- **Won't Fix**: Explicitly not doing
-
-**Finalization Rules**:
-- All Open issues must be Resolved or converted to Won't Fix
-- Output issue closure report at finalization
+> See [Reference/decision-tables.md](Reference/decision-tables.md#detailed-decision-rules) for gate pass rules, conflict escalation rules, and open issue management.
 
 ## Quality Checks (Detailed)
 
-### 10.1 Completeness Standards (P0)
-
-| Check Item | Standard | Check Method |
-|--------|------|----------|
-| Structure completeness | All 9 sections exist | Section existence scan |
-| Field completeness | Required fields 100% filled | Field non-empty check |
-| Acceptance coverage | Main flow + boundary + exception fully covered | Given-When-Then coverage rate |
-| State coverage | All 5 states defined | State type enum matching |
-
-### 10.2 Consistency Standards (P1)
-
-| Check Item | Standard | Check Method |
-|--------|------|----------|
-| Objective traceability chain | OKR→metric→feature→acceptance connected | Traceability chain completeness check |
-| Priority consistency | MoSCoW consistent across all references | Priority cross-validation |
-| Version consistency | Version number matches change log | Version number consistency check |
-
-### 10.3 Ambiguity Elimination Standards (P1)
-
-| Check Item | Standard | Check Method |
-|--------|------|----------|
-| Quantifier quantification | No fuzzy quantifiers (fast→<2s) | Quantifier regex matching + replacement |
-| Dangling references | All references point to existing targets | Reference resolution + existence validation |
-| Logical contradictions | No precondition-result contradictions | Logic rule engine check |
-| UI instruction overreach | AC only describes business rules, does not include specific UI/color/control forms | UI form terminology detection, violations tagged with needs_human_review |
-
-### 10.4 Executability Standards (P2)
-
-| Check Item | Standard | Check Method |
-|--------|------|----------|
-| Acceptance format | Given-When-Then format correct | Format regex matching |
-| Judgment clarity | Then result can be objectively judged | Judgment condition testability check |
-| Coverage completeness | Happy Path + boundary + exception | Coverage rate statistical analysis |
+> See [Reference/quality-checks.md](Reference/quality-checks.md) for the detailed completeness (P0), consistency (P1), ambiguity elimination (P1), and executability (P2) standards tables.
 
 ## Degradation Strategy
 
-### Upstream File Missing Degradation Plan
-
-| Missing Scope | Degradation Plan | Output Impact | Data Acquisition Instructions |
-|----------|----------|----------|------------|
-| insight_analysis missing | Supplement user insights based on user description and opportunity_definition, annotate "Insight data pending supplementation" | Section 2 user requirements section simplified, requirements collection may not be complete enough | Ask user to provide user insight descriptions or upload insight-analysis.json file |
-| opportunity_definition missing | Infer opportunities and priorities based on user description and insight_analysis, annotate "Priority pending confirmation" | Requirements understanding and priority ranking may not be precise enough | Ask user to provide opportunity definition and priority descriptions or upload opportunity-definition.json file |
-| Both insight_analysis and opportunity_definition missing | Execute built-in requirements collection, understanding, and prioritization based on user verbal description (Step 1-3), annotate "Requirements management data is AI-inferred" | Requirements management full process relies on AI inference, confidence reduced | Ask user to provide core requirements, target users, and priority ranking |
-| exploration_outputs missing | Background and objectives section annotated "Pending supplementation", generate simplified version based on user description | Section 2 content simplified | Ask user to provide product background and objective descriptions or upload discovery phase output files |
-| strategy_outputs missing | OKR alignment and priority judgment section annotated "Pending supplementation" | Section 2.2 objective definition simplified | Ask user to provide strategic objectives and OKR or upload strategy phase output files |
-| ideation_outputs missing | Solution design section annotated "Pending supplementation", generate feature list based on user description | Section 3 feature specs simplified | Ask user to provide feature solution descriptions or upload ideation phase output files |
-| design_outputs missing | Interaction logic and state design annotated "Pending supplementation" | Section 3.2 interaction logic simplified | Ask user to provide interaction design descriptions or upload design phase output files |
-| metrics_outputs missing | Tracking plan annotated "Pending supplementation" | Section 6 content simplified | Ask user to provide core metrics and tracking requirements or upload metrics phase output files |
-| All upstream missing | Generate a baseline PRD (unified complete structure, content fields annotated "AI-inferred, pending confirmation") based on user verbal description, with built-in requirements collection, understanding, and prioritization | Output unified complete PRD with low-confidence annotations | Ask user to provide product requirements description, core features, and target users |
-
-### Data Acquisition Instructions
-
-When upstream files are missing, the user needs to provide the following information to support degraded generation:
-- **Product requirements description**: What are the core requirements, what problem to solve
-- **Target users**: Who are the product's target user groups
-- **Core feature list**: The main feature points that need to be implemented
+> See [Reference/decision-tables.md](Reference/decision-tables.md#degradation-strategy) for the upstream file missing degradation plan and data acquisition instructions.
 
 ## Upstream Change Response
 
-When upstream inputs change, this Skill's response strategy:
-
-| Upstream Change | Impact Scope | Response Strategy |
-|----------|----------|----------|
-| User insight added/changed | User requirements section in PRD | Annotate affected requirement items, recommend human confirmation on whether to update PRD |
-| Business model change | Business model section in PRD | Annotate affected business logic, recommend human confirmation on whether to update PRD |
-| OKR adjustment | Objectives and metrics section in PRD | Annotate affected metric definitions, recommend human confirmation on whether to update PRD |
-
-When the PRD itself changes, the notification mechanism for downstream:
-
-| PRD Change Type | Notification Scope | Notification Method |
-|-------------|----------|----------|
-| Feature point addition/removal | change-impact-analysis | Mark change impact scope, trigger change impact analysis |
-| Priority adjustment | change-impact-analysis | Mark priority change, trigger impact assessment |
-| Objective metric change | metrics-system, tracking-plan | Mark metric change, trigger measurement system update |
-| Business logic change | business-model-canvas, business-strategy-report | Mark business logic change, trigger strategy document update |
+> See [Reference/decision-tables.md](Reference/decision-tables.md#upstream-change-response) for the upstream change impact table and downstream notification mechanism table.

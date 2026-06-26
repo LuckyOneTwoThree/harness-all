@@ -124,7 +124,7 @@ For each feature in ENGINEERING_PLAN.md Section 5 execution order (topological s
 4. After each feature completes:
    - Update ENGINEERING_PLAN.md Section 2 Status column (pending → done)
    - Update FEATURES.md status board
-   - Update product-level state.yaml substage (e.g., `substage: feature-F03`)
+   - Update product-level state.yaml nested_progress (e.g., `nested_progress: feature-F03 in progress`)
 5. **Integration Checkpoints** (per Section 6): when a checkpoint trigger is reached, run the checkpoint checks before continuing to the next feature.
 
 **Interruption handling**: If a per-feature LOOP fails or hits hard circuit breaker, pause the entire product workflow, report to user. User can: fix the feature and resume, or skip the feature and continue with others (mark as "skipped" in ENGINEERING_PLAN.md — but dependent features cannot start).
@@ -173,7 +173,7 @@ Update `memory/progress.md` and archive the session.
 | File | Description |
 |------|-------------|
 | docs/engineering/ENGINEERING_PLAN.md | Product-level engineering plan (feature inventory + shared infrastructure + dependency graph + execution order) |
-| docs/product/FEATURES.md | Dynamic status board (updated per feature completion) |
+| .harness/FEATURES.md | Dynamic status board (updated per feature completion) |
 | Source code for shared infrastructure | Phase 1 outputs (auth/API client/state management/utils) |
 | Source code for all features | Phase 2 outputs (one per feature) |
 | loops/specs/<product-task>/state.yaml | Product-level loop state |

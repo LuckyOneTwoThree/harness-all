@@ -159,130 +159,7 @@ Traffic
 
 Generate complete experiment configuration:
 
-```yaml
-ab_test_design:
-  created_at: "2024-01-15T10:00:00Z"
-
-  # Experiment basic info
-  experiment:
-    id: "exp_20240115_simplified_register"
-    name: "Simplified Registration Flow Experiment"
-    owner: "product_team"
-    priority: "high"
-
-  # Structured hypothesis
-  hypothesis:
-    original: "Simplifying the registration flow can improve conversion rate"
-    structured: |
-      If we simplify the registration flow from 5 steps to 3 steps,
-      then the registration completion rate will increase by 10%,
-      because users face less friction,
-      for all new users on iOS and Android.
-
-    components:
-      change: "Simplify registration from 5 steps to 3 steps"
-      expected_outcome: "Registration rate +10%"
-      mechanism: "Reduced user friction"
-      target_users: "New users on iOS and Android"
-
-  # Metric selection
-  metrics:
-    primary_metric:
-      name: "registration_completion_rate"
-      definition: "Number of users who completed registration / Number of users who started registration"
-      baseline_value: 0.35
-      minimum_detectable_effect: 0.10  # 10% relative lift
-
-    guardrail_metrics:
-      - name: "d7_retention_rate"
-        definition: "7-day retention rate after registration"
-        baseline_value: 0.42
-        acceptable_change: -0.02  # Allow 2% decline
-      # ... same structure can be extended
-
-    secondary_metrics:
-      - name: "registration_abandon_rate"
-        definition: "Registration abandonment rate"
-      # ... same structure can be extended
-
-  # Sample size calculation
-  sample_size:
-    per_group: 12400
-    total: 24800
-    daily_eligible_users: 4000
-    expected_duration_days: 7
-    minimum_duration_days: 5
-
-    assumptions:
-      baseline_rate: 0.35
-      mde: 0.10
-      significance_level: 0.05
-      statistical_power: 0.80
-
-  # Traffic split plan
-  traffic_split:
-    strategy: "random"
-    allocation:
-      control: 50
-      treatment: 50
-
-    targeting:
-      platform: ["ios"]  # ... same structure can be extended
-      user_type: "new_user"
-      exclusion:
-        - registered_users
-        # ... same structure can be extended
-
-    hash_salt: "exp_reg_2024_v1"
-
-  # Termination conditions
-  termination_conditions:
-    automatic:
-      - condition: "Reached target sample size"
-        action: "Trigger result analysis"
-      # ... same structure can be extended
-
-    manual:
-      - condition: "Guardrail metric significantly declined"
-        action: "Alert + human decision"
-      # ... same structure can be extended
-
-    minimum_runtime_days: 5
-    maximum_runtime_days: 30
-
-  # Experiment variants
-  variants:
-    control:
-      name: "Current registration flow"
-      description: "5-step registration flow, including email and phone verification"
-      config: {}
-
-    treatment:
-      name: "Simplified registration flow"
-      description: "3-step registration flow, phone verification only"
-      config:
-        steps: 3
-        required_fields: ["phone"]
-        optional_fields: ["email", "nickname"]
-        skip_verification: false
-
-  # Technical configuration
-  technical:
-    platform: "internal_ab_platform"
-    layer: 2
-    mutex_group: "registration_flow"
-    traffic_allocation: 100  # 100% of available traffic
-
-  # Risk assessment
-  risk_assessment:
-    overall_risk: "low"
-    reasons:
-      - "Only affects new user registration flow"
-      # ... same structure can be extended
-    mitigation:
-      - "Configure real-time monitoring"
-      # ... same structure can be extended
-```
+> See [Reference/experiment-config-example.md](./Reference/experiment-config-example.md) for the full ab_test_design YAML example (experiment info, structured hypothesis, metrics, sample size, traffic split, termination conditions, variants, technical config, risk assessment).
 
 ### Output Depth Tiers
 
@@ -298,23 +175,9 @@ ab_test_design:
 
 **Output file**: experiment_design.json
 
-**Output Schema**:
+**Output Schema** and validation rules:
 
-```json
-{
-  "type": "object",
-  "required": ["hypothesis", "primary_metric", "sample_size", "traffic_allocation"],
-  "properties": {
-    "hypothesis": {"type": "object", "description": "Structured hypothesis, containing If-Then-Because-For"},
-    "primary_metric": {"type": "object", "description": "Primary metric definition, including name and calculation method"},
-    "guardrail_metrics": {"type": "array", "description": "Guardrail metric list, covering retention/revenue/technical dimensions"},
-    "sample_size": {"type": "object", "description": "Sample size estimation, including calculation parameters and results"},
-    "traffic_allocation": {"type": "object", "description": "Traffic split plan, including ratios and layering strategy"},
-    "termination_conditions": {"type": "object", "description": "Termination conditions, including early termination and maximum duration"},
-    "risk_assessment": {"type": "object", "description": "Risk assessment and mitigation measures"}
-  }
-}
-```
+> See [Reference/output-schema-and-validation.md](./Reference/output-schema-and-validation.md) for the output JSON schema (hypothesis, primary_metric, guardrail_metrics, sample_size, traffic_allocation, termination_conditions, risk_assessment) and the field validation rules table.
 
 ### Required Outputs
 
@@ -341,29 +204,6 @@ ab_test_design:
 □ Risk assessment complete
 □ Experiment configuration reviewed and approved
 ```
-
-## Output Validation Rules
-
-| Field Path | Type | Required | Description |
-|----------|------|------|------|
-| ab_test_design | object | Yes | Experiment design root object |
-| ab_test_design.experiment | object | Yes | Experiment basic info |
-| ab_test_design.experiment.id | string | Yes | Experiment ID |
-| ab_test_design.experiment.name | string | Yes | Experiment name |
-| ab_test_design.hypothesis | object | Yes | Structured hypothesis |
-| ab_test_design.hypothesis.structured | string | Yes | If-Then-Because-For format hypothesis |
-| ab_test_design.metrics | object | Yes | Metric system |
-| ab_test_design.metrics.primary_metric | object | Yes | Primary metric |
-| ab_test_design.metrics.primary_metric.name | string | Yes | Primary metric name |
-| ab_test_design.metrics.primary_metric.baseline_value | number | Yes | Baseline value |
-| ab_test_design.metrics.guardrail_metrics | array | Yes | Guardrail metric list, at least 2 |
-| ab_test_design.sample_size | object | Yes | Sample size calculation |
-| ab_test_design.sample_size.per_group | number | Yes | Sample size per group |
-| ab_test_design.sample_size.total | number | Yes | Total sample size |
-| ab_test_design.sample_size.expected_duration_days | number | Yes | Expected days |
-| ab_test_design.traffic_split | object | Yes | Traffic split plan |
-| ab_test_design.termination_conditions | object | Yes | Termination conditions |
-| ab_test_design.risk_assessment | object | Yes | Risk assessment |
 
 ## Upstream Change Response
 

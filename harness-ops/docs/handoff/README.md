@@ -37,3 +37,7 @@
 - Filename is fixed (no date): `<source>-to-<target>.md`
 - Downstream only looks at the latest state; historical versions are not retained
 - For historical tracing, check git log
+
+## Write Access
+
+Contract documents follow one-way write permission isolation (per ARCHITECTURE.md §4.3). Only the source framework may write/modify a contract document; consumers read-only. Templates are scaffolds and do not participate in cross-framework flow until instantiated.

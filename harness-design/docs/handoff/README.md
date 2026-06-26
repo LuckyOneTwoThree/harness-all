@@ -28,3 +28,7 @@ For example:
 - `design-to-solo-template.md`: harness-design → harness-solo dedicated template (includes AC-xxx/DAC-xxx sections + component-map.json reference)
 
 Copy and fill in based on actual conditions.
+
+## Write Access
+
+Contract documents follow one-way write permission isolation (per ARCHITECTURE.md §4.3). Only the source framework may write/modify a contract document; consumers read-only. Templates are scaffolds and do not participate in cross-framework flow until instantiated.

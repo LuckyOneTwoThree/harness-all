@@ -54,26 +54,7 @@ Trigger conditions:
 | Backend review report | JSON | ○ | docs/handoff/solo-to-pm.md (from harness-solo) | Backend architecture review results |
 | API coverage report | JSON | ○ | docs/handoff/solo-to-pm.md (from harness-solo) | PRD/frontend alignment coverage report |
 
-### Story Acceptance Criteria Structure Example
-
-```json
-{
-  "story_id": "story_001",
-  "title": "Phone verification code login",
-  "build_ref": "build_2024_0125_001",
-  "version": "v2.1.0",
-  "acceptance_criteria": [
-    {
-      "id": "AC-001",
-      "format": "given_when_then",
-      "content": "Given the user is on the login page\nWhen the user enters a valid phone number 13800138000\nAnd clicks the get verification code button\nThen the system sends a 6-digit verification code to that phone number\nAnd the page displays a success message",
-      "automatable": true,
-      "priority": "P0"
-    }
-    // ... same structure can be extended
-  ]
-}
-```
+> See [Reference/examples.md](./Reference/examples.md) for the Story Acceptance Criteria Structure JSON example.
 
 ## Execution Steps
 
@@ -90,32 +71,7 @@ Trigger conditions:
 | And | Append to previous When | Continuous actions |
 | Then | Expected result array | Assertion verification |
 
-**Parse output**:
-
-```json
-{
-  "parsed_criteria": [
-    {
-      "ac_id": "AC-001",
-      "setup": [
-        "Open the login page",
-        "Confirm the page has finished loading"
-      ],
-      "actions": [
-        "Enter phone number: 13800138000",
-        "Click the get verification code button"
-      ],
-      "assertions": [
-        "Verify the SMS sending API is called",
-        "Verify a success response is returned",
-        "Verify the page displays a success message"
-      ],
-      "priority": "P0",
-      "automatable": true
-    }
-  ]
-}
-```
+> See [Reference/examples.md](./Reference/examples.md) for the Acceptance Criteria Parse Output JSON example.
 
 #### 1.2 Test Strategy Selection [Core]
 
@@ -128,46 +84,11 @@ Trigger conditions:
 | Unit testing | Independent function logic | Jest/JUnit execution instruction generation |
 | Integration testing | Inter-module interaction | Hybrid strategy execution instruction generation |
 
-**Strategy selection rules**:
-
-```json
-{
-  "strategy_selection": {
-    "AC-001": {
-      "selected_strategy": "api_automation",
-      "reason": "Acceptance point is API call and response",
-      "test_framework": "rest_assured",
-      "script_location": "tests/api/test_login.py::test_send_verification_code"
-    },
-    "AC-002": {
-      "selected_strategy": "e2e_automation",
-      "reason": "Includes UI verification such as page navigation",
-      "test_framework": "cypress",
-      "script_location": "tests/e2e/test_login.py::test_verify_code_login"
-    }
-  }
-}
-```
+> See [Reference/examples.md](./Reference/examples.md) for the Strategy Selection Rules JSON example.
 
 #### 1.3 Test Data Preparation [Conditional]
 
-```json
-{
-  "test_data_requirements": {
-    "AC-001": {
-      "phone": "13800138000",
-      "type": "valid_phone",
-      "source": "test_data/phones/valid.json"
-    },
-    "AC-002": {
-      "phone": "13800138000",
-      "verification_code": "123456",
-      "type": "valid_code",
-      "source": "generated_by_AC-001"
-    }
-  }
-}
-```
+> See [Reference/examples.md](./Reference/examples.md) for the Test Data Preparation JSON example.
 
 #### 1.4 Test Environment Configuration Recommendations [Conditional]
 
@@ -182,111 +103,13 @@ Trigger conditions:
 | Third-party Mock | Mock service available | 30s |
 | Test account | Test data preparation complete | 20s |
 
-**Environment isolation configuration**:
-
-```json
-{
-  "isolation_config": {
-    "test_db": "test_db_isolation_enabled",
-    "test_cache_prefix": "test:",
-    "network_isolation": "enabled",
-    "clean_strategy": "per_suite"
-  }
-}
-```
-
-**Mock service configuration recommendations**:
-
-```json
-{
-  "mock_config": {
-    "sms_gateway": {
-      "enabled": true,
-      "behavior": "record_and_playback",
-      "record_file": "mocks/recordings/sms_gateway.json"
-    },
-    "wechat_auth": {
-      "enabled": true,
-      "behavior": "simulate_success",
-      "user_id": "mock_wechat_123"
-    }
-  }
-}
-```
+> See [Reference/examples.md](./Reference/examples.md) for the Environment Isolation Configuration and Mock Service Configuration JSON examples.
 
 #### 1.5 Execution Instruction Generation [Core]
 
-**Execution plan generation**:
-
-```json
-{
-  "execution_plan": {
-    "total_criteria": 12,
-    "parallel_groups": [
-      {
-        "group_id": "group_1",
-        "criteria": ["AC-001", "AC-002"],
-        "execution_mode": "sequential",
-        "reason": "Dependency exists (AC-002 depends on AC-001 data)"
-      }
-      // ... same structure can be extended
-    ],
-    "estimated_duration_minutes": 25
-  }
-}
-```
-
-**Execution engine configuration recommendations**:
-
-```json
-{
-  "execution_config": {
-    "runner": "pytest",
-    "browsers": ["chrome", "firefox"],
-    "retry_config": {
-      "enabled": true,
-      "max_retries": 2,
-      "retry_on_failure": ["timeout", "network_error"]
-    },
-    "timeout_config": {
-      "test_case_timeout": 120,
-      "api_call_timeout": 30,
-      "page_load_timeout": 60
-    },
-    "reporting": {
-      "generate_html_report": true,
-      "generate_json_report": true,
-      "screenshots_on_failure": true,
-      "video_recording": "on_failure"
-    }
-  }
-}
-```
+> See [Reference/examples.md](./Reference/examples.md) for the Execution Plan Generation and Execution Engine Configuration JSON examples.
 
 #### 1.6 Decision Rule Generation [Core]
-
-**Result aggregation**:
-
-```json
-{
-  "result_aggregation": {
-    "summary": {
-      "total_criteria": 12,
-      "passed": 10,
-      "failed": 2,
-      "skipped": 0,
-      "pass_rate": 0.83
-    },
-    "by_priority": {
-      "P0": {"total": 4, "passed": 3, "failed": 1},
-      "P1": {"total": 5, "passed": 5, "failed": 0},
-      "P2": {"total": 3, "passed": 2, "failed": 1}
-    },
-    "execution_duration_seconds": 1200,
-    "automated_execution_rate": 0.92
-  }
-}
-```
 
 **Gate decision**:
 
@@ -297,28 +120,7 @@ Trigger conditions:
 | Automation rate < 90% | **Block** | Block release, increase automation |
 | P2 failures > 5 | **Warning** | Allow release, commitment to fix required |
 
-**Gate output**:
-
-```json
-{
-  "gate_decision": {
-    "passed": false,
-    "blocked_by": "P0_FAILURE",
-    "blocking_items": [
-      {
-        "ac_id": "AC-002",
-        "priority": "P0",
-        "failure_reason": "Did not navigate to home page after successful login"
-      }
-    ],
-    "release_allowed": false,
-    "next_actions": [
-      "Fix the defect corresponding to AC-002",
-      "Re-run acceptance"
-    ]
-  }
-}
-```
+> See [Reference/examples.md](./Reference/examples.md) for the Result Aggregation and Gate Output JSON examples.
 
 #### 1.7 Failure Analysis Rule Generation [Deep]
 
@@ -332,62 +134,7 @@ Trigger conditions:
 | Data issue | Test data is inaccurate | Update test data |
 | Requirement change | Requirements and implementation out of sync | Confirm whether to update requirements |
 
-**Classification output**:
-
-```json
-{
-  "failure_analysis": [
-    {
-      "ac_id": "AC-002",
-      "failure_type": "code_defect",
-      "evidence": {
-        "expected": "Page navigates to home page",
-        "actual": "Page stays on login page",
-        "error_message": "Navigation timeout after 30000ms",
-        "screenshots": ["screenshots/ac002_failure_1.png"],
-        "logs": ["logs/browser_console.log"]
-      },
-      "root_cause_hypothesis": "Frontend routing logic not executed correctly after successful login",
-      "likely_location": "frontend/router/index.ts",
-      "confidence": 0.85
-    }
-  ]
-}
-```
-
-**Fix suggestion generation**:
-
-```json
-{
-  "fix_suggestions": [
-    {
-      "ac_id": "AC-002",
-      "fix_type": "code_fix",
-      "location": "frontend/pages/login.vue",
-      "line_range": "45-60",
-      "suggestion": "Add router.push('/home') call in the login success callback",
-      "verification_plan": "Re-run AC-002 acceptance test"
-    }
-  ]
-}
-```
-
-**Regression risk assessment**:
-
-```json
-{
-  "regression_risk": {
-    "scope": "limited",
-    "affected_stories": ["story_002", "story_003"],
-    "risk_level": "medium",
-    "reason": "Login module changes may affect user registration flow",
-    "recommendations": [
-      "Recommend running regression tests for story_002 and story_003",
-      "Recommend running login-related E2E test suite"
-    ]
-  }
-}
-```
+> See [Reference/examples.md](./Reference/examples.md) for the Failure Classification Output, Fix Suggestion Generation, and Regression Risk Assessment JSON examples.
 
 ### Step 2: Sign-off Report Generation [Core]
 
@@ -423,27 +170,13 @@ Integrate test results, map to acceptance criteria:
 | AC-001 | 5 | 5 | 0 | 0 | 100% | ✅ |
 | AC-002 | 3 | 2 | 1 | 0 | 67% | ❌ |
 
-**Overall statistics**:
-
-| Metric | Value |
-|------|------|
-| Total test case count | |
-| Passed count | |
-| Failed count | |
-| Blocked count | |
-| Skipped count | |
-| Overall pass rate | |
-| Must requirement pass rate | |
+**Overall statistics**: total test case count, passed/failed/blocked/skipped counts, overall pass rate, Must requirement pass rate.
 
 #### 2.3 Defect Analysis [Conditional]
 
 Perform defect analysis on failed and blocked test cases:
 
-**Defect list**:
-
-| Defect ID | Related Acceptance Criterion | Severity | Description | Reproduction Steps | Status | Owner |
-|----------|------------|---------|------|---------|------|--------|
-| BUG-001 | AC-002 | Critical | First screen load timeout | 1.Open home page 2.Wait | Pending fix | |
+**Defect list**: Defect ID, Related Acceptance Criterion, Severity, Description, Reproduction Steps, Status, Owner.
 
 **Severity definition**:
 
@@ -457,11 +190,7 @@ Perform defect analysis on failed and blocked test cases:
 
 #### 2.4 Open Issue Assessment [Conditional]
 
-**Open issue list**:
-
-| ID | Description | Severity | Impact Scope | Handling Plan | Estimated Fix Time | Risk Assessment |
-|------|------|---------|---------|---------|------------|---------|
-| | | | | Fix/Mitigate/Accept | | |
+**Open issue list**: ID, Description, Severity, Impact Scope, Handling Plan (Fix/Mitigate/Accept), Estimated Fix Time, Risk Assessment.
 
 **Open issue acceptance impact judgment**:
 
@@ -473,26 +202,7 @@ Perform defect analysis on failed and blocked test cases:
 
 #### 2.5 Acceptance Conclusion [Core]
 
-**Acceptance conclusion template**:
-
-```
-Acceptance Conclusion: ✅ Pass / ⚠️ Conditional Pass / ❌ Fail
-
-Acceptance Scope: {version number} {functional scope}
-Acceptance Date: {date}
-Acceptance Party: {acceptance party}
-
-Passed Items: {N} items ({X}%)
-Failed Items: {N} items ({X}%)
-Must Requirement Pass Rate: {X}%
-
-Open Issues: {N}
-- Fatal/Critical: {N}
-- General/Minor: {N}
-
-Acceptance Recommendation:
-{specific recommendation}
-```
+> See [Reference/examples.md](./Reference/examples.md) for the Acceptance Conclusion Template and Sign-off Confirmation table.
 
 **Sign-off confirmation**:
 
@@ -505,48 +215,7 @@ Acceptance Recommendation:
 
 #### 2.6 Document Assembly [Conditional]
 
-**Report structure**:
-
-```
-# {Product Name} v{Version} Acceptance Test Report
-
-## 1. Acceptance Overview
-### 1.1 Acceptance Scope
-### 1.2 Acceptance Criteria
-### 1.3 Acceptance Environment
-
-## 2. Acceptance Execution Plan
-### 2.1 Acceptance Criteria Parsing
-### 2.2 Test Environment Configuration Recommendations
-### 2.3 Execution Instructions and Decision Rules
-### 2.4 Gate Decision
-
-## 3. Test Result Summary
-### 3.1 Overall Statistics
-### 3.2 Acceptance Criteria Item-by-Item Results
-### 3.3 Test Coverage
-
-## 4. Defect Analysis
-### 4.1 Defect Statistics
-### 4.2 Defect List
-### 4.3 Defect Trends
-
-## 5. Open Issues
-### 5.1 Open Issue List
-### 5.2 Open Issue Risk Assessment
-### 5.3 Handling Plan
-
-## 6. Acceptance Conclusion
-### 6.1 Conclusion
-### 6.2 Open Issue Handling Plan
-### 6.3 Sign-off Confirmation
-
-## Appendix
-- Test case details
-- Test environment configuration
-- Complete acceptance criteria list
-- Failed case analysis details
-```
+> See [Reference/examples.md](./Reference/examples.md) for the Report Structure template.
 
 ## Output
 
@@ -620,80 +289,14 @@ When acceptance results themselves change, the downstream notification mechanism
 
 ## Quality Checks
 
-### P0 Checks (must pass for quick/standard/deep)
+Quality gates follow P0/P1/P2 tiering: P0 case pass rate must be 100%; P1 requires automation rate ≥ 90%, full environment config, and failure analysis; P2 (deep only) requires regression matrix, performance baseline comparison, and security audit checklist.
 
-| Check Item | Standard | Non-compliance Handling |
-|--------|------|------------|
-| P0 case pass rate | 100% | Block |
-
-- [ ] All P0 case execution instructions generated
-- [ ] P0 case pass rate 100%
-
-### P1 Checks (must pass for standard/deep)
-
-| Check Item | Standard | Non-compliance Handling |
-|--------|------|------------|
-| Automation execution rate | ≥ 90% | Block |
-| Test environment configuration | All configuration recommendation items output | Block |
-| Failure analysis completeness | Includes root cause and recommendations | Alert |
-
-- [ ] Automation execution rate meets standard
-- [ ] Failed case analysis rules generated
-- [ ] Failed cases have fix suggestions
-- [ ] Environment configuration recommendations output
-- [ ] Acceptance criteria have item-by-item results
-- [ ] Must requirement pass rate calculated
-- [ ] Defects classified by severity
-- [ ] Open issues have handling plans
-- [ ] Acceptance conclusion clear (pass/conditional pass/fail)
-- [ ] Sign-off confirmation table included
-
-### P2 Checks (only deep must pass)
-
-- [ ] Regression test matrix generated (affected modules, regression case coverage, risk level annotation)
-- [ ] Performance baseline comparison completed (key metrics compared with previous version baseline, performance degradation detection)
-- [ ] Security audit checklist output (security acceptance items, vulnerability scan results, compliance check)
+> See [Reference/quality-and-degradation.md](./Reference/quality-and-degradation.md) for the full P0/P1/P2 check items and checklists.
 
 ## Degradation Strategy
 
-### Upstream File Missing Degradation Plan
-
-| Missing Scope | Degradation Plan | Output Impact |
-|----------|----------|----------|
-| Acceptance criteria missing | User provides Given-When-Then acceptance criteria → generate acceptance checklist | Acceptance criteria need manual writing |
-| Test environment missing | Generate acceptance checklist and execution instructions, environment configuration marked as to-be-filled | Only outputs checklist and execution instructions, environment configuration marked as to-be-filled |
-| Acceptance criteria + test environment both missing | User provides Given-When-Then acceptance criteria → generate acceptance checklist | Outputs acceptance checklist, environment configuration marked as "to be configured" |
-| Test results missing | Generate to-be-filled report template based on acceptance criteria | Cannot auto-determine pass/fail |
-| SRS missing (already covered by design-prd) | Acceptance criteria provided by user | Need to manually define acceptance criteria |
-| Acceptance party missing | If user does not provide acceptance party, prompt user to provide or skip related steps | Sign-off confirmation table marked as "acceptance party to be designated" |
-| Backend review report missing | Accept based only on functional acceptance criteria | May miss backend architecture quality issues |
-| API coverage report missing | Accept based only on PRD acceptance criteria | May miss incomplete API coverage issues |
-
-### Data Acquisition Instructions
-
-When upstream files are missing, the following information is needed from the user to support degradation generation:
-- **Given-When-Then acceptance criteria**: Given/When/Then description for each acceptance condition
-- **Test environment information** (optional): Test environment address, accounts and other configuration
-- **Build version** (optional): Build version number to be accepted
+> See [Reference/quality-and-degradation.md](./Reference/quality-and-degradation.md) for the Upstream File Missing Degradation Plan table and Data Acquisition Instructions.
 
 ## Execution Log
 
-```json
-{
-  "execution_id": "exec_p5_xxx",
-  "pipeline": "quality-acceptance",
-  "story_id": "story_001",
-  "trigger": "story_completed",
-  "started_at": "ISO8601",
-  "completed_at": "ISO8601",
-  "steps": [
-    {"step": "criteria_parsing", "status": "completed", "duration_ms": 200}
-    // ... same structure can be extended
-  ],
-  "gate_decision": {
-    "passed": false,
-    "reason": "P0_FAILURE"
-  },
-  "notifications_sent": ["dev_lead", "product_manager"]
-}
-```
+> See [Reference/examples.md](./Reference/examples.md) for the Execution Log JSON example.

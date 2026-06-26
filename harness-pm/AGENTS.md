@@ -107,11 +107,6 @@ harness-pm is the **Product Management** member of the harness family, focused o
 
 > Note: Visual / interaction / component / prototype and other design outputs belong to harness-design (`docs/visual/`, `docs/interaction/`, `docs/prototype/`, `docs/design-system/`) and are outside the scope of harness-pm. harness-pm only produces PRD and product strategy; design implementation is handed to harness-design via `docs/handoff/pm-to-design.md` for consumption.
 
-**output/ directory** (machine-consumed JSON, not in docs):
-- Approval records: `output/approvals/{orchestrator-name}/{stage-id}.approval.json`
-- Phase summaries: `output/phase-reports/{orchestrator-name}.json`
-- Metrics data: `output/metrics/{metric-id}.json`
-
 **Other**:
 - Feature progress: see `.harness/FEATURES.md`
 

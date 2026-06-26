@@ -19,6 +19,7 @@ default_mode: standard
 
 ```
 session-start
+  → Design System Gate (lightweight existence check)
   → Chesterton's Fence analysis (understand the original design)
   → PLAN (inline, initialize LOOP state)
   → LOOP(visual-design → verify → design-lint)        [visual-design, max 5] (always runs)
@@ -41,7 +42,23 @@ If the AC only involves visuals (color/spacing/typography/layout), skip the inte
 
 Read `memory/progress.md` to restore context.
 
-### 2. Chesterton's Fence analysis
+### 2. Design System Gate (lightweight existence check)
+
+The `visual-design` SKILL requires `docs/design-system/DESIGN.md` as input, and `design-lint` validates against `docs/design-system/tokens.json`. Before iterating, confirm the design system exists so the iterated output can be token-validated:
+
+- [ ] Read `docs/design-system/DESIGN.md` — exists?
+- [ ] Read `docs/design-system/tokens.json` — exists?
+
+**On pass** (both exist): proceed to Chesterton's Fence analysis. The design system is the source of truth for the tokens/components being iterated.
+
+**On fail** (either missing): pause and prompt the user. The design being iterated cannot be consistently tokenized without a design system. Options:
+- Run the `design-onboarding` workflow first (fast skeleton)
+- Run the `design-system-setup` workflow first (full system with components)
+- User confirms they will provide the design system externally, then proceed
+
+This is a lighter check than `new-product-design`'s Design System Gate (which verifies 10-section completeness): iteration only requires existence, because the iteration target already references the design system. Do not proceed without resolving — `visual-design` would otherwise produce outputs that `design-lint` cannot token-validate.
+
+### 3. Chesterton's Fence analysis
 
 **Understand the original design before changing it** (from addyosmani code-simplification):
 
@@ -80,14 +97,14 @@ Output `loops/specs/<task>/context-analysis.md`:
 - <Should we create a task?>
 ```
 
-### 3. PLAN (inline, no standalone skill)
+### 4. PLAN (inline, no standalone skill)
 
 - Define iteration goals + AC-xxx based on the Chesterton's Fence analysis
 - Constitution check
 - Initialize `loops/specs/<task>/state.yaml` (stage=plan, iteration=0, status=running)
 - Write `loops/specs/<task>/spec.md` (with AC list)
 
-### 4. LOOP: visual-design (max 5)
+### 5. LOOP: visual-design (max 5)
 
 ```
 visual-design → verify → design-lint
@@ -99,7 +116,7 @@ visual-design → verify → design-lint
 - verify/design-lint failure → back to visual-design, iteration +1
 - More than 5 iterations → request human intervention
 
-### 5. LOOP: interaction-design (max 5, conditional)
+### 6. LOOP: interaction-design (max 5, conditional)
 
 **Trigger conditions**: See "interaction-design LOOP trigger conditions" in the Orchestration section. If not triggered, skip this step.
 
@@ -112,7 +129,7 @@ interaction-design → verify → design-lint
 - Based on the iterated visual design, update component states/motion parameters
 - verify/design-lint failure → back to interaction-design, iteration +1
 
-### 6. design-review (gate outside LOOP)
+### 7. design-review (gate outside LOOP)
 
 - Five-Axis Review
 - Doubt-Driven (only Critical triggers adversarial debate)
@@ -120,12 +137,12 @@ interaction-design → verify → design-lint
 - Output `loops/specs/<task>/evidence.md`
 - Not passed → back to LOOP (fixable) or PLAN (needs re-planning)
 
-### 7. accessibility-audit (gate outside LOOP)
+### 8. accessibility-audit (gate outside LOOP)
 
 - WCAG 2.1 AA full check
 - Not passed → back to LOOP
 
-### 8. session-end
+### 9. session-end
 
 Update `memory/progress.md` and archive the session.
 

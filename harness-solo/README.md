@@ -279,7 +279,7 @@ session-start → Pre-release checks (hard gate) → writing-documentation(CHANG
 
 ```yaml
 # Required
-current_feature: 001-todo-cli
+current_task: 001-todo-cli
 iteration: 2
 stage: act          # plan / act / verify / debug
 status: running     # running / done / needs-human / blocked

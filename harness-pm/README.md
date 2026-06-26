@@ -163,24 +163,20 @@ harness-pm/
 │   │   ├── pm/                        # 82 PM skills (7 modules, flat organization)
 │   │   └── workflows/                 # 10 workflows
 │   └── templates/                     # Document templates
-├── docs/                              # Human-readable docs (produced directly by skills)
-│   ├── discovery/                     # User research, market analysis
-│   ├── strategy/                      # Business model, positioning, OKR
-│   ├── product/                       # PRD, product proposals
-│   ├── metrics/                       # Metric system, instrumentation plan
-│   ├── growth/                        # Growth strategy, GTM
-│   ├── monitoring/                    # Monitoring, release
-│   ├── project/                       # Project charter, Sprint
-│   └── handoff/                       # harness family handoff documents
-│       ├── README.md
-│       ├── handoff-template.md
-│       ├── pm-to-design-template.md
-│       ├── pm-to-growth-template.md
-│       └── pm-to-solo-template.md
-└── output/                            # Machine-consumed JSON (approval records, phase summaries, metric data)
-    ├── approvals/
-    ├── phase-reports/
-    └── metrics/
+└── docs/                              # Human-readable docs (produced directly by skills)
+    ├── discovery/                     # User research, market analysis
+    ├── strategy/                      # Business model, positioning, OKR
+    ├── product/                       # PRD, product proposals
+    ├── metrics/                       # Metric system, instrumentation plan
+    ├── growth/                        # Growth strategy, GTM
+    ├── monitoring/                    # Monitoring, release
+    ├── project/                       # Project charter, Sprint
+    └── handoff/                       # harness family handoff documents
+        ├── README.md
+        ├── handoff-template.md
+        ├── pm-to-design-template.md
+        ├── pm-to-growth-template.md
+        └── pm-to-solo-template.md
 ```
 
 ## Document System

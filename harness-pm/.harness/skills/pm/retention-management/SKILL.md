@@ -165,23 +165,8 @@ Based on the churn prediction results output by Step 1, segment users by lifecyc
 #### 2.1 User Segmentation
 
 ##### Segmentation Rule Engine
-```yaml
-rules:
-  - segment: "new_user"
-    condition: "account_age_days <= 30 AND is_activated == true"
 
-  - segment: "growing_user"
-    condition: "account_age_days > 30 AND account_age_days <= 90 AND weekly_active_days >= 3"
-
-  - segment: "mature_user"
-    condition: "account_age_days > 90 AND weekly_active_days >= 2"
-
-  - segment: "at_risk"
-    condition: "consecutive_inactive_days >= 7 AND consecutive_inactive_days < 30"
-
-  - segment: "churned"
-    condition: "consecutive_inactive_days >= 30"
-```
+> See [Reference/examples.md](./Reference/examples.md#segmentation-rule-engine-yaml) for the segmentation rule engine YAML (new_user / growing_user / mature_user / at_risk / churned conditions).
 
 ##### Segmentation Priority
 Dormant and churned user identification takes priority over normal segmentation, ensuring timely triggering of churn-prevention strategies.
@@ -226,34 +211,8 @@ Dormant and churned user identification takes priority over normal segmentation,
 | Churned user | Targeted recall | Incentive offers, emotional recall | Recall rate, recalled user LTV |
 
 ##### Strategy Trigger Rules
-```yaml
-trigger_rules:
-  new_user:
-    - event: "Registration complete"
-      action: "Send welcome sequence"
-    - event: "Activation complete"
-      action: "Send advanced guidance"
 
-  growing_user:
-    - event: "Feature usage reaches threshold"
-      action: "Recommend advanced features"
-    - event: "Usage frequency drops"
-      action: "Send value reminder"
-
-  mature_user:
-    - event: "Inactive for 3 consecutive days"
-      action: "Send update notification"
-    - event: "New feature released"
-      action: "Send feature recommendation"
-
-  at_risk:
-    - event: "Enters dormancy"
-      action: "Trigger recall flow"
-
-  churned:
-    - event: "Churned for 30 days"
-      action: "Trigger recall campaign"
-```
+> See [Reference/examples.md](./Reference/examples.md#strategy-trigger-rules-yaml) for the strategy trigger rules YAML (event-driven actions per tier: new_user / growing_user / mature_user / at_risk / churned).
 
 #### 2.4 Outreach Content Personalization
 
@@ -277,160 +236,13 @@ trigger_rules:
 
 **Output files**: retention-management.json, retention-management.md
 
-**Output Schema**:
+**Output Schema**: See [Reference/output-schema.md](./Reference/output-schema.md) for the JSON output schema and field-level validation rules.
 
-```json
-{
-  "type": "object",
-  "required": ["churn_prevention", "segments", "strategies"],
-  "properties": {
-    "churn_prevention": {"type": "object", "description": "Churn prediction and intervention results, including model, risk users, and intervention strategies"},
-    "segments": {"type": "array", "description": "User segmentation data, including tier name, count, characteristics, and health score"},
-    "segment_overview": {"type": "object", "description": "Overview per tier, including count and average health score"},
-    "strategies": {"type": "array", "description": "List of tiered operation strategies, including goals, actions, and success metrics"},
-    "personalized_content": {"type": "array", "description": "List of personalized outreach content, including content type, theme, and channel"}
-  }
-}
-```
-
-`retention_management`
-```json
-{
-  "churn_prevention": {
-    "risk_model": {
-      "model_type": "XGBoost",
-      "features": ["Usage frequency", "Feature breadth", "Payment status"],
-      "accuracy": 0.85,
-      "precision": 0.78,
-      "recall": 0.72
-    },
-    "risk_thresholds": {
-      "high_risk": 0.7,
-      "medium_risk": 0.4,
-      "low_risk": 0.2
-    },
-    "high_risk_users": [
-      {
-        "user_id": "User ID",
-        "risk_score": 0.85,
-        "risk_level": "high",
-        "primary_churn_signals": ["Signal 1", "Signal 2"],
-        "recommended_intervention": "Intervention strategy"
-      }
-    ],
-    "interventions": [
-      {
-        "intervention_id": "INT_001",
-        "trigger_condition": "Risk score > 0.7",
-        "intervention_type": "personalized_outreach",
-        "channel": "email",
-        "content_theme": "Value recall",
-        "expected_effectiveness": 0.25
-      }
-    ],
-    "tracking": {
-      "total_interventions_sent": 5000,
-      "response_rate": 0.15,
-      "churn_prevention_rate": 0.12,
-      "roi": 3.5
-    }
-  },
-  "segments": [
-    {
-      "name": "New user",
-      "segment_id": "new_user",
-      "count": 5000,
-      "percentage": 0.15,
-      "characteristics": {
-        "avg_age_days": 7,
-        "avg_weekly_active_days": 3.5,
-        "avg_features_used": 5,
-        "paying_users_ratio": 0.08
-      },
-      "health_score": 0.72
-    }
-  ],
-  "segment_overview": {
-    "new_user": {"count": 5000, "avg_health": 0.72},
-    "growing_user": {"count": 8000, "avg_health": 0.78},
-    "mature_user": {"count": 15000, "avg_health": 0.85},
-    "at_risk": {"count": 3000, "avg_health": 0.35},
-    "churned": {"count": 2000, "avg_health": 0.1}
-  },
-  "strategies": [
-    {
-      "segment": "new_user",
-      "objective": "Drive activation and early retention",
-      "key_actions": ["Guide core feature usage", "Build usage habits"],
-      "success_metrics": ["D30 retention rate", "Activation rate"]
-    }
-  ],
-  "personalized_content": [
-    {
-      "segment": "new_user",
-      "content_type": "onboarding_guidance",
-      "theme": "Quickly experience core value",
-      "channels": ["app_push", "email"],
-      "frequency": "per_week"
-    }
-  ]
-}
-```
+**Complete Output Example**: See [Reference/examples.md](./Reference/examples.md#complete-output-example-retention_management) for a populated `retention_management` JSON example.
 
 ## Automated Operation Calendar
 
-```
-Weekly fixed outreach:
-- Monday: Active user weekly report
-- Wednesday: Feature usage reminder (new users)
-- Friday: Content push to active users
-
-Event-triggered outreach:
-- On feature update: Notify all users
-- On holiday events: Exclusive for high-value users
-- On user milestones: Congratulate + incentivize
-```
-
-## Output Validation Rules
-
-| Field Path | Type | Required | Description |
-|----------|------|------|------|
-| churn_prevention | object | Yes | Churn prediction and intervention results, must include risk_model/high_risk_users/interventions |
-| churn_prevention.risk_model | object | Yes | Prediction model, must include model_type/features/accuracy |
-| churn_prevention.risk_model.model_type | string | Yes | Model type |
-| churn_prevention.risk_model.features | array | Yes | Model feature list |
-| churn_prevention.risk_model.features[].feature_name | string | Yes | Feature name |
-| churn_prevention.risk_model.features[].importance | number | No | Feature importance |
-| churn_prevention.risk_model.accuracy | number | Yes | Model accuracy, must be >0.75 |
-| churn_prevention.risk_thresholds | object | Yes | Risk thresholds, must include high_risk/medium_risk/low_risk |
-| churn_prevention.high_risk_users | array | Yes | High-risk user list, each item must include user_id/risk_score/risk_level |
-| churn_prevention.high_risk_users[].user_id | string | Yes | User ID |
-| churn_prevention.high_risk_users[].risk_score | number | Yes | Risk score, range 0-1 |
-| churn_prevention.high_risk_users[].risk_level | string | Yes | Risk level, only allows high/medium/low/stable |
-| churn_prevention.high_risk_users[].primary_churn_signals | string[] | No | Primary churn signals |
-| churn_prevention.high_risk_users[].recommended_intervention | string | No | Recommended intervention |
-| churn_prevention.interventions | array | Yes | Intervention strategy list, each item must include trigger_condition/intervention_type/channel |
-| churn_prevention.interventions[].trigger_condition | string | Yes | Trigger condition |
-| churn_prevention.interventions[].intervention_type | string | Yes | Intervention type, enum: email/in_app/push/call |
-| churn_prevention.interventions[].channel | string | Yes | Outreach channel |
-| churn_prevention.interventions[].content_theme | string | No | Content theme |
-| churn_prevention.tracking | object | No | Effectiveness tracking, must include response_rate/churn_prevention_rate/roi |
-| segments | array | Yes | User segmentation data, must cover at least new/growing/mature/dormant/churned 5 tiers |
-| segments[].segment_id | string | Yes | Segment identifier, only allows new_user/growing_user/mature_user/at_risk/churned |
-| segments[].count | number | Yes | Segment user count, must be ≥0 |
-| segments[].health_score | number | Yes | Health score, range 0-1 |
-| segments[].characteristics | object | No | Segment characteristics |
-| segments[].characteristics.avg_tenure | string | No | Average lifecycle |
-| segments[].characteristics.key_behaviors | string[] | No | Key behaviors |
-| strategies | array | Yes | Operation strategy list, at least 5 (1 per tier) |
-| strategies[].segment | string | Yes | Target segment |
-| strategies[].key_actions | string[] | No | Key action list |
-| strategies[].success_metrics | array | Yes | Success metric list, at least 1 |
-| personalized_content | array | No | Personalized content list |
-| personalized_content[].content_type | string | Yes | Content type, enum: email/in_app/push/sms |
-| personalized_content[].theme | string | Yes | Content theme |
-| personalized_content[].channels | string[] | No | Outreach channel list |
-| personalized_content[].frequency | string | No | Outreach frequency |
+> See [Reference/examples.md](./Reference/examples.md#automated-operation-calendar) for the weekly fixed outreach and event-triggered outreach calendar template.
 
 ## Decision Rules
 
@@ -458,45 +270,11 @@ Event-triggered outreach:
 
 ## Degradation Strategy
 
-### Upstream File Missing Degradation Plan
-
-| Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Instructions |
-|----------|----------|----------|------------|
-| User behavior data missing | User provides user activity data → analyze churn characteristics | Churn attribution inferred from activity data, behavioral characteristic analysis limited | Require user to provide user activity data (active user count per period, churned user count) |
-| No behavior data | Infer based on user interviews, mark confidence ≤0.3 | Churn characteristics inferred from interviews, low confidence, requires manual verification | Require user to provide user interview records and churned user descriptions |
-| Churn history missing | Skip churn trend comparison, analyze only based on current data | Cannot assess churn trend changes | Require user to provide historical churn rate and churned user count trend data |
-| User behavior data + churn history both missing | User provides user activity data → analyze churn characteristics | Output basic churn analysis, intervention strategies marked "pending validation" | Require user to provide user activity data and churn definition criteria |
-| Lifecycle stage missing | Use generic lifecycle model (new/active/dormant/churned), marked "pending confirmation" | Segmentation criteria based on generic assumptions | Require user to provide user lifecycle stage definition and segmentation criteria |
-| User behavior data + lifecycle stage both missing | User describes user groups → generate segmentation strategy | Output segmentation strategy based on description, marked "pending data validation" | Require user to provide user group description and core behavioral characteristics |
-| User account data missing | Skip account-level churn analysis, analyze only based on aggregated data | Cannot identify high churn risk accounts | Require user to provide user account list, payment status, and activity data |
-
-### Data Acquisition Instructions
-
-When upstream files are missing, the following information is needed from the user to support degraded generation:
-- **User activity data**: Active user count and churned user count per period
-- **Churn definition** (optional): The product's definition criteria for churned users
-- **High-value user proportion** (optional): Proportion of high-value users among active users
-- **User group description**: Main types and characteristics of product users
-- **Activity distribution** (optional): Proportion of high/medium/low activity users
-- **Operation resources** (optional): Resources and channels available for user operations
+> See [Reference/decision-tables.md](./Reference/decision-tables.md#degradation-strategy) for the upstream file missing degradation plan and data acquisition instructions.
 
 ## Upstream Change Response
 
-### Upstream Change Impact Table
-
-| Upstream Source | Change Type | Impact Scope | Response Action |
-|----------|----------|----------|----------|
-| Data analytics platform - active logs | Behavioral event definition change | Churn signal features and model training | Update feature engineering, retrain model |
-| Data analytics platform - churn records | Churn definition change | Churn labels and risk thresholds | Re-label per new definition, adjust thresholds |
-| User system - account info | User attribute change | Risk tiering and intervention strategy | Update user characteristics, adjust intervention matching |
-| User-provided - lifecycle | Milestone definition change | Segmentation criteria and strategy triggers | Adjust segmentation conditions and trigger rules |
-
-### Downstream Notification Mechanism Table
-
-| Downstream Consumer | Notification Condition | Notification Method | Notification Content |
-|------------|----------|----------|----------|
-| revenue-upsell | High-value user segmentation change | Write to output file | High-value user list and upgrade signals |
-| retention-orchestrator | Churn prediction and tiered operations complete | Output file updated | Retention management completion status and key conclusions |
+> See [Reference/decision-tables.md](./Reference/decision-tables.md#upstream-change-response) for the upstream change impact table and downstream notification mechanism table.
 
 ## Key Success Metrics
 

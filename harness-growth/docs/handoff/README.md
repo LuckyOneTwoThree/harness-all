@@ -40,3 +40,7 @@ For example:
 | `growth-to-pm-template.md` | Dedicated template for growth feedback to product |
 
 > Inbound templates (pm-to-growth / solo-to-growth) are provided by the source framework and are not stored in this framework.
+
+## Write Access
+
+Contract documents follow one-way write permission isolation (per ARCHITECTURE.md §4.3). Only the source framework may write/modify a contract document; consumers read-only. Templates are scaffolds and do not participate in cross-framework flow until instantiated.

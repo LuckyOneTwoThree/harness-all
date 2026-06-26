@@ -101,6 +101,7 @@ Have clear change requirements (user feedback/business needs/missing features)?
 ┌─────────────────┐
 │ session-end     │  Archive + update FEATURES.md
 │                 │  + Output docs/handoff/pm-to-solo.md (changed parts handoff to engineering)
+│                 │  + Conditional: when involves design requirements → also produce pm-to-design.md; when involves growth strategy → also produce pm-to-growth.md
 └─────────────────┘
 ```
 

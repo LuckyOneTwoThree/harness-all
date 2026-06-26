@@ -98,7 +98,7 @@ case "$FW_TYPE" in
   design) REQUIRED_DIRS_DOMAIN=(".harness/skills/design") ;;
   solo)   REQUIRED_DIRS_DOMAIN=(".harness/skills/engineering") ;;
   growth) REQUIRED_DIRS_DOMAIN=(".harness/skills/strategy" ".harness/skills/content" ".harness/skills/seo" ".harness/skills/experiment" ".harness/skills/lifecycle" ".harness/skills/monetization" ".harness/skills/review" ".harness/skills/analytics" ".harness/skills/acquisition") ;;
-  ops)    REQUIRED_DIRS_DOMAIN=(".harness/skills/deployment" ".harness/skills/infrastructure" ".harness/skills/monitoring" ".harness/skills/incident" ".harness/skills/security" ".harness/skills/capacity" ".harness/skills/recovery" ".harness/skills/audit") ;;
+  ops)    REQUIRED_DIRS_DOMAIN=(".harness/skills/deployment" ".harness/skills/infrastructure" ".harness/skills/monitoring" ".harness/skills/incident" ".harness/skills/security" ".harness/skills/capacity" ".harness/skills/recovery" ".harness/skills/review") ;;
   *)      REQUIRED_DIRS_DOMAIN=() ;;
 esac
 

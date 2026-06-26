@@ -95,9 +95,9 @@ description: Task breakdown — output an executable spec.md
 
    **AC source notes**:
    - Engineering AC (AC-xxx): from the PRD (`docs/product/PRD.md` Section 7.1) or `docs/product/prd.json` `features[].acceptance_criteria[]` or brainstorming; describes feature behavior
-   - Design AC (DAC-xxx): from `docs/handoff/design-to-solo.md`; describes visual/interaction constraints
+   - Design AC (DAC-xxx): from `docs/handoff/design-to-solo.md` (design-added ACs, already prefixed with D)
    - If there is no design-to-solo.md, skip the Design AC section
-   - DAC numbering follows the AC-xxx numbering in design-to-solo.md, with a D prefix to distinguish the source
+   - design-to-solo.md carries both `AC-xxx` (reused from PRD) and `DAC-xxx` (design-added); harness-solo consumes both as-is, no conversion or renumbering
 
    *Exit condition: spec.md contains Goal, Acceptance Criteria (AC-xxx list), and Task Breakdown sections, and every AC carries a source annotation (pm-to-solo.md / brainstorming / design-to-solo.md). Additionally, if `docs/handoff/component-map.json` exists and the feature touches the frontend, every component task in Task Breakdown MUST contain a `Contract: component-map.json#<Component>` line — otherwise exit condition fails (the task has no executable contract for frontend-implementation to consume).*
 
@@ -112,7 +112,7 @@ description: Task breakdown — output an executable spec.md
 4. **Initialize state.yaml**
    Initialize the fields defined in the "state.yaml Schema" section of `loops/LOOP.md`:
    ```yaml
-   current_feature: <NNN>-<feature-name>
+   current_task: <NNN>-<feature-name>
    iteration: 0
    stage: plan
    status: running
