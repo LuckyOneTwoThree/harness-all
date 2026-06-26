@@ -68,13 +68,35 @@ description: Task breakdown — output an executable spec.md
    [Explicit boundaries to avoid scope creep]
    ```
 
+   **Component contract injection (frontend tasks)**:
+   If the feature involves frontend component implementation AND `docs/handoff/component-map.json` exists, every component task in Task Breakdown MUST use the contract reference format below. Tasks without a `Contract:` line are treated as logic/backend tasks and skip frontend-implementation routing at execution time.
+
+   ```markdown
+   - [ ] T1: Implement Button component
+         - Contract: component-map.json#Button
+         - Props: variant, size (per component-map.json)
+         - States: default, hover, active, disabled, loading
+         - usedBy: P01, P02, P03 (high-reuse, implement first)
+   - [ ] T2: Implement LoginForm composition
+         - Contract: component-map.json#LoginForm
+         - Props: onSubmit, initialvalues (per component-map.json)
+         - States: default, submitting, error
+   - [ ] T3: Wire login API endpoint (backend, no contract)
+   ```
+
+   **How to fill the contract reference**:
+   - Read `docs/handoff/component-map.json`
+   - For each component this feature will implement, look up its entry by `engineeringComponent` name
+   - Copy the `props` keys, `states` values, and `usedBy` (if present) into the task description
+   - If a component is not yet in component-map.json, this is a handoff defect — feed it back to harness-design before proceeding
+
    **AC source notes**:
    - Engineering AC (AC-xxx): from the PRD (`docs/product/PRD.md` Section 7.1) or `docs/product/prd.json` `features[].acceptance_criteria[]` or brainstorming; describes feature behavior
    - Design AC (DAC-xxx): from `docs/handoff/design-to-solo.md`; describes visual/interaction constraints
    - If there is no design-to-solo.md, skip the Design AC section
    - DAC numbering follows the AC-xxx numbering in design-to-solo.md, with a D prefix to distinguish the source
 
-   *Exit condition: spec.md contains Goal, Acceptance Criteria (AC-xxx list), and Task Breakdown sections, and every AC carries a source annotation (pm-to-solo.md / brainstorming / design-to-solo.md).*
+   *Exit condition: spec.md contains Goal, Acceptance Criteria (AC-xxx list), and Task Breakdown sections, and every AC carries a source annotation (pm-to-solo.md / brainstorming / design-to-solo.md). Additionally, if `docs/handoff/component-map.json` exists and the feature touches the frontend, every component task in Task Breakdown MUST contain a `Contract: component-map.json#<Component>` line — otherwise exit condition fails (the task has no executable contract for frontend-implementation to consume).*
 
 3. **Task Granularity Control**
    Each task should be:
@@ -121,10 +143,13 @@ description: Task breakdown — output an executable spec.md
 | Task granularity too large | "This feature is one thing" | Tasks > 5 minutes cannot be covered by a single tdd cycle and stall LOOP |
 | Skipping state.yaml initialization | "I'll create it when I start coding" | The LOOP engine depends on state.yaml; without it, iteration tracking cannot start |
 | Skipping constitution review | "Review is too slow" | The constitution is the bottom line; skipping it equals no review and propagates risk into execution |
+| Frontend component tasks without `Contract: component-map.json#<Component>` | "I'll just describe the component in the task" | Without explicit contract reference, executing-plans cannot route the task to frontend-implementation, and tdd will guess props/states instead of sourcing them from design — implementation drifts from the design contract silently |
+
 
 ## Red Flags
 - A task description contains the word "and" — it is likely two tasks stitched together and must be split.
 - spec.md has no DAC section even though the feature touches the frontend (design-to-solo.md exists).
+- A frontend component task lacks the `Contract: component-map.json#<Component>` line while component-map.json exists — executing-plans will treat it as a backend task and skip frontend-implementation, causing silent contract drift.
 - state.yaml is missing or has `iteration > 0` at the plan stage — LOOP has already been started or the file was never created.
 - AC descriptions contain "should be", "easy to", or "user-friendly" — they are not testable and must be rewritten as "given X, then Y".
 - A single task is estimated at > 5 minutes — granularity is too coarse for the tdd cycle and must be split further.

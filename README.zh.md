@@ -14,8 +14,8 @@
 
 ![Version](https://img.shields.io/badge/version-v2.1-blue.svg?style=for-the-badge&logo=semver)
 ![Frameworks](https://img.shields.io/badge/frameworks-5-green.svg?style=for-the-badge&logo=github)
-![Skills](https://img.shields.io/badge/skills-196-orange.svg?style=for-the-badge&logo=skill)
-![Workflows](https://img.shields.io/badge/workflows-36-purple.svg?style=for-the-badge&logo=git)
+![Skills](https://img.shields.io/badge/skills-198-orange.svg?style=for-the-badge&logo=skill)
+![Workflows](https://img.shields.io/badge/workflows-40-purple.svg?style=for-the-badge&logo=git)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge&logo=open-source-initiative)
 
 ---
@@ -23,10 +23,10 @@
 | 框架 | 领域 | Skill | Workflow |
 |:----:|------|:-----:|:--------:|
 | **harness-pm** | 战略 · 市场 · PRD · 指标 | 86 | 10 |
-| **harness-design** | 视觉 · 交互 · 原型 · 设计系统 | 18 | 6 |
-| **harness-solo** | 工程 · TDD · 调试 · 重构 · 验证 | 20 | 7 |
-| **harness-growth** | 内容 · SEO · 增长实验 · 变现 | 40 | 6 |
-| **harness-ops** | 部署 · 监控 · 故障 · 容灾 | 32 | 7 |
+| **harness-design** | 视觉 · 交互 · 原型 · 设计系统 | 19 | 7 |
+| **harness-solo** | 工程 · TDD · 调试 · 重构 · 验证 | 21 | 8 |
+| **harness-growth** | 内容 · SEO · 增长实验 · 变现 | 40 | 7 |
+| **harness-ops** | 部署 · 监控 · 故障 · 容灾 | 32 | 8 |
 
 </div>
 
@@ -167,7 +167,7 @@ harness-pm → pm-to-design.md → harness-design → design-to-solo.md → harn
 
 ### harness-solo — "写好代码"
 
-工程开发、TDD、调试、验证、代码审查。20 个 skill。特色：**双源 AC 验证** — 同时检查工程 AC（`AC-xxx`）和设计 AC（`DAC-xxx`）。**熵增检查** — 逮住文件膨胀和依赖蔓延。
+工程开发、TDD、调试、验证、代码审查。21 个 skill。特色：**双源 AC 验证** — 同时检查工程 AC（`AC-xxx`）和设计 AC（`DAC-xxx`）。**熵增检查** — 逮住文件膨胀和依赖蔓延。
 
 核心产出：`TECH_STACK.md` / `solo-to-growth.md` / `solo-to-ops.md` / `spec.md`
 
@@ -237,7 +237,7 @@ description: 一句话描述
 
 ### 为什么独立而非统一
 
-上下文爆炸和记忆污染是 AI Agent 协作的核心痛点。单个 Agent 加载 196 个 skill 浪费 token、降低输出质量。独立框架让每个 Agent 专精一个领域。
+上下文爆炸和记忆污染是 AI Agent 协作的核心痛点。单个 Agent 加载 198 个 skill 浪费 token、降低输出质量。独立框架让每个 Agent 专精一个领域。
 
 ### 为什么用契约文档而非共享状态
 

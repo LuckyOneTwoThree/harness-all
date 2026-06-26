@@ -39,6 +39,12 @@ Run the project's test command and **show the full output** (not the four words 
 ### 2. Acceptance Criteria Item-by-Item Check
 Read every `AC-xxx` (engineering, from `spec.md`) and `DAC-xxx` (design, flowed in from `design-to-solo.md`) and check each one. Mark `✓` only when you can cite a specific test, assertion, or demo; mark `✗` with a reason otherwise. Design ACs that cannot be verified at the engineering layer are marked `needs harness-design review`, not `✗`. All `✓` → continue. Any `✗` → return to tdd (engineering AC) or feed back to harness-design (design AC).
 
+**Component contract check (frontend tasks only)**: if `spec.md` contains tasks with `Contract: component-map.json#<Component>` lines, for each such component cross-check the implemented code against `docs/handoff/component-map.json`:
+- Every prop in the contract's `props` object is accepted by the component (no missing/extra props).
+- Every state in the contract's `states` array is handled (default/hover/active/disabled/loading etc.).
+- The `engineeringComponent` name matches the actual code component name.
+A mismatch is a `✗` with reason `contract drift: <field> mismatch`. This check is in addition to AC/DAC — the ACs may pass while the component silently drifts from the contract (e.g., missing `loading` state that no AC explicitly covers).
+
 ### 3. Constitution Compliance Check
 Read `constitution.md` and check item by item: unapproved new dependencies, APIs without tests, schema changes without migration scripts, plus any project-specific clauses. Use the actual `git diff` of lockfiles — do not rely on memory.
 
@@ -79,6 +85,7 @@ Any of the following means the verify run is invalid; stop and reconcile before 
 | Pass an AC marked partially satisfied | "Most of it works." | Partial pass = partial fail; return to tdd until every AC is fully `✓` or explicitly deferred. |
 | Update `state.yaml` from memory | "I remember the state." | Memory is unreliable and not auditable; read the raw file before writing. |
 | Whitelist all security hits as false positives | "They are just fixtures." | Each hit requires an explicit disposition citing the file path and reason; blanket whitelisting hides real leaks. |
+| Skip the component contract check because all ACs passed | "ACs are green, the component is fine." | ACs cover behavior; the contract covers props/states. A component can pass all ACs yet still drift from the contract (e.g., missing `loading` state no AC mentions). Contract drift surfaces only at integration, when it is expensive to fix. |
 
 ## Prohibitions
 - Skipping any check.

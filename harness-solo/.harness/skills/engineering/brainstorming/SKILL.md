@@ -31,7 +31,8 @@ description: Requirements exploration and design refinement — a hard gate: no 
    - `docs/handoff/pm-to-solo.md` — product requirements (PRD path, key decisions, open items) + **business context summary**
    - `docs/handoff/design-to-solo.md` — design handoff (design asset path, component mapping, design ACs)
    - `docs/handoff/component-map.json` — explicit mapping layer (design components → engineering components, including props/states)
-   - If any of these exists, **read it first** as the source of requirements
+   - **Mandatory read**: if `docs/handoff/design-to-solo.md` exists, you MUST read it before any technical solution exploration — skipping it drops the design contract from the entire downstream chain (writing-plans cannot fill `Contract:` lines without it, executing-plans cannot route to frontend-implementation, tdd will guess props/states). This is a hard gate, not a conditional.
+   - If `docs/handoff/pm-to-solo.md` exists, read it as the source of product requirements.
    - **When reading pm-to-solo.md, you must also read the "Business Context Summary" section** to understand the business constraints behind the ACs
    - After reading, jump to step 3 of the process (technical solution exploration), skipping the requirements exploration in steps 1-2
 2. **PRD direct read** (primary requirements source from harness-pm):

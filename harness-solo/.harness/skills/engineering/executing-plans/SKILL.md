@@ -14,6 +14,7 @@ description: Execute the spec.md produced by writing-plans, advancing through th
 - loops/specs/<feature>/spec.md
 - loops/specs/<feature>/state.yaml
 - docs/engineering/TECH_STACK.md
+- docs/handoff/component-map.json (optional, required when spec.md contains `Contract: component-map.json#<Component>` tasks)
 
 ## Outputs
 - loops/specs/<feature>/state.yaml
@@ -34,9 +35,18 @@ description: Execute the spec.md produced by writing-plans, advancing through th
 
    For each task T<N> in spec.md:
 
-   **2.1 Enter ACT (hand off to the tdd skill)**
-   - Invoke the `test-driven-development` skill: red (write a failing test) → green (minimal implementation) → refactor
-   - Update per the "state.yaml Schema" in LOOP.md:
+   **2.1 Enter ACT (task-type routing + handoff)**
+
+   Before dispatching, inspect the task description to decide the route:
+
+   - **Frontend component task** — task description contains a `Contract: component-map.json#<Component>` line:
+     1. Invoke the `frontend-implementation` skill first — it reads `docs/handoff/component-map.json` for the named component's props/states/usedBy, and produces structure/styling/state guidance for that component.
+     2. Then invoke the `test-driven-development` skill: red (failing test for component behavior per the contract) → green (minimal implementation following frontend-implementation's guidance) → refactor.
+     3. If `docs/handoff/component-map.json` is missing while a `Contract:` line exists, STOP — this is a handoff defect; do not guess the contract, request harness-design to deliver it.
+   - **Logic/backend task** — task description has no `Contract:` line:
+     1. Invoke the `test-driven-development` skill directly: red → green → refactor.
+
+   Update per the "state.yaml Schema" in LOOP.md:
      - `iteration`: +1
      - `stage`: `act`
      - `status`: `running`
@@ -89,8 +99,9 @@ This skill schedules; it does not write code or run tests itself. Each collabora
 
 | Skill | Responsibility | Timing |
 |-------|------|------|
-| writing-plans | Write spec.md (task breakdown) | PLAN phase |
-| **executing-plans** | Schedule task execution (this skill) | ACT+VERIFY scheduling |
+| writing-plans | Write spec.md (task breakdown, with `Contract:` lines for frontend tasks) | PLAN phase |
+| **executing-plans** | Schedule task execution + route by task type (this skill) | ACT+VERIFY scheduling |
+| frontend-implementation | Read component-map.json, produce structure/styling/state guidance for a named component | ACT phase, before tdd, only for tasks with `Contract:` line |
 | test-driven-development | Red-green-refactor for a single task | ACT phase |
 | verify | Comprehensive verification for a single task | VERIFY phase |
 | systematic-debugging | Find root cause on failure | On VERIFY failure |
@@ -116,6 +127,8 @@ Each row below names a shortcut you may be tempted to take, the rationalization 
 | Write implementation code yourself | "It's faster than dispatching." | executing-plans is a scheduler; writing code is the tdd skill's job — violating this destroys the LOOP division of labor. |
 | Delay updating state.yaml | "I'll update it later." | The LOOP engine reads state.yaml to resume; a stale state equals lost progress and duplicated work. |
 | Guess user intent in autonomous mode | "They probably want me to keep going." | A failed verify is a hard stop; guessing intent silently violates the checkpoint contract. |
+| Skip frontend-implementation for a `Contract:` task and go straight to tdd | "tdd can write the component anyway." | Without frontend-implementation reading component-map.json, tdd guesses props/states; the implementation drifts from the design contract and verify cannot catch it (verify checks ACs, not the full props/states contract). |
+| Guess the component contract when component-map.json is missing | "I roughly remember the design." | A missing component-map.json is a handoff defect; guessing produces a fabricated contract that silently diverges from design. STOP and request it from harness-design. |
 
 ## Red Flags
 Stop and reconcile immediately when any of these appear:
@@ -124,8 +137,10 @@ Stop and reconcile immediately when any of these appear:
 - The user says "continue" twice in a row without reviewing the checkpoint output — confirm they actually read it before proceeding; silence is not consent.
 - An AC is marked `✓` in the checkpoint report but verify was never run — the mark is fabricated; rerun verify before continuing.
 - A single task takes more than 15 minutes of wall-clock time — the task granularity is too coarse; return to writing-plans to split it.
+- A task with a `Contract: component-map.json#<Component>` line is dispatched directly to tdd without frontend-implementation — the contract is being ignored; redo the task via frontend-implementation first.
+- frontend-implementation is invoked but `docs/handoff/component-map.json` does not exist — handoff defect; STOP and request it from harness-design rather than guessing the contract.
 
 ## Relationship with LOOP
 This skill is the **scheduler** of the LOOP cycle and does not write code itself:
-- executing-plans schedules → tdd executes ACT → verify executes VERIFY → on failure, return to systematic-debugging
+- executing-plans schedules → (frontend-implementation if `Contract:` task, then) tdd executes ACT → verify executes VERIFY → on failure, return to systematic-debugging
 - All tasks in a spec.md complete = LOOP ends

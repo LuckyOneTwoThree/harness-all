@@ -14,8 +14,8 @@
 
 ![Version](https://img.shields.io/badge/version-v2.1-blue.svg?style=for-the-badge&logo=semver)
 ![Frameworks](https://img.shields.io/badge/frameworks-5-green.svg?style=for-the-badge&logo=github)
-![Skills](https://img.shields.io/badge/skills-196-orange.svg?style=for-the-badge&logo=skill)
-![Workflows](https://img.shields.io/badge/workflows-36-purple.svg?style=for-the-badge&logo=git)
+![Skills](https://img.shields.io/badge/skills-198-orange.svg?style=for-the-badge&logo=skill)
+![Workflows](https://img.shields.io/badge/workflows-40-purple.svg?style=for-the-badge&logo=git)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge&logo=open-source-initiative)
 
 ---
@@ -23,10 +23,10 @@
 | Framework | Domain | Skills | Workflows |
 |:---------:|--------|:------:|:---------:|
 | **harness-pm** | Strategy · Market · PRD · Metrics | 86 | 10 |
-| **harness-design** | Visual · Interaction · Prototype · Design System | 18 | 6 |
-| **harness-solo** | Engineering · TDD · Debug · Refactor · Verify | 20 | 7 |
-| **harness-growth** | Content · SEO · Experiments · Monetization | 40 | 6 |
-| **harness-ops** | Deploy · Monitor · Incident · Disaster Recovery | 32 | 7 |
+| **harness-design** | Visual · Interaction · Prototype · Design System | 19 | 7 |
+| **harness-solo** | Engineering · TDD · Debug · Refactor · Verify | 21 | 8 |
+| **harness-growth** | Content · SEO · Experiments · Monetization | 40 | 7 |
+| **harness-ops** | Deploy · Monitor · Incident · Disaster Recovery | 32 | 8 |
 
 </div>
 
@@ -161,13 +161,13 @@ Core outputs: `PRD.md` / `pm-to-design.md` / `pm-to-solo.md` / `pm-to-growth.md`
 
 ### harness-design — "Make it look good and usable"
 
-Visual design, interaction design, design system, prototype output. 18 skills. Signature: **Push-back** — design Agent can refuse PM's hardcoded UI directives. **Anti AI-Slop** — bans Inter/purple gradients/Lorem ipsum.
+Visual design, interaction design, design system, prototype output. 19 skills. Signature: **Push-back** — design Agent can refuse PM's hardcoded UI directives. **Anti AI-Slop** — bans Inter/purple gradients/Lorem ipsum.
 
 Core outputs: `DESIGN.md` / `tokens.json` / `design-to-solo.md` / `component-map.json`
 
 ### harness-solo — "Write good code"
 
-Engineering, TDD, debugging, verification, code review. 20 skills. Signature: **Dual-source AC verification** — checks both engineering ACs (`AC-xxx`) and design ACs (`DAC-xxx`). **Entropy check** — catches file bloat and dependency creep.
+Engineering, TDD, debugging, verification, code review. 21 skills. Signature: **Dual-source AC verification** — checks both engineering ACs (`AC-xxx`) and design ACs (`DAC-xxx`). **Entropy check** — catches file bloat and dependency creep.
 
 Core outputs: `TECH_STACK.md` / `solo-to-growth.md` / `solo-to-ops.md` / `spec.md`
 
@@ -237,7 +237,7 @@ Dependency info (when to use, inputs, outputs, quality gates) lives in body text
 
 ### Why independent, not unified
 
-Context explosion and memory pollution are the core pain points of AI Agent collaboration. A single Agent loading 196 skills wastes tokens and degrades output quality. Independent frameworks let each Agent specialize.
+Context explosion and memory pollution are the core pain points of AI Agent collaboration. A single Agent loading 198 skills wastes tokens and degrades output quality. Independent frameworks let each Agent specialize.
 
 ### Why contract documents, not shared state
 

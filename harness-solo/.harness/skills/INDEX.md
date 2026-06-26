@@ -23,6 +23,7 @@
 - **dependency-management** — Dependency management, add / upgrade / audit, integrates with the constitution approval gate
 - **frontend-implementation** — Frontend engineering implementation, components / state / styling (not visual design)
 - **verify** — Delivery verification, mandatory comprehensive check before claiming completion
+- **product-engineering-review** — Product-level cross-feature consistency review (after all features implemented, before handoff)
 - **webapp-testing** — Frontend verification, pure Agent tool approach (build / type / lint / accessibility)
 - **requesting-code-review** — Code review, quality gatekeeping
 - **receiving-code-review** — Review feedback handling, classify + fix + reply
@@ -34,6 +35,7 @@
 > `default_mode`: deep=forced exploration / standard=pause at module boundaries / skip=execute directly (user can switch at any time)
 
 - **setup** [skip] — Project kickoff guidance (after install.sh, guide filling in SOUL/constitution/PROJECT/TECH_STACK)
+- **new-product-engineering** [deep] — Product-level engineering (plan all features → shared infrastructure → per-feature new-feature LOOPs → product-review → handoff)
 - **new-feature** [deep] — New feature development (brainstorming → LOOP → code-review)
 - **bugfix** [standard] — Bug fix (systematic-debugging → LOOP → code-review)
 - **refactor** [deep] — Refactoring (brainstorming to confirm boundaries → LOOP guarding against regression → code-review)

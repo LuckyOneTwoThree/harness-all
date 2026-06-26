@@ -103,9 +103,9 @@ The following scenarios **always pause**, unaffected by exploration_mode:
 ## Skill Selection
 
 When you need to select a Skill, read `.harness/skills/INDEX.md` (pure index, under 80 lines).
-- Design skills: 14 (`.harness/skills/design/`)
+- Design skills: 15 (`.harness/skills/design/`)
 - Meta skills: 4 (`.harness/skills/meta/`)
-- Workflow orchestration (new design / iteration / redesign / handoff, etc.) is under `.harness/skills/workflows/`, read on demand.
+- Workflow orchestration (new product design / new design / iteration / redesign / handoff, etc.) is under `.harness/skills/workflows/`, read on demand.
 - General craft rules are in `.harness/craft/` (anti-ai-slop / common-rules / typography / color).
 - Data-driven recommendation data is in `.harness/data/design/` (reasoning/products/styles/colors/typography/landing/ux-guidelines/vibes).
 

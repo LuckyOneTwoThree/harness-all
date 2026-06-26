@@ -8,7 +8,14 @@ default_mode: deep
 # Workflow A: New Feature Development
 
 > Applicable scenario: Develop new features, add new modules, implement new requirements
-> Core mode: brainstorming hard gate → LOOP iterative validation → code-review final review
+> Core mode: Engineering Foundation gate → brainstorming hard gate → LOOP iterative validation → code-review final review
+
+## When to use a different workflow
+
+- Implementing an entire product with multiple features that must work together → use `new-product-engineering` (it plans feature inventory + shared infrastructure + dependency graph, then drives this workflow per feature)
+- Fixing a production bug → use `bugfix`
+- Refactoring existing code → use `refactor`
+- Releasing a version → use `release`
 
 ## Process
 
@@ -16,6 +23,18 @@ default_mode: deep
 ┌─────────────────┐
 │ session-start   │  Load context, confirm task scope
 └────────┬────────┘
+         ▼
+┌─────────────────────────────────────────┐
+│ Engineering Foundation Gate (hard gate) │
+│                                         │
+│  - docs/engineering/TECH_STACK.md       │
+│    exists and has test/build/lint?      │
+│  - docs/product/PROJECT.md exists?      │
+│                                         │
+│  ★ If missing → prompt to run setup     │
+│    workflow first; do not proceed       │
+└────────┬────────────────────────────────┘
+         │ Passed
          ▼
 ┌─────────────────┐
 │ brainstorming   │  ★ Hard gate: unclear requirements are not allowed through
@@ -77,6 +96,21 @@ default_mode: deep
 │ session-end     │  Archive + baseline + update FEATURES.md
 └─────────────────┘
 ```
+
+## Engineering Foundation Gate (hard gate)
+
+Before brainstorming, verify the engineering foundation exists:
+
+- [ ] Read `docs/engineering/TECH_STACK.md` — must exist and have test/build/lint commands filled in
+- [ ] Read `docs/product/PROJECT.md` — must exist with acceptance criteria
+- [ ] If either is missing or incomplete → **refuse to proceed**, prompt user with options:
+  - Option A: run `setup` workflow first (initialize config files)
+  - Option B: run `new-product-engineering` workflow instead (it includes this gate and handles multi-feature)
+- **Hard gate rationale**: executing-plans / verify depend on TECH_STACK.md for test/build/lint commands. Proceeding without it causes silent failures — commands cannot run, verify cannot validate, LOOP cannot iterate.
+
+## Task Granularity
+
+`<feature>` in `loops/specs/<feature>/` is feature-level or infrastructure-level. Use `<NNN>-<feature-name>` (e.g., `001-user-auth`) for feature tasks, `<NNN>-infra-<module-name>` (e.g., `002-infra-api-client`) for shared infrastructure tasks. For product-level multi-feature implementation, use `new-product-engineering` workflow instead, which uses `<NNN>-<product-name>` at product level and `<NNN>-<product-name>-<feature-name>` per feature. See LOOP.md "Task Granularity" section for full rules.
 
 ## Key Checkpoints
 

@@ -13,6 +13,7 @@ The canonical schema, consumption rules, and worked example for `docs/handoff/co
     "engineeringComponent": "<CodeComponentName>",
     "props": { "<propName>": "<propValue or type>" },
     "states": ["<state1>", "<state2>", "..."],
+    "usedBy": ["<pageId1>", "<pageId2>", "..."],
     "notes": "<free-form engineering note>"
   }
 }
@@ -26,6 +27,7 @@ The canonical schema, consumption rules, and worked example for `docs/handoff/co
 | `engineeringComponent` | string | yes | Engineering component name (e.g. `Button`). Used verbatim as the code component name; do not rename on import. |
 | `props` | object | yes | Contract for component props. Every prop must be implemented; dropping a prop is a contract violation. |
 | `states` | string[] | yes | All interactive/visual states that must be covered. A missing state is a design omission — feed it back to harness-design, do not silently skip. |
+| `usedBy` | string[] | no | Page IDs that use this component (e.g. `["P01", "P03"]`). Present only in product-level handoff (from new-product-design workflow). Use to sequence implementation: high-reuse (≥3 pages) first. Backward-compatible — if absent, no prioritization is applied. |
 | `notes` | string | no | Free-form engineering guidance (e.g. "at most 1 per screen"). Read but not machine-enforced. |
 
 ## Consumption Rules
@@ -65,6 +67,7 @@ A higher-priority source may refine but not contradict a lower one. If a contrad
     "engineeringComponent": "Button",
     "props": { "variant": "primary", "size": "md" },
     "states": ["default", "hover", "active", "disabled", "loading"],
+    "usedBy": ["P01", "P02", "P03"],
     "notes": "Primary action button, at most 1 per screen"
   }
 }
@@ -77,6 +80,7 @@ Engineering implementation contract derived from the example:
 - Must implement five states: `default`, `hover`, `active`, `disabled`, `loading` — none may be missing
 - Color/spacing values resolve through the `button.primary` token path in `tokens.json`
 - At most one `PrimaryButton` per screen (engineering note, enforced at review time)
+- Used by 3 pages (P01/P02/P03) → high-reuse tier, implement first as a shared foundation
 
 ## What NOT to do
 

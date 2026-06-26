@@ -91,6 +91,23 @@ Why designed this way?
   - iterations.log append-only → preserve full iteration history; you can see failure trajectories when debugging
   - All artifacts of a feature live in one directory → good cohesion, no need to search across directories
 
+## Task Granularity
+
+`<feature>` in `loops/specs/<feature>/` has three levels of granularity. Use the correct level based on the workflow:
+
+| Granularity | Naming Pattern | Example | Used by workflow | State directory |
+|-------------|----------------|---------|------------------|-----------------|
+| Infrastructure-level | `<NNN>-infra-<module-name>` | `002-infra-api-client` | new-feature (infrastructure task), new-product-engineering Phase 1 | `loops/specs/002-infra-api-client/` |
+| Feature-level | `<NNN>-<feature-name>` | `001-user-auth` | new-feature (feature task), new-product-engineering Phase 2 | `loops/specs/001-user-auth/` |
+| Product-level | `<NNN>-<product-name>` | `001-shopping-app` | new-product-engineering | `loops/specs/001-shopping-app/` (product) + `loops/specs/001-shopping-app-auth/` (per feature) |
+
+**Rules**:
+- `<NNN>` is a zero-padded 3-digit sequence number, unique within the framework
+- Product-level tasks nest per-feature tasks: product-level state.yaml tracks overall progress, per-feature state.yaml tracks feature progress
+- On session resume for a product-level task: read product-level state.yaml first to find current feature, then read that feature's state.yaml for LOOP position
+- Single-feature workflows (new-feature, bugfix, refactor, optimize) use feature-level or infrastructure-level; never product-level
+- If a feature is part of a product-level task, its task name must include the product name prefix (e.g., `001-shopping-app-auth`, not just `002-auth`) to keep all features of one product grouped in directory listing
+
 ## State Maintenance
 
 **Decision: The Agent reads and writes state.yaml (one file per feature, persisted to disk)**

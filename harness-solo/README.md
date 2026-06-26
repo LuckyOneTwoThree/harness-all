@@ -9,8 +9,8 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-cross--platform-green.svg)](#cross-platform-compatibility)
 [![Principles](https://img.shields.io/badge/principles-Karpathy%204-orange.svg)](#karpathy-principles-in-detail)
-[![Workflows](https://img.shields.io/badge/workflows-7-purple.svg)](#workflows-in-detail)
-[![Skills](https://img.shields.io/badge/skills-20-red.svg)](#core-features)
+[![Workflows](https://img.shields.io/badge/workflows-8-purple.svg)](#workflows-in-detail)
+[![Skills](https://img.shields.io/badge/skills-21-red.svg)](#core-features)
 
 **[Quick Start](#quick-start)** · **[Directory Structure](#directory-structure)**
 
@@ -52,15 +52,16 @@ PLAN → ACT → VERIFY → Pass? DONE : Back to PLAN/ACT
 - Iteration limit protection: exceeding 5 requests human intervention
 - Evidence-driven: no claiming done without test output
 
-### 7 Workflows Cover the Full Development Lifecycle
+### 8 Workflows Cover the Full Development Lifecycle
 
 ```
-setup (project initiation) → new-feature/bugfix/refactor/optimize/migration (development) → release (release)
+setup (project initiation) → new-product-engineering/new-feature/bugfix/refactor/optimize/migration (development) → release (release)
 ```
 
 | Workflow | Scenario | Iteration Limit |
 |--------|------|:---:|
 | setup | New project initiation guide | No LOOP |
+| new-product-engineering | Product-level multi-feature engineering (plan all features → shared infrastructure → per-feature LOOPs → product-review) | 5 |
 | new-feature | New feature development | 5 |
 | bugfix | Bug fix | 3 |
 | refactor | Refactor (no behavior change) | 3 |
@@ -68,9 +69,9 @@ setup (project initiation) → new-feature/bugfix/refactor/optimize/migration (d
 | migration | Framework upgrade / API migration | 3 |
 | release | Version release | No LOOP |
 
-### 20 Skills (16 engineering + 4 meta)
+### 21 Skills (17 engineering + 4 meta)
 
-**Engineering skills** : brainstorming / writing-plans / executing-plans / test-driven-development / test-coverage / systematic-debugging / performance-optimization / migration / dependency-management / frontend-implementation / verify / webapp-testing / requesting-code-review / receiving-code-review / writing-skills / writing-documentation
+**Engineering skills** : brainstorming / writing-plans / executing-plans / test-driven-development / test-coverage / systematic-debugging / performance-optimization / migration / dependency-management / frontend-implementation / verify / product-engineering-review / webapp-testing / requesting-code-review / receiving-code-review / writing-skills / writing-documentation
 
 **Meta skills** : session-start / session-end / skill-maintenance / memory-maintenance
 
@@ -153,9 +154,9 @@ harness-solo/
 │   │   └── archive-progress.sh        # Progress archive (optional)
 │   ├── skills/
 │   │   ├── INDEX.md                   # Skill index (within 80 lines)
-│   │   ├── engineering/               # 16 engineering skills
+│   │   ├── engineering/               # 17 engineering skills
 │   │   ├── meta/                      # 4 meta skills
-│   │   └── workflows/                 # 7 workflows
+│   │   └── workflows/                 # 8 workflows
 │   └── templates/                     # 10 document templates
 │       ├── AGENTS.md.template
 │       ├── SOUL.md.template
@@ -208,6 +209,16 @@ harness-solo/
 ```
 install.sh execution → Guide filling SOUL/constitution/PROJECT/TECH_STACK → Validate configuration completeness
 ```
+
+### new-product-engineering (Product-Level Multi-Feature Engineering)
+
+```
+session-start → brainstorming (product-level) → Engineering Foundation Gate → Product-level PLAN (ENGINEERING_PLAN.md)
+→ [Phase 1] Shared Infrastructure LOOP → [Phase 2] Per-feature new-feature LOOPs (topological sort)
+→ [Phase 3] Integration Checkpoints → product-engineering-review → Product-level Handoff → session-end
+```
+
+Use this when implementing an entire product with multiple features that must work together. It plans feature inventory + shared infrastructure + dependency graph first, then drives per-feature new-feature LOOPs, and finishes with cross-feature consistency review. For single-feature work, use `new-feature` instead.
 
 ### new-feature (New Feature Development)
 
@@ -289,6 +300,7 @@ After a session interruption, session-start reads `state.yaml` and resumes from 
 
 | Workflow | Iteration Limit | Over-Limit Handling |
 |--------|:---:|---------|
+| new-product-engineering | 5 (per feature) | Request human intervention |
 | new-feature | 5 | Request human intervention |
 | bugfix | 3 | Request human intervention |
 | refactor | 3 | Request human intervention |

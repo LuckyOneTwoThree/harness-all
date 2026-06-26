@@ -131,6 +131,23 @@ Why designed this way?
   - lint-report.md overwrite → only care about the latest lint result
   - All artifacts of one task in one directory → good cohesion, no cross-directory lookup
 
+## Task Granularity
+
+`<task>` in `loops/specs/<task>/` has three levels of granularity. Use the correct level based on the workflow:
+
+| Granularity | Naming Pattern | Example | Used by workflow | State directory |
+|-------------|----------------|---------|------------------|-----------------|
+| Component-level | `<NNN>-<component-name>` | `002-button` | design-system-setup, new-design (component task) | `loops/specs/002-button/` |
+| Page-level | `<NNN>-<page-name>` | `001-login-page` | new-design (page task) | `loops/specs/001-login-page/` |
+| Product-level | `<NNN>-<product-name>` | `001-shopping-app` | new-product-design | `loops/specs/001-shopping-app/` (product) + `loops/specs/001-shopping-app-home/` (per page) |
+
+**Rules**:
+- `<NNN>` is a zero-padded 3-digit sequence number, unique within the framework
+- Product-level tasks nest per-page tasks: product-level state.yaml tracks overall progress, per-page state.yaml tracks page progress
+- On session resume for a product-level task: read product-level state.yaml first to find current page, then read that page's state.yaml for LOOP position
+- Single-page workflows (new-design, design-iteration) use page-level or component-level; never product-level
+- If a page is part of a product-level task, its task name must include the product name prefix (e.g., `001-shopping-app-home`, not just `002-home`) to keep all pages of one product grouped in directory listing
+
 ## State Maintenance
 
 **Decision: Agent reads/writes state.yaml (one file per task, persisted to disk)**

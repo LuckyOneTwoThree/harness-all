@@ -56,7 +56,7 @@ The former `triggers` / `reads` / `writes` / `quality_gates` / `max_iterations` 
 
 ### Principle 6: Exploration First Cannot Be Bypassed
 
-Workflows with `default_mode: deep` (e.g., new-feature / refactor) must complete the requirements exploration phase (brainstorming hard gate) before entering coding.
+Workflows with `default_mode: deep` (e.g., new-product-engineering / new-feature / refactor) must complete the requirements exploration phase (brainstorming hard gate) before entering coding.
 
 - In `deep` mode, ⏸ exploration dialog points cannot be skipped; user input must be received before continuing
 - In `deep` mode, skill downgrade strategies are disabled; skipping the brainstorming hard gate is not allowed

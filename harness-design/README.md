@@ -54,28 +54,29 @@ PLAN (inline) → LOOP(DESIGN → VERIFY → LINT) → LOOP outer gate(DESIGN-RE
 - Iteration limit protection: exceeding 5 requests human intervention
 - Evidence-driven: no claiming done without review passing
 
-### 6 Workflows Cover the Full Design Lifecycle
+### 7 Workflows Cover the Full Design Lifecycle
 
 ```
-design-onboarding (first-time onboarding) → new-design/design-iteration/design-system-setup/redesign (design) → design-handoff (delivery)
+design-onboarding (first-time onboarding) → new-product-design (product-level) / new-design/design-iteration/design-system-setup/redesign (single-page) → design-handoff (delivery)
 ```
 
 | Workflow | Scenario | LOOP Type | Iteration Limit |
 |--------|------|---------|:---:|
 | design-onboarding | First-time onboarding, quick design system skeleton | No LOOP | - |
-| new-design | New design task (from 0 to 1) | wireframe/visual/interaction | 5/5/5 |
+| new-product-design | Product-level design (plan all pages → per-page LOOPs → cross-page review) | wireframe/visual/interaction/component | 5/5/5/5 |
+| new-design | New design task (from 0 to 1, single page) | wireframe/visual/interaction | 5/5/5 |
 | design-iteration | Design iteration (existing design optimization) | visual (mandatory) + interaction (conditional) | 5/5 |
 | design-system-setup | Full design system build (with component LOOP + review) | component | 5 |
 | redesign | Redesign (major revamp) | visual (mandatory) + interaction (conditional) | 5/5 |
 | design-handoff | Design handoff | No LOOP | - |
 
-### 18 Skills (14 design + 4 meta)
+### 19 Skills (15 design + 4 meta)
 
 **Design skills** :
 - Requirements & recommendation: design-brief / design-recommendation
 - Design system: design-system / design-system-import / design-system-refactor
 - Design output: visual-design / interaction-design / wireframe / component-design
-- Review & validation: verify / design-lint / design-review / accessibility-audit
+- Review & validation: verify / design-lint / design-review / product-design-review / accessibility-audit
 - Handoff: design-handoff-spec
 
 **Meta skills** : session-start / session-end / skill-maintenance / memory-maintenance
@@ -182,9 +183,9 @@ harness-design/
 │   │   └── prompt-defense.md          # Prompt injection defense
 │   ├── skills/
 │   │   ├── INDEX.md                   # Skill index (within 80 lines)
-│   │   ├── design/                    # 14 design skills
+│   │   ├── design/                    # 15 design skills
 │   │   ├── meta/                      # 4 meta skills
-│   │   └── workflows/                 # 6 workflows
+│   │   └── workflows/                 # 7 workflows
 │   ├── data/design/                   # Data-driven design recommendation (8 CSVs)
 │   ├── craft/                         # Common craft rules
 │   │   ├── anti-ai-slop.md

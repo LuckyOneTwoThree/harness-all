@@ -43,6 +43,15 @@ This skill has a hard dependency on harness-design outputs. Read each asset per 
 - **`docs/handoff/design-to-solo.md`** — handoff notes: design AC-xxx checklist (flows into verify), asset paths, open items.
 When sources conflict, follow the priority order in `Reference/component-map-contract.md`. A contradiction is a handoff defect — feed it back to harness-design.
 
+### Implementation Priority (product-level handoff)
+When the handoff is product-level (from new-product-design workflow), `component-map.json` may include an optional `usedBy` field (array of page IDs) on each component. Use it to sequence implementation:
+- **High-reuse components** (`usedBy` lists ≥3 pages, e.g., Button / Header / Footer): implement first. These are the shared foundation; pages depend on them.
+- **Medium-reuse** (2 pages): implement next, after the high-reuse tier is verified.
+- **Single-page components** (`usedBy` lists 1 page, or field absent): implement within that page's feature work.
+- **Field absent** (single-page handoff from new-design): no prioritization needed; implement in any order the feature plan dictates.
+
+`usedBy` is backward-compatible: if absent, this section does not apply and implementation proceeds per the feature plan. Do not block on missing `usedBy`.
+
 ## Component Design
 
 ### 1. Container vs. Presentation separation

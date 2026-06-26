@@ -66,10 +66,10 @@
 | Category | Framework | Responsibility | Status | Skill Count |
 |------|------|------|------|---------|
 | Core | **harness-pm** | Strategy · Market · Product · PRD · Metrics · Growth Monitoring | ✅ Built | 86 skills (82 domain + 4 meta) + 10 workflows |
-| Core | **harness-design** | UI · Visual · Interaction · Prototype · Design System | ✅ Built | 18 skills (14 domain + 4 meta) + 6 workflows |
-| Core | **harness-solo** | Engineering · TDD · Debugging · Refactoring · Verification | ✅ Built | 20 skills (16 domain + 4 meta) + 7 workflows |
-| Core | **harness-growth** | Operations · Content · SEO · Growth Experiments | ✅ Built | 40 skills (36 domain + 4 meta) + 6 workflows |
-| Extension | **harness-ops** | Ops · Deployment · Monitoring · Disaster Recovery | ✅ Built | 32 skills (28 domain + 4 meta) + 7 workflows |
+| Core | **harness-design** | UI · Visual · Interaction · Prototype · Design System | ✅ Built | 19 skills (15 domain + 4 meta) + 7 workflows |
+| Core | **harness-solo** | Engineering · TDD · Debugging · Refactoring · Verification | ✅ Built | 21 skills (17 domain + 4 meta) + 8 workflows |
+| Core | **harness-growth** | Operations · Content · SEO · Growth Experiments | ✅ Built | 40 skills (36 domain + 4 meta) + 7 workflows |
+| Extension | **harness-ops** | Ops · Deployment · Monitoring · Disaster Recovery | ✅ Built | 32 skills (28 domain + 4 meta) + 8 workflows |
 | Extension | harness-data | Data Pipeline · ETL · Metric Production | 📋 P1 To Build | - |
 | Extension | harness-qa | Quality Assurance · Automated Testing · Performance Testing | ⚠️ P2 On Demand | - |
 | Extension | harness-security | Security Audit · Compliance · Penetration Testing | ⚠️ P3 On Demand | - |
@@ -157,7 +157,7 @@ project-A/                    # Product project
 
 project-B/                    # Engineering project
 ├── .harness/                 # harness-solo config
-│   ├── skills/               # 16 engineering skills
+│   ├── skills/               # 17 engineering skills
 │   ├── memory/               # solo memory
 │   └── ...
 └── src/                      # Engineering code
@@ -313,6 +313,7 @@ docs/handoff/
 | `pm-to-solo-template.md` | PM → Solo | Product type / Tech stack / PRD path / AC-xxx / Feature priority / Tracking plan / Business Context Digest |
 | `pm-to-growth-template.md` | PM → Growth | Product type / Target audience / North Star Metric / OKR / Persona / Growth hypothesis |
 | `design-to-solo-template.md` | Design → Solo | Design system assets / Page list / Component list / AC-xxx+DAC-xxx / component-map.json |
+| `solo-to-pm-template.md` | Solo → PM | Engineering feedback / implementation status / blocker list (on demand) |
 | `solo-to-growth-template.md` | Solo → Growth | Implemented feature list / AC-xxx / Tech stack / Performance metrics / Tracking event list |
 | `solo-to-ops-template.md` | Solo → Ops | Deliverable version / Environment variable list / Database scripts / Smoke test / Rollback plan |
 | `ops-to-pm-template.md` | Ops → PM | SLA summary / Incident notices / Ops recommendations |
@@ -423,11 +424,11 @@ PLAN → RESEARCH → VALIDATE → Pass? DELIVER : Back to RESEARCH/PLAN
 PLAN (inline) → LOOP(DESIGN → VERIFY → LINT) → LOOP outer gate(DESIGN-REVIEW + ACCESSIBILITY-AUDIT)
 ```
 
-**Skill System** (18 skills = 14 design + 4 meta):
+**Skill System** (19 skills = 15 design + 4 meta):
 - Requirements & Recommendations: design-brief / design-recommendation
 - Design System: design-system / design-system-import / design-system-refactor
 - Design Output: visual-design / interaction-design / wireframe / component-design
-- Review & Verification: verify / design-lint / design-review / accessibility-audit
+- Review & Verification: verify / design-lint / design-review / product-design-review / accessibility-audit
 - Handoff: design-handoff-spec
 
 **Loop Types** (4 types):
@@ -465,12 +466,12 @@ PLAN (inline) → LOOP(DESIGN → VERIFY → LINT) → LOOP outer gate(DESIGN-RE
 PLAN → ACT → VERIFY → Pass? DONE : Back to PLAN/ACT
 ```
 
-**Skill System** (20 skills = 16 engineering + 4 meta):
+**Skill System** (21 skills = 17 engineering + 4 meta):
 - Requirements & Planning: brainstorming / writing-plans / executing-plans
 - Testing & Debugging: test-driven-development / test-coverage / systematic-debugging
 - Frontend & Performance: frontend-implementation / webapp-testing / performance-optimization
 - Migration & Dependencies: migration / dependency-management
-- Verification & Review: verify / requesting-code-review / receiving-code-review
+- Verification & Review: verify / product-engineering-review / requesting-code-review / receiving-code-review
 - Documentation & Skills: writing-documentation / writing-skills
 
 **Loop Types** (4 types):
@@ -482,12 +483,14 @@ PLAN → ACT → VERIFY → Pass? DONE : Back to PLAN/ACT
 **Core Outputs**:
 - `docs/product/PROJECT.md` — Product requirements (engineering perspective)
 - `docs/engineering/TECH_STACK.md` — Tech stack
+- `docs/engineering/ENGINEERING_PLAN.md` — Product-level engineering plan (feature inventory + shared infrastructure + dependency graph)
 - `docs/handoff/solo-to-growth.md` — Handoff to Growth
 - `.harness/loops/specs/<feature>/spec.md` — Single-feature spec (with AC + DAC)
 
 **Signature Mechanisms**:
 - **Dual-source AC Verification**: verify checks both engineering ACs (AC-xxx) and design ACs (DAC-xxx)
 - **Design Asset Consumption Contract**: frontend-implementation reads component-map.json as the single source of truth for component implementation
+- **Product-Level Engineering Orchestration**: new-product-engineering workflow plans all features + shared infrastructure + dependency order before per-feature LOOPs; product-engineering-review checks cross-feature consistency (API contract / dependency / data model / config / shared module reuse / integration runnability)
 - **Entropy Check**: verify checks file growth rate / LOC growth rate / dependency bloat / TODO backlog
 - **git hooks**: pre-commit (secret/sensitive file/commit-msg check) + pre-push
 
@@ -881,10 +884,10 @@ Phase 2: Design (harness-design)
 └── Output: design-to-solo.md + component-map.json
 
 Phase 3: Engineering (harness-solo)
-├── new-feature workflow
+├── new-product-engineering workflow (plans all features + shared infrastructure first)
 ├── Consumes: pm-to-solo.md + design-to-solo.md + component-map.json
-├── Output: code + tests + spec.md (with AC + DAC)
-└── Output: solo-to-growth.md
+├── Output: ENGINEERING_PLAN.md + code + tests + spec.md (with AC + DAC)
+└── Output: solo-to-growth.md + solo-to-ops.md
 
 Phase 4: Growth (harness-growth)
 ├── Growth experiment workflow
@@ -1157,8 +1160,8 @@ harness-all is a multi-Agent framework family with **Independence First, Contrac
 | .harness/loops/LOOP.md | ✅ | ✅ | ✅ | ✅ | ✅ |
 | .harness/skills/INDEX.md | ✅ | ✅ | ✅ | ✅ | ✅ |
 | .harness/skills/meta/ | ✅ (4 skills) | ✅ (4 skills) | ✅ (4 skills) | ✅ (4 skills) | ✅ (4 skills) |
-| .harness/skills/<domain>/ | ✅ (82 domain skills) | ✅ (14 domain skills) | ✅ (16 domain skills) | ✅ (36 domain skills) | ✅ (28 domain skills) |
-| .harness/skills/workflows/ | ✅ (10 workflows) | ✅ (6 workflows) | ✅ (7 workflows) | ✅ (6 workflows) | ✅ (7 workflows) |
+| .harness/skills/<domain>/ | ✅ (82 domain skills) | ✅ (15 domain skills) | ✅ (17 domain skills) | ✅ (36 domain skills) | ✅ (28 domain skills) |
+| .harness/skills/workflows/ | ✅ (10 workflows) | ✅ (7 workflows) | ✅ (8 workflows) | ✅ (7 workflows) | ✅ (8 workflows) |
 | .harness/rules/security.md | ✅ | ✅ | ✅ | ✅ | ✅ |
 | .harness/rules/prompt-defense.md | ✅ | ✅ | ✅ | ✅ | ✅ |
 | .harness/memory/ | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -1171,7 +1174,7 @@ harness-all is a multi-Agent framework family with **Independence First, Contrac
 | .harness/scripts/ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | docs/handoff/ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
-**Skill count note**: Each framework's total skill count = domain skills + 4 meta skills. For example, harness-design totals 18 skills (14 domain + 4 meta), harness-solo totals 20 skills (16 domain + 4 meta), harness-pm totals 86 skills (82 domain + 4 meta), harness-growth totals 40 skills (36 domain + 4 meta), harness-ops totals 32 skills (28 domain + 4 meta).
+**Skill count note**: Each framework's total skill count = domain skills + 4 meta skills. For example, harness-design totals 19 skills (15 domain + 4 meta), harness-solo totals 21 skills (17 domain + 4 meta), harness-pm totals 86 skills (82 domain + 4 meta), harness-growth totals 40 skills (36 domain + 4 meta), harness-ops totals 32 skills (28 domain + 4 meta).
 
 ## Appendix B: Contract Document Matrix
 

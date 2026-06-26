@@ -108,7 +108,9 @@ The following scenarios **always pause**, unaffected by exploration_mode:
 ## Skill Selection
 
 When you need to select a Skill, read `.harness/skills/INDEX.md` (pure index, under 80 lines).
-Workflow orchestration (new feature / bugfix) is read on demand under `.harness/skills/workflows/`.
+- Engineering skills: 17 (`.harness/skills/engineering/`)
+- Meta skills: 4 (`.harness/skills/meta/`)
+Workflow orchestration (new product engineering / new feature / bugfix / refactor / optimize / migration / release) is read on demand under `.harness/skills/workflows/`.
 
 ## Relationship with the harness family
 
