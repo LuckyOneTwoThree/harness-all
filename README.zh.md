@@ -114,6 +114,22 @@ bash /path/to/your-parent-dir/harness-all/harness-solo/install.sh
 
 安装脚本会在你的项目中创建 `.harness/` 目录结构、复制核心配置文件、初始化记忆。
 
+> **Windows 用户注意 —— `bash` 命令路由问题**
+>
+> Windows 上系统自带的 `bash.exe`(位于 `C:\Windows\System32\` 或 `WindowsApps\`)是 WSL 的存根,不是 Git Bash。如果在 PowerShell/CMD 里执行 `bash install.sh` 报错"适用于 Linux 的 Windows 子系统没有已安装的分发",说明 `bash` 命令被路由到了 WSL 而非 Git Bash。
+>
+> **三种解决方案(任选其一):**
+>
+> 1. **使用 Git Bash 终端**(推荐):从开始菜单打开 "Git Bash",然后 `cd /d/your-project && bash /path/to/install.sh`
+> 2. **PowerShell 里用完整路径**:`& "C:\Program Files\Git\bin\bash.exe" install.sh`
+> 3. **永久别名**(一次性配置):在 PowerShell profile 里添加(`notepad $PROFILE`):
+>    ```powershell
+>    function bash { & "C:\Program Files\Git\bin\bash.exe" @args }
+>    ```
+>    重开 PowerShell 后,`bash install.sh` 会永久路由到 Git Bash。
+>
+> 这是 Windows 上 WSL 与 Git Bash 的已知冲突 —— 两者都带 `bash.exe`,但 Windows 把 WSL 存根排在 PATH 前面遮蔽了 Git Bash。
+
 ### 启动 Agent
 
 在项目目录打开 AI Agent（如 Trae IDE）。Agent 自动读取：

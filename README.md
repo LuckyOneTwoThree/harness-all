@@ -114,6 +114,22 @@ bash /path/to/your-parent-dir/harness-all/harness-solo/install.sh
 
 The install script creates the `.harness/` directory structure in your project, copies core config files, and initializes memory.
 
+> **Windows users — `bash` command routing**
+>
+> On Windows, the system-provided `bash.exe` (in `C:\Windows\System32\` or `WindowsApps\`) is a WSL stub, not Git Bash. If you run `bash install.sh` in PowerShell/CMD and see "WSL has no installed distribution", the `bash` command was routed to WSL instead of Git Bash.
+>
+> **Three solutions (pick one):**
+>
+> 1. **Use Git Bash terminal** (recommended): open "Git Bash" from the Start menu, then `cd /d/your-project && bash /path/to/install.sh`
+> 2. **Full path in PowerShell**: `& "C:\Program Files\Git\bin\bash.exe" install.sh`
+> 3. **Permanent alias** (one-time setup): add to your PowerShell profile (`notepad $PROFILE`):
+>    ```powershell
+>    function bash { & "C:\Program Files\Git\bin\bash.exe" @args }
+>    ```
+>    Reopen PowerShell, then `bash install.sh` will route to Git Bash permanently.
+>
+> This is a known Windows conflict between WSL and Git Bash — both ship a `bash.exe`, but Windows puts the WSL stub earlier in PATH.
+
 ### Start the Agent
 
 Open your AI Agent (e.g., Trae IDE) in the project directory. The Agent auto-reads:
