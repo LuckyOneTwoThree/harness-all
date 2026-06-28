@@ -116,7 +116,7 @@ This skill is outside LOOP and is the final review after LOOP completes:
 | Dimension | verify | code-review |
 |------|--------|-------------|
 | Focus | Is the feature correct? | Is the code good? |
-| Timing | Every LOOP iteration | Once after LOOP completes |
+| Timing | verify-fast: every iteration (3-step); verify-full: once after LOOP exits (8-step) | Once after verify-full passes |
 | Output | evidence.md | Review conclusion |
 | Failure | Return to tdd | Hand off to receiving-code-review |
 

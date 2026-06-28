@@ -1,7 +1,7 @@
 # <feature name>
 
 > Source: produced by the writing-plans skill.
-> Load timing: read by executing-plans / tdd / verify.
+> Load timing: read by tdd / verify.
 > File semantics: overwrite write (only the final passed spec is kept).
 
 ## Goal

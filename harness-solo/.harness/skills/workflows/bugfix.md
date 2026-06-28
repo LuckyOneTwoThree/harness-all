@@ -30,6 +30,8 @@ default_mode: standard
 │              LOOP iterative fix         │
 │  ┌─────────────────────────────────┐    │
 │  │ test-driven-development (ACT)   │    │
+│  │  Route by task type (absorbs    │    │
+│  │  executing-plans scheduling)    │    │
 │  │  Reproduction test ready →      │    │
 │  │  fix root cause                 │    │
 │  │  Red (reproduce) → Green (fix)  │    │
@@ -37,9 +39,10 @@ default_mode: standard
 │  └──────────┬──────────────────────┘    │
 │             ▼                            │
 │  ┌─────────────────────────────────┐    │
-│  │ verify (VERIFY)                 │    │
+│  │ verify-fast (VERIFY, per iter)  │    │
 │  │  Reproduction test passes +     │    │
-│  │  full test suite no regression  │    │
+│  │  quick regression +             │    │
+│  │  quick security                 │    │
 │  └──────────┬──────────────────────┘    │
 │             │                            │
 │             ├── Pass → exit LOOP ────────┼──→
@@ -58,6 +61,13 @@ default_mode: standard
 │  Iteration cap: 3 (bugfix type)         │
 │  Exceeded → request human intervention  │
 └─────────────────────────────────────────┘
+         │
+         ▼
+┌─────────────────┐
+│ verify-full     │  LOOP exit gate
+│ Full test suite │  + comprehensive checks
+│ + security scan │
+└────────┬────────┘
          │
          ▼
 ┌─────────────────────┐

@@ -10,7 +10,7 @@
 [![Platform](https://img.shields.io/badge/platform-cross--platform-green.svg)](#cross-platform-compatibility)
 [![Principles](https://img.shields.io/badge/principles-Karpathy%204-orange.svg)](#karpathy-principles-in-detail)
 [![Workflows](https://img.shields.io/badge/workflows-8-purple.svg)](#workflows-in-detail)
-[![Skills](https://img.shields.io/badge/skills-21-red.svg)](#core-features)
+[![Skills](https://img.shields.io/badge/skills-20-red.svg)](#core-features)
 
 **[Quick Start](#quick-start)** · **[Directory Structure](#directory-structure)**
 
@@ -69,9 +69,11 @@ setup (project initiation) → new-product-engineering/new-feature/bugfix/refact
 | migration | Framework upgrade / API migration | 3 |
 | release | Version release | No LOOP |
 
-### 21 Skills (17 engineering + 4 meta)
+### 20 Skills (16 engineering + 4 meta)
 
-**Engineering skills** : brainstorming / writing-plans / executing-plans / test-driven-development / test-coverage / systematic-debugging / performance-optimization / migration / dependency-management / frontend-implementation / verify / product-engineering-review / webapp-testing / requesting-code-review / receiving-code-review / writing-skills / writing-documentation
+**Engineering skills** : brainstorming / writing-plans / test-driven-development / test-coverage / systematic-debugging / performance-optimization / migration / dependency-management / frontend-implementation / verify / product-engineering-review / webapp-testing / requesting-code-review / receiving-code-review / writing-skills / writing-documentation
+
+> Note: `executing-plans` has been merged into `test-driven-development` (routing logic absorbed into tdd Step 1). The SKILL.md file is retained for reference only.
 
 **Meta skills** : session-start / session-end / skill-maintenance / memory-maintenance
 
@@ -227,7 +229,7 @@ Use this when implementing an entire product with multiple features that must wo
 ### new-feature (New Feature Development)
 
 ```
-session-start → brainstorming (hard gate) → writing-plans → LOOP(executing-plans→tdd→verify) → code-review → session-end
+session-start → brainstorming (hard gate) → writing-plans → LOOP(tdd→verify-fast) → verify-full → code-review → session-end
 ```
 
 **brainstorming hard gate** (5 checks; stop and ask if any one is not met):
@@ -240,13 +242,13 @@ session-start → brainstorming (hard gate) → writing-plans → LOOP(executing
 ### bugfix (Bug Fix)
 
 ```
-session-start → systematic-debugging (root cause analysis) → LOOP(tdd→verify) → code-review → session-end
+session-start → systematic-debugging (root cause analysis) → LOOP(tdd→verify-fast) → verify-full → code-review → session-end
 ```
 
 ### refactor (Refactor)
 
 ```
-session-start → brainstorming (confirm boundaries) → writing-plans → Prerequisite: build a test safety net → LOOP(executing-plans→tdd→verify) → code-review → session-end
+session-start → brainstorming (confirm boundaries) → writing-plans → Prerequisite: build a test safety net → LOOP(tdd→verify-fast) → verify-full → code-review → session-end
 ```
 
 ### optimize (Performance Optimization)

@@ -53,7 +53,7 @@ default_mode: standard
 │  └──────────┬──────────────────────┘    │
 │             ▼                            │
 │  ┌─────────────────────────────────┐    │
-│  │ verify (VERIFY)                 │    │
+│  │ verify-fast (VERIFY, per iter)  │    │
 │  │  - Re-test the same way,        │    │
 │  │    compare before/after         │    │
 │  │  - Full test suite no regression│    │
@@ -78,6 +78,13 @@ default_mode: standard
 │  Iteration cap: 3 (optimize type)       │
 │  Exceeded → request human intervention  │
 └─────────────────────────────────────────┘
+         │
+         ▼
+┌─────────────────┐
+│ verify-full     │  LOOP exit gate
+│ Full test suite │  + comprehensive checks
+│ + security scan │
+└────────┬────────┘
          │
          ▼
 ┌─────────────────────┐

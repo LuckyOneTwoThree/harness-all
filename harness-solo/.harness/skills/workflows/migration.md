@@ -74,7 +74,7 @@ default_mode: standard
 │  └──────────┬──────────────────────┘    │
 │             ▼                            │
 │  ┌─────────────────────────────────┐    │
-│  │ verify (VERIFY)                 │    │
+│  │ verify-fast (VERIFY, per iter)  │    │
 │  │  - Full test suite no regression│    │
 │  │    (mandatory)                  │    │
 │  │  - Behavior equivalence confirm │    │
@@ -96,6 +96,13 @@ default_mode: standard
 │  Iteration cap: 3 (refactor type)       │
 │  Exceeded → request human intervention  │
 └─────────────────────────────────────────┘
+         │
+         ▼
+┌─────────────────┐
+│ verify-full     │  LOOP exit gate
+│ Full test suite │  + comprehensive checks
+│ + security scan │
+└────────┬────────┘
          │
          ▼
 ┌─────────────────────────────────────────┐

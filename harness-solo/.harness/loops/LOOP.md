@@ -208,13 +208,21 @@ nested_progress: "<progress overview>"                       # Nested sub-task p
 
 ## Verification Protocol (originally from verification.md)
 
-### Required checks during the VERIFY phase
+### Two-Layer Verification (see verify/SKILL.md for full detail)
 
-1. **Tests pass**: Run the project test command and show the full output
-2. **Acceptance criteria**: Check each AC-xxx in spec.md item by item (the spec.md ACs cover the project-level ACs in PROJECT.md)
-3. **Constitution compliance**: Check for violations of the principles in constitution.md
-4. **Security scan**: Per "Approach A" in the verify SKILL.md, use the Grep tool to scan (cross-platform); when bash is available, optionally run `security-check.sh` as a fallback
-5. **Entropy check** (optional): Per "Approach A" in the verify SKILL.md, use Glob+Read to gather stats (cross-platform); when bash is available, optionally run `entropy-check.sh` as a fallback
+Verification runs at two points in the LOOP cycle:
+
+1. **verify-fast** (inside LOOP, per iteration): 3 steps
+   - Tests pass (show actual output)
+   - AC check (current task's AC-xxx + DAC-xxx + component contract if applicable)
+   - Quick security scan (Grep changed files for secrets/passwords patterns)
+   - Pass → continue to next task or exit LOOP
+   - Fail → back to tdd
+
+2. **verify-full** (after LOOP exits, before code-review): 8 steps
+   - Tests pass + AC item-by-item + Constitution compliance + Security scan (full) + Entropy check + Frontend verification + Write evidence + Update state
+   - Pass → enter code-review
+   - Fail → back to LOOP
 
 ### Prerequisites for claiming "done"
 

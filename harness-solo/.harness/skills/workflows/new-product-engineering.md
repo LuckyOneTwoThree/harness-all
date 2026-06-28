@@ -105,7 +105,7 @@ For each shared infrastructure module in ENGINEERING_PLAN.md Section 3 (in prior
 
 - Run a mini new-feature workflow for the infrastructure module:
   - writing-plans (produce spec.md for the module, e.g., `loops/specs/<NNN>-<product-name>-infra-<module-name>/spec.md`)
-  - LOOP(tdd → verify) [feature type, max 5]
+  - LOOP(tdd → verify-fast) [feature type, max 5] → verify-full
   - code-review (gate outside LOOP)
 - Output: functional shared infrastructure module + tests
 - After all infrastructure modules complete, run **Integration Checkpoint IC1**: shared infrastructure compiles + unit tests pass
@@ -160,7 +160,7 @@ After all features in ENGINEERING_PLAN.md Section 2 reach Status = done or skipp
 
 ### 9. Product-level Handoff
 
-> **Division of labor with session-end**: The actual handoff document writing is executed by session-end (steps 6-8). Step 9 only prepares the product-level aggregated content (cross-feature summaries, shared infrastructure list, aggregated tracking events / env vars / dependency list) for session-end to consume — it does not write the handoff files itself.
+> **Division of labor with session-end**: The actual handoff document writing is executed by session-end (Step 3, Conditions 2-4). Step 9 only prepares the product-level aggregated content (cross-feature summaries, shared infrastructure list, aggregated tracking events / env vars / dependency list) for session-end to consume — it does not write the handoff files itself.
 
 Run the handoff skills at product level:
 

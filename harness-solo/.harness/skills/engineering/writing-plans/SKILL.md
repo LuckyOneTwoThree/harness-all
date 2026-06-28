@@ -172,18 +172,18 @@ description: Task breakdown — output an executable spec.md
 
 | Anti-pattern | Common excuse | Why it doesn't hold |
 |---|---|---|
-| Coding directly without writing spec.md | "I have it all in my head" | executing-plans needs a spec input; without spec.md the LOOP engine cannot schedule tasks |
+| Coding directly without writing spec.md | "I have it all in my head" | tdd needs a spec input; without spec.md the LOOP engine cannot schedule tasks |
 | ACs without a source annotation | "I came up with them all myself" | ACs without a source cannot be traced back during verify, so failures cannot be routed to the right owner |
 | Task granularity too large | "This feature is one thing" | Tasks > 5 minutes cannot be covered by a single tdd cycle and stall LOOP |
 | Skipping state.yaml initialization | "I'll create it when I start coding" | The LOOP engine depends on state.yaml; without it, iteration tracking cannot start |
 | Skipping constitution review | "Review is too slow" | The constitution is the bottom line; skipping it equals no review and propagates risk into execution |
-| Frontend component tasks without `Contract: component-map.json#<Component>` | "I'll just describe the component in the task" | Without explicit contract reference, executing-plans cannot route the task to frontend-implementation, and tdd will guess props/states instead of sourcing them from design — implementation drifts from the design contract silently |
+| Frontend component tasks without `Contract: component-map.json#<Component>` | "I'll just describe the component in the task" | Without explicit contract reference, tdd cannot route the task to frontend-implementation, and tdd will guess props/states instead of sourcing them from design — implementation drifts from the design contract silently |
 
 
 ## Red Flags
 - A task description contains the word "and" — it is likely two tasks stitched together and must be split.
 - spec.md has no DAC section even though the feature touches the frontend (design-to-solo.md exists).
-- A frontend component task lacks the `Contract: component-map.json#<Component>` line while component-map.json exists — executing-plans will treat it as a backend task and skip frontend-implementation, causing silent contract drift.
+- A frontend component task lacks the `Contract: component-map.json#<Component>` line while component-map.json exists — tdd will treat it as a backend task and skip frontend-implementation, causing silent contract drift.
 - state.yaml is missing or has `iteration > 0` at the plan stage — LOOP has already been started or the file was never created.
 - AC descriptions contain "should be", "easy to", or "user-friendly" — they are not testable and must be rewritten as "given X, then Y".
 - A single task is estimated at > 5 minutes — granularity is too coarse for the tdd cycle and must be split further.

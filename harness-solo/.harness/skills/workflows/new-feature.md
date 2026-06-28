@@ -120,7 +120,7 @@ Before brainstorming, the Agent auto-verifies the engineering foundation exists:
 - [ ] Did each LOOP iteration update state.yaml and iterations.log?
 - [ ] Did verify show actual output? (Not "should pass")
 - [ ] Did code-review pass?
-- [ ] Did session-end execute the archive steps? (Per SKILL.md steps 4.1-4.2)
+- [ ] Did session-end execute the archive steps? (Per SKILL.md steps 3.1-3.2)
 
 ## Interaction Points
 

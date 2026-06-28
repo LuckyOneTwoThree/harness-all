@@ -35,8 +35,7 @@ default_mode: skip
 │  - Have PROJECT.md's milestone statuses │
 │    been updated?                        │
 │  - Does the full test suite pass?       │
-│  - Does the verify skill's comprehensive│
-│    check pass?                          │
+│  - Does verify-full pass?               │
 │  - Security scan has no critical/high?  │
 │  - Constitution compliant?              │
 │                                         │
