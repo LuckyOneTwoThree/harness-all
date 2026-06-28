@@ -27,6 +27,37 @@ description: Task breakdown — output an executable spec.md
 
 ## Process
 
+## Mode-Adaptive Process
+
+| Mode | Steps | Constitution Review |
+|------|-------|-------------------|
+| `deep` | 5 steps (below) | Full review (dependencies/API/schema/core files/doc length) |
+| `standard` | 3 steps (below) | Quick check (new dependencies + schema only) |
+
+### Standard Mode Fast Path (3 steps)
+
+#### Standard 1. Create feature directory + Write spec.md
+- Glob `loops/specs/` to find max NNN, create `NNN_<feature_name>/`
+- Write spec.md: Goal + AC (from brainstorming) + Task Breakdown (2-5 min tasks) + Technical Approach + Boundaries
+- Frontend tasks must include `Contract: component-map.json#<Component>` line
+- (Combines original steps 1+2)
+
+#### Standard 2. Task granularity control + Initialize state.yaml
+- Verify each task is 2-5 minutes, independently verifiable, with clear deliverables
+- Initialize state.yaml: iteration=0, stage=plan, status=ready
+- (Combines original steps 3+4)
+
+#### Standard 3. Quick constitution review (👤 human decision point)
+- New dependencies approved? (if any)
+- Schema migration task included? (if schema changes)
+- No full constitution scan — only check the two highest-risk items
+- Pass → enter tdd (LOOP starts)
+- (Simplified version of original step 5)
+
+---
+
+### Deep Mode Full Process (5 steps)
+
 1. **Create the feature directory**
    Create a feature directory under `.harness/loops/specs/`:
    ```

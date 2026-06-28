@@ -31,12 +31,43 @@ description: Delivery Verification — mandatory comprehensive check before clai
 
 ## Process
 
+## Two-Layer Verification
+
+Verification runs at two points in the LOOP cycle:
+
+1. **verify-fast** (inside LOOP, per iteration): 3 steps — tests + AC + quick security scan
+   - Purpose: catch regressions quickly without overhead of full checks
+   - Trigger: after each tdd Red→Green→Refactor cycle
+   - Pass → continue to next task or exit LOOP
+   - Fail → back to tdd
+
+2. **verify-full** (after LOOP exits, before code-review): 8 steps — full comprehensive check
+   - Purpose: final gate before claiming feature complete
+   - Trigger: all tasks in spec.md done + verify-fast passed
+   - Pass → enter code-review
+   - Fail → back to LOOP
+
+### verify-fast (per iteration, 3 steps)
+
+### Fast 1. Test Pass Check
+Run the project's test command and **show the full output** (not the four words "tests passed"). All pass → continue. Any failure → write to `state.yaml`'s `last_error` and return to tdd.
+
+### Fast 2. Acceptance Criteria Check
+Check each `AC-xxx` (and `DAC-xxx` if present) for the current task item by item. Mark `✓` only when you can cite a specific test, assertion, or demo. Component contract check (if `Contract:` lines exist): cross-check props/states/engineeringComponent against `component-map.json`.
+
+### Fast 3. Quick Security Scan
+Grep the changed files for `password|secret|api_key|token|rm -rf` patterns. **Show the hits and dispositions.** No hits → continue. Hits → continue only after disposition.
+
+---
+
+### verify-full (LOOP exit gate)
+
 Run all eight steps in order. Each step is summarized below; the Reference files carry the canonical detail.
 
-### 1. Test Pass Check
+### Full 1. Test Pass Check
 Run the project's test command and **show the full output** (not the four words "tests passed"). All pass → continue. Any failure → write to `state.yaml`'s `last_error` and return to tdd. Paste the runner's own summary line into evidence.
 
-### 2. Acceptance Criteria Item-by-Item Check
+### Full 2. Acceptance Criteria Item-by-Item Check
 Read every `AC-xxx` (engineering, from `spec.md`) and `DAC-xxx` (design, flowed in from `design-to-solo.md`) and check each one. Mark `✓` only when you can cite a specific test, assertion, or demo; mark `✗` with a reason otherwise. Design ACs that cannot be verified at the engineering layer are marked `needs harness-design review`, not `✗`. All `✓` → continue. Any `✗` → return to tdd (engineering AC) or feed back to harness-design (design AC).
 
 **Component contract check (frontend tasks only)**: if `spec.md` contains tasks with `Contract: component-map.json#<Component>` lines, for each such component cross-check the implemented code against `docs/handoff/component-map.json`:
@@ -45,22 +76,22 @@ Read every `AC-xxx` (engineering, from `spec.md`) and `DAC-xxx` (design, flowed 
 - The `engineeringComponent` name matches the actual code component name.
 A mismatch is a `✗` with reason `contract drift: <field> mismatch`. This check is in addition to AC/DAC — the ACs may pass while the component silently drifts from the contract (e.g., missing `loading` state that no AC explicitly covers).
 
-### 3. Constitution Compliance Check
+### Full 3. Constitution Compliance Check
 Read `constitution.md` and check item by item: unapproved new dependencies, APIs without tests, schema changes without migration scripts, plus any project-specific clauses. Use the actual `git diff` of lockfiles — do not rely on memory.
 
-### 4. Security Scan (mandatory, cross-platform)
+### Full 4. Security Scan (mandatory, cross-platform)
 Use Method A (Agent-driven Grep/Read; works on Windows) or Method B (optional `bash .harness/scripts/security-check.sh`). Scope every pattern to the files changed in this iteration. Apply the false-positive rules before escalating any hit. **Show the actual hits and dispositions**; do not write only "security scan passed". For the full pattern catalog, hit policies, and false-positive guidance, see `Reference/security-patterns.md`.
 
-### 5. Entropy Check (cross-platform)
+### Full 5. Entropy Check (cross-platform)
 Read `.harness/memory/baseline.json` and compare current metrics (files, loc, deps, TODO/FIXME) against the baseline. Apply the WARN/FAIL thresholds: `files` growth > 20% AND absolute delta > 50; `loc` growth > 50%; `deps` more than 3 new (WARN) or 6 new (FAIL); `todos` count > 20 or growth > 50% (WARN), > 50 (FAIL). Method A uses Glob/Read/Grep; Method B uses `bash .harness/scripts/entropy-check.sh`. On Windows you must use Method A. For the schema, threshold derivation, and skip rules, see `Reference/entropy-baseline.md`.
 
-### 6. Frontend Verification (if frontend code is involved)
+### Full 6. Frontend Verification (if frontend code is involved)
 Use Glob to scan the files changed in this iteration. If any match `*.tsx` / `*.vue` / `*.svelte` / `*.html` / `*.css`, invoke the `webapp-testing` skill for build, type check, lint, structural, and frontend-security verification. Merge the results into the "Frontend Verification" section of evidence.md. If no frontend code was changed, write `no frontend code changes, skipped` and move on.
 
-### 7. Write Evidence
+### Full 7. Write Evidence
 Summarize the actual output of steps 1–6 into `evidence.md` using the canonical template. Every section heading must be present even when the answer is `skipped` or `n/a`. For the full template, section-by-section instructions, and a worked sample, see `Reference/evidence-template.md`.
 
-### 8. Update State
+### Full 8. Update State
 Update `state.yaml` per the schema in `loops/LOOP.md`: `stage: verify`, `status: done` (all pass) or `retrying` (any failure), `last_error: ""` on success or the error description on failure. Append (never overwrite) a line to `iterations.log`:
 ```
 [YYYY-MM-DD HH:MM] iter=<N> stage=verify → PASSED

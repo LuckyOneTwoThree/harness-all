@@ -1,8 +1,19 @@
 ---
 name: executing-plans
-description: Execute the spec.md produced by writing-plans, advancing through the task sequence with checkpoints
+description: "[MERGED] This skill's routing logic has been merged into test-driven-development. Retained for INDEX.md integrity and historical reference only."
 ---
-# Executing Plans — Plan Execution
+# Executing Plans — [MERGED into test-driven-development]
+
+> **⚠️ This skill has been merged.** Its task-routing logic (mixed-task detection, `Contract:` line routing, component-map.json existence check) has been absorbed into `test-driven-development` Step 1 (Red) as a pre-routing phase. The checkpoint logic has been moved to `verify` (run after each task's verify-fast/full completes).
+>
+> **Do not invoke this skill.** The LOOP cycle now goes directly: `writing-plans → tdd (with routing) → verify → code-review`.
+>
+> This file is retained for:
+> - INDEX.md structural integrity
+> - Historical reference of the routing rules
+> - Division-of-labor documentation
+>
+> The routing rules now live in `test-driven-development/SKILL.md` Step 1.
 
 ## When to use
 - After writing-plans completes

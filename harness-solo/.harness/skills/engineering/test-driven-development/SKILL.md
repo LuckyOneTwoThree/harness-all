@@ -12,6 +12,10 @@ description: Test-Driven Development (TDD) — red→green→refactor
 ## Inputs
 - rules/security.md
 - loops/LOOP.md
+- loops/specs/<feature>/spec.md
+- loops/specs/<feature>/state.yaml
+- docs/engineering/TECH_STACK.md
+- docs/handoff/component-map.json (optional)
 
 ## Outputs
 - loops/specs/<feature>/state.yaml
@@ -23,45 +27,34 @@ description: Test-Driven Development (TDD) — red→green→refactor
 
 ## Process
 
-### Red
-1. Based on the acceptance criteria in spec.md, write a failing test
-2. Run the test and **confirm it fails** (not "should fail", but actually see FAIL)
-3. The failure reason must be "feature not implemented", not "the test itself has a bug"
+### 1. Red (写失败测试)
 
-### Green
-1. Write the **minimal** implementation to make the test pass
-2. Run the test and confirm it passes
-3. Do not over-engineer — just enough to pass; leave refactoring for the next step
+**前置路由（吸收自 executing-plans）**：
+- Read `loops/specs/<feature>/spec.md` 确认当前任务 T<N>
+- Read `loops/specs/<feature>/state.yaml` 确认恢复位置
+- Read `docs/engineering/TECH_STACK.md` 确认 test/lint/build 命令
+- 任务路由判断：
+  - 如果任务含 `Contract: component-map.json#<Component>` 行 → 先调 `frontend-implementation` 技能读 component-map.json 获取契约，再继续写测试
+  - 如果任务是混合任务（同时含前端组件+后端逻辑）→ STOP，返回 writing-plans 拆分
+  - 如果 `Contract:` 行存在但 component-map.json 缺失 → STOP，要求 harness-design 交付
+  - 无 `Contract:` 行 → 直接写测试
 
-### Refactor
-1. Refactor the code while the tests are all green
-2. Run the tests immediately after each refactor and confirm no regression
-3. Refactor goal: readability, eliminating duplication, not adding features
+**写测试**：
+- 基于 spec.md 中的 AC-xxx 写失败测试
+- 运行测试，确认失败
+- 失败原因必须是"功能未实现"而非"测试本身有 bug"
 
-## State Maintenance Per Iteration
+### 2. Green (写最小实现)
+- 写最小实现让测试通过
+- 运行测试确认通过
+- 不过度工程（YAGNI）
+- 如果任务含 Contract: 行，实现需遵循 frontend-implementation 产出的结构/样式/状态指导
 
-After completing one red→green→refactor, update state.yaml per the "state.yaml Schema" in `loops/LOOP.md`:
-- `iteration`: +1
-- `stage`: `act`
-- `status`: `running`
-- `last_error`: clear to "" on success
-
-On failure, update:
-- `stage`: `verify` (about to enter verification but failed)
-- `last_error`: `"test_xxx FAILED: <error message>"`
-- `status`: `retrying`
-
-For full field definitions and write responsibilities, see the "Field Write Responsibilities" table in LOOP.md.
-
-**Update iterations.log (must append, overwriting is forbidden)**:
-- Tool approach: first Read the current iterations.log → append the new line → Write it back
-- Or terminal command: `echo "[YYYY-MM-DD HH:MM] iter=<N> stage=act → verify FAILED: <test name>" >> .harness/loops/specs/<feature>/iterations.log`
-- Do not use Write to overwrite iterations.log directly (it would erase historical iteration records)
-
-Append format:
-```
-[YYYY-MM-DD HH:MM] iter=<N> stage=act → verify FAILED: <test name>
-```
+### 3. Refactor (重构 + 更新状态)
+- 测试全绿下重构（可读性、消除重复，不加功能）
+- 每次重构后运行测试确认无回归
+- 更新 state.yaml: iteration +1, stage=act, status=running, last_error="" (成功) 或失败详情
+- 追加 iterations.log（Read 当前内容 → 追加新行 → Write 回去）
 
 ## Prohibitions
 - Writing code first and adding tests later (putting the cart before the horse)

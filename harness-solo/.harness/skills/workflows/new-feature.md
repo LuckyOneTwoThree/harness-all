@@ -2,8 +2,10 @@
 workflow_id: B
 name: new-feature
 description: "Develop new features through brainstorming, TDD-driven LOOPs, and code review"
-default_mode: deep
+default_mode: standard
 ---
+
+> **Default mode is `standard`.** For ambiguous requirements or new architecture, switch to `deep` mode. For trivial changes under 10 lines, use the `quick-fix` workflow instead.
 
 # Workflow new-feature
 
@@ -25,14 +27,14 @@ default_mode: deep
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ Engineering Foundation Gate (hard gate) │
+│ Engineering Foundation Gate (auto)      │
 │                                         │
 │  - docs/engineering/TECH_STACK.md       │
 │    exists and has test/build/lint?      │
 │  - docs/product/PROJECT.md exists?      │
 │                                         │
-│  ★ If missing → prompt to run setup     │
-│    workflow first; do not proceed       │
+│  ★ Auto-pass if both present;           │
+│    pause only if either is missing      │
 └────────┬────────────────────────────────┘
          │ Passed
          ▼
@@ -53,20 +55,15 @@ default_mode: deep
 ┌─────────────────────────────────────────┐
 │              LOOP iterative validation  │
 │  ┌─────────────────────────────────┐    │
-│  │ executing-plans (scheduler)     │    │
-│  │  Advance per task sequence,     │    │
-│  │  checkpoint per task            │    │
-│  └──────────┬──────────────────────┘    │
-│             ▼                            │
-│  ┌─────────────────────────────────┐    │
 │  │ test-driven-development (ACT)   │    │
+│  │  Route by task type (absorbs    │    │
+│  │  executing-plans scheduling)    │    │
 │  │  Red → Green → Refactor         │    │
 │  └──────────┬──────────────────────┘    │
 │             ▼                            │
 │  ┌─────────────────────────────────┐    │
-│  │ verify (VERIFY)                 │    │
-│  │  Tests + AC + constitution +    │    │
-│  │  security + entropy             │    │
+│  │ verify-fast (VERIFY, per iter)  │    │
+│  │  Tests + AC + quick security    │    │
 │  └──────────┬──────────────────────┘    │
 │             │                            │
 │             ├── Pass → exit LOOP ────────┼──→
@@ -97,18 +94,20 @@ default_mode: deep
 └─────────────────┘
 ```
 
-See ASCII diagram above for node sequence. Each node delegates to its corresponding SKILL.md for detailed steps. Key nodes: session-start (load context) → Engineering Foundation Gate → brainstorming (hard gate) → writing-plans → LOOP(executing-plans/tdd/verify/systematic-debugging) → requesting-code-review → session-end (archive + update FEATURES.md).
+See ASCII diagram above for node sequence. Each node delegates to its corresponding SKILL.md for detailed steps. Key nodes: session-start (load context) → Engineering Foundation Gate (auto-check) → brainstorming (hard gate) → writing-plans → LOOP(tdd/verify-fast/systematic-debugging) → verify-full (LOOP exit gate) → requesting-code-review → session-end (archive + update FEATURES.md).
 
-## Engineering Foundation Gate (hard gate)
+## Engineering Foundation Gate (auto-check)
 
-Before brainstorming, verify the engineering foundation exists:
+This gate is auto-checked. Only pauses if TECH_STACK.md or PROJECT.md is missing.
 
-- [ ] Read `docs/engineering/TECH_STACK.md` — must exist and have test/build/lint commands filled in
-- [ ] Read `docs/product/PROJECT.md` — must exist with acceptance criteria
-- [ ] If either is missing or incomplete → **refuse to proceed**, prompt user with options:
+Before brainstorming, the Agent auto-verifies the engineering foundation exists:
+
+- [ ] Read `docs/engineering/TECH_STACK.md` — must exist and have test/build/lint commands filled in → auto-pass if present
+- [ ] Read `docs/product/PROJECT.md` — must exist with acceptance criteria → auto-pass if present
+- [ ] If either is missing or incomplete → **pause and prompt user** with options:
   - Option A: run `setup` workflow first (initialize config files)
   - Option B: run `new-product-engineering` workflow instead (it includes this gate and handles multi-feature)
-- **Hard gate rationale**: executing-plans / verify depend on TECH_STACK.md for test/build/lint commands. Proceeding without it causes silent failures — commands cannot run, verify cannot validate, LOOP cannot iterate.
+- **Auto-check rationale**: TECH_STACK.md exists and has test/build/lint → auto-pass; PROJECT.md exists → auto-pass; either missing → pause. tdd / verify depend on TECH_STACK.md for test/build/lint commands. Proceeding without it causes silent failures — commands cannot run, verify cannot validate, LOOP cannot iterate.
 
 ## Task Granularity
 
@@ -128,7 +127,7 @@ Before brainstorming, verify the engineering foundation exists:
 | Point | Type | Mode-dependent? |
 |------|------|-----------------|
 | brainstorming assumptions confirmation | 👤 human decision | Always pause |
-| Engineering Foundation Gate resolution | 👤 human decision | Always pause |
+| Engineering Foundation Gate resolution | ⚙️ auto-check | Pause only if missing |
 | spec.md confirmation | 👤 human decision | Always pause |
 | code-review Critical findings | 👤 human decision | Always pause |
 | Module boundary pauses | ⏸ exploration dialog | Controlled by exploration_mode |

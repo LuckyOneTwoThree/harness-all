@@ -2,8 +2,10 @@
 workflow_id: D
 name: refactor
 description: "Refactor existing code to improve structure without changing external behavior, with test safety nets"
-default_mode: deep
+default_mode: standard
 ---
+
+> **Default mode is `standard`.** For ambiguous requirements or new architecture, switch to `deep` mode. For trivial changes under 10 lines, use the `quick-fix` workflow instead.
 
 # Workflow refactor
 
@@ -53,13 +55,9 @@ default_mode: deep
 │  └──────────┬──────────────────────┘    │
 │             ▼                            │
 │  ┌─────────────────────────────────┐    │
-│  │ executing-plans (scheduler)     │    │
-│  │  Advance per task sequence,     │    │
-│  │  checkpoint per task            │    │
-│  └──────────┬──────────────────────┘    │
-│             ▼                            │
-│  ┌─────────────────────────────────┐    │
 │  │ test-driven-development (ACT)   │    │
+│  │  - Route by task type (absorbs  │    │
+│  │    executing-plans scheduling)  │    │
 │  │  - Change structure, not        │    │
 │  │    behavior                     │    │
 │  │  - Run tests immediately after  │    │

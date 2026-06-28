@@ -63,14 +63,10 @@ default_mode: standard
 ┌─────────────────────────────────────────┐
 │              LOOP iterative migration   │
 │  ┌─────────────────────────────────┐    │
-│  │ executing-plans (scheduler)     │    │
-│  │  Advance per task sequence,     │    │
-│  │  checkpoint per task            │    │
-│  └──────────┬──────────────────────┘    │
-│             ▼                            │
-│  ┌─────────────────────────────────┐    │
 │  │ migration (ACT) — incremental   │    │
 │  │  migration                      │    │
+│  │  - Route by task type (absorbs  │    │
+│  │    executing-plans scheduling)  │    │
 │  │  - Point one consumer at a time │    │
 │  │    to the new system            │    │
 │  │  - Run full test suite, behavior│    │

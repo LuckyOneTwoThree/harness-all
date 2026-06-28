@@ -14,29 +14,48 @@
 5. **Session end** — Update `memory/progress.md`, then follow the `session-end` SKILL.md steps to archive (no bash dependency, cross-platform)
 6. **Interact first** — Workflows are not auto-run scripts; exploration dialog points (⏸) are controlled by exploration_mode, human decision points (👤) always pause
 
-## Exploration Mode (exploration_mode)
+## Workflow Mode (3-tier speed)
 
-Controls the interaction depth during workflow execution. Three modes:
+Three workflow modes balance speed vs rigor. The Agent auto-detects the appropriate tier; user can override anytime.
 
-| Mode | ⏸ Exploration dialog | Applicable scenarios |
-|------|-----------|---------|
-| `deep` | Pause dialog before every module; must receive user input before continuing | New feature development / unclear direction / requires brainstorming hard gate |
-| `standard` | Pause dialog only at module boundaries; auto-execute within modules | Bug fixes / performance optimization / tasks with clear requirements |
-| `skip` | No exploration dialog pause; auto-execute by workflow | Releases / emergency fixes / existing thorough technical plan |
+| Tier | Workflow | Steps | When to use |
+|------|---------|-------|-------------|
+| **quick-fix** | `quick-fix` | ~5 | Under 10 lines, no new deps/APIs/schema, no frontend contracts, no core files |
+| **standard** | `new-feature` / `bugfix` / `refactor` | ~18 | Clear requirements, normal feature dev or bug fix |
+| **deep** | `new-feature` / `new-product-engineering` | ~35 | Ambiguous requirements, new architecture, cross-module impact |
 
-**Default mode source priority**: User explicit switch > workflow frontmatter `default_mode` > `standard`
+**Auto-detection signals**:
 
-**How to switch**: At any time in the dialog, say "switch to deep/standard/skip mode"; after Agent confirms, it writes to the `exploration_mode` field in `state.yaml`
+| Signal | Recommended tier |
+|--------|-----------------|
+| User says "quick fix" / "small tweak" / "typo" | quick-fix |
+| Change is single-file, under 10 lines, no new deps | quick-fix |
+| Has clear spec or handoff, normal scope | standard |
+| Requirements ambiguous, needs exploration | deep |
+| User says "go full flow" / "this is complex" | deep |
+| Multi-feature product implementation | deep (new-product-engineering) |
 
-**skip mode safety fallback**: When starting in skip mode, the Agent must check whether `memory/progress.md` and `docs/handoff/` contain upstream requirement documents. If no requirement documents exist, **refuse to execute skip, downgrade to standard, and inform the user**
+**Mode source priority**: User explicit choice > auto-detection > workflow frontmatter `default_mode` > `standard`
 
-**Mode and downgrade strategy linkage**:
+**How to switch**: Say "switch to quick-fix/standard/deep mode" anytime; Agent confirms and writes `exploration_mode` in `state.yaml`
+
+**Exploration dialog depth per mode**:
+
+| Mode | ⏸ Exploration dialog | Brainstorming hard gate |
+|------|----------------------|------------------------|
+| `deep` | Pause before every module | Full 5-step + 4-checkbox gate |
+| `standard` | Pause only at module boundaries | Simplified 3-step + 2-checkbox gate |
+| `skip` (quick-fix) | No dialog pause | Skipped (trivial changes only) |
+
+**skip mode safety fallback**: When starting in skip/quick-fix mode, if the change exceeds 10 lines or involves new dependencies, **auto-upgrade to standard and inform the user**
+
+**Downgrade strategy linkage**:
 
 | Mode | Downgrade strategy |
-|------|---------|
-| `deep` | **Downgrade disabled** — user wants deep exploration; skipping the brainstorming hard gate is not allowed |
-| `standard` | Downgrade allowed, but downgraded output must be marked `degraded: true` |
-| `skip` | Downgrade allowed, no extra marking |
+|------|--------------------|
+| `deep` | **Downgrade disabled** — deep exploration required; brainstorming hard gate cannot be skipped |
+| `standard` | Downgrade allowed; downgraded output must be marked `degraded: true` |
+| `skip` | Downgrade allowed; auto-upgrade to standard if scope exceeds quick-fix limits |
 
 ## Human Decision Points (general rules)
 
@@ -69,7 +88,7 @@ Four principles as a concrete supplement to the core rules: **Think Before Codin
 When you need to select a Skill, read `.harness/skills/INDEX.md` (pure index, under 80 lines).
 - Engineering skills: 17 (`.harness/skills/engineering/`)
 - Meta skills: 4 (`.harness/skills/meta/`)
-Workflow orchestration (new product engineering / new feature / bugfix / refactor / optimize / migration / release) is read on demand under `.harness/skills/workflows/`.
+Workflow orchestration (quick-fix / new product engineering / new feature / bugfix / refactor / optimize / migration / release) is read on demand under `.harness/skills/workflows/`. Use `quick-fix` for changes under 10 lines; use `new-feature` (standard mode) for normal features; use `new-product-engineering` (deep mode) for multi-feature products.
 
 ## Relationship with the harness family
 

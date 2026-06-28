@@ -56,14 +56,18 @@ The former `triggers` / `reads` / `writes` / `quality_gates` / `max_iterations` 
 
 ### Principle 6: Exploration First Cannot Be Bypassed
 
-Workflows with `default_mode: deep` (e.g., new-product-engineering / new-feature / refactor) must complete the requirements exploration phase (brainstorming hard gate) before entering coding.
+**All modes (`deep` / `standard`) must complete the brainstorming hard gate** before entering coding; only `skip` mode (quick-fix) is exempt. The hard gate depth is tiered by mode:
 
-- In `deep` mode, ⏸ exploration dialog points cannot be skipped; user input must be received before continuing
-- In `deep` mode, skill downgrade strategies are disabled; skipping the brainstorming hard gate is not allowed
-- Users can only bypass this by explicitly stating "switch to skip mode", and the Agent must record the reason in `state.yaml`
-- `skip` mode has a safety fallback: automatically downgrades to `standard` when no requirement documents exist
+- `deep` mode: 5-step exploration + 4-checkbox hard gate
+  - ⏸ exploration dialog points cannot be skipped; user input must be received before continuing
+  - Skill downgrade strategies are disabled; skipping the brainstorming hard gate is not allowed
+- `standard` mode: 3-step quick exploration + 2-checkbox hard gate
+  - Lightweight requirements clarification; boundaries and acceptance criteria must still be confirmed
+- `skip` mode (`quick-fix` workflow): exempt — only allowed for changes under 10 lines with no new dependencies
+  - Users can only bypass by explicitly stating "switch to skip mode", and the Agent must record the reason in `state.yaml`
+  - Safety fallback: automatically downgrades to `standard` when no requirement documents exist
 
-**Verification**: Before workflow execution, check the `exploration_mode` field in `state.yaml`; in `deep` mode, if brainstorming is not completed, block the PLAN→ACT transition.
+**Verification**: Before workflow execution, check the `exploration_mode` field in `state.yaml`; in `deep` or `standard` mode, if brainstorming is not completed, block the PLAN→ACT transition.
 
 ## Constitution Checkpoints (must check during PLAN phase)
 
@@ -72,7 +76,7 @@ Workflows with `default_mode: deep` (e.g., new-product-engineering / new-feature
 - [ ] Does it involve core file modifications? Has user authorization been obtained?
 - [ ] Do new/modified skills have complete frontmatter?
 - [ ] Does the document length exceed the project threshold?
-- [ ] Is the current workflow's exploration_mode deep? If so, has the brainstorming hard gate been completed?
+- [ ] Is the current workflow's exploration_mode deep or standard? If so, has the brainstorming hard gate been completed? (skip/quick-fix is exempt for <10-line changes with no new dependencies)
 
 ## Revision History
 
@@ -80,3 +84,4 @@ Workflows with `default_mode: deep` (e.g., new-product-engineering / new-feature
 |------|---------|------|
 | 2026-06-21 | Initial version | Clarify harness-solo's own constraints |
 | 2026-06-23 | Add Principle 6 (Exploration first cannot be bypassed) + AGENTS.md line limit 120→150 | Promote the exploration_mode mechanism to control workflow interaction depth |
+| 2026-06-29 | Principle 6 expanded to cover deep+standard modes; add 3-tier workflow mode (quick-fix/standard/deep) | Reduce process overhead for small tasks while preserving hard gate for non-trivial changes |

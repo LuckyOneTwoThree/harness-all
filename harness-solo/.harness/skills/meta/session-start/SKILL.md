@@ -25,51 +25,42 @@ Context must be loaded before the session starts; working in an "amnesic" state 
 
 ## Process
 
-1. **Read the progress log**
-   Read `.harness/memory/progress.md` to restore the previous working state.
-   - Extract the **last session summary** (what was done, what was the final state)
-   - Extract **open tasks** (started but not marked done)
-   - Extract **blocked items** (anything tagged `blocked` / `waiting`)
-   - Verify: you can state in one sentence "Last session ended with X done, Y open, Z blocked"
+1. **Load context**
+   Restore the working state by reading the canonical sources in parallel, then report a consolidated summary to the user.
 
-2. **Read the knowledge base**
-   Read `.harness/memory/knowledge-base.md` to load accumulated decisions and constraints.
-   - Extract **active decisions** (still in force, not superseded)
-   - Extract **technical constraints** (e.g., "must support Node 18", "no new dependencies")
-   - Verify: you can name at least one active decision and one constraint before proceeding
+   - Read `.harness/memory/progress.md` and extract:
+     - the **last session summary** (what was done, final state)
+     - **open tasks** (started but not marked done)
+     - **blocked items** (anything tagged `blocked` / `waiting`)
+   - Glob `.harness/loops/specs/*/state.yaml` and read each file:
+     - list every feature whose `stage` is not `done`
+     - read the `exploration_mode` field and report the current mode (e.g., "Current exploration mode: deep")
+     - if any in-progress feature exists, surface it for continuation
+   - Glob `docs/handoff/` for unconsumed handoff documents:
+     - if a `<source>-to-solo.md` file exists, report it (from harness-<source>)
+     - if handoff references `docs/product/PRD.md` or `docs/product/prd.json`, verify those files exist and report their presence
+     - if unconsumed handoffs exist, remind the user to prioritize them
 
-3. **Check in-progress features**
-   Glob `.harness/loops/specs/*/state.yaml` and read each file.
-   - List every feature whose `stage` is not `done` (e.g., `plan`, `act`, `verify`, `retrying`)
-   - Read the `exploration_mode` field and report the current mode (e.g., "Current exploration mode: deep")
-   - If any in-progress feature exists, report to the user: "Found in-progress feature X (stage=act), continue?"
-   - Verify: you have an explicit list of open features; do not rely on memory of "what we were doing"
+   **Conditional triggers** (only fire when progress.md actually demands them — do not read unconditionally):
+   - Read `.harness/memory/knowledge-base.md` **only if** progress.md references a knowledge-base entry (e.g., decision id, constraint name). When loaded, extract active decisions and technical constraints.
+   - Read `.harness/FEATURES.md` **only if** progress.md mentions an iteration scope change (e.g., new iteration started, scope rebalanced, priority shifted). When loaded, confirm current iteration range and priority order.
 
-4. **Read the feature board**
-   Read `.harness/FEATURES.md` to understand the iteration scope and priorities.
-   - Confirm the **current iteration range** (which features are in scope)
-   - Confirm **priority order** (what should be picked next)
-   - Verify: you can name the top-priority feature for this iteration
+   Report to the user in one consolidated message:
+   > "Last session: X done, Y in progress, Z blocked. Found handoff: [list or none]. What to work on?"
 
-5. **Check handoff documents**
-   Scan the `docs/handoff/` directory for documents from other harness family members.
-   - If a `<source>-to-solo.md` file exists, report: "Found handoff document X (from harness-<source>), consume it this session?"
-   - Handoff documents may contain PRD paths, AC numbers, key decisions, and open items — these are inputs brainstorming cannot skip
-   - If handoff references `docs/product/PRD.md` or `docs/product/prd.json`, verify these files exist and report their presence (these are the primary requirements source from harness-pm)
-   - If unconsumed handoff documents exist, remind the user to prioritize them
-   - Verify: you have explicitly checked the directory, not assumed "user will tell me"
+   - Verify: you can state in one sentence "Last session ended with X done, Y open, Z blocked"; you have an explicit list of open features; you have explicitly checked `docs/handoff/` rather than assuming the user will tell you.
 
-6. **Confirm task scope and write the session block**
-   Confirm with the user what this session will accomplish, then append a new session block to `progress.md`:
+2. **Confirm scope and write the session block**
+   Confirm with the user what this session will accomplish, then append a new session block to `progress.md` before any production work begins.
    ```
    ## Session: YYYY-MM-DD HH:MM
    ### Task
-   [Session goal, agreed with the user]
-   ### Context Loaded
-   - Open features: [list]
+   [Session goal]
+   ### Context
+   - Open features: [list or "none"]
    - Handoff consumed: [yes/no/which]
    ```
-   - Verify: the block is written before any production work begins; if the session is interrupted, this block is the recovery point
+   - Verify: the block is written before any production work begins; if the session is interrupted, this block is the recovery point.
 
 ## Failure Handling
 

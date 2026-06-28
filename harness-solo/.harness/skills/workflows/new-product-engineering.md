@@ -65,7 +65,7 @@ Check whether engineering foundation exists:
 - [ ] If either is missing or incomplete → pause, ask user:
   - Option A: run `setup` workflow first (initialize config files)
   - Option B: user confirms they will provide config externally, then proceed
-- **Hard gate rationale**: brainstorming / writing-plans / executing-plans / verify all depend on TECH_STACK.md for test/build/lint commands. Proceeding without it causes silent failures — commands cannot run, verify cannot validate.
+- **Hard gate rationale**: brainstorming / writing-plans / tdd / verify all depend on TECH_STACK.md for test/build/lint commands. Proceeding without it causes silent failures — commands cannot run, verify cannot validate.
 
 ### 3. brainstorming (product-level)
 

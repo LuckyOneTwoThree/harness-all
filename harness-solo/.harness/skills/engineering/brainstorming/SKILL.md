@@ -47,6 +47,41 @@ description: Requirements exploration and design refinement — a hard gate: no 
 
 ## Process
 
+## Mode-Adaptive Process
+
+The depth of brainstorming depends on the workflow mode:
+
+| Mode | Steps | Hard Gate checkboxes |
+|------|-------|---------------------|
+| `deep` | 5 steps (below) | 4 checkboxes (full) |
+| `standard` | 3 steps (below) | 2 checkboxes (simplified) |
+
+**deep mode** (default for new-product-engineering, ambiguous requirements): Run all 5 steps below.
+**standard mode** (default for new-feature, bugfix): Run the 3-step fast path below, then skip to the Hard Gate.
+
+### Standard Mode Fast Path (3 steps)
+
+#### Standard 1. Understand Requirements + Quick Constitution Check
+- Read handoff/PRD/PROJECT.md (if available)
+- Confirm AC is testable
+- Quick constitution check: any new dependencies? new APIs? schema changes?
+- Confirm understanding with user (👤 human decision point)
+
+#### Standard 2. Technical Solution + Output PROJECT.md
+- Evaluate reusable modules + implementation path
+- Write to PROJECT.md: feature description + AC + technical approach + boundaries
+- (Combines original steps 3+4)
+
+#### Standard 3. Hard Gate (Simplified — 2 checkboxes)
+- [ ] Requirement can be described in one sentence (≤30 words)
+- [ ] Technical approach has a concrete implementation path
+- Pass → enter writing-plans
+- Fail → re-explore with user until both checkboxes pass
+
+---
+
+### Deep Mode Full Process (5 steps)
+
 1. **Understand the requirements**
    Use structured Q&A to clarify:
    - What problem are we solving? (user pain point)
