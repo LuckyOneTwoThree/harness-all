@@ -219,8 +219,8 @@ Verification runs at two points in the LOOP cycle:
    - Pass → continue to next task or exit LOOP
    - Fail → back to tdd
 
-2. **verify-full** (after LOOP exits, before code-review): 8 steps
-   - Tests pass + AC item-by-item + Constitution compliance + Security scan (full) + Entropy check + Frontend verification + Write evidence + Update state
+2. **verify-full** (after LOOP exits, before code-review): 9 steps
+   - Tests pass + AC item-by-item + Constitution compliance + Security scan (full) + Entropy check + Frontend verification + Token compliance + Write evidence + Update state
    - Pass → enter code-review
    - Fail → back to LOOP
 

@@ -16,6 +16,8 @@ description: Delivery Verification — mandatory comprehensive check before clai
 - docs/handoff/pm-to-solo.md (optional, conditional on upstream handoff)
 - docs/handoff/design-to-solo.md (optional, conditional on upstream handoff)
 - docs/handoff/component-map.json (optional, conditional on upstream handoff)
+- docs/handoff/tokens.json (optional, conditional on design handoff)
+- docs/handoff/tokens.css (optional, conditional on design handoff)
 - loops/specs/<feature>/spec.md
 - Reference/security-patterns.md
 - Reference/evidence-template.md
@@ -41,7 +43,7 @@ Verification runs at two points in the LOOP cycle:
    - Pass → continue to next task or exit LOOP
    - Fail → back to tdd
 
-2. **verify-full** (after LOOP exits, before code-review): 8 steps — full comprehensive check
+2. **verify-full** (after LOOP exits, before code-review): 9 steps — full comprehensive check
    - Purpose: final gate before claiming feature complete
    - Trigger: all tasks in spec.md done + verify-fast passed
    - Pass → enter code-review
@@ -62,7 +64,7 @@ Grep the changed files for `password|secret|api_key|token|rm -rf` patterns. **Sh
 
 ### verify-full (LOOP exit gate)
 
-Run all eight steps in order. Each step is summarized below; the Reference files carry the canonical detail.
+Run all nine steps in order. Each step is summarized below; the Reference files carry the canonical detail.
 
 ### Full 1. Test Pass Check
 Run the project's test command and **show the full output** (not the four words "tests passed"). All pass → continue. Any failure → write to `state.yaml`'s `last_error` and return to tdd. Paste the runner's own summary line into evidence.
@@ -88,10 +90,19 @@ Read `.harness/memory/baseline.json` and compare current metrics (files, loc, de
 ### Full 6. Frontend Verification (if frontend code is involved)
 Use Glob to scan the files changed in this iteration. If any match `*.tsx` / `*.vue` / `*.svelte` / `*.html` / `*.css`, invoke the `webapp-testing` skill for build, type check, lint, structural, and frontend-security verification. Merge the results into the "Frontend Verification" section of evidence.md. If no frontend code was changed, write `no frontend code changes, skipped` and move on.
 
-### Full 7. Write Evidence
-Summarize the actual output of steps 1–6 into `evidence.md` using the canonical template. Every section heading must be present even when the answer is `skipped` or `n/a`. For the full template, section-by-section instructions, and a worked sample, see `Reference/evidence-template.md`.
+### Full 7. Token Compliance Check (if design tokens exist)
+If `docs/handoff/tokens.json` or `docs/handoff/tokens.css` exists, scan the frontend files changed in this iteration for hardcoded values that should use design tokens:
 
-### Full 8. Update State
+- **Color values**: Grep for `#[0-9a-fA-F]{3,8}\b` and `rgb\(` / `rgba\(` in changed `*.tsx` / `*.vue` / `*.svelte` / `*.html` / `*.css` files. Compare hits against `tokens.json` color tokens. Any color not in tokens → `✗` with reason `hardcoded color: <value> (use token: <suggested-token>)`.
+- **Spacing values**: Grep for `\b\d+px\b` / `\b\d+rem\b` in changed style/code files. Compare against spacing tokens. Exceptions: `0px` / `0rem` (always allowed), values inside `calc()` expressions (allowed if operands are tokens). Any spacing not in tokens → `✗` with reason `hardcoded spacing: <value>`.
+- **Font sizes**: Grep for `font-size:` declarations. Compare against type scale tokens. Any font-size not in tokens → `✗`.
+
+If no tokens files exist, write `no design tokens found, skipped` and move on. Show the actual hits and dispositions — do not write only "token check passed".
+
+### Full 8. Write Evidence
+Summarize the actual output of steps 1–7 into `evidence.md` using the canonical template. Every section heading must be present even when the answer is `skipped` or `n/a`. For the full template, section-by-section instructions, and a worked sample, see `Reference/evidence-template.md`.
+
+### Full 9. Update State
 Update `state.yaml` per the schema in `loops/LOOP.md`: `stage: verify`, `status: done` (all pass) or `retrying` (any failure), `last_error: ""` on success or the error description on failure. Append (never overwrite) a line to `iterations.log`:
 ```
 [YYYY-MM-DD HH:MM] iter=<N> stage=verify → PASSED

@@ -22,7 +22,7 @@
 - **migration** — Code migration, framework upgrade / API migration, guard against regression
 - **dependency-management** — Dependency management, add / upgrade / audit, integrates with the constitution approval gate
 - **frontend-implementation** — Frontend engineering implementation, components / state / styling (not visual design)
-- **verify** — Two-layer verification: verify-fast (3-step per iteration) + verify-full (8-step LOOP exit gate)
+- **verify** — Two-layer verification: verify-fast (3-step per iteration) + verify-full (9-step LOOP exit gate)
 - **product-engineering-review** — Product-level cross-feature consistency review (after all features implemented, before handoff)
 - **webapp-testing** — Frontend verification, pure Agent tool approach (build / type / lint / accessibility)
 - **requesting-code-review** — Code review, quality gatekeeping

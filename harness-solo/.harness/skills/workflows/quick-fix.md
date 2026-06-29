@@ -92,7 +92,7 @@ Use quick-fix when **all** of the following are true:
 | writing-plans / spec.md | No multi-task breakdown needed for a single edit |
 | executing-plans / state.yaml | No iteration tracking needed |
 | tdd Red-Green-Refactor | Small fixes can write test directly if needed; not mandatory for typo-level changes |
-| verify 8-step full | Replaced by step 3 (test + security scan) |
+| verify 9-step full | Replaced by step 3 (test + security scan) |
 | code-review | Trivial changes don't need design review; security scan in step 3 covers safety |
 | session-end full flow | One-line progress log is sufficient |
 

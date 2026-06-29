@@ -151,12 +151,15 @@ Archiving must be performed before the session ends; "bare exit" is not allowed 
    - If `solo-to-pm.md` already exists, append this session's feedback; do not overwrite history
    - The filename is fixed as `solo-to-pm.md`; do not split by date (downstream only reads the latest state)
 
-   **Condition 5: any handoff document generated in conditions 2/3/4 → run AC format validation**
+   **Condition 5: any handoff document generated in conditions 2/3/4 → run AC + DAC format validation**
    Run Acceptance Criteria format validation on the handoff documents produced in conditions 2/3/4:
    - Scan the Acceptance Criteria in the handoff document and check that the numbering format is `AC-NNN` (e.g., AC-001, AC-002)
    - Check that numbers are consecutive (AC-001 must not jump directly to AC-003)
    - Check that each AC contains: description + validation method
-   - If a format anomaly is found (e.g., "Acceptance Criteria One", non-consecutive numbering, missing validation method), **block the handoff** and require correction before re-producing
+   - Scan for Design Acceptance Criteria and check that the numbering format is `DAC-NNN` (e.g., DAC-001, DAC-002)
+   - Check that DAC numbers are consecutive within each feature's set
+   - Check that each DAC contains: description + validation method
+   - If a format anomaly is found (e.g., "Acceptance Criteria One", non-consecutive numbering, missing validation method, "Design AC One" instead of DAC-001), **block the handoff** and require correction before re-producing
 
    **Exit condition**: all conditions have been checked; the ones requiring execution have been executed; no conditions met → end directly.
 

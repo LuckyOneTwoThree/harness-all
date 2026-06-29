@@ -128,7 +128,7 @@ This skill is a **frontend-specific supplement to the verify skill** and does no
 
 | Dimension | verify | webapp-testing |
 |------|--------|----------------|
-| Scope | Full-stack verification (verify-fast 3-step / verify-full 8-step) | Frontend-specific |
+| Scope | Full-stack verification (verify-fast 3-step / verify-full 9-step) | Frontend-specific |
 | Trigger | Every VERIFY of LOOP | When frontend code is involved |
 | Output | Main sections of evidence.md | "Frontend Verification" section of evidence.md |
 | Relationship | verify invokes webapp-testing | webapp-testing is a sub-item of verify |

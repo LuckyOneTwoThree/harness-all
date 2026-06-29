@@ -18,13 +18,16 @@ description: Performs product-level cross-feature consistency review after all f
 - package.json / lockfile (or equivalent dependency manifest)
 - Database migration files / ORM entity definitions (if backend is involved)
 - List of skipped features (entries with Status = skipped in ENGINEERING_PLAN.md Section 2)
+- docs/handoff/component-map.json (optional, conditional on design handoff)
+- docs/handoff/design-to-solo.md (optional, conditional on design handoff)
+- docs/handoff/tokens.json (optional, conditional on design handoff)
 
 ## Outputs
 - loops/specs/<product-task>/product-review-evidence.md
 
 ## Overview
 
-Product-level cross-feature consistency review. Single-feature verify checks one feature in isolation; product-engineering-review checks whether all features work together as a coherent product. Catches: API contract mismatches, dependency conflicts, data model conflicts, config naming drift, shared module duplication, integration failures.
+Product-level cross-feature consistency review. Single-feature verify checks one feature in isolation; product-engineering-review checks whether all features work together as a coherent product. Catches: API contract mismatches, dependency conflicts, data model conflicts, config naming drift, shared module duplication, integration failures, design contract inconsistencies.
 
 Only checks **hard consistency that causes runtime/integration failures**. Does NOT check soft consistency (code style — handled by lint; state management strategy — bounded mixing is acceptable).
 
@@ -149,7 +152,33 @@ $ npm test
 FAIL F03 Dashboard: cannot read property 'userId' of undefined
 ```
 
-### 7. Severity Labeling
+### 7. Design Contract Consistency Check (if design handoff exists)
+
+If `docs/handoff/component-map.json` or `docs/handoff/design-to-solo.md` exists, check cross-feature design contract consistency:
+
+- **Component contract uniformity**: For each component in `component-map.json` that appears in multiple features (check the `usedBy` array), verify that all features implement the same props/states/engineeringComponent as defined in the contract. A component drifting in one feature but not another is a cross-feature inconsistency.
+- **DAC-xxx cross-feature status**: Collect all DAC-xxx items from all features' spec.md files. Verify that DACs shared across features (e.g., "consistent navigation header across all pages") have the same pass/fail status in all features' evidence.md. A DAC passing in F01 but failing in F03 is a cross-feature design inconsistency.
+- **Token usage consistency**: If `tokens.json` exists, verify that features touching the same design token (e.g., `color.primary`) use it consistently. Grep for hardcoded values that should be tokens across all frontend features — a hardcoded color in one feature but a token in another is an inconsistency.
+
+**Pass criteria**:
+- All components in `component-map.json` with `usedBy` spanning multiple features have consistent implementations across those features
+- No DAC-xxx has conflicting pass/fail status across features
+- No token vs hardcoded value inconsistency across features touching the same token
+
+**Skip condition**: If no design handoff documents exist, write `no design handoff, skipped` and move on.
+
+**Fail example**:
+```
+component-map.json: Button { props: { variant: "primary|secondary|ghost" }, usedBy: ["P01","P03"] }
+F01 P01: <Button variant="primary"> ✓ matches contract
+F03 P03: <Button type="main"> ✗ prop name drift (type vs variant), contract violation
+
+DAC-003 "Header height consistent across pages" (shared by F01, F03):
+F01 evidence.md: DAC-003 ✓
+F03 evidence.md: DAC-003 ✗  ← cross-feature inconsistency
+```
+
+### 8. Severity Labeling
 
 | Severity | Meaning | Handling |
 |----------|---------|----------|
@@ -157,7 +186,7 @@ FAIL F03 Dashboard: cannot read property 'userId' of undefined
 | No prefix | Must change | Must fix |
 | `Nit:` | Optional | Record directly |
 
-### 8. Output Review Report
+### 9. Output Review Report
 
 Write to `loops/specs/<product-task>/product-review-evidence.md`:
 
@@ -187,6 +216,11 @@ Write to `loops/specs/<product-task>/product-review-evidence.md`:
 ## Integration Runnability
 - ✗ Build fails: type conflict in F03 Dashboard
 - ✗ Full test suite: 2 failures in F03
+
+## Design Contract Consistency
+- ✓ component-map.json: Button consistent across P01 and P03
+- ✗ DAC-003 conflicting status: F01 ✓ / F03 ✗
+- ✗ Token drift: F01 uses color.primary token, F03 hardcodes #3B82F6
 
 ## Critical Findings
 #### C001: getUser() return type mismatch between F01 and F03
