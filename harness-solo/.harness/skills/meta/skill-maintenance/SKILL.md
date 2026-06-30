@@ -124,10 +124,7 @@ You cannot just write "check passed".
 
 ## Division of Labor with writing-skills
 
-| Skill | Responsibility |
-|-------|----------------|
-| writing-skills | Create new skills |
-| skill-maintenance | Check the health of existing skills |
+skill 定位见 INDEX.md；特有协作见上方 Process 段落。
 
 ## Relationship with session-start
 session-start may lightly invoke this skill's check logic:

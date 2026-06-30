@@ -70,12 +70,7 @@ The linear 5 Whys chain can stall when the bug spans modules or involves hidden 
 
 ## State Maintenance
 
-While debugging, follow `.harness/loops/STATE_PROTOCOL.md` and validate with `state.schema.json`:
-- `stage`: `debug`
-- `last_error`: `"[root cause description]"`
-- `status`: `retrying`
-
-For full field definitions and write responsibilities, see LOOP.md.
+Follow `.harness/loops/STATE_PROTOCOL.md`: the active ACT skill owns the per-attempt terminal outcome; verify owns `evidence.md`.
 
 **Update iterations.log (must append, overwriting is forbidden)**:
 - Tool approach: first Read the current iterations.log → append the new line → Write it back
@@ -98,10 +93,8 @@ Append format:
 | Anti-pattern | Common excuse | Why it doesn't hold |
 |---|---|---|
 | Skipping reproduction, jumping to fix | "I know where the bug is" | No repro = no confirmation the fix actually works |
-| Guessing root cause without verifying | "It's probably this" | "Probably" is not evidence; verify before fixing |
 | Fixing the symptom, not the cause | "Stop the bleeding first" | The symptom resurfaces in another form within ≤ 3 changes |
 | Changing multiple things at once | "Fixed another bug along the way" | You cannot isolate which change actually fixed it |
-| No regression test added | "It's fixed, move on" | The same bug returns; nothing prevents regression |
 | Still guessing after 3 failed fixes | "One more try" | 3 failures means the direction is wrong; switch to bisection |
 
 ## Red Flags
@@ -114,34 +107,8 @@ Stop immediately and reassess if you observe any of:
 - The fix is a `try/except` or `if x is not None` guard around the failure point — this is symptom suppression
 - You cannot state the root cause in one sentence — you have not found the cause yet
 
-## Good vs Bad
-
-A good fix targets the root cause and is locked in by a regression test. A bad fix silences the symptom and leaves the cause free to resurface.
-
-<Good>
-```python
-# Root cause: Y initialized after X reads it
-# Fix: move Y's init before X's first read
-def init():
-    y = load_config()        # moved up
-    x = build_parser(y)      # now sees config
-```
-</Good>
-
-<Bad>
-```python
-# "Fix": guard against the None we observed
-def init():
-    x = build_parser(y)
-    if x is None:
-        x = DEFAULT_PARSER   # symptom patched, Y still wrong
-```
-</Bad>
+Good vs Bad 修复示例见 `Reference/good-vs-bad-fix.md`
 
 ## Relationship with LOOP
-This skill is triggered when LOOP fails:
-- tdd fails → systematic-debugging finds the root cause → return to tdd to fix
-- verify fails → systematic-debugging finds the root cause → return to tdd to fix
 
-Bug fix workflow:
-session-start → systematic-debugging → LOOP(tdd→verify) → code-review → session-end
+Triggered when LOOP fails (tdd or verify): finds root cause, returns to tdd to fix. Bug fix workflow: session-start (on-demand) → systematic-debugging → LOOP(tdd 内嵌 verify-fast) → verify-full → code-review → session-end (on-demand baseline). See `.harness/loops/LOOP.md`.

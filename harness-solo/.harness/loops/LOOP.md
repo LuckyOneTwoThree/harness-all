@@ -46,7 +46,7 @@ loops/specs/<task>/
 └── iterations.log# append-only attempt/review/reset events
 ```
 
-Do not use evidence.md as an ACT scratchpad. Actual Red/Green output may be reused by verify-fast only when it is still present in the same execution context and the command, code, and attempt have not changed; otherwise rerun.
+Do not use evidence.md as an ACT scratchpad. Actual Red/Green output may be reused by the ACT skill's inline verify-fast only when it is still present in the same execution context and the command, code, and attempt have not changed; otherwise rerun.
 
 ## State Responsibilities
 

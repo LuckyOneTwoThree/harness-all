@@ -45,7 +45,7 @@ These four are engineering principles distilled from observations by [Andrej Kar
 ### LOOP Cycle Engine
 
 ```
-PLAN → ACT → VERIFY-FAST → VERIFY-FULL → CODE-REVIEW → DONE
+PLAN → ACT (含 inline verify-fast) → VERIFY-FULL → CODE-REVIEW → DONE
 ```
 
 - One `state.yaml` per feature, supports checkpoint resume
@@ -217,9 +217,9 @@ install.sh execution → Guide filling SOUL/constitution/PROJECT/TECH_STACK → 
 ### new-product-engineering (Product-Level Multi-Feature Engineering)
 
 ```
-session-start → Engineering Foundation Gate (hard gate) → brainstorming (product-level) → Product-level PLAN (ENGINEERING_PLAN.md)
+session-start (product-level, runs once) → Engineering Foundation Gate (hard gate) → brainstorming (product-level) → Product-level PLAN (ENGINEERING_PLAN.md)
 → [Phase 1] Shared Infrastructure LOOP (IC1 after all infra modules)
-→ [Phase 2] Nested canonical tasks (topological sort; checkpoints at real boundaries)
+→ [Phase 2] Nested canonical tasks (topological sort; checkpoints inlined into verify-full; no per-feature session ceremony)
 → product-engineering-review (IC5 runs as part of review) → session-end (publish requested product handoffs once)
 ```
 
@@ -236,7 +236,7 @@ Brainstorming is required for material requirement ambiguity; a validated execut
 ### bugfix (Bug Fix)
 
 ```
-session-start → systematic-debugging (root cause analysis) → LOOP(tdd→verify-fast) → verify-full → code-review → session-end
+session-start (on-demand) → systematic-debugging (root cause analysis) → LOOP(tdd 内嵌 verify-fast) → verify-full → code-review → session-end (on-demand baseline)
 ```
 
 ### refactor (Refactor)
@@ -248,7 +248,7 @@ session-start → brainstorming (confirm boundaries) → writing-plans → Prere
 ### optimize (Performance Optimization)
 
 ```
-session-start → measure/identify → writing-plans → LOOP(performance ACT→verify-fast) → verify-full → code-review → session-end
+session-start (on-demand) → measure/identify → writing-plans → LOOP(performance-optimization 内嵌 verify-fast) → verify-full → code-review → session-end (on-demand baseline)
 ```
 
 **Iron rule**: no changing code without baseline numbers.
@@ -256,7 +256,7 @@ session-start → measure/identify → writing-plans → LOOP(performance ACT→
 ### migration (Code Migration)
 
 ```
-session-start → decision gate → writing-plans → LOOP(incremental migration→verify-fast) → prove zero usage/cleanup → verify-full → code-review → session-end
+session-start (on-demand) → decision gate → writing-plans → LOOP(incremental migration 内嵌 verify-fast) → prove zero usage/cleanup → verify-full → code-review → session-end (on-demand baseline)
 ```
 
 ### release (Release)

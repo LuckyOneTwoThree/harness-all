@@ -77,4 +77,4 @@ When an active task returns to PLAN:
 
 ## Relationship with LOOP
 
-This skill exclusively owns PLAN artifacts and initialization. ACT skills own iteration; verify owns evidence; code-review owns done.
+Exclusively owns PLAN artifacts and initialization. See `.harness/loops/LOOP.md`.

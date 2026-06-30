@@ -8,11 +8,11 @@ default_mode: standard
 
 ## Route
 
-1. session-start + Foundation gate.
+1. session-start (on-demand) + Foundation gate.
 2. performance-optimization measures a representative baseline, confirms target, and identifies one proven bottleneck.
 3. writing-plans records metric, environment, target, behavioral guard, and rollback.
-4. LOOP uses performance-optimization as ACT owner; verify-fast repeats the same benchmark method plus affected tests.
-5. verify-full → code-review → session-end.
+4. LOOP: performance-optimization as ACT owner with inline verify-fast (same benchmark method + affected tests).
+5. verify-full → code-review → session-end (on-demand baseline).
 
 ## Specialization
 

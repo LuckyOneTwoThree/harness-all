@@ -12,13 +12,12 @@ Use for one independently deliverable behavior/module. Use new-product-engineeri
 
 Follow `.harness/rules/engineering-pipeline.md`:
 
-1. session-start + Foundation gate;
-2. brainstorming (skip only when a validated upstream spec is already unambiguous);
-3. writing-plans;
-4. LOOP with test-driven-development → verify-fast; route unknown failures to systematic-debugging;
-5. verify-full once after all planned outcomes pass;
-6. code-review;
-7. session-end.
+1. session-start (on-demand: skip if no active state + unambiguous handoff) + Foundation gate;
+2. Plan: brainstorming (skip only when a validated upstream spec is already unambiguous) → writing-plans, executed as one continuous stage without pause between them unless a material user-owned decision surfaces;
+3. LOOP: test-driven-development with inline verify-fast (ACT owns the 4 fast-verify duties); route unknown failures to systematic-debugging;
+4. verify-full once after all planned outcomes pass;
+5. code-review;
+6. session-end (on-demand: baseline only when source files changed).
 
 ## Specialization
 

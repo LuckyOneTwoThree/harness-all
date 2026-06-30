@@ -26,11 +26,6 @@ description: Test Coverage — coverage gap analysis + adding boundary/integrati
 
 ## Division of Labor with the tdd Skill
 
-| Skill | Scenario | Timing |
-|-------|------|------|
-| **tdd** | Writing **new feature** code | Red→Green→Refactor, tests first |
-| **test-coverage** | Adding tests for **existing code** | Code already exists but lacks tests, or coverage has gaps |
-
 This skill does not write new feature code; it only adds tests to guard existing behavior.
 
 ## Process
@@ -51,22 +46,7 @@ Show the full output and record the current coverage.
 - Critical paths first: core business logic > helper functions > edge tooling
 - Risk first: high-frequency files changed recently, modules with a bug history
 
-**1.3 Classify gaps**:
-
-| Gap Type | Priority | Test Type |
-|---------|--------|---------|
-| Core logic without tests | P0 | unit |
-| Boundary conditions not covered | P0 | unit |
-| API integration not tested | P1 | integration |
-| Critical user flows not tested | P1 | E2E (if infrastructure exists) |
-| Error paths not covered | P1 | unit |
-
 ### 2. Add Tests (by the test pyramid)
-
-**Test pyramid 80/15/5**:
-- 80% unit (millisecond-level, no I/O, pure logic)
-- 15% integration (second-level, localhost, cross-boundary)
-- 5% E2E (minute-level, real browser, critical paths only)
 
 **2.1 Unit tests** (add first):
 - Pure logic functions: test inputs and outputs
@@ -83,25 +63,7 @@ Show the full output and record the current coverage.
 - Not mandatory in this skill (abide by the constitution's zero-new-dependency principle)
 
 ### 3. Test Quality Rules
-
-**3.1 Test state, not interactions**
-- Assert on **results**, not on "which method was called"
-- Anti-example: `expect(mockFn).toHaveBeenCalledWith(args)` ← breaks on refactor
-- Positive example: `expect(result).toEqual(expectedResult)` ← behavior is stable
-
-**3.2 DAMP over DRY**
-- Tests should read like specifications; each test is self-contained and readable
-- Allow duplication to avoid shared setup obscuring intent
-- Shared setup is only for genuinely repeated boilerplate (e.g. creating a test context)
-
-**3.3 Real implementation > Fake > Stub > Mock**
-- Prefer real implementations (most credible)
-- Use mocks only when the real implementation is too slow / non-deterministic / has uncontrollable side effects
-- Excessive mocking leads to "tests green but production broken"
-
-**3.4 Arrange-Act-Assert + one concept per test**
-- Each test verifies only one behavior
-- Naming describes the behavior: `it('sets status to completed and records timestamp')` instead of `it('works')`
+gap 分类表、Test pyramid、Test Quality Rules 见 `Reference/test-quality-principles.md`
 
 ### 4. Verification
 
@@ -127,20 +89,12 @@ After a bug fix (via the bugfix workflow), you **must** add regression tests:
 
 | Excuse | Rebuttal |
 |------|------|
-| "This is too simple to test" | Simple code becomes complex; tests are behavior specs |
-| "I'll write tests after the code works" | You won't, and after-the-fact tests test the implementation, not the behavior |
-| "It's tested, should be fine" | "Should" is not evidence; run the tests and look at the output |
 | "Just mock it and it passes" | Excessive mocking = tests green but production broken |
 | "Skip this test to make the suite pass" | Skipping = not testing; mark it as tech debt and record it |
 
 ## State Maintenance
 
-When inside a LOOP, follow `.harness/loops/STATE_PROTOCOL.md` and validate with `state.schema.json`:
-- `stage`: `act` (while adding tests)
-- Inside an active LOOP, the selected ACT owner increments once before the test batch; outside LOOP this skill does not invent or mutate LOOP iteration state
-- `last_error`: on failure, fill in "test failed: <test name>"
-
-Inside LOOP, return coverage results to verify; verify owns terminal attempt logging. Standalone test-only work reports results directly without fabricating LOOP history.
+Follow `.harness/loops/STATE_PROTOCOL.md`: the active ACT skill owns the per-attempt terminal outcome; verify owns `evidence.md`. Inside LOOP, return results to verify; outside LOOP, do not invent LOOP state.
 
 ## Prohibitions
 - Testing implementation details rather than behavior (breaks on refactor)
@@ -151,15 +105,11 @@ Inside LOOP, return coverage results to verify; verify owns terminal attempt log
 - Flaky tests (timing/order-dependent; must fix or delete)
 
 ## Relationship with LOOP
-This skill can be triggered inside or outside LOOP:
-- **Inside LOOP**: add tests before refactor/migration to guard behavior → this skill is a prerequisite of the PLAN phase
-- **Outside LOOP**: standalone test-adding task → go directly through this skill's process
+
+Triggered inside LOOP as a PLAN prerequisite (before refactor/migration) or outside LOOP as a standalone test-adding task. See `.harness/loops/LOOP.md`.
 
 ## Division of Labor with Other Skills
 | Skill | Responsibility |
 |-------|------|
-| test-coverage | Add tests for existing code |
-| tdd | Red-green-refactor for new features (tests first) |
 | systematic-debugging | Bug reproduction test (this skill adds similar regression tests) |
-| verify | Coverage check as a verification sub-item |
 | migration | Call this skill before migration to add test coverage |

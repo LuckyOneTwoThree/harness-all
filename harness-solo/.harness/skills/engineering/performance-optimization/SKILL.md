@@ -20,8 +20,9 @@ description: Performance Optimization — measure→identify→fix→verify→gu
 - docs/engineering/TECH_STACK.md
 
 ## Outputs
-- loops/specs/<feature>/state.yaml
-- benchmark data returned to verify for final evidence
+- `loops/specs/<feature>/state.yaml` (stage/iteration/error)
+- per-attempt terminal outcome in `iterations.log` (written by this skill's inline verify-fast)
+- benchmark data and re-measurement evidence returned to verify for `evidence.md`
 
 ## Iron Rule
 **Measure before optimize.** Optimization without profile data is guessing, and guessing leads to premature optimization — adding complexity without improving the real problem.
@@ -95,20 +96,13 @@ Common bottleneck quick reference:
 
 | Excuse | Rebuttal |
 |------|------|
-| "I think it's slow here" | Your feeling is not evidence; profile first |
-| "It should be faster after optimization" | "Should" is not evidence; measure again and compare |
 | "This optimization definitely works" | You only know after you change and measure; change one then measure |
 | "Adding React.memo can't hurt" | Overuse is as bad as underuse; profile proves it's needed |
 | "The user's machine shouldn't be slow" | Your machine is not the user's machine; test on a representative environment |
 
 ## State Maintenance
 
-Follow `.harness/loops/STATE_PROTOCOL.md` and validate with `state.schema.json`:
-- `stage`: `act` while this skill mutates; verify owns the `verify` transition and terminal outcome
-- `iteration`: increment exactly once immediately before each FIX mutation, following STATE_PROTOCOL.md; MEASURE/IDENTIFY and failure handling do not increment
-- `last_error`: on failure, fill in "metric did not improve: <details>"
-
-Return before/after measurements to verify; verify owns the attempt's terminal log entry.
+Follow `.harness/loops/STATE_PROTOCOL.md`: increment once before mutation; the ACT skill appends the per-attempt terminal outcome via inline verify-fast; verify owns `evidence.md` (full verification only).
 
 ## Prohibitions
 - Changing without measuring (guess-based optimization)
@@ -118,16 +112,10 @@ Return before/after measurements to verify; verify owns the attempt's terminal l
 - Overusing memo/useMemo/cache (adds complexity without measured benefit)
 
 ## Relationship with LOOP
-This skill corresponds to the optimize loop of LOOP:
-- MEASURE/IDENTIFY = PLAN (locate the problem)
-- FIX = ACT (change code)
-- Re-measurement data is returned to verify (compare numbers + no test regression)
-- GUARD = part of the approved ACT/PLAN before review; it never mutates a task after `done`
+
+Corresponds to the optimize loop: MEASURE/IDENTIFY = PLAN, FIX = ACT, re-measurement data returns to verify, GUARD never mutates a task after `done`. See `.harness/loops/LOOP.md`.
 
 ## Division of Labor with Other Skills
 | Skill | Responsibility |
 |-------|------|
-| performance-optimization | measure→identify→optimize→verify closed loop |
-| tdd | Behavioral protection during optimization (tests must not regress) |
-| verify | Comprehensive verification after optimization |
 | systematic-debugging | Root cause analysis of performance issues (when the bottleneck is not obvious) |

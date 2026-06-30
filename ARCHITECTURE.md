@@ -158,7 +158,7 @@ project-A/                    # Product project
 
 project-B/                    # Engineering project
 ├── .harness/                 # harness-solo config
-│   ├── skills/               # 17 engineering skills
+│   ├── skills/               # 15 engineering skills
 │   ├── memory/               # solo memory
 │   └── ...
 └── src/                      # Engineering code
@@ -485,11 +485,12 @@ PLAN → ACT → VERIFY → Pass? DONE : Back to PLAN/ACT
 - Verification & Review: verify / code-review / product-engineering-review
 - Documentation & Skills: writing-documentation / writing-skills
 
-**Loop Types** (4 types):
+**Loop Types** (5 types):
 - `feature` — New feature development
 - `bugfix` — Bug fix
-- `optimize` — Performance optimization
 - `refactor` — Refactoring
+- `optimize` — Performance optimization
+- `migration` — Code/framework/data migration
 
 **Core Outputs**:
 - `docs/product/PROJECT.md` — Product requirements (engineering perspective)
@@ -984,7 +985,7 @@ If multiple people + multiple Agents collaborate:
 - ✅ harness-pm's 5 overreaching design skills deleted + design-orchestrator split into prd-orchestrator (kept PRD + change impact analysis; visual/interaction moved to harness-design)
 - ✅ harness-pm's 5 deprecated shell orchestrators deleted (insight/positioning/ideation/opportunity/stakeholder)
 - ✅ harness-pm's PRD adds ac_id field, aligned with design-brief AC-xxx
-- ✅ harness-solo's README skill count corrected (engineering skill mislabeled 17, actually 17, total 21)
+- ✅ harness-solo's README skill count corrected (engineering skill mislabeled 17, actually 15, total 19)
 - ✅ harness-solo's install.sh adds Node.js check
 - ✅ harness-pm's core handoff templates filled in (pm-to-solo-template / pm-to-growth-template)
 - ✅ harness-solo's core handoff templates filled in (solo-to-growth-template / solo-to-ops-template)
@@ -1212,6 +1213,7 @@ harness-all is a multi-Agent framework family with **Independence First, Contrac
 | harness-solo | bugfix | Bug fix | 3 |
 | harness-solo | optimize | Performance optimization | 3 |
 | harness-solo | refactor | Refactoring | 3 |
+| harness-solo | migration | Code/framework/data migration | 3 |
 | harness-growth | content | Content production | 3 |
 | harness-growth | seo | SEO optimization | 5 |
 | harness-growth | experiment | Growth experiments | 3 |

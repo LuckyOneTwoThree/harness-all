@@ -19,8 +19,9 @@ description: Code Migration — framework upgrades/API migration/data migration,
 - docs/engineering/TECH_STACK.md
 
 ## Outputs
-- loops/specs/<feature>/state.yaml
-- migration/equivalence results returned to verify
+- `loops/specs/<feature>/state.yaml` (stage/iteration/error)
+- per-attempt terminal outcome in `iterations.log` (written by this skill's inline verify-fast)
+- migration/equivalence evidence returned to verify for `evidence.md`
 
 ## Iron Rule
 **Build the replacement first, then deprecate the old system.** Do not deprecate without a replacement in place — users (including future you) will be stuck unable to use either the old or the new.
@@ -58,13 +59,17 @@ Before starting a migration, answer the following questions. If any item is not 
 
 **Default to the Strangler Pattern**, unless the replacement is fully interface-compatible with the old system and an Adapter can be used.
 
-### 3. Incremental Migration
-- **Migrate one consumer at a time** (use Grep to find call sites and change them one by one)
-- For each migration:
-  1. Change the call site to point to the new system
-  2. Run the full test suite and confirm behavior matches
-  3. Return migrated-consumer and equivalence results to verify
-- Do not batch-change multiple consumers before testing (errors accumulate, attribution is impossible)
+### 3. Incremental Migration + Inline Verify-Fast (merged)
+
+- **Migrate one consumer at a time** (use Grep to find call sites and change them one by one). Do not batch-change multiple consumers before testing (errors accumulate, attribution is impossible).
+- For each migrated consumer, this skill owns the per-attempt fast verification inline (verify-fast is no longer a separate skill invocation). Keep `stage: act`, `status: running`, and the current iteration. Perform these 4 fast-verify duties before declaring the attempt outcome:
+  1. **Validate tests + equivalence** — run the full test suite and confirm behavior matches the old system (equivalence); reject `0 tests`, stale output, or a different command than claimed.
+  2. **AC/DAC check** — confirm the stable AC/DAC IDs exercised by this task have evidence.
+  3. **Changed-file security scan** — run the quick security scan on changed files and disposition every hit.
+  4. **Append terminal outcome** — append exactly one terminal PASSED/FAILED line to `iterations.log` for this attempt.
+- On pass: `stage: verify`, `status: running`, clear error. Continue to the next consumer or verify-full.
+- On failure: `stage: verify`, `status: retrying`, concrete error, then route by cause. At the recommended failed-attempt limit, set `needs-human`. A failed attempt 10 triggers the hard breaker.
+- Do not append a second attempt record. This inline step writes the one terminal outcome.
 
 ### 4. Verify Zero Active Usage
 Before removing the old code, you **must** prove there are no active consumers:
@@ -101,12 +106,7 @@ Data migration (DB schema / data format) has additional requirements:
 
 ## State Maintenance
 
-Follow `.harness/loops/STATE_PROTOCOL.md` and validate with `state.schema.json`:
-- `stage`: `act` during mutation; verify owns the `verify` transition and terminal outcome
-- `iteration`: increment exactly once immediately before mutating one consumer/batch, following STATE_PROTOCOL.md; verification and rollback do not increment
-- `last_error`: on failure, fill in "<consumer> migration failed: <reason>"
-
-Return consumer/equivalence/zero-usage results to verify; verify owns terminal attempt logging.
+Follow `.harness/loops/STATE_PROTOCOL.md`: increment once before mutation; this skill owns the per-attempt terminal outcome via inline verify-fast; verify owns `evidence.md` (full verification only).
 
 ## Prohibitions
 - Deprecating the old system without a replacement
@@ -117,18 +117,12 @@ Return consumer/equivalence/zero-usage results to verify; verify owns terminal a
 - Adding new features to a deprecated old system
 
 ## Relationship with LOOP
-This skill corresponds to the refactor loop of LOOP:
-- Build replacement = PLAN (plan the new system)
-- Incremental migration = ACT (change consumers one by one)
-- Zero-usage/equivalence data is returned to verify; old-system cleanup is a subsequent ACT task
-- Remove old code = DONE
+
+Corresponds to the migration loop: build replacement = PLAN, incremental migration = ACT (with inline verify-fast per consumer), zero-usage/equivalence evidence aggregated at verify-full, remove old code = final ACT before DONE. See `.harness/loops/LOOP.md`.
 
 ## Division of Labor with Other Skills
 | Skill | Responsibility |
 |-------|------|
-| migration | Migration decisions + incremental migration process |
-| tdd | Red-green-refactor for the replacement |
 | test-coverage | Add test coverage before migration (Beyonce Rule) |
-| verify | No-regression verification after migration |
 | writing-documentation | Migration guide + ADR |
 | dependency-management | Dependency upgrades (minor versions go through this skill; major versions go through migration) |

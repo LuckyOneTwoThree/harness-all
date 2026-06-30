@@ -12,6 +12,7 @@ description: Resolves validated design semantics into Solo-owned tech-stack bind
 - design tokens, DESIGN.md, component-spec.md, and flow.md from that package
 - `.harness/rules/component-contract.schema.json`
 - `.harness/rules/component-bindings.schema.json`
+- `Reference/state-management-matrix.md` (state-management pattern selection by tech stack)
 
 ## Outputs
 

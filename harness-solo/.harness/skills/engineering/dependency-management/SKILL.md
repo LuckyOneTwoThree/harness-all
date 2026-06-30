@@ -107,24 +107,17 @@ For vulnerabilities that cannot be fixed immediately, record them in `memory/kno
 | "Upgrade later" | The longer you wait, the more breaking changes accumulate |
 
 ## Prohibitions
-- Adding a dependency without review (violates security.md dependency review)
 - Not committing the lockfile (non-reproducible builds)
 - Using `npm install` instead of `npm ci` in CI (version drift)
 - Using `--force` to ignore audit red (masks the problem)
 - Upgrading multiple dependencies at once (cannot attribute issues)
-- Installing dependencies via `curl | sh` (violates the security red line)
 
 ## Relationship with LOOP
-This skill is usually triggered outside LOOP (adding/upgrading/auditing are independent operations):
-- New feature development needs a new dependency → brainstorming triggers this skill → continue LOOP after approval
-- The verify stage checks dependency compliance → as a sub-item of verify
 
-It never increments LOOP state or writes a terminal attempt outcome. When invoked inside a task, the active ACT owner controls iteration and verify records the outcome.
+Usually triggered outside LOOP (brainstorming for new deps, verify for compliance). Never increments LOOP state or writes terminal attempt outcome; the active ACT owner controls iteration. See `.harness/loops/LOOP.md`.
 
 ## Division of Labor with Other Skills
 | Skill | Responsibility |
 |-------|------|
-| dependency-management | Gatekeeping the add/upgrade/audit process for dependencies |
 | brainstorming | Evaluating whether a new dependency is really needed (first gate of necessity) |
-| verify | Dependency compliance check as a verification sub-item |
 | migration | Major version upgrades (v3→v4) go through the migration flow |

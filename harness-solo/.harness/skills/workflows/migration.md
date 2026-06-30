@@ -8,12 +8,12 @@ default_mode: standard
 
 ## Route
 
-1. session-start + Foundation gate.
+1. session-start (on-demand) + Foundation gate.
 2. Run migration's decision gate: justified replacement, complete consumer inventory, compatibility target, rollback, and sufficient safety tests.
 3. writing-plans orders replacement first, consumers incrementally, zero-usage verification, then cleanup.
-4. LOOP uses migration as ACT owner for one consumer/batch per attempt; verify-fast checks equivalence and affected tests.
+4. LOOP: migration as ACT owner with inline verify-fast (equivalence + affected tests) for one consumer/batch per attempt.
 5. After all consumers move, prove zero active usage before removing old code/config/docs.
-6. verify-full → code-review → session-end.
+6. verify-full → code-review → session-end (on-demand baseline).
 
 ## Specialization
 

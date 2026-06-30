@@ -120,15 +120,11 @@ session-end handles daily wrap-up, memory-maintenance handles deep cleanup:
 
 | Skill | Frequency | Responsibility |
 |-------|-----------|----------------|
-| session-end | Every session end | Record recovery state, write baseline, update board, invoke this skill on threshold |
+| session-end | Every session end | Record recovery state, refresh baseline when source files changed, update board, invoke this skill on threshold |
 | memory-maintenance | On-demand/periodic | Split large files, clean old archives, execute retention |
 
 **Recommendation**: session-end should check the progress.md length each time and invoke memory-maintenance when it exceeds 200 lines.
 
 ## Relationship with LOOP
 
-This skill does not affect LOOP state:
-- state.yaml is not cleaned
-- spec.md is not cleaned
-- evidence.md is not cleaned
-- Only log-type and archive-type files are cleaned
+Does not affect LOOP state (state.yaml/spec.md/evidence.md are not cleaned); only log-type and archive-type files are cleaned. See `.harness/loops/LOOP.md`.

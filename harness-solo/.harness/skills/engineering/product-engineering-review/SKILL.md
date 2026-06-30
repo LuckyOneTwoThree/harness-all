@@ -33,37 +33,15 @@ Failure here returns to orchestration; do not disguise incomplete feature work a
 
 ## Checks
 
-### 1. Cross-Feature Contracts
+### 1. Contracts + Dependency (merged)
 
-Inspect only boundaries actually used across features:
+**Cross-feature contracts** — inspect only boundaries actually used across features: exported API input/output/error semantics match callers; shared data entity names/types/lifecycle align with migrations; config/environment/feature-flag names have one meaning; semantic component IDs join to one current binding and preserve shared states/properties; global/scoped DAC evidence is not contradictory across pages/features.
 
-- exported API input/output/error semantics match callers;
-- shared data entity names/types/lifecycle align with migrations;
-- config/environment/feature-flag names have one meaning;
-- semantic component IDs join to one current binding and preserve shared states/properties;
-- global/scoped DAC evidence is not contradictory across pages/features.
+**Dependency and shared infrastructure** — one resolved version/major for shared dependencies with no peer/lock conflict; features import approved shared modules instead of reimplementing them; dependency direction follows the approved DAG; no new cycle. Use targeted searches and manifest/tool output. Do not claim semantic duplication solely from similar function names.
 
-### 2. Dependency and Shared Infrastructure
+### 2. Checkpoints + Skipped-Work (merged)
 
-- one resolved version/major for shared dependencies with no peer/lock conflict;
-- features import approved shared modules instead of reimplementing them;
-- dependency direction follows the approved DAG; no new cycle.
-
-Use targeted searches and manifest/tool output. Do not claim semantic duplication solely from similar function names.
-
-### 3. Integration Checkpoints
-
-Run each checkpoint defined in ENGINEERING_PLAN with actual command/flow output. The final checkpoint includes:
-
-- clean build/start where applicable;
-- full combined test suite;
-- critical cross-feature user/data flow;
-- migration/config startup compatibility;
-- frontend build and shared navigation/design contract when applicable.
-
-This is integration evidence, not a second per-feature verify-full.
-
-### 4. Skipped-Work Impact
+Run each checkpoint defined in ENGINEERING_PLAN with actual command/flow output. The final checkpoint includes: clean build/start where applicable; full combined test suite; critical cross-feature user/data flow; migration/config startup compatibility; frontend build and shared navigation/design contract when applicable. This is integration evidence, not a second per-feature verify-full.
 
 For each approved skip, state broken/unverified flows, blocked dependents, handoff limitation, owner, and required-before milestone. A dependent task cannot be considered integrated without an approved substitute.
 
@@ -99,4 +77,4 @@ Pass requires the current combined revision, all checkpoints passing, and no unr
 
 ## Relationship with LOOP
 
-This is an out-of-LOOP product gate. It never increments product or nested iteration. A finding routes to the owning nested task; only affected checkpoints plus the final combined checkpoint rerun afterward.
+Out-of-LOOP product gate; never increments product or nested iteration. A finding routes to the owning nested task; only affected checkpoints plus the final combined checkpoint rerun afterward. See `.harness/loops/LOOP.md`.

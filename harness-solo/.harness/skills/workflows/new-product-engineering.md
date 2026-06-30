@@ -21,32 +21,25 @@ Do not duplicate status across all three.
 
 ### 1. Foundation and Product Plan
 
-1. session-start validates PM/Design packages and project foundation.
-2. product-level brainstorming confirms feature inventory and boundaries.
-3. Produce `ENGINEERING_PLAN.md` from its template:
-   - feature IDs and stable criteria;
-   - shared infrastructure only when used by multiple features;
-   - hard dependency DAG and topological order;
-   - integration checkpoints tied to real cross-feature boundaries;
-   - technical decisions, open items, rollback/operational impact.
-4. Initialize product state with `iteration: 0`, `stage: plan`, `status: running`, and empty/current `current_nested_task`; validate it against the state schema.
-5. Obtain user approval for material architecture/scope decisions.
+1. session-start (product-level, runs once) validates PM/Design packages and project foundation.
+2. product-level brainstorming + writing-plans merge: confirm feature inventory/boundaries and produce `ENGINEERING_PLAN.md` (feature IDs + stable criteria; shared infrastructure only when used by multiple features; hard dependency DAG + topological order; integration checkpoints tied to real cross-feature boundaries; technical decisions, open items, rollback/operational impact).
+3. Initialize product state with `iteration: 0`, `stage: plan`, `status: running`, and empty/current `current_nested_task`; validate against the state schema.
+4. 👤 Obtain user approval for material architecture/scope decisions.
 
-### 2. Nested Delivery
+### 2. Nested Delivery (no per-feature session ceremony)
 
-Execute each infrastructure module/feature as its own canonical task:
+Execute each infrastructure module/feature as its own canonical task. **Nested tasks do not re-run session-start/session-end** — the product-level session owns the whole product's recovery point and board sync. Each nested task runs directly:
 
 - select workflow variant (normally new-feature; bug/refactor/migration only when that is the actual work);
-- writing-plans creates nested spec/state;
-- nested LOOP → verify-full → code-review;
-- session-end syncs the resulting reviewed/done state to FEATURES;
+- Plan (brainstorming if ambiguous → writing-plans creates nested spec/state);
+- nested LOOP (ACT with inline verify-fast → verify-full → code-review);
 - product state changes only `current_nested_task`.
 
 Do not invoke the whole new-feature workflow recursively while also duplicating its steps here; follow the shared pipeline once for each nested task.
 
-### 3. Integration Checkpoints
+### 3. Integration Checkpoints (inlined)
 
-Run checkpoints after shared infrastructure and at dependency-bound milestones. Each checkpoint has a command/flow, expected result, and evidence path. Failure routes to the owning nested task; it does not increment product-level iteration.
+Checkpoints run after shared infrastructure and at dependency-bound milestones, **inlined into the owning nested task's verify-full** rather than as a separate workflow stage. Each checkpoint has a command/flow, expected result, and evidence path written into the nested task's evidence. Failure routes to the owning nested task; it does not increment product-level iteration.
 
 ### 4. Product Review
 

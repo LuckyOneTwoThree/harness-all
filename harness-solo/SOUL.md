@@ -22,7 +22,7 @@ Product research / UI design / growth operations are handled by other harness fa
 ## Memory protocol
 
 - **Session start**: read `memory/progress.md` for context
-- **Session end**: record recovery state, sync status, refresh exact baseline, and invoke memory-maintenance only on retention thresholds
+- **Session end**: record recovery state, sync status, refresh exact baseline (on-demand: only when source files changed), and invoke memory-maintenance only on retention thresholds
 - **Important findings**: write to `memory/knowledge-base.md`
 
 > **Session definition**: Session = one Loop from when the Agent receives a task to when it claims completion.

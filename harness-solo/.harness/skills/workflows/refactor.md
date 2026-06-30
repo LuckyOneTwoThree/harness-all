@@ -8,11 +8,10 @@ default_mode: standard
 
 ## Route
 
-1. session-start + Foundation gate.
-2. Clarify the exact structural target and behavior boundary; use brainstorming only when ambiguous.
-3. Establish a green safety baseline. If characterization is missing, writing-plans makes test-coverage the first non-production-code task; no mutation occurs before PLAN.
-4. writing-plans → LOOP(test-coverage safety task if needed → test-driven-development structural attempts → verify-fast).
-5. verify-full → code-review → session-end.
+1. session-start (on-demand) + Foundation gate.
+2. Plan: clarify the structural target and behavior boundary (brainstorming only when ambiguous) → writing-plans (makes test-coverage the first non-production-code task if characterization is missing).
+3. LOOP: test-coverage safety task if needed → test-driven-development structural attempts with inline verify-fast.
+4. verify-full → code-review → session-end (on-demand baseline).
 
 ## Specialization
 

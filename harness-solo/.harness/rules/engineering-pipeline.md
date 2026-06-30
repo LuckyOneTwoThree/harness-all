@@ -4,15 +4,15 @@ This is the single routing contract for Solo delivery. Workflows select a varian
 
 ## Canonical Path
 
-1. **Restore** — `session-start` loads active state and validates inbound handoffs.
+1. **Restore** — `session-start` loads active state and validates inbound handoffs. **On-demand**: skip when no active state exists and an upstream handoff is unambiguous; go straight to Plan.
 2. **Foundation** — confirm `PROJECT.md`, `TECH_STACK.md`, and executable verification commands. Use `setup` only when missing.
-3. **Clarify** — `brainstorming` resolves material ambiguity. Skip only when an existing valid spec or the quick-fix gate makes scope unambiguous.
-4. **Plan** — `writing-plans` creates one spec and initializes one state file.
-5. **Attempt** — the selected ACT skill increments iteration once before mutation, then executes the smallest verifiable outcome.
-6. **Verify-fast** — validates the current attempt and routes failure. It may reuse fresh test output from the same attempt; resumed work reruns it.
-7. **Verify-full** — runs once after every planned task passes fast verification.
-8. **Code review** — reviews maintainability and resolves review feedback. Only this gate marks a delivery task `done`.
-9. **Close** — `session-end` records progress, updates the task board, refreshes the baseline, and publishes only explicitly needed handoffs.
+3. **Clarify + Plan (merged)** — `brainstorming` resolves material ambiguity, then `writing-plans` immediately consumes the resolved requirements to produce one spec + state. The two skills run as one continuous Plan stage without a pause between them unless a material user-owned decision surfaces. Skip brainstorming only when an existing valid spec or the quick-fix gate makes scope unambiguous.
+4. **Attempt + inline verify-fast (merged)** — the selected ACT skill increments iteration once before mutation, executes the smallest verifiable outcome, then performs the 4 fast-verify duties inline (test validation / AC-DAC check / changed-file security scan / append terminal outcome to iterations.log). verify-fast is no longer a separate skill invocation.
+5. **Verify-full** — owned by `verify`; runs once after every planned task passes inline fast verification.
+6. **Code review** — reviews maintainability and resolves review feedback. Only this gate marks a delivery task `done`.
+7. **Close** — `session-end` records progress, syncs the task board, refreshes baseline **only when source files changed**, and publishes only explicitly needed handoffs.
+
+**Product orchestration (new-product-engineering)**: session-start/end run once at product level; nested features do not re-run session ceremony. Integration checkpoints are inlined into the owning nested task's verify-full rather than a separate stage.
 
 ## State and Artifact Ownership
 
@@ -20,7 +20,8 @@ This is the single routing contract for Solo delivery. Workflows select a varian
 |---|---|
 | `spec.md`, initial `state.yaml` | writing-plans |
 | `iteration`, `stage: act` | active ACT skill, immediately before mutation |
-| verification evidence, verify outcome log | verify |
+| per-attempt terminal outcome in `iterations.log` | active ACT skill (inline verify-fast) |
+| `evidence.md` (full verification) | verify |
 | `review.md`, delivery-task `status: done` | code-review |
 | product-orchestrator `status: done` | product-engineering-review, after all nested reviews and integration checks pass |
 | `.harness/FEATURES.md` aggregate status | session-end |

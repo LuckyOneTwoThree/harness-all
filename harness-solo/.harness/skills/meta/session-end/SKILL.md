@@ -19,34 +19,19 @@ description: Records recoverable session state, synchronizes canonical status, r
 
 ## Process
 
-### 1. Record Recoverable State
+### 1. Record + Sync (merged)
 
 Complete the current progress block with outcomes/evidence, current task and stage, pending work, blockers, decisions, and next action. Promote only durable decisions/pitfalls to knowledge-base.md.
 
-### 2. Synchronize the One Aggregate Board
+Read raw task states changed this session. Sync `.harness/FEATURES.md` from them: only review-owned `status: done` becomes board `done` (code-review for delivery tasks, product-engineering-review for the product orchestrator); running/retrying/needs-human/blocked/failed remain distinct and are not collapsed to in-progress; product nested progress is derived from this board, not duplicated in ENGINEERING_PLAN.md or product state.
 
-Read raw task states changed this session. Sync `.harness/FEATURES.md` from them:
+Check retention thresholds, then invoke `memory-maintenance` as the sole owner of progress/knowledge/iteration/archive rotation. Session-end does not implement a second archive algorithm. Progress recording is mandatory; archival is conditional on retention thresholds.
 
-- only review-owned `status: done` becomes board `done`: code-review for delivery tasks, product-engineering-review for the product orchestrator;
-- running/retrying/needs-human/blocked/failed remain distinct and are not collapsed to in-progress;
-- product nested progress is derived from this board, not duplicated in ENGINEERING_PLAN.md or product state.
+### 2. Refresh Baseline (on-demand)
 
-### 3. Refresh Exact Baseline
+Refresh `baseline.json` **only when source files changed this session** (code/test/config/migration changes). Skip for pure-documentation or no-code sessions. When refreshing, write baseline fields defined by verify's `Reference/entropy-baseline.md`: exact tracked/source file count under documented exclusions; exact line count from those files (never estimate LOC from file count); dependency count from actual manifests; TODO/FIXME/XXX count. Record measurement scope/tool. If required exact metrics cannot be computed, keep the previous valid baseline and record the blocker; never replace an unknown value with zero, null, or an estimate.
 
-Write baseline fields defined by verify's `Reference/entropy-baseline.md`:
-
-- exact tracked/source file count under documented exclusions;
-- exact line count from those files (never estimate LOC from file count);
-- dependency count from actual manifests;
-- TODO/FIXME/XXX count.
-
-Record measurement scope/tool. If required exact metrics cannot be computed, keep the previous valid baseline and record the blocker; never replace an unknown value with zero, null, or an estimate.
-
-### 4. Invoke Retention Only When Needed
-
-Check thresholds, then invoke `memory-maintenance` as the sole owner of progress/knowledge/iteration/archive rotation. Session-end does not implement a second archive algorithm. Progress recording is mandatory; archival is conditional on retention thresholds.
-
-### 5. Publish Requested Downstream Contracts
+### 3. Publish Requested Downstream Contracts (on-demand)
 
 Publish only when there is a real consumer need:
 

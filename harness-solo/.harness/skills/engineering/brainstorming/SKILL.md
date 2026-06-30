@@ -12,6 +12,8 @@ description: Resolves material requirement ambiguity and records an executable e
 
 Do not invoke ceremonially when a validated upstream/current spec is already executable. Bug reproduction, performance measurement, migration decision, and refactor equivalence are owned by their specialist workflows.
 
+**Plan-stage merge**: In standard/deep mode, brainstorming and writing-plans may be executed as one continuous Plan stage without a pause between them — brainstorming resolves ambiguity, then writing-plans immediately consumes the resolved requirements to produce spec.md + state.yaml. The two skills remain separate artifacts (PROJECT.md updates vs spec.md), but the workflow does not force a pause between them unless a material user-owned decision surfaces.
+
 ## Inputs
 
 - `constitution.md`, risk/security rules, `TECH_STACK.md`

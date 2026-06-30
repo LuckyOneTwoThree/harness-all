@@ -6,7 +6,7 @@ description: Restores only the context needed for the requested work, validates 
 
 ## When to use
 
-- Every standard/deep task or resumed task.
+- Standard/deep task or resumed task **with active state** (`loops/specs/*/state.yaml` nonterminal). If no active state exists and an upstream handoff is unambiguous, skip straight to Plan.
 - Quick-fix uses its minimal context check unless active-task context may be affected.
 
 ## Inputs
@@ -24,27 +24,15 @@ description: Restores only the context needed for the requested work, validates 
 
 ## Process
 
-### 1. Restore Canonical State
+### 1. Restore + Validate (merged)
 
-Read progress.md and raw nonterminal state files. Report last outcome, open/blocked tasks, current stage/iteration/breaker, and any conflict between the user request and an active task.
+Read progress.md and raw nonterminal state files; report last outcome, open/blocked tasks, current stage/iteration/breaker, and any conflict with the user request. Load knowledge-base only when the task/progress references a durable decision or known pitfall; load FEATURES only when aggregate scope matters.
 
-Load knowledge-base only when the task/progress references a durable decision or known pitfall. Load FEATURES when aggregate scope/dependencies/status matter. Do not read both by ritual.
+Discover `pm-to-solo.md` / `design-to-solo.md` current pointers and matching packages. Apply `.harness/rules/handoff-protocol.md` and run the installed validator before semantic use. Resolve PRD/design/token/component artifacts only inside a valid package and write acceptance/rejection receipts. Enforce family frontend routing: a ready Design package is required when PM marks design required, unless the PM contract carries a complete approved waiver. Invalid packages are reported precisely and not partially consumed; the last valid delivery remains active.
 
-### 2. Validate Inbound Contracts
+If the user request is explicit and does not conflict with active state, use it directly. Ask only when scope is materially ambiguous, conflicts with an active task/contract, or requires a user-owned decision.
 
-Discover `pm-to-solo.md` / `design-to-solo.md` current pointers and matching packages. Apply `.harness/rules/handoff-protocol.md` and run the installed validator before semantic use. Resolve PRD/design/token/component artifacts only inside a valid package and write acceptance/rejection receipts.
-
-Enforce family frontend routing: a ready Design package is required when PM marks design required, unless the PM contract carries a complete approved waiver.
-
-Invalid packages are reported precisely and not partially consumed; the last valid delivery remains active.
-
-### 3. Resolve Scope Without Redundant Questions
-
-- If the user request is explicit and does not conflict with active state, use it directly.
-- Ask only when scope is materially ambiguous, conflicts with an active task/contract, or requires a user-owned decision.
-- Do not ask “what should we work on?” after the user already stated it.
-
-### 4. Write Recovery Point
+### 2. Write Recovery Point
 
 Before production work, append:
 

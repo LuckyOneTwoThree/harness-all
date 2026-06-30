@@ -11,7 +11,7 @@
 2. **Tests before behavior changes (TDD)** — Bug fixes and behavior changes require a failing test before production code. Pure text/comment/format changes may skip a new test, but still require targeted verification
 3. **Security red lines** — No hardcoded secrets, no `rm -rf`, no `curl | sh`; install/replace Git hooks only with explicit user authorization
 4. **Loop-first validation** — Follow `.harness/rules/engineering-pipeline.md`; workflow limits trigger early human escalation and attempt 10 is the absolute final attempt
-5. **Session end** — Update progress and exact baseline; invoke memory-maintenance only when retention thresholds are exceeded
+5. **Session end** — Update progress and sync board; refresh exact baseline only when source files changed; invoke memory-maintenance only when retention thresholds are exceeded
 6. **Interact first** — Workflows are not auto-run scripts; exploration dialog points (⏸) are controlled by exploration_mode, human decision points (👤) always pause
 
 ## Workflow Mode (3-tier speed)
@@ -21,8 +21,8 @@ Three workflow modes balance speed vs rigor. The Agent auto-detects the appropri
 | Tier | Workflow | Steps | When to use |
 |------|---------|-------|-------------|
 | **quick-fix** | `quick-fix` | ~5 | Low-risk, unambiguous change with no contract/security/schema/dependency impact; line count is only a secondary signal |
-| **standard** | `new-feature` / `bugfix` / `refactor` | ~18 | Clear requirements, normal feature dev or bug fix |
-| **deep** | `new-feature` / `new-product-engineering` | ~35 | Ambiguous requirements, new architecture, cross-module impact |
+| **standard** | `new-feature` / `bugfix` / `refactor` | ~11 | Clear requirements, normal feature dev or bug fix |
+| **deep** | `new-feature` / `new-product-engineering` | ~20 | Ambiguous requirements, new architecture, cross-module impact |
 
 **Auto-detection signals**:
 
@@ -88,7 +88,7 @@ Four principles as a concrete supplement to the core rules: **Think Before Codin
 When you need to select a Skill, read `.harness/skills/INDEX.md` (pure index, under 80 lines).
 - Engineering skills: 15 (`.harness/skills/engineering/`)
 - Meta skills: 4 (`.harness/skills/meta/`)
-Workflow orchestration (quick-fix / new product engineering / new feature / bugfix / refactor / optimize / migration / release) is read on demand under `.harness/skills/workflows/`. Use `quick-fix` only for changes that pass its risk gate; use `new-feature` (standard mode) for normal features; use `new-product-engineering` (deep mode) for multi-feature products.
+Workflow orchestration (setup / quick-fix / new product engineering / new feature / bugfix / refactor / optimize / migration / release) is read on demand under `.harness/skills/workflows/`. Use `quick-fix` only for changes that pass its risk gate; use `new-feature` (standard mode) for normal features; use `new-product-engineering` (deep mode) for multi-feature products.
 
 ## Relationship with the harness family
 

@@ -7,12 +7,12 @@
 
 ## Meta
 - **session-start** — Session startup, load context and restore working state
-- **session-end** — Recovery record + canonical board sync + exact baseline + requested handoffs
+- **session-end** — Recovery record + canonical board sync + on-demand baseline + requested handoffs
 - **skill-maintenance** — Skill health check
 - **memory-maintenance** — Memory retention cleanup
 
 ## Engineering
-- **brainstorming** — Resolve material requirement ambiguity; not ceremonial for already executable specs
+- **brainstorming** [conditional] — Resolve material requirement ambiguity; not ceremonial for already executable specs
 - **writing-plans** — One canonical spec/state process with depth-adjusted impact analysis
 - **test-driven-development** — Default ACT owner; increments once before mutation and returns results to verify
 - **test-coverage** — Add tests for existing code, coverage gap analysis
@@ -21,7 +21,7 @@
 - **migration** — Code migration, framework upgrade / API migration, guard against regression
 - **dependency-management** — Dependency management, add / upgrade / audit, integrates with the constitution approval gate
 - **frontend-implementation** — Frontend engineering implementation, components / state / styling (not visual design)
-- **verify** — Attempt outcome owner + one final delivery verification gate
+- **verify** — Owns verify-full (final delivery evidence gate); verify-fast is inlined into ACT skills
 - **product-engineering-review** — Product-level cross-feature consistency review (after all features implemented, before handoff)
 - **webapp-testing** — Frontend verification, pure Agent tool approach (build / type / lint / accessibility)
 - **code-review** — Maintainability review + feedback response + final done transition

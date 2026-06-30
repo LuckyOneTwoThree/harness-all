@@ -57,36 +57,8 @@ This skill is a **frontend-specific supplement to the verify skill** and does no
    - Show the output and confirm there are no errors (warnings are acceptable but should be recorded)
 
 5. **Structural verification** (using Agent tools, cross-platform)
-
-   **5.1 Component structure check**
-   - Use Glob to find the component files changed in this change (`*.tsx` / `*.vue` / `*.svelte`)
-   - Use Read to read each component and check:
-     - [ ] The component has clear prop type definitions (not any)
-     - [ ] The component has a corresponding test file (`*.test.tsx` / `*.spec.tsx`)
-     - [ ] No hardcoded inline styles (should use CSS classes/Tailwind classes)
-     - [ ] No uncleaned console.log / debugger
-
-   **5.2 Accessibility baseline check** (using Grep)
-   - Search `<img` to confirm all have `alt` attributes:
-     ```
-     <img[^>]*(?!alt=)[^>]*>
-     ```
-     Hit → mark as an accessibility issue
-   - Search `<button` to confirm all have readable text or `aria-label`:
-     ```
-     <button[^>]*>\s*</button>
-     ```
-     Hit (empty button) → mark as an accessibility issue
-   - Search `onClick` to confirm it is not bound on div/span (should use button):
-     ```
-     <div[^>]*onClick
-     ```
-     Hit → mark as an accessibility suggestion
-
-   **5.3 Routing/page check** (if routing exists)
-   - Use Glob to find the routing config file
-   - Use Read to confirm new pages are registered in the routing
-   - Confirm the routing paths match the ACs in spec.md
+   - Check component structure, accessibility baseline (Grep), and routing/page registration
+   - 完整正则模式与返回结构模板见 `Reference/frontend-check-patterns.md`
 
 6. **Security check** (frontend-specific)
    - Use Grep to search for `dangerouslySetInnerHTML` (React) / `v-html` (Vue):
@@ -98,37 +70,13 @@ This skill is a **frontend-specific supplement to the verify skill** and does no
      Hit → confirm whether it should be configured via environment variables
 
 7. **Return verification results**
-   Return the following structure to verify for its "Frontend Verification" evidence section:
-   ```markdown
-   ## Frontend Verification
-
-   ### Build
-   $ <command>
-   <actual output>
-
-   ### Type Check
-   $ <command>
-   <actual output>
-
-   ### Lint
-   $ <command>
-   <actual output>
-
-   ### Structural Verification
-   - Component files: X, all with prop types ✓/✗
-   - Test files: X components have tests, Y missing
-   - Accessibility: [issue list or "no issues"]
-
-   ### Security
-   - dangerouslySetInnerHTML: [hits or "none"]
-   - Hardcoded API addresses: [hits or "none"]
-   ```
+   - Return structured results (Build/Type/Lint/Structural/Security) to verify for evidence merging
+   - 完整正则模式与返回结构模板见 `Reference/frontend-check-patterns.md`
 
 ## Division of Labor with verify
 
 | Dimension | verify | webapp-testing |
 |------|--------|----------------|
-| Scope | Attempt verification + one final delivery gate | Frontend-specific |
 | Trigger | Every VERIFY of LOOP | When frontend code is involved |
 | Output | Canonical evidence.md | Structured frontend results for verify to merge |
 | Relationship | verify invokes and records | webapp-testing checks but does not write evidence |
@@ -141,18 +89,6 @@ This skill is a **frontend-specific supplement to the verify skill** and does no
 - Ignoring accessibility issues (not optional; it is a baseline quality)
 - Introducing external dependencies like Playwright/Cypress for E2E (violates the zero-new-dependency principle; if E2E is needed, the user configures it separately)
 
-## Regarding E2E Tests
-
-This skill **does not include** E2E tests (Playwright/Cypress), for the following reasons:
-- E2E frameworks are heavy dependencies, violating the constitution.md zero-new-dependency principle
-- E2E requires a browser environment, with complex cross-platform compatibility
-- For personal mid-sized projects, unit tests + structural verification are usually sufficient
-
-If the user explicitly needs E2E:
-1. The user approves introducing Playwright (modify the dependency whitelist in constitution.md)
-2. Create a separate `e2e-testing` skill
-3. Out of scope for this skill
-
 ## Relationship with LOOP
-This skill is invoked by the verify skill during verify-full (LOOP exit gate, Step 6):
-- tdd (ACT) → verify-fast (per iteration, no frontend invocation) → … → verify-full (LOOP exit gate) → detects frontend code → invoke webapp-testing → merge evidence
+
+Invoked by verify at verify-full (LOOP exit gate) when frontend code is detected; verify-fast per iteration does not invoke. See `.harness/loops/LOOP.md`.

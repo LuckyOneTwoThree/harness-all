@@ -23,7 +23,7 @@ description: Executes one behavior or structure change through Red, Green, and R
 - production/test changes
 - updated `state.yaml`
 
-Verify owns `evidence.md` and the terminal attempt log. TDD does not write a competing evidence document or increment after execution.
+Verify owns `evidence.md`. TDD owns the per-attempt terminal outcome (inline verify-fast) and does not write a competing evidence document or increment after execution.
 
 ## Hard Rules
 
@@ -60,16 +60,19 @@ Implement the smallest change that satisfies the current test/target. Do not bun
 
 With the focused test green, improve only code touched by this outcome when it materially improves clarity or removes duplication. Rerun the affected test set after every structural change. Refactor is optional when there is nothing concrete to improve; do not manufacture churn.
 
-### 5. Hand to Verify
+### 5. Inline Verify-Fast (merged)
 
-Keep `stage: act`, `status: running`, and the current iteration. Provide verify-fast with:
+TDD owns the per-attempt fast verification inline (verify-fast is no longer a separate skill invocation). Keep `stage: act`, `status: running`, and the current iteration. Perform these 4 fast-verify duties before declaring the attempt outcome:
 
-- exact commands and outputs;
-- changed files;
-- stable criteria exercised;
-- any known limitation.
+1. **Validate tests** — reuse the exact green output from step 3 only when produced in the same execution context and neither command, code, nor attempt changed; otherwise rerun the affected test set. Reject `0 tests`, stale output, or a different command than claimed.
+2. **AC/DAC check** — confirm the stable AC/DAC IDs exercised by this task have evidence; cite component contract/binding when frontend.
+3. **Changed-file security scan** — run the quick security scan on changed files and disposition every hit.
+4. **Append terminal outcome** — append exactly one terminal PASSED/FAILED line to `iterations.log` for this attempt.
 
-Do not append a second attempt record. Verify-fast writes the one terminal PASSED/FAILED outcome for this attempt.
+On pass: `stage: verify`, `status: running`, clear error. Continue to the next planned outcome or verify-full.
+On failure: `stage: verify`, `status: retrying`, concrete error, then route by cause (see Failure Handling). At the recommended failed-attempt limit, set `needs-human`. A failed attempt 10 triggers the hard breaker.
+
+Do not append a second attempt record. This inline step writes the one terminal outcome.
 
 ## Failure Handling
 
@@ -84,8 +87,8 @@ Do not append a second attempt record. Verify-fast writes the one terminal PASSE
 - [ ] Test failed for the intended reason when behavior changed.
 - [ ] Minimal implementation passes the focused/affected tests.
 - [ ] No unrelated scope entered the diff.
-- [ ] Verify-fast received actual output, not a prediction.
+- [ ] Inline fast-verify received actual output, not a prediction.
 
 ## Relationship with LOOP
 
-This is the default ACT owner for feature, bugfix, and refactor variants. Performance and migration use their specialist ACT skills under the same state protocol.
+Default ACT owner for feature/bugfix/refactor variants; performance and migration use their specialist ACT skills. See `.harness/loops/LOOP.md`.
