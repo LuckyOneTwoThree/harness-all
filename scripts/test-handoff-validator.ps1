@@ -64,8 +64,9 @@ No acceptance criteria in this fixture.
 } finally {
     if (Test-Path -LiteralPath $temp) {
         $candidate = [IO.Path]::GetFullPath($temp)
-        $tempRoot = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\')
-        if (-not $candidate.StartsWith($tempRoot + '\harness-handoff-test-', [StringComparison]::OrdinalIgnoreCase)) {
+        $tempRoot = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\', '/')
+        $expectedPrefix = $tempRoot + [IO.Path]::DirectorySeparatorChar + 'harness-handoff-test-'
+        if (-not $candidate.StartsWith($expectedPrefix, [StringComparison]::OrdinalIgnoreCase)) {
             throw "Unsafe test cleanup target: $candidate"
         }
         Remove-Item -LiteralPath $candidate -Recurse -Force
