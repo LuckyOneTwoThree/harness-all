@@ -1,3 +1,16 @@
+---
+schema_version: "1.0"
+handoff_id: "<SOURCE-TARGET-YYYYMMDD-NNN>"
+producer: "<source-framework>"
+consumer: "<target-framework>"
+created_at: "<ISO-8601>"
+source_revision: "<commit-or-artifact-revision>"
+supersedes: null
+status: draft
+ac_ids: []
+artifacts: []
+---
+
 # Handoff: [handoff title]
 
 > **From**: harness-ops (Operations)

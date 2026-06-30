@@ -37,7 +37,7 @@ session-start
       └─ PC2: at P0 milestone
   → product-design-review (product-level consistency gate)
       └─ PC3: full cross-page check runs as part of review
-  → Product-level Handoff (design-to-solo.md + component-map.json, product-level)
+  → Product-level Handoff package (design-to-solo.md + component-contract.json)
   → session-end
 ```
 
@@ -150,7 +150,7 @@ For each page in DESIGN_PLAN.md Section 6 execution order:
 After all pages in DESIGN_PLAN.md Section 2 reach Status = done or skipped:
 
 - Run the `product-design-review` skill
-- Inputs: DESIGN_PLAN.md + all per-page outputs (visual/interaction/prototype) + component-map.json (with usedBy) + tokens.json
+  - Inputs: DESIGN_PLAN.md + all per-page outputs + component-contract.json (with used_by) + tokens.json
 - Output: `loops/specs/<product-task>/product-review-evidence.md`
 - Checks: navigation consistency / user flow completeness / component reuse / token consistency / responsive consistency / interaction consistency
 
@@ -166,7 +166,7 @@ Run the `design-handoff` workflow / `design-handoff-spec` skill at product level
 
 - Aggregate all per-page outputs
 - Generate `docs/handoff/design-to-solo.md` (product-level, includes Page Inventory with navigation structure, Component Inventory with reuse matrix, Cross-Page Consistency Report, reference to DESIGN_PLAN.md)
-- Generate `docs/handoff/component-map.json` (with `usedBy` field populated from DESIGN_PLAN.md Section 3)
+- Generate `docs/handoff/component-contract.json` with `used_by` populated from DESIGN_PLAN.md Section 3
 - Run Pre-Delivery Checklist
 
 ### 9. session-end
@@ -185,7 +185,7 @@ Update `memory/progress.md` and archive the session.
 | docs/prototype/wireframe-<page>.md | Per-page wireframes (one per page, if wireframe LOOP ran) |
 | docs/prototype/flow.md | Product user flow diagram |
 | docs/handoff/design-to-solo.md | Product-level handoff (enhanced) |
-| docs/handoff/component-map.json | Component map (with usedBy field) |
+| docs/handoff/component-contract.json | Semantic component contract (with used_by) |
 | loops/specs/<product-task>/state.yaml | Product-level loop state |
 | loops/specs/<product-task>/product-review-evidence.md | Product-level review evidence |
 | loops/specs/<product-task>-<page-name>/state.yaml | Per-page loop state (one per page) |
@@ -199,7 +199,7 @@ Update `memory/progress.md` and archive the session.
 - All shared components designed (Phase 1, if run)
 - All pages in DESIGN_PLAN.md Section 2 reach Status = done or skipped (each non-skipped page passed its own verify + lint + design-review + accessibility-audit; skipped pages must be acknowledged in Open Items)
 - product-design-review passed (no open Critical findings)
-- design-handoff completed (design-to-solo.md + component-map.json + Pre-Delivery Checklist)
+- design-handoff package completed and validated (contract + manifest + artifacts)
 - Product-level state.yaml status = done
 
 ## Interaction Points

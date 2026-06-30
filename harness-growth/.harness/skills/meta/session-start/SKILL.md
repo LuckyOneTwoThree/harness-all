@@ -41,10 +41,10 @@ Context must be loaded before the session starts; working in an "amnesic" state 
    Read `.harness/FEATURES.md` to understand the overall growth progress of the project.
 
 5. **Check handoff documents** (from other harness family members)
-   Scan the `docs/handoff/` directory:
+   Scan `docs/handoff/` and validate inbound packages with `.harness/rules/handoff-protocol.md` before consumption:
    - If a `solo-to-growth.md` file exists (from harness-solo), report to the user: "Found handoff document solo-to-growth.md (from harness-solo), consume it this session?"
    - This document may contain new feature release info, trackable events, API endpoints, etc., and is an important input for growth work.
-   - If unconsumed handoff documents exist, remind the user to prioritize them.
+   - If valid unconsumed handoffs exist, prioritize them. Report invalid packages precisely and retain the last valid input.
 
 6. **Confirm task scope**
    Confirm with the user what this session will do, and write a new session block to progress.md:

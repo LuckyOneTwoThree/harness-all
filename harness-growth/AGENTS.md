@@ -52,43 +52,10 @@ The following scenarios **always pause**, unaffected by exploration_mode:
 
 ## Growth Principles
 
-> A concrete supplement to the Core Rules, guiding the judgment of every growth action.
-
-### 1. Experiment-Driven
-
-**Growth is experimentation, not gut feel. Every action has a hypothesis and metrics.**
-
-- Write a hypothesis before every growth action ("Doing X will increase Y by Z%")
-- Define metrics for every experiment (primary metric + guardrail metrics)
-- Do not perform actions without hypotheses and metrics
-- Failed experiments are also conclusions; record and archive them
-
-### 2. Content-First
-
-**Content quality > quantity. No content farming.**
-
-- One high-quality piece of content > ten low-quality pieces
-- No keyword stuffing for SEO, no producing homogeneous content
-- Content must deliver value to users, not be written for algorithms
-- Users should gain something from reading, not waste their time
-
-### 3. Long-Term
-
-**SEO is a long-term investment. No black-hat, no fake traffic.**
-
-- No keyword stuffing, hidden text, or link farms
-- No fake clicks, downloads, ratings, or followers
-- Do not sacrifice long-term brand for short-term vanity metrics
-- Accept that SEO takes time (3-6 months); do the right thing
-
-### 4. Data-Loop
-
-**Every experiment has a conclusion, every conclusion drives an action, forming a closed loop.**
-
-- Experiments must end with a conclusion (effective / ineffective / inconclusive)
-- Effective → scale up; Ineffective → stop; Inconclusive → redesign the experiment
-- Conclusions are written to the knowledge base to avoid duplicate experiments
-- Closed loop: Hypothesis → Experiment → Measurement → Conclusion → Action → New Hypothesis
+1. **Experiment-Driven** — Every action starts with a falsifiable hypothesis, primary metric, and guardrails; failed experiments are still archived conclusions.
+2. **Content-First** — User value and quality beat volume; no content farming, homogeneous output, or writing solely for algorithms.
+3. **Long-Term** — No black-hat SEO or fake traffic; protect the brand and accept realistic 3–6 month SEO horizons.
+4. **Data-Loop** — Every experiment ends effective/ineffective/inconclusive, drives scale/stop/redesign, and enters the knowledge base: Hypothesis → Experiment → Measurement → Conclusion → Action.
 
 ## Loading Chain (strict order; each step triggered only when needed)
 
@@ -119,6 +86,13 @@ harness-growth is the **Operations Growth** member of the harness family, focuse
 
 **Handoff protocol**: See handoff documents under the `docs/handoff/` directory. Drop files in manually to make them recognized.
 
+### Standalone vs Family Mode
+
+- **Standalone mode**: Growth may obtain goals directly from the user when PM contracts are absent.
+- **Family mode**: Growth owns channel/content/SEO/user operations and experiment execution/statistical conclusions. It must not change product strategy, PRD, product ACs, or roadmap priorities.
+- Consume goals, hypotheses, guardrails, and product analytics definitions from `pm-to-growth.md`; return evidence and recommendations through `growth-to-pm.md`.
+- Infrastructure availability and Logs/Metrics/Traces belong to harness-ops; Growth only uses them as guardrail inputs.
+
 ## Project Context
 
 - Growth strategy at `docs/operations/GROWTH_STRATEGY.md` (created on demand: fill in at project initiation; skip if it does not exist)
@@ -143,7 +117,9 @@ PLAN → EXPERIMENT → MEASURE → pass? DONE : back to EXPERIMENT/PLAN
 ```
 Each experiment's loop state is in `loops/specs/<experiment>/state.yaml`, evidence in `evidence.md`, iteration history in `iterations.log`.
 
-## Security Layer
+## Risk and Security Layer
+
+Classify actions with `.harness/rules/risk-model.md`: R0 inspection, R1 scoped reversible work, R2 material change requiring explicit approval, R3 production/critical change requiring fresh approval plus rollback and blast-radius review. Risk is based on consequence, not line count.
 
 - Full security rules: `.harness/rules/security.md` (pulled on demand by the `Inputs` section of SKILL.md)
 - Prompt injection defense: `.harness/rules/prompt-defense.md`

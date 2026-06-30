@@ -12,10 +12,10 @@
 
 ---
 
-![Version](https://img.shields.io/badge/version-v2.1-blue.svg?style=for-the-badge&logo=semver)
+![Version](https://img.shields.io/badge/version-v2.2-blue.svg?style=for-the-badge&logo=semver)
 ![Frameworks](https://img.shields.io/badge/frameworks-5-green.svg?style=for-the-badge&logo=github)
-![Skills](https://img.shields.io/badge/skills-198-orange.svg?style=for-the-badge&logo=skill)
-![Workflows](https://img.shields.io/badge/workflows-40-purple.svg?style=for-the-badge&logo=git)
+![Skills](https://img.shields.io/badge/skills-196-orange.svg?style=for-the-badge&logo=skill)
+![Workflows](https://img.shields.io/badge/workflows-41-purple.svg?style=for-the-badge&logo=git)
 ![Handoffs](https://img.shields.io/badge/handoffs-11-teal.svg?style=for-the-badge&logo=markdown)
 ![Loop Types](https://img.shields.io/badge/loop--types-24-red.svg?style=for-the-badge&logo=circleci)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge&logo=open-source-initiative)
@@ -26,7 +26,7 @@
 |:----:|------|:-----:|:--------:|
 | **harness-pm** | 战略 · 市场 · PRD · 指标 | 86 | 10 |
 | **harness-design** | 视觉 · 交互 · 原型 · 设计系统 | 19 | 7 |
-| **harness-solo** | 工程 · TDD · 调试 · 重构 · 验证 | 21 | 8 |
+| **harness-solo** | 工程 · TDD · 调试 · 重构 · 验证 | 19 | 9 |
 | **harness-growth** | 内容 · SEO · 增长实验 · 变现 | 40 | 7 |
 | **harness-ops** | 部署 · 监控 · 故障 · 容灾 | 32 | 8 |
 
@@ -149,7 +149,7 @@ harness-pm → pm-to-design.md → harness-design → design-to-solo.md → harn
                                                                     → solo-to-ops.md → harness-ops
 ```
 
-将交接文档复制到下游框架的 `docs/handoff/` 目录，消费方 Agent 会自动读取。
+将完整的 `docs/handoff/packages/<handoff_id>/` 目录复制到下游框架；不能只复制 Markdown 契约，因为消费方还必须校验 manifest 与随包产物。
 
 ---
 
@@ -165,11 +165,11 @@ harness-pm → pm-to-design.md → harness-design → design-to-solo.md → harn
 
 视觉设计、交互设计、设计系统、原型输出。19 个 skill。特色：**Push-back 反越界** — 设计 Agent 有权拒绝 PM 硬编码的 UI 指令。**反 AI 味** — 禁用 Inter/紫色渐变/Lorem ipsum。
 
-核心产出：`DESIGN.md` / `tokens.json` / `design-to-solo.md` / `component-map.json`
+核心产出：`DESIGN.md` / `tokens.json` / `design-to-solo.md` / `component-contract.json`
 
 ### harness-solo — "写好代码"
 
-工程开发、TDD、调试、验证、代码审查。21 个 skill。特色：**双源 AC 验证** — 同时检查工程 AC（`AC-xxx`）和设计 AC（`DAC-xxx`）。**熵增检查** — 逮住文件膨胀和依赖蔓延。
+工程开发、TDD、调试、验证、代码审查。19 个 skill。特色：单一规范交付流水线、稳定验收证据和由代码审查独占的完成状态。
 
 核心产出：`TECH_STACK.md` / `solo-to-growth.md` / `solo-to-ops.md` / `spec.md`
 
@@ -208,7 +208,7 @@ harness-pm → pm-to-design.md → harness-design → design-to-solo.md → harn
 | pm → design | `pm-to-design.md` |
 | pm → solo | `pm-to-solo.md` |
 | pm → growth | `pm-to-growth.md` |
-| design → solo | `design-to-solo.md` + `component-map.json` |
+| design → solo | 含 `design-to-solo.md` + `component-contract.json` 的可移植交接包 |
 | solo → growth | `solo-to-growth.md` |
 | solo → ops | `solo-to-ops.md` |
 | growth → pm | `growth-to-pm.md` |
@@ -239,7 +239,7 @@ description: 一句话描述
 
 ### 为什么独立而非统一
 
-上下文爆炸和记忆污染是 AI Agent 协作的核心痛点。单个 Agent 加载 198 个 skill 浪费 token、降低输出质量。独立框架让每个 Agent 专精一个领域。
+上下文爆炸和记忆污染是 AI Agent 协作的核心痛点。单个 Agent 加载 196 个 skill 浪费 token、降低输出质量。独立框架让每个 Agent 专精一个领域。
 
 ### 为什么用契约文档而非共享状态
 
@@ -255,7 +255,10 @@ description: 一句话描述
 
 | 文档 | 内容 |
 |------|------|
-| [ARCHITECTURE.md](./ARCHITECTURE.md) | 完整架构设计（v2.1） |
+| [ARCHITECTURE.md](./ARCHITECTURE.md) | 完整架构设计（v2.2） |
+| [DOMAIN_BOUNDARIES.md](./DOMAIN_BOUNDARIES.md) | 规范化职责边界与路由规则 |
+| [HANDOFF_PROTOCOL.md](./HANDOFF_PROTOCOL.md) | 可版本化契约协议 |
+| [UPGRADING.md](./UPGRADING.md) | 冲突安全的框架升级流程 |
 | [harness-pm/README.md](./harness-pm/README.md) | PM 框架详情 |
 | [harness-design/README.md](./harness-design/README.md) | 设计框架详情 |
 | [harness-solo/README.md](./harness-solo/README.md) | 工程框架详情 |

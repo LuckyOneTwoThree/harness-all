@@ -12,14 +12,15 @@ description: Code Migration — framework upgrades/API migration/data migration,
 
 ## Inputs
 - loops/LOOP.md
+- loops/STATE_PROTOCOL.md
+- loops/state.schema.json
 - rules/security.md
 - constitution.md
 - docs/engineering/TECH_STACK.md
 
 ## Outputs
 - loops/specs/<feature>/state.yaml
-- loops/specs/<feature>/evidence.md
-- loops/specs/<feature>/iterations.log
+- migration/equivalence results returned to verify
 
 ## Iron Rule
 **Build the replacement first, then deprecate the old system.** Do not deprecate without a replacement in place — users (including future you) will be stuck unable to use either the old or the new.
@@ -62,7 +63,7 @@ Before starting a migration, answer the following questions. If any item is not 
 - For each migration:
   1. Change the call site to point to the new system
   2. Run the full test suite and confirm behavior matches
-  3. Append to iterations.log: `[time] iter=<N> migrated <consumer> ✓`
+  3. Return migrated-consumer and equivalence results to verify
 - Do not batch-change multiple consumers before testing (errors accumulate, attribution is impossible)
 
 ### 4. Verify Zero Active Usage
@@ -74,6 +75,7 @@ Before removing the old code, you **must** prove there are no active consumers:
 **Without evidence of zero active usage, do not delete the old code.**
 
 ### 5. Remove the Old System
+- Treat cleanup as its own planned ACT attempt after zero-usage evidence; increment before deletion and preserve rollback.
 - Delete the old code + old tests + old docs + old config
 - Run the full test suite and confirm no regressions
 - Update `docs/engineering/TECH_STACK.md`
@@ -99,16 +101,12 @@ Data migration (DB schema / data format) has additional requirements:
 
 ## State Maintenance
 
-Update per the "state.yaml Schema" in LOOP.md:
-- `stage`: `act` (during migration) / `verify` (verifying zero usage)
-- `iteration`: +1 (per consumer migrated)
+Follow `.harness/loops/STATE_PROTOCOL.md` and validate with `state.schema.json`:
+- `stage`: `act` during mutation; verify owns the `verify` transition and terminal outcome
+- `iteration`: increment exactly once immediately before mutating one consumer/batch, following STATE_PROTOCOL.md; verification and rollback do not increment
 - `last_error`: on failure, fill in "<consumer> migration failed: <reason>"
 
-**Update iterations.log (append only, overwriting is forbidden)**:
-```
-[YYYY-MM-DD HH:MM] iter=<N> stage=act → migrated <consumer> ✓
-[YYYY-MM-DD HH:MM] iter=<N> stage=verify → zero active usage confirmed
-```
+Return consumer/equivalence/zero-usage results to verify; verify owns terminal attempt logging.
 
 ## Prohibitions
 - Deprecating the old system without a replacement
@@ -122,7 +120,7 @@ Update per the "state.yaml Schema" in LOOP.md:
 This skill corresponds to the refactor loop of LOOP:
 - Build replacement = PLAN (plan the new system)
 - Incremental migration = ACT (change consumers one by one)
-- Verify zero usage + no test regression = VERIFY
+- Zero-usage/equivalence data is returned to verify; old-system cleanup is a subsequent ACT task
 - Remove old code = DONE
 
 ## Division of Labor with Other Skills

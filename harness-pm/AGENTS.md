@@ -90,6 +90,13 @@ harness-pm is the **Product Management** member of the harness family, focused o
 
 **Handoff protocol**: See the handoff documents under the `docs/handoff/` directory. Drop them in manually and downstream frameworks will recognize them.
 
+### Standalone vs Family Mode
+
+- **Standalone mode**: PM may use its local growth and monitoring fallback skills to remain self-sufficient; mark their outputs `mode: standalone-fallback`.
+- **Family mode**: PM owns product strategy, PRD, product analytics definitions, growth goals/hypotheses/guardrails, and roadmap decisions. harness-growth owns channel/content/SEO/user operations and experiment execution/statistical conclusions. harness-ops owns system observability, SLA, deployment, and incidents.
+- In family mode, produce `pm-to-growth.md` instead of executing live growth operations, and consume `growth-to-pm.md` before making roadmap decisions.
+- Use precise terms: **product analytics** (PM), **growth experimentation** (Growth), **system observability** (Ops).
+
 ## Project Context
 
 **Single-track documentation system**:
@@ -125,7 +132,9 @@ PLAN → RESEARCH → VALIDATE → pass? DELIVER : back to RESEARCH/PLAN
 ```
 The loop state of each task is in `loops/specs/<task>/state.yaml`, evidence in `evidence.md`, and iteration history in `iterations.log`.
 
-## Security Layer
+## Risk and Security Layer
+
+Classify actions with `.harness/rules/risk-model.md`: R0 inspection, R1 scoped reversible work, R2 material change requiring explicit approval, R3 production/critical change requiring fresh approval plus rollback and blast-radius review. Risk is based on consequence, not line count.
 
 - Full security rules: `.harness/rules/security.md` (pulled on demand by the `Inputs` section of SKILL.md)
 - Prompt injection defense: `.harness/rules/prompt-defense.md`

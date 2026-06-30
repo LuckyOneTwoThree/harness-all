@@ -1,7 +1,7 @@
 ---
 workflow_id: F
 name: design-handoff
-description: "Hand off completed design deliverables to engineering with specs, component maps, and pre-delivery checks"
+description: "Hand off completed design deliverables to engineering with specs, component contract, and pre-delivery checks"
 default_mode: skip
 ---
 
@@ -79,7 +79,7 @@ Generate deliverables:
 - Aggregate visual/interaction/prototype outputs
 - Generate `docs/handoff/design-to-solo.md` (human-readable complete description)
 - Generate `docs/interaction/component-spec.md` (component props/states/variants table)
-- Generate `docs/handoff/component-map.json` (explicit mapping layer, Stitch's core innovation)
+- Generate `docs/handoff/component-contract.json` (framework-neutral semantic component contract)
 - Generate `docs/prototype/flow.md` (interaction flow diagram)
 
 Run the Pre-Delivery Checklist (6 items):
@@ -100,13 +100,15 @@ Update `memory/progress.md` and archive the session.
 | File | Description |
 |------|------|
 | docs/handoff/design-to-solo.md | Human-readable complete description |
-| docs/handoff/component-map.json | Explicit mapping layer (design → engineering) |
+| docs/handoff/component-contract.json | Semantic component contract (design → engineering) |
 | docs/interaction/component-spec.md | Component spec |
 | docs/prototype/flow.md | Interaction flow diagram |
+| docs/handoff/packages/<handoff_id>/ | Portable package (manifest.json + artifacts/ + hash validation) |
 
 ## Exit Criteria
 
 - All prerequisite hard gates passed
 - All deliverables generated
 - Pre-Delivery Checklist all ✓
-- component-map.json is valid and contains a states field
+- component-contract.json validates against its schema and contains stable IDs/states/token provenance
+- Portable package is self-contained; manifest hash validates and every artifact path resolves

@@ -94,8 +94,7 @@ Archiving must be performed before the session ends; "bare exit" is not allowed 
 
    **Notes**:
    - If this session has no externally deliverable output (pure monitoring config, pure IaC maintenance), skip this step
-   - If `ops-to-pm.md` already exists, append this content; do not overwrite history
-   - The filename is fixed as `ops-to-pm.md`; do not split by date (downstream only reads the latest state)
+   - `ops-to-pm.md` is a current pointer. Archive the previous contract to `docs/handoff/archive/<handoff_id>.md`, then replace it with one latest contract using `supersedes: <previous-id>` and `status: ready`; never append a second delivery body
 
    **AC Format Validation** (handoff documents must pass)
    Run Acceptance Criteria format validation on the produced handoff document:
@@ -103,6 +102,10 @@ Archiving must be performed before the session ends; "bare exit" is not allowed 
    - Check that numbers are consecutive (AC-001 must not jump directly to AC-003)
    - Check that each AC contains: description + validation method
    - If a format anomaly is found (e.g., "Acceptance Criteria One", non-consecutive numbering, missing validation method), **block the handoff** and require correction before re-producing
+
+## Handoff Publication Gate
+
+For every outbound contract, apply `.harness/rules/handoff-protocol.md` and `.harness/rules/acceptance-id-protocol.md`. Build `docs/handoff/packages/<handoff_id>/{manifest.json,contract.md,artifacts/...}`, use package-relative paths, record SHA-256/size for every artifact, validate envelope/body ID parity, then archive and replace the current pointer. Do not publish `ready` until the self-contained package validates.
 
 ## Prohibitions
 - Ending the session without updating progress.md (next session loses context)

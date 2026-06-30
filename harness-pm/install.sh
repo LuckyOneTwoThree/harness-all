@@ -52,10 +52,10 @@ fi
 echo "→ Copying .harness/ framework..."
 cp -r "$TEMPLATE_DIR/.harness" .harness
 
-# Copy AGENTS.md and SOUL.md templates (if they don't exist)
+# Copy the canonical AGENTS.md and user-owned templates (if they don't exist)
 if [ ! -f "AGENTS.md" ]; then
-  cp "$TEMPLATE_DIR/.harness/templates/AGENTS.md.template" AGENTS.md
-  echo "  ✓ Created AGENTS.md (from template)"
+  cp "$TEMPLATE_DIR/AGENTS.md" AGENTS.md
+  echo "  ✓ Created AGENTS.md (from canonical framework rules)"
 fi
 if [ ! -f "SOUL.md" ]; then
   cp "$TEMPLATE_DIR/.harness/templates/SOUL.md.template" SOUL.md
@@ -68,7 +68,7 @@ fi
 
 # Create the docs/ directory structure (required by the PM framework)
 echo "→ Creating docs/ directory..."
-mkdir -p docs/discovery docs/strategy docs/product docs/metrics docs/growth docs/monitoring docs/handoff
+mkdir -p docs/discovery docs/strategy docs/product docs/metrics docs/growth docs/monitoring docs/handoff/archive docs/handoff/receipts docs/handoff/packages
 
 # Initialize PRODUCT_STRATEGY.md from template (if it doesn't exist)
 if [ ! -f "docs/strategy/PRODUCT_STRATEGY.md" ]; then

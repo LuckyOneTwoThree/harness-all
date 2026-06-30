@@ -57,7 +57,7 @@ check_file() {
     for pattern in "${PATTERNS[@]}"; do
       if grep -qE "$pattern" "$file" 2>/dev/null; then
         echo "BLOCK: $file contains a suspected secret (matched $pattern)"
-        grep -nE "$pattern" "$file" 2>/dev/null | head -3
+        echo "  Matching value redacted; inspect the file locally."
         exit_code=1
       fi
     done

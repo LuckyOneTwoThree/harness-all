@@ -60,7 +60,7 @@ This path uses only Agent tools and works on Windows, macOS, and Linux without a
 
 1. **Read the baseline**: use Read to load `.harness/memory/baseline.json`. If the file is missing, write `skipped — no baseline.json present` in evidence and skip the rest of Method A.
 2. **Count current files**: use Glob with the project's source glob (e.g. `src/**/*.ts`). Subtract `node_modules/`, `dist/`, `build/` via Glob's path filter. Compare to `baseline.files`.
-3. **Sum current loc**: use Read to open each counted file and sum the non-blank lines. For large trees, sample the top 20 files by size and extrapolate, marking the result as `estimated` in evidence.
+3. **Sum current loc**: count non-blank lines across every file in the declared source scope using available read/shell tooling. If exact counting is unavailable, mark the entropy dimension unavailable and keep the prior baseline; extrapolation is not comparable evidence.
 4. **Read current deps**: use Read to open `package.json` (or equivalent). Count entries under `dependencies`. Compare to `baseline.deps`.
 5. **Count current TODO/FIXME**: use Grep with pattern `TODO|FIXME` against the source tree. Compare the count to `baseline.todos`.
 

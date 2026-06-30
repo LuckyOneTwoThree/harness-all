@@ -1,160 +1,80 @@
 ---
 name: frontend-implementation
-description: Frontend Implementation — component decomposition/state management/styling engineering (not visual design)
+description: Resolves validated design semantics into Solo-owned tech-stack bindings and implementation constraints for TDD.
 ---
-# Frontend Implementation — Frontend Engineering
-
-## When to use
-- When implementing frontend components
-- When selecting a state management approach
-- When establishing the styling engineering
-- When designing frontend architecture
+# Frontend Implementation
 
 ## Inputs
-- constitution.md
-- rules/security.md
-- docs/engineering/TECH_STACK.md
-- docs/handoff/design-to-solo.md
-- docs/handoff/component-map.json
-- docs/design-system/tokens.json
-- docs/design-system/tokens.css
-- docs/design-system/DESIGN.md
-- docs/interaction/component-spec.md
-- Reference/component-map-contract.md
-- Reference/state-management-matrix.md
+
+- `docs/engineering/TECH_STACK.md`
+- a validated, ready design-to-solo package
+- `docs/handoff/component-contract.json` or its package copy
+- design tokens, DESIGN.md, component-spec.md, and flow.md from that package
+- `.harness/rules/component-contract.schema.json`
+- `.harness/rules/component-bindings.schema.json`
 
 ## Outputs
-- loops/specs/<feature>/iterations.log
 
-## Iron Rule
-**Composition over configuration.** `<Card><CardHeader><CardTitle>` is better than `<Card title="..." headerVariant="large">`. Component composition > configuration explosion.
+- `docs/engineering/component-bindings.json`
+- resolved component constraints returned to test-driven-development
 
-## Positioning
-This skill is **engineering implementation**, not visual design:
-- Visual design (color/typography/branding) → handed off by harness-design via `docs/handoff/`
-- **This skill handles**: component structure, state management, styling engineering approach selection, three-state handling
+## Hard Gates
 
-## Consuming Design Assets (from harness-design)
-This skill has a hard dependency on harness-design outputs. Read each asset per its contract; do not improvise.
-- **`docs/handoff/component-map.json`** — single source of truth for component implementation. Schema, consumption rules, framework Type alignment, and a worked example live in `Reference/component-map-contract.md`.
-- **`docs/design-system/tokens.json` / `tokens.css`** — spacing/color/type scale. Hardcoded values are forbidden; resolve every value through a token.
-- **`docs/design-system/DESIGN.md`** — global design system constraints (10 sections).
-- **`docs/interaction/component-spec.md`** — interaction behavior spec (gestures / animations / state transitions).
-- **`docs/handoff/design-to-solo.md`** — handoff notes: design AC-xxx checklist (flows into verify), asset paths, open items.
-When sources conflict, follow the priority order in `Reference/component-map-contract.md`. A contradiction is a handoff defect — feed it back to harness-design.
+1. Apply `.harness/rules/handoff-protocol.md` before reading package content.
+2. Family-mode frontend work requires a ready design package and valid semantic component contract. An explicit PM waiver must include approver, reason, scope, and expiry/review point.
+3. Confirm TECH_STACK.md before creating bindings. Design does not choose code names or framework types.
+4. Validate component-contract.json. Reject duplicate/unknown IDs, framework-specific types, missing token provenance, or invalid hashes.
 
-### Implementation Priority (product-level handoff)
-When the handoff is product-level (from new-product-design workflow), `component-map.json` may include an optional `usedBy` field (array of page IDs) on each component. Use it to sequence implementation:
-- **High-reuse components** (`usedBy` lists ≥3 pages, e.g., Button / Header / Footer): implement first. These are the shared foundation; pages depend on them.
-- **Medium-reuse** (2 pages): implement next, after the high-reuse tier is verified.
-- **Single-page components** (`usedBy` lists 1 page, or field absent): implement within that page's feature work.
-- **Field absent** (single-page handoff from new-design): no prioritization needed; implement in any order the feature plan dictates.
+## Contract Precedence
 
-`usedBy` is backward-compatible: if absent, this section does not apply and implementation proceeds per the feature plan. Do not block on missing `usedBy`.
+1. Semantic component intent/states/accessibility: `component-contract.json`.
+2. Token values: packaged `artifacts/design-system/tokens.json` and `tokens.css`.
+3. Interaction detail: component-spec.md and flow.md.
+4. Engineering names, modules, and framework types: Solo-owned `component-bindings.json`.
 
-## Component Design
+Contradictions between design-owned sources are handoff defects; report them to harness-design. Binding defects belong to harness-solo.
 
-### 1. Container vs. Presentation separation
-- **Container**: handles data (fetch/loading/error/empty three states), does not care about UI
-- **Presentation**: pure rendering, props in and UI out, does not care about data source
+## Process
 
-### 2. Single Responsibility
-- Component > 200 lines → split
-- One component does one thing: either fetch data, render UI, or handle interaction
-- Naming describes responsibility: `UserList` / `UserListItem` / `EmptyState`
+### 1. Create or Update Engineering Bindings
 
-### 3. Composition over Configuration
-```tsx
-// Good — composition
-<Card><CardHeader><CardTitle>Title</CardTitle></CardHeader><CardBody>Content</CardBody></Card>
-// Bad — configuration explosion
-<Card title="Title" headerVariant="large" bodyPadding="md" showHeader={true}>Content</Card>
-```
+Join by immutable `component_id`. For each component being implemented, choose the source module, engineering component name, and property/type mapping appropriate to TECH_STACK.md. Write `docs/engineering/component-bindings.json` with:
 
-### 4. Colocate
-Everything related to a component lives in the same directory: `UserList/` contains `UserList.tsx` (impl), `UserList.test.tsx` (tests), `UserList.stories.tsx` (stories), `useUserData.ts` (hook), and `types.ts`.
+- schema version;
+- SHA-256 of the exact semantic contract;
+- TECH_STACK revision;
+- component ID, engineering name, module, and property bindings.
 
-## State Management Selection
-Use the simplest solution that fits; escalate on demand. The full selection matrix (6 scenarios with escalation triggers), applicability conditions, and Good/Bad code examples live in `Reference/state-management-matrix.md`. In short: start with `useState`, lift to a common parent for 2-3 siblings, escalate to Context / URL state / React Query / Zustand only when you can cite a concrete pain point — never "for future possible needs".
+Validate against `.harness/rules/component-bindings.schema.json`. Never mutate the design contract to make a binding fit.
 
-## Styling Engineering
+### 2. Return Sequence and Constraints
 
-### 1. Design system constraints
-- **spacing scale**: use the design system's spacing scale (e.g. 0.25 / 0.5 / 1 / 1.5 / 2 / 3 / 4 rem); arbitrary values like `13px` / `2.3rem` are forbidden
-- **Semantic color tokens**: use `text-primary` / `bg-surface`; do not use bare `#333`
-- **Type scale**: use the design system's type scale; do not pick arbitrary values
+Recommend foundations and high-reuse `used_by` components first, then page-local composition, subject to the approved engineering dependency order. Return required properties, states, token references, accessibility behaviors, and package artifact paths for the current stable component ID.
 
-### 2. Responsive
-- **Mobile-first**: start with small screens, upgrade with `min-width` media queries
-- **Required breakpoints**: 320 / 768 / 1024 / 1440
-- Retrofitting responsiveness later costs 3× as much; do it from the start
+### 3. Hand Off to the ACT Owner
 
-### 3. Avoid the AI default aesthetic
-- Purple everywhere, excessive gradients, `rounded-2xl` for everything, stock card grids, stacked shadows — these are "the generic look of AI-generated code", not "UI written by an engineer with strong design sense"
-- Visual specs are produced by harness-design; this skill implements per the spec
+`test-driven-development` remains the ACT owner: it writes the failing test, mutates implementation code, and runs the affected tests. This skill does not start a second Red/Green cycle or increment state.
 
-## Three-State Handling (mandatory)
-Every data-driven component must handle three states:
-```tsx
-function UserList() {
-  const { data, isLoading, error } = useUserData();
-  if (isLoading) return <Skeleton />;               // loading
-  if (error) return <ErrorMessage error={error} />; // error
-  if (!data?.length) return <EmptyState />;         // empty
-  return <ul>{data.map(u => <UserListItem key={u.id} user={u} />)}</ul>;
-}
-```
-**Forbidden**: writing only the happy path and ignoring loading/error/empty.
+### 4. Verification Contract
 
-## Accessibility (WCAG 2.1 AA baseline)
-- Every interactive element is keyboard reachable (traversable via Tab)
-- Controls without visible text have `aria-label`
-- Color is not the only state indicator (add icons/text)
-- `<img>` must have `alt`
-- Use `<button>`, not `<div onClick>`
+Return the checks below to `verify`; do not write evidence directly: current binding/TECH_STACK revisions, semantic property/state coverage, actual module/name, token resolution, accessibility/responsive/reduced-motion behavior, and relevant stable AC/DAC IDs.
 
-## Anti-Rationalization Table
-| Shortcut taken | Rationalization | Why it fails |
-|----------------|-----------------|--------------|
-| Write the component big, defer splitting | "I'll split it later." | 200 lines is a red line; split once exceeded. |
-| Defer responsive implementation | "Responsive can wait." | Retrofitting later costs 3× as much. |
-| Skip accessibility | "Accessibility is nice-to-have." | It is a legal requirement and an engineering quality standard in many places. |
-| Start with Redux | "Use Redux first to be safe." | Over-engineering; start with useState. |
-| Skip styles when design is unfinished | "Design isn't finalized, skip styles for now." | Use design system defaults; an unstyled UI leaves a bad impression. |
-| Skip the loading state | "Skip the loading state for now." | Three states are mandatory, not optional. |
-| Guess the component contract when the named component is not a key in component-map.json | "The component name is close enough; I can infer the props/states." | A `#<Component>` name that does not match any JSON key (DesignComponentName) in component-map.json is a handoff defect. Guessing produces a fabricated contract that silently diverges from design and verify cannot catch it. STOP and feed back to harness-design; do not guess. |
+## Brand Override
+
+Anti-pattern defaults in design guidance are defaults, not universal bans. A project constitution or approved brand system may intentionally require a normally discouraged font, color treatment, radius system, or visual motif. Record the override source and still enforce accessibility, consistency, and evidence gates.
 
 ## Prohibitions
-- Components > 200 lines without splitting
-- Inline styles (`style={{ color: 'red' }}`)
-- Arbitrary pixel values (values outside the scale)
-- Missing loading/error/empty three states
-- Color as the only state indicator
-- `<div onClick>` instead of `<button>`
-- `<img>` without `alt`
-- Prop drilling beyond 3 levels without extracting a Context
 
-## Relationship with LOOP
-This skill is triggered in the ACT phase of LOOP:
-- Frontend component implementation → this skill guides structure → tdd writes tests → verify validates
-- Not triggered independently outside LOOP (implementation code must be inside LOOP)
+- Guessing a missing semantic component or silently changing its ID.
+- Treating an example file as a runtime contract.
+- Copying a design-suggested code name without making a Solo-owned binding decision.
+- Hardcoding values that have an applicable token without a documented exception.
+- Running a second independent TDD/verification lifecycle instead of returning constraints to the canonical pipeline.
 
-## Division of Labor with Other Skills
-| Skill | Responsibility |
-|-------|------|
-| frontend-implementation | Frontend engineering implementation (structure/state/styling) |
-| tdd | Unit tests for component logic |
-| webapp-testing | Frontend verification (build/type/lint/accessibility) |
-| verify | Comprehensive verification (invokes webapp-testing) |
-| writing-documentation | Component API docs (prop types) |
+## Verification
 
-## Evidence Requirements
-After implementation is complete, record in evidence.md:
-```
-## Frontend Implementation
-- Component structure: X components, max Y lines (≤200 ✓)
-- State management: <approach>, reason: <one sentence>
-- Three-state: loading ✓ / error ✓ / empty ✓
-- Accessibility: keyboard ✓ / aria-label ✓ / alt ✓
-- Responsive: 320/768/1024/1440 ✓
-```
+- [ ] Handoff consumer gate passed and receipt was written.
+- [ ] Semantic contract and engineering binding both validate.
+- [ ] Contract hash and tech-stack revision match current files.
+- [ ] Every implemented component joins by stable component ID.
+- [ ] Tests and frontend verification pass with AC/DAC evidence.

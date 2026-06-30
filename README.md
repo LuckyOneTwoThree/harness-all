@@ -12,10 +12,10 @@
 
 ---
 
-![Version](https://img.shields.io/badge/version-v2.1-blue.svg?style=for-the-badge&logo=semver)
+![Version](https://img.shields.io/badge/version-v2.2-blue.svg?style=for-the-badge&logo=semver)
 ![Frameworks](https://img.shields.io/badge/frameworks-5-green.svg?style=for-the-badge&logo=github)
-![Skills](https://img.shields.io/badge/skills-198-orange.svg?style=for-the-badge&logo=skill)
-![Workflows](https://img.shields.io/badge/workflows-40-purple.svg?style=for-the-badge&logo=git)
+![Skills](https://img.shields.io/badge/skills-196-orange.svg?style=for-the-badge&logo=skill)
+![Workflows](https://img.shields.io/badge/workflows-41-purple.svg?style=for-the-badge&logo=git)
 ![Handoffs](https://img.shields.io/badge/handoffs-11-teal.svg?style=for-the-badge&logo=markdown)
 ![Loop Types](https://img.shields.io/badge/loop--types-24-red.svg?style=for-the-badge&logo=circleci)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge&logo=open-source-initiative)
@@ -26,7 +26,7 @@
 |:---------:|--------|:------:|:---------:|
 | **harness-pm** | Strategy · Market · PRD · Metrics | 86 | 10 |
 | **harness-design** | Visual · Interaction · Prototype · Design System | 19 | 7 |
-| **harness-solo** | Engineering · TDD · Debug · Refactor · Verify | 21 | 8 |
+| **harness-solo** | Engineering · TDD · Debug · Refactor · Verify | 19 | 9 |
 | **harness-growth** | Content · SEO · Experiments · Monetization | 40 | 7 |
 | **harness-ops** | Deploy · Monitor · Incident · Disaster Recovery | 32 | 8 |
 
@@ -149,7 +149,7 @@ harness-pm → pm-to-design.md → harness-design → design-to-solo.md → harn
                                                                     → solo-to-ops.md → harness-ops
 ```
 
-Copy handoff documents to the downstream framework's `docs/handoff/` directory. The consuming Agent reads them automatically.
+Copy the complete `docs/handoff/packages/<handoff_id>/` directory to the downstream framework. A Markdown contract alone is not portable because the consumer must verify its manifest and bundled artifacts.
 
 ---
 
@@ -165,11 +165,11 @@ Core outputs: `PRD.md` / `pm-to-design.md` / `pm-to-solo.md` / `pm-to-growth.md`
 
 Visual design, interaction design, design system, prototype output. 19 skills. Signature: **Push-back** — design Agent can refuse PM's hardcoded UI directives. **Anti AI-Slop** — bans Inter/purple gradients/Lorem ipsum.
 
-Core outputs: `DESIGN.md` / `tokens.json` / `design-to-solo.md` / `component-map.json`
+Core outputs: `DESIGN.md` / `tokens.json` / `design-to-solo.md` / `component-contract.json`
 
 ### harness-solo — "Write good code"
 
-Engineering, TDD, debugging, verification, code review. 21 skills. Signature: **Dual-source AC verification** — checks both engineering ACs (`AC-xxx`) and design ACs (`DAC-xxx`). **Entropy check** — catches file bloat and dependency creep.
+Engineering, TDD, debugging, verification, code review. 19 skills. Signature: one canonical delivery pipeline with stable acceptance evidence and review-owned completion.
 
 Core outputs: `TECH_STACK.md` / `solo-to-growth.md` / `solo-to-ops.md` / `spec.md`
 
@@ -208,7 +208,7 @@ Frameworks pass structured requirements via `docs/handoff/` documents. Each docu
 | pm → design | `pm-to-design.md` |
 | pm → solo | `pm-to-solo.md` |
 | pm → growth | `pm-to-growth.md` |
-| design → solo | `design-to-solo.md` + `component-map.json` |
+| design → solo | portable package with `design-to-solo.md` + `component-contract.json` |
 | solo → growth | `solo-to-growth.md` |
 | solo → ops | `solo-to-ops.md` |
 | growth → pm | `growth-to-pm.md` |
@@ -239,7 +239,7 @@ Dependency info (when to use, inputs, outputs, quality gates) lives in body text
 
 ### Why independent, not unified
 
-Context explosion and memory pollution are the core pain points of AI Agent collaboration. A single Agent loading 198 skills wastes tokens and degrades output quality. Independent frameworks let each Agent specialize.
+Context explosion and memory pollution are the core pain points of AI Agent collaboration. A single Agent loading 196 skills wastes tokens and degrades output quality. Independent frameworks let each Agent specialize.
 
 ### Why contract documents, not shared state
 
@@ -255,7 +255,10 @@ Heavy YAML frontmatter (`triggers` / `reads` / `writes` / `quality_gates` / `max
 
 | Document | Content |
 |----------|---------|
-| [ARCHITECTURE.md](./ARCHITECTURE.md) | Full architecture design (v2.1) |
+| [ARCHITECTURE.md](./ARCHITECTURE.md) | Full architecture design (v2.2) |
+| [DOMAIN_BOUNDARIES.md](./DOMAIN_BOUNDARIES.md) | Normative ownership and routing rules |
+| [HANDOFF_PROTOCOL.md](./HANDOFF_PROTOCOL.md) | Versioned contract protocol |
+| [UPGRADING.md](./UPGRADING.md) | Conflict-safe framework upgrade process |
 | [harness-pm/README.md](./harness-pm/README.md) | PM framework details |
 | [harness-design/README.md](./harness-design/README.md) | Design framework details |
 | [harness-solo/README.md](./harness-solo/README.md) | Engineering framework details |

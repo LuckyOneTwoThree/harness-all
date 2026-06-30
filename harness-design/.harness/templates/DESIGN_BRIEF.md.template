@@ -25,14 +25,14 @@
 
 | Number | Design task / component | Priority | Acceptance criteria |
 |------|--------------|--------|---------|
-| D-001 | [design task name] | P0 | AC-001: [verifiable description, e.g., "button contrast ≥ 4.5:1"] |
-| D-002 | [design task name] | P1 | AC-002: [verifiable description] |
+| D-001 | [design task name] | P0 | DAC-P01-001: [verifiable design-derived description] |
+| D-002 | [design task name] | P1 | DAC-GLOBAL-001: [verifiable cross-page description] |
 
 ### Acceptance criteria notes
 
 Acceptance criteria must be **verifiable** — not "the page should look good", but "contrast ≥ 4.5:1".
 
-**AC layering**: the ACs in DESIGN_BRIEF.md are **project-level acceptance conditions** (defined at initiation), while the ACs in spec.md are **single-task refined acceptance conditions** (produced in the LOOP PLAN phase); the latter must cover the former.
+**Acceptance layering**: preserve upstream product AC IDs unchanged. Design-derived DAC IDs add verifiable design constraints; task specs may reference them but never renumber them.
 
 Good AC examples:
 - AC-001: button text-to-background contrast ≥ 4.5:1 (WCAG AA)

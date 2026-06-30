@@ -41,7 +41,7 @@ Read the user-selected direction from DESIGN_BRIEF.md's Aesthetic Direction.
 
 ### 4. Font Selection
 
-- Select fonts from the design system (no Inter/Roboto/Arial as primary font)
+- Select fonts from the approved design system; generic defaults require a documented brand override
 - Check that font sizes are on the type scale
 
 ### 5. Layout Design
@@ -58,7 +58,7 @@ Read the user-selected direction from DESIGN_BRIEF.md's Aesthetic Direction.
 ### 7. Anti AI-slop Check
 
 Check item by item against `.harness/craft/anti-ai-slop.md`:
-- [ ] No Inter/Roboto/Arial as primary font
+- [ ] Primary font follows the design system, with any generic-font override documented
 - [ ] No #6366f1 purple
 - [ ] No purple-blue gradient
 - [ ] No uniform border radius (rounded-2xl everywhere)
@@ -108,7 +108,7 @@ Each variant annotates:
 ## Red Flags
 
 - Hardcoded hex colors (not from tokens)
-- Using Inter/Roboto/Arial as primary font
+- Using a generic default font without an approved project-brand rationale
 - Using #6366f1 or purple-blue gradient
 - Only one variant produced
 - No responsive annotations

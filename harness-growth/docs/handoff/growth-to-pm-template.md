@@ -1,3 +1,16 @@
+---
+schema_version: "1.0"
+handoff_id: "<GROWTH-PM-YYYYMMDD-NNN>"
+producer: "harness-growth"
+consumer: "harness-pm"
+created_at: "<ISO-8601>"
+source_revision: "<commit-or-artifact-revision>"
+supersedes: null
+status: draft
+ac_ids: []
+artifacts: []
+---
+
 # Handoff: harness-growth → harness-pm
 
 > This template is the **producer template** for harness-growth, used to generate `growth-to-pm.md` as feedback to harness-pm.

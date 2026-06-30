@@ -105,6 +105,12 @@ harness-ops is the **SRE & Operations** core of the harness family, bridging eng
 
 **Handoff protocol**: See handoff documents under `docs/handoff/`. Drop files in manually and they will be recognized.
 
+### Observability Boundary
+
+- Ops owns **system observability**: Logs/Metrics/Traces, availability, latency, infrastructure alerts, SLA/SLO, deployment health, and incidents.
+- PM owns product analytics definitions and business-success interpretation; Growth owns experiment metrics and growth conclusions.
+- Ops reports operational evidence through `ops-to-pm.md` and must not change product metrics, growth hypotheses, PRD, or roadmap priorities.
+
 ## Project Context
 
 - Infrastructure code (Terraform / Helm, etc.) is generally stored in the corresponding code repository
@@ -123,7 +129,9 @@ PLAN → PROVISION/DEPLOY → VERIFY → success? DONE : on failure, ROLLBACK an
 ```
 The state of each ops task is in `loops/specs/<task>/state.yaml`, and evidence is in `evidence.md`.
 
-## Security Layer
+## Risk and Security Layer
+
+Classify actions with `.harness/rules/risk-model.md`: R0 inspection, R1 scoped reversible work, R2 material change requiring explicit approval, R3 production/critical change requiring fresh approval plus rollback and blast-radius review. Risk is based on consequence, not line count.
 
 - Full security rules: `.harness/rules/security.md` (pulled on demand by the `Inputs` section of SKILL.md)
 - Prompt injection defense: `.harness/rules/prompt-defense.md`

@@ -1,116 +1,28 @@
 ---
 workflow_id: G
 name: release
-description: "Release a version through prerequisite checks, CHANGELOG updates, semantic versioning, and artifact building"
+description: "Validate a selected release scope, review metadata/artifacts, and perform only user-authorized version and tag actions"
 default_mode: skip
 ---
+# Workflow: Release
 
-# Workflow release
+Release is a non-LOOP delivery path. It does not require every item on the global FEATURES board to be done—only every item explicitly included in this release scope.
 
-> Applicable scenario: Version release, CHANGELOG update, tagging, building release artifacts
-> Core mode: verify full validation → writing-documentation update CHANGELOG → tag → build release artifacts
+## Route
 
-## Differences from Other Workflows
+1. session-start; define release scope, target version, channel, and excluded known work.
+2. Hard gate:
+   - scoped tasks are done and reviewed;
+   - current full verification/security evidence passes;
+   - migrations/config/rollback/release notes are complete;
+   - artifact command and clean-environment verification are known.
+3. writing-documentation updates CHANGELOG from reviewed task/review evidence.
+4. Build and verify release artifacts in a clean or representative environment.
+5. Review version choice, CHANGELOG, artifacts, migration order, and rollback **before** tagging.
+6. With explicit user authorization, update version files and create an annotated local tag.
+7. Never push tags, publish packages/images, or deploy without separate explicit authorization.
+8. session-end records the release and prepares requested handoffs.
 
-| Dimension | new-feature | **release** |
-|------|-------------|------------|
-| Goal | Implement new features | Release a version |
-| Prerequisite | brainstorming | **All planned features complete (FEATURES.md all done)** |
-| LOOP | tdd→verify | **No LOOP (validation-focused)** |
-| Output | Code + tests | **Version number + tag + CHANGELOG + release artifacts** |
+## Exit
 
-## Process
-
-```
-┌─────────────────┐
-│ session-start   │  Load context, confirm release scope
-└────────┬────────┘
-         ▼
-┌─────────────────────────────────────────┐
-│ Release prerequisite check (hard gate)  │
-│                                         │
-│  - Are all features in FEATURES.md done?│
-│  - Have PROJECT.md's success metrics    │
-│    been met?                            │
-│  - Have PROJECT.md's milestone statuses │
-│    been updated?                        │
-│  - Does the full test suite pass?       │
-│  - Does verify-full pass?               │
-│  - Security scan has no critical/high?  │
-│  - Constitution compliant?              │
-│                                         │
-│  ★ If any is not met → don't release    │
-└────────┬────────────────────────────────┘
-         │ Passed
-         ▼
-┌─────────────────┐
-│ writing-docu-   │  Update CHANGELOG
-│ mentation       │  - Added / Fixed / Changed
-│                 │  - Link issue numbers
-│                 │  - Extract changes from iterations.log
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│ Version number  │  Per semantic versioning
-│ management      │  - major: incompatible API changes
-│                 │  - minor: backward-compatible new features
-│                 │  - patch: backward-compatible fixes
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│ Build + verify  │
-│                 │  - Build release artifacts (e.g. npm pack / go build)
-│                 │  - Verify artifacts run in a clean environment
-│                 │  - Show build output
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│ Tag             │  git tag v<X.Y.Z>
-│                 │  - annotated tag with CHANGELOG summary
-│                 │  - Don't auto-push (requires user confirmation)
-└────────┬────────┘
-         ▼
-┌─────────────────────┐
-│ requesting-code-    │  Release review
-│ review              │  - CHANGELOG accurate?
-│                     │  - Version number reasonable?
-│                     │  - Release artifacts complete?
-└──────────┬──────────┘
-           │ Passed
-           ▼
-┌─────────────────┐
-│ session-end     │  Archive + baseline
-│                 │  - Record release info to progress.md
-│                 │  - Optional output solo-to-growth.md
-└─────────────────┘
-```
-
-## Key Checkpoints
-
-- [ ] Are all features in FEATURES.md marked done?
-- [ ] Have PROJECT.md's success metrics been met? (Check item by item, show data)
-- [ ] Have PROJECT.md's milestone statuses been updated? (Updated in FEATURES.md)
-- [ ] Does the full test suite pass? (Show output)
-- [ ] Does verify's comprehensive check pass?
-- [ ] Security scan has no critical/high?
-- [ ] CHANGELOG updated? (Added/Fixed/Changed)
-- [ ] Does the version number follow semantic versioning?
-- [ ] Were release artifacts verified in a clean environment?
-- [ ] Was the tag created? (Don't auto-push)
-
-## Failure Handling
-
-| Failure Point | Handling |
-|--------|---------|
-| Some features not done | Don't release; finish them or remove from this version |
-| Tests fail | Fix and re-validate; no skipping |
-| Security scan has critical | Fix before release; don't ignore |
-| Release artifact build fails | Fix the build issue; don't publish broken artifacts |
-| code-review not passed | Fix issues and re-review |
-
-## Safety Principles
-
-1. **Don't auto-push tags**: Tags are created locally; push requires explicit user confirmation
-2. **Don't auto-publish**: npm publish / docker push etc. require explicit user confirmation
-3. **Release artifact verification**: Must verify it runs in a clean environment; don't "publish just because the build succeeded"
-4. **CHANGELOG accuracy**: Extract from iterations.log; don't write from memory
+Artifacts match reviewed sources, release metadata is accurate, authorized local actions succeeded, and no external publication is implied.

@@ -22,11 +22,11 @@ Product research / UI design / growth operations are handled by other harness fa
 ## Memory protocol
 
 - **Session start**: read `memory/progress.md` for context
-- **Session end**: update `memory/progress.md`, follow the `session-end` SKILL.md steps to archive (cross-platform, does not depend on bash)
+- **Session end**: record recovery state, sync status, refresh exact baseline, and invoke memory-maintenance only on retention thresholds
 - **Important findings**: write to `memory/knowledge-base.md`
 
 > **Session definition**: Session = one Loop from when the Agent receives a task to when it claims completion.
-> session-start = load state before the Loop begins; session-end = archive after the Loop ends.
+> session-start restores only relevant state; session-end records recovery and delegates conditional retention.
 > "Single session" is equivalent to "single Loop" in entropy-check.
 >
 > **session-end hard directive**: after updating progress.md, you must follow the archiving steps in `session-end` SKILL.md.

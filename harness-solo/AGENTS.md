@@ -8,10 +8,10 @@
 ## Core Rules (Agent must read; enough to start working without reading other files)
 
 1. **Verify before claiming done (Evidence-Based)** — Must run tests and show output before claiming completion; no evidence, no claim of completion
-2. **Tests before code (TDD)** — No production code without a failing test; tests that pass immediately indicate you're testing existing behavior
-3. **Security red lines** — No hardcoded secrets, no `rm -rf`, no `curl | sh`, no modifying `.git/hooks/`
-4. **Loop-first validation** — Feature development follows the Loop (plan→act→verify), max 5 iterations; request human intervention after 10
-5. **Session end** — Update `memory/progress.md`, then follow the `session-end` SKILL.md steps to archive (no bash dependency, cross-platform)
+2. **Tests before behavior changes (TDD)** — Bug fixes and behavior changes require a failing test before production code. Pure text/comment/format changes may skip a new test, but still require targeted verification
+3. **Security red lines** — No hardcoded secrets, no `rm -rf`, no `curl | sh`; install/replace Git hooks only with explicit user authorization
+4. **Loop-first validation** — Follow `.harness/rules/engineering-pipeline.md`; workflow limits trigger early human escalation and attempt 10 is the absolute final attempt
+5. **Session end** — Update progress and exact baseline; invoke memory-maintenance only when retention thresholds are exceeded
 6. **Interact first** — Workflows are not auto-run scripts; exploration dialog points (⏸) are controlled by exploration_mode, human decision points (👤) always pause
 
 ## Workflow Mode (3-tier speed)
@@ -20,7 +20,7 @@ Three workflow modes balance speed vs rigor. The Agent auto-detects the appropri
 
 | Tier | Workflow | Steps | When to use |
 |------|---------|-------|-------------|
-| **quick-fix** | `quick-fix` | ~5 | Under 10 lines, no new deps/APIs/schema, no frontend contracts, no core files |
+| **quick-fix** | `quick-fix` | ~5 | Low-risk, unambiguous change with no contract/security/schema/dependency impact; line count is only a secondary signal |
 | **standard** | `new-feature` / `bugfix` / `refactor` | ~18 | Clear requirements, normal feature dev or bug fix |
 | **deep** | `new-feature` / `new-product-engineering` | ~35 | Ambiguous requirements, new architecture, cross-module impact |
 
@@ -29,7 +29,7 @@ Three workflow modes balance speed vs rigor. The Agent auto-detects the appropri
 | Signal | Recommended tier |
 |--------|-----------------|
 | User says "quick fix" / "small tweak" / "typo" | quick-fix |
-| Change is single-file, under 10 lines, no new deps | quick-fix |
+| Change is low-risk, single-purpose, and passes the quick-fix risk gate | quick-fix |
 | Has clear spec or handoff, normal scope | standard |
 | Requirements ambiguous, needs exploration | deep |
 | User says "go full flow" / "this is complex" | deep |
@@ -37,25 +37,25 @@ Three workflow modes balance speed vs rigor. The Agent auto-detects the appropri
 
 **Mode source priority**: User explicit choice > auto-detection > workflow frontmatter `default_mode` > `standard`
 
-**How to switch**: Say "switch to quick-fix/standard/deep mode" anytime; Agent confirms and writes `exploration_mode` in `state.yaml`
+**How to switch**: Say "switch to quick-fix/standard/deep mode" anytime. Stateful workflows write `exploration_mode` in `state.yaml`; quick-fix records `mode=skip` and the reason in `memory/progress.md`
 
 **Exploration dialog depth per mode**:
 
 | Mode | ⏸ Exploration dialog | Brainstorming hard gate |
 |------|----------------------|------------------------|
 | `deep` | Pause before every module | Full 5-step + 4-checkbox gate |
-| `standard` | Pause only at module boundaries | Simplified 3-step + 2-checkbox gate |
+| `standard` | Pause only for material user decisions | Scope/criteria/verification boundary check |
 | `skip` (quick-fix) | No dialog pause | Skipped (trivial changes only) |
 
-**skip mode safety fallback**: When starting in skip/quick-fix mode, if the change exceeds 10 lines or involves new dependencies, **auto-upgrade to standard and inform the user**
+**skip mode safety fallback**: Before starting quick-fix, run its risk gate. Any public API, schema, dependency, auth/security, payment, deployment, cross-module, design-contract, or ambiguous requirement impact **auto-upgrades to standard and is reported to the user**
 
 **Downgrade strategy linkage**:
 
 | Mode | Downgrade strategy |
 |------|--------------------|
-| `deep` | **Downgrade disabled** — deep exploration required; brainstorming hard gate cannot be skipped |
+| `deep` | **Downgrade disabled** — material alternatives, contracts, rollback, and cross-feature impact must be analyzed |
 | `standard` | Downgrade allowed; downgraded output must be marked `degraded: true` |
-| `skip` | Downgrade allowed; auto-upgrade to standard if scope exceeds quick-fix limits |
+| `skip` | Allowed only while the quick-fix risk gate remains green; otherwise auto-upgrade to standard |
 
 ## Human Decision Points (general rules)
 
@@ -86,9 +86,9 @@ Four principles as a concrete supplement to the core rules: **Think Before Codin
 ## Skill Selection
 
 When you need to select a Skill, read `.harness/skills/INDEX.md` (pure index, under 80 lines).
-- Engineering skills: 17 (`.harness/skills/engineering/`)
+- Engineering skills: 15 (`.harness/skills/engineering/`)
 - Meta skills: 4 (`.harness/skills/meta/`)
-Workflow orchestration (quick-fix / new product engineering / new feature / bugfix / refactor / optimize / migration / release) is read on demand under `.harness/skills/workflows/`. Use `quick-fix` for changes under 10 lines; use `new-feature` (standard mode) for normal features; use `new-product-engineering` (deep mode) for multi-feature products.
+Workflow orchestration (quick-fix / new product engineering / new feature / bugfix / refactor / optimize / migration / release) is read on demand under `.harness/skills/workflows/`. Use `quick-fix` only for changes that pass its risk gate; use `new-feature` (standard mode) for normal features; use `new-product-engineering` (deep mode) for multi-feature products.
 
 ## Relationship with the harness family
 
@@ -121,9 +121,11 @@ Feature development follows the Loop (see `.harness/loops/LOOP.md` for details):
 ```
 PLAN → ACT → VERIFY → passed? DONE : back to PLAN/ACT
 ```
-Each feature's loop state is in `loops/specs/<feature>/state.yaml`, evidence in `evidence.md`, iteration history in `iterations.log`.
+Verify-full passes → code-review → DONE. Each task keeps state, evidence, review, and iteration history together under `loops/specs/<task>/`.
 
-## Security Layer
+## Risk and Security Layer
+
+Classify actions with `.harness/rules/risk-model.md`: R0 inspection, R1 scoped reversible work, R2 material change requiring explicit approval, R3 production/critical change requiring fresh approval plus rollback and blast-radius review. Risk is based on consequence, not line count.
 
 - Full security rules: `.harness/rules/security.md` (auto-fetched on demand by the `Inputs` section in SKILL.md)
 - Prompt injection defense: `.harness/rules/prompt-defense.md`

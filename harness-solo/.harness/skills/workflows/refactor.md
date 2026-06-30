@@ -1,136 +1,26 @@
 ---
 workflow_id: D
 name: refactor
-description: "Refactor existing code to improve structure without changing external behavior, with test safety nets"
+description: "Improve structure without observable behavior change, guarded by a green baseline and measurable structural target"
 default_mode: standard
 ---
+# Workflow: Refactor
 
-> **Default mode is `standard`.** For ambiguous requirements or new architecture, switch to `deep` mode. For trivial changes under 10 lines, use the `quick-fix` workflow instead.
+## Route
 
-# Workflow refactor
+1. session-start + Foundation gate.
+2. Clarify the exact structural target and behavior boundary; use brainstorming only when ambiguous.
+3. Establish a green safety baseline. If characterization is missing, writing-plans makes test-coverage the first non-production-code task; no mutation occurs before PLAN.
+4. writing-plans → LOOP(test-coverage safety task if needed → test-driven-development structural attempts → verify-fast).
+5. verify-full → code-review → session-end.
 
-> Applicable scenario: Improve existing code structure without changing external behavior
-> Core mode: brainstorming to confirm boundaries → LOOP (tdd safety net + verify no regression) → code-review
+## Specialization
 
-## Differences from New Feature / Bug Fix
+- Recommended failed-attempt limit: 3.
+- No fabricated failing behavior test is required; the baseline must be green before mutation.
+- Each attempt changes one structural dimension and shows the target improved without behavior regression.
+- New behavior becomes a separate new-feature task.
 
-| Dimension | New Feature | Bug Fix | Refactoring |
-|------|--------|---------|------|
-| Prerequisite | brainstorming (requirements exploration) | systematic-debugging (root cause analysis) | brainstorming (confirm refactoring boundaries) |
-| TDD starting point | Write new tests from AC | Write tests from bug reproduction | **Build a safety net from existing tests** |
-| verify focus | AC satisfied | Reproduction passes + no regression | **Full test suite no regression + complexity reduction** |
-| LOOP cap | 5 | 3 | 3 (refactor type) |
+## Exit
 
-## Process
-
-```
-┌─────────────────┐
-│ session-start   │  Load context, confirm refactoring goals
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│ brainstorming   │  ★ Hard gate: refactoring boundaries must be clear
-│                 │  - Refactor what? Why?
-│                 │  - What behavior not to change? (boundaries)
-│                 │  - Success criteria: tests don't regress + complexity drops
-└────────┬────────┘
-         │ Passed
-         ▼
-┌─────────────────┐
-│ writing-plans   │  Task breakdown
-│                 │  - Each step should be small (2-5 minutes)
-│                 │  - Run the full test suite after each step
-│                 │  - Output spec.md (with "no behavior change" boundaries)
-└────────┬────────┘
-         ▼
-┌─────────────────────────────────────────┐
-│              LOOP iterative refactoring │
-│  ┌─────────────────────────────────┐    │
-│  │ Pre-step: build test safety net │    │
-│  │  - Run full test suite, confirm │    │
-│  │    currently all green          │    │
-│  │  - If tests are incomplete,     │    │
-│  │    call test-coverage skill to  │    │
-│  │    add tests before refactoring │    │
-│  └──────────┬──────────────────────┘    │
-│             ▼                            │
-│  ┌─────────────────────────────────┐    │
-│  │ test-driven-development (ACT)   │    │
-│  │  - Route by task type (absorbs  │    │
-│  │    executing-plans scheduling)  │    │
-│  │  - Change structure, not        │    │
-│  │    behavior                     │    │
-│  │  - Run tests immediately after  │    │
-│  │    each change                  │    │
-│  └──────────┬──────────────────────┘    │
-│             ▼                            │
-│  ┌─────────────────────────────────┐    │
-│  │ verify-fast (VERIFY, per iter)  │    │
-│  │  - Full test suite no regression│    │
-│  │    (mandatory)                  │    │
-│  │  - Complexity metrics down      │    │
-│  │    (entropy check)              │    │
-│  │  - Behavior equivalence confirm │    │
-│  └──────────┬──────────────────────┘    │
-│             │                            │
-│             ├── Pass → exit LOOP ────────┼──→
-│             │                            │
-│             └── Fail                     │
-│                   │                      │
-│                   ▼                      │
-│  ┌─────────────────────────────────┐    │
-│  │ systematic-debugging            │    │
-│  │  - Roll back changes, re-analyze│    │
-│  └──────────┬──────────────────────┘    │
-│             │                            │
-│             └── Back to tdd ─────────────┘
-│                                          │
-│  Iteration cap: 3 (refactor type)       │
-│  Exceeded → request human intervention  │
-└─────────────────────────────────────────┘
-         │
-         ▼
-┌─────────────────┐
-│ verify-full     │  LOOP exit gate
-│ Full test suite │  + comprehensive checks
-│ + security scan │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────────┐
-│ requesting-code-review │  Review refactoring quality
-│                       │  - Did structure improve
-│                       │  - Was behavior preserved
-│                       │  - Was readability improved
-└──────────┬────────────┘
-           │ Passed
-           ▼
-┌─────────────────┐
-│ session-end     │  Archive + baseline + update FEATURES.md
-└─────────────────┘
-```
-
-## Key Checkpoints
-
-- [ ] Are the refactoring boundaries clear? (What to change, what behavior not to change)
-- [ ] Was the full test suite green before refactoring? (Don't start if not green)
-- [ ] Is the test safety net sufficient? (Core paths have test coverage)
-- [ ] Did you run tests after every structural change?
-- [ ] Did complexity drop after refactoring? (Entropy check)
-- [ ] Didn't sneak in new features, right? (Refactoring ≠ adding features)
-
-## Failure Handling
-
-| Failure Point | Handling |
-|--------|---------|
-| Tests not all green before refactoring | Add tests or fix bugs first; don't refactor on top of red |
-| Test regression after refactoring | Immediately roll back changes and re-analyze |
-| Refactoring introduces new features | Stop immediately; split new features into a new spec.md |
-| LOOP iterations exceed 3 | Refactoring direction may be wrong; request human intervention |
-
-## Refactoring Safety Principles
-
-1. **Small steps, fast feedback**: Change one thing at a time; run tests immediately after each change
-2. **Keep tests green**: Tests should be green at all times; roll back immediately if red
-3. **No new features**: Don't add new features during refactoring; if you find one is needed, record it as a TODO and open a new spec after refactoring
-4. **Behavior equivalence**: External observable behavior unchanged (API signatures, outputs, side effects)
+Behavior remains equivalent, the named structural target improves, and code-review marks done.

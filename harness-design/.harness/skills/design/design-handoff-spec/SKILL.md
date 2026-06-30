@@ -1,295 +1,121 @@
 ---
 name: design-handoff-spec
-description: Produces engineering-consumable handoff with component-map.json. Use after design-review passes. Use for design-to-engineering delivery.
+description: Produces an engineering-consumable handoff with a framework-neutral component contract after design review passes.
 ---
 # Design Handoff Spec
 
 ## When to use
-- Design handoff
-- After design-review passes (single-page) or product-design-review passes (product-level)
-- Need to hand off to engineering
 
-**Two modes**:
-- **Single-page mode** (default): triggered by new-design / design-iteration / redesign workflows. Produces handoff for one page. Omits Cross-Page Consistency Report and Product Design Plan Reference sections.
-- **Product-level mode**: triggered by new-product-design workflow. Produces handoff for the entire product (all pages). Includes Page Inventory with navigation structure, Component Inventory with reuse matrix, Cross-Page Consistency Report, and Product Design Plan Reference. Requires `docs/visual/DESIGN_PLAN.md` and `loops/specs/<product-task>/product-review-evidence.md` as additional inputs.
+- After `design-review` passes for one page.
+- After `product-design-review` passes for a product-level delivery.
 
 ## Inputs
 
-**Common inputs (both modes)**:
-- .harness/data/design/ux-guidelines.csv
-- .harness/craft/common-rules.md
-- docs/visual/
-- docs/interaction/
-- docs/prototype/
-- docs/design-system/DESIGN.md
-- docs/design-system/tokens.json
-- docs/design-system/tokens.css
-- docs/design-system/components/
-- docs/handoff/pm-to-design.md
-- loops/specs/<task>/evidence.md (per-page review evidence)
-
-**Product-level mode additional inputs**:
-- docs/visual/DESIGN_PLAN.md (page inventory + shared components + user flows)
-- loops/specs/<product-task>/product-review-evidence.md (cross-page consistency review)
+- `docs/handoff/pm-to-design.md`
+- `docs/visual/`, `docs/interaction/`, `docs/prototype/`
+- `docs/design-system/DESIGN.md`
+- `docs/design-system/tokens.json` and `tokens.css`
+- `loops/specs/<task>/evidence.md`
+- Product mode only: `docs/visual/DESIGN_PLAN.md` and product review evidence
 
 ## Outputs
-- docs/handoff/design-to-solo.md
-- docs/handoff/component-map.json
-- docs/interaction/component-spec.md
-- docs/prototype/flow.md
 
-## Overview
+- `docs/handoff/design-to-solo.md`
+- `docs/handoff/component-contract.json`
+- `docs/interaction/component-spec.md`
+- `docs/prototype/flow.md`
+- Portable package under `docs/handoff/packages/<handoff_id>/`
 
-Engineering-consumable structured handoff. Turns "design to code" from "magic export" into "explicit mapping"—reviewable, version-controllable, testable.
+## Hard Boundary
+
+Design owns semantic component intent, not framework selection or source-code names.
+
+- Read platform constraints from `pm-to-design.md`, if present.
+- Do not require `docs/engineering/TECH_STACK.md`; harness-solo owns it and it may not exist yet.
+- Use neutral property types: `string`, `boolean`, `number`, `enum`, `slot`, `collection`, `object`.
+- Never emit React/Vue/Svelte-specific types or prescribe `engineeringComponent` names.
+- Harness-solo creates `docs/engineering/component-bindings.json` after choosing the tech stack.
 
 ## Process
 
-### 0. Confirm Tech Stack (source of truth alignment)
+### 1. Validate the Upstream Contract
 
-Before generating any handoff artifacts, confirm the tech stack source of truth to keep the harness family aligned:
-- Read `docs/engineering/TECH_STACK.md` (if it exists) — this is the single source of truth for tech stack across the harness family
-- If `docs/engineering/TECH_STACK.md` does not exist, fall back to the tech stack field declared in `docs/handoff/pm-to-solo.md`
-- Ensure `docs/visual/DESIGN_BRIEF.md` mirrors `TECH_STACK.md`'s framework declaration; if DESIGN_BRIEF.md diverges, align it to TECH_STACK.md before proceeding (the component-map.json Type declarations in step 5 depend on this alignment)
+Apply `.harness/rules/handoff-protocol.md`. Do not consume a draft, wrong-consumer, unsupported-schema, stale, incomplete, or hash-invalid handoff. Preserve all stable AC IDs from the PM contract; never renumber or reuse them.
 
-### 1. Determine Mode
+### 2. Determine Scope
 
-- If `docs/visual/DESIGN_PLAN.md` exists AND `loops/specs/<product-task>/product-review-evidence.md` exists → **product-level mode**
-- Otherwise → **single-page mode**
+- Product mode requires both `DESIGN_PLAN.md` and product review evidence.
+- Otherwise use single-page mode.
+- Product mode includes page inventory, shared-component reuse, cross-page consistency, and all named flows.
 
-In product-level mode, read DESIGN_PLAN.md first to get the full page inventory and shared component inventory before aggregating per-page outputs.
+### 3. Aggregate Approved Outputs
 
-### 2. Aggregate Outputs
+Read only approved design artifacts. Confirm every referenced page, interaction, token, and review-evidence file exists. Record its package-relative destination and SHA-256.
 
-Read approved design outputs:
-- `docs/visual/<page>.md`: Visual design (all pages in product-level mode; one page in single-page mode)
-- `docs/interaction/<page>.md`: Interaction design
-- `docs/prototype/wireframe.md`: Wireframe
-- `docs/design-system/DESIGN.md`: Design system
-- `docs/design-system/tokens.json`: Token definitions
-- `docs/handoff/pm-to-design.md`: PM handoff document (reuse AC-xxx numbering; do not renumber)
+### 4. Produce Human-Readable Contract
 
-**Product-level mode additional**:
-- `docs/visual/DESIGN_PLAN.md`: Page inventory, shared components, user flows
-- `loops/specs/<product-task>/product-review-evidence.md`: Cross-page consistency report
+Fill `docs/handoff/design-to-solo-template.md` with:
 
-### 3. Generate design-to-solo.md (Human-readable Full Specification)
+- phase summary and asset inventory;
+- pages, navigation, components, and flows;
+- PM-owned stable ACs (`AC-<feature>-<sequence>`);
+- design-derived stable DACs (`DAC-<page>-<sequence>` or `DAC-GLOBAL-<sequence>`);
+- decisions, open items, risks, and explicit downstream actions.
 
-> Full template at `docs/handoff/design-to-solo-template.md`; below is the core structure. Product-level mode fills all sections; single-page mode omits Cross-Page Consistency Report and Product Design Plan Reference.
+Every section must name its consumer action or gate. Put non-actionable context under Notes.
 
-```markdown
-# Design Handoff: <Project Name>
+### 5. Produce Semantic Component Contract
 
-## Phase Summary
-<One-sentence summary of what was done in this phase. e.g., Completed V1 visual design + interaction design + component mapping, including 3 core pages>
+Write `docs/handoff/component-contract.json`, validate it against `.harness/rules/component-contract.schema.json`, and follow `.harness/templates/component-contract.example.json`.
 
-## Design System Assets
-| Asset | Path | Notes |
-|------|------|------|
-| Design system | docs/design-system/DESIGN.md | Color / typography / spacing / shadow / radius / breakpoints (10-segment standard format) |
-| Design tokens (JSON) | docs/design-system/tokens.json | Machine-readable token definitions |
-| Design tokens (CSS) | docs/design-system/tokens.css | CSS variables for direct engineering consumption |
-| Component spec | docs/interaction/component-spec.md | Component Props/States table |
-| Component map | docs/handoff/component-map.json | Explicit mapping from design components to engineering components |
+Required provenance:
 
-## Page List
-| Page ID | Page | Priority | Depends On | Visual draft | Interaction draft | Wireframe |
-|---------|------|----------|------------|--------------|-------------------|-----------|
-| P01 | Home | P0 | — | docs/visual/home.md | docs/interaction/home.md | - |
+- `schema_version`;
+- `design_revision` (the design handoff ID);
+- `token_source.path` using a package-relative path;
+- `token_source.sha256`.
 
-**Navigation structure** (product-level only):
-- Global Header: [Logo, Nav, UserMenu]
+Each component requires a stable `component_id`, semantic `name` and `purpose`, neutral `properties`, `states`, `token_refs`, and accessibility constraints. Product mode also records `used_by` page IDs. Component IDs are immutable across revisions; removed IDs are retired, never reassigned.
 
-## Component List
-| Component ID | Component | States | Used By Pages | Notes |
-|--------------|-----------|--------|---------------|-------|
-| C01 | Button | default, hover, active, disabled, loading | P01, P02, P03 | Primary CTA |
+### 6. Produce Component and Flow Specs
 
-> In single-page mode, leave the "Used By Pages" column empty or fill it with the current page's Page ID.
+Write component props/states/behavior to `docs/interaction/component-spec.md` and key entry/exit/error paths to `docs/prototype/flow.md`. These are explanatory artifacts; the JSON semantic contract is the machine-readable authority.
 
-## Acceptance Criteria (AC-xxx)
-> Reuses the acceptance_criteria numbering from the harness-pm PRD; do not renumber.
-> Acceptance points added during the design stage use the DAC-xxx prefix (D = Design-derived).
+### 7. Run Pre-Delivery Checks
 
-- [ ] AC-001: <Testable description reused from PRD>
-- [ ] DAC-001: <Testable description added during design stage>
+- UX guideline and common-rule scans pass.
+- 375px, landscape, reduced-motion, dark-mode contrast, keyboard, and touch-target checks pass.
+- All AC/DAC IDs are unique, stable, scoped, and included in the envelope.
+- No framework-specific type or implementation name appears in component-contract.json.
+- Token and artifact hashes match packaged files.
 
-## Interaction Flows
-### Flow 1: <name>
-<entry/exit/checkpoints>
+### 8. Publish Portable Package
 
-## Cross-Page Consistency Report (product-level only)
-| Consistency Dimension | Status | Notes |
-| Navigation consistency | ✓/✗ | ... |
-| User flow completeness | ✓/✗ | ... |
-| Component reuse | ✓/✗ | ... |
-| Token consistency | ✓/✗ | ... |
-| Responsive consistency | ✓/✗ | ... |
-| Interaction consistency | ✓/✗ | ... |
+Follow `HANDOFF_PROTOCOL.md` semantics via `.harness/rules/handoff-protocol.md`:
 
-## Key Decisions
-| Decision | Rationale | Impact scope |
-|------|------|---------|
-| <decision> | <rationale> | <scope> |
-
-## Notes
-<Points engineering should be aware of during implementation>
-
-## Open Items
-Issues for harness-solo to handle or confirm with harness-design:
-- TBD 1: <issue description>
-
-## Product Design Plan Reference (product-level only)
-- Path: docs/visual/DESIGN_PLAN.md
-
-## Suggested Next Steps
-harness-solo should prioritize:
-1. Run the brainstorming skill, consume this file + component-map.json
-2. Run the writing-plans skill, write AC-xxx + DAC-xxx into spec.md
-3. Run the frontend-implementation skill, implement components per component-map.json
-
-## Risk Notes
-| Risk | Level | Mitigation |
-|------|------|---------|
-| <risk> | High/Medium/Low | <action> |
-
-## Downstream Framework Usage Notes
-harness-solo's brainstorming / writing-plans / frontend-implementation / verify skills will auto-detect this file and read the AC-xxx + DAC-xxx list and component-map.json.
-```
-
-### 4. Generate component-spec.md (Component Specification)
-
-Write to `docs/interaction/component-spec.md`:
-
-```markdown
-# Component Specification
-
-## Button
-### Props
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| variant | primary/secondary/ghost | primary | Visual variant |
-| size | sm/md/lg | md | Size |
-| disabled | boolean | false | Disabled state |
-| loading | boolean | false | Loading state |
-
-### States
-| State | Style |
-|-------|-------|
-| default | bg: --color-primary |
-| hover | bg: --color-primary-hover |
-| active | transform: scale(0.98) |
-| disabled | opacity: 0.5 |
-| loading | spinner + disabled |
-```
-
-### 5. Generate component-map.json (Explicit Mapping Layer)
-
-**Core innovation** (from Stitch): explicit mapping from design components to engineering components, version-controllable.
-
-**Framework-agnostic constraint**: The Type declaration of props must match the framework declared in `docs/engineering/TECH_STACK.md` (the single source of truth for tech stack across the harness family; DESIGN_BRIEF.md should mirror TECH_STACK.md's framework declaration).
-- React project → `ReactNode` / `JSX.Element`
-- Vue project → `VNode` / `Slot`
-- Svelte project → `Snippet` / `Component`
-- Native/Web Components → `HTMLElement` / `Slot`
-- Tech stack unclear → use neutral abstract types (`Slot` / `Component`), and annotate "pending engineering confirmation" in notes
-
-**`usedBy` field** (optional, product-level mode recommended): lists page IDs that use this component. Source: DESIGN_PLAN.md Section 3 Shared Component Inventory. Backward-compatible: old harness-solo readers ignore this field; new readers can use it to prioritize implementing high-reuse components first. Omit in single-page mode.
-
-Write to `docs/handoff/component-map.json`:
-
-```json
-{
-  "PrimaryButton": {
-    "designToken": "button.primary",
-    "engineeringComponent": "Button",
-    "props": { "variant": "primary", "size": "md" },
-    "states": ["default", "hover", "active", "disabled", "loading"],
-    "usedBy": ["P01", "P02", "P03"],
-    "notes": "Primary action button, max 1 per screen"
-  },
-  "ProductCard": {
-    "designToken": "card.product",
-    "engineeringComponent": "Card",
-    "props": { "variant": "product", "elevation": "sm" },
-    "states": ["default", "hover", "selected"],
-    "usedBy": ["P03"],
-    "notes": "Product list card, supports selected state"
-  },
-  "EmptyState": {
-    "designToken": "empty-state",
-    "engineeringComponent": "EmptyState",
-    "props": {
-      "illustration": "string",
-      "title": "string",
-      "description": "string",
-      "action": "Slot"
-    },
-    "states": ["default"],
-    "usedBy": ["P03"],
-    "notes": "Empty state component, defined in Section 10 of DESIGN.md. action type depends on Tech Stack, see framework-agnostic constraint"
-  }
-}
-```
-
-### 6. Generate flow.md (Interaction Flow Diagram)
-
-Write to `docs/prototype/flow.md`, describing key user flows.
-
-### 7. Pre-Delivery Checklist
-
-From UI UX Pro Max:
-
-- [ ] Run UX validation scan (Grep ux-guidelines.csv for animation/accessibility/z-index/loading)
-- [ ] Walk through Common Rules §1-§3 (CRITICAL + HIGH levels)
-- [ ] Test at 375px (small phone) and landscape
-- [ ] Verify with reduced-motion enabled
-- [ ] Independently verify dark mode contrast
-- [ ] Confirm all touch targets ≥44pt
-
-## Common Rationalizations
-
-| Excuse | Reality |
-|--------|---------|
-| "Markdown handoff is enough" | Engineering needs component-map.json for mapping, not just markdown |
-| "Engineering can read the design mockups themselves" | Explicit mapping is more reliable than magic export—reviewable and testable |
-| "Pre-Delivery Checklist is too tedious" | 6 checks are the minimum guarantee of handoff quality |
-
-## Red Flags
-
-- component-map.json not generated
-- component-map.json missing the states field
-- component-map.json props Type mismatched with DESIGN_BRIEF.md Tech Stack (e.g., ReactNode used in a Vue project)
-- Pre-Delivery Checklist not executed
-- Handoff artifact paths inconsistent with AGENTS.md conventions
+1. Generate with `status: draft`.
+2. Create `docs/handoff/packages/<handoff_id>/manifest.json` and `contract.md`.
+3. Copy every referenced dependency under `artifacts/`; never reference producer-local paths.
+4. Validate manifest, artifact hashes, envelope/body ID parity, and consumer.
+5. Archive the previous current pointer, publish `status: ready`, and record the handoff ID.
 
 ## Verification
 
-**Common (both modes)**:
-- [ ] design-to-solo.md generated (evidence: file exists)
-- [ ] design-to-solo.md contains Phase Summary section (evidence: section exists with one-sentence phase summary)
-- [ ] design-to-solo.md contains Key Decisions section (evidence: section exists with Decision/Rationale/Impact scope table)
-- [ ] design-to-solo.md contains Open Items section (evidence: section exists with TBD items or "None")
-- [ ] design-to-solo.md contains Suggested Next Steps section (evidence: section exists with prioritized next-step list)
-- [ ] design-to-solo.md contains Risk Notes section (evidence: section exists with Risk/Level/Mitigation table)
-- [ ] design-to-solo.md contains Downstream Framework Usage Notes section (evidence: section exists describing harness-solo auto-detection)
-- [ ] design-to-solo.md Design System Assets section lists 5 assets (evidence: table contains DESIGN.md / tokens.json / tokens.css / component-spec.md / component-map.json rows)
-- [ ] component-map.json generated (evidence: JSON valid + contains states field)
-- [ ] component-spec.md generated (evidence: file contains Props/States tables)
-- [ ] flow.md generated (evidence: file contains key flows)
-- [ ] Pre-Delivery Checklist all ✓ (evidence: 6 check records)
+- [ ] design-to-solo.md has exactly one valid envelope and all required sections.
+- [ ] component-contract.json validates and contains no engineering binding.
+- [ ] component-spec.md and flow.md exist.
+- [ ] Product mode covers every planned page, shared component, and flow.
+- [ ] Package is self-contained; every manifest path exists and every hash matches.
+- [ ] Envelope `ac_ids` exactly equals the unique AC/DAC IDs in the contract body.
+- [ ] Previous current pointer is archived unchanged.
 
-**Product-level mode additional**:
-- [ ] design-to-solo.md contains Cross-Page Consistency Report section (evidence: section exists with 6 dimensions)
-- [ ] design-to-solo.md contains Product Design Plan Reference section (evidence: section exists with DESIGN_PLAN.md path)
-- [ ] Page List includes all pages from DESIGN_PLAN.md Section 2 (evidence: page count matches)
-- [ ] Component List includes Used By Pages column (evidence: column exists, populated for shared components)
-- [ ] component-map.json contains usedBy field for shared components (evidence: JSON contains usedBy arrays)
-- [ ] usedBy values match DESIGN_PLAN.md Section 3 (evidence: cross-reference matches)
-- [ ] Interaction Flows cover all flows from DESIGN_PLAN.md Section 4 (evidence: flow count matches)
+## Red Flags
+
+- A repository sample is present as `docs/handoff/component-contract.json` before a real delivery.
+- The design contract chooses a framework, code component name, or language-specific type.
+- A package references `docs/...` outside its own directory.
+- An AC/DAC is renumbered, duplicated, or silently dropped.
 
 ## Relationship with LOOP
 
-- Not run inside LOOP (runs in the handoff stage after the out-of-LOOP gate passes)
-- Reads all design mockups produced by LOOP (docs/visual/ + docs/interaction/ + docs/prototype/) as aggregated input
-- Reads the pass evidence from the out-of-LOOP gate (design-review + accessibility-audit evidence.md)
-- The component-map.json produced is the core Stitch innovation, consumed by the harness-solo engineering implementation stage
+This skill runs after the out-of-LOOP review gate. It packages approved LOOP outputs for harness-solo; Solo then creates its own implementation binding.

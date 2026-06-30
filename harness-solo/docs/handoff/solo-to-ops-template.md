@@ -1,3 +1,16 @@
+---
+schema_version: "1.0"
+handoff_id: "<SOLO-OPS-YYYYMMDD-NNN>"
+producer: "harness-solo"
+consumer: "harness-ops"
+created_at: "<ISO-8601>"
+source_revision: "<commit-or-artifact-revision>"
+supersedes: null
+status: draft
+ac_ids: []
+artifacts: []
+---
+
 # Handoff: harness-solo → harness-ops
 
 > Generated at: YYYY-MM-DD HH:MM
@@ -138,7 +151,7 @@ Issues for harness-ops to handle or confirm with harness-solo:
 
 ### Engineering Plan Reference
 
-- **Path**: `docs/engineering/ENGINEERING_PLAN.md`
+- **Path**: `artifacts/engineering/ENGINEERING_PLAN.md`
 - **Contents**: Feature Inventory / Shared Infrastructure / Dependency Graph / Implementation Execution Order / Integration Checkpoints / Cross-Feature Consistency Constraints
 
 ## Suggested Next Steps

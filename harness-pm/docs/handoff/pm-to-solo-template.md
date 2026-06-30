@@ -1,8 +1,45 @@
+---
+schema_version: "1.0"
+handoff_id: "<PM-SOLO-YYYYMMDD-NNN>"
+producer: "harness-pm"
+consumer: "harness-solo"
+created_at: "<ISO-8601>"
+source_revision: "<commit-or-artifact-revision>"
+supersedes: null
+status: draft
+ac_ids: []
+artifacts: []
+---
+
 # Handoff: harness-pm → harness-solo
 
 > Generated at: YYYY-MM-DD HH:MM
 > Source framework: harness-pm
 > Target framework: harness-solo
+
+## Delivery Routing
+
+| Field | Value | Rule |
+|---|---|---|
+| delivery_mode | <standalone / family> | `family` enables cross-framework gates |
+| frontend_scope | <true / false> | True when implementation includes user-facing frontend UI |
+| design_required | <true / false> | In family mode, normally true when frontend_scope is true |
+| design_status | <not-required / pending / ready / waived> | `ready` requires a validated design package |
+| design_handoff_id | <DESIGN-SOLO-... / null> | Required when design_status is ready |
+| design_waiver | <approver + reason + scope + review point / null> | Required when design_status is waived |
+
+## Consumer Action Map
+
+| Contract section | Engineering consumer action or gate |
+|---|---|
+| Delivery Routing | Select standalone/family path and enforce the frontend design gate |
+| PRD + stable AC IDs | Generate specs/tests without renumbering |
+| Business Context Summary / NFR | Drive architecture tradeoffs and measurable constraints |
+| Priority / out of scope | Define engineering plan boundaries |
+| Tracking plan | Preserve instrumentation requirements in implementation and downstream handoff |
+| Decisions / open items / risks | Apply, assign an owner, or stop when materially unresolved |
+
+Any context without a downstream action belongs under Notes, not a new required section.
 
 ## Phase Summary
 
@@ -14,7 +51,7 @@
 |------|-----|------|
 | Product name | <name> | |
 | Product type | <web app / mobile app / desktop / landing page / ...> | Determines engineering architecture |
-| Tech stack | <React / Vue / Svelte / vanilla / ...> | Determines the props Type system in component-map.json |
+| Tech constraints (optional) | <platform/integration constraints, or unknown> | Context only; harness-solo owns the final tech-stack decision |
 | Platform | <iOS / Android / Web / desktop> | Determines deployment strategy |
 | Current stage | <MVP / PMF / Scaling / ...> | Determines development priorities |
 
@@ -24,8 +61,8 @@
 
 ## PRD Path and Acceptance Criteria
 
-**PRD document**: `docs/product/PRD.md`
-**PRD structured data**: `docs/product/prd.json` (machine-consumable; contains features[], entities[], non_functional_requirements[] for engineering consumption)
+**PRD document**: `artifacts/product/PRD.md`
+**PRD structured data**: `artifacts/product/prd.json` (generated projection with matching source hash)
 
 **Acceptance criteria list (AC-xxx)**:
 
@@ -33,9 +70,9 @@
 > harness-solo's writing-plans skill should reuse these IDs as-is, do not renumber.
 > If harness-design produced a design-to-solo.md, the DAC-xxx entries there are design-specific acceptance points and must also be written into spec.md.
 
-- [ ] AC-001: <Given-When-Then or testable description>
-- [ ] AC-002: <testable description>
-- [ ] AC-003: <testable description>
+- [ ] AC-F01-001: <stable Given-When-Then or testable description>
+- [ ] AC-F01-002: <stable testable description>
+- [ ] AC-F02-001: <stable testable description; gaps are valid>
 
 ## Engineering-Consumable PRD Sections
 
@@ -50,7 +87,7 @@
 | 5.1-5.4 NFR | Performance, availability, security, observability targets | `non_functional_requirements[]` |
 | 7.1 Functional acceptance | AC-xxx (Happy Path + boundary + exception) | `features[].acceptance_criteria[]` |
 
-## Business Context Digest
+## Business Context Summary
 
 > Engineering-relevant constraints extracted by PM from user-research.md / market-analysis.md.
 > harness-solo **must reference** these when making architecture and tech-stack decisions, to avoid technical choices detached from business reality.
@@ -65,7 +102,7 @@
 | <e.g., 70% of target users on mobile> | <e.g., mobile-first, first screen < 2s> | <user-research.md#device-distribution> |
 | <e.g., peak concurrency estimated at 1000 QPS> | <e.g., requires cache layer + rate limiting> | <market-analysis.md#capacity-estimate> |
 
-> If user-research.md / market-analysis.md do not exist (early-stage project), fill in "No business context digest, judge based on ACs".
+> If user-research.md / market-analysis.md do not exist, record "No additional business context; use the stated ACs".
 
 ## Feature Priorities
 
@@ -79,8 +116,8 @@
 
 | Asset | Path | Notes |
 |------|------|------|
-| Tracking plan | docs/metrics/tracking-plan.md | Event tracking definitions |
-| Metric system | docs/metrics/metrics-system.md | North Star + key metrics |
+| Tracking plan | artifacts/metrics/tracking-plan.md | Event tracking definitions |
+| Metric system | artifacts/metrics/metrics-system.md | North Star + key metrics |
 
 > If not yet produced, fill in "To be supplemented".
 >
@@ -92,10 +129,9 @@
 
 | Asset | Path inside harness-design | Produced? |
 |------|----------------------|-----------|
-| Design handoff spec | docs/handoff/design-to-solo.md | <yes/no> |
-| Component map | docs/handoff/component-map.json | <yes/no> |
-| Design system | docs/design-system/DESIGN.md | <yes/no> |
-| Design tokens | docs/design-system/tokens.json / tokens.css | <yes/no> |
+| Design handoff package | <design_handoff_id> | <ready/pending/waived/not-required> |
+| Semantic component contract | <inside design package> | <yes/no> |
+| Design system and tokens | <inside design package> | <yes/no> |
 
 ## Out of Scope
 
@@ -124,7 +160,7 @@ harness-solo should prioritize:
 
 1. Run the brainstorming skill, consume the AC-xxx + feature priorities in this file
 2. Run the writing-plans skill, write AC-xxx (+ DAC-xxx if any) into spec.md
-3. If design-to-solo.md exists, run the frontend-implementation skill, implement components per component-map.json
+3. If the ready design package exists, run frontend-implementation, create engineering bindings, and implement against component-contract.json
 
 ## Risk Notes
 
@@ -138,5 +174,5 @@ harness-solo should prioritize:
 
 ## Downstream Framework Usage Notes
 
-harness-solo's brainstorming / writing-plans / verify skills will auto-detect this file and read the AC-xxx list, feature priorities, and business context digest.
+harness-solo's brainstorming / writing-plans / verify skills will auto-detect this file and read stable AC IDs, feature priorities, and the Business Context Summary.
 If not auto-detected, you can manually point the Agent to this file path to read it.

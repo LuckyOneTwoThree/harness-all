@@ -40,11 +40,11 @@ Context must be loaded before the session begins; working with "amnesia" is not 
    Read `.harness/FEATURES.md` to understand overall project design progress.
 
 5. **Check handoff documents** (from other harness family members)
-   Scan the `docs/handoff/` directory:
+   Scan `docs/handoff/` and validate inbound packages with `.harness/rules/handoff-protocol.md` before consumption:
    - If `pm-to-design.md` exists, report to the user: "Found handoff document (from harness-pm). Consume it in this session?"
    - Handoff documents may include PRD paths, key decisions, and open items; they are important input for design-brief
-   - If handoff references `docs/product/PRD.md` or `docs/product/prd.json`, verify these files exist and report their presence (these are the primary requirements source from harness-pm, containing pages/entities/user_flows for design)
-   - If unconsumed handoff documents exist, remind the user to prioritize them
+   - Resolve PRD and research artifacts from inside the package; producer-local `docs/...` paths outside it are invalid
+   - Report valid unconsumed handoffs. Report exact validation failures and do not consume a package partially
 
 6. **Confirm task scope**
    Confirm with the user what this session will accomplish, and write a new session block to progress.md:

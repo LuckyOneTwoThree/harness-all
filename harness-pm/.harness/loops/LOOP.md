@@ -44,7 +44,7 @@
 > **Hard Circuit Breaker execution rules (non-negotiable)**:
 > 1. At each VALIDATE stage, the Agent **must** read the `iteration` field of `state.yaml`
 > 1.5. **VALIDATE stage must forcibly read the raw contents of state.yaml**: At each VALIDATE, the Agent must use the Read tool to read the full contents of `state.yaml` to obtain the true iteration value. **Referencing the iteration value from context memory is prohibited** (to prevent skipping the circuit breaker check in a hallucination state).
-> 2. When the `iteration >= 10` read by the Read tool (must come from the raw file contents, not a memory reference), the Agent **must** perform the following operations, without skipping:
+> 2. When attempt 10 fails, or a new ACT is requested while `iteration >= 10`, trigger the breaker. A successful attempt 10 may complete normally:
 >    - Change `status` to `failed`
 >    - Write `hard_limit_reached` to `true`
 >    - Write `last_error` as "Iteration limit exceeded (iteration >= 10), hard circuit breaker triggered"
@@ -88,6 +88,8 @@ iterations.log example:
 
 ## State Maintenance
 
+Shared counting, status-transition, and circuit-breaker semantics are defined in `STATE_PROTOCOL.md`; `state.schema.json` validates the common state shape. In particular, iteration increments exactly once immediately before RESEARCH begins, never again during failure handling.
+
 **Decision: The Agent reads and writes state.yaml (one file per task, persisted to disk)**
 
 `loops/specs/<task>/state.yaml` is actively read and written by PM skills during the loop:
@@ -116,7 +118,7 @@ substage: "<substage description>"         # e.g., "voice-analysis" / "persona-m
 exploration_mode: "<enum>"                 # deep / standard / skip; default standard; controlled by workflow default_mode and user switching
 
 # Optional fields (hard circuit breaker flag)
-hard_limit_reached: <bool>                 # When true, further looping is prohibited; default false; set to true only when iteration >= 10
+hard_limit_reached: <bool>                 # True after failed attempt 10 or blocked attempt 11; successful attempt 10 may complete
 ```
 
 **stage enum values**:
@@ -195,7 +197,7 @@ When VALIDATE fails:
    - Insufficient data (little feedback / small sample) → back to RESEARCH to gather more data
    - Wrong direction (hypothesis not supported / requirements changed) → back to PLAN to re-plan
    - Quality not met (gates not passed / low confidence) → back to RESEARCH to improve the output
-4. Increment the iteration count and check whether the maximum iterations have been exceeded
+4. Check the current iteration against the recommended and hard limits; do not increment here. The next RESEARCH attempt increments exactly once when it begins
 
 ### Checkpoint Resume
 

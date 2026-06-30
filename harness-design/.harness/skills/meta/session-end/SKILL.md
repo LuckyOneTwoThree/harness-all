@@ -1,125 +1,74 @@
 ---
 name: session-end
-description: Session wrap-up, archive progress + write baseline + update board + optionally produce handoff documents
+description: Wraps the design session, records evidence, archives progress, and publishes validated handoffs when needed.
 ---
-# Session End — Session Wrap-up
-
-## When to use
-- Before claiming task completion
-- When the user ends the session
-- When session context is near the limit
+# Session End
 
 ## Inputs
-- memory/progress.md
-- loops/specs/*/state.yaml
-- FEATURES.md
-- docs/handoff/design-to-solo-template.md
+
+- `.harness/memory/progress.md`
+- `.harness/loops/specs/*/state.yaml`
+- `.harness/FEATURES.md`
+- approved design outputs and review evidence
 
 ## Outputs
-- memory/progress.md
-- memory/baseline.json
-- memory/archives/
-- FEATURES.md
-- docs/handoff/design-to-solo.md
 
-## Core Rules
-Archiving is required before the session ends; "bare exit" is not allowed — the next session will lose context.
+- updated progress, baseline, archive, and task board
+- optional ready design-to-solo package
+- optional ready design-to-pm feedback package
 
 ## Process
 
-1. **Update progress.md**
-   Complete the current session block with:
-   - Completed items (with evidence summary)
-   - Pending items (context the next session needs to know)
-   - Key decisions (important decisions made in this session)
-   - Exploration mode (if this session used a workflow, record the current exploration_mode and switching history)
+1. Complete the current progress block with outcomes, evidence, pending work, decisions, and exploration-mode history.
+2. Update FEATURES.md from state files; do not infer done without pass evidence.
+3. Write `.harness/memory/baseline.json` with timestamp, file count, document LOC, task count, and TODO count.
+4. If progress.md exceeds 200 lines, preserve the latest complete session and archive older complete sessions unchanged.
+5. Promote durable design decisions or pitfalls to knowledge-base.md.
 
-2. **Batch update FEATURES.md**
-   Scan `.harness/loops/specs/*/state.yaml`:
-   - Tasks with status `done` → change the corresponding task status in FEATURES.md to `done`
-   - Tasks with status `running` → keep status as `in_progress`
-   - Record the last updated date
+## Outbound Handoffs
 
-3. **Write baseline.json** (for entropy-check)
-   Compute current project metrics and write to `.harness/memory/baseline.json`:
-   ```json
-   {
-     "timestamp": "YYYY-MM-DDTHH:MM:SSZ",
-     "files": <file count>,
-     "loc": <document line count>,
-     "tasks": <design task count>,
-     "todos": <TODO count>
-   }
-   ```
-   Computation method (Agent uses tools, no bash dependency):
-   - files: use Glob to scan design documents (excluding .git/dist)
-   - loc: use Read to read each document and accumulate by line count
-   - tasks: read FEATURES.md to count tasks
-   - todos: use Grep to search for `TODO|FIXME|XXX` comments
+Only harness-design writes its outbound contracts. Apply `.harness/rules/handoff-protocol.md` and `.harness/rules/acceptance-id-protocol.md` to every publication.
 
-4. **Execute archiving** (mandatory, cross-platform)
-   Follow these steps (no bash script dependency):
+### Design to Solo
 
-   **Step 4.1: Detect progress.md line count**
-   - Use Read to read `.harness/memory/progress.md`
-   - Count lines (≤200 lines → skip archiving, go directly to step 5)
+Prefer `design-handoff-spec`; session-end may publish only when that skill was not run and approved engineering-consumable design exists. Use `docs/handoff/design-to-solo-template.md` and include the framework-neutral component contract.
 
-   **Step 4.2: Rotate (line count > 200)**
-   - Use Read to read the full progress.md content
-   - Find the position of the last `## Session:` marker (keep the last complete session block)
-   - Cut the content before the marker and archive it to `.harness/memory/archives/YYYY-MM-DD-HHMM-progress.md`
-   - Use Write to write back progress.md: keep only the last session block + top explanatory line
-   - Use Write to write the archive file: the cut historical content
+Hard checks:
 
-5. **Extract important findings** (if any)
-   If this session produced knowledge worth long-term retention (design decisions, pitfalls, patterns), write it to `memory/knowledge-base.md`.
+- review evidence passed;
+- all stable AC/DAC IDs are unique and preserve upstream IDs;
+- envelope `ac_ids` exactly equals IDs in the body;
+- component-contract.json validates and contains no engineering binding;
+- package contains every referenced design artifact and token with hashes;
+- family-mode frontend status becomes ready only after these checks pass.
 
-6. **Produce handoff documents** (optional, executed when conditions are met)
+### Design to PM
 
-   **Write Access Unidirectional Isolation (Non-negotiable)**: Only the producer can write to a handoff document. `design-to-solo.md` can only be written by Design. Consumers can only read; modifying upstream handoff documents is prohibited. To provide feedback, use `AskUserQuestion` to relay through the user, or write to your own outbound handoff document.
+Publish `design-to-pm.md` using `docs/handoff/design-to-pm-template.md` when design discovers a product-scope conflict, ambiguous business rule, infeasible requirement, user-flow gap, or evidence that should change the PRD.
 
-   > **Division of labor with design-handoff-spec**: `design-to-solo.md` is generated by the design-handoff-spec skill (using the dedicated template `docs/handoff/design-to-solo-template.md`, with overwrite semantics, including AC-xxx/DAC-xxx sections + component-map.json reference). session-end only falls back to producing it with the same template when design-handoff-spec has not been executed, to avoid conflicting with design-handoff-spec's overwrite semantics.
+Each feedback item has a stable `feedback_id`, affected AC IDs, evidence, recommendation, impact, and requested PM decision. This is feedback, not authority to rewrite the PRD.
 
-   **Skip condition**: If design-handoff-spec has already produced `docs/handoff/design-to-solo.md` (file exists and contains AC-xxx/DAC-xxx section structure), skip this step and do not produce it again.
+### Publication
 
-   If this session completed a design **deliverable to downstream engineering** (e.g., implementation drafts needed by harness-solo), and design-handoff-spec has not been executed, produce `docs/handoff/design-to-solo.md` using the `docs/handoff/design-to-solo-template.md` template:
+For either route:
 
-   **Trigger conditions** (any one met):
-   - A design task status changed from `in_progress` to `done` this session
-   - The user explicitly requested "prepare delivery to engineering"
-   - Completed designs involve new pages, new components, or new interaction patterns
+1. Allocate a handoff ID and create draft contract.
+2. Build `docs/handoff/packages/<handoff_id>/{manifest.json,contract.md,artifacts/...}` with package-relative paths.
+3. Validate envelope, manifest, hashes, consumer, stable IDs, and body/envelope parity.
+4. Archive the previous current pointer unchanged.
+5. Publish the current pointer and package with `status: ready`.
+6. Record ID, package path, and superseded ID in progress.md.
 
-   **Output content** (fill in per template):
-   - Phase summary: what design was delivered this time
-   - Deliverables list: design draft paths, component list, design tokens, etc. (what downstream engineering needs to know)
-   - Acceptance criteria: copy the passed ACs from spec.md
-   - Suggested next step: what downstream can do (e.g., "design drafts are ready, implementation can begin")
-
-   **Notes**:
-   - If this session has no deliverable output (pure exploration, pure iteration), skip this step
-   - If `design-to-solo.md` already exists and was produced as a fallback by session-end (not produced by design-handoff-spec), append this delivery; do not overwrite history
-   - The file name is fixed as `design-to-solo.md`; do not split by date (downstream only reads the latest state)
-
-   **AC format validation** (handoff documents must pass)
-   Run acceptance criteria format validation on the produced handoff document:
-   - Scan acceptance criteria in the handoff document; check that the numbering format is `AC-NNN` (e.g., AC-001, AC-002)
-   - Check that numbering is continuous (AC-001 cannot jump directly to AC-003)
-   - Check that each AC contains: description + validation method
-   - If format anomalies are found (e.g., "Acceptance Criteria One", non-continuous numbering, missing validation method), **block the handoff** and require correction before re-producing
+Never append a second delivery body and never ask consumers to resolve producer-local paths.
 
 ## Prohibitions
-- Ending without updating progress.md (next session loses context)
-- Skipping archiving step 4 (progress.md grows unbounded)
-- Not writing baseline.json (entropy-check cannot compute growth rate)
-- Forcing .sh script execution in a bash-less environment (will hang)
 
-## Relationship with LOOP
-This skill runs after LOOP, as the session wrap-up.
-session-start → ... → LOOP → ... → session-end
+- Publishing unreviewed design as ready.
+- Renumbering AC/DAC IDs or requiring continuous sequences.
+- Prescribing framework-specific component types/names.
+- Deleting feedback or handoff history after consumption.
+- Ending without progress and baseline updates.
 
 ## Evidence Requirements
-After session-end completes, progress.md must contain:
-- What this session did
-- What the next session needs to continue
-- The actual result of the archiving operation (e.g., "progress.md cut from 250 lines to 45 lines, archived to archives/2026-06-20-1900-progress.md"; cannot just write "archived")
-- If step 6 was executed, record "produced design-to-solo.md, containing X delivery items"
+
+Record the archive result and, for each handoff, its ID, consumer, artifact count, manifest hash, validation result, and current-pointer/archive actions.

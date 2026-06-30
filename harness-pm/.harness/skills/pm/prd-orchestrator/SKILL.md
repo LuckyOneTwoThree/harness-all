@@ -101,22 +101,18 @@ stages:
 #### Handle UI Feedback (phase-0, conditional execution)
 
 ```
-Trigger condition: User-provided (UI/UX feedback) exists
-Action: Evaluate UI→PM feedback suggestions
+Trigger condition: a validated ready `design-to-pm` package exists, or equivalent user-provided UI/UX feedback exists
+Action: Evaluate Design→PM feedback without granting Design write authority over the PRD
 Input:
-  design_feedback: User-provided (UI/UX feedback)
+  design_feedback: docs/handoff/design-to-pm.md + its portable package (preferred), or user-provided feedback
 Process flow:
-  1. Read design_feedback.json
-  2. Group suggestions by target_artifact
-  3. Evaluate each suggestion:
-     - Accept: Mark as accepted, include in subsequent phase modification scope
-     - Reject: Mark as rejected, record rejection reason
-  4. ⏸ Human confirms feedback processing results
-  5. For accepted suggestions:
-     - If target_artifact is prd.json: Include in modification scope in phase-1
-  6. Delete design_feedback.json after processing to avoid duplicate consumption
-Output: Feedback processing results (accepted/rejected list)
-Validation: Feedback suggestions have been evaluated item by item, processing results confirmed by human
+  1. Validate envelope, consumer, manifest, hashes, freshness, and AC-ID parity using `.harness/rules/handoff-protocol.md`
+  2. Evaluate every stable feedback_id as accept / reject / defer with rationale and owner
+  3. ⏸ Human confirms any product-scope or acceptance-meaning change
+  4. For accepted items, update authoritative PRD.md, allocate new IDs when meaning changes, then regenerate prd.json
+  5. Write a receipt and archive the feedback unchanged; never delete the source contract or package
+Output: docs/product/design-feedback-decisions/<handoff_id>.md + receipt + optional new PRD revision
+Validation: every feedback_id has a decision; accepted changes preserve stable-ID rules; history remains auditable
 Mode: 🤖→👤
 ```
 
@@ -192,5 +188,5 @@ Downstream handoff:
 
 | Decision Point | Trigger Condition | Decision Content |
 |--------|----------|----------|
-| UI feedback processing confirmation | phase-0, when design_feedback.json exists | Confirm accept/reject of UI-side feedback suggestions |
+| Design feedback processing confirmation | phase-0, when a ready design-to-pm package exists | Confirm accept/reject/defer decisions that change product scope or AC meaning |
 | PRD tier confirmation | AI auto-tiering confidence <0.7 | Confirm PRD tier (L/S/X) |

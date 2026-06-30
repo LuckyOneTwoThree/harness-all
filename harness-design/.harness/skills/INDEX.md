@@ -23,7 +23,7 @@
 - **design-lint** — AI design Linter (mechanical rule check, script execution)
 - **design-review** — Final review (Five-Axis + Doubt-Driven)
 - **product-design-review** — Product-level cross-page consistency review (after all pages designed, before handoff)
-- **design-handoff-spec** — Engineering handoff (+component-map.json explicit mapping)
+- **design-handoff-spec** — Engineering handoff with portable semantic component contract
 - **accessibility-audit** — WCAG 2.1 AA dedicated review
 - **verify** — Inside-LOOP quick check
 - **design-system-refactor** — Design system refactor (merge/abstract/tokenize)

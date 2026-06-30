@@ -1,3 +1,16 @@
+---
+schema_version: "1.0"
+handoff_id: "<SOLO-PM-YYYYMMDD-NNN>"
+producer: "harness-solo"
+consumer: "harness-pm"
+created_at: "<ISO-8601>"
+source_revision: "<commit-or-artifact-revision>"
+supersedes: null
+status: draft
+ac_ids: []
+artifacts: []
+---
+
 # solo-to-pm-template.md
 
 > Engineering feedback handoff from harness-solo to harness-pm
@@ -96,7 +109,7 @@ Issues for harness-pm to handle or confirm with harness-solo:
 
 harness-pm should prioritize:
 
-1. Triage the suggested product adjustments; decide which ACs to update in `docs/product/PRD.md`
+1. Triage suggested product adjustments; update the authoritative PRD only through a new approved revision and stable-ID rules
 2. Feed user-feedback themes into discovery / user-research to validate
 3. Re-sync updated PRD or positioning back to harness-solo via `pm-to-solo.md` if scope changes
 

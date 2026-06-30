@@ -11,6 +11,8 @@ description: Systematic Debugging — root cause analysis rather than symptom pa
 
 ## Inputs
 - loops/LOOP.md
+- loops/STATE_PROTOCOL.md
+- loops/state.schema.json
 - rules/security.md
 - memory/knowledge-base.md
 
@@ -68,7 +70,7 @@ The linear 5 Whys chain can stall when the bug spans modules or involves hidden 
 
 ## State Maintenance
 
-While debugging, update per the "state.yaml Schema" in `loops/LOOP.md`:
+While debugging, follow `.harness/loops/STATE_PROTOCOL.md` and validate with `state.schema.json`:
 - `stage`: `debug`
 - `last_error`: `"[root cause description]"`
 - `status`: `retrying`

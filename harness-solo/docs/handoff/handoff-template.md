@@ -1,3 +1,16 @@
+---
+schema_version: "1.0"
+handoff_id: "<SOURCE-TARGET-YYYYMMDD-NNN>"
+producer: "<source-framework>"
+consumer: "<target-framework>"
+created_at: "<ISO-8601>"
+source_revision: "<commit-or-artifact-revision>"
+supersedes: null
+status: draft
+ac_ids: []
+artifacts: []
+---
+
 # Handoff: <source framework> → <target framework>
 
 > Generated at: YYYY-MM-DD HH:MM
@@ -17,7 +30,7 @@
 | Roadmap | docs/product/roadmap.md | Markdown | Feature priorities and iteration plan |
 
 > Note: harness-pm produces this handoff document (with PRD content), not docs/product/PROJECT.md.
-> PROJECT.md is always maintained by harness-solo's brainstorming skill (written after extracting requirements from the handoff document).
+> The inbound handoff remains immutable. When it introduces new or conflicting product requirements, harness-solo's brainstorming skill records only the resolved requirement boundaries in PROJECT.md; an already executable contract does not require a ceremonial rewrite.
 
 ## Key Decisions
 
@@ -30,9 +43,9 @@
 
 Testable conditions that downstream frameworks must satisfy when implementing:
 
-- [ ] AC-001: <testable description>
-- [ ] AC-002: <testable description>
-- [ ] AC-003: <testable description>
+- [ ] AC-F01-001: <stable testable description>
+- [ ] AC-F01-002: <stable testable description>
+- [ ] AC-F02-001: <stable testable description>
 
 ## Open Items
 

@@ -51,9 +51,9 @@ Before consuming the handoff's AC-xxx list, read the PRD itself for full context
 ### 1.5 Review and Strip Overreach ACs (Push-back Mechanism)
 
 Review the AC-xxx items passed down from upstream `pm-to-design.md`. If you find PM ACs that contain specific UI form directives (e.g., "put a shopping cart icon in the top nav bar", "pop up a red confirmation box"), you must **exercise push-back authority**:
-1. Refuse to copy rigid UI layouts verbatim; preserve the professional independence of design.
-2. Reframe them as pure business intent or UX goals (e.g., "users can conveniently access the shopping cart from any page", "provide a high-priority, mis-tap-resistant confirmation mechanism").
-3. Record such changes for disclosure to the user in the `[AC Cleanup Log]` section of the output document.
+1. Refuse the overreaching wording; preserve the original AC ID and text in the cleanup log for traceability.
+2. Do not silently change meaning under the same ID. Request harness-pm to supersede the AC through a new PRD revision, or add a separately scoped DAC for a design-verifiable constraint.
+3. Record the proposed UX-intent wording, affected ID, and required PM decision in the `[AC Cleanup Log]`; unresolved product AC defects block a ready handoff.
 
 ### 2. Product Type Identification
 
@@ -64,7 +64,7 @@ Identify the product type (SaaS / E-commerce / Finance / Healthcare / Education 
 - Product Type (required)
 - Target Audience (required)
 - Style Keywords (optional)
-- Tech Stack (optional)
+- Platform constraints (optional; framework choice belongs to harness-solo)
 
 ### 4. Vibe Translation
 
@@ -87,18 +87,18 @@ Provide 2-3 visual directions, each describing:
 
 ### 6. Reframe (Translate Vague Requirements into Testable ACs)
 
-Translate vague requirements into testable conditions, numbered as AC-xxx (for direct consumption by the PLAN stage of LOOP.md):
+Preserve valid upstream `AC-<feature>-<sequence>` IDs. Add design-derived criteria only as stable `DAC-<page>-<sequence>` or `DAC-GLOBAL-<sequence>` IDs:
 
 | Vague Requirement | Testable Condition (AC) |
 |-------------------|-------------------------|
-| "make it look better" | AC-001: Card spacing 8px consistent / AC-002: Contrast ≥4.5:1 / AC-003: No overflow at mobile 375px |
-| "make a nice button" | AC-001: Button has 4 states (default/hover/active/disabled) / AC-002: Annotate size + color + radius |
-| "this page should be modern" | AC-001: Page uses 12-column grid / AC-002: Primary color #xxx / AC-003: 8px spacing baseline |
+| "make it look better" | DAC-P01-001: Card spacing uses token scale / DAC-GLOBAL-001: Contrast ≥4.5:1 |
+| "make a nice button" | DAC-GLOBAL-002: Button has required interaction states |
+| "this page should be modern" | Clarify intended qualities first; then allocate scoped DAC IDs to testable design outcomes |
 
-**AC Numbering Rules**:
-- Format: `AC-<3-digit number>` (e.g., AC-001, AC-002)
-- Globally unique (no duplicates within the same DESIGN_BRIEF.md)
-- Each AC must be verifiable (containing specific values / conditions / states)
+**Acceptance ID Rules**:
+- Follow `.harness/rules/acceptance-id-protocol.md`; gaps are valid and IDs are never renumbered or reused.
+- PM-owned AC meaning is immutable in Design. Design additions use DAC IDs and may reference related AC IDs.
+- Every criterion records source, scope, revision introduced, and a verifiable value/condition/state.
 
 ### 7. Anti AI-Slop Explicit Field
 
@@ -126,8 +126,8 @@ Write to `docs/visual/DESIGN_BRIEF.md`, format below.
 ## Style Keywords
 <Style keywords>
 
-## Tech Stack
-<Tech stack>
+## Platform Constraints
+<Device/browser/platform constraints, or "None known"; no framework selection required>
 
 ## Vibe Translation
 - Input vibe words: <User input>
@@ -140,16 +140,17 @@ Write to `docs/visual/DESIGN_BRIEF.md`, format below.
 <2-3 visual directions, user selects>
 
 ## Reframed Success Criteria
-- AC-001: <Testable condition 1>
-- AC-002: <Testable condition 2>
-- AC-003: <Testable condition 3>
+- AC-F01-001: <Preserved product criterion, if applicable>
+- DAC-P01-001: <Page-scoped design criterion>
+- DAC-GLOBAL-001: <Cross-page design criterion>
 
 ## AC Cleanup Log (Push-back Log)
 > Records overreaching UI directives refused and rewritten by the design side
 - Original AC-xxx: <PM's rigid directive> → Rewritten as: <Pure UX goal>
 
 ## Anti AI-Slop Requirements
-- Forbidden: purple-blue gradient / symmetric three-column / emoji icons / Inter font
+- Defaults to avoid: purple-blue gradient / symmetric three-column / emoji icons / generic default font
+- Approved brand overrides: <rule ID + source + rationale + scope + review point, or None>
 - Required: Use the project design system's fonts and color palette
 
 ## Assumptions
@@ -178,15 +179,15 @@ Write to `docs/visual/DESIGN_BRIEF.md`, format below.
 
 DESIGN_BRIEF.md is treated as passed only when ALL of the following are satisfied; otherwise the workflow does not proceed:
 
-1. **Requirements clear** — the 4 requirement elements (Product Type / Target Audience / Style Keywords / Tech Stack) are explicit, not vague
+1. **Requirements clear** — Product Type and Target Audience are explicit; Style Keywords and Platform Constraints are either explicit or recorded as not provided
 2. **ACs testable** — every AC-xxx contains a specific value / condition / state and is verifiable
 3. **Constitution compliant** — no violation of `constitution.md` (WCAG 2.1 AA, mobile-first, design-system-first, etc.)
 4. **User confirmed** — Assumptions are explicitly listed and the user has confirmed them (evidence: conversation record)
-5. **Technically feasible** — Tech Stack and token recommendations are implementable within the project's engineering constraints
+5. **Technically feasible** — token and interaction recommendations respect known platform constraints without choosing harness-solo's tech stack
 
 ## Verification
 
-- [ ] DESIGN_BRIEF.md contains the 4 elements (evidence: file exists and fields are complete)
+- [ ] DESIGN_BRIEF.md contains required product/audience fields and explicit status for optional style/platform fields
 - [ ] Assumptions explicitly listed and confirmed by the user (evidence: conversation record)
 - [ ] Aesthetic Direction has 2-3 options (evidence: file content)
 - [ ] Vibe Translation has output (evidence: file content; if prior knowledge used, has WARNING label)

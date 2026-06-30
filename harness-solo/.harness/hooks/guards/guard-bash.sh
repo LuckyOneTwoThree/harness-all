@@ -46,7 +46,7 @@ BLOCK_PATTERNS=(
   '> /dev/sda'
   'git push --force.*origin/(main|master)'
   'DROP DATABASE'
-  'DROP TABLE.*;(?!.*WHERE)'  # DROP without WHERE (simplified check)
+  'DROP TABLE'
 )
 
 # Confirm-required patterns (WARN, Agent should ask the user)

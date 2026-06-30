@@ -5,7 +5,7 @@ description: Maintain the memory directory, execute retention policy, prevent pr
 # Memory Maintenance
 
 ## When to use
-- session-end optional invocation
+- session-end invocation when a retention threshold is exceeded
 - When the user says "clean up history" / "archive" / "memory too large
 - When memory files exceed thresholds
 
@@ -120,7 +120,7 @@ session-end handles daily wrap-up, memory-maintenance handles deep cleanup:
 
 | Skill | Frequency | Responsibility |
 |-------|-----------|----------------|
-| session-end | Every session end | Archive this session, write baseline, update board |
+| session-end | Every session end | Record recovery state, write baseline, update board, invoke this skill on threshold |
 | memory-maintenance | On-demand/periodic | Split large files, clean old archives, execute retention |
 
 **Recommendation**: session-end should check the progress.md length each time and invoke memory-maintenance when it exceeds 200 lines.

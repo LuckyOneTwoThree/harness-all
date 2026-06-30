@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "component_contract_sha256": "<sha256 of component-contract.json>",
+  "tech_stack_revision": "<TECH_STACK revision>",
+  "bindings": [
+    {
+      "component_id": "CMP-BUTTON-PRIMARY",
+      "engineering_component": "Button",
+      "module": "src/components/Button.tsx",
+      "property_bindings": {
+        "variant": "ButtonProps.variant",
+        "content": "ButtonProps.children: ReactNode"
+      }
+    }
+  ]
+}

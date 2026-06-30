@@ -165,10 +165,10 @@ if [ "$FW_TYPE" = "solo" ]; then
   GUARDS=(
     ".harness/hooks/guards/guard-secret.sh"
     ".harness/hooks/guards/guard-bash.sh"
-    ".harness/hooks/guards/guard-sensitive-file.sh"
     ".harness/hooks/guards/guard-commit-msg.sh"
     ".harness/hooks/pre-commit.sh"
     ".harness/hooks/pre-push.sh"
+    ".harness/hooks/commit-msg.sh"
   )
   for g in "${GUARDS[@]}"; do
     if [ -f "$g" ]; then

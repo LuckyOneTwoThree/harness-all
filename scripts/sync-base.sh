@@ -24,6 +24,19 @@ for arg in "$@"; do
   esac
 done
 
+# Prefer the deterministic cross-platform validator. Keep the legacy Bash checks
+# below as a fallback for environments without PowerShell Core/Windows PowerShell.
+VALIDATOR="$ROOT_DIR/scripts/validate.ps1"
+if [ -f "$VALIDATOR" ]; then
+  if command -v pwsh >/dev/null 2>&1; then
+    pwsh -NoProfile -File "$VALIDATOR" -Strict
+    exit $?
+  elif command -v powershell.exe >/dev/null 2>&1 && command -v cygpath >/dev/null 2>&1; then
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$(cygpath -w "$VALIDATOR")" -Strict
+    exit $?
+  fi
+fi
+
 echo "========================================="
 echo " harness-all base file sync check"
 echo "========================================="

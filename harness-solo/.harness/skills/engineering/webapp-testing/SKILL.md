@@ -15,7 +15,7 @@ description: Frontend/Web App Verification — pure Agent tooling approach (no P
 - rules/security.md
 
 ## Outputs
-- loops/specs/<feature>/evidence.md
+- frontend verification results returned to verify; verify alone writes evidence.md
 
 ## Iron Rule
 **Frontend code changes must be verified; do not just read the code and say "should work".** Use a pure Agent tooling approach; do not introduce external dependencies like Playwright (abide by the constitution.md zero-new-dependency principle).
@@ -97,8 +97,8 @@ This skill is a **frontend-specific supplement to the verify skill** and does no
      ```
      Hit → confirm whether it should be configured via environment variables
 
-7. **Write evidence**
-   Summarize the above check results into the "Frontend Verification" section of evidence.md:
+7. **Return verification results**
+   Return the following structure to verify for its "Frontend Verification" evidence section:
    ```markdown
    ## Frontend Verification
 
@@ -128,10 +128,10 @@ This skill is a **frontend-specific supplement to the verify skill** and does no
 
 | Dimension | verify | webapp-testing |
 |------|--------|----------------|
-| Scope | Full-stack verification (verify-fast 3-step / verify-full 9-step) | Frontend-specific |
+| Scope | Attempt verification + one final delivery gate | Frontend-specific |
 | Trigger | Every VERIFY of LOOP | When frontend code is involved |
-| Output | Main sections of evidence.md | "Frontend Verification" section of evidence.md |
-| Relationship | verify invokes webapp-testing | webapp-testing is a sub-item of verify |
+| Output | Canonical evidence.md | Structured frontend results for verify to merge |
+| Relationship | verify invokes and records | webapp-testing checks but does not write evidence |
 
 **Invocation**: when the verify skill detects frontend code changes, it invokes this skill for frontend-specific verification, and the results are merged into evidence.md.
 

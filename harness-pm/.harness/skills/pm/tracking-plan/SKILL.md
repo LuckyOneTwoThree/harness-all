@@ -36,41 +36,10 @@ This pipeline auto-generates the tracking plan, but key decision points require 
 - **Must approve**: Privacy compliance
 - **Recommended to approve**: Tracking priority adjustments
 
-## Input
+## Progressive-Disclosure Guidance
 
-| Input Item | Type | Required | Source | Description |
-|--------|------|------|------|------|
-| PRD | string/file | Yes | User-provided | PRD document content (including feature descriptions, user flows, core paths, business rules) |
-| Metric System | JSON | Yes | docs/metrics/metrics-system.md | North Star Metric, L1/L2/action metrics |
-| Existing Tracking Inventory | JSON array | ○ | User-provided | Existing tracking event inventory |
+The detailed templates, examples, and depth-specific execution guidance are in [Reference/progressive-disclosure.md](Reference/progressive-disclosure.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
 
-### PRD (Required)
-
-**PRD document content**, including:
-- Product feature descriptions
-- User flow descriptions
-- Core path definitions
-- Business rule descriptions
-
-**Supported formats**:
-- Markdown
-- Word document
-- Structured JSON
-- Wireframes + descriptions
-
----
-
-### Metric System (from Pipeline 1)
-
-> 📋 For input JSON schema, see [Reference/input-schemas.md](./Reference/input-schemas.md)
-
----
-
-### Existing Tracking Inventory (Optional)
-
-> 📋 For input JSON schema, see [Reference/input-schemas.md](./Reference/input-schemas.md)
-
----
 
 ## Execution Steps
 

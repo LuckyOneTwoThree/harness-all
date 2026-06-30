@@ -60,10 +60,10 @@ fi
 echo "→ Copying .harness/ framework..."
 cp -r "$TEMPLATE_DIR/.harness" .harness
 
-# Copy AGENTS.md and SOUL.md templates (if they don't exist)
+# Copy the canonical AGENTS.md and user-owned templates (if they don't exist)
 if [ ! -f "AGENTS.md" ]; then
-  cp "$TEMPLATE_DIR/.harness/templates/AGENTS.md.template" AGENTS.md
-  echo "  ✓ Created AGENTS.md (from template)"
+  cp "$TEMPLATE_DIR/AGENTS.md" AGENTS.md
+  echo "  ✓ Created AGENTS.md (from canonical framework rules)"
 fi
 if [ ! -f "SOUL.md" ]; then
   cp "$TEMPLATE_DIR/.harness/templates/SOUL.md.template" SOUL.md
@@ -76,7 +76,7 @@ fi
 
 # Create the docs/ directory structure (only directories required by the engineering framework; design/ops belong to other harness family members)
 echo "→ Creating docs/ directory..."
-mkdir -p docs/product docs/engineering docs/acceptance docs/handoff docs/decisions
+mkdir -p docs/product docs/engineering docs/acceptance docs/handoff/archive docs/handoff/receipts docs/handoff/packages docs/decisions
 
 # Initialize PROJECT.md and TECH_STACK.md from templates (if they don't exist)
 if [ ! -f "docs/product/PROJECT.md" ]; then
@@ -131,17 +131,21 @@ echo "Tips: Install git hooks (optional):"
 echo "  macOS/Linux:"
 echo "    ln -sf ../../.harness/hooks/pre-commit.sh .git/hooks/pre-commit"
 echo "    ln -sf ../../.harness/hooks/pre-push.sh .git/hooks/pre-push"
+echo "    ln -sf ../../.harness/hooks/commit-msg.sh .git/hooks/commit-msg"
 echo "  Windows (Git Bash):"
 echo "    cp .harness/hooks/pre-commit.sh .git/hooks/pre-commit"
 echo "    cp .harness/hooks/pre-push.sh .git/hooks/pre-push"
+echo "    cp .harness/hooks/commit-msg.sh .git/hooks/commit-msg"
 echo "    # ⚠️ Must convert line endings! Otherwise Git Bash cannot execute:"
-echo "    sed -i 's/\r$//' .git/hooks/pre-commit .git/hooks/pre-push"
+echo "    sed -i 's/\r$//' .git/hooks/pre-commit .git/hooks/pre-push .git/hooks/commit-msg"
 echo "  Windows (PowerShell):"
 echo "    Copy-Item .harness/hooks/pre-commit.sh .git/hooks/pre-commit -Force"
 echo "    Copy-Item .harness/hooks/pre-push.sh .git/hooks/pre-push -Force"
+echo "    Copy-Item .harness/hooks/commit-msg.sh .git/hooks/commit-msg -Force"
 echo "    # ⚠️ Must convert line endings! Otherwise Git Bash cannot execute:"
-echo "    (Get-Content .git/hooks/pre-commit) -join \"`n\" | Set-Content -NoNewline .git/hooks/pre-commit"
-echo "    (Get-Content .git/hooks/pre-push) -join \"`n\" | Set-Content -NoNewline .git/hooks/pre-push"
+echo '    (Get-Content .git/hooks/pre-commit) -join "`n" | Set-Content -NoNewline .git/hooks/pre-commit'
+echo '    (Get-Content .git/hooks/pre-push) -join "`n" | Set-Content -NoNewline .git/hooks/pre-push'
+echo '    (Get-Content .git/hooks/commit-msg) -join "`n" | Set-Content -NoNewline .git/hooks/commit-msg'
 echo ""
 echo "  ⚠️ Windows note: symbolic links (ln -s) require admin privileges by default; cp is recommended instead"
 echo "  ⚠️ CRLF risk: Windows core.autocrlf=true will turn .sh files into CRLF,"

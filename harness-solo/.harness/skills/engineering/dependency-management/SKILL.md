@@ -16,7 +16,7 @@ description: Dependency Management — add/upgrade/audit, integrated with the co
 - docs/engineering/TECH_STACK.md
 
 ## Outputs
-- loops/specs/<feature>/iterations.log
+- structured dependency decision and verification results returned to the invoking workflow/verify
 - memory/knowledge-base.md
 
 ## Iron Rule
@@ -65,7 +65,7 @@ Answer the following questions. If any item is not satisfied → do not introduc
 ### 3. After Upgrade
 - Run the full test suite and compare against the baseline
 - On failure → roll back or fix (go through systematic-debugging)
-- All green → record in iterations.log
+- All green → return the exact commands/results to the invoking workflow or verify
 
 ## Security Audit
 
@@ -118,6 +118,8 @@ For vulnerabilities that cannot be fixed immediately, record them in `memory/kno
 This skill is usually triggered outside LOOP (adding/upgrading/auditing are independent operations):
 - New feature development needs a new dependency → brainstorming triggers this skill → continue LOOP after approval
 - The verify stage checks dependency compliance → as a sub-item of verify
+
+It never increments LOOP state or writes a terminal attempt outcome. When invoked inside a task, the active ACT owner controls iteration and verify records the outcome.
 
 ## Division of Labor with Other Skills
 | Skill | Responsibility |

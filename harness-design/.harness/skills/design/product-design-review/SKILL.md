@@ -16,7 +16,7 @@ description: Performs product-level cross-page consistency review after all page
 - docs/prototype/wireframe-*.md (all wireframes)
 - docs/design-system/DESIGN.md
 - docs/design-system/tokens.json
-- docs/handoff/component-map.json
+- docs/handoff/component-contract.json
 - loops/specs/<task>/evidence.md (per-page review evidence)
 - List of skipped pages (entries with Status = skipped in DESIGN_PLAN.md Section 2)
 
@@ -27,7 +27,7 @@ description: Performs product-level cross-page consistency review after all page
 
 Product-level cross-page consistency review. Single-page design-review checks one page in isolation; product-design-review checks whether all pages work together as a coherent product. Catches: broken user flows, navigation inconsistency, component duplication, token drift, responsive inconsistency, interaction inconsistency.
 
-**Handling of skipped pages**: Pages with Status = skipped in DESIGN_PLAN.md Section 2 do not participate in the consistency checks below (they have no per-page outputs to compare). However, skipping a page may break cross-page user flows or leave shared components under-specified. For each skipped page, the review must record a risk note in the review evidence (e.g., "Flow X cannot be fully traced because P03 was skipped", "Component Button usedBy lists P03 which was skipped — reuse coverage incomplete"). These risk notes do not block the review by themselves, but every skipped page must appear in the evidence with an explicit risk assessment.
+**Handling of skipped pages**: Pages with Status = skipped in DESIGN_PLAN.md Section 2 do not participate in the consistency checks below (they have no per-page outputs to compare). However, skipping a page may break cross-page user flows or leave shared components under-specified. For each skipped page, the review must record a risk note in the review evidence (e.g., "Flow X cannot be fully traced because P03 was skipped", "Component Button used_by lists P03 which was skipped — reuse coverage incomplete"). These risk notes do not block the review by themselves, but every skipped page must appear in the evidence with an explicit risk assessment.
 
 ## Process
 
@@ -71,19 +71,19 @@ Flow 1: Landing → Login → Dashboard
 
 ### 3. Component Reuse Check
 
-Cross-reference DESIGN_PLAN.md Section 3 (Shared Component Inventory) with component-map.json:
-- Each shared component should have `usedBy` listing all expected pages
+Cross-reference DESIGN_PLAN.md Section 3 with component-contract.json:
+- Each shared component should have `used_by` listing all expected pages
 - No page should re-implement a shared component with a different name/props
 
 **Pass criteria**:
-- component-map.json's `usedBy` field matches DESIGN_PLAN.md Section 3
+- component-contract.json's `used_by` field matches DESIGN_PLAN.md Section 3
 - No semantic duplication (e.g., two different "PrimaryButton" entries)
 - Shared components have consistent states across pages
 
 **Fail example**:
 ```
 DESIGN_PLAN says Button is shared by P01/P02/P03
-component-map.json Button.usedBy = ["home", "login"]  ← missing dashboard
+component-contract.json CMP-BUTTON.used_by = ["home", "login"]  ← missing dashboard
 P03 dashboard.md defines its own "ActionButton" with same props as Button  ← duplication
 ```
 
@@ -154,7 +154,7 @@ Write to `loops/specs/<task>/product-review-evidence.md`:
 - ✗ Login → Dashboard loading state missing
 
 ## Component Reuse
-- ✓ Button usedBy matches DESIGN_PLAN
+- ✓ Button used_by matches DESIGN_PLAN
 - ✗ P03 re-implements ActionButton (duplication of Button)
 
 ## Token Consistency
@@ -195,14 +195,14 @@ Write to `loops/specs/<task>/product-review-evidence.md`:
 
 - Skipping flow completeness check (most common product-level failure)
 - Treating component duplication as "intentional variant" without checking design-lint L006-L008
-- Not cross-referencing component-map.json's usedBy field
+- Not cross-referencing component-contract.json's used_by field
 - Approving with open Critical findings
 
 ## Verification
 
 - [ ] Navigation consistency checked across all pages (evidence: report contains per-page comparison)
 - [ ] All flows in DESIGN_PLAN Section 4 traced end-to-end (evidence: report contains flow-by-flow trace)
-- [ ] component-map.json usedBy cross-referenced with DESIGN_PLAN Section 3 (evidence: report contains mismatch list)
+- [ ] component-contract.json used_by cross-referenced with DESIGN_PLAN Section 3 (evidence: report contains mismatch list)
 - [ ] Token consistency checked across all pages (evidence: Grep results in report)
 - [ ] Responsive consistency checked at all 3 breakpoints (evidence: report contains breakpoint matrix)
 - [ ] Interaction consistency checked for shared components (evidence: report contains motion param comparison)

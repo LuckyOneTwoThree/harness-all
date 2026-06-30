@@ -12,6 +12,8 @@ description: Performance Optimization — measure→identify→fix→verify→gu
 
 ## Inputs
 - loops/LOOP.md
+- loops/STATE_PROTOCOL.md
+- loops/state.schema.json
 - rules/security.md
 - constitution.md
 - docs/product/PROJECT.md
@@ -19,8 +21,7 @@ description: Performance Optimization — measure→identify→fix→verify→gu
 
 ## Outputs
 - loops/specs/<feature>/state.yaml
-- loops/specs/<feature>/evidence.md
-- loops/specs/<feature>/iterations.log
+- benchmark data returned to verify for final evidence
 
 ## Iron Rule
 **Measure before optimize.** Optimization without profile data is guessing, and guessing leads to premature optimization — adding complexity without improving the real problem.
@@ -51,7 +52,7 @@ No numbers, no optimization. Measure first, change later.
 - INP: ≤ 200ms
 - CLS: ≤ 0.1
 
-Write the baseline numbers into evidence.md.
+Keep the baseline command, environment, and numbers as structured results for verify; verify writes evidence.md.
 
 ### 2. IDENTIFY — Locate the real bottleneck
 **Only fix bottlenecks confirmed by measurement, not places where "I think it's slow".**
@@ -71,7 +72,7 @@ Common bottleneck quick reference:
 - Changes follow the surgical changes principle — touch only the code that must be touched
 - Do not opportunistically refactor unrelated code (that's refactor's job)
 
-### 4. VERIFY — Measure again and confirm the improvement
+### 4. Return Domain Verification Data
 - Re-measure using the **same** method as in step 1
 - Show before/after comparison numbers:
   ```
@@ -88,7 +89,7 @@ Common bottleneck quick reference:
 - Add regression tests or monitoring to prevent performance regression:
   - Backend: include benchmarks in CI
   - Frontend: bundle size check / Lighthouse CI
-- If the project has no CI infrastructure, record "recommend adding monitoring" in evidence.md
+- If the project has no CI infrastructure, return "recommend adding monitoring" to verify for evidence
 
 ## Anti-Rationalization Table
 
@@ -102,15 +103,12 @@ Common bottleneck quick reference:
 
 ## State Maintenance
 
-Update per the "state.yaml Schema" in LOOP.md:
-- `stage`: `act` (FIX phase) / `verify` (VERIFY phase)
-- `iteration`: +1 (per MEASURE→FIX→VERIFY cycle)
+Follow `.harness/loops/STATE_PROTOCOL.md` and validate with `state.schema.json`:
+- `stage`: `act` while this skill mutates; verify owns the `verify` transition and terminal outcome
+- `iteration`: increment exactly once immediately before each FIX mutation, following STATE_PROTOCOL.md; MEASURE/IDENTIFY and failure handling do not increment
 - `last_error`: on failure, fill in "metric did not improve: <details>"
 
-**Update iterations.log (append only, overwriting is forbidden)**:
-```
-[YYYY-MM-DD HH:MM] iter=<N> stage=verify → P95 850ms→320ms ✓
-```
+Return before/after measurements to verify; verify owns the attempt's terminal log entry.
 
 ## Prohibitions
 - Changing without measuring (guess-based optimization)
@@ -123,8 +121,8 @@ Update per the "state.yaml Schema" in LOOP.md:
 This skill corresponds to the optimize loop of LOOP:
 - MEASURE/IDENTIFY = PLAN (locate the problem)
 - FIX = ACT (change code)
-- VERIFY = VERIFY (compare numbers + no test regression)
-- GUARD = post-DONE protection
+- Re-measurement data is returned to verify (compare numbers + no test regression)
+- GUARD = part of the approved ACT/PLAN before review; it never mutates a task after `done`
 
 ## Division of Labor with Other Skills
 | Skill | Responsibility |

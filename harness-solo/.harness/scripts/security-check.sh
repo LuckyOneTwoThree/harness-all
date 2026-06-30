@@ -30,23 +30,9 @@ else
   exit_code=1
 fi
 
-# 2. Sensitive file check (full project)
-echo "→ guard-sensitive-file.sh (full project scan)"
-# Manual scan, because without arguments it checks staged files
-sensitive_found=0
-while IFS= read -r -d '' f; do
-  if bash "$GUARDS_DIR/guard-sensitive-file.sh" "$f" 2>/dev/null | grep -q "BLOCK"; then
-    echo "  ✗ Sensitive file: $f"
-    sensitive_found=1
-  fi
-done < <(find . -type f -not -path '*/.git/*' -not -path '*/node_modules/*' -print0 2>/dev/null)
-if [ "$sensitive_found" -eq 0 ]; then
-  echo "  ✓ No sensitive files"
-else
-  exit_code=1
-fi
+# guard-secret owns both content patterns and sensitive filenames; do not run a second scanner.
 
-# 3. Check whether .gitignore contains .env
+# 2. Check whether .gitignore contains .env
 echo "→ .gitignore check"
 if [ -f ".gitignore" ]; then
   if grep -qE '^\.env' .gitignore 2>/dev/null; then
@@ -58,7 +44,7 @@ else
   echo "  ⚠ No .gitignore file"
 fi
 
-# 4. Check whether hooks are installed (non-blocking warning)
+# 3. Check whether hooks are installed (non-blocking warning)
 echo "→ Git hooks installation check"
 if [ -d ".git/hooks" ]; then
   if [ -L ".git/hooks/pre-commit" ] || [ -f ".git/hooks/pre-commit" ]; then

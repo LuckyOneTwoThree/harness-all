@@ -135,7 +135,7 @@ Convention:
 ## Naming Conventions
 
 - lowercase-kebab-case: `test-driven-development`, not `TestDrivenDevelopment`
-- Start with a verb or gerund: `writing-plans` / `requesting-code-review` / `verify`
+- Prefer an action-oriented name: `writing-plans` / `code-review` / `verify`
 - Avoid abbreviations: `systematic-debugging`, not `sys-debug`
 - Exactly match the directory name
 

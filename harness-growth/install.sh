@@ -53,10 +53,10 @@ fi
 echo "→ Copying .harness/ framework..."
 cp -r "$TEMPLATE_DIR/.harness" .harness
 
-# Copy AGENTS.md and SOUL.md templates (if they don't exist)
+# Copy the canonical AGENTS.md and user-owned templates (if they don't exist)
 if [ ! -f "AGENTS.md" ]; then
-  cp "$TEMPLATE_DIR/.harness/templates/AGENTS.md.template" AGENTS.md
-  echo "  ✓ Created AGENTS.md (from template)"
+  cp "$TEMPLATE_DIR/AGENTS.md" AGENTS.md
+  echo "  ✓ Created AGENTS.md (from canonical framework rules)"
 fi
 if [ ! -f "SOUL.md" ]; then
   cp "$TEMPLATE_DIR/.harness/templates/SOUL.md.template" SOUL.md
@@ -69,7 +69,7 @@ fi
 
 # Create the docs/ directory structure (only directories required by the growth framework; product/design/engineering belong to other harness family members)
 echo "→ Creating docs/ directory..."
-mkdir -p docs/content docs/seo docs/experiment docs/operations docs/handoff
+mkdir -p docs/content docs/seo docs/experiment docs/operations docs/handoff/archive docs/handoff/receipts docs/handoff/packages
 
 # Initialize GROWTH_STRATEGY.md from template (if it doesn't exist)
 if [ ! -f "docs/operations/GROWTH_STRATEGY.md" ]; then

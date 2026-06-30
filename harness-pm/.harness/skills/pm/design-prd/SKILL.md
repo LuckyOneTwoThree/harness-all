@@ -11,6 +11,7 @@ description: Use when you need to generate a standardized PRD document. PRD auto
 
 ## Outputs
 - docs/product/PRD.md
+- docs/product/prd.json (generated projection; never edited independently)
 - memory/progress.md
 - memory/knowledge-base.md
 
@@ -30,11 +31,13 @@ This Skill is responsible for automatically converting upstream phase outputs (u
 4. [Conditional] Upstream/downstream handoff — Ensure PRD is traceable to upstream requirements, downstream design can directly consume PRD output
 
 **Key Output Requirements**:
-- **entities[].fields must be complete**: Each entity must contain at least an identifier field (id), a name field, a status field, and business core fields. Field granularity should be at the "backend can directly use for ER model design" level; cannot only provide entity names without fields
-- **pages[].data_requirements must be complete**: Each page must explicitly specify what data is needed, data operation types (read/create/update/delete), which entity it relates to, and which fields are needed. This is the direct input for UI page generation and API design
-- **entities[].api_endpoints is advisory**: What PRD defines is business operation requirements (e.g., "users need to view the course list"); specific API paths are designed by api-design-spec
+- **entities describe business semantics**: define identity, lifecycle, business attributes, relationships, retention, volume, and compliance constraints. Harness-solo owns physical schema, indexes, storage types, and migrations.
+- **pages[].data_requirements describe information needs**: state what information and business operations a user needs, not API paths, cache strategy, or database fields.
+- **interfaces describe business capabilities**: PM may specify actors, inputs/outputs, invariants, scale, latency expectations, and failure impact. Harness-solo owns endpoints, protocols, error codes, dependencies, and implementation design; harness-ops owns concrete SLO/DR/alert implementation.
 
 ## 1. PRD Complete 9-Section Structure
+
+The schema is unified; applicability is not. For CLI, static, landing-page, prototype, and similarly narrow products, mark irrelevant domains `not_applicable`. Mark immature but required domains `deferred` with reason, owner, and `required_before`. Never invent pages, entities, flows, APIs, capacity, or DR details merely to make an array non-empty.
 
 All projects use the same unified most-complete 9-section structure. No tiering/simplification — this ensures downstream consumers (design-brief, brainstorming, growth, ops) always receive full contract data.
 
@@ -222,6 +225,8 @@ prd.json contains 7 top-level arrays: features, pages, entities, user_flows, non
 
 ### Relationship between prd.json and prd.md
 
+`PRD.md` is the sole authoring authority. Generate `prd.json` from it after every approved change, validate against `.harness/rules/prd.schema.json`, and record `source_revision` plus the exact PRD.md SHA-256. Direct edits to prd.json are prohibited; a mismatch blocks handoff publication.
+
 | Dimension | prd.md | prd.json |
 |------|--------|----------|
 | Consumer | Humans (PM, designers, developers) | Machines (Backend Skill, UI Skill) |
@@ -237,12 +242,12 @@ prd.json contains 7 top-level arrays: features, pages, entities, user_flows, non
 - [ ] Traceability chain connected: Traceability chain from OKR to acceptance criteria is complete
 - [ ] Gates passed: All 4 quality gates passed
 - [ ] No residual ambiguity: No fuzzy quantifiers and dangling references
-- [ ] prd.json completeness: features/pages/entities/user_flows four arrays are all non-empty
+- [ ] prd.json applicability honesty: relevant arrays are complete; irrelevant/deferred domains have explicit applicability metadata instead of fabricated entries
 - [ ] prd.json entities field completeness: Each entity's fields array is non-empty and contains at least core fields (id/name/status, etc.), relationships array is non-empty; migration field present when entity evolves from existing data
 - [ ] prd.json pages data requirements completeness: Each page's data_requirements array is non-empty, clearly annotates data source (api/local/cache) and required fields
 - [ ] prd.json reference consistency: page_id in feature.related_pages exists in pages[], entity_id in feature.related_entities exists in entities[]
 - [ ] prd.json traceability chain complete: Each feature has a corresponding traceability entry
-- [ ] prd.json and prd.md consistency: Feature point names, priorities, and acceptance criteria in prd.json are consistent with prd.md
+- [ ] prd.json provenance and consistency: schema_version/source_revision/source_sha256 match authoritative PRD.md; generated data and stable IDs are an exact projection
 - [ ] prd.json tracking_plan completeness: tracking_plan.events is non-empty, each event's properties is non-empty; experiment_hypothesis_ref present for growth-bound projects
 - [ ] prd.json NFR completeness: All 4 dimension arrays of non_functional_requirements are non-empty; slo_targets, capacity_forecast, dr_targets present for production-grade projects
 - [ ] prd.json feature driving information completeness: Each P0/P1 feature's driven_by field is non-empty, clearly linked to North Star Metric or OKR

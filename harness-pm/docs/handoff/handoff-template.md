@@ -1,3 +1,16 @@
+---
+schema_version: "1.0"
+handoff_id: "<SOURCE-TARGET-YYYYMMDD-NNN>"
+producer: "<source-framework>"
+consumer: "<target-framework>"
+created_at: "<ISO-8601>"
+source_revision: "<commit-or-artifact-revision>"
+supersedes: null
+status: draft
+ac_ids: []
+artifacts: []
+---
+
 # Handoff: <source framework> → <target framework>
 
 > Generated at: YYYY-MM-DD HH:MM
@@ -30,9 +43,9 @@
 
 Testable conditions that downstream frameworks must satisfy when implementing:
 
-- [ ] AC-001: <testable description>
-- [ ] AC-002: <testable description>
-- [ ] AC-003: <testable description>
+- [ ] AC-F01-001: <stable testable description>
+- [ ] AC-F01-002: <stable testable description>
+- [ ] AC-F02-001: <stable testable description; gaps are valid>
 
 ## Open Items
 

@@ -106,7 +106,7 @@ For each component, produce the following structure:
 Check item by item against `.harness/craft/anti-ai-slop.md`:
 - [ ] No uniform border radius (rounded-2xl everywhere)
 - [ ] No heavy shadows
-- [ ] No Inter/Roboto/Arial as primary font
+- [ ] Typography follows the approved design system; any brand override is documented
 - [ ] No #6366f1 purple
 
 ### 6. Touch Target Check

@@ -10,6 +10,15 @@ default_mode: standard
 > Applicable scenario: Need to acquire users, improve retention, monetize
 > Core mode: Growth diagnosis → LOOP experiment validation → full release
 
+## Ownership Mode Gate
+
+At workflow start, establish the operating mode:
+
+- **Family mode** (user intentionally combines PM + Growth): PM diagnoses the product problem, defines goals/hypotheses/guardrails and approval criteria, then produces `docs/handoff/pm-to-growth.md`. harness-growth owns channel execution, content/SEO/user operations, live experiments, statistical analysis, and returns `growth-to-pm.md`. PM consumes that evidence and decides roadmap impact.
+- **Standalone mode** (PM is the only harness): the local Module 5/6 skills remain available as a fallback. Mark generated growth execution output `mode: standalone-fallback`.
+
+Do not silently execute both paths. The user chooses the mode when it is not already explicit.
+
 ## Process
 
 ```
@@ -90,8 +99,9 @@ default_mode: standard
          ▼
 ┌─────────────────┐
 │ session-end     │  Archive + update FEATURES.md
-│                 │  + Record experiment results to memory/knowledge-base.md
-│                 │  + No handoff document produced; results archived to memory/progress.md
+│                 │  + Standalone: record results in memory/knowledge-base.md
+│                 │  + Family: produce pm-to-growth.md before execution,
+│                 │    then consume growth-to-pm.md for roadmap decisions
 └─────────────────┘
 ```
 
@@ -103,6 +113,7 @@ default_mode: standard
 - [ ] Experiment design sound? (Hypothesis+metrics+guardrails)
 - [ ] Human approved experiment plan?
 - [ ] Experiment results analyzed? (experiment-execution + decision-orchestrator)
+- [ ] Ownership mode recorded? (family handoff or standalone fallback; never both)
 
 ## Failure Handling
 

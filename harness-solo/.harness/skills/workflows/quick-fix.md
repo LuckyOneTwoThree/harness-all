@@ -1,106 +1,39 @@
 ---
 workflow_id: I
 name: quick-fix
-description: "Fast path for small changes: typo fixes, small bug fixes, minor tweaks"
+description: "Fast path for one unambiguous low-risk outcome with scoped evidence and no LOOP state"
 default_mode: skip
 ---
+# Workflow: Quick Fix
 
-# Workflow quick-fix
+Line count and elapsed time are signals, not gates.
 
-> Applicable scenario: Changes under ~10 lines, no new dependencies, no new APIs, no schema changes, no frontend component contracts
-> Core mode: Understand → Fix → Test → Commit → Log
+## Risk Gate (Admission)
 
-## When to use this workflow
+All must be true:
 
-Use quick-fix when **all** of the following are true:
+- one unambiguous outcome and a small reviewable diff;
+- R0/R1 under `.harness/rules/risk-model.md`;
+- no schema/migration, dependency, public API/contract, auth/security boundary, deployment, data-loss, or family frontend component-contract impact;
+- verification command/path is known;
+- no unresolved context or active task conflict.
 
-- Estimated change is under 10 lines of code
-- No new dependencies introduced
-- No new API endpoints or API signature changes
-- No database schema changes or migrations
-- No frontend component contract (`Contract: component-map.json#...`) involved
-- No core file modifications (AGENTS.md / SOUL.md / constitution.md / security.md / prompt-defense.md)
+Otherwise route to bugfix, new-feature, refactor, optimize, or migration.
 
-## When to use a different workflow
+## Route
 
-- Change grows beyond 10 lines or scope expands → upgrade to `new-feature` (standard mode)
-- Fixing a production bug that needs root cause analysis → use `bugfix`
-- Change involves new dependencies or schema → use `new-feature`
-- Implementing multiple features that must work together → use `new-product-engineering`
+1. Read the directly relevant file/context and current diff; full session restoration is optional only when no active-task context is implicated.
+2. Record admission reason and verification plan.
+3. Behavior/bug change: write and run a failing regression test first. Pure text/comment/format change may skip a new test.
+4. Make the smallest edit.
+5. Run the relevant test/check and changed-file security scan; show actual output and hit dispositions.
+6. Review the final diff for scope. Commit only when requested.
+7. Append one progress line with mode, reason, files, and verification result.
 
-## Auto-detection signals
+## Upgrade Triggers
 
-| Signal | Recommended workflow |
-|--------|---------------------|
-| User says "quick fix" / "small tweak" / "typo" | quick-fix |
-| User says "go full flow" / "this is complex" | new-feature (deep mode) |
-| Change is a single-file edit under 10 lines | quick-fix |
-| Change touches multiple files or modules | new-feature (standard mode) |
-| Requirements are ambiguous | new-feature (deep mode) |
+Immediately stop and route to a standard workflow if the diff expands, a test path is unavailable, the reproduction does not fail, risk changes, or implementation requires a second independent outcome.
 
-## Process
+## Exit
 
-```
-┌─────────────────┐
-│ 1. Understand   │  Confirm what needs changing and why
-│                 │  - User describes the issue
-│                 │  - Agent confirms scope in one sentence
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│ 2. Fix          │  Make the change directly
-│                 │  - Use Edit tool to modify code
-│                 │  - No spec.md, no state.yaml needed
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│ 3. Test         │  Run tests and show actual output
-│                 │  - Run project test command from TECH_STACK.md
-│                 │  - Show full output (not "tests passed")
-│                 │  - Quick security scan: Grep changed files
-│                 │    for secrets/passwords patterns
-└────────┬────────┘
-         │ Tests pass + no security hits
-         ▼
-┌─────────────────┐
-│ 4. Commit       │  Git commit the change
-│                 │  - Stage only the changed files
-│                 │  - Commit with descriptive message
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│ 5. Log          │  Append a one-line session record
-│                 │  to memory/progress.md
-└─────────────────┘
-```
-
-## Rules
-
-1. **Evidence required**: Must run tests and show actual output before claiming done (same Iron Rule as full workflow)
-2. **Security scan**: Must Grep changed files for `password|secret|api_key|token` patterns — even quick fixes can leak secrets
-3. **Auto-upgrade trigger**: If during execution the change exceeds 10 lines or requires new dependencies, STOP and tell the user: "This change is larger than expected. Recommend switching to new-feature workflow."
-4. **No skipping tests**: If the project has no test command configured in TECH_STACK.md, warn the user and ask whether to proceed without tests
-5. **Progress logging**: Append a single line to progress.md: `[YYYY-MM-DD HH:MM] quick-fix: <one-sentence description> (<files changed>)`
-
-## What quick-fix skips (and why)
-
-| Skipped step | Why it's safe to skip for small fixes |
-|-------------|--------------------------------------|
-| session-start full flow | No context restoration needed for a 5-minute fix |
-| Engineering Foundation Gate | TECH_STACK.md only needed for test command; if missing, step 3 handles it |
-| brainstorming hard gate | Scope is trivially clear (typo/one-line fix) |
-| writing-plans / spec.md | No multi-task breakdown needed for a single edit |
-| executing-plans / state.yaml | No iteration tracking needed |
-| tdd Red-Green-Refactor | Small fixes can write test directly if needed; not mandatory for typo-level changes |
-| verify 9-step full | Replaced by step 3 (test + security scan) |
-| code-review | Trivial changes don't need design review; security scan in step 3 covers safety |
-| session-end full flow | One-line progress log is sufficient |
-
-## Failure Handling
-
-| Failure Point | Handling |
-|---------------|---------|
-| Tests fail after fix | Re-examine the change; if can't fix quickly, upgrade to `bugfix` workflow |
-| Security scan finds a hit | Resolve or document disposition before committing |
-| Change exceeds 10 lines | Stop and recommend upgrading to `new-feature` |
-| No test command configured | Warn user; ask whether to proceed without tests or configure TECH_STACK.md first |
+No state/spec/review artifact is required, but actual verification and a scoped progress record are mandatory.

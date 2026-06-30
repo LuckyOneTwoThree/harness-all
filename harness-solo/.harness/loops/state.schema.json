@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/LuckyOneTwoThree/harness-all/state.schema.json",
+  "title": "Harness LOOP state",
+  "type": "object",
+  "required": ["current_task", "iteration", "stage", "status", "started_at"],
+  "properties": {
+    "current_task": { "type": "string", "pattern": "^[0-9]{3}-[a-z0-9][a-z0-9-]*$" },
+    "iteration": { "type": "integer", "minimum": 0, "maximum": 10 },
+    "stage": { "type": "string", "minLength": 1 },
+    "status": {
+      "type": "string",
+      "enum": ["running", "retrying", "done", "failed", "needs-human", "blocked"]
+    },
+    "started_at": { "type": "string", "format": "date-time" },
+    "last_error": { "type": "string" },
+    "last_error_at": { "type": "string", "format": "date-time" },
+    "substage": { "type": "string" },
+    "exploration_mode": { "type": "string", "enum": ["deep", "standard", "skip"] },
+    "hard_limit_reached": { "type": "boolean" },
+    "current_nested_task": { "type": "string" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "hard_limit_reached": { "const": true } },
+        "required": ["hard_limit_reached"]
+      },
+      "then": {
+        "properties": { "status": { "const": "failed" }, "iteration": { "minimum": 10 } },
+        "required": ["last_error"]
+      }
+    }
+  ],
+  "additionalProperties": false
+}

@@ -33,6 +33,7 @@ AI design Linter; mechanically verifiable rule checks with zero subjective judgm
 - `docs/design-system/DESIGN.md`: Design system
 - `docs/design-system/tokens.json`: Token definitions
 - Design mockups to be checked (`docs/visual/<page>.md`)
+- Approved brand overrides from `constitution.md` or DESIGN.md. Each override must name the rule ID, rationale, approver/source, scope, and review point. Accessibility and token-consistency rules are never waived by a style override.
 
 ### 2. Write Lint Script
 
@@ -44,6 +45,8 @@ import { readFileSync, writeFileSync } from 'fs';
 
 const design = readFileSync('docs/visual/<page>.md', 'utf8');
 const tokens = JSON.parse(readFileSync('docs/design-system/tokens.json', 'utf8'));
+// Populate only from explicit, scoped rule IDs recorded in constitution.md or DESIGN.md.
+const approvedOverrides = new Set([]);
 
 const errors = [];
 
@@ -63,11 +66,11 @@ for (const match of hexMatches) {
   }
 }
 
-// L011: Forbid Inter/Roboto/Arial as primary font
+// L011: Flag generic default fonts unless an approved project brand override names L011
 if (/font-family.*?(Inter|Roboto|Arial)/i.test(design)) {
   errors.push({
     rule: 'L011',
-    severity: 'error',
+    severity: approvedOverrides.has('L011') ? 'info' : 'error',
     value: 'Inter/Roboto/Arial',
     expected: 'project design system font',
     fix: 'use font from DESIGN.md'
@@ -94,6 +97,24 @@ if (/(indigo|violet|purple).*?(purple|violet|indigo)/i.test(design)) {
     expected: 'flat color or subtle gradient',
     fix: 'remove gradient'
   });
+}
+
+// L014: Forbid uniform border-radius (rounded-2xl/3xl/full everywhere)
+const radiusMatches = design.matchAll(/rounded-(2xl|3xl|full)/g);
+const radiusCounts = {};
+for (const match of radiusMatches) {
+  radiusCounts[match[1]] = (radiusCounts[match[1]] || 0) + 1;
+}
+for (const [radius, count] of Object.entries(radiusCounts)) {
+  if (count > 2) {
+    errors.push({
+      rule: 'L014',
+      severity: 'error',
+      value: `rounded-${radius} used ${count} times`,
+      expected: 'varied radii; no more than 2 elements share the same border-radius unless same component family',
+      fix: 'use radius scale tokens; vary radii by component family'
+    });
+  }
 }
 
 // L015: Forbid Lorem ipsum
@@ -168,12 +189,13 @@ The script outputs `loops/specs/<task>/lint-report.md`, formatted as:
 - L009: Consistent alignment baseline
 - L010: Consistent grid column count (12-column grid)
 
-### Anti AI-slop
-- L011: Forbid Inter/Roboto/Arial as primary font
+### Anti AI-slop Defaults
+- L011: Forbid generic default fonts (Inter/Roboto/Arial) unless an approved brand override names L011
 - L012: Forbid #6366f1 purple
 - L013: Forbid purple-blue gradient
-- L014: Forbid uniform border radius (rounded-2xl everywhere)
-- L015: Forbid Lorem ipsum placeholder text
+- L014: Forbid uniform border-radius — no more than 2 elements share the same `rounded-2xl`/`rounded-3xl`/`rounded-full` value unless they belong to the same component family
+- L015: Forbid Lorem ipsum placeholder copy (error unless the artifact is explicitly a content-wireframe fixture)
+- A constitution/brand-system override may downgrade a named rule (L011-L015) when rationale, source, scope, and review point are recorded. Overrides never bypass WCAG, token consistency, interaction-state, or evidence gates.
 
 ## Common Rationalizations
 

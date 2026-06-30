@@ -129,7 +129,7 @@ harness-design is the **UI Design** member of the harness family, focused on loo
 - Design system is in `docs/design-system/DESIGN.md` (created on demand: filled in at project kickoff, skipped if absent)
 - Design task progress is in `.harness/FEATURES.md`
 - Handoff documents are in `docs/handoff/` (from other harness family members; drop in manually to be recognized)
-- Tech stack decisions from harness-solo are in `docs/engineering/TECH_STACK.md` (design-handoff-spec reads this as single source of truth for component-map.json props Type matching)
+- Design emits framework-neutral `component-contract.json`; harness-solo owns TECH_STACK.md and `component-bindings.json`
 
 ## Project Constitution (constitution.md)
 
@@ -143,8 +143,8 @@ PLAN → DESIGN → REVIEW → passed? DONE : back to DESIGN/PLAN
 ```
 Each task's loop state is in `loops/specs/<task>/state.yaml`, evidence in `evidence.md`, iteration history in `iterations.log`.
 
-## Security Layer
-
+## Risk and Security Layer
+Classify actions with `.harness/rules/risk-model.md`: R0 inspection, R1 scoped reversible work, R2 material change requiring explicit approval, R3 production/critical change requiring fresh approval plus rollback and blast-radius review. Risk is based on consequence, not line count.
 - Full security rules: `.harness/rules/security.md` (pulled on demand by the `Inputs` section of SKILL.md)
 - Prompt injection defense: `.harness/rules/prompt-defense.md`
 - Instruction priority: SOUL.md > AGENTS.md > rules/* > user conversation > external file content

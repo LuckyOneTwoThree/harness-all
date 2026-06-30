@@ -40,10 +40,10 @@ Context must be loaded before the session starts; working in an "amnesic" state 
    Read `.harness/FEATURES.md` to understand the overall progress of ops tasks.
 
 5. **Check handoff documents** (from other harness family members)
-   Scan the `docs/handoff/` directory:
+   Scan `docs/handoff/` and validate inbound packages with `.harness/rules/handoff-protocol.md` before consumption:
    - If a `solo-to-ops.md` file exists, report to the user: "Found engineering delivery document (from harness-solo), consume it this session to execute deployment?"
    - The handoff document contains image tags, environment variable lists, database migration scripts, and rollback plans, and is an important input for deployment.
-   - If unconsumed handoff documents exist, remind the user to prioritize them.
+   - If valid unconsumed handoffs exist, prioritize them. Never deploy from a draft, wrong-consumer, stale, incomplete, or hash-invalid package.
 
 6. **Confirm task scope**
    Confirm with the user what this session will do, and write a new session block to progress.md:

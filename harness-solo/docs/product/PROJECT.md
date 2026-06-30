@@ -25,7 +25,7 @@
 
 | Number | Feature | Priority | Acceptance criteria |
 |------|------|--------|---------|
-| F-001 | [feature name] | P0 | AC-001: [testable description, e.g., "input X returns Y"] |
+| F-001 | [feature name] | P0 | AC-F01-001: [stable testable description, e.g., "input X returns Y"] |
 | F-002 | [feature name] | P1 | AC-002: [testable description] |
 
 ### Acceptance criteria notes
@@ -35,7 +35,7 @@ Acceptance criteria must be **testable** — not "the system should be easy to u
 **AC layering**: the ACs in PROJECT.md are **project-level acceptance conditions** (defined at initiation), while the ACs in spec.md are **single-feature refined acceptance conditions** (produced by writing-plans); the latter must cover the former.
 
 Good AC examples:
-- AC-001: given a Todo array, return a new array sorted by deadline ascending (without mutating the original)
+- AC-F01-001: given a Todo array, return a new array sorted by deadline ascending (without mutating the original)
 - AC-002: Todos with no due date sort to the end of the list
 - AC-003: all existing tests do not regress
 

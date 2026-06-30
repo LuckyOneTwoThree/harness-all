@@ -1,3 +1,16 @@
+---
+schema_version: "1.0"
+handoff_id: "<PM-GROWTH-YYYYMMDD-NNN>"
+producer: "harness-pm"
+consumer: "harness-growth"
+created_at: "<ISO-8601>"
+source_revision: "<commit-or-artifact-revision>"
+supersedes: null
+status: draft
+ac_ids: []
+artifacts: []
+---
+
 # Handoff: harness-pm → harness-growth
 
 > Generated at: YYYY-MM-DD HH:MM
@@ -43,8 +56,8 @@
 
 | Persona | Path | Growth traits |
 |---------|------|---------|
-| Primary user | docs/discovery/user-research.md ("User Personas" section) | <acquisition channel preference / willingness to pay> |
-| Secondary user | docs/discovery/user-research.md ("User Personas" section) | <acquisition channel preference / willingness to pay> |
+| Primary user | artifacts/research/user-research.md ("User Personas" section) | <acquisition channel preference / willingness to pay> |
+| Secondary user | artifacts/research/user-research.md ("User Personas" section) | <acquisition channel preference / willingness to pay> |
 
 > Persona data is stored in the "User Personas" section of user-research.md.
 
@@ -52,10 +65,10 @@
 
 | Asset | Path | Notes |
 |------|------|------|
-| Metric definitions | docs/metrics/ | <if any> |
-| Tracking plan | docs/metrics/tracking-plan.md | <if any> |
-| Historical experiments | docs/metrics/experiments/ | <if any> |
-| Decision records | docs/metrics/decision-report.md | <if any> |
+| Metric definitions | artifacts/metrics/definitions.md | <if any> |
+| Tracking plan | artifacts/metrics/tracking-plan.md | <if any> |
+| Historical experiments | artifacts/metrics/experiments/ | <if any> |
+| Decision records | artifacts/metrics/decision-report.md | <if any> |
 
 > For a brand-new project, fill in "None".
 

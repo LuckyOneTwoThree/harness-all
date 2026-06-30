@@ -27,10 +27,6 @@ exit_code=0
 echo "→ guard-secret.sh"
 bash "$GUARDS_DIR/guard-secret.sh" || exit_code=1
 
-# 2. Sensitive file blocking
-echo "→ guard-sensitive-file.sh"
-bash "$GUARDS_DIR/guard-sensitive-file.sh" || exit_code=1
-
 # commit-msg is handled separately by the commit-msg hook; not duplicated here
 
 if [ $exit_code -ne 0 ]; then

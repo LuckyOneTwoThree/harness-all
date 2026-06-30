@@ -2,7 +2,7 @@
 
 > Dynamic status tracking (updated during development).
 > Division of labor with PROJECT.md: PROJECT.md is a static definition (written at project initiation), while this file is dynamic status (updated during development).
-> Update trigger: after the verify skill passes, change the corresponding feature status to done.
+> Update trigger: session-end syncs from task state; only code-review may set a task to done.
 
 ## Feature status
 

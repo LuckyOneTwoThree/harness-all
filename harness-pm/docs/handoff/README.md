@@ -1,5 +1,7 @@
 # Handoff Document Directory
 
+Transfer complete `packages/<handoff_id>/` directories, not standalone Markdown files. Consumers validate the manifest, hashes, target, status, freshness, and stable-ID parity before use, then write a receipt.
+
 This directory stores handoff documents between harness family frameworks.
 
 ## Handoff Protocol
@@ -21,9 +23,9 @@ For example:
 
 ## Usage
 
-1. After completing its phase, the upstream framework generates a handoff document from the template and places it in this directory
-2. The downstream framework's session-start skill will auto-detect and read the corresponding handoff document
-3. You can also place files manually (e.g., copy a PRD from another project)
+1. Producer generates a current pointer and self-contained package from the template.
+2. Transfer the complete package directory to the consumer's `docs/handoff/packages/`.
+3. Consumer validates and receipts the package before using its content.
 
 ## Templates
 
@@ -46,6 +48,13 @@ Copy and fill in based on actual conditions.
 - `growth-to-pm.md` — Growth data feedback (experiment results / user feedback)
 - `ops-to-pm.md` — Ops feedback (SLA summary / incident notices / ops recommendations)
 - `design-to-pm.md` — Design feedback (on demand)
+
+## Versioning
+
+- The fixed `<source>-to-<target>.md` file is the current pointer and contains one latest contract.
+- Before replacement, archive the previous contract as `archive/<handoff_id>.md`.
+- Every contract uses the template frontmatter envelope and records `supersedes`.
+- Optional consumer acknowledgements belong in `receipts/`; consumers never edit producer contracts.
 
 ## Write Access
 

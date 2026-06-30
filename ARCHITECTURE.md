@@ -1,7 +1,8 @@
 # harness-all Multi-Agent Framework Family · Architecture Design
 
-> Version: v2.1 · 2026-06-22
+> Version: v2.2 · 2026-06-29
 > Positioning: A "Personal AI Studio" framework family for AI Agents; each framework works independently and collaborates via contract documents
+> Normative domain routing: see `DOMAIN_BOUNDARIES.md`
 
 ---
 
@@ -67,7 +68,7 @@
 |------|------|------|------|---------|
 | Core | **harness-pm** | Strategy · Market · Product · PRD · Metrics · Growth Monitoring | ✅ Built | 86 skills (82 domain + 4 meta) + 10 workflows |
 | Core | **harness-design** | UI · Visual · Interaction · Prototype · Design System | ✅ Built | 19 skills (15 domain + 4 meta) + 7 workflows |
-| Core | **harness-solo** | Engineering · TDD · Debugging · Refactoring · Verification | ✅ Built | 21 skills (17 domain + 4 meta) + 8 workflows |
+| Core | **harness-solo** | Engineering · TDD · Debugging · Refactoring · Verification | ✅ Built | 19 skills (15 domain + 4 meta) + 9 workflows |
 | Core | **harness-growth** | Operations · Content · SEO · Growth Experiments | ✅ Built | 40 skills (36 domain + 4 meta) + 7 workflows |
 | Extension | **harness-ops** | Ops · Deployment · Monitoring · Disaster Recovery | ✅ Built | 32 skills (28 domain + 4 meta) + 8 workflows |
 | Extension | harness-data | Data Pipeline · ETL · Metric Production | 📋 P1 To Build | - |
@@ -79,7 +80,7 @@
 ```
 ┌─────────────┐  PRD + Persona + AC   ┌─────────────┐  design-to-solo.md   ┌─────────────┐
 │ harness-pm  │ ────────────────────> │harness-design│ ───────────────────> │ harness-solo│
-│ "Do the     │                        │ "Make it     │ + component-map     │ "Write good │
+│ "Do the     │                        │ "Make it     │ + component-contract│ "Write good │
 │  right      │                        │  look good   │ + tokens.json       │  code"      │
 │  thing"     │  PRD + AC + Tracking   │  and usable" │                     │             │
 │             │ ───────────────────────────────────────────────────────> │             │
@@ -100,14 +101,14 @@
    - Consumer: harness-design's design-brief skill
    - Scenario: When UI/visual/interaction design is needed
 
-2. **pm → solo** (`pm-to-solo.md`): PRD + AC-xxx + **Business Context Digest** + Tracking Plan + Key Decisions
+2. **pm → solo** (`pm-to-solo.md`): PRD + stable AC IDs + **Business Context Summary** + Tracking Plan + Key Decisions
    - Consumer: harness-solo's brainstorming skill
    - Scenario: Pure engineering projects (CLI/backend/API), or when engineering requirements start in parallel with design
-   - **Business Context Digest**: PM extracts engineering-relevant constraints (e.g., data scale, concurrency, performance requirements) from user-research.md / market-analysis.md to prevent Solo from making architecture decisions detached from business context
+   - **Business Context Summary**: PM extracts engineering-relevant constraints (e.g., data scale, concurrency, performance requirements) from user research and market analysis
 
-3. **design → solo** (`design-to-solo.md` + `component-map.json` + `tokens.json` + `DESIGN.md`): Design asset paths + AC-xxx (design perspective) + Component Mapping + Design Tokens + Design System
+3. **design → solo** (portable package with `design-to-solo.md` + `component-contract.json` + tokens + `DESIGN.md`): design assets + stable AC/DAC IDs + semantic component contract
    - Consumer: harness-solo's frontend-implementation / brainstorming / writing-plans / verify skill
-   - Scenario: **Frontend engineering implementation strongly depends on this contract** — component-map.json is the single source of truth for component implementation, tokens.json is the source of styling tokens, AC-xxx (design perspective) are verifiable design constraints that become DAC-xxx once entering engineering
+   - Scenario: family-mode frontend engineering hard-depends on a ready design package. Design owns framework-neutral semantics and tokens; Solo owns `TECH_STACK.md` and `component-bindings.json`.
 
 **Serial execution not enforced**: pm → design → solo is not the only path. Pure engineering projects can skip design and go directly pm → solo; for frontend projects, design → solo is a hard dependency (no frontend implementation without design assets).
 
@@ -227,10 +228,10 @@ docs/handoff/
 ├── solo-to-ops.md               # Contract: Solo → Ops (Deployment contract, env vars and DB migration)
 ├── ops-to-pm.md                 # Contract: Ops → PM (SLA report, incident post-mortem)
 ├── growth-to-pm.md              # Contract: Growth → PM (Experiment results + Data feedback)
-└── component-map.json           # Contract: Design → Solo (Explicit mapping layer, machine-readable)
+└── component-contract.json      # Contract: Design → Solo semantic component layer
 ```
 
-**Note**: Template files (`*-template.md`) are scaffolds for producing contract documents and do not themselves participate in cross-framework flow; contract documents (`*-to-*.md` / `component-map.json`) are the actual collaboration media that get passed.
+**Note**: templates are scaffolds only. The transferable unit is a self-contained `packages/<handoff_id>/` directory with contract, manifest, hashes, and artifacts.
 
 ### 4.2 Contract Document Flow Diagram
 
@@ -242,7 +243,7 @@ docs/handoff/
 │             │                     └─────────────┘
 │             │                           │
 │             │                     design-to-solo.md
-│             │ pm-to-solo.md       + component-map.json
+│             │ pm-to-solo package  + component-contract.json
 │             │                           ▼
 │             │ ──────────────────> ┌─────────────┐
 │             │                     │ harness-solo│
@@ -277,33 +278,35 @@ docs/handoff/
 | solo-to-ops.md | harness-solo | harness-ops | Image Tag + Environment Variable List + Database Migration Scripts |
 | ops-to-pm.md | harness-ops | harness-pm | SLA report + Incident Post-mortem |
 | growth-to-pm.md | harness-growth | harness-pm | Experiment results + Data feedback |
-| component-map.json | harness-design | harness-solo | Explicit mapping layer (machine-readable) |
+| component-contract.json | harness-design | harness-solo | Framework-neutral component semantics |
+| component-bindings.json | harness-solo | harness-solo | Tech-stack-specific code binding |
 
 ### 4.3 Contract Document Specification
 
 #### 4.3.1 General Specification
 
-- **File name**: `<source-framework>-to-<target-framework>.md` (fixed, not split by date)
-- **Append mode**: If exists, append this delivery's content; do not overwrite history
-- **Single latest**: Downstream only reads the latest state, does not trace historical versions
+- **Current pointer**: `<source-framework>-to-<target-framework>.md` contains exactly one latest contract
+- **Version archive**: Before replacement, archive the previous contract as `archive/<handoff_id>.md`
+- **Machine-readable envelope**: Each contract carries schema version, immutable handoff ID, producer/consumer, source revision, supersedes, AC IDs, and artifacts
+- **Single latest consumption**: Downstream reads the current pointer by default; history is available for audit without polluting normal context
 - **Machine-readable fields**: Key fields use structured formats (tables/JSON) for Agent parsing
 
 #### 4.3.2 AC Numbering System (Cross-framework Alignment)
 
 | AC Type | Prefix | Source | Consumer | Example |
 |---------|------|------|--------|------|
-| Engineering AC | `AC-xxx` | harness-pm's PRD | harness-solo's spec.md | `AC-001: User can log in` |
-| Design AC (within design) | `AC-xxx` (reuses PRD numbering) | harness-design's DESIGN_BRIEF.md | harness-design's LOOP | `AC-001: Contrast ratio ≥4.5:1` (corresponds to PRD's AC-001) |
-| Design AC (flowing into engineering) | `DAC-xxx` | harness-design's design-to-solo.md | harness-solo's spec.md | `DAC-001: 375px no overflow` |
+| Product AC | `AC-<feature>-<sequence>` | harness-pm PRD | design/solo | `AC-F01-001: User can log in` |
+| Page design AC | `DAC-<page>-<sequence>` | harness-design | design/solo | `DAC-P01-001: 375px no overflow` |
+| Global design AC | `DAC-GLOBAL-<sequence>` | harness-design | design/solo | `DAC-GLOBAL-001: contrast ≥4.5:1` |
 
 **AC flow and anti-corruption rules**:
 - harness-pm's PRD produces `AC-xxx` (with `ac_id` field), the sole source of ACs. At production time it is intercepted by the **UI Directive Overreach Gate**, strictly forbidding PM from describing specific UI layouts here.
-- harness-design's design-brief reuses PRD's `AC-xxx` numbering. At this stage the **Review and Stripping Mechanism (Push-back)** is executed: if upstream ACs are found to violate rules by including specific UI, the design Agent exercises its right to refuse, strips them, and rewrites them as pure business/UX intent, records them in `[AC Cleanup Record]`, and supplements visual acceptance criteria within the design domain.
-- harness-design's design-to-solo.md carries both `AC-xxx` (reused from PRD) and `DAC-xxx` (design-added).
+- harness-design preserves PM AC IDs and meaning byte-for-byte. Overreach is rejected and returned through design-to-pm; Design additions receive independent scoped DAC IDs.
+- IDs are immutable, gaps are valid, and retired IDs are never reused or renumbered.
 - harness-solo's writing-plans consumes both as-is, no conversion.
 - harness-solo's verify checks both `AC-xxx` (pure engineering) and `DAC-xxx` (design mapping) to ensure design constraints are not lost at the engineering layer.
 
-**Why DAC-xxx is needed**: The same spec.md may contain both `AC-001` (engineering requirement from PRD) and `DAC-001` (design constraint from design-to-solo.md). The D prefix avoids numbering collisions while making source traceable.
+Scoped stable IDs prevent collisions across features/pages and keep source/revision traceable without relying on list position.
 
 #### 4.3.3 Dedicated Templates and Data Files
 
@@ -313,9 +316,9 @@ docs/handoff/
 |------|------|---------|
 | `handoff-template.md` | Generic handoff | Phase summary / Deliverables list / AC / Open items |
 | `pm-to-design-template.md` | PM → Design | Product type / Target audience / Tech stack / Persona / PRD path / AC-xxx / Style keywords / Out-of-scope list |
-| `pm-to-solo-template.md` | PM → Solo | Product type / Tech stack / PRD path / AC-xxx / Feature priority / Tracking plan / Business Context Digest |
+| `pm-to-solo-template.md` | PM → Solo | Product context / PRD / stable AC IDs / routing gate / tracking / Business Context Summary |
 | `pm-to-growth-template.md` | PM → Growth | Product type / Target audience / North Star Metric / OKR / Persona / Growth hypothesis |
-| `design-to-solo-template.md` | Design → Solo | Design system assets / Page list / Component list / AC-xxx+DAC-xxx / component-map.json |
+| `design-to-solo-template.md` | Design → Solo | Design assets / pages / stable AC+DAC IDs / component-contract.json |
 | `solo-to-pm-template.md` | Solo → PM | Engineering feedback / implementation status / blocker list (on demand) |
 | `solo-to-growth-template.md` | Solo → Growth | Implemented feature list / AC-xxx / Tech stack / Performance metrics / Tracking event list |
 | `solo-to-ops-template.md` | Solo → Ops | Deliverable version / Environment variable list / Database scripts / Smoke test / Rollback plan |
@@ -326,7 +329,8 @@ docs/handoff/
 
 | Data File | Purpose | Structure |
 |---------|------|------|
-| `component-map.json` | Design → Solo explicit mapping layer | `{ "<DesignComponentName>": { designToken, engineeringComponent, props, states, usedBy?, notes } }` |
+| `component-contract.json` | Design → Solo semantic layer | Stable component IDs, neutral properties/states, token provenance, accessibility, used_by |
+| `component-bindings.json` | Solo implementation layer | Stable component ID → module/name/framework property types |
 
 ### Contract Document Write Access Rules
 
@@ -339,7 +343,8 @@ Handoff documents enforce **Write Access Unidirectional Isolation**:
 | pm-to-growth.md | harness-pm | harness-growth |
 | design-to-solo.md | harness-design | harness-solo |
 | design-to-pm.md | harness-design | harness-pm |
-| component-map.json | harness-design | harness-solo |
+| component-contract.json | harness-design | harness-solo |
+| component-bindings.json | harness-solo | harness-solo |
 | solo-to-growth.md | harness-solo | harness-growth |
 | solo-to-ops.md | harness-solo | harness-ops |
 | solo-to-pm.md | harness-solo | harness-pm |
@@ -362,7 +367,7 @@ Scenario: Alice owns PM, Bob owns Design, Carol owns Solo
 1. Alice's Agent produces pm-to-design.md, uploads to shared storage
 2. Bob manually downloads pm-to-design.md, places it in his docs/handoff/
 3. Bob's Agent reads it, produces design assets + design-to-solo.md
-4. Carol manually downloads design-to-solo.md + component-map.json
+4. Carol transfers the complete validated design handoff package
 5. Carol's Agent reads them, implements code
 ```
 
@@ -448,14 +453,14 @@ PLAN (inline) → LOOP(DESIGN → VERIFY → LINT) → LOOP outer gate(DESIGN-RE
 - `docs/design-system/DESIGN.md` — Design system (10-section standard format)
 - `docs/design-system/tokens.json` / `tokens.css` — Design tokens (W3C format)
 - `docs/handoff/design-to-solo.md` — Handoff to Engineering
-- `docs/handoff/component-map.json` — Explicit mapping layer (Stitch core innovation)
+- `docs/handoff/component-contract.json` — Framework-neutral semantic component contract
 
 **Signature Mechanisms**:
 - **Push-back Mechanism**: The first stop when the design Agent receives requirements is to forcibly review upstream ACs. If PM is found to have violated rules by hardcoding UI layout directives, the Agent has the right to refuse and Reframe them as UX goals, while publicly displaying the cleanup record to defend professional independence.
 - **Data-Driven Design Recommendations**: 8 CSV files (reasoning/products/styles/colors/typography/landing/ux-guidelines/vibes)
 - **Anti AI-Slop**: Disable Inter/purple gradients/uniform border radius/Lorem ipsum, mechanically checked by design-lint using Node.js
 - **Doubt-Driven Adversarial Review**: design-review uses a fresh-context sub-agent for adversarial review
-- **Framework-Agnostic Constraint**: component-map.json's props Type matches TECH_STACK (React→ReactNode / Vue→VNode / Svelte→Snippet / Native→HTMLElement)
+- **Two-layer Contract**: Design emits neutral semantics; Solo binds them to TECH_STACK and source modules
 
 ### 5.3 harness-solo (Engineering Framework)
 
@@ -472,12 +477,12 @@ PLAN (inline) → LOOP(DESIGN → VERIFY → LINT) → LOOP outer gate(DESIGN-RE
 PLAN → ACT → VERIFY → Pass? DONE : Back to PLAN/ACT
 ```
 
-**Skill System** (21 skills = 17 engineering + 4 meta):
-- Requirements & Planning: brainstorming / writing-plans / executing-plans
+**Skill System** (19 skills = 15 engineering + 4 meta):
+- Requirements & Planning: brainstorming / writing-plans; execution routing is integrated into test-driven-development
 - Testing & Debugging: test-driven-development / test-coverage / systematic-debugging
 - Frontend & Performance: frontend-implementation / webapp-testing / performance-optimization
 - Migration & Dependencies: migration / dependency-management
-- Verification & Review: verify / product-engineering-review / requesting-code-review / receiving-code-review
+- Verification & Review: verify / code-review / product-engineering-review
 - Documentation & Skills: writing-documentation / writing-skills
 
 **Loop Types** (4 types):
@@ -495,7 +500,7 @@ PLAN → ACT → VERIFY → Pass? DONE : Back to PLAN/ACT
 
 **Signature Mechanisms**:
 - **Dual-source AC Verification**: verify checks both engineering ACs (AC-xxx) and design ACs (DAC-xxx)
-- **Design Asset Consumption Contract**: frontend-implementation reads component-map.json as the single source of truth for component implementation
+- **Design Asset Consumption Contract**: frontend-implementation joins component-contract.json with Solo-owned component-bindings.json by stable component ID
 - **Product-Level Engineering Orchestration**: new-product-engineering workflow plans all features + shared infrastructure + dependency order before per-feature LOOPs; product-engineering-review checks cross-feature consistency (API contract / dependency / data model / config / shared module reuse / integration runnability)
 - **Entropy Check**: verify checks file growth rate / LOC growth rate / dependency bloat / TODO backlog
 - **git hooks**: pre-commit (secret/sensitive file/commit-msg check) + pre-push
@@ -717,7 +722,7 @@ All frameworks must follow:
 | Product Name | ✅ | |
 | Product Type | ✅ | web app / mobile / desktop / landing page |
 | Target Audience | ✅ | Affects style positioning |
-| Tech Stack | ✅ | Determines component-map.json's props Type system |
+| Platform Constraints | ○ | Device/browser/platform context; Solo owns tech stack |
 | Positioning Statement | ✅ | From positioning skill |
 | Persona Path | ✅ | docs/research/persona-*.md |
 | PRD Path | ✅ | docs/product/PRD.md |
@@ -739,7 +744,7 @@ All frameworks must follow:
 | Phase Summary | ✅ | What this delivery contains |
 | Deliverables List | ✅ | PRD path, design spec path, tracking plan path |
 | AC-xxx List | ✅ | Engineering ACs, for spec.md to reuse |
-| Business Context Digest | ✅ | Engineering-relevant constraints extracted by PM from user-research.md / market-analysis.md (data scale / concurrency / performance requirements, etc.), to prevent Solo from making architecture decisions detached from business |
+| Business Context Summary | ✅ | Engineering-relevant business constraints, scale, concurrency, and performance expectations |
 | Key Decisions | ✅ | Decision + rationale + impact scope |
 | Open Items | ✅ | Questions for engineering to confirm |
 | Suggested Next Step | ✅ | What engineering can do |
@@ -772,7 +777,7 @@ All frameworks must follow:
 
 ### 7.4 Design → Solo Contract
 
-**File**: `docs/handoff/design-to-solo.md` + `docs/handoff/component-map.json`
+**File**: portable package containing `design-to-solo.md` + `component-contract.json`
 
 **design-to-solo.md Key Fields**:
 
@@ -780,33 +785,32 @@ All frameworks must follow:
 |------|:---:|------|
 | Design Asset Path | ✅ | docs/visual/<page>.md / docs/interaction/<page>.md |
 | Design AC List | ✅ | AC-xxx (design perspective, e.g., "Contrast ratio ≥4.5:1") |
-| Component Mapping Path | ✅ | docs/handoff/component-map.json |
+| Semantic Component Contract | ✅ | package-relative component-contract.json |
 | Design System Path | ✅ | docs/design-system/DESIGN.md + tokens.json |
 | Open Items | ✅ | Questions to confirm with engineering |
 
-**component-map.json Structure**:
+**component-contract.json + component-bindings.json Structure**:
 
 ```json
 {
-  "<DesignComponentName>": {
-    "designToken": "<token-name>",
-    "engineeringComponent": "<EngineeringComponentName>",
-    "props": { "<key>": "<Type>" },
-    "states": ["default", "hover", "..."],
-    "usedBy": ["<PageID>", "..."],
-    "notes": "<description>"
+  "component-contract.json": {
+    "component_id": "CMP-BUTTON-PRIMARY",
+    "properties": { "content": { "type": "slot", "required": true } },
+    "states": ["default", "hover", "disabled"],
+    "token_refs": ["button.primary"],
+    "used_by": ["P01", "P03"]
+  },
+  "component-bindings.json": {
+    "component_id": "CMP-BUTTON-PRIMARY",
+    "engineering_component": "Button",
+    "module": "src/components/Button.tsx",
+    "property_bindings": { "content": "ButtonProps.children: ReactNode" }
   }
 }
 ```
 
-- `usedBy` (optional, array of page IDs): pages that use this component; single-page mode may leave empty or list the current page ID.
-
-**Framework-Agnostic Constraint**: props Type must match the framework in `docs/engineering/TECH_STACK.md`:
-- React → `ReactNode` / `JSX.Element`
-- Vue → `VNode` / `Slot`
-- Svelte → `Snippet` / `Component`
-- Native / Web Components → `HTMLElement` / `Slot`
-- Unspecified tech stack → use neutral `Slot` / `Component`, mark "pending engineering confirmation" in notes
+- Design's contract is framework-neutral and tied to token/design revisions by hash.
+- Solo's binding owns framework types, code names, modules, and the hash of the exact design contract it binds.
 
 **Consumer**: harness-solo's brainstorming / frontend-implementation / writing-plans / verify skill
 
@@ -887,11 +891,11 @@ Phase 2: Design (harness-design)
 ├── new-design workflow
 ├── Consumes: pm-to-design.md
 ├── Output: DESIGN_BRIEF.md / DESIGN.md / tokens.json / visual/ / interaction/
-└── Output: design-to-solo.md + component-map.json
+└── Output: design-to-solo package + component-contract.json
 
 Phase 3: Engineering (harness-solo)
 ├── new-product-engineering workflow (plans all features + shared infrastructure first)
-├── Consumes: pm-to-solo.md + design-to-solo.md + component-map.json
+├── Consumes: validated PM/Design packages + component-contract.json
 ├── Output: ENGINEERING_PLAN.md + code + tests + spec.md (with AC + DAC)
 └── Output: solo-to-growth.md + solo-to-ops.md
 
@@ -908,7 +912,7 @@ Phase 4: Growth (harness-growth)
 Phase 1: Iteration Requirements (harness-pm)
 ├── iteration workflow
 ├── Output: PRD update (new/modified AC-xxx)
-└── Output: pm-to-solo.md (append iteration requirements)
+└── Output: replace the pm-to-solo.md current pointer and archive the superseded contract
 
 Phase 2: Engineering Implementation (harness-solo)
 ├── new-feature / bugfix workflow
@@ -926,7 +930,7 @@ Phase 2: Redesign (harness-design)
 ├── redesign workflow
 ├── Consumes: pm-to-design.md + design-system-import (existing assets)
 ├── Output: updated visual/ / interaction/ / DESIGN.md / tokens.json
-└── Output: design-to-solo.md (updated) + component-map.json (updated)
+└── Output: superseding design package + updated semantic component contract
 
 Phase 3: Engineering Adaptation (harness-solo)
 ├── refactor / migration workflow
@@ -960,13 +964,13 @@ If multiple people + multiple Agents collaborate:
 
 - **One framework per person**: Alice uses pm, Bob uses design, Carol uses solo
 - **Contract document sharing**: Manually shared via Git repo / cloud drive / email, etc.
-- **Version alignment**: Contract documents are not split by date; downstream only reads the latest state
+- **Version alignment**: The fixed current pointer contains the latest state; immutable historical contracts live under `docs/handoff/archive/`
 
 ---
 
 ## 10. Evolution Roadmap
 
-### 10.1 Current Stage (v2.1, completed)
+### 10.1 Previous Stage (v2.1, completed)
 
 - ✅ 4 core frameworks built independently (pm/design/solo/growth all complete)
 - ✅ Contract document system connected (pm→design→solo→growth→pm closed loop)
@@ -975,7 +979,7 @@ If multiple people + multiple Agents collaborate:
 - ✅ Foundation layer unified (AGENTS/SOUL/constitution/security/meta skill)
 - ✅ harness-ops built (P0, ops framework, 32 skills + 8 workflows, semi-automated architecture)
 
-### 10.2 Short-term Optimization (v2.1, within 1-2 weeks)
+### 10.2 Current Reliability Optimization (v2.2, completed)
 
 - ✅ harness-pm's 5 overreaching design skills deleted + design-orchestrator split into prd-orchestrator (kept PRD + change impact analysis; visual/interaction moved to harness-design)
 - ✅ harness-pm's 5 deprecated shell orchestrators deleted (insight/positioning/ideation/opportunity/stakeholder)
@@ -1070,17 +1074,16 @@ If multiple people + multiple Agents collaborate:
 - spec.md has two AC sets, slightly more complex
 - But the benefit (design constraints verifiable) far outweighs the cost
 
-### Decision 6: component-map.json Framework-Agnostic
+### Decision 6: Two-Layer Component Contract
 
-**Choice**: props Type matches TECH_STACK, not bound to any framework
+**Choice**: Design semantics and engineering bindings are separate versioned files joined by immutable component ID.
 **Rationale**:
-- harness-design should not prejudge whether downstream engineering uses React/Vue/Svelte
-- Hard-binding to React would prevent Vue projects from consuming
-- Neutral abstraction (Slot/Component) + Tech Stack constraint is the fundamental solution
+- harness-design does not prejudge React/Vue/Svelte or source-code structure
+- harness-solo can change framework bindings without rewriting design intent
+- contract and tech-stack hashes make stale bindings detectable
 
 **Trade-off**:
-- Mapping rules must be maintained on both design-handoff-spec and frontend-implementation sides
-- But the benefit (cross-framework compatibility) far outweighs the cost
+- Two schemas and a binding step must be maintained, but ownership and change impact are explicit
 
 ---
 
@@ -1101,13 +1104,13 @@ If multiple people + multiple Agents collaborate:
 - Contract documents use structured fields (tables/JSON) to reduce natural language ambiguity
 - AC-xxx numbering aligned cross-framework, traceable
 - design-brief's Reframe step explicitly lists "what was extracted from PRD" for verification
-- **pm-to-solo.md adds Business Context Digest**: PM extracts engineering-relevant constraints (data scale / concurrency / performance requirements) from user-research.md / market-analysis.md; Solo must reference it during brainstorming's technical feasibility assessment and proactively raise issues when ACs conflict with business constraints
+- **pm-to-solo.md adds Business Context Summary**: Solo must use these business constraints during technical feasibility analysis and surface conflicts with ACs
 
 ### 12.3 Multi-person Collaboration Version Conflicts
 
 **Risk**: Multiple people modify contract documents simultaneously, versions inconsistent
 **Mitigation**:
-- Contract documents are not split by date; downstream only reads the latest state (forces single latest version)
+- Fixed current-pointer documents expose the latest state; immutable handoff IDs and `docs/handoff/archive/` preserve history without burdening normal consumers
 - Multi-person collaboration managed via Git branches (PR merge does not overwrite mainline)
 - Current stage: manual flow; future orchestration layer can handle automatically
 
@@ -1167,7 +1170,7 @@ harness-all is a multi-Agent framework family with **Independence First, Contrac
 | .harness/skills/INDEX.md | ✅ | ✅ | ✅ | ✅ | ✅ |
 | .harness/skills/meta/ | ✅ (4 skills) | ✅ (4 skills) | ✅ (4 skills) | ✅ (4 skills) | ✅ (4 skills) |
 | .harness/skills/<domain>/ | ✅ (82 domain skills) | ✅ (15 domain skills) | ✅ (17 domain skills) | ✅ (36 domain skills) | ✅ (28 domain skills) |
-| .harness/skills/workflows/ | ✅ (10 workflows) | ✅ (7 workflows) | ✅ (8 workflows) | ✅ (7 workflows) | ✅ (8 workflows) |
+| .harness/skills/workflows/ | ✅ (10 workflows) | ✅ (7 workflows) | ✅ (9 workflows) | ✅ (7 workflows) | ✅ (8 workflows) |
 | .harness/rules/security.md | ✅ | ✅ | ✅ | ✅ | ✅ |
 | .harness/rules/prompt-defense.md | ✅ | ✅ | ✅ | ✅ | ✅ |
 | .harness/memory/ | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -1180,14 +1183,14 @@ harness-all is a multi-Agent framework family with **Independence First, Contrac
 | .harness/scripts/ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | docs/handoff/ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
-**Skill count note**: Each framework's total skill count = domain skills + 4 meta skills. For example, harness-design totals 19 skills (15 domain + 4 meta), harness-solo totals 21 skills (17 domain + 4 meta), harness-pm totals 86 skills (82 domain + 4 meta), harness-growth totals 40 skills (36 domain + 4 meta), harness-ops totals 32 skills (28 domain + 4 meta).
+**Skill count note**: Each framework's total skill count = domain skills + 4 meta skills. harness-design totals 19, harness-solo 19, harness-pm 86, harness-growth 40, and harness-ops 32.
 
 ## Appendix B: Contract Document Matrix
 
 | Source \ Target | harness-pm | harness-design | harness-solo | harness-growth | harness-ops |
 |-----------|:---:|:---:|:---:|:---:|:---:|
 | harness-pm | - | pm-to-design.md | pm-to-solo.md | pm-to-growth.md | - |
-| harness-design | design-to-pm.md (on demand) | - | design-to-solo.md + component-map.json | - | - |
+| harness-design | design-to-pm package (on demand) | - | design-to-solo package + component-contract.json | - | - |
 | harness-solo | solo-to-pm.md (on demand) | - | - | solo-to-growth.md | solo-to-ops.md |
 | harness-growth | growth-to-pm.md | - | - | - | - |
 | harness-ops | ops-to-pm.md | - | - | - | - |
@@ -1227,6 +1230,6 @@ harness-all is a multi-Agent framework family with **Independence First, Contrac
 
 ---
 
-**Document Version**: v2.1 · 2026-06-22 (synced with harness-growth + harness-ops build completion)
+**Document Version**: v2.2 · 2026-06-29 (single-source install, protocol validation, versioned handoffs, safe upgrades)
 **Maintainer**: harness-all Architect
 **Next Review**: At v3.0 release (harness-data build kickoff)

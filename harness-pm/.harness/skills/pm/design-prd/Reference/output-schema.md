@@ -56,6 +56,10 @@
 **Report structure**:
 ```json
 {
+  "schema_version": "1.0",
+  "source_document": "PRD.md",
+  "source_revision": "string",
+  "source_sha256": "64-char lowercase sha256",
   "prd_id": "string",
   "check_timestamp": "ISO8601",
   "gate_results": {
@@ -139,6 +143,11 @@ prd.json is the machine-consumable version of the PRD, provided for programmatic
   "prd_id": "string",
   "version": "string",
   "status": "draft | in_review | approved | released",
+  "applicability": {
+    "pages": { "status": "applicable | not_applicable | deferred", "reason": "string", "owner": "string | null", "required_before": "string | null" },
+    "entities": { "status": "applicable | not_applicable | deferred", "reason": "string", "owner": "string | null", "required_before": "string | null" },
+    "user_flows": { "status": "applicable | not_applicable | deferred", "reason": "string", "owner": "string | null", "required_before": "string | null" }
+  },
   "meta": {
     "title": "string",
     "owner": "string",

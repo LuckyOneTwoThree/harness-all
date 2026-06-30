@@ -16,11 +16,11 @@ $ <command>
 
 ## 2. Acceptance Criteria
 ### Engineering AC
-- AC-001: ✓ ...
+- AC-F01-001: ✓ ...
 - AC-002: ✓ ...
 
 ### Design AC (if frontend is involved)
-- DAC-001: ✓ ...
+- DAC-P01-001: ✓ ...
 - DAC-002: ...
 (If there is no design-to-solo.md, fill in "no design AC")
 
@@ -40,6 +40,11 @@ Method: Agent Glob+Read statistics / optional bash entropy-check.sh
 ## 6. Frontend Verification (if involved)
 Method: invoke webapp-testing skill
 <actual output or "no frontend code changes, skipped">
+
+## 7. Documentation
+- README.md updated (if user-facing behavior changed): <yes/no — n/a if no user-facing change>
+- API docs updated (if public API changed): <yes/no — n/a if no public API change>
+- Component spec updated (if component contract changed): <yes/no — n/a if no contract change>
 ```
 
 ## Section-by-Section Instructions
@@ -83,6 +88,13 @@ Use the local timezone. Write the wall-clock time at the moment you start writin
 - Record that you invoked the `webapp-testing` skill and paste its summary output: build result, type check result, lint result, structural verification, frontend security.
 - If no frontend code was changed, write `no frontend code changes, skipped` — do not delete the heading.
 
+### 7. Documentation
+- Verify documentation alignment for every user-facing, API, or contract change made in this iteration.
+- README.md: updated when user-facing behavior changed; write `n/a — no user-facing change` otherwise.
+- API docs: updated when a public API changed; write `n/a — no public API change` otherwise.
+- Component spec: updated when the component contract changed; write `n/a — no contract change` otherwise.
+- Do not delete the heading even if all items are `n/a`.
+
 ## Sample Evidence
 
 ```markdown
@@ -103,7 +115,7 @@ Test Files  2 passed (2)
 
 ## 2. Acceptance Criteria
 ### Engineering AC
-- AC-001: ✓ login() returns token within 200ms (src/auth/login.test.ts:14)
+- AC-F01-001: ✓ login() returns token within 200ms (src/auth/login.test.ts:14)
 - AC-002: ✓ token refresh extends expiry by 60min (src/auth/token.test.ts:22)
 
 ### Design AC (if frontend is involved)
@@ -130,6 +142,11 @@ Method: Agent Glob+Read statistics
 
 ## 6. Frontend Verification (if involved)
 no frontend code changes, skipped
+
+## 7. Documentation
+- README.md updated: n/a — no user-facing change
+- API docs updated: n/a — no public API change
+- Component spec updated: n/a — no contract change
 ```
 
 ## What NOT to write

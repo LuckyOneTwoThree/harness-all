@@ -1,158 +1,92 @@
 ---
 name: brainstorming
-description: Requirements exploration and design refinement — a hard gate: no coding allowed until passed
+description: Resolves material requirement ambiguity and records an executable engineering-facing requirement boundary without choosing speculative implementation.
 ---
-# Brainstorming — Requirements Exploration
+# Brainstorming
 
 ## When to use
-- Before new feature development
-- When kicking off a new project
-- When requirements are ambiguous
+
+- New/changed behavior has material ambiguity.
+- Product-level feature inventory or success criteria are incomplete.
+- Upstream requirements conflict with business, design, security, or engineering constraints.
+
+Do not invoke ceremonially when a validated upstream/current spec is already executable. Bug reproduction, performance measurement, migration decision, and refactor equivalence are owned by their specialist workflows.
 
 ## Inputs
-- constitution.md
-- rules/security.md
-- docs/handoff/pm-to-solo.md (optional, conditional on upstream handoff)
-- docs/handoff/design-to-solo.md (optional, conditional on upstream handoff)
-- docs/handoff/component-map.json (optional, conditional on upstream handoff)
-- docs/product/PRD.md (read-only; sections 3.2.1 feature list, 3.2.5 data model, 3.2.6 interface definition, 4.2 tech constraints, 5 NFR, 7.1 acceptance criteria)
-- docs/product/prd.json (read-only; features[], entities[], non_functional_requirements[], features[].acceptance_criteria[] for structured engineering input)
-- docs/product/PROJECT.md
+
+- `constitution.md`, risk/security rules, `TECH_STACK.md`
+- authoritative local `PROJECT.md`
+- validated PM/Design package contracts and bundled PRD/design artifacts when present
+- user decisions and relevant existing-code evidence
 
 ## Outputs
-- docs/product/PROJECT.md
 
-## Iron Rule
-**No coding without clear requirements.** This is a hard gate — if you cannot pass it, stop and ask; do not guess and proceed.
+- updated `docs/product/PROJECT.md` requirement/boundary records
+- material unresolved decisions returned to the user
+- optional ADR request for writing-documentation after an architecture decision is actually made
 
-## Input Sources (by priority)
+Never edit an inbound handoff or independently edit derived `prd.json`.
 
-1. **Handoff documents** (from harness-pm / harness-design):
-   - `docs/handoff/pm-to-solo.md` — product requirements (PRD path, key decisions, open items) + **business context summary**
-   - `docs/handoff/design-to-solo.md` — design handoff (design asset path, component mapping, design ACs)
-   - `docs/handoff/component-map.json` — explicit mapping layer (design components → engineering components, including props/states)
-   - **Mandatory read**: if `docs/handoff/design-to-solo.md` exists, you MUST read it before any technical solution exploration — skipping it drops the design contract from the entire downstream chain (writing-plans cannot fill `Contract:` lines without it, tdd cannot route to frontend-implementation, tdd will guess props/states). This is a hard gate, not a conditional.
-   - If `docs/handoff/pm-to-solo.md` exists, read it as the source of product requirements.
-   - **When reading pm-to-solo.md, you must also read the "Business Context Summary" section** to understand the business constraints behind the ACs
-   - After reading, jump to step 3 of the process (technical solution exploration), skipping the requirements exploration in steps 1-2
-2. **PRD direct read** (primary requirements source from harness-pm):
-   - `docs/product/PRD.md` — full PRD document (sections: feature list, data model, interface definition, tech constraints, NFR, acceptance criteria)
-   - `docs/product/prd.json` — structured data (features[], entities[], non_functional_requirements[], features[].acceptance_criteria[])
-   - If handoff documents reference PRD paths, **read PRD sections directly** for full context that handoff AC-xxx alone cannot convey (especially data model for ER design, NFR for architecture decisions)
-   - If PRD.md does not exist (early-stage project without harness-pm), fall back to PROJECT.md or user conversation
-3. **Product documentation**: If `docs/product/PROJECT.md` exists and is filled in, read it as the requirements input
-   - PROJECT.md is the static requirements definition (written at project kickoff); FEATURES.md is the dynamic status dashboard (updated during development)
-   - After reading, jump to step 2 of the process (constitution check), skipping the requirements exploration in step 1
-4. **User conversation**: If none of the above exist, explore requirements with the user in a structured way following the process below
+## Source Priority
+
+1. Validated ready handoff package and authoritative bundled PRD.md.
+2. Existing PROJECT.md revision.
+3. Explicit user decision.
+4. Existing implementation as evidence of current behavior—not automatic authority for desired behavior.
+
+Conflict is surfaced; lower-priority material does not silently override higher-priority intent. **Family frontend hard gate**: family-mode frontend work enforces PM Delivery Routing and a ready Design package before planning.
 
 ## Process
 
-## Mode-Adaptive Process
+### 1. State the Ambiguity
 
-The depth of brainstorming depends on the workflow mode:
+Name the exact missing/conflicting decision and why it changes observable behavior, scope, risk, or architecture. If no material ambiguity remains, stop successfully and let writing-plans use the existing source.
 
-| Mode | Steps | Hard Gate checkboxes |
-|------|-------|---------------------|
-| `deep` | 5 steps (below) | 4 checkboxes (full) |
-| `standard` | 3 steps (below) | 2 checkboxes (simplified) |
+### 2. Explore the Minimum Decision Set
 
-**deep mode** (default for new-product-engineering, ambiguous requirements): Run all 5 steps below.
-**standard mode** (default for new-feature, bugfix): Run the 3-step fast path below, then skip to the Hard Gate.
+Ask only questions needed to determine:
 
-### Standard Mode Fast Path (3 steps)
+- user/problem and observable outcome;
+- stable acceptance behavior and failure/edge behavior;
+- explicit non-goals;
+- business/NFR constraints and affected contracts;
+- material choices the user owns.
 
-#### Standard 1. Understand Requirements + Quick Constitution Check
-- Read handoff/PRD/PROJECT.md (if available)
-- Confirm AC is testable
-- Quick constitution check: any new dependencies? new APIs? schema changes?
-- Confirm understanding with user (👤 human decision point)
+Do not impose arbitrary word counts, require a fake non-goal, or pause for confirmation of facts already explicit in a validated contract.
 
-#### Standard 2. Technical Solution + Output PROJECT.md
-- Evaluate reusable modules + implementation path
-- Write to PROJECT.md: feature description + AC + technical approach + boundaries
-- (Combines original steps 3+4)
+Deep mode compares material alternatives, rollback/operational impact, and cross-feature effects. Standard mode resolves only the blocking ambiguity. Both produce the same artifact shape.
 
-#### Standard 3. Hard Gate (Simplified — 2 checkboxes)
-- [ ] Requirement can be described in one sentence (≤30 words)
-- [ ] Technical approach has a concrete implementation path
-- Pass → enter writing-plans
-- Fail → re-explore with user until both checkboxes pass
+### 3. Feasibility and Constitution Screen
 
----
+Read the existing TECH_STACK rather than selecting a new stack by popularity. Identify reusable boundaries, dependency/schema/API/security implications, and contradictions with business/NFR constraints.
 
-### Deep Mode Full Process (5 steps)
+- New dependency routes to dependency-management.
+- Schema/data migration routes to migration planning.
+- Product/design contract defect blocks and routes feedback to its owner.
+- Material architecture choice requires explicit decision and optional ADR.
 
-1. **Understand the requirements**
-   Use structured Q&A to clarify:
-   - What problem are we solving? (user pain point)
-   - Who is it for? (target users)
-   - What counts as success? (acceptance criteria, described in testable terms)
-   - What are we NOT doing? (explicit boundaries to avoid scope creep)
+This screen proves an implementation path exists; detailed tasks belong to writing-plans.
 
-   *Exit condition: each of the four questions above has a written answer, and the "NOT doing" list contains at least one explicit item.*
+### 4. Record Requirements
 
-2. **Constitution check**
-   Read `constitution.md` and check whether the requirements violate the project constitution:
-   - Will it introduce new dependencies? (zero-new-dependency principle; if needed, go through the `dependency-management` skill approval flow)
-   - Does it involve APIs? (must have a test plan)
-   - Does it involve schema changes? (must have a migration script, go through the `migration` skill)
+Update PROJECT.md only with product/engineering-facing requirement facts:
 
-   *Exit condition: every checkbox above is answered yes/no; for each "yes", the corresponding approval or migration skill is queued (or already executed) and recorded in PROJECT.md.*
+- feature/outcome;
+- stable AC IDs and source revision;
+- in/out scope;
+- business/NFR/compatibility constraints;
+- open decisions with owner and required-before milestone.
 
-3. **Technical feasibility**
-   Assess whether the existing code can support the requirements:
-   - Are there reusable modules?
-   - What new files/modules need to be added?
-   - Are there known technical risks?
-   - **Business context constraint check** (if a business context summary from pm-to-solo.md exists):
-     - Does the technical solution satisfy the engineering constraints in the summary? (e.g. "5GB export requires an async queue")
-     - If you find a contradiction between an AC and a business constraint, **raise it proactively** instead of blindly implementing the AC
-     - Write the business constraints into the technical solution section of PROJECT.md as architectural decision input
+Do not duplicate source-code task breakdown, framework bindings, API endpoint design, or implementation detail here.
 
-   *Exit condition: the technical solution names a concrete tech stack and at least one implementation path (files/modules to add or reuse); known risks are listed, not hidden.*
+## Exit Gate
 
-4. **Output the design document**
-   Decide the write strategy based on the input source:
-   - **With handoff documents + PRD**: Extract requirements from the handoff documents and PRD (PRD.md + prd.json), synthesize them into `docs/product/PROJECT.md`. PROJECT.md is the engineering-facing requirements doc maintained by solo (synthesized from PRD + handoff + constitution check); harness-pm produces PRD.md/prd.json as upstream input, solo's brainstorming translates them into PROJECT.md for engineering use. Also supplement the technical solution in the "open items" section of the handoff document or in a separate `docs/engineering/TECH_NOTES.md`
-   - **Without handoff documents**: Write the confirmed requirements to `docs/product/PROJECT.md`
-     - If the `docs/product/` directory does not exist, create it with a tool (do not use `mkdir -p`; use the Agent tool for cross-platform support)
-     - If the file does not exist, create it; if it exists, append/update the corresponding feature rows (append a revision record)
-   - The written content includes:
-     - Feature description (one sentence)
-     - Acceptance criteria (AC-xxx, testable)
-     - Technical solution (brief)
-     - Out-of-scope items (boundaries)
+- Observable outcome and boundaries are clear.
+- Stable criteria are testable and source-traceable.
+- No material user-owned decision is silently assumed.
+- Feasibility/constitution implications have an owner/route.
+- Writing-plans can create tasks without guessing.
 
-   *Exit condition: docs/product/PROJECT.md exists on disk and contains all four sections (feature description, AC-xxx, technical solution, out-of-scope) for the current feature.*
+## Relationship with Pipeline
 
-5. **Hard gate check**
-   Confirm item by item:
-   - [ ] Can the requirement be stated in one sentence (≤30 words, with no "and / or / etc." conjunctions)?
-   - [ ] Does the technical solution specify a concrete tech stack and at least one implementation path?
-   - [ ] Is the constitution satisfied (no unresolved violations)?
-   - [ ] Have all prohibited items in `rules/security.md` been scanned and confirmed absent?
-
-   **If any item is not satisfied → stop and ask the user; do not proceed**
-
-   *Exit condition: all four checkboxes are ticked. If any checkbox cannot be ticked, the skill returns control to the user instead of advancing to writing-plans.*
-
-## Prohibitions
-- Starting work before requirements are clear (the most common cause of mid-sized project failures)
-- Writing acceptance criteria as untestable descriptions like "the system should be easy to use"
-- Skipping the constitution check
-- Making requirement decisions on behalf of the user
-
-## Anti-Rationalization Table
-
-| Anti-pattern | Common excuse | Why it doesn't hold |
-|---|---|---|
-| Skipping brainstorming and jumping straight to code | "The requirements are simple" | Simple projects hide assumptions more easily; later changes cost exponentially more |
-| Not reading the handoff documents | "The user already told me" | Handoff docs carry AC numbers and design constraints; a conversation can drop or misread them |
-| Picking a tech stack without validation | "This library is popular" | Popular ≠ suitable; you must check compatibility, license, and maintenance status |
-| Continuing past the hard gate | "Good enough for now" | "Good enough" is not "passed"; an un-passed gate produces an untestable plan downstream |
-| Not writing the design document | "I'll keep it in my head" | writing-plans needs a doc input; memory drifts and is not queryable by downstream skills |
-| Replacing testable ACs with vibes | "Users will know it when they see it" | "Vibes" cannot be verified by LOOP, so the feature never reaches done |
-
-## Relationship with LOOP
-This skill runs before the PLAN phase of LOOP and is the prerequisite gate for PLAN.
-brainstorming (hard gate) → writing-plans (PLAN) → LOOP(tdd→verify) → ...
+Brainstorming is a conditional clarification skill before PLAN, not a mandatory step in every non-quick workflow.

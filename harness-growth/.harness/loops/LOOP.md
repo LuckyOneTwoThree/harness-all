@@ -45,7 +45,7 @@
 > **Hard Circuit Breaker execution rules (non-negotiable)**:
 > 1. At every MEASURE stage, the Agent **must** read the `iteration` field of `state.yaml`
 > 1.5. **MEASURE stage must mandatorily read the raw contents of state.yaml**: At every MEASURE, the Agent must use the Read tool to read the full contents of `state.yaml` to obtain the true iteration value. **Referencing the iteration value from contextual memory is prohibited** (to prevent skipping the circuit-breaker check under hallucination).
-> 2. When the `iteration >= 10` read by the Read tool (must come from raw file contents, not memory reference), the Agent **must** perform the following operations, without skipping any:
+> 2. When attempt 10 fails, or a new EXPERIMENT stage is requested while `iteration >= 10`, trigger the breaker. A successful attempt 10 may complete normally:
 >    - Change `status` to `failed`
 >    - Write `hard_limit_reached` to `true`
 >    - Write `last_error` as "Iteration limit exceeded (iteration >= 10), hard circuit breaker triggered"
@@ -94,6 +94,8 @@ Why this design?
 
 ## State Maintenance
 
+Shared counting, status-transition, and circuit-breaker semantics are defined in `STATE_PROTOCOL.md`; `state.schema.json` validates the common state shape. In particular, iteration increments exactly once immediately before EXPERIMENT begins, never again during failure handling.
+
 **Decision: The Agent reads and writes state.yaml (one file per experiment, persisted to disk)**
 
 `loops/specs/<experiment>/state.yaml` is actively read and written by the experiment/measure skill during the loop:
@@ -123,7 +125,7 @@ substage: "<substage description>"          # e.g., "ab-test" / "keyword-researc
 exploration_mode: "<enum>"                 # deep / standard / skip, defaults to standard, controls workflow interaction depth
 
 # Optional field (hard circuit breaker flag)
-hard_limit_reached: <bool>                 # When true, further looping is prohibited; defaults to false; set to true only when iteration >= 10
+hard_limit_reached: <bool>                 # True after failed attempt 10 or blocked attempt 11; successful attempt 10 may complete
 ```
 
 **stage enum values**:
@@ -202,7 +204,7 @@ When MEASURE fails:
 3. Analyze the failure cause:
    - Fixable (insufficient sample, insufficient duration) → Back to EXPERIMENT (extend experiment / enlarge sample)
    - Needs replanning (wrong hypothesis, design flaw) → Back to PLAN
-4. Increment the iteration count and check whether the maximum iterations have been exceeded
+4. Check the current iteration against the recommended and hard limits; do not increment here. The next EXPERIMENT attempt increments exactly once when it begins
 
 ### Breakpoint Resumption
 

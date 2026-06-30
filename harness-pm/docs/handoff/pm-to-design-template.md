@@ -1,8 +1,33 @@
+---
+schema_version: "1.0"
+handoff_id: "<PM-DESIGN-YYYYMMDD-NNN>"
+producer: "harness-pm"
+consumer: "harness-design"
+created_at: "<ISO-8601>"
+source_revision: "<commit-or-artifact-revision>"
+supersedes: null
+status: draft
+ac_ids: []
+artifacts: []
+---
+
 # Handoff: harness-pm → harness-design
 
 > Generated at: YYYY-MM-DD HH:MM
 > Source framework: harness-pm
 > Target framework: harness-design
+
+## Consumer Action Map
+
+| Contract section | Design consumer action or gate |
+|---|---|
+| Product basics / audience / positioning | Inputs to design-brief and recommendation framing |
+| PRD + stable AC IDs | Requirements gate; preserve IDs and report overreach through design-to-pm |
+| Style keywords / existing assets | Exploration constraints; unknown values stay explicitly unknown |
+| Out of scope | Scope gate for DESIGN_PLAN and review |
+| Decisions / open items / risks | Apply, resolve with owner, or block publication when material |
+
+Any context without a downstream action belongs under Notes, not a new required section.
 
 ## Phase Summary
 
@@ -15,7 +40,7 @@
 | Product name | <name> | |
 | Product type | <web app / mobile app / desktop / landing page / ...> | Determines design paradigm |
 | Target audience | <audience description> | Influences style positioning |
-| Tech stack | <React / Vue / Svelte / vanilla / ...> | Determines the props Type system in component-map.json |
+| Platform constraints (optional) | <web/mobile/browser/device constraints, or unknown> | Design context only; harness-solo owns framework selection |
 | Platform | <iOS / Android / Web / desktop> | Determines responsive strategy |
 
 ## Positioning Statement
@@ -26,15 +51,15 @@
 
 | Persona | Path | Key traits |
 |---------|------|---------|
-| Primary user | docs/discovery/user-research.md ("User Personas" section) | <one-sentence trait> |
-| Secondary user | docs/discovery/user-research.md ("User Personas" section) | <one-sentence trait> |
+| Primary user | artifacts/research/user-research.md ("User Personas" section) | <one-sentence trait> |
+| Secondary user | artifacts/research/user-research.md ("User Personas" section) | <one-sentence trait> |
 
 > Persona data is stored in the "User Personas" section of user-research.md. If not yet produced, fill in "To be supplemented" and note the impact scope.
 
 ## PRD Path and Acceptance Criteria
 
-**PRD document**: `docs/product/PRD.md`
-**PRD structured data**: `docs/product/prd.json` (machine-consumable; contains pages[], entities[], user_flows[] for design consumption)
+**PRD document**: `artifacts/product/PRD.md`
+**PRD structured data**: `artifacts/product/prd.json` (generated projection with matching source hash)
 
 **Acceptance criteria list (AC-xxx)**:
 
@@ -42,9 +67,9 @@
 > harness-design's design-brief skill should reuse these IDs as-is, do not renumber.
 > ⚠️ **Warning**: The ACs listed here by PM are limited to describing [business rules, data flows, pre/post-conditions]. Do NOT include specific UI layout, color, or typography instructions. The entire visual and interaction exploration space must be left 100% to harness-design.
 
-- [ ] AC-001: <Given-When-Then or testable description>
-- [ ] AC-002: <testable description>
-- [ ] AC-003: <testable description>
+- [ ] AC-F01-001: <stable Given-When-Then or testable description>
+- [ ] AC-F01-002: <stable testable description>
+- [ ] AC-F02-001: <stable testable description; gaps are valid>
 
 ## Design-Consumable PRD Sections
 
@@ -76,9 +101,9 @@ Content explicitly excluded from this design scope:
 
 | Asset | Path inside harness-design | Already exists? |
 |------|----------------------|-----------|
-| Design system | docs/design-system/DESIGN.md | <yes/no/unknown> |
-| Design tokens | docs/design-system/tokens.json | <yes/no/unknown> |
-| Component library | docs/design-system/components/ | <yes/no/unknown> |
+| Existing design system | artifacts/existing-design/DESIGN.md | <yes/no/unknown> |
+| Existing design tokens | artifacts/existing-design/tokens.json | <yes/no/unknown> |
+| Existing component inventory | artifacts/existing-design/components.md | <yes/no/unknown> |
 
 > For a brand-new project, fill in "None". If PM is unsure, fill in "Unknown, to be confirmed by harness-design".
 

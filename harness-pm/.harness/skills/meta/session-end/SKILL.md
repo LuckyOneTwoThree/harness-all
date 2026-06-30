@@ -98,17 +98,17 @@ Archiving is required before the session ends; "bare exit" is not allowed — th
    **Output content** (fill in per pm-to-solo-template.md):
    - Product basic info (product type / tech stack / platform / current phase)
    - PRD path + AC-xxx list
-   - **Business Context Digest** (see 6a.1)
+   - **Business Context Summary** (see 6a.1)
    - Feature priority (P0/P1/P2)
    - Instrumentation plan path (if any)
    - Design asset status (pending harness-design output / ready)
 
-   **6a.1 Business Context Digest extraction** (6a sub-step):
-   - Read `docs/discovery/user-research.md` and `docs/discovery/market-analysis.md` (skip if not present; fill digest with "No business context digest; judge by AC yourself")
+   **6a.1 Business Context Summary extraction** (6a sub-step):
+   - Read `docs/discovery/user-research.md` and `docs/discovery/market-analysis.md` (skip if absent; record "No additional business context; use the stated ACs")
    - **Extract only constraints that affect engineering decisions**; do not extract personas/mental models/aesthetic preferences (those go to design, not engineering)
    - Extraction scope: constraints affecting architecture/tech selection/performance requirements/capacity planning/data scale
    - For each constraint fill in: constraint item + engineering impact + source (filename#section)
-   - Write to the "Business Context Digest" section of pm-to-solo.md
+   - Write to the "Business Context Summary" section of pm-to-solo.md
 
    **6b. Produce pm-to-design.md** (Product → Design)
    If this session completed product requirements **handable to design** (e.g., PRD, positioning statement, Persona, user profile), produce `docs/handoff/pm-to-design.md` using the `docs/handoff/pm-to-design-template.md` template:
@@ -127,8 +127,9 @@ Archiving is required before the session ends; "bare exit" is not allowed — th
 
    **Notes**:
    - If this session has no externally deliverable output (pure research, pure analysis), skip this step
-   - If `pm-to-solo.md` / `pm-to-design.md` / `pm-to-growth.md` already exist, append this delivery; do not overwrite history
-   - File names are fixed; do not split by date (downstream only reads the latest state)
+   - Each fixed file is a current pointer containing one latest contract; never append a second delivery body
+   - If a current pointer exists, archive its unchanged content to `docs/handoff/archive/<handoff_id>.md`, then write the new contract with `supersedes: <previous-id>` and `status: ready`
+   - Consumers read the fixed current pointer by default; archives are only for audit/history
    - Multiple files can be produced simultaneously (e.g., this session completed both PRD and OKR; PRD goes to design, OKR goes to growth)
 
    **6c. Produce pm-to-growth.md** (Product → Growth)
@@ -147,10 +148,14 @@ Archiving is required before the session ends; "bare exit" is not allowed — th
 
    **6d. AC format validation** (handoff documents must pass)
    Run acceptance criteria format validation on the handoff documents produced in steps 6a/6b/6c:
-   - Scan acceptance criteria in the handoff document; check that the numbering format is `AC-NNN` (e.g., AC-001, AC-002)
-   - Check that numbering is continuous (AC-001 cannot jump directly to AC-003)
-   - Check that each AC contains: description + validation method
-   - If format anomalies are found (e.g., "Acceptance Criteria One", non-continuous numbering, missing validation method), **block the handoff** and require correction before re-producing
+   - Validate product IDs as `AC-<feature>-<sequence>` (for example `AC-F01-001`) using `.harness/rules/acceptance-id-protocol.md`
+   - Allow gaps; reject renumbering, reuse, duplicate IDs, changed text under the same ID, or envelope/body mismatch
+   - Check that each AC contains description, validation method, source handoff/revision, scope, and lifecycle status
+   - Block publication on any anomaly; never "repair" an ID by resequencing existing criteria
+
+## Handoff Publication Gate
+
+For every outbound contract, apply `.harness/rules/handoff-protocol.md` and `.harness/rules/acceptance-id-protocol.md`. Build `docs/handoff/packages/<handoff_id>/{manifest.json,contract.md,artifacts/...}`, use package-relative paths, record SHA-256/size for every artifact, validate envelope/body ID parity, then archive and replace the current pointer. Do not publish `ready` until the self-contained package validates.
 
 ## Prohibitions
 - Ending without updating progress.md (next session loses context)
@@ -167,6 +172,6 @@ After session-end completes, progress.md must contain:
 - What this session did
 - What the next session needs to continue
 - The actual result of the archiving operation (e.g., "progress.md cut from 250 lines to 45 lines, archived to archives/2026-06-20-1900-progress.md")
-- If step 6a was executed, record "produced pm-to-solo.md, containing X delivery items + Business Context Digest with X constraints"
+- If step 6a was executed, record "produced pm-to-solo.md, containing X delivery items + Business Context Summary with X constraints"
 - If step 6b was executed, record "produced pm-to-design.md, containing PRD path + X ACs + Persona path"
 - If step 6c was executed, record "produced pm-to-growth.md, containing OKR + North Star metric + X growth hypotheses"

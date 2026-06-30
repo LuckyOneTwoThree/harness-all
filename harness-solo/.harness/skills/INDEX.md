@@ -7,40 +7,37 @@
 
 ## Meta
 - **session-start** — Session startup, load context and restore working state
-- **session-end** — Session wrap-up, archive progress + write baseline + update board
+- **session-end** — Recovery record + canonical board sync + exact baseline + requested handoffs
 - **skill-maintenance** — Skill health check
 - **memory-maintenance** — Memory retention cleanup
 
 ## Engineering
-- **brainstorming** — Requirements exploration, hard gate (mode-adaptive: 5-step deep / 3-step standard)
-- **writing-plans** — Task decomposition, output spec.md (mode-adaptive: 5-step deep / 3-step standard)
-- **executing-plans** — [MERGED into test-driven-development] Routing logic absorbed into tdd Step 1; retained for reference only
-- **test-driven-development** — TDD red→green→refactor (3 steps, absorbs executing-plans routing in Step 1)
+- **brainstorming** — Resolve material requirement ambiguity; not ceremonial for already executable specs
+- **writing-plans** — One canonical spec/state process with depth-adjusted impact analysis
+- **test-driven-development** — Default ACT owner; increments once before mutation and returns results to verify
 - **test-coverage** — Add tests for existing code, coverage gap analysis
 - **systematic-debugging** — Systematic debugging, root cause analysis
 - **performance-optimization** — Performance optimization, measure→fix→verify closed loop
 - **migration** — Code migration, framework upgrade / API migration, guard against regression
 - **dependency-management** — Dependency management, add / upgrade / audit, integrates with the constitution approval gate
 - **frontend-implementation** — Frontend engineering implementation, components / state / styling (not visual design)
-- **verify** — Two-layer verification: verify-fast (3-step per iteration) + verify-full (9-step LOOP exit gate)
+- **verify** — Attempt outcome owner + one final delivery verification gate
 - **product-engineering-review** — Product-level cross-feature consistency review (after all features implemented, before handoff)
 - **webapp-testing** — Frontend verification, pure Agent tool approach (build / type / lint / accessibility)
-- **requesting-code-review** — Code review, quality gatekeeping
-- **receiving-code-review** — Review feedback handling, classify + fix + reply
+- **code-review** — Maintainability review + feedback response + final done transition
 - **writing-skills** — Create new skills per the standard, supports framework extension
 - **writing-documentation** — Documentation writing, ADR / API doc / CHANGELOG, document the why
 
 ## Workflows
 
-> 3-tier speed: quick-fix (~5 steps, <10 lines) / standard (~18 steps, normal features) / deep (~35 steps, complex/ambiguous)
-> Auto-detection based on change size and complexity; user can override anytime.
+> 3-tier speed: risk-gated quick-fix / standard / deep. Size is a signal; consequence and ambiguity decide the route.
 
 - **setup** [skip] — Project kickoff guidance (after install.sh, guide filling in SOUL/constitution/PROJECT/TECH_STACK)
-- **quick-fix** [skip] — Fast path for small changes under 10 lines (understand → fix → test → commit → log)
-- **new-product-engineering** [deep] — Product-level engineering (plan all features → shared infrastructure → per-feature new-feature LOOPs → product-review → handoff)
+- **quick-fix** [skip] — Risk-gated fast path for one low-risk outcome with scoped verification
+- **new-product-engineering** [deep] — Product plan → nested canonical tasks → integration checkpoints → product review
 - **new-feature** [standard] — New feature development (brainstorming → LOOP → code-review)
 - **bugfix** [standard] — Bug fix (systematic-debugging → LOOP → code-review)
 - **refactor** [standard] — Refactoring (brainstorming to confirm boundaries → LOOP guarding against regression → code-review)
 - **optimize** [standard] — Performance optimization (performance-optimization measure→fix→verify → code-review)
 - **migration** [standard] — Code migration (migration decision → LOOP incremental migration → verify zero usage → remove old system)
-- **release** [skip] — Release (verify full → CHANGELOG → tag → release artifact verification)
+- **release** [skip] — Scoped release verification → artifact/metadata review → user-authorized version/tag

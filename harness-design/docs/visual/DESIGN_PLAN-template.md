@@ -32,7 +32,7 @@
 
 ## 3. Shared Component Inventory
 
-> Components shared across multiple pages. Designed first to ensure consistency. The "usedBy" field here aligns with component-map.json's optional "usedBy" field.
+> Components shared across multiple pages. The "Used By" field aligns with component-contract.json's optional `used_by` field.
 
 | Component ID | Component Name | Used By Pages | Design Priority | Source |
 |--------------|----------------|---------------|-----------------|--------|
@@ -120,7 +120,7 @@ Dashboard (P03) → Click avatar → Settings (P04) → Modify → Save → Dash
 
 | Checkpoint | Trigger | Checks |
 |------------|---------|--------|
-| PC1 | After all shared components complete (end of Phase 1) | Shared components cover all page references in Section 2; component-map.json usedBy matches Section 3 |
+| PC1 | After all shared components complete (end of Phase 1) | Shared components cover all page references in Section 2; component-contract.json used_by matches Section 3 |
 | PC2 | After P0 pages complete (P0 milestone in Phase 2) | Navigation structure consistent across P0 pages; cross-page user flows in Section 5 pre-checked as navigable |
 | PC3 | After all pages complete (runs as part of product-design-review) | Full cross-page consistency check — input to product-design-review; covers navigation / flow / component-reuse / token / responsive / interaction |
 
@@ -134,7 +134,7 @@ Dashboard (P03) → Click avatar → Settings (P04) → Modify → Save → Dash
 |------------|------|---------------|
 | Navigation consistency | Header/Footer structure identical across all pages, only active state differs | Grep all docs/visual/*.md for nav structure |
 | Flow completeness | Each flow in Section 5 must be navigable end-to-end | Manual walkthrough + flow.md diagram |
-| Component reuse | Shared components (Section 3) must not be re-implemented per page | Cross-reference component-map.json usedBy |
+| Component reuse | Shared components (Section 3) must not be re-implemented per page | Cross-reference component-contract.json used_by |
 | Token consistency | All pages use tokens from the same tokens.json, no hardcoded hex | design-lint L001-L005 per page + product-level Grep |
 | Responsive consistency | Breakpoint behavior consistent across pages (e.g., all use mobile-first) | Review docs/visual/*.md responsive sections |
 | Interaction consistency | Same component has same motion params across pages (e.g., Button hover 150ms) | Review docs/interaction/*.md motion sections |

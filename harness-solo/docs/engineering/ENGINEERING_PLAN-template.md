@@ -14,20 +14,21 @@
 - **Upstream Sources**:
   - docs/handoff/pm-to-solo.md (product requirements + AC-xxx)
   - docs/handoff/design-to-solo.md (design handoff + DAC-xxx, if frontend is involved)
-  - docs/handoff/component-map.json (component contract, if frontend is involved)
+  - docs/handoff/component-contract.json (semantic design contract, if frontend is involved)
+  - docs/engineering/component-bindings.json (Solo-owned framework binding)
   - docs/visual/DESIGN_PLAN.md (product-level design plan, page inventory maps to feature inventory)
 
 ## 2. Feature Inventory
 
 > Lists all features to be implemented this round, with priority and dependencies. Drives the execution order in Section 5.
 
-| Feature ID | Feature Name | Priority | Depends On | Complexity | Status |
-|------------|--------------|----------|------------|------------|--------|
-| F01 | User Authentication | P0 | — | M | pending |
-| F02 | User Registration | P0 | F01 | M | pending |
-| F03 | Dashboard | P0 | F01, F02 | L | pending |
-| F04 | Settings | P1 | F01, F03 | S | pending |
-| F05 | Profile | P1 | F01, F03 | S | pending |
+| Feature ID | Feature Name | Priority | Depends On | Complexity |
+|------------|--------------|----------|------------|------------|
+| F01 | User Authentication | P0 | — | M |
+| F02 | User Registration | P0 | F01 | M |
+| F03 | Dashboard | P0 | F01, F02 | L |
+| F04 | Settings | P1 | F01, F03 | S |
+| F05 | Profile | P1 | F01, F03 | S |
 
 **Priority rules**:
 - P0 = MVP required, blocks launch
@@ -38,18 +39,18 @@
 
 **Complexity**: S (≤1 day) / M (1-3 days) / L (3+ days) — rough estimate for sequencing, not commitment.
 
-**Status**: `pending` / `done` / `skipped` — `pending` (not yet started), `done` (passed its own tdd → verify → code-review), `skipped` (deferred this round; must be acknowledged in Section 10 Open Items, and dependent features cannot start).
+**Status source**: `.harness/FEATURES.md` is the only aggregate status board. Do not add or update status here.
 
 ## 3. Shared Infrastructure
 
 > Modules shared across multiple features. Implemented first (Phase 1) so features can depend on them. Unlike design's shared components (which can be stubbed), shared infrastructure must be functional before features start.
 
-| Infra ID | Module | Used By Features | Implementation Priority | Status |
-|----------|--------|------------------|------------------------|--------|
-| I01 | API Client (fetch wrapper + error handling) | F01, F02, F03, F04, F05 | P0 | pending |
-| I02 | Auth Context (useUser hook + token management) | F01, F02, F03, F04, F05 | P0 | pending |
-| I03 | State Management Setup (store configuration) | F03, F04 | P0 | pending |
-| I04 | Utility Functions (formatDate, formatCurrency, etc.) | F03, F04, F05 | P1 | pending |
+| Infra ID | Module | Used By Features | Implementation Priority |
+|----------|--------|------------------|------------------------|
+| I01 | API Client (fetch wrapper + error handling) | F01, F02, F03, F04, F05 | P0 |
+| I02 | Auth Context (useUser hook + token management) | F01, F02, F03, F04, F05 | P0 |
+| I03 | State Management Setup (store configuration) | F03, F04 | P0 |
+| I04 | Utility Functions (formatDate, formatCurrency, etc.) | F03, F04, F05 | P1 |
 
 **Implementation rules**:
 - Shared infrastructure is implemented in Phase 1 before any feature starts

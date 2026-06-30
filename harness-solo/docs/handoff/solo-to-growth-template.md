@@ -1,3 +1,16 @@
+---
+schema_version: "1.0"
+handoff_id: "<SOLO-GROWTH-YYYYMMDD-NNN>"
+producer: "harness-solo"
+consumer: "harness-growth"
+created_at: "<ISO-8601>"
+source_revision: "<commit-or-artifact-revision>"
+supersedes: null
+status: draft
+ac_ids: []
+artifacts: []
+---
+
 # Handoff: harness-solo → harness-growth
 
 > Generated at: YYYY-MM-DD HH:MM
@@ -20,14 +33,14 @@
 
 > The following ACs have all passed verify skill validation, sourced from spec.md.
 
-- [x] AC-001: <passed testable description>
-- [x] AC-002: <passed testable description>
-- [x] AC-003: <passed testable description>
+- [x] AC-F01-001: <passed stable testable description>
+- [x] AC-F01-002: <passed stable testable description>
+- [x] AC-F03-001: <passed stable testable description>
 
 ### Design ACs (DAC-xxx, if frontend is involved)
 
-- [x] DAC-001: <passed design testable description>
-- [x] DAC-002: <passed design testable description>
+- [x] DAC-P01-001: <passed stable design criterion>
+- [x] DAC-GLOBAL-001: <passed stable design criterion>
 
 ## Technical Implementation
 
@@ -51,10 +64,10 @@
 
 | Event name | Trigger timing | Parameters | Related AC |
 |--------|---------|------|--------|
-| <event_name_1> | <user clicks X button> | <param1, param2> | AC-001 |
-| <event_name_2> | <page load complete> | <page_path> | AC-002 |
+| <event_name_1> | <user clicks X button> | <param1, param2> | AC-F01-001 |
+| <event_name_2> | <page load complete> | <page_path> | AC-F01-002 |
 
-> For the full tracking plan, see `docs/metrics/tracking-plan.md` (from harness-pm).
+> For the full tracking plan, see bundled `artifacts/metrics/tracking-plan.md`.
 
 ## Known Issues and Limitations
 
@@ -101,8 +114,8 @@ Issues for harness-growth to handle or confirm with harness-solo:
 
 | Event name | Source feature | Trigger timing | Parameters | Related AC |
 |--------|---------|---------|------|--------|
-| <event_name_1> | F01 | <trigger> | <params> | AC-001 |
-| <event_name_2> | F03 | <trigger> | <params> | AC-003 |
+| <event_name_1> | F01 | <trigger> | <params> | AC-F01-001 |
+| <event_name_2> | F03 | <trigger> | <params> | AC-F03-001 |
 
 > Aggregated from each feature's tracking events. For product-level growth planning, use this aggregated list rather than per-feature Tracking Event List above.
 

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harness.local/schemas/prd.schema.json",
+  "type": "object",
+  "required": ["schema_version", "source_document", "source_revision", "source_sha256", "prd_id", "version", "features", "applicability"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "source_document": { "const": "PRD.md" },
+    "source_revision": { "type": "string", "minLength": 1 },
+    "source_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "prd_id": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "minLength": 1 },
+    "features": { "type": "array", "items": { "type": "object" } },
+    "pages": { "type": "array", "items": { "type": "object" } },
+    "entities": { "type": "array", "items": { "type": "object" } },
+    "user_flows": { "type": "array", "items": { "type": "object" } },
+    "non_functional_requirements": { "type": "object" },
+    "tracking_plan": { "type": "object" },
+    "traceability": { "type": "array", "items": { "type": "object" } },
+    "applicability": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["status", "reason"],
+        "properties": {
+          "status": { "enum": ["applicable", "not_applicable", "deferred"] },
+          "reason": { "type": "string", "minLength": 1 },
+          "owner": { "type": ["string", "null"] },
+          "required_before": { "type": ["string", "null"] }
+        }
+      }
+    }
+  }
+}
+

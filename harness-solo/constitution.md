@@ -54,20 +54,21 @@ The former `triggers` / `reads` / `writes` / `quality_gates` / `max_iterations` 
 
 **Verification**: The Agent uses the Read tool to count lines + optional `verify-harness.sh` fallback + optional `entropy-check.sh` fallback.
 
-### Principle 6: Exploration First Cannot Be Bypassed
+### Principle 6: Material Ambiguity Cannot Enter ACT
 
-**All modes (`deep` / `standard`) must complete the brainstorming hard gate** before entering coding; only `skip` mode (quick-fix) is exempt. The hard gate depth is tiered by mode:
+All standard/deep work must pass a clarification gate before coding. `brainstorming` owns ambiguous/new product requirements; a validated upstream spec or a workflow-specific evidence gate (bug reproduction, performance baseline, migration decision, refactor behavior boundary) can satisfy clarification without rerunning generic brainstorming.
 
-- `deep` mode: 5-step exploration + 4-checkbox hard gate
+- `deep` mode: analyze material alternatives, contracts, rollback, and cross-feature impact
   - ⏸ exploration dialog points cannot be skipped; user input must be received before continuing
-  - Skill downgrade strategies are disabled; skipping the brainstorming hard gate is not allowed
-- `standard` mode: 3-step quick exploration + 2-checkbox hard gate
-  - Lightweight requirements clarification; boundaries and acceptance criteria must still be confirmed
-- `skip` mode (`quick-fix` workflow): exempt — only allowed for changes under 10 lines with no new dependencies
-  - Users can only bypass by explicitly stating "switch to skip mode", and the Agent must record the reason in `state.yaml`
-  - Safety fallback: automatically downgrades to `standard` when no requirement documents exist
+  - Skill downgrade is disabled; the workflow-specific clarification/evidence gate cannot be skipped
+- `standard` mode: confirm scope, stable criteria/equivalence target, verification path, and boundaries
+- `skip` mode (`quick-fix` workflow): exempt — only allowed after the quick-fix risk gate confirms there is no API/schema/dependency/auth/security/payment/deployment/cross-module/design-contract impact
+  - Line count is only a secondary signal and never overrides a risk signal
+  - Quick-fix does not create `state.yaml`; record `mode=skip` and the reason in `memory/progress.md`
+  - Behavior changes and bug fixes still require a failing regression test; only pure text/comment/format changes may skip creating a new test
+  - Safety fallback: any failed risk-gate item automatically upgrades the workflow to `standard`
 
-**Verification**: Before workflow execution, check the `exploration_mode` field in `state.yaml`; in `deep` or `standard` mode, if brainstorming is not completed, block the PLAN→ACT transition.
+**Verification**: Before PLAN→ACT, spec.md must cite the clarification source. If requirements remain materially ambiguous, block and invoke brainstorming; do not require ceremonial brainstorming when domain evidence already makes the task executable.
 
 ## Constitution Checkpoints (must check during PLAN phase)
 
@@ -76,7 +77,7 @@ The former `triggers` / `reads` / `writes` / `quality_gates` / `max_iterations` 
 - [ ] Does it involve core file modifications? Has user authorization been obtained?
 - [ ] Do new/modified skills have complete frontmatter?
 - [ ] Does the document length exceed the project threshold?
-- [ ] Is the current workflow's exploration_mode deep or standard? If so, has the brainstorming hard gate been completed? (skip/quick-fix is exempt for <10-line changes with no new dependencies)
+- [ ] Does spec.md cite a valid clarification source, with no material ambiguity entering ACT?
 
 ## Revision History
 
@@ -85,3 +86,4 @@ The former `triggers` / `reads` / `writes` / `quality_gates` / `max_iterations` 
 | 2026-06-21 | Initial version | Clarify harness-solo's own constraints |
 | 2026-06-23 | Add Principle 6 (Exploration first cannot be bypassed) + AGENTS.md line limit 120→150 | Promote the exploration_mode mechanism to control workflow interaction depth |
 | 2026-06-29 | Principle 6 expanded to cover deep+standard modes; add 3-tier workflow mode (quick-fix/standard/deep) | Reduce process overhead for small tasks while preserving hard gate for non-trivial changes |
+| 2026-06-29 | Replace the quick-fix line-count gate with a risk gate; align TDD and state recording exceptions | Prevent small but high-risk changes from bypassing engineering controls |

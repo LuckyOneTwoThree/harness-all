@@ -40,11 +40,12 @@ Context must be loaded before the session begins; working with "amnesia" is not 
    Read `.harness/FEATURES.md` to understand overall product progress.
 
 5. **Check handoff documents** (from other harness family members)
-   Scan the `docs/handoff/` directory:
+   Scan `docs/handoff/` and apply `.harness/rules/handoff-protocol.md` before consuming any contract:
    - If `solo-to-pm.md` exists (from harness-solo), report to the user: "Found engineering feedback document X. Consume it in this session?"
    - Engineering feedback may include: implemented features, technical constraints, open issues.
    - If `growth-to-pm.md` exists (from harness-growth), report the growth data feedback.
-   - If unconsumed handoff documents exist, remind the user to prioritize them.
+   - If `design-to-pm.md` exists, validate it, report its feedback IDs, and route accepted consumption to prd-orchestrator phase 0.
+   - If valid unconsumed handoffs exist, remind the user to prioritize them. Report invalid handoffs precisely and do not consume them partially.
 
 6. **Confirm task scope**
    Confirm with the user what this session will accomplish, and write a new session block to progress.md:

@@ -1,3 +1,16 @@
+---
+schema_version: "1.0"
+handoff_id: "<OPS-PM-YYYYMMDD-NNN>"
+producer: "harness-ops"
+consumer: "harness-pm"
+created_at: "<ISO-8601>"
+source_revision: "<commit-or-artifact-revision>"
+supersedes: null
+status: draft
+ac_ids: []
+artifacts: []
+---
+
 # Handoff: Ops Feedback to PM (Ops to PM)
 
 > **From**: harness-ops (Operations)

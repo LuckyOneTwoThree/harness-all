@@ -1,5 +1,7 @@
 # Handoff Document Directory
 
+Transfer complete `packages/<handoff_id>/` directories, not standalone Markdown files. Consumers validate the manifest, hashes, target, status, freshness, and stable-ID parity before use, then write a receipt.
+
 This directory stores handoff documents between harness family frameworks.
 
 ## Handoff Protocol
@@ -18,20 +20,29 @@ For example:
 
 ## Usage
 
-1. After completing its phase, the upstream framework generates a handoff document from the template and places it in this directory
-2. The downstream framework's session-start skill will auto-detect and read the corresponding handoff document
-3. You can also place files manually (e.g., copy a PRD from another project)
+1. Producer generates a current pointer and self-contained package from the template.
+2. Transfer the complete package directory to the consumer's `docs/handoff/packages/`.
+3. Consumer validates and receipts the package before using its content.
 
 ## Templates
 
 - `handoff-template.md`: Generic handoff template
-- `design-to-solo-template.md`: harness-design → harness-solo dedicated template (includes AC-xxx/DAC-xxx sections + component-map.json reference)
+- `design-to-solo-template.md`: harness-design → harness-solo template with stable AC/DAC IDs and semantic component contract reference
+
+- `design-to-pm-template.md`: harness-design to harness-pm product feedback with stable feedback IDs and evidence
 
 Copy and fill in based on actual conditions.
 
 ## Data Files
 
-- `component-map.json`: Design → Solo machine-readable contract carrier example. It explicitly maps each design component to its engineering counterpart (`designToken` / `engineeringComponent` / `props` / `states` / `usedBy` / `notes`), serving as the single source of truth for frontend implementation. Unlike Markdown contract documents, it is structured JSON intended for programmatic consumption by the Solo framework's implementation skill.
+- Runtime `component-contract.json` is generated only from approved project design; no sample is installed in `docs/handoff/`. The framework-neutral example lives at `.harness/templates/component-contract.example.json`. Harness-solo separately owns `component-bindings.json`.
+
+## Versioning
+
+- The fixed `<source>-to-<target>.md` file is the current pointer and contains one latest contract.
+- Before replacement, archive the previous contract as `archive/<handoff_id>.md`.
+- Every contract uses the template frontmatter envelope and records `supersedes`.
+- Optional consumer acknowledgements belong in `receipts/`; consumers never edit producer contracts.
 
 ## Write Access
 

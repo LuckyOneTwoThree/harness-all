@@ -40,7 +40,7 @@ These four are the core constraints of this framework, corresponding to the Karp
 | User-Centered | Don't assume user aesthetics; let Persona drive | design-brief hard gate: stop and ask when requirements are vague |
 | System-First | Don't reinvent the wheel; build the design system first | design-system + tokens.json unified management |
 | Accessible by Design | WCAG 2.1 AA is a hard constraint | accessibility-audit mandatory check |
-| Deliverable | Design must be implementable | design-handoff-spec produces annotations/specs/component-map.json |
+| Deliverable | Design must be implementable | design-handoff-spec produces annotations/specs/component-contract.json |
 
 ### LOOP Cycle Engine
 
@@ -259,7 +259,7 @@ session-start → design-brief (hard gate) → design-system-import → diff ana
 ### design-handoff (Design Handoff)
 
 ```
-session-start → Pre-condition check (hard gate) → design-handoff-spec (incl. Pre-Delivery Checklist) → session-end (produces design-to-solo.md + component-map.json)
+session-start → Pre-condition check → design-handoff-spec → session-end (publishes design-to-solo.md + component-contract.json package)
 ```
 
 ## LOOP Cycle Engine

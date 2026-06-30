@@ -129,7 +129,7 @@ Write to `docs/design-system/REFACTOR_REPORT.md`:
 After user confirmation, update:
 - `docs/design-system/DESIGN.md` (Section 4 Component Stylings)
 - `docs/design-system/tokens.json` (add/merge tokens)
-- `docs/handoff/component-map.json` (update mappings)
+- `docs/handoff/component-contract.json` (update semantic token references/revision)
 
 ### 6. Post-Refactor Verification
 
@@ -157,7 +157,7 @@ Run design-lint to confirm the refactor introduced no errors.
 - [ ] Each recommendation has a Before/After comparison (evidence: report content)
 - [ ] Execution priority annotated (evidence: P0/P1/P2 markers)
 - [ ] design-lint passes after refactoring (evidence: lint-report.md has no errors)
-- [ ] DESIGN.md + tokens.json + component-map.json updated (evidence: file diff)
+- [ ] DESIGN.md + tokens.json + component-contract.json updated with matching revision/hash evidence
 
 ## Relationship with LOOP
 

@@ -12,13 +12,14 @@ description: Test Coverage — coverage gap analysis + adding boundary/integrati
 
 ## Inputs
 - loops/LOOP.md
+- loops/STATE_PROTOCOL.md
+- loops/state.schema.json
 - rules/security.md
 - docs/engineering/TECH_STACK.md
 
 ## Outputs
 - loops/specs/<feature>/state.yaml
-- loops/specs/<feature>/evidence.md
-- loops/specs/<feature>/iterations.log
+- coverage command/results returned to verify (or reported directly for standalone test-only work)
 
 ## Iron Rule
 **Tests are proof.** "Seems right" is not done. Code without tests that breaks during refactoring/migration is not the refactor's fault — it is the fault of your missing tests (Beyonce Rule).
@@ -134,16 +135,12 @@ After a bug fix (via the bugfix workflow), you **must** add regression tests:
 
 ## State Maintenance
 
-Update per the "state.yaml Schema" in LOOP.md:
+When inside a LOOP, follow `.harness/loops/STATE_PROTOCOL.md` and validate with `state.schema.json`:
 - `stage`: `act` (while adding tests)
-- `iteration`: +1 (per batch of tests added)
+- Inside an active LOOP, the selected ACT owner increments once before the test batch; outside LOOP this skill does not invent or mutate LOOP iteration state
 - `last_error`: on failure, fill in "test failed: <test name>"
 
-**Update iterations.log (append only, overwriting is forbidden)**:
-```
-[YYYY-MM-DD HH:MM] iter=<N> stage=act → added 5 unit tests for <module>
-[YYYY-MM-DD HH:MM] iter=<N> stage=verify → coverage 62%→85% ✓
-```
+Inside LOOP, return coverage results to verify; verify owns terminal attempt logging. Standalone test-only work reports results directly without fabricating LOOP history.
 
 ## Prohibitions
 - Testing implementation details rather than behavior (breaks on refactor)

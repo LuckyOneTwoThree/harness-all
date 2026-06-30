@@ -1,5 +1,7 @@
 # Handoff Document Directory
 
+Transfer complete `packages/<handoff_id>/` directories, not standalone Markdown files. Consumers validate the manifest, hashes, target, status, freshness, and stable-ID parity before use, then write a receipt.
+
 > This directory stores handoff documents between harness-ops and other members of the harness family.
 > Handoff protocol: upstream framework produces document → human feeds it to downstream framework → downstream framework consumes and executes.
 
@@ -28,15 +30,22 @@
 
 ## Usage
 
-1. The upstream framework produces a handoff document from the template and places it in this directory
-2. session-start automatically scans this directory and reminds the user when new handoff documents are found
-3. After the downstream framework consumes a document, it records "Consumed X handoff document" in progress.md
+1. Producer generates a current pointer and self-contained package from the template.
+2. Transfer the complete package directory to the consumer's `docs/handoff/packages/`.
+3. Consumer validates and receipts the package before deployment use.
 
 ## Naming Convention
 
 - Filename is fixed (no date): `<source>-to-<target>.md`
 - Downstream only looks at the latest state; historical versions are not retained
 - For historical tracing, check git log
+
+## Versioning
+
+- The fixed `<source>-to-<target>.md` file is the current pointer and contains one latest contract.
+- Before replacement, archive the previous contract as `archive/<handoff_id>.md`.
+- Every contract uses the template frontmatter envelope and records `supersedes`.
+- Optional consumer acknowledgements belong in `receipts/`; consumers never edit producer contracts.
 
 ## Write Access
 

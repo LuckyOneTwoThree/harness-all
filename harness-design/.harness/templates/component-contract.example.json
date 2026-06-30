@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "design_revision": "<source revision or design handoff id>",
+  "token_source": { "path": "artifacts/design-system/tokens.json", "sha256": "<sha256>" },
+  "components": [
+    {
+      "component_id": "CMP-BUTTON-PRIMARY",
+      "name": "PrimaryButton",
+      "purpose": "Primary action; at most one per screen",
+      "token_refs": ["button.primary"],
+      "properties": {
+        "variant": { "type": "enum", "values": ["primary", "secondary", "ghost"], "required": true, "default": "primary" },
+        "content": { "type": "slot", "required": true }
+      },
+      "states": ["default", "hover", "active", "disabled", "loading"],
+      "used_by": ["P01", "P02"],
+      "accessibility": ["touch target >= 44px", "visible focus indicator"]
+    }
+  ]
+}

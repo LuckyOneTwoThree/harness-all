@@ -1,8 +1,34 @@
+---
+schema_version: "1.0"
+handoff_id: "<DESIGN-SOLO-YYYYMMDD-NNN>"
+producer: "harness-design"
+consumer: "harness-solo"
+created_at: "<ISO-8601>"
+source_revision: "<commit-or-artifact-revision>"
+supersedes: null
+status: draft
+ac_ids: []
+artifacts: []
+---
+
 # Handoff: harness-design → harness-solo
 
 > Generated at: YYYY-MM-DD HH:MM
 > Source framework: harness-design
 > Target framework: harness-solo
+
+## Consumer Action Map
+
+| Contract section | Engineering consumer action or gate |
+|---|---|
+| Asset inventory + hashes | Validate and resolve package-relative files |
+| Stable AC/DAC IDs | Copy unchanged into specs and verification evidence |
+| Component contract | Create Solo-owned bindings and implement by stable component ID |
+| Tokens / DESIGN.md | Enforce token and system compliance |
+| Pages / flows / states | Plan composition, navigation, and interaction tests |
+| Open items / risks | Assign an owner or block when implementation would require guessing |
+
+Any context without a downstream action belongs under Notes, not a new required section.
 
 ## Phase Summary
 
@@ -12,11 +38,11 @@
 
 | Asset | Path | Notes |
 |------|------|------|
-| Design system | docs/design-system/DESIGN.md | Color / typography / spacing / shadow / radius / breakpoints (10-segment standard format) |
-| Design tokens (JSON) | docs/design-system/tokens.json | Machine-readable token definitions |
-| Design tokens (CSS) | docs/design-system/tokens.css | CSS variables for direct engineering consumption |
-| Component spec | docs/interaction/component-spec.md | Component Props/States table |
-| Component map | docs/handoff/component-map.json | Explicit mapping from design components to engineering components |
+| Design system | artifacts/design-system/DESIGN.md | Color / typography / spacing / shadow / radius / breakpoints |
+| Design tokens (JSON) | artifacts/design-system/tokens.json | Machine-readable token definitions |
+| Design tokens (CSS) | artifacts/design-system/tokens.css | CSS variables for direct engineering consumption |
+| Component spec | artifacts/interaction/component-spec.md | Component properties/states table |
+| Semantic component contract | artifacts/component-contract.json | Framework-neutral component intent, states, properties, and token references |
 
 ## Page List
 
@@ -25,18 +51,18 @@
 
 | Page ID | Page | Priority | Depends On | Visual draft | Interaction draft | Wireframe |
 |---------|------|----------|------------|--------------|-------------------|-----------|
-| P01 | <Home> | P0 | — | docs/visual/home.md | docs/interaction/home.md | - |
-| P02 | <Login> | P0 | — | docs/visual/login.md | docs/interaction/login.md | - |
-| P03 | <Dashboard> | P0 | P02 | docs/visual/dashboard.md | docs/interaction/dashboard.md | docs/prototype/wireframe-dashboard.md |
+| P01 | <Home> | P0 | — | artifacts/visual/home.md | artifacts/interaction/home.md | - |
+| P02 | <Login> | P0 | — | artifacts/visual/login.md | artifacts/interaction/login.md | - |
+| P03 | <Dashboard> | P0 | P02 | artifacts/visual/dashboard.md | artifacts/interaction/dashboard.md | artifacts/prototype/wireframe-dashboard.md |
 
 **Navigation structure** (product-level handoff only):
 - Global Header: [Logo, Nav(<pages>), UserMenu] — consistent across P01/P03/P04
 - Global Footer: [Links, Copyright] — consistent across P01/P03/P04
-- Authenticated vs anonymous header variants defined in docs/visual/header.md
+- Authenticated vs anonymous header variants defined in artifacts/visual/header.md
 
 ## Component List
 
-> Component list + states + variants. For product-level handoff, the "Used By" column indicates which pages use each component — engineering should prioritize implementing components with higher reuse first (reusable across more pages). See component-spec.md and component-map.json for details. The "Used By" field here aligns with the optional `usedBy` field in component-map.json.
+> Component list + states + variants. For product-level handoff, the "Used By" column indicates which pages use each component. See component-spec.md and component-contract.json for details.
 
 | Component ID | Component | States | Used By Pages | Notes |
 |--------------|-----------|--------|---------------|-------|
@@ -50,11 +76,11 @@
 > harness-solo's writing-plans skill should mark these AC-xxx as "design-related AC" in spec.md, preserving the original IDs.
 > If the design phase added design-specific acceptance points, use the DAC-xxx prefix (D = Design-derived) to distinguish from engineering ACs.
 
-- [ ] AC-001: <testable description reused from PRD>
-- [ ] AC-002: <testable description reused from PRD>
-- [ ] AC-003: <testable description reused from PRD>
-- [ ] DAC-001: <testable description added in design phase, e.g., "button hover state has a 200ms transition animation">
-- [ ] DAC-002: <testable description added in design phase, e.g., "first screen LCP >= 2.5s">
+- [ ] AC-F01-001: <stable testable description reused from PRD>
+- [ ] AC-F01-002: <stable testable description reused from PRD>
+- [ ] AC-F02-001: <stable testable description reused from PRD>
+- [ ] DAC-P01-001: <stable page-scoped design criterion, e.g., "button hover state has a 200ms transition animation">
+- [ ] DAC-GLOBAL-001: <stable cross-page design criterion, e.g., "first screen LCP <= 2.5s">
 
 ## Interaction Flows
 
@@ -78,7 +104,7 @@ Login Page (P02) → Enter credentials → Dashboard (P03)
 - **Exit**: Dashboard load
 - **Critical checkpoints**: Wrong password hint, "forgot password" link
 
-See docs/prototype/flow.md for full flow diagrams.
+See artifacts/prototype/flow.md for full flow diagrams.
 
 ## Cross-Page Consistency Report
 
@@ -89,7 +115,7 @@ See docs/prototype/flow.md for full flow diagrams.
 |----------------------|--------|-------|
 | Navigation consistency | ✓ Pass / ✗ <issue> | Header/Footer structure identical across all pages |
 | User flow completeness | ✓ Pass / ✗ <issue> | All flows in "Interaction Flows" navigable end-to-end |
-| Component reuse | ✓ Pass / ✗ <issue> | Shared components not re-implemented per page; matches component-map.json usedBy |
+| Component reuse | ✓ Pass / ✗ <issue> | Shared components not re-implemented per page; matches component-contract.json used_by |
 | Token consistency | ✓ Pass / ✗ <issue> | Zero hardcoded hex across all pages; motion params consistent for same component |
 | Responsive consistency | ✓ Pass / ✗ <issue> | All pages have 375px/768px/1280px; mobile-first strategy uniform |
 | Interaction consistency | ✓ Pass / ✗ <issue> | Same component has same states + motion params across pages |
@@ -109,7 +135,7 @@ See docs/prototype/flow.md for full flow diagrams.
 ## Notes
 
 <Points engineering should note during implementation, e.g.,:>
-- The props Type in component-map.json has been matched to TECH_STACK; engineering can consume it directly
+- component-contract.json is framework-neutral; harness-solo creates its local component-bindings.json
 - Dark mode tokens are defined in tokens.json; switching logic must be implemented in the engineering codebase
 - All touch targets >= 44px (hard accessibility constraint)
 
@@ -126,10 +152,10 @@ Issues for harness-solo to handle or confirm with harness-design:
 >
 > **Inline carry note**: design-to-solo.md already carries DESIGN_PLAN.md's key content inline — Page List / Component List / Interaction Flows / Cross-Page Consistency Report are all present in the earlier sections of this file. Engineering can obtain the information it needs via those sections, with no need to read DESIGN_PLAN.md directly. If finer granularity is required (e.g., the full wireframe path), it may be indirectly consulted via the Path below — but this consultation is optional, not mandatory.
 
-- **Path**: `docs/visual/DESIGN_PLAN.md`
+- **Path**: `artifacts/visual/DESIGN_PLAN.md`
 - **Contents**:
   - Section 2 Page Inventory (full list with priority + dependencies)
-  - Section 3 Shared Component Inventory (with usedBy mapping)
+  - Section 3 Shared Component Inventory (with used_by mapping)
   - Section 4 Page Dependency Graph (soft dependencies; informational)
   - Section 5 Product User Flows (cross-page flows with checkpoints)
   - Section 6 Design Execution Order (informational; engineering need not follow)
@@ -140,20 +166,20 @@ Issues for harness-solo to handle or confirm with harness-design:
 
 harness-solo should prioritize:
 
-1. Run the brainstorming skill, consume this file + component-map.json
+1. Run the brainstorming skill, consume this file + component-contract.json
 2. Run the writing-plans skill, write AC-xxx + DAC-xxx into spec.md
-3. Run the frontend-implementation skill, implement components per component-map.json
+3. Run the frontend-implementation skill, create component-bindings.json, then implement against both contracts
 
 ## Risk Notes
 
 | Risk | Level | Mitigation |
 |------|------|---------|
-| Tech stack does not match component-map.json | High/Medium/Low | <action> |
+| Component contract cannot be bound to the selected tech stack | High/Medium/Low | <action> |
 | Design drafts deviate from PRD acceptance criteria | High/Medium/Low | <action> |
 
 ---
 
 ## Downstream Framework Usage Notes
 
-harness-solo's brainstorming / writing-plans / frontend-implementation / verify skills will auto-detect this file and read the AC-xxx + DAC-xxx list and component-map.json.
+harness-solo's brainstorming / writing-plans / frontend-implementation / verify skills will auto-detect this file and read the stable AC/DAC list and component-contract.json.
 If not auto-detected, you can manually point the Agent to this file path to read it.

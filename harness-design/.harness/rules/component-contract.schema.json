@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harness.local/schemas/component-contract.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "design_revision", "token_source", "components"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "design_revision": { "type": "string", "minLength": 1 },
+    "token_source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "pattern": "^artifacts/" },
+        "sha256": { "type": "string", "pattern": "^([a-f0-9]{64}|<sha256>)$" }
+      }
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["component_id", "name", "purpose", "token_refs", "properties", "states", "accessibility"],
+        "properties": {
+          "component_id": { "type": "string", "pattern": "^CMP-[A-Z0-9-]+$" },
+          "name": { "type": "string", "minLength": 1 },
+          "purpose": { "type": "string", "minLength": 1 },
+          "token_refs": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+          "properties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["type", "required"],
+              "properties": {
+                "type": { "enum": ["string", "boolean", "number", "enum", "slot", "collection", "object"] },
+                "values": { "type": "array", "items": { "type": ["string", "number", "boolean"] }, "uniqueItems": true },
+                "required": { "type": "boolean" },
+                "default": {}
+              }
+            }
+          },
+          "states": { "type": "array", "minItems": 1, "items": { "type": "string" }, "uniqueItems": true },
+          "used_by": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+          "accessibility": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+        }
+      }
+    }
+  }
+}
+

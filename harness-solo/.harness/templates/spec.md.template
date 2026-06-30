@@ -12,13 +12,13 @@
 
 ### Engineering AC (from pm-to-solo.md / brainstorming)
 
-- AC-001: [testable description]
-- AC-002: [testable description]
-- AC-003: [testable description]
+- AC-F01-001: [stable testable description]
+- AC-F01-002: [stable testable description]
+- AC-F01-003: [stable testable description]
 
 ### Design AC (from design-to-solo.md, if frontend is involved)
 
-> DAC-xxx = Design-derived AC, reuses the AC-xxx numbering from design-to-solo.md with a D prefix to distinguish the source.
+> DAC-<scope>-<sequence> is design-derived and has its own stable identity. It may reference a related product AC, but never inherits or reuses that AC's number.
 > If there is no design-to-solo.md, skip this section.
 
 - DAC-001: [design testable description, e.g., "contrast ≥ 4.5:1"]
@@ -26,9 +26,10 @@
 
 ## Task breakdown
 
-- [ ] T1: [task 1, completable in 2-5 minutes]
+- [ ] T1: [one independently verifiable outcome; normally 15-45 minutes]
 - [ ] T2: [task 2]
 - [ ] T3: [task 3]
+- [ ] T4: [frontend task, if any] Contract: component-contract.json#<ComponentID> (required for frontend tasks; references the stable component ID from design handoff)
 
 ## Technical plan
 

@@ -9,8 +9,8 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-cross--platform-green.svg)](#cross-platform-compatibility)
 [![Principles](https://img.shields.io/badge/principles-Karpathy%204-orange.svg)](#karpathy-principles-in-detail)
-[![Workflows](https://img.shields.io/badge/workflows-8-purple.svg)](#workflows-in-detail)
-[![Skills](https://img.shields.io/badge/skills-20-red.svg)](#core-features)
+[![Workflows](https://img.shields.io/badge/workflows-9-purple.svg)](#workflows-in-detail)
+[![Skills](https://img.shields.io/badge/skills-19-red.svg)](#core-features)
 
 **[Quick Start](#quick-start)** · **[Directory Structure](#directory-structure)**
 
@@ -45,14 +45,14 @@ These four are engineering principles distilled from observations by [Andrej Kar
 ### LOOP Cycle Engine
 
 ```
-PLAN → ACT → VERIFY → Pass? DONE : Back to PLAN/ACT
+PLAN → ACT → VERIFY-FAST → VERIFY-FULL → CODE-REVIEW → DONE
 ```
 
 - One `state.yaml` per feature, supports checkpoint resume
-- Iteration limit protection: exceeding 5 requests human intervention
+- Recommended limits trigger early human escalation; attempt 10 is the final allowed attempt
 - Evidence-driven: no claiming done without test output
 
-### 8 Workflows Cover the Full Development Lifecycle
+### 9 Workflows Cover the Full Development Lifecycle
 
 ```
 setup (project initiation) → new-product-engineering/new-feature/bugfix/refactor/optimize/migration (development) → release (release)
@@ -68,12 +68,13 @@ setup (project initiation) → new-product-engineering/new-feature/bugfix/refact
 | optimize | Performance optimization | 3 |
 | migration | Framework upgrade / API migration | 3 |
 | release | Version release | No LOOP |
+| quick-fix | One low-risk outcome | No LOOP state |
 
-### 20 Skills (16 engineering + 4 meta)
+### 19 Skills (15 engineering + 4 meta)
 
-**Engineering skills** : brainstorming / writing-plans / test-driven-development / test-coverage / systematic-debugging / performance-optimization / migration / dependency-management / frontend-implementation / verify / product-engineering-review / webapp-testing / requesting-code-review / receiving-code-review / writing-skills / writing-documentation
+**Engineering skills** : brainstorming / writing-plans / test-driven-development / test-coverage / systematic-debugging / performance-optimization / migration / dependency-management / frontend-implementation / verify / code-review / product-engineering-review / webapp-testing / writing-skills / writing-documentation
 
-> Note: `executing-plans` has been merged into `test-driven-development` (routing logic absorbed into tdd Step 1). The SKILL.md file is retained for reference only.
+Execution routing is owned by `.harness/rules/engineering-pipeline.md`; each workflow selects one ACT skill.
 
 **Meta skills** : session-start / session-end / skill-maintenance / memory-maintenance
 
@@ -90,7 +91,7 @@ setup (project initiation) → new-product-engineering/new-feature/bugfix/refact
 | Hardcoded secrets | security.md + verify security scan |
 | `rm -rf` | security.md + Agent refusal |
 | `curl \| sh` | security.md + Agent refusal |
-| Modifying `.git/hooks/` | security.md + Agent refusal |
+| Unrequested `.git/hooks/` changes | security.md + explicit authorization gate |
 
 ## Quick Start
 
@@ -141,8 +142,8 @@ harness-solo/
 │   ├── FEATURES.md                    # Dynamic feature status board
 │   ├── craft/                         # Engineering craft notes (Karpathy principles, etc.)
 │   ├── gates/                         # External check gates (reserved)
-│   ├── hooks/                         # git hooks (pre-commit/pre-push)
-│   │   └── guards/                    # Guard scripts (bash/commit-msg/secret/sensitive-file)
+│   ├── hooks/                         # optional pre-commit/pre-push/commit-msg hooks
+│   │   └── guards/                    # Reusable bash/commit-message/secret guards
 │   ├── loops/
 │   │   └── LOOP.md                    # Cycle engine definition
 │   ├── memory/
@@ -158,11 +159,10 @@ harness-solo/
 │   │   └── archive-progress.sh        # Progress archive (optional)
 │   ├── skills/
 │   │   ├── INDEX.md                   # Skill index (within 80 lines)
-│   │   ├── engineering/               # 17 engineering skills
+│   │   ├── engineering/               # 15 engineering skills
 │   │   ├── meta/                      # 4 meta skills
-│   │   └── workflows/                 # 8 workflows
+│   │   └── workflows/                 # 9 workflows
 │   └── templates/                     # 10 document templates
-│       ├── AGENTS.md.template
 │       ├── SOUL.md.template
 │       ├── constitution.md.template
 │       ├── PROJECT.md.template
@@ -170,7 +170,6 @@ harness-solo/
 │       ├── SKILL.md.template
 │       ├── spec.md.template
 │       ├── ADR.md.template
-│       ├── evidence.md.template
 │       └── progress.md.template
 └── docs/
     ├── product/                       # Product requirements (PROJECT.md)
@@ -220,11 +219,11 @@ install.sh execution → Guide filling SOUL/constitution/PROJECT/TECH_STACK → 
 ```
 session-start → Engineering Foundation Gate (hard gate) → brainstorming (product-level) → Product-level PLAN (ENGINEERING_PLAN.md)
 → [Phase 1] Shared Infrastructure LOOP (IC1 after all infra modules)
-→ [Phase 2] Per-feature new-feature LOOPs (topological sort; IC2-IC4 at milestones)
-→ product-engineering-review (IC5 runs as part of review) → Product-level Handoff → session-end
+→ [Phase 2] Nested canonical tasks (topological sort; checkpoints at real boundaries)
+→ product-engineering-review (IC5 runs as part of review) → session-end (publish requested product handoffs once)
 ```
 
-Use this when implementing an entire product with multiple features that must work together. It plans feature inventory + shared infrastructure + dependency graph first, then drives per-feature new-feature LOOPs, and finishes with cross-feature consistency review. For single-feature work, use `new-feature` instead.
+Use this for coordinated multi-feature delivery. ENGINEERING_PLAN owns scope/order, FEATURES owns aggregate status, and each nested task owns its own LOOP state; product review checks only cross-feature integration.
 
 ### new-feature (New Feature Development)
 
@@ -232,12 +231,7 @@ Use this when implementing an entire product with multiple features that must wo
 session-start → brainstorming (hard gate) → writing-plans → LOOP(tdd→verify-fast) → verify-full → code-review → session-end
 ```
 
-**brainstorming hard gate** (5 checks; stop and ask if any one is not met):
-- Are requirements clear?
-- Are acceptance criteria testable?
-- Is the constitution compliant?
-- Has the user confirmed?
-- Is it technically feasible?
+Brainstorming is required for material requirement ambiguity; a validated executable upstream spec can satisfy clarification without repeating discovery.
 
 ### bugfix (Bug Fix)
 
@@ -254,7 +248,7 @@ session-start → brainstorming (confirm boundaries) → writing-plans → Prere
 ### optimize (Performance Optimization)
 
 ```
-session-start → performance-optimization(MEASURE→IDENTIFY→FIX→VERIFY→GUARD) → code-review → session-end
+session-start → measure/identify → writing-plans → LOOP(performance ACT→verify-fast) → verify-full → code-review → session-end
 ```
 
 **Iron rule**: no changing code without baseline numbers.
@@ -262,18 +256,18 @@ session-start → performance-optimization(MEASURE→IDENTIFY→FIX→VERIFY→G
 ### migration (Code Migration)
 
 ```
-session-start → Decision hard gate → brainstorming → writing-plans → LOOP(incremental migration→verify) → Verify zero usage → Remove old system → session-end
+session-start → decision gate → writing-plans → LOOP(incremental migration→verify-fast) → prove zero usage/cleanup → verify-full → code-review → session-end
 ```
 
 ### release (Release)
 
 ```
-session-start → Pre-release checks (hard gate) → writing-documentation(CHANGELOG) → Version number management → Build + verify → Tag → code-review → session-end
+session-start → define release scope → verify/build artifacts → review metadata/artifacts → user-authorized version/tag → session-end
 ```
 
 **Release hard gate**:
-- All features in FEATURES.md are done
-- PROJECT.md success metrics met
+- All tasks included in this release scope are reviewed/done
+- Excluded known work is explicit
 - Full test suite passes
 - Security scan has no critical/high
 - constitution compliance
@@ -286,7 +280,7 @@ session-start → Pre-release checks (hard gate) → writing-documentation(CHANG
 # Required
 current_task: 001-todo-cli
 iteration: 2
-stage: act          # plan / act / verify / debug
+stage: act          # plan / act / verify / review / debug
 status: running     # running / done / needs-human / blocked / retrying / failed
 started_at: "2026-06-21T14:30:00"
 
@@ -318,7 +312,7 @@ After a session interruption, session-start reads `state.yaml` and resumes from 
 | refactor | 3 | Request human intervention |
 | optimize | 3 | Request human intervention |
 | migration | 3 | Request human intervention |
-| Total cycle | 10 | Request human intervention |
+| Hard cap | 10 | Failed attempt 10 triggers breaker; attempt 11 is forbidden |
 
 ## harness Family
 
@@ -382,7 +376,7 @@ See [`.harness/rules/security.md`](.harness/rules/security.md) for full security
 | Hardcoded secrets | Secret leakage risk |
 | `rm -rf` | Accidental deletion risk |
 | `curl \| sh` | Supply chain attack risk |
-| Modifying `.git/hooks/` | Breaks git hook integrity |
+| Replacing `.git/hooks/` without explicit approval | Breaks user-owned Git configuration |
 | `git push --force` to main | Overwrites others' commits |
 
 ## Load Chain (Strict Order)
