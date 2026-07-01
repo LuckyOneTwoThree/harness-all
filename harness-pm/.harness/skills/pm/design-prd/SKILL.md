@@ -59,76 +59,43 @@ All projects use the same unified most-complete 9-section structure. No tiering/
 
 ## 2. Quality Gates
 
-### Gate 1: Completeness Check
+PRD validation uses 4 Quality Gates mapped to P0/P1/P2 severity. The unified matrix is in [Reference/quality-checks.md](Reference/quality-checks.md).
 
-**Checklist**:
-- [ ] All 9 sections exist
-- [ ] All required fields are filled
-- [ ] MoSCoW prioritization annotated
-- [ ] Given-When-Then acceptance criteria cover the main flow
-- [ ] State design covers 5 special states
-- [ ] Non-functional requirements include 4 dimensions
+| Gate | Name | Severity | Coverage |
+|------|------|----------|----------|
+| Gate 1 | Completeness | P0 | Structure + field + MoSCoW + AC coverage + state coverage + NFR dimensions |
+| Gate 2 | Consistency | P1 | OKR→metric→feature→AC traceability chain + priority consistency + version consistency |
+| Gate 3 | Ambiguity Elimination | P1 | Quantifier quantification + dangling reference + logical contradiction + UI instruction overreach |
+| Gate 4 | Traceability | P2 | Feature→upstream artifact + AC→specific metric + metric→business objective |
 
-**Failure Handling**:
-- Block the generation process
-- Output missing items list
-- Provide guidance for supplementation
+**Gate pass rules** (per-mode requirements):
 
-### Gate 2: Consistency Check
+| Gate | quick | standard | deep |
+|------|-------|----------|------|
+| Gate 1 (Completeness) | ✅ required | ✅ required | ✅ required |
+| Gate 2 (Consistency) | ⚠️ best-effort | ✅ required | ✅ required |
+| Gate 3 (Ambiguity) | ⚠️ best-effort | ✅ required | ✅ required |
+| Gate 4 (Traceability) | ❌ skip | ⚠️ best-effort | ✅ required |
 
-**Check Rules**:
-- OKR objectives → success metrics consistency
-- Metrics → functional requirements consistency
-- Functional requirements → acceptance criteria consistency
-- Whether upstream/downstream references exist
+> "best-effort" means: attempt check, record failures, but do not block generation.
 
-**Traceability Chain**:
+**Failure handling**:
+- Gate 1 failure: Block generation, output missing items list, provide supplementation guidance
+- Gate 2/3 failure: Identify inconsistent locations, output correction suggestions, record as items pending confirmation; auto-correct identifiable ambiguities (fuzzy quantifiers, dangling references); logical contradiction issues are NOT auto-corrected, output suspected_contradictions list with `needs_human_review: true`
+- Gate 4 failure: Generate traceability chain breakpoint report, prompt missing traceability paths, require supplementing upstream evidence
+
+**Traceability Chain** (Gate 2/4):
 ```
 Strategic objectives → OKR → Key Results → Primary metrics → Functional requirements → Acceptance criteria
 ```
 
-**Failure Handling**:
-- Identify inconsistent locations
-- Provide correction suggestions
-- Record as items pending confirmation
+**UI instruction overreach detection** (Gate 3): Detect whether AC contains specific UI form instructions (e.g., "left sidebar", "red button"). If found, tag `needs_human_review: true` to force changing it to a business intent description (e.g., "provide a high-priority entry"), never auto-correct UI forms.
 
-### Gate 3: Ambiguity Check
-
-**Automatic Check Items**:
-- Fuzzy quantifier detection ("fast", "large amount", "occasionally", etc.)
-- Dangling reference detection (references to non-existent charts, fields, interfaces)
-- Logical contradiction detection: Annotate suspected contradictions (e.g., preconditions contradicting results, circular feature dependencies), output suspected_contradictions list, tag needs_human_review: true, do not auto-correct
-- UI instruction overreach detection: Detect whether AC contains specific UI form instructions (e.g., "left sidebar", "red button"). If found, tag needs_human_review: true to force changing it to a business intent description (e.g., "provide a high-priority entry"), never auto-correct UI forms
-
-**Human Review Items**:
-- Business rule reasonableness
-- User scenario authenticity
-- Technical solution feasibility
-- Suspected contradiction items in suspected_contradictions
-
-**Failure Handling**:
-- Auto-correct identifiable ambiguities (fuzzy quantifiers, dangling references)
-- Logical contradiction issues are not auto-corrected; output suspected_contradictions list and tag needs_human_review: true
-- Mark items requiring human confirmation
-- Generate ambiguity clarification question list
-
-### Gate 4: Traceability Check
-
-**Traceability Requirements**:
-- Each feature point can be traced to upstream output
-- Each acceptance criterion can be traced to a specific metric
-- Each metric can be traced to a business objective
-
-**Upstream Artifact Specific File Paths**:
+**Upstream Artifact Specific File Paths** (Gate 4):
 - insight_analysis: `docs/discovery/insight.md`
 - opportunity_definition: `docs/discovery/opportunity.md`
 - north_star_metric: `docs/strategy/PRODUCT_STRATEGY.md` ("North Star" section)
 - okr_candidates: `docs/strategy/OKR.md`
-
-**Failure Handling**:
-- Generate traceability chain breakpoint report
-- Prompt missing traceability paths
-- Require supplementing upstream evidence
 
 ## 3. Version Lifecycle [Conditional]
 

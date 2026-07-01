@@ -76,7 +76,7 @@ Check whether a design system exists:
 
 ### 4. Product-level PLAN
 
-Produce `docs/visual/DESIGN_PLAN.md` based on the `DESIGN_PLAN-template.md`, and **pre-generate per-page spec skeletons** to skip per-page PLAN:
+Produce `docs/visual/DESIGN_PLAN.md` based on the `templates/DESIGN_PLAN-template.md`, and **pre-generate per-page spec skeletons** to skip per-page PLAN:
 
 1. Read `docs/visual/DESIGN_BRIEF.md` for product scope, target audience, AC-xxx
 2. Read upstream `docs/handoff/pm-to-design.md` (if present) for PRD context, persona, page hints

@@ -42,4 +42,4 @@ When upstream files are missing, the following information is needed from the us
 | Downstream Consumer | Notification Condition | Notification Method | Notification Content |
 |------------|----------|----------|----------|
 | revenue-upsell | High-value user segmentation change | Write to output file | High-value user list and upgrade signals |
-| retention-orchestrator | Churn prediction and tiered operations complete | Output file updated | Retention management completion status and key conclusions |
+| growth-orchestrator (phase-4) | Churn prediction and tiered operations complete | Output file updated | Retention management completion status and key conclusions |

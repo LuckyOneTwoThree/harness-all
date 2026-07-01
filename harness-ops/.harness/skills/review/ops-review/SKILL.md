@@ -19,7 +19,7 @@ requires_approval: false
 - loops/specs/*/state.yaml
 - loops/specs/*/evidence.md
 - FEATURES.md
-- docs/handoff/ops-to-pm-template.md
+- docs/handoff/templates/ops-to-pm-template.md
 
 ## Outputs
 - docs/handoff/ops-to-pm.md

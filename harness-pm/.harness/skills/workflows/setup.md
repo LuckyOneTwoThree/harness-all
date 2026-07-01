@@ -56,20 +56,18 @@ default_mode: skip
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ Fill in PRODUCT_STRATEGY.md (skeleton)  │
+│ Create PRODUCT_STRATEGY.md placeholder  │
 │                                         │
-│  - Product overview / background        │
-│    motivation / target users            │
-│  - Core value proposition               │
-│  - Success metrics (quantifiable)       │
-│  - Out of scope (boundaries)            │
-│  - Milestones                           │
+│  - Create empty file with header only   │
+│  - Mark "to be filled by                │
+│    planning-orchestrator (phase-1:      │
+│    product-proposal) in new-product     │
+│    workflow"                            │
+│  - Do NOT fill skeleton content here    │
 │                                         │
-│  ★ Only fill in skeleton info known to  │
-│    user                                 │
-│  ★ Full output enriched and updated by  │
-│    planning-orchestrator in new-product │
-│    workflow                             │
+│  ★ product-proposal skill owns          │
+│    PRODUCT_STRATEGY.md content;         │
+│    setup only creates the placeholder   │
 └────────┬────────────────────────────────┘
          ▼
 ┌─────────────────────────────────────────┐
@@ -101,7 +99,7 @@ default_mode: skip
 
 - [ ] SOUL.md's product preferences filled?
 - [ ] constitution.md clauses verifiable? (Not "product should be good", but "PRD must pass 4 gates")
-- [ ] PRODUCT_STRATEGY.md success metrics quantifiable? (Not "users like it", but "DAU > 10000")
+- [ ] PRODUCT_STRATEGY.md placeholder created? (Content filled by product-proposal in new-product workflow)
 - [ ] PRD.md skeleton created?
 - [ ] All 5 files (AGENTS.md, SOUL.md, constitution.md, PRODUCT_STRATEGY.md, PRD.md) saved?
 
@@ -111,7 +109,7 @@ default_mode: skip
 |--------|---------|
 | Config files missing (partial install) | Prompt to re-run install.sh or copy from .harness/templates/ manually |
 | Constitution clauses not verifiable | Help user rewrite as verifiable descriptions |
-| PRODUCT_STRATEGY metrics not quantifiable | Help user rewrite as quantifiable descriptions |
+| PRODUCT_STRATEGY.md content needed before new-product workflow | Advise user to proceed to new-product workflow; product-proposal skill (phase-1) will fill content |
 
 ## Division of Labor with install.sh
 

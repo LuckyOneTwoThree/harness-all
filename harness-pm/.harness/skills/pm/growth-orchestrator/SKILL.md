@@ -40,6 +40,24 @@ Growth is not about blindly stacking channels, but about first figuring out whic
 
 Follows the [orchestrator-protocol.md](../../../templates/orchestrator-protocol.md) orchestration protocol.
 
+## Section Ownership Matrix
+
+`docs/growth/growth-strategy.md` is an aggregate file written by multiple skills. Each skill owns a specific section and MUST NOT write to sections owned by other skills. The growth-strategy-report (phase-6) performs assembly-only synthesis.
+
+| Section | Owner Skill (Write) | Phase | Read By |
+|---------|---------------------|-------|---------|
+| "Growth Model" section | growth-model | phase-1 | acquisition-analysis, activation-orchestrator, retention-management, revenue-orchestrator, growth-strategy-report |
+| "Acquisition Analysis" section | acquisition-analysis | phase-2 | growth-strategy-report |
+| "Aha Moment" section | activation-aha (via activation-orchestrator) | phase-3 | activation-onboarding, growth-strategy-report |
+| "Onboarding" section | activation-onboarding (via activation-orchestrator) | phase-3 | growth-strategy-report |
+| "Retention Management" section | retention-management | phase-4 | growth-strategy-report |
+| "Revenue Funnel" section | revenue-funnel (via revenue-orchestrator) | phase-5 | revenue-nrr, growth-strategy-report |
+| "NRR Analysis" section | revenue-nrr (via revenue-orchestrator) | phase-5 | revenue-upsell, growth-strategy-report |
+| "Upsell" section | revenue-upsell (via revenue-orchestrator) | phase-5 | growth-strategy-report |
+| Consolidated overwrite | growth-strategy-report | phase-6 | Downstream consumers |
+
+> **Write isolation rule**: A skill may ONLY write to its owned section. Reading other sections is allowed. The growth-strategy-report (phase-6) performs assembly-only synthesis and may overwrite the consolidated file, but must preserve the content of sections owned by phases 1-5.
+
 ## Pipeline
 
 ```yaml
@@ -62,7 +80,7 @@ stages:
   - id: phase-2
     name: "Acquisition Optimization"
     depends_on: [phase-1]
-    skills: [acquisition-orchestrator]
+    skills: [acquisition-analysis]
     trigger: growth-model output bottleneck == "acquisition" or acquisition conversion rate below 50% of industry benchmark
     gate:
       condition: "Channel evaluation completed and funnel optimization plan generated"
@@ -80,7 +98,7 @@ stages:
   - id: phase-4
     name: "Retention Optimization"
     depends_on: [phase-1]
-    skills: [retention-orchestrator]
+    skills: [retention-management]
     trigger: growth-model output bottleneck == "retention" or D7 retention rate below 20%
     gate:
       condition: "Churn prediction model built and user segmentation completed"

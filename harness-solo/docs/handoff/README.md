@@ -27,10 +27,10 @@ For example:
 
 ## Templates
 
-- `handoff-template.md` — Generic handoff template
-- `solo-to-pm-template.md` — harness-solo → harness-pm dedicated template (engineering feedback: implementation status / blockers, on demand)
-- `solo-to-growth-template.md` — harness-solo → harness-growth dedicated template (includes implemented features list + AC-xxx + performance metrics + tracking events)
-- `solo-to-ops-template.md` — harness-solo → ops dedicated template (engineering handoff to ops: deployment checklist + config items + monitoring alerts + rollback plan)
+- `templates/handoff-template.md` — Generic handoff template
+- `templates/solo-to-pm-template.md` — harness-solo → harness-pm dedicated template (engineering feedback: implementation status / blockers, on demand)
+- `templates/solo-to-growth-template.md` — harness-solo → harness-growth dedicated template (includes implemented features list + AC-xxx + performance metrics + tracking events)
+- `templates/solo-to-ops-template.md` — harness-solo → ops dedicated template (engineering handoff to ops: deployment checklist + config items + monitoring alerts + rollback plan)
 
 Copy and fill in based on actual conditions.
 

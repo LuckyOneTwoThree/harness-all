@@ -16,7 +16,7 @@ description: Generate a growth review report (weekly / monthly / quarterly), sum
 - loops/specs/*/state.yaml
 - loops/specs/*/evidence.md
 - FEATURES.md
-- docs/handoff/growth-to-pm-template.md
+- docs/handoff/templates/growth-to-pm-template.md
 
 ## Outputs
 - docs/handoff/growth-to-pm.md
@@ -94,7 +94,7 @@ description: Generate a growth review report (weekly / monthly / quarterly), sum
    ```
 
 7. **Produce growth-to-pm.md** (when conditions are met)
-   Fill in per the `docs/handoff/growth-to-pm-template.md` template:
+   Fill in per the `docs/handoff/templates/growth-to-pm-template.md` template:
    - Period summary: one-line summary of this period's growth work
    - Experiment results table: conclusions of all completed experiments
    - User feedback: collected user insights

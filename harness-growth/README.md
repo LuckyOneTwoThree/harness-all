@@ -172,8 +172,9 @@ harness-growth/
     ├── operations/                    # Operations docs (GROWTH_STRATEGY.md)
     └── handoff/                       # harness family handoff documents
         ├── README.md
-        ├── handoff-template.md
-        └── growth-to-pm-template.md
+        └── templates/                 # handoff templates (scaffolds)
+            ├── handoff-template.md
+            └── growth-to-pm-template.md
 ```
 
 ## Document System

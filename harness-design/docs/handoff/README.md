@@ -26,10 +26,10 @@ For example:
 
 ## Templates
 
-- `handoff-template.md`: Generic handoff template
-- `design-to-solo-template.md`: harness-design → harness-solo template with stable AC/DAC IDs and semantic component contract reference
+- `templates/handoff-template.md`: Generic handoff template
+- `templates/design-to-solo-template.md`: harness-design → harness-solo template with stable AC/DAC IDs and semantic component contract reference
 
-- `design-to-pm-template.md`: harness-design to harness-pm product feedback with stable feedback IDs and evidence
+- `templates/design-to-pm-template.md`: harness-design to harness-pm product feedback with stable feedback IDs and evidence
 
 Copy and fill in based on actual conditions.
 

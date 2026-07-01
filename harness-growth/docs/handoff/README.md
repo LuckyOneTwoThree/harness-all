@@ -38,8 +38,8 @@ For example:
 
 | Template | Purpose |
 |------|------|
-| `handoff-template.md` | Generic handoff template |
-| `growth-to-pm-template.md` | Dedicated template for growth feedback to product |
+| `templates/handoff-template.md` | Generic handoff template |
+| `templates/growth-to-pm-template.md` | Dedicated template for growth feedback to product |
 
 > Inbound templates (pm-to-growth / solo-to-growth) are provided by the source framework and are not stored in this framework.
 

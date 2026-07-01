@@ -12,6 +12,18 @@ description: Used when generating acceptance execution plans and sign-off report
 - Version is going to acceptance, help me produce the report
 - Organize the acceptance results
 
+## Scope Boundary
+
+> **This skill does NOT produce Acceptance Criteria (AC-xxx).**
+>
+> AC-xxx is produced by `design-prd` skill in PRD Section 7 (Acceptance Criteria) and projected to `prd.json.features[].acceptance_criteria[]`.
+>
+> This skill **consumes** already-produced AC to generate:
+> - Acceptance execution plan (test strategy + environment config + execution instructions)
+> - Sign-off report (pass/fail per AC + open issues + auditable sign-off)
+>
+> **Invocation prerequisite**: PRD must be finalized with AC-xxx before this skill can run.
+
 ## Outputs
 - docs/monitoring/release-notes.md
 - memory/progress.md

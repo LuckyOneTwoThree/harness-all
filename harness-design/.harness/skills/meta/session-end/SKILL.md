@@ -31,7 +31,7 @@ Only harness-design writes its outbound contracts. Apply `.harness/rules/handoff
 
 ### Design to Solo
 
-Prefer `design-handoff-spec`; session-end may publish only when that skill was not run and approved engineering-consumable design exists. Use `docs/handoff/design-to-solo-template.md` and include the framework-neutral component contract.
+Prefer `design-handoff-spec`; session-end may publish only when that skill was not run and approved engineering-consumable design exists. Use `docs/handoff/templates/design-to-solo-template.md` and include the framework-neutral component contract.
 
 Hard checks:
 
@@ -44,7 +44,7 @@ Hard checks:
 
 ### Design to PM
 
-Publish `design-to-pm.md` using `docs/handoff/design-to-pm-template.md` when design discovers a product-scope conflict, ambiguous business rule, infeasible requirement, user-flow gap, or evidence that should change the PRD.
+Publish `design-to-pm.md` using `docs/handoff/templates/design-to-pm-template.md` when design discovers a product-scope conflict, ambiguous business rule, infeasible requirement, user-flow gap, or evidence that should change the PRD.
 
 Each feedback item has a stable `feedback_id`, affected AC IDs, evidence, recommendation, impact, and requested PM decision. This is feedback, not authority to rewrite the PRD.
 

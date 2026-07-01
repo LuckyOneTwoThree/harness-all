@@ -66,13 +66,13 @@ The following scenarios **always pause**, unaffected by exploration_mode:
 1. **AGENTS.md** (this file) — required reading at startup
 2. **SOUL.md + constitution.md** — read on first interaction (persona identity + project constitution)
 3. **skills/INDEX.md** — read when selecting a Skill (pure index, under 80 lines)
-4. **Corresponding SKILL.md** — read when executing a task (82 PM skills (82 domain + 4 meta = 86 total) under `.harness/skills/pm/`)
+4. **Corresponding SKILL.md** — read when executing a task (80 PM skills (80 domain + 4 meta = 84 total) under `.harness/skills/pm/`)
 5. **memory/progress.md** — read at session-start
 
 ## Skill Selection
 
 When you need to select a Skill, read `.harness/skills/INDEX.md` (pure index, under 80 lines).
-- PM methodology skills are under `.harness/skills/pm/` (7 modules, 82 domain skills (+ 4 meta = 86 total))
+- PM methodology skills are under `.harness/skills/pm/` (7 modules, 80 domain skills (+ 4 meta = 84 total))
 - Workflow orchestration is under `.harness/skills/workflows/`, read on demand (10 workflows)
 - Meta skills (session management / maintenance) are under `.harness/skills/meta/`
 

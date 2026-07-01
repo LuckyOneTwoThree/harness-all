@@ -29,10 +29,10 @@ For example:
 
 ## Templates
 
-- `handoff-template.md` — Generic handoff template
-- `pm-to-solo-template.md` — harness-pm → harness-solo dedicated template (includes PRD path + AC-xxx + feature priorities + tracking plan)
-- `pm-to-design-template.md` — harness-pm → harness-design dedicated template (includes PRD path + AC-xxx + Persona + style keywords)
-- `pm-to-growth-template.md` — harness-pm → harness-growth dedicated template (includes OKR + North Star metric + growth hypotheses)
+- `templates/handoff-template.md` — Generic handoff template
+- `templates/pm-to-solo-template.md` — harness-pm → harness-solo dedicated template (includes PRD path + AC-xxx + feature priorities + tracking plan)
+- `templates/pm-to-design-template.md` — harness-pm → harness-design dedicated template (includes PRD path + AC-xxx + Persona + style keywords)
+- `templates/pm-to-growth-template.md` — harness-pm → harness-growth dedicated template (includes OKR + North Star metric + growth hypotheses)
 
 Copy and fill in based on actual conditions.
 

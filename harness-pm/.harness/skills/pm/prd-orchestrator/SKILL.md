@@ -17,11 +17,12 @@ description: Use when you need to generate a PRD or assess the impact of PRD cha
 
 ## Outputs
 - docs/product/PRD.md
-- docs/handoff/pm-to-design.md
-- docs/handoff/pm-to-solo.md
+- docs/product/prd.json
 - output/phase-reports/prd-orchestrator.json
 - memory/progress.md
 - memory/knowledge-base.md
+
+> **Handoff publication note**: PRD 产出后，handoff 文档（`pm-to-solo.md` / `pm-to-design.md`）由 `session-end` skill 的步骤 6a/6b 统一发布，遵循 publication gate（SHA-256 校验 + 包结构 + envelope 完整性）。prd-orchestrator 不直接产 handoff 文档，避免绕过 Consumer Gate 校验。
 
 ## Core Principles
 

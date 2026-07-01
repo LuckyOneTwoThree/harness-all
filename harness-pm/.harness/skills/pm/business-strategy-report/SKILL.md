@@ -41,21 +41,24 @@ description: Used when a complete business strategy planning document is needed.
 
 ## Execution Steps
 
-### Step 1: Strategic Posture Assessment [Core]
+> **Assembly-only mode**: This skill is an assembly skill. Steps 1-2 perform synthesis from already-produced upstream artifacts, NOT re-analysis. The upstream skills (business-model-canvas, business-value-fit, business-pricing, positioning-strategy, stakeholder-analysis, planning-north-star, planning-okr, planning-roadmap, strategic-analysis) own the analysis; this skill synthesizes them into a coherent strategic narrative.
 
-Integrate SWOT + Porter's Five Forces + Value Curve to assess the current strategic posture:
+### Step 1: Assembly + Strategic Posture Synthesis [Core]
 
-**External Environment Assessment**:
-- Industry attractiveness (Porter's Five Forces conclusion)
-- Market opportunity window (SWOT's O)
-- External threat level (SWOT's T)
-- Competitive positioning (differentiated position in the value curve)
+**Assembly** (read-only, no re-analysis):
+- Read Business Model Canvas from `docs/strategy/business-strategy.md` ("Business Model Canvas" section)
+- Read Value Fit from `docs/strategy/business-strategy.md` ("Value Fit" section)
+- Read Pricing from `docs/strategy/business-strategy.md` ("Pricing Strategy" section)
+- Read SWOT from `docs/strategy/PRODUCT_STRATEGY.md` ("Strategic Analysis" section)
+- Read OKR from `docs/strategy/OKR.md`
+- Read Roadmap from `docs/strategy/roadmap.md`
+- Read Positioning from `docs/strategy/positioning.md`
+- Read Stakeholders from `docs/strategy/stakeholder-analysis.md`
+- Read North Star from `docs/strategy/PRODUCT_STRATEGY.md` ("North Star" section)
 
-**Internal Capability Assessment**:
-- Core strengths (SWOT's S)
-- Key weaknesses (SWOT's W)
-- Resource endowment (key resources from the Business Model Canvas)
-- Capability gaps (capabilities needed to execute the strategy but currently missing)
+**Synthesis** (new analysis, not re-derivation):
+- Strategic Posture Matrix: derive from assembled SWOT + Value Curve (synthesize, not re-analyze)
+- Strategic posture judgment: Offensive / Defensive / Turnaround / Survival based on assembled data
 
 **Strategic Posture Matrix**:
 
@@ -64,26 +67,16 @@ Integrate SWOT + Porter's Five Forces + Value Curve to assess the current strate
 | **Strong Strengths** | Offensive Strategy | Defensive Strategy |
 | **Obvious Weaknesses** | Turnaround Strategy | Survival Strategy |
 
-### Step 2: Strategic Direction Reasoning [Core]
+### Step 2: Strategic Direction Synthesis [Core]
 
-Based on the posture assessment, reason through 2-3 strategic directions:
+**Synthesis** (based on assembled data, not re-derivation):
+- Compare 2-3 strategic directions based on assembled posture assessment + positioning + OKR
+- Each direction includes: Ansoff positioning, core rationale (cite upstream evidence), target market, differentiation strategy, key assumptions, risk factors
 
 **Reasoning Logic**:
 ```
-Posture Judgment → Ansoff Matrix Positioning → Strategic Direction Selection → Positioning Validation → OKR Alignment
+Posture Synthesis → Ansoff Matrix Positioning → Strategic Direction Comparison → Positioning Validation → OKR Alignment
 ```
-
-**Each strategic direction includes**:
-
-| Element | Description |
-|------|------|
-| Direction Name | One-sentence summary |
-| Ansoff Positioning | Market Penetration / Market Development / Product Development / Diversification |
-| Core Rationale | Why this direction is viable (cite SWOT/Five Forces/Value Curve evidence) |
-| Target Market | Which users/scenarios to focus on |
-| Differentiation Strategy | How to differentiate from competitors (cite differentiation assessment) |
-| Key Assumptions | Preconditions for the strategy to hold |
-| Risk Factors | Factors that may cause the strategy to fail |
 
 **Strategic Direction Comparison Table**:
 

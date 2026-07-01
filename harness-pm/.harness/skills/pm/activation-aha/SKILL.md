@@ -9,6 +9,16 @@ description: Use when you need to identify and engineer Aha Moments. Aha Moment 
 - How to find the aha moment
 - How long for new users to experience core value
 
+## Mode Boundary
+
+> ⚠️ **Standalone fallback only.**
+>
+> In **family mode** (with harness-growth installed), this skill is NOT directly invoked. PM produces `docs/handoff/pm-to-growth.md` instead, and harness-growth owns channel/content/SEO/user operations and experiment execution (per `DOMAIN_BOUNDARIES.md` Ownership Matrix).
+>
+> In **standalone mode** (PM is the only harness), this skill is the fallback for growth-related work. All outputs must be marked `mode: standalone-fallback`.
+>
+> **Detection rule**: If `docs/handoff/pm-to-growth.md` exists or harness-growth is installed, do NOT invoke this skill; produce/refresh `pm-to-growth.md` instead.
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

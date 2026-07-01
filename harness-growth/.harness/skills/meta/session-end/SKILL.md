@@ -13,7 +13,7 @@ description: Session wrap-up, archive progress + write baseline + update board +
 - memory/progress.md
 - loops/specs/*/state.yaml
 - FEATURES.md
-- docs/handoff/growth-to-pm-template.md
+- docs/handoff/templates/growth-to-pm-template.md
 
 ## Outputs
 - memory/progress.md
@@ -80,7 +80,7 @@ Archiving must be performed before the session ends; "bare exit" is not allowed 
 
    **Write Access Unidirectional Isolation (Non-negotiable)**: Only the producing party may write handoff documents. `growth-to-pm.md` can only be written by Growth. Consumers may only read; modifying upstream handoff documents is prohibited. To provide feedback, use `AskUserQuestion` to have the user relay it, or write it to your own outbound handoff document.
 
-   If this session completed growth work **that can be fed back to harness-pm** (experiment conclusions, growth data, user insights), produce `docs/handoff/growth-to-pm.md` using the `docs/handoff/growth-to-pm-template.md` template:
+   If this session completed growth work **that can be fed back to harness-pm** (experiment conclusions, growth data, user insights), produce `docs/handoff/growth-to-pm.md` using the `docs/handoff/templates/growth-to-pm-template.md` template:
 
    **Trigger conditions** (any one met):
    - An experiment's status changed from `in_progress` to `done` this session, and the conclusion is clearly valid/invalid

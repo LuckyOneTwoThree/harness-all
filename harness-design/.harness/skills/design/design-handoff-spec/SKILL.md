@@ -54,7 +54,7 @@ Read only approved design artifacts. Confirm every referenced page, interaction,
 
 ### 4. Produce Human-Readable Contract
 
-Fill `docs/handoff/design-to-solo-template.md` with:
+Fill `docs/handoff/templates/design-to-solo-template.md` with:
 
 - phase summary and asset inventory;
 - pages, navigation, components, and flows;

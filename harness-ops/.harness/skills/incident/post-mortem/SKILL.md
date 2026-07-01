@@ -18,7 +18,7 @@ requires_approval: false
 - loops/specs/<incident-id>/evidence.md
 - loops/specs/<incident-id>/iterations.log
 - memory/knowledge-base.md
-- docs/handoff/ops-to-pm-template.md
+- docs/handoff/templates/ops-to-pm-template.md
 
 ## Outputs
 - docs/incident/<incident-id>-post-mortem.md

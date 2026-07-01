@@ -44,7 +44,7 @@ Have clear change requirements (user feedback/business needs/missing features)?
 │    analysis + change)                   │
 │  - change-impact-analysis               │
 │    (Change impact: affected modules +   │
-│     risk + migration)                   │
+│     risk + version_updates)             │
 │                                         │
 │  ★ Hard gate check:                     │
 │  - Is change scope clear?               │
@@ -107,7 +107,7 @@ Have clear change requirements (user feedback/business needs/missing features)?
 
 ## Key Checkpoints
 
-- [ ] Change impact analysis complete? (Affected modules/risks/migration paths)
+- [ ] Change impact analysis complete? (Affected modules/risks/version updates)
 - [ ] Data diagnosis has conclusions? (Based on data analysis, not gut feeling)
 - [ ] Post-change PRD passed quality gate?
 - [ ] Human approved? (Solution selection/priority)

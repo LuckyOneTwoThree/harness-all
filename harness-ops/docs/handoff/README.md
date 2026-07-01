@@ -23,8 +23,8 @@ Transfer complete `packages/<handoff_id>/` directories, not standalone Markdown 
 
 | Template | Purpose |
 |------|------|
-| `handoff-template.md` | Generic handoff template |
-| `ops-to-pm-template.md` | Dedicated template for ops feedback to product |
+| `templates/handoff-template.md` | Generic handoff template |
+| `templates/ops-to-pm-template.md` | Dedicated template for ops feedback to product |
 
 > Inbound templates (solo-to-ops) are provided by the source framework harness-solo and are not stored in this framework.
 

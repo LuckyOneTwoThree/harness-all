@@ -110,7 +110,7 @@ After all sub-skills finish executing, a stage summary document must be generate
 | Approval record path | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
 
 Downstream handoff:
-  primary: retention-orchestrator (user activation optimization complete, prevent user churn)
+  primary: retention-management (user activation optimization complete, prevent user churn)
   alternatives:
     - target: growth-orchestrator
       reason: Activation is not the current bottleneck, fall back to growth diagnosis for re-evaluation

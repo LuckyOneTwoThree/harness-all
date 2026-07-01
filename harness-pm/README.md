@@ -173,10 +173,11 @@ harness-pm/
     ├── project/                       # Project charter, Sprint
     └── handoff/                       # harness family handoff documents
         ├── README.md
-        ├── handoff-template.md
-        ├── pm-to-design-template.md
-        ├── pm-to-growth-template.md
-        └── pm-to-solo-template.md
+        └── templates/                 # handoff templates (scaffolds)
+            ├── handoff-template.md
+            ├── pm-to-design-template.md
+            ├── pm-to-growth-template.md
+            └── pm-to-solo-template.md
 ```
 
 ## Document System

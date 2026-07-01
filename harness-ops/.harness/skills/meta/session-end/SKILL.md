@@ -13,8 +13,8 @@ description: Session wrap-up, archive progress + write baseline + update board +
 - memory/progress.md
 - loops/specs/*/state.yaml
 - FEATURES.md
-- docs/handoff/handoff-template.md
-- docs/handoff/ops-to-pm-template.md
+- docs/handoff/templates/handoff-template.md
+- docs/handoff/templates/ops-to-pm-template.md
 
 ## Outputs
 - memory/progress.md
@@ -79,7 +79,7 @@ Archiving must be performed before the session ends; "bare exit" is not allowed 
 
    **Write Access Unidirectional Isolation (Non-negotiable)**: Only the producing party may write handoff documents. `ops-to-pm.md` can only be written by Ops. Consumers may only read; modifying upstream handoff documents is prohibited. To provide feedback, use `AskUserQuestion` to have the user relay it, or write it to your own outbound handoff document.
 
-   If this session completed **ops tasks that can be fed back to PM** (e.g., successful deployment, SLA report, incident postmortem), produce `docs/handoff/ops-to-pm.md` using the `docs/handoff/ops-to-pm-template.md` template:
+   If this session completed **ops tasks that can be fed back to PM** (e.g., successful deployment, SLA report, incident postmortem), produce `docs/handoff/ops-to-pm.md` using the `docs/handoff/templates/ops-to-pm-template.md` template:
 
    **Trigger conditions** (any one met):
    - A task's status changed from `running` to `done` this session (successful deployment)

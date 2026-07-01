@@ -42,23 +42,30 @@ The core value of the growth strategy report lies in consolidating scattered gro
 
 ## Execution Steps
 
-### Step 1: Growth Model Evaluation [Core]
+> **Assembly-only mode**: This skill is an assembly skill. Steps 1-2 perform synthesis from already-produced upstream artifacts (growth-model + acquisition-analysis + activation-* + retention-management + revenue-*), NOT re-diagnosis. The upstream skills own the analysis; this skill synthesizes them into a coherent growth strategy narrative.
 
-Distill core judgments from the growth model diagnosis results:
+### Step 1: Assembly + Growth Model Synthesis [Core]
 
-1. **Growth model identification**: PLG / SLG / MLG / Hybrid model and the rationale
-2. **Flywheel model construction**: Flywheel nodes, causal relationships, reinforcing loops, current rotation status
-3. **Bottleneck localization**: Current biggest bottleneck stage and quantified rationale
+**Assembly** (read-only, no re-diagnosis):
+- Read Growth Model from `docs/growth/growth-strategy.md` ("Growth Model" section)
+- Read Acquisition plan from `docs/growth/growth-strategy.md` ("Acquisition Analysis" section)
+- Read Activation plan from `docs/growth/growth-strategy.md` ("Aha Moment" + "Onboarding" sections)
+- Read Retention plan from `docs/growth/growth-strategy.md` ("Retention Management" section)
+- Read Revenue plan from `docs/growth/growth-strategy.md` ("Revenue Funnel" + "NRR Analysis" + "Upsell" sections)
+
+**Synthesis** (new analysis, not re-derivation):
+1. **Growth model identification**: Distill from assembled growth-model diagnosis (PLG / SLG / MLG / Hybrid)
+2. **Flywheel model construction**: Synthesize from assembled data (nodes, causal relationships, current rotation status)
+3. **Bottleneck localization**: Distill from assembled growth-model output
 4. **Growth stage assessment**: Cold start / takeoff / scale / mature
 
-### Step 2: AARRR Funnel Diagnosis [Core]
+### Step 2: AARRR Funnel Synthesis [Core]
 
-Integrate the analysis results of each stage to build a full-funnel view:
-
-1. **Acquisition funnel**: Exposure → click → registration → activation, conversion rates at each stage vs. industry benchmarks
-2. **Activation funnel**: Registration → Aha Moment → core feature usage, time-decay analysis
-3. **Retention curve**: D1/D7/D30 retention rates, retention curve shape (power law/exponential/logarithmic)
-4. **Monetization funnel**: Free → trial → paid → renewal → upsell, ARPU contribution at each stage
+**Synthesis** (integrate assembled stage plans, not re-analyze):
+1. **Acquisition funnel**: Synthesize from assembled acquisition plan (conversion rates vs. industry benchmarks)
+2. **Activation funnel**: Synthesize from assembled activation plan (Aha Moment + time decay)
+3. **Retention curve**: Synthesize from assembled retention plan (D1/D7/D30 + shape analysis)
+4. **Monetization funnel**: Synthesize from assembled revenue plan (ARPU contribution breakdown)
 
 ### Step 3: Leverage Strategy Integration [Core]
 

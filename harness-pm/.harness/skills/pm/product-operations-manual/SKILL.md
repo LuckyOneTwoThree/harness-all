@@ -9,6 +9,18 @@ description: Used when consolidating operations strategies and processes into a 
 - How to standardize daily operations processes
 - Help me organize operations SOP
 
+## Scope Boundary
+
+> **PM owns product operations manual; Ops owns technical operations manual.**
+>
+> | Dimension | PM (this skill) | Ops (harness-ops) |
+> |-----------|-----------------|-------------------|
+> | Output | `docs/growth/operations-manual.md` | `OPS_STRATEGY.md` |
+> | Focus | Product-level operations: user ops scenarios, content ops rhythm, growth ops triggers, activity ops templates | System-level operations: deployment, infrastructure, SLA/SLO, incidents, scaling |
+> | Consumer | Growth team (product ops guidance) | Ops team (technical ops execution) |
+>
+> **Boundary**: PM does NOT produce deployment runbooks, infrastructure alerts, or SLO definitions. Ops does NOT reinterpret business success metrics.
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

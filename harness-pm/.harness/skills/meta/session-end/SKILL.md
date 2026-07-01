@@ -13,10 +13,10 @@ description: Session wrap-up, archive progress + write baseline + update board +
 - memory/progress.md
 - loops/specs/*/state.yaml
 - FEATURES.md
-- docs/handoff/handoff-template.md
-- docs/handoff/pm-to-design-template.md
-- docs/handoff/pm-to-solo-template.md
-- docs/handoff/pm-to-growth-template.md
+- docs/handoff/templates/handoff-template.md
+- docs/handoff/templates/pm-to-design-template.md
+- docs/handoff/templates/pm-to-solo-template.md
+- docs/handoff/templates/pm-to-growth-template.md
 - docs/discovery/user-research.md
 - docs/discovery/market-analysis.md
 
@@ -88,7 +88,7 @@ Archiving is required before the session ends; "bare exit" is not allowed — th
    Based on this session's output type, generate the corresponding handoff document:
 
    **6a. Produce pm-to-solo.md** (Product → Engineering)
-   If this session completed a product design **handable to engineering** (e.g., PRD, design specs, instrumentation plan), produce `docs/handoff/pm-to-solo.md` using the `docs/handoff/pm-to-solo-template.md` template:
+   If this session completed a product design **handable to engineering** (e.g., PRD, design specs, instrumentation plan), produce `docs/handoff/pm-to-solo.md` using the `docs/handoff/templates/pm-to-solo-template.md` template:
 
    **Trigger conditions** (any one met):
    - A feature status changed from `in_progress` to `approved` this session
@@ -111,7 +111,7 @@ Archiving is required before the session ends; "bare exit" is not allowed — th
    - Write to the "Business Context Summary" section of pm-to-solo.md
 
    **6b. Produce pm-to-design.md** (Product → Design)
-   If this session completed product requirements **handable to design** (e.g., PRD, positioning statement, Persona, user profile), produce `docs/handoff/pm-to-design.md` using the `docs/handoff/pm-to-design-template.md` template:
+   If this session completed product requirements **handable to design** (e.g., PRD, positioning statement, Persona, user profile), produce `docs/handoff/pm-to-design.md` using the `docs/handoff/templates/pm-to-design-template.md` template:
 
    **Trigger conditions** (any one met):
    - This session produced a PRD or updated core PRD fields (product type / target audience / Persona / AC)
@@ -133,7 +133,7 @@ Archiving is required before the session ends; "bare exit" is not allowed — th
    - Multiple files can be produced simultaneously (e.g., this session completed both PRD and OKR; PRD goes to design, OKR goes to growth)
 
    **6c. Produce pm-to-growth.md** (Product → Growth)
-   If this session completed product data **handable to growth** (e.g., OKR, North Star metric, growth hypothesis, instrumentation plan), produce `docs/handoff/pm-to-growth.md` using the `docs/handoff/pm-to-growth-template.md` template:
+   If this session completed product data **handable to growth** (e.g., OKR, North Star metric, growth hypothesis, instrumentation plan), produce `docs/handoff/pm-to-growth.md` using the `docs/handoff/templates/pm-to-growth-template.md` template:
 
    **Trigger conditions** (any one met):
    - This session produced OKR or defined a North Star metric

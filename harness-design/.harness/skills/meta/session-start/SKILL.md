@@ -46,6 +46,16 @@ Context must be loaded before the session begins; working with "amnesia" is not 
    - Resolve PRD and research artifacts from inside the package; producer-local `docs/...` paths outside it are invalid
    - Report valid unconsumed handoffs. Report exact validation failures and do not consume a package partially
 
+### 5a. AC Change Impact Analysis (when supersedes an already-consumed handoff)
+
+When a newly accepted pm-to-design.md supersedes a previously consumed handoff, compare the new envelope `ac_ids` against the AC IDs already implemented in `loops/specs/*/spec.md` and recorded in `memory/progress.md`:
+
+- **Removed ACs** (in old set, not in new): identify the design task owning each removed AC. Flag the corresponding task for re-verification or rework since its acceptance basis may have been withdrawn.
+- **Added ACs** (in new set, not in old): new design scope. Route via design-brief → new-design or design-iteration workflow.
+- **Unchanged ACs**: no action; existing evidence remains valid unless the AC text changed (per acceptance-id-protocol, changed meaning gets a new ID, so same ID = same semantics).
+
+Record the diff in the new session block of progress.md: `AC Change: removed=[...], added=[...], affected_tasks=[...]`. If removed ACs affect done tasks, surface this to the user before proceeding — per STATE_PROTOCOL.md, `done` is terminal and further work creates a new task (e.g., `<original-task-id>-fix-<N>`) to address the withdrawn acceptance basis, rather than re-opening the original.
+
 6. **Confirm task scope**
    Confirm with the user what this session will accomplish, and write a new session block to progress.md:
    ```

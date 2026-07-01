@@ -202,21 +202,23 @@ Each framework must be able to **independently complete its domain work** withou
 
 Frameworks collaborate via contract documents under `docs/handoff/`. Each document has a clear **source framework** and **target framework**.
 
-> The following is a logical view of all contract documents and templates across the harness family. Physically, each framework's `docs/handoff/` directory only contains its own produced templates + the generic handoff-template.md + README.md; contract documents (`*.md` without `-template` suffix) are runtime products generated during workflow execution.
+> The following is a logical view of all contract documents and templates across the harness family. Physically, each framework's `docs/handoff/` directory contains its own produced templates under `templates/` + README.md; contract documents (`*.md` without `-template` suffix) are runtime products generated during workflow execution.
 
 ```
 docs/handoff/
 ├── README.md                    # Handoff protocol description
-├── handoff-template.md          # Generic template (not a contract document)
-├── pm-to-design-template.md     # PM → Design template (not a contract document)
-├── pm-to-solo-template.md       # PM → Solo template (not a contract document)
-├── pm-to-growth-template.md     # PM → Growth template (not a contract document)
-├── design-to-solo-template.md   # Design → Solo template (not a contract document)
-├── solo-to-pm-template.md       # Solo → PM template (not a contract document)
-├── solo-to-growth-template.md   # Solo → Growth template (not a contract document)
-├── solo-to-ops-template.md      # Solo → Ops template (not a contract document)
-├── ops-to-pm-template.md        # Ops → PM template (not a contract document)
-├── growth-to-pm-template.md     # Growth → PM template (not a contract document)
+├── templates/                   # All handoff templates (scaffolds, not contract documents)
+│   ├── handoff-template.md          # Generic template
+│   ├── pm-to-design-template.md     # PM → Design template
+│   ├── pm-to-solo-template.md       # PM → Solo template
+│   ├── pm-to-growth-template.md     # PM → Growth template
+│   ├── design-to-solo-template.md   # Design → Solo template
+│   ├── design-to-pm-template.md     # Design → PM template
+│   ├── solo-to-pm-template.md       # Solo → PM template
+│   ├── solo-to-growth-template.md   # Solo → Growth template
+│   ├── solo-to-ops-template.md      # Solo → Ops template
+│   ├── ops-to-pm-template.md        # Ops → PM template
+│   └── growth-to-pm-template.md     # Growth → PM template
 │
 ├── pm-to-design.md              # Contract: PM → Design (PRD + Persona + AC)
 ├── pm-to-solo.md                # Contract: PM → Solo (PRD + AC + Tracking)
@@ -231,7 +233,7 @@ docs/handoff/
 └── component-contract.json      # Contract: Design → Solo semantic component layer
 ```
 
-**Note**: templates are scaffolds only. The transferable unit is a self-contained `packages/<handoff_id>/` directory with contract, manifest, hashes, and artifacts.
+**Note**: templates are scaffolds only (under `templates/`). The transferable unit is a self-contained `packages/<handoff_id>/` directory with contract, manifest, hashes, and artifacts.
 
 ### 4.2 Contract Document Flow Diagram
 
@@ -310,11 +312,11 @@ Scoped stable IDs prevent collisions across features/pages and keep source/revis
 
 #### 4.3.3 Dedicated Templates and Data Files
 
-**Template files** (scaffolds for producing contract documents):
+**Template files** (scaffolds for producing contract documents, all located under `docs/handoff/templates/`):
 
 | Template | Purpose | Key Fields |
 |------|------|---------|
-| `handoff-template.md` | Generic handoff | Phase summary / Deliverables list / AC / Open items |
+| `templates/handoff-template.md` | Generic handoff | Phase summary / Deliverables list / AC / Open items |
 | `pm-to-design-template.md` | PM → Design | Product type / Target audience / Tech stack / Persona / PRD path / AC-xxx / Style keywords / Out-of-scope list |
 | `pm-to-solo-template.md` | PM → Solo | Product context / PRD / stable AC IDs / routing gate / tracking / Business Context Summary |
 | `pm-to-growth-template.md` | PM → Growth | Product type / Target audience / North Star Metric / OKR / Persona / Growth hypothesis |
@@ -638,7 +640,7 @@ PLAN → PROVISION/DEPLOY → VERIFY → Pass? DONE : On failure ROLLBACK and re
 | `.harness/FEATURES.md` | Dynamic task status board | ✅ |
 | `.harness/VERSION` | Framework version | ✅ |
 | `docs/handoff/README.md` | Handoff protocol description | ✅ |
-| `docs/handoff/handoff-template.md` | Generic handoff template | ✅ |
+| `docs/handoff/templates/handoff-template.md` | Generic handoff template | ✅ |
 
 ### 6.2 4 Meta Skills (Unified Across All Frameworks)
 

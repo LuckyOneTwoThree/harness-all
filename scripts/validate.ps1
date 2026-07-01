@@ -207,7 +207,7 @@ foreach ($file in $soloWorkflowFiles) {
 $soloProcessText = @(
     Get-ChildItem (Join-Path $soloRoot '.harness/loops') -File -Include '*.md', '*.json' | ForEach-Object { Read-Utf8 $_.FullName }
     Get-ChildItem (Join-Path $soloRoot '.harness/skills') -Recurse -File -Include '*.md' | ForEach-Object { Read-Utf8 $_.FullName }
-    Read-Utf8 (Join-Path $soloRoot 'docs/engineering/ENGINEERING_PLAN-template.md')
+    Read-Utf8 (Join-Path $soloRoot 'docs/engineering/templates/ENGINEERING_PLAN-template.md')
 ) -join "`n"
 if ($soloProcessText -match '\b(requesting-code-review|receiving-code-review)\b') { Add-ValidationError 'Solo still references removed split code-review skills' }
 if ($soloProcessText -match '\bnested_progress\b') { Add-ValidationError 'Solo still maintains duplicate nested_progress state' }
@@ -227,7 +227,7 @@ if ($codeReviewSkill -match '(?i)fewer than 3|minimum (number|count)') { Add-Val
 if (Test-Path (Join-Path $soloRoot '.harness/skills/engineering/requesting-code-review/SKILL.md')) { Add-ValidationError 'obsolete requesting-code-review skill still exists' }
 if (Test-Path (Join-Path $soloRoot '.harness/skills/engineering/receiving-code-review/SKILL.md')) { Add-ValidationError 'obsolete receiving-code-review skill still exists' }
 
-$engineeringPlanTemplate = Read-Utf8 (Join-Path $soloRoot 'docs/engineering/ENGINEERING_PLAN-template.md')
+$engineeringPlanTemplate = Read-Utf8 (Join-Path $soloRoot 'docs/engineering/templates/ENGINEERING_PLAN-template.md')
 if ($engineeringPlanTemplate -match '\|\s*Status\s*\|') { Add-ValidationError 'ENGINEERING_PLAN still duplicates aggregate task status' }
 $soloSessionEnd = Read-Utf8 (Join-Path $soloRoot '.harness/skills/meta/session-end/SKILL.md')
 if ($soloSessionEnd -notmatch 'never estimate LOC' -or $soloSessionEnd -notmatch 'invoke `memory-maintenance`') { Add-ValidationError 'Solo session-end does not delegate retention or require exact baseline metrics' }
@@ -277,7 +277,7 @@ if ($allActiveContractText -match '\bexecuting-plans\b') { Add-ValidationError '
 if ($allActiveContractText -match 'Business Context Digest') { Add-ValidationError 'Business Context heading is inconsistent; use Business Context Summary' }
 if ($allActiveContractText -match 'LCP\s*>=' ) { Add-ValidationError 'LCP threshold uses the wrong comparison direction' }
 
-$pmSoloTemplate = Join-Path $root 'harness-pm/docs/handoff/pm-to-solo-template.md'
+$pmSoloTemplate = Join-Path $root 'harness-pm/docs/handoff/templates/pm-to-solo-template.md'
 foreach ($field in @('delivery_mode', 'frontend_scope', 'design_required', 'design_status', 'design_handoff_id', 'design_waiver')) {
     Assert-Contains $pmSoloTemplate ([regex]::Escape($field)) "pm-to-solo routing contract missing $field"
 }
@@ -319,7 +319,7 @@ if ((Get-FileHash (Join-Path $root 'harness-design/.harness/rules/component-cont
 $prdSchemaHashes = @('harness-pm', 'harness-design', 'harness-solo') | ForEach-Object { (Get-FileHash (Join-Path $root "$_/.harness/rules/prd.schema.json")).Hash }
 if (@($prdSchemaHashes | Select-Object -Unique).Count -ne 1) { Add-ValidationError 'PM/Design/Solo PRD schemas differ' }
 Assert-Contains (Join-Path $root 'harness-pm/.harness/skills/pm/design-prd/SKILL.md') 'sole authoring authority' 'design-prd does not declare PRD.md authority and generated prd.json semantics'
-if (-not (Test-Path (Join-Path $root 'harness-design/docs/handoff/design-to-pm-template.md'))) { Add-ValidationError 'Design-to-PM feedback contract is missing' }
+if (-not (Test-Path (Join-Path $root 'harness-design/docs/handoff/templates/design-to-pm-template.md'))) { Add-ValidationError 'Design-to-PM feedback contract is missing' }
 Assert-Contains (Join-Path $root 'harness-pm/.harness/skills/pm/prd-orchestrator/SKILL.md') 'never delete' 'PM feedback consumer may still delete Design-to-PM history'
 
 # Validate repository-relative Markdown links. Runtime project paths such as docs/... are intentionally excluded.

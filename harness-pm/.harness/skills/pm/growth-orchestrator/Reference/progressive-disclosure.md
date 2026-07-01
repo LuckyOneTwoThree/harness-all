@@ -23,10 +23,10 @@ Mode: 🤖→👤
 
 Dispatch the corresponding sub-orchestrator based on the bottleneck stage diagnosed in Stage 1.
 
-#### Invoke acquisition-orchestrator
+#### Invoke acquisition-analysis
 
 ```
-Skill: acquisition-orchestrator
+Skill: acquisition-analysis
 Input:
   growth_model: docs/growth/growth-strategy.md ("Growth Model" section)
   channel_data: User-provided
@@ -49,10 +49,10 @@ Validation: Aha Moment candidates identified; Onboarding strategy generated
 Mode: 🤖→👤
 ```
 
-#### Invoke retention-orchestrator
+#### Invoke retention-management
 
 ```
-Skill: retention-orchestrator
+Skill: retention-management
 Input:
   growth_model: docs/growth/growth-strategy.md ("Growth Model" section)
   user_behavior_data: User-provided
@@ -147,7 +147,7 @@ After all sub-Skills complete, a stage summary document must be generated and wr
 | Approval record path | output/approvals/{orchestrator-name}/{stage-id}.approval.json |
 
 Downstream handoff:
-  primary: acquisition-orchestrator (growth strategy formulation complete, proceed to acquisition optimization execution)
+  primary: acquisition-analysis (growth strategy formulation complete, proceed to acquisition optimization execution)
   alternatives:
     - target: experiment-orchestrator
       reason: Growth plan needs A/B testing to validate effectiveness

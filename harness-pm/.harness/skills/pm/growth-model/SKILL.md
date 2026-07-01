@@ -242,7 +242,7 @@ When upstream files are missing, the user needs to provide the following informa
 | Downstream Consumer | Notification Condition | Notification Method | Notification Content |
 |------------|----------|----------|----------|
 | growth-strategy-report | Growth model or bottleneck change | Write to output file | New growth model, flywheel model, and bottleneck localization |
-| acquisition-orchestrator | Growth model change | Output file update | Model diagnosis completion status and key conclusions |
+| acquisition-analysis | Growth model change | Output file update | Model diagnosis completion status and key conclusions |
 | activation-orchestrator | Growth model change | Output file update | Model diagnosis completion status and key conclusions |
-| retention-orchestrator | Growth model change | Output file update | Model diagnosis completion status and key conclusions |
+| retention-management | Growth model change | Output file update | Model diagnosis completion status and key conclusions |
 | revenue-orchestrator | Growth model change | Output file update | Model diagnosis completion status and key conclusions |

@@ -10,6 +10,18 @@ description: Used when attribution analysis is needed for monitoring anomalies. 
 - Metric drop cause investigation
 - Impact scope assessment
 
+## Mode Boundary
+
+> **PM owns product analytics alerts; Ops owns system observability; Growth owns growth experimentation attribution.**
+>
+> | Alert Type | Owner | Scope |
+> |------------|-------|-------|
+> | Product metric anomaly (DAU drop, conversion rate decline) | PM (this skill) | Business metric thresholds |
+> | Infrastructure alert (CPU, memory, latency, uptime) | Ops | System health |
+> | Experiment attribution (A/B test significance) | Growth | Growth experimentation |
+>
+> **Boundary**: This skill produces product-level alert rules (business metric thresholds + notification config). It does NOT configure infrastructure monitoring dashboards or SLO alerting rules.
+
 ## Inputs
 - rules/security.md
 - loops/LOOP.md

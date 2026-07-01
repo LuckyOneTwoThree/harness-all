@@ -33,6 +33,19 @@ A business model is not designed, it is validated.
 
 Follows the [orchestrator-protocol.md](../../../templates/orchestrator-protocol.md) orchestration protocol.
 
+## Section Ownership Matrix
+
+`docs/strategy/business-strategy.md` is an aggregate file written by multiple skills. Each skill owns a specific section and MUST NOT write to sections owned by other skills. The final phase (business-strategy-report) performs assembly-only synthesis.
+
+| Section | Owner Skill (Write) | Phase | Read By |
+|---------|---------------------|-------|---------|
+| "Business Model Canvas" section | business-model-canvas | phase-1 | business-value-fit, business-pricing, business-strategy-report, planning-north-star, planning-okr, positioning-strategy, product-proposal, stakeholder-analysis, strategic-analysis, metrics-system |
+| "Value Fit" section | business-value-fit | phase-2 | business-strategy-report, positioning-strategy |
+| "Pricing Strategy" section | business-pricing | phase-3 | business-strategy-report, product-proposal |
+| Consolidated overwrite | business-strategy-report | phase-4 | Downstream consumers (planning-orchestrator, etc.) |
+
+> **Write isolation rule**: A skill may ONLY write to its owned section. Reading other sections is allowed. The business-strategy-report (phase-4) performs assembly-only synthesis and may overwrite the consolidated file, but must preserve the content of sections owned by phases 1-3.
+
 ## Pipeline
 
 ```yaml

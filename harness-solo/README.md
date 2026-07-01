@@ -173,15 +173,16 @@ harness-solo/
 │       └── progress.md.template
 └── docs/
     ├── product/                       # Product requirements (PROJECT.md)
-    ├── engineering/                   # Tech docs (TECH_STACK.md, ENGINEERING_PLAN-template.md, etc.)
+    ├── engineering/                   # Tech docs (TECH_STACK.md, ENGINEERING_PLAN template in templates/, etc.)
     ├── acceptance/                    # Acceptance documents (install.sh creates)
     ├── decisions/                     # Architecture Decision Records (ADR) (install.sh creates)
     └── handoff/                       # harness family handoff documents
         ├── README.md
-        ├── handoff-template.md
-        ├── solo-to-growth-template.md
-        ├── solo-to-ops-template.md
-        └── solo-to-pm-template.md
+        └── templates/                 # handoff templates (scaffolds)
+            ├── handoff-template.md
+            ├── solo-to-growth-template.md
+            ├── solo-to-ops-template.md
+            └── solo-to-pm-template.md
 ```
 
 ## Document System

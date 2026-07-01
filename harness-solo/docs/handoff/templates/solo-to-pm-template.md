@@ -60,6 +60,18 @@ artifacts: []
 
 > These are engineering-side suggestions for harness-pm to triage. PM retains decision rights on whether to update the PRD (per the Contract-Driven principle).
 
+## Design Issues (for PM to route to harness-design)
+
+> Engineering-side design contract issues discovered during implementation. PM should triage and route accepted items to harness-design via `pm-to-design.md`. PM retains decision rights on whether to update the PRD or design scope (per the Contract-Driven principle; solo does NOT directly hand off to harness-design).
+
+| Design issue | Affected component/page | Severity | Suggested design adjustment | Affects DAC |
+|--------|---------|--------|---------|--------|
+| <e.g., missing button disabled state> | <Button component> | High/Medium/Low | <add disabled state spec> | DAC-xxx |
+| <e.g., token inconsistency> | <color.primary> | Medium | <align with tokens.json> | DAC-xxx |
+| <e.g., component-contract.json gap> | <Modal> | High | <add missing contract field> | DAC-xxx |
+
+> Leave this section empty if no design contract issues were found during implementation.
+
 ## Technical Implementation
 
 | Field | Value | Notes |
@@ -111,8 +123,9 @@ Issues for harness-pm to handle or confirm with harness-solo:
 harness-pm should prioritize:
 
 1. Triage suggested product adjustments; update the authoritative PRD only through a new approved revision and stable-ID rules
-2. Feed user-feedback themes into discovery / user-research to validate
-3. Re-sync updated PRD or positioning back to harness-solo via `pm-to-solo.md` if scope changes
+2. Triage design issues; route accepted items to harness-design via `pm-to-design.md` if design contract changes are needed
+3. Feed user-feedback themes into discovery / user-research to validate
+4. Re-sync updated PRD or positioning back to harness-solo via `pm-to-solo.md` if scope changes
 
 ## Risk Notes
 

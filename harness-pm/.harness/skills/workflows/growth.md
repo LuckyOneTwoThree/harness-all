@@ -36,11 +36,11 @@ Do not silently execute both paths. The user chooses the mode when it is not alr
 │    growth-orchestrator internal         │
 │    conditional trigger scheduling):     │
 │    ├── Acquisition issues →             │
-│    │   acquisition-orchestrator         │
+│    │   acquisition-analysis             │
 │    ├── Activation issues →              │
 │    │   activation-orchestrator          │
 │    ├── Retention issues →               │
-│    │   retention-orchestrator           │
+│    │   retention-management             │
 │    └── Monetization issues →            │
 │        revenue-orchestrator             │
 │      (If pricing issue identified →     │
