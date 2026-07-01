@@ -25,6 +25,20 @@ description: Used when summarizing competitor tracking data into a complete, del
 
 The core value of competitor monitoring reports lies in transforming scattered competitor information into structured strategic insights. The purpose of monitoring is not to imitate competitors, but to understand market landscape changes and identify threats and opportunities.
 
+## Ownership Boundary (division of labor with diagnosis-competition)
+
+This skill owns **periodic report assembly + market strategy analysis**:
+- Consumes diagnosis-competition's tracking data (feature changes, advantage assessment, response strategies) as input — see Input table below
+- Adds market strategy changes analysis (unique to this skill, not in diagnosis-competition)
+- Assembles the final structured monitoring report (Step 6: Report Assembly, unique to this skill)
+- Adds threat assessment with cross-references to the tracking data
+
+`diagnosis-competition` (diagnosis-orchestrator phase-2, upstream of this skill) owns **real-time tracking**:
+- Feature change monitoring + advantage dynamic assessment + immediate response strategy generation
+- This skill's "Threat Assessment" (Step 4) and "Response Recommendations" (Step 5) CONSUME and consolidate diagnosis-competition's output — they do not re-perform the tracking.
+
+**Routing rule**: diagnosis-competition runs first (phase-2) → this skill runs second (phase-3, depends_on phase-2). This skill must NOT be invoked standalone without diagnosis-competition's upstream output (use the degradation strategy in the Input table below if tracking data is missing).
+
 ## Interaction Mode
 
 🤖→👤 AI suggests, human approves

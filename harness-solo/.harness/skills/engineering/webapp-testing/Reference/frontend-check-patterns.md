@@ -11,17 +11,17 @@
 ## 5.2 Accessibility baseline check (using Grep)
 - Search `<img` to confirm all have `alt` attributes:
   ```
-  <img[^>]*(?!alt=)[^>]*>
+  <img(?![^>]*\balt=)[^>]*>
   ```
-  Hit → mark as an accessibility issue
+  Hit → mark as an accessibility issue (negative-lookahead anchored to img tag, robust against attributes ordered after `src`)
 - Search `<button` to confirm all have readable text or `aria-label`:
   ```
   <button[^>]*>\s*</button>
   ```
   Hit (empty button) → mark as an accessibility issue
-- Search `onClick` to confirm it is not bound on div/span (should use button):
+- Search click handlers to confirm they are not bound on div/span (should use button). Match React `onClick`, Vue `@click`, Svelte `on:click`, and native `onclick`:
   ```
-  <div[^>]*onClick
+  <div[^>]*(?:onClick|@click|on:click|onclick)
   ```
   Hit → mark as an accessibility suggestion
 
@@ -59,14 +59,39 @@ $ <command>
 - Hardcoded API addresses: [hits or "none"]
 ```
 
-## Regarding E2E Tests
+## Regarding E2E Tests & DOM-Level Accessibility Verification
 
-This skill **does not include** E2E tests (Playwright/Cypress), for the following reasons:
-- E2E frameworks are heavy dependencies, violating the constitution.md zero-new-dependency principle
-- E2E requires a browser environment, with complex cross-platform compatibility
-- For personal mid-sized projects, unit tests + structural verification are usually sufficient
+### Default: Static checks only (zero-dependency)
 
-If the user explicitly needs E2E:
-1. The user approves introducing Playwright (modify the dependency whitelist in constitution.md)
-2. Create a separate `e2e-testing` skill
-3. Out of scope for this skill
+This skill performs **static code checks only** (using Grep/Read), per the constitution.md zero-new-dependency principle. The following WCAG 2.1 AA checks are **statically verifiable** and always run:
+
+- Contrast ratios (from token values)
+- Touch target sizes (from component-spec dimensions)
+- `alt` attribute presence on images
+- `aria-label` presence on interactive elements
+- Semantic HTML element choice (button vs div+onClick)
+- Reduced-motion media query presence
+- Color-blindness safe palette
+
+### DOM-level checks (opt-in, requires user-configured E2E tool)
+
+The following WCAG 2.1 AA checks **require a running DOM** and are **not performed by default**:
+
+- Live focus trap behavior (Modal/Drawer)
+- Runtime ARIA roles/labels computed by assistive technology
+- Real screen reader output
+- Dynamic focus order during keyboard navigation
+- Focus visibility (outline rings) under runtime conditions
+
+**Design framework's design-review Axis 5 declares these are "deferred to harness-solo verify", but Solo's default static checks cannot cover them.** This is an acknowledged architectural boundary:
+
+- If the user has **not** configured an E2E tool (Playwright/Cypress): verify stage records `DOM-level WCAG checks skipped (no E2E tool configured; static subset verified)` in evidence.md. This is an **explicit, auditable skip**, not a silent gap.
+- If the user **has** configured an E2E tool (approved in constitution.md dependency whitelist): verify stage invokes webapp-testing's opt-in DOM-check mode, which runs the user's E2E tool to execute the dynamic checks above.
+
+### Opt-in E2E mode (user-triggered)
+
+If the user explicitly needs DOM-level verification:
+1. User approves introducing Playwright/Cypress (modify the dependency whitelist in constitution.md)
+2. User configures the E2E tool in project settings
+3. verify stage invokes webapp-testing with `dom_check: true` flag
+4. Out of scope for the default zero-dependency skill mode

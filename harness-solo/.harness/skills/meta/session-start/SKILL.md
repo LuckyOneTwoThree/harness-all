@@ -42,7 +42,12 @@ When a newly accepted pm-to-solo.md or design-to-solo.md supersedes a previously
 - **Added ACs** (in new set, not in old): new scope. Route via the normal Plan pipeline (brainstorming/writing-plans).
 - **Unchanged ACs**: no action; existing evidence remains valid unless the AC text changed (per acceptance-id-protocol, changed meaning gets a new ID, so same ID = same semantics).
 
-Record the diff in the new session block of progress.md: `AC Change: removed=[...], added=[...], affected_tasks=[...]`. If removed ACs affect done tasks, surface this to the user before proceeding — per STATE_PROTOCOL.md fix task exception, done tasks are NOT re-opened; instead a `<original-task-id>-fix-<N>` task is created to address the withdrawn acceptance basis.
+Record the diff in two places:
+
+1. **progress.md** (session block): `AC Change: removed=[...], added=[...], affected_tasks=[...]`
+2. **state.yaml** (active task's `ac_change` field, per state.schema.json): write `ac_change: {removed: [AC-xxx,...], added: [AC-yyy,...], affected_tasks: [task-id,...]}` to the current task's state.yaml. This is the machine-readable source of truth consumed by downstream skills (brainstorming/writing-plans read `ac_change` to scope rework; verify reads it to confirm all added ACs have evidence).
+
+If removed ACs affect done tasks, surface this to the user before proceeding — per STATE_PROTOCOL.md fix task exception, done tasks are NOT re-opened; instead a `<original-task-id>-fix-<N>` task is created to address the withdrawn acceptance basis.
 
 ### 1b. Nested Task Switch (product-level resume only)
 

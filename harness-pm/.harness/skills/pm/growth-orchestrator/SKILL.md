@@ -69,6 +69,14 @@ post_pipeline:
     output: output/phase-reports/growth-orchestrator.json
 
 stages:
+  # Dispatch-level rationale: phases 2 and 4 dispatch pipeline skills directly
+  # (acquisition-analysis, retention-management) because these are single-skill
+  # stages with no multi-skill orchestration needed. Phases 3 and 5 dispatch
+  # sub-orchestrators (activation-orchestrator, revenue-orchestrator) because
+  # activation and monetization each require multi-skill sub-pipelines
+  # (activation-aha + activation-onboarding; revenue-funnel + revenue-nrr +
+  # revenue-upsell). This is intentional, not inconsistent: the dispatch level
+  # matches the complexity of the funnel stage.
   - id: phase-1
     name: "Growth Model Diagnosis"
     depends_on: []

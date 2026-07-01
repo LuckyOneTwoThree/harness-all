@@ -28,7 +28,7 @@ Controls the interaction depth during workflow execution. Three modes:
 
 **How to switch**: Say "switch to deep/standard/skip mode" at any time during the conversation; the Agent confirms and writes the `exploration_mode` field in `state.yaml`
 
-**skip mode safety fallback**: When starting in skip mode, the Agent must check `memory/progress.md` and `docs/discovery/` for exploration data. If there is no exploration data, **refuse to execute skip, downgrade to standard, and inform the user**
+**skip mode safety fallback**: When starting in skip mode, the Agent must check `memory/progress.md` and `docs/discovery/` for exploration data. If there is no exploration data, **refuse to execute skip, downgrade to standard, and inform the user**. When downgrading, recommend the minimum core skill set to run first: `user-research-orchestrator` (persona) + `opportunity-definition` (problem statement + opportunity brief). These two skills produce the persona and problem statement that downstream PRD/metrics contracts depend on; skipping them leaves PRD's value proposition and priority fields without evidence.
 
 **Mode and degradation strategy linkage**:
 

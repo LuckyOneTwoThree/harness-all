@@ -58,7 +58,17 @@ Do not use evidence.md as an ACT scratchpad. Actual Red/Green output may be reus
 | status | `running` | running/retrying | running/retrying/needs-human/failed | done/retrying/needs-human | retrying/needs-human |
 | last error | clear | observed ACT failure | observed gate failure | blocking finding | root cause |
 
-`done` belongs exclusively to code-review. Verify-full success means "verified and awaiting review", represented by `stage: verify`, `status: running`.
+`done` belongs exclusively to code-review. The `stage: verify` value is disambiguated by the `substage` field (see state.schema.json):
+
+| substage | Meaning | Written by |
+|---|---|---|
+| `inline-passed` | ACT inline fast-verify passed (per-attempt); may continue to next consumer or hand off to verify-full | active ACT skill (inline verify-fast) |
+| `awaiting-full` | ACT fully complete; verify-full not yet started | active ACT skill (after last consumer) |
+| `full-running` | verify-full skill executing | verify |
+| `full-passed` | verify-full passed; awaiting code-review | verify |
+| `full-failed` | verify-full failed; routed for rework | verify |
+
+`stage: verify` without a `substage` is ambiguous and should not be written. Verify-full success transitions to `substage: full-passed, status: running` (awaiting review), not back to `substage: inline-passed`.
 
 ## Product Orchestration
 

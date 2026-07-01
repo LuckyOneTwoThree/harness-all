@@ -77,8 +77,16 @@ stages:
       fail_action: "Supplement pricing options, ensure differentiation"
 
   - id: phase-4
+    name: "Stakeholder Analysis"
+    depends_on: [phase-1, phase-2]
+    skills: [stakeholder-analysis]
+    gate:
+      condition: "Stakeholder map complete (power/interest grid + alignment risks)"
+      fail_action: "Supplement stakeholder identification or re-assess alignment risks"
+
+  - id: phase-5
     name: "Business Strategy Report"
-    depends_on: [phase-1, phase-2, phase-3]
+    depends_on: [phase-1, phase-2, phase-3, phase-4]
     skills: [business-strategy-report]
     gate:
       condition: "Report executive summary complete, at least 2 strategic directions"
@@ -135,8 +143,9 @@ Skill: business-strategy-report
 Inputs:
   bmc: from phase 1 docs/strategy/business-strategy.md ("Business Model Canvas" section)
   pricing_strategy: from phase 3 docs/strategy/business-strategy.md ("Pricing Strategy" section)
+  stakeholder_analysis: from phase 4 docs/strategy/business-strategy.md ("Stakeholder Analysis" section)
   product_business_info: user provided
-  optional_inputs: SWOT, OKR, roadmap, positioning, value curve, differentiation assessment, stakeholders, North Star Metric
+  optional_inputs: SWOT, OKR, roadmap, positioning, value curve, differentiation assessment, North Star Metric
 Output: docs/strategy/business-strategy.md (consolidated overwrite)
 Validation: Report executive summary complete, at least 2 strategic directions
 Mode: 🤖→👤

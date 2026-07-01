@@ -139,4 +139,6 @@ def init():
 
 ## Relationship with LOOP
 
-Triggered when LOOP fails (tdd or verify): finds root cause, returns to tdd to fix. Bug fix workflow: session-start (on-demand) → systematic-debugging → LOOP(tdd 内嵌 verify-fast) → verify-full → code-review → session-end (on-demand baseline). See `.harness/loops/LOOP.md`.
+Triggered when LOOP fails (tdd or verify): this skill owns the **diagnose-and-fix cycle** (reproduce → locate → analyze → fix root cause → regression test), then returns to LOOP for verify-full. Bug fix workflow: session-start (on-demand) → systematic-debugging (reproduce + root cause + fix + regression test) → verify-full → code-review → session-end (on-demand baseline). See `.harness/loops/LOOP.md`.
+
+**Division of labor with tdd**: systematic-debugging fixes the **bug-specific root cause** with a reproduction + regression test (steps 1-5 above). It does not delegate the fix to tdd — the fix is part of the debugging skill's terminal outcome. After the root-cause fix passes regression, control returns to LOOP's verify-full for full-suite confirmation.

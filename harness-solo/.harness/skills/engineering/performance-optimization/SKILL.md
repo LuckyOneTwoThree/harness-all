@@ -72,6 +72,7 @@ Common bottleneck quick reference:
 - Change only one bottleneck at a time (changing multiple makes it impossible to tell which one worked)
 - Changes follow the surgical changes principle — touch only the code that must be touched
 - Do not opportunistically refactor unrelated code (that's refactor's job)
+- **Add the regression guard as part of this same attempt** (before inline verify-fast appends the terminal outcome): add a benchmark/bundle-size assertion test that fails if performance regresses past the new baseline. This guard test is a code mutation and MUST be included in the attempt's terminal outcome, not appended afterward.
 
 ### 4. Return Domain Verification Data
 - Re-measure using the **same** method as in step 1
@@ -83,7 +84,7 @@ Common bottleneck quick reference:
   | P95 latency | 850ms | 320ms | -62% |
   | Bundle size | 340KB | 185KB | -46% |
   ```
-- Run the full test suite and confirm **no behavioral regression** (performance optimization is a subset of refactor; behavior is unchanged)
+- Run the full test suite (including the new guard test from step 3) and confirm **no behavioral regression** (performance optimization is a subset of refactor; behavior is unchanged)
 - Numbers did not improve → return to IDENTIFY and re-locate (you may have fixed the wrong bottleneck)
 
 ### 4.5. Inline Verify-Fast (merged)
@@ -91,14 +92,14 @@ Common bottleneck quick reference:
 - **Validate tests + benchmark re-measurement**: reuse the exact output from step 4 only when produced in the same execution context and neither command, code, nor attempt changed; otherwise rerun. Reject `0 tests`, stale output, or different commands.
 - **AC/DAC check**: every stable AC/DAC for this task has evidence; frontend tasks reference contract/binding by stable component ID.
 - **Changed-file security scan**: quick scan on changed files and disposition every hit (cite `verify/Reference/security-patterns.md` Patterns 1-3).
-- **Append terminal outcome**: append exactly one PASSED/FAILED line to `iterations.log`; do not append a second attempt record.
+- **Append terminal outcome**: append exactly one PASSED/FAILED line to `iterations.log`; do not append a second attempt record. The regression guard test from step 3 is already included in this attempt's mutations.
 
-Pass → `stage: verify, status: running, clear error`. Fail → `stage: verify, status: retrying, concrete error`. Numbers did not improve → return to IDENTIFY (domain-specific route, not a retry). At the recommended failed-attempt limit (3 for optimize), set `needs-human`. Never increment during failure handling.
+Pass → `stage: verify, status: running, substage: awaiting-full`, clear error. Fail → `stage: verify, status: retrying, substage: inline-passed`, concrete error. Numbers did not improve → return to IDENTIFY (domain-specific route, not a retry). At the recommended failed-attempt limit (3 for optimize), set `needs-human`. Never increment during failure handling.
 
-### 5. GUARD — Prevent regression
-- Add regression tests or monitoring to prevent performance regression:
-  - Backend: include benchmarks in CI
-  - Frontend: bundle size check / Lighthouse CI
+### 5. GUARD — Recommend monitoring (no code mutation after terminal outcome)
+- The regression guard test was already added in step 3 (before the terminal outcome was appended). This step only **recommends** CI/monitoring integration; it does NOT mutate code or state after the per-attempt terminal outcome has been written:
+  - Backend: recommend including benchmarks in CI (verify records the recommendation in evidence.md)
+  - Frontend: recommend bundle size check / Lighthouse CI (verify records the recommendation in evidence.md)
 - If the project has no CI infrastructure, return "recommend adding monitoring" to verify for evidence
 
 ## Anti-Rationalization Table
@@ -122,7 +123,7 @@ Follow `.harness/loops/STATE_PROTOCOL.md`: increment once before mutation; the A
 
 ## Relationship with LOOP
 
-Corresponds to the optimize loop: MEASURE/IDENTIFY = PLAN, FIX = ACT, re-measurement data returns to verify, GUARD never mutates a task after `done`. See `.harness/loops/LOOP.md`.
+Corresponds to the optimize loop: MEASURE/IDENTIFY = PLAN, FIX (including regression guard test) = ACT, re-measurement data returns to verify, GUARD only recommends monitoring (no code mutation after terminal outcome). See `.harness/loops/LOOP.md`.
 
 ## Division of Labor with Other Skills
 | Skill | Responsibility |

@@ -299,11 +299,16 @@ Before claiming a task complete, the Agent **must**:
 4. Check the current iteration against the recommended and hard limits; do not increment here. The next DESIGN attempt increments exactly once when it begins
 
 **Outside-LOOP failure** (design-review):
-1. Write failure info to the `last_error` field of `state.yaml`
-2. Analyze the failure reason:
-   - Fixable (visual hierarchy issue, contrast not met) → back to LOOP (re-DESIGN)
-   - Needs replanning (direction deviation, requirement misunderstanding) → back to PLAN
-3. Does not consume iteration count (outside-LOOP failures are not counted)
+1. Write failure info to the `last_error` field of `state.yaml` and append to `iterations.log` with a `review-failure` marker
+2. Analyze the failure reason and route by severity:
+
+| Finding severity | Route | Iteration impact | Limit |
+|---|---|---|---|
+| Fixable (visual hierarchy / contrast / spacing) | Re-enter LOOP at `stage: design` (re-DESIGN) | The re-DESIGN attempt increments iteration as normal (review failure itself does not increment, but the subsequent re-DESIGN does) | After 2 consecutive review-failure → same-LOOP re-DESIGN cycles, escalate to `needs-human` (prevents infinite review↔DESIGN ping-pong without consuming iterations) |
+| Critical (Doubt-Driven adversarial finding) | `status: blocked`, surface to user for decision (may require spec change or scope reduction) | Does not consume iteration | No retry limit — requires explicit user resolution |
+| Needs replanning (direction deviation / requirement misunderstanding) | Back to PLAN (`stage: plan`) | PLAN re-entry resets the design but preserves iteration count for limit tracking | After 2 PLAN re-entries from review failure, escalate to `needs-human` |
+
+3. Iteration accounting: design-review failure itself does not increment `iteration`, but any subsequent re-DESIGN attempt increments as normal (per the inside-LOOP rule). The consecutive-review-failure counter tracks how many times design-review has failed and sent back to the same LOOP without exiting — reset to 0 when a LOOP cycle exits successfully (verify pass) and re-enters review.
 
 ### Checkpoint Resume
 

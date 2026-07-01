@@ -54,7 +54,12 @@ When a newly accepted pm-to-design.md supersedes a previously consumed handoff, 
 - **Added ACs** (in new set, not in old): new design scope. Route via design-brief → new-design or design-iteration workflow.
 - **Unchanged ACs**: no action; existing evidence remains valid unless the AC text changed (per acceptance-id-protocol, changed meaning gets a new ID, so same ID = same semantics).
 
-Record the diff in the new session block of progress.md: `AC Change: removed=[...], added=[...], affected_tasks=[...]`. If removed ACs affect done tasks, surface this to the user before proceeding — per STATE_PROTOCOL.md, `done` is terminal and further work creates a new task (e.g., `<original-task-id>-fix-<N>`) to address the withdrawn acceptance basis, rather than re-opening the original.
+Record the diff in two places:
+
+1. **progress.md** (session block): `AC Change: removed=[...], added=[...], affected_tasks=[...]`
+2. **state.yaml** (active task's `ac_change` field, per state.schema.json): write `ac_change: {removed: [AC-xxx,...], added: [AC-yyy,...], affected_tasks: [task-id,...]}` to the current task's state.yaml. This is the machine-readable source of truth consumed by downstream skills (design-brief reads `ac_change` to scope rework; verify reads it to confirm all added ACs have evidence).
+
+If removed ACs affect done tasks, surface this to the user before proceeding — per STATE_PROTOCOL.md, `done` is terminal and further work creates a new task (e.g., `<original-task-id>-fix-<N>`) to address the withdrawn acceptance basis, rather than re-opening the original.
 
 6. **Confirm task scope**
    Confirm with the user what this session will accomplish, and write a new session block to progress.md:

@@ -34,4 +34,5 @@
 - **design-iteration** [standard] — Design iteration (Chesterton's Fence + LOOP)
 - **redesign** [deep] — Redesign (design-system-import + diff analysis + LOOP)
 - **design-system-setup** [standard] — Full design system build (recommendation → system → component LOOP → review)
+- **design-system-refactor** [standard] — Standalone design system maintenance (scan → recommend → user-confirm → execute → verify lint). No separate workflow file; invoke the skill directly. Triggered when the design system has accumulated redundancy or bloat.
 - **design-handoff** [skip] — Design handoff (handoff-spec; reviews already passed upstream)

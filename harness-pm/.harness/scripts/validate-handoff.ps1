@@ -81,10 +81,12 @@ if ($null -ne $contractPath) {
             # Supersedes freshness: if non-null, its date segment must be older than this handoff's date segment
             $supersedes = $scalar['supersedes']
             if ($supersedes -and $supersedes -ne 'null' -and $supersedes -match '-(\d{8})-') {
-                $superDate = [datetime]::ParseExact($Matches[1], 'yyyyMMdd', $null)
+                $superDateStr = $Matches[1]
+                $superDate = [datetime]::ParseExact($superDateStr, 'yyyyMMdd', $null)
                 if ($manifest.handoff_id -match '-(\d{8})-') {
-                    $thisDate = [datetime]::ParseExact($Matches[1], 'yyyyMMdd', $null)
-                    if ($superDate -ge $thisDate) { Fail "supersedes freshness violation: $($supersedes) date ($($Matches[1])) is not older than this handoff ($($manifest.handoff_id))" }
+                    $thisDateStr = $Matches[1]
+                    $thisDate = [datetime]::ParseExact($thisDateStr, 'yyyyMMdd', $null)
+                    if ($superDate -ge $thisDate) { Fail "supersedes freshness violation: $($supersedes) date ($($superDateStr)) is not older than this handoff ($($manifest.handoff_id) date $($thisDateStr))" }
                 }
             }
 

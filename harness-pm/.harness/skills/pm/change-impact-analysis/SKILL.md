@@ -21,28 +21,34 @@ description: Used when analyzing the impact scope of PRD changes, design changes
 
 ## Core Principles
 
-1. **PRD change driven**: Triggered by prd-orchestrator on PRD changes, not manually initiated
+1. **Change-driven**: Triggered by prd-orchestrator on PRD changes, OR by iteration/pivot workflows on broader change requirements (user feedback, strategic direction change). Not limited to PRD-only changes.
 2. **Automated validation**: Change classification, impact propagation analysis, re-review judgment fully automated
-3. **Result synchronization**: Analysis results synchronized to downstream design Skills (IA/user flow/prototype/interaction specification), maintaining release rhythm
+3. **Scope boundary — PM-owned vs Design-owned**:
+   - PM-owned artifacts (assessed directly by this skill): PRD, IA structure, user flows — these are product-level artifacts that PM owns even after the visual/interaction design migration.
+   - Design-owned artifacts (notified via handoff): prototypes, interaction specifications, visual mockups — these have been migrated to harness-design. This skill identifies the impact on them and records it in the impact report, but the actual design-side assessment is delegated to harness-design via `docs/handoff/pm-to-design.md`.
 4. **Real-time retrospective**: Version linkage recommendations generated immediately after change impact analysis completes
 
 ## Interaction Mode
 
 🤖→👤 **AI suggests, human approves**
 
-Trigger condition: prd-orchestrator triggers on PRD changes.
+Trigger conditions:
+- prd-orchestrator triggers on PRD changes (PRD-driven path)
+- iteration workflow triggers on clear change requirements from user feedback/business needs (change-driven path)
+- pivot workflow triggers on strategic direction changes (strategic-driven path)
 
 ## Input
 
 | Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| Change request | JSON | Yes | User-provided (PRD change content) | Change content to be analyzed |
+| Change request | JSON | Yes | User-provided (PRD change content) or workflow-provided (iteration/pivot change requirement) | Change content to be analyzed |
 | Current PRD | JSON | Yes | docs/product/PRD.md | Currently effective PRD version |
 
-> Note: Previously also assessed impact on design outputs such as IA/userflow/prototype/interaction-spec.
-> These outputs have been migrated to harness-design. This skill now only assesses impact on the PRD itself and downstream handoff contracts.
-> Impact assessment on design outputs is handled by harness-design, notified via docs/handoff/pm-to-design.md.
-> If design impact assessment is needed, notify harness-design via docs/handoff/pm-to-design.md.
+> Note: Previously also assessed impact on design outputs such as prototypes/interaction-spec in full.
+> Visual/interaction design outputs have been migrated to harness-design. This skill now:
+> 1. Directly assesses impact on PM-owned artifacts (PRD, IA, user flows) — Steps 2.2-2.3 and 4.2-4.3 remain active.
+> 2. Identifies impact on design-owned artifacts (prototypes, interaction specs) — Steps 2.4-2.5 remain active but produce a "design impact notification" entry rather than a full design assessment.
+> 3. The full design-side assessment is delegated to harness-design, notified via docs/handoff/pm-to-design.md.
 
 > See [Reference/examples.md](./Reference/examples.md) → "Change Request Structure" for the change request JSON example.
 

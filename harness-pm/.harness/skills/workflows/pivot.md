@@ -37,11 +37,12 @@ default_mode: deep
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ ⏸ Exploration Dialog 0: Strategic      │
-│   adjustment direction alignment        │
+│ Module 1: Strategy Retrospective        │
 │                                         │
-│  Minimum question set (must all be      │
-│  answered before continuing):           │
+│  ⏸ Step 0: Direction alignment          │
+│  (must complete before research starts) │
+│                                         │
+│  Minimum question set:                  │
 │  1. Why adjust strategy? What are the   │
 │     trigger factors?                    │
 │  2. What is the new direction? How does │
@@ -50,15 +51,10 @@ default_mode: deep
 │     this adjustment?                    │
 │  4. What constraints exist?             │
 │                                         │
-│  ⚠️ Forbidden: starting module 1        │
+│  ⚠️ Forbidden: starting research        │
 │  directly without asking user           │
-└────────┬────────────────────────────────┘
-         │ User answered
-         ▼
-┌─────────────────────────────────────────┐
-│ Module 1: Strategy Retrospective        │
-│ (★ Exploration hard gate)               │
 │                                         │
+│  Research (after direction aligned):    │
 │  - user-research-orchestrator           │
 │    (Re-validate user needs, new Persona)│
 │    👤 New Persona confirmation          │
@@ -69,21 +65,18 @@ default_mode: deep
 │  - insight-analysis                     │
 │    (Re-insight needs, new JTBD)         │
 │                                         │
-│  ★ Hard gate check:                     │
+│  ★ Exploration Gate (hard check +       │
+│    review, single stop)                 │
+│                                         │
+│  Objective checks:                      │
 │  - Is strategic adjustment reason       │
 │    sufficient? (Data-supported)         │
 │  - Are new target users validated?      │
 │  - Is new market opportunity viable?    │
 │  👤 Hard gate result approval           │
 │    (Human Decision Point)               │
-└────────┬────────────────────────────────┘
-         │ Pass
-         ▼
-┌─────────────────────────────────────────┐
-│ ⏸ Exploration Dialog 1: Strategy       │
-│   retrospective review                  │
 │                                         │
-│  Minimum question set:                  │
+│  ⏸ Review with user (minimum set):     │
 │  1. Do retrospective findings match     │
 │     your expectations?                  │
 │  2. Is data support for new direction   │
@@ -100,13 +93,17 @@ default_mode: deep
 │  │   (RESEARCH)                    │    │
 │  │  - business-orchestrator        │    │
 │  │    (New business model+value    │    │
-│  │     fit+pricing)                │    │
+│  │     fit+pricing+stakeholder+    │    │
+│  │     strategy-report)            │    │
 │  │  - positioning-strategy         │    │
 │  │    (New positioning statement)  │    │
 │  │  - planning-orchestrator        │    │
 │  │    (New OKR+North Star+roadmap) │    │
-│  │  - stakeholder-analysis         │    │
-│  │    (New Stakeholder alignment)  │    │
+│  │  - metrics-orchestrator          │    │
+│  │    (if North Star changes:       │    │
+│  │     validate+break down new NS, │    │
+│  │     propagate to tracking-plan  │    │
+│  │     + dashboard)                 │    │
 │  └──────────┬──────────────────────┘    │
 │             ▼                            │
 │  ┌─────────────────────────────────┐    │
@@ -143,8 +140,9 @@ default_mode: deep
 │  - Update PRODUCT_STRATEGY.md           │
 │  - Update PRD.md (if positioning change │
 │    affects features)                    │
-│  - Update metrics system (if North Star │
-│    changes)                             │
+│  - metrics-orchestrator (if North Star  │
+│    changes; validate+break down+        │
+│    propagate to tracking/dashboard)      │
 │                                         │
 │  Output: docs/strategy/PRODUCT_STRATEGY.md │
 │        + docs/product/PRD.md            │

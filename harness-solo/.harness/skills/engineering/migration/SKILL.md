@@ -27,7 +27,7 @@ description: Code Migration — framework upgrades/API migration/data migration,
 **Build the replacement first, then deprecate the old system.** Do not deprecate without a replacement in place — users (including future you) will be stuck unable to use either the old or the new.
 
 ## Loop Type
-This skill corresponds to the **refactor** loop in LOOP.md: a maximum of 3 iterations; the stop condition is no test regressions.
+This skill corresponds to the **migration** loop in LOOP.md: a maximum of 3 iterations; the stop condition is migrated consumer equivalence + no test regressions.
 
 ## Migration Decision (hard gate)
 
@@ -67,8 +67,8 @@ Before starting a migration, answer the following questions. If any item is not 
   2. **AC/DAC check** — confirm the stable AC/DAC IDs exercised by this task have evidence.
   3. **Changed-file security scan** — run the quick security scan on changed files and disposition every hit.
   4. **Append terminal outcome** — append exactly one terminal PASSED/FAILED line to `iterations.log` for this attempt.
-- On pass: `stage: verify`, `status: running`, clear error. Continue to the next consumer or verify-full.
-- On failure: `stage: verify`, `status: retrying`, concrete error, then route by cause. At the recommended failed-attempt limit, set `needs-human`. A failed attempt 10 triggers the hard breaker.
+- On pass: `stage: verify, status: running, substage: inline-passed`, clear error. Continue to the next consumer or hand off to verify-full (set `substage: awaiting-full` when all consumers are done).
+- On failure: `stage: verify, status: retrying, substage: inline-passed`, concrete error, then route by cause. At the recommended failed-attempt limit, set `needs-human`. A failed attempt 10 triggers the hard breaker.
 - Do not append a second attempt record. This inline step writes the one terminal outcome.
 
 ### 4. Verify Zero Active Usage

@@ -96,6 +96,8 @@ Wizard MVP / Prototype testing / Landing page testing
 
 ### Step 2: Experiment Plan Design [Core]
 
+> **Delegation boundary**: When method=A/B_TEST and harness-growth is NOT installed, the detailed A/B test parameter design (sample size calculation, traffic split layering, guardrail metric thresholds) is delegated to the **experiment-design** skill (standalone fallback specialist). This skill produces the experiment_framework skeleton (hypothesis + primary_metric + method), and experiment-design fills in the statistical parameters. This mirrors the existing delegation of usability test scripts to validation-usability (see Step 2 output note below). When harness-growth IS installed, growth's experiment pipeline owns A/B test design entirely.
+
 #### A/B Test Design Plan
 
 ```json

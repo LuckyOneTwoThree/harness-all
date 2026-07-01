@@ -34,10 +34,15 @@ default_mode: skip
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ Module 7: Health Diagnosis (diagnosis-  │
-│ orchestrator phase-1)                   │
+│ Module 7: Health Diagnosis              │
+│ (via diagnosis-orchestrator,            │
+│  snapshot mode: phase-1 only)           │
 │                                         │
-│  - diagnosis-health                     │
+│  - Invoke diagnosis-orchestrator with   │
+│    snapshot_mode: true (runs phase-1     │
+│    only, skips downstream handoff/gates) │
+│  - Orchestrator dispatches diagnosis-   │
+│    health internally                    │
 │    (Multi-dimensional data collection + │
 │     composite scoring + trend           │
 │     prediction + bottleneck             │
@@ -48,10 +53,15 @@ default_mode: skip
          ▼
 ┌─────────────────────────────────────────┐
 │ Module 7: Competitor Snapshot           │
-│ (diagnosis-orchestrator phase-2,        │
+│ (via diagnosis-orchestrator,            │
+│  snapshot mode: phase-2 only,           │
 │  lightweight version)                   │
 │                                         │
-│  - diagnosis-competition                │
+│  - Invoke diagnosis-orchestrator with   │
+│    snapshot_mode: true (runs phase-2    │
+│    only, lightweight competitor scan)   │
+│  - Orchestrator dispatches diagnosis-   │
+│    competition internally               │
 │    (Quick scan of competitor dynamics,  │
 │     not deep analysis)                  │
 │                                         │

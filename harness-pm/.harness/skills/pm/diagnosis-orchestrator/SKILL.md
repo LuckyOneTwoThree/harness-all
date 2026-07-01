@@ -36,6 +36,16 @@ The value of diagnosis lies not in producing reports, but in shortening the time
 
 Follows the [orchestrator-protocol.md](../../../templates/orchestrator-protocol.md) orchestration protocol.
 
+### Snapshot Mode (invoked by health-check workflow)
+
+When invoked with `snapshot_mode: true` and a `snapshot_phases` list (e.g., `[phase-1]` or `[phase-2]`), the orchestrator runs ONLY the specified phases and skips:
+- `post_pipeline` stage-summary (no phase-reports JSON generated)
+- Downstream handoff routing
+- Orchestrator-level gates (phase-internal skill checks still run)
+- Human approval record path
+
+This mode is used by the `health-check` workflow for lightweight periodic checks. A full diagnosis (all phases + gates + handoffs) should invoke the orchestrator without `snapshot_mode`.
+
 ## Pipeline
 
 ```yaml

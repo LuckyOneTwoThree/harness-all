@@ -6,8 +6,10 @@ description: Use when building a product metrics system. Metrics System Auto-Con
 
 ## When to use
 - Help me organize the product's core metrics
-- We need to define the North Star metric
-- Build a metrics system
+- Validate the North Star metric selected by planning-north-star
+- Build a metrics system (L1/L2 breakdown + tracking + dashboard)
+
+> **Ownership boundary**: North Star SELECTION (candidate generation + human decision) is owned by `planning-north-star`. This skill owns North Star VALIDATION (vanity-metric detection, product-type-fit scoring) + L1/L2 breakdown. If no North Star has been selected yet, route to `planning-north-star` first. The "North Star Not Defined" auto-recommendation branch below is a standalone-fallback only (when planning-north-star is unavailable).
 
 ## Outputs
 - memory/progress.md

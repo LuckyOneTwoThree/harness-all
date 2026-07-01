@@ -14,8 +14,8 @@ description: Guides agents through design requirement discovery. Use when starti
 - .harness/data/design/vibes.csv
 - .harness/craft/anti-ai-slop.md
 - docs/handoff/pm-to-design.md
-- docs/product/PRD.md (read-only; sections 3.2.3 interaction logic, 3.2.4 state design, 3.2.5 data model, 5.1 performance)
-- docs/product/prd.json (read-only; pages[], entities[], user_flows[] for structured design input)
+- Handoff package's `artifacts/product/PRD.md` (preferred; read-only; sections 3.2.3 interaction logic, 3.2.4 state design, 3.2.5 data model, 5.1 performance). Fallback to producer-local `docs/product/PRD.md` only when the handoff package does not carry the PRD artifact (e.g., standalone PM contract without artifact bundle). Per handoff-protocol.md, producer-local paths outside a valid package are invalid in family mode.
+- Handoff package's `artifacts/product/prd.json` (preferred; read-only; pages[], entities[], user_flows[] for structured design input). Same fallback rule as PRD.md.
 
 ## Outputs
 - docs/visual/DESIGN_BRIEF.md
@@ -41,8 +41,9 @@ ASSUMPTIONS I'M MAKING:
 ### 0.5 Read PRD Directly (Upstream Requirement Source)
 
 Before consuming the handoff's AC-xxx list, read the PRD itself for full context:
-- Read `docs/product/PRD.md` sections 3.2.3 (interaction logic), 3.2.4 (state design), 3.2.5 (data model), 5.1 (performance)
-- Read `docs/product/prd.json` arrays: `pages[]` (page list + flows), `entities[]` (for form/component design), `user_flows[]` (for flow diagrams)
+- Resolve PRD path from the handoff package first: `artifacts/product/PRD.md` and `artifacts/product/prd.json`. Only fall back to producer-local `docs/product/PRD.md` / `docs/product/prd.json` when the package does not carry these artifacts (e.g., standalone PM contract).
+- Read PRD.md sections 3.2.3 (interaction logic), 3.2.4 (state design), 3.2.5 (data model), 5.1 (performance)
+- Read prd.json arrays: `pages[]` (page list + flows), `entities[]` (for form/component design), `user_flows[]` (for flow diagrams)
 - The unified PRD always produces all arrays — no fallback needed
 - These sections provide the structural foundation that handoff AC-xxx alone cannot convey
 

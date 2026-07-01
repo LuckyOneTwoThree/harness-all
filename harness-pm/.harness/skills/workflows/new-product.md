@@ -8,8 +8,18 @@ default_mode: deep
 # Workflow A: Build New Product from 0 to 1
 
 > Applicable scenario: Complete product process for new product from 0 to 1
-> Core mode: Exploration hard gate → LOOP validation → PRD output → Engineering handoff
+> Core mode: Exploration Gate → LOOP validation → PRD output → Engineering handoff
 > Default mode: deep (mandatory exploration first, pause dialog before each module)
+
+## Mode Selection Guide
+
+| Mode | Stops | Feel | Suitable For |
+|------|-------|------|--------------|
+| `deep` (default) | 3 stops (Exploration Gate + Dialog 2/3) + 5 👤 | New domain / unclear direction / needs exploration | First-time PM, unfamiliar market |
+| `standard` | Module boundaries only | Balanced | Have ideas but need validation, routine iteration |
+| `skip` | No exploration stops, auto-run | Fastest but risky | Domain expert with data already in `docs/discovery/`; safety fallback triggers if exploration data missing |
+
+> Tip: Say "switch to standard/skip mode" anytime. Skip mode without prior exploration data auto-downgrades to standard (see AGENTS.md).
 
 ## Process
 
@@ -19,11 +29,12 @@ default_mode: deep
 └────────┬────────┘
          ▼
 ┌─────────────────────────────────────────┐
-│ ⏸ Exploration Dialog 0: Product         │
-│   direction alignment                   │
+│ Module 1: Exploration & Discovery       │
 │                                         │
-│  Minimum question set (must all be      │
-│  answered before continuing):           │
+│  ⏸ Step 0: Direction alignment          │
+│  (must complete before research starts) │
+│                                         │
+│  Minimum question set:                  │
 │  1. What product do you want to build?  │
 │     What problem does it solve?         │
 │  2. Who are the target users? How well  │
@@ -31,27 +42,21 @@ default_mode: deep
 │  3. What data/insights do you already   │
 │     have?                               │
 │  4. What hypotheses need validation?    │
-│  5. What constraints (budget/time/      │
+│  5. What constraints (budget/time/     │
 │     technology)?                        │
 │                                         │
 │  Adjust execution strategy based on     │
 │  user answers:                          │
-│  - User has sufficient data → can skip  │
-│    some exploration                     │
-│  - User only has vague ideas → must do  │
-│    complete exploration                 │
-│  - User has clear direction → focus on  │
-│    validation rather than divergence    │
+│  - Sufficient data → skip some          │
+│    exploration                          │
+│  - Vague ideas → complete exploration   │
+│  - Clear direction → focus on           │
+│    validation                           │
 │                                         │
-│  ⚠️ Forbidden: starting module 1        │
+│  ⚠️ Forbidden: starting research        │
 │  directly without asking user           │
-└────────┬────────────────────────────────┘
-         │ User answered
-         ▼
-┌─────────────────────────────────────────┐
-│ Module 1: Exploration & Discovery       │
-│ (★ Exploration hard gate)               │
 │                                         │
+│  Research (after direction aligned):    │
 │  - user-research-orchestrator           │
 │    (User research: VOC+behavior+        │
 │     modeling+interviews+report)         │
@@ -68,8 +73,10 @@ default_mode: deep
 │    👤 Opportunity brief approval        │
 │      (Human Decision Point)             │
 │                                         │
-│  ★ Hard gate check (5 items, stop and   │
-│    ask if any not met):                 │
+│  ★ Exploration Gate (hard check +       │
+│    review, single stop)                 │
+│                                         │
+│  Objective checks (must all pass):      │
 │  - Target users clear? (Persona          │
 │    confidence ≥0.7)                     │
 │  - Core problem validated? (Problem     │
@@ -78,17 +85,9 @@ default_mode: deep
 │    has data)                            │
 │  - Business model feasible? (Value      │
 │    proposition clear)                   │
-│  - User confirmed? (Opportunity brief   │
-│    human-approved)                      │
-└────────┬────────────────────────────────┘
-         │ Pass
-         ▼
-┌─────────────────────────────────────────┐
-│ ⏸ Exploration Dialog 1: Exploration &  │
-│   discovery review                      │
 │                                         │
-│  Minimum question set:                  │
-│  1. Do these findings match your        │
+│  ⏸ Review with user (minimum set):     │
+│  1. Do these findings match your       │
 │     understanding?                      │
 │  2. Is there any important missing      │
 │     information?                        │
@@ -105,15 +104,14 @@ default_mode: deep
 │                                         │
 │  - business-orchestrator                │
 │    (Business model: canvas+value        │
-│     fit+pricing)                        │
+│     fit+pricing+stakeholder+            │
+│     strategy-report)                    │
 │  - positioning-strategy                 │
 │    (Product positioning: positioning    │
 │     statement)                          │
 │  - planning-orchestrator                │
 │    (Strategic planning: proposal+OKR+   │
 │     North Star+roadmap)                 │
-│  - stakeholder-analysis                 │
-│    (Stakeholder: analysis+alignment)    │
 │    👤 Strategy direction confirmation   │
 │      (Human Decision Point)             │
 │                                         │
@@ -233,7 +231,7 @@ default_mode: deep
 
 ## Key Checkpoints
 
-- [ ] Exploration hard gate passed? (Target users/core problem/market opportunity/business model/user confirmation)
+- [ ] Exploration Gate passed? (Target users/core problem/market opportunity/business model)
 - [ ] PRODUCT_STRATEGY.md updated? (Produced by planning-orchestrator, setup only fills skeleton)
 - [ ] PRD passed 4 quality gates? (Completeness/consistency/ambiguity elimination/traceability)
 - [ ] Confidence check passed? (Low-confidence items human-confirmed)
@@ -245,7 +243,7 @@ default_mode: deep
 
 | Failure point | Handling |
 |--------|---------|
-| Exploration hard gate not passed | Stop and ask user, supplement research data |
+| Exploration Gate not passed | Stop and ask user, supplement research data |
 | LOOP iteration exceeds 5 times | Request human intervention, don't force |
 | PRD quality gate not passed | Revise and re-validate, no skipping |
 | Confidence < 0.3 | Block, request human confirmation whether to continue |

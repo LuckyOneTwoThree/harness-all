@@ -71,7 +71,10 @@ default_mode: skip
 │ - Growth stagnation → growth-           │
 │   orchestrator                          │
 │ - Extremely low health and no           │
-│   improvement → product-sunset-plan     │
+│   improvement → session-end (sunset     │
+│   plan already produced internally by  │
+│   orchestrator phase-4; output handoff │
+│   document for downstream consumption)  │
 │ - Only health check needed →            │
 │   monitoring-orchestrator               │
 └────────┬────────────────────────────────┘

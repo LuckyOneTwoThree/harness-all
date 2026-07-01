@@ -35,9 +35,9 @@ Run once, in this order (8 sub-checks merged into 4 groups):
 3. **Entropy + Frontend + Documentation** — compare exact current metrics to baseline using `entropy-baseline.md` (do not estimate LOC from file count); when frontend files changed, invoke webapp-testing once (semantic contract, binding hash/revision, token use, accessibility, build, typecheck, lint); changed public API/schema/config has documentation or explicit n/a reason.
 4. **Evidence** — overwrite evidence.md using the canonical headings and actual outputs.
 
-Full pass writes `stage: verify`, `status: running`, and clears error: verified, awaiting code review. It does **not** mark done.
+Full pass writes `stage: verify`, `status: running`, `substage: full-passed`, and clears error: verified, awaiting code review. It does **not** mark done.
 
-Full failure writes `status: retrying` (or `needs-human`/`failed` under limit rules) and routes back to PLAN/ACT/debug. Do not append a second terminal outcome for an already logged attempt; append a distinct `full-verify` event.
+Full failure writes `status: retrying`, `substage: full-failed` (or `needs-human`/`failed` under limit rules) and routes back to PLAN/ACT/debug. Do not append a second terminal outcome for an already logged attempt; append a distinct `full-verify` event.
 
 ## Invalid Evidence
 
