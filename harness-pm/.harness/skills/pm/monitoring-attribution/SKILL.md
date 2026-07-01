@@ -12,15 +12,13 @@ description: Used when attribution analysis is needed for monitoring anomalies. 
 
 ## Mode Boundary
 
-> **PM owns product analytics alerts; Ops owns system observability; Growth owns growth experimentation attribution.**
->
-> | Alert Type | Owner | Scope |
-> |------------|-------|-------|
-> | Product metric anomaly (DAU drop, conversion rate decline) | PM (this skill) | Business metric thresholds |
-> | Infrastructure alert (CPU, memory, latency, uptime) | Ops | System health |
-> | Experiment attribution (A/B test significance) | Growth | Growth experimentation |
->
-> **Boundary**: This skill produces product-level alert rules (business metric thresholds + notification config). It does NOT configure infrastructure monitoring dashboards or SLO alerting rules.
+> **PM owns product analytics alerts; Ops owns system observability; Growth owns growth experimentation attribution.** This skill produces product-level alert rules (business metric thresholds + notification config); does NOT configure infra dashboards or SLO alerting.
+
+| Alert Type | Owner |
+|------------|-------|
+| Product metric anomaly | PM (this skill) |
+| Infrastructure alert | Ops |
+| Experiment attribution | Growth |
 
 ## Inputs
 - rules/security.md
@@ -229,24 +227,17 @@ description: Used when attribution analysis is needed for monitoring anomalies. 
 
 ### P0 Checks (must pass for quick/standard/deep)
 
-- [ ] Every alert event has a root cause analysis conclusion
-- [ ] Root cause analysis is supported by evidence (not pure speculation)
-- [ ] Impact scope is quantified (affected user count, feature availability)
+- [ ] Every alert event has a root cause analysis conclusion supported by evidence (not pure speculation); impact scope is quantified (affected user count, feature availability)
 
 ### P1 Checks (must pass for standard/deep)
 
-- [ ] Remediation suggestions are actionable (each suggestion has specific steps and commands)
-- [ ] Immediate remediation actions have rollback plans
-- [ ] Impact assessment covers 5 dimensions (users/features/business/revenue/reputation)
-- [ ] Root cause confidence is labeled
+- [ ] Remediation suggestions are actionable (specific steps/commands) with rollback plans; impact assessment covers 5 dimensions (users/features/business/revenue/reputation); root cause confidence is labeled
 
 ### P2 Checks (only deep must pass)
 
-- [ ] Root cause localization accuracy ≥ 80%
-- [ ] 5 Why chain is complete (3-5 layers)
+- [ ] Root cause localization accuracy ≥ 80%; 5 Why chain is complete (3-5 layers)
 - [ ] MTTR reduction target met
-- [ ] Long-term fix plan has priority and effort estimate
-- [ ] Retrospective suggestions generated (P0 anomaly scenarios)
+- [ ] Long-term fix plan has priority and effort estimate; retrospective suggestions generated (P0 anomaly scenarios)
 
 ## Degradation Strategy
 
@@ -296,8 +287,7 @@ When upstream files are missing, obtain necessary data through the following met
 
 | Upstream Source | Change Type | Impact Scope | Response Action |
 |----------|----------|----------|----------|
-| monitoring-alert-detection | Alert event update | Root cause analysis input | Re-perform attribution analysis |
-| monitoring-alert-detection | Alert classification change | Root cause pattern matching | Update root cause matching patterns |
+| monitoring-alert-detection | Alert event/classification update | Root cause analysis input & pattern matching | Re-perform attribution analysis, update matching patterns |
 | release-gradual | Release record update | Change correlation attribution | Update correlation events and attribution |
 | Root cause knowledge base | Historical case update | Root cause matching and suggestions | Update reference case library |
 

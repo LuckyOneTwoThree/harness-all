@@ -12,15 +12,13 @@ description: Used when monitoring product metrics and detecting anomalies. Monit
 
 ## Mode Boundary
 
-> **PM owns product analytics alerts; Ops owns system observability; Growth owns growth experimentation attribution.**
->
-> | Alert Type | Owner | Scope |
-> |------------|-------|-------|
-> | Product metric anomaly (DAU drop, conversion rate decline) | PM (this skill) | Business metric thresholds |
-> | Infrastructure alert (CPU, memory, latency, uptime) | Ops | System health |
-> | Experiment attribution (A/B test significance) | Growth | Growth experimentation |
->
-> **Boundary**: This skill produces product-level alert rules (business metric thresholds + notification config). It does NOT configure infrastructure monitoring dashboards or SLO alerting rules.
+> **PM owns product analytics alerts; Ops owns system observability; Growth owns growth experimentation attribution.** This skill produces product-level alert rules (business metric thresholds + notification config); does NOT configure infra dashboards or SLO alerting.
+
+| Alert Type | Owner |
+|------------|-------|
+| Product metric anomaly | PM (this skill) |
+| Infrastructure alert | Ops |
+| Experiment attribution | Growth |
 
 ## Inputs
 - rules/security.md
@@ -257,29 +255,20 @@ description: Used when monitoring product metrics and detecting anomalies. Monit
 
 - [ ] Core path coverage ≥ 95%
 - [ ] Each core path has at least 4 golden signals
-- [ ] Alert rules have no conflicts or omissions
-- [ ] SLA requirements have corresponding metric support
+- [ ] Alert rules have no conflicts or omissions; SLA requirements have corresponding metric support
 
 ### P1 Checks (must pass for standard/deep)
 
-- [ ] Alert noise rate < 15%
-- [ ] All P0 services have On-Call handbooks
+- [ ] Alert noise rate < 15%; all P0 services have On-Call handbooks
 - [ ] Alert classification accuracy ≥ 85%
-- [ ] Escalation marks have no omissions
-- [ ] All roles have corresponding Dashboards
-- [ ] Core metric coverage ≥ 90%
-- [ ] Alert config correct
-- [ ] Alert severity accuracy ≥ 90%
-- [ ] Escalation trigger timeliness 100%
-- [ ] Notification delivery rate ≥ 99%
-- [ ] SLA response time met
-- [ ] Escalation chain config correct
+- [ ] Escalation marks have no omissions; SLA response time met
+- [ ] All roles have corresponding Dashboards; core metric coverage ≥ 90%
+- [ ] Alert and escalation chain config correct
+- [ ] Alert severity accuracy ≥ 90%; escalation trigger timeliness 100%; notification delivery rate ≥ 99%
 
 ### P2 Checks (only deep must pass)
 
-- [ ] Visualization component selection reasonable
-- [ ] Layout aesthetic, clear hierarchy
-- [ ] Refresh rate matches role needs
+- [ ] Visualization component selection reasonable; layout aesthetic, clear hierarchy; refresh rate matches role needs
 - [ ] On-call report completeness 100%
 - [ ] Capacity planning output (resource utilization forecast, scaling thresholds, capacity redundancy assessment)
 - [ ] Chaos engineering plan generated (fault injection scenarios, blast radius assessment, recovery verification plan)

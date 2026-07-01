@@ -18,7 +18,17 @@
     "substage": { "type": "string" },
     "exploration_mode": { "type": "string", "enum": ["deep", "standard", "skip"] },
     "hard_limit_reached": { "type": "boolean" },
-    "current_nested_task": { "type": "string" }
+    "current_nested_task": { "type": "string" },
+    "ac_change": {
+      "type": "object",
+      "description": "Recorded by session-start 1a when a newly accepted handoff supersedes a previously consumed one. Null or absent when no AC-level change occurred.",
+      "properties": {
+        "removed": { "type": "array", "items": { "type": "string" }, "description": "AC IDs in old set but not in new" },
+        "added": { "type": "array", "items": { "type": "string" }, "description": "AC IDs in new set but not in old" },
+        "affected_tasks": { "type": "array", "items": { "type": "string" }, "description": "Task IDs owning removed ACs; may need re-verification or rework" }
+      },
+      "additionalProperties": false
+    }
   },
   "allOf": [
     {

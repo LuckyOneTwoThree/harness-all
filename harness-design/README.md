@@ -50,7 +50,7 @@ PLAN (inline) → LOOP(DESIGN → VERIFY incl. lint) → LOOP outer gate(DESIGN-
 
 - One `state.yaml` per task, supports checkpoint resume
 - LOOP inner = verify (unified: AC check + quick a11y + lint)
-- LOOP outer = design-review (Five-Axis including WCAG audit)
+- LOOP outer = design-review (Five-Axis including WCAG 2.1 AA static-checkable audit; DOM-level checks deferred to harness-solo verify)
 - Iteration limit protection: exceeding 5 requests human intervention
 - Evidence-driven: no claiming done without review passing
 

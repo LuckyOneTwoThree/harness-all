@@ -37,8 +37,9 @@
 │  Outside-LOOP Gate (final review, non-loop)         │
 │  ┌─────────────────┐                                │
 │  │ DESIGN-REVIEW   │ ← Five-Axis + Doubt-Driven     │
-│  │  (incl. Axis 5  │   + Axis 5 full WCAG 2.1 AA    │
-│  │   WCAG audit)   │   accessibility audit           │
+│  │  (incl. Axis 5  │   + Axis 5 WCAG 2.1 AA         │
+│  │   WCAG audit)   │   static-checkable audit       │
+│  │                 │   (DOM-level deferred to solo) │
 │  └────────┬────────┘                                │
 │           ├── Pass → enter handoff                  │
 │           └── Fail → back to LOOP (fixable) or PLAN (needs replanning) │
@@ -273,7 +274,7 @@ nested_progress: "<progress overview>"                    # Nested sub-task prog
 
 **ACCESSIBILITY AUDIT** (design-review skill Axis 5):
 
-1. WCAG 2.1 AA full check (contrast / keyboard / screen reader / responsive / reduced-motion)
+1. WCAG 2.1 AA static-checkable subset (contrast / keyboard nav spec / semantic labels / responsive / reduced-motion). DOM-level verification (live focus trap, runtime ARIA, real screen reader output) is deferred to harness-solo's verify stage.
 
 ### Preconditions for Claiming "Complete"
 
@@ -281,7 +282,7 @@ Before claiming a task complete, the Agent **must**:
 - [ ] All inside-LOOP verify passed (each AC-xxx ✓)
 - [ ] All inside-LOOP verify lint step passed (no error-level violations)
 - [ ] Outside-LOOP design-review passed (Five-Axis + Doubt-Driven)
-- [ ] Outside-LOOP design-review Axis 5 passed (WCAG 2.1 AA)
+- [ ] Outside-LOOP design-review Axis 5 passed (WCAG 2.1 AA static-checkable subset)
 - [ ] Write evidence to `loops/specs/<task>/evidence.md`
 - [ ] Update `loops/specs/<task>/state.yaml` status to done
 

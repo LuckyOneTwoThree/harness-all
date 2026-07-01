@@ -68,9 +68,17 @@ Any context without a downstream action belongs under Notes, not a new required 
 > harness-solo's writing-plans skill should mark these AC-xxx as "design-related AC" in spec.md, preserving the original IDs.
 > If the design phase added design-specific acceptance points, use the DAC-xxx prefix (D = Design-derived) to distinguish from engineering ACs.
 
+### Inherited AC-xxx (from PM PRD)
+
+> **Cross-package AC traceability**: This list must be a superset of the `ac_ids` in the upstream `pm-to-design.md` envelope (PM-owned AC-xxx only; DAC-xxx are design-derived and not in the upstream set).
+> harness-solo's session-start Consumer Gate should compare this list against the PM `pm-to-solo.md` `ac_ids` to detect any AC-xxx silently dropped during design. If an AC-xxx is dropped, design-brief's `[AC Cleanup Log]` must reference it; otherwise the handoff is invalid.
+
 - [ ] AC-F01-001: <stable testable description reused from PRD>
 - [ ] AC-F01-002: <stable testable description reused from PRD>
 - [ ] AC-F02-001: <stable testable description reused from PRD>
+
+### Design-derived DAC-xxx (new in this handoff)
+
 - [ ] DAC-P01-001: <stable page-scoped design criterion, e.g., "button hover state has a 200ms transition animation">
 - [ ] DAC-GLOBAL-001: <stable cross-page design criterion, e.g., "first screen LCP <= 2.5s">
 

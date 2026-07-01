@@ -58,8 +58,8 @@ Fill `docs/handoff/templates/design-to-solo-template.md` with:
 
 - phase summary and asset inventory;
 - pages, navigation, components, and flows;
-- PM-owned stable ACs (`AC-<feature>-<sequence>`);
-- design-derived stable DACs (`DAC-<page>-<sequence>` or `DAC-GLOBAL-<sequence>`);
+- **Inherited AC-xxx** (from PM PRD): all PM-owned stable ACs (`AC-<feature>-<sequence>`) must appear under "Inherited AC-xxx" — this list must be a superset of the upstream `pm-to-design.md` envelope's `ac_ids`. Any AC-xxx dropped during design must be referenced in design-brief's `[AC Cleanup Log]`; otherwise the handoff is invalid;
+- **Design-derived DAC-xxx** (new in this handoff): design-added stable DACs (`DAC-<page>-<sequence>` or `DAC-GLOBAL-<sequence>`) under "Design-derived DAC-xxx";
 - decisions, open items, risks, and explicit downstream actions.
 
 Every section must name its consumer action or gate. Put non-actionable context under Notes.
@@ -107,6 +107,7 @@ Follow `HANDOFF_PROTOCOL.md` semantics via `.harness/rules/handoff-protocol.md`:
 - [ ] Product mode covers every planned page, shared component, and flow.
 - [ ] Package is self-contained; every manifest path exists and every hash matches.
 - [ ] Envelope `ac_ids` exactly equals the unique AC/DAC IDs in the contract body.
+- [ ] Inherited AC-xxx list (under "Inherited AC-xxx" section) is a superset of upstream `pm-to-design.md` envelope's `ac_ids`; any dropped AC-xxx is referenced in design-brief's `[AC Cleanup Log]`.
 - [ ] Previous current pointer is archived unchanged.
 
 ## Red Flags

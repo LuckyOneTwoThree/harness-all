@@ -508,6 +508,8 @@ PLAN → ACT → VERIFY → Pass? DONE : Back to PLAN/ACT
 - **Operating-Mode Propagation**: solo outbound handoffs carry a `mode` field in the envelope so downstream consumers can distinguish family-produced contracts from `standalone-fallback` degraded output; `validate-handoff.ps1` enforces this for solo-produced packages
 - **AC Change Impact Analysis**: on accepting a handoff that `supersedes` an already-consumed one, session-start compares the new envelope `ac_ids` against implemented ACs — removed ACs flag their owning task for re-verification/rework, added ACs route through the normal Plan pipeline, unchanged ACs keep their evidence; the diff is recorded in `state.yaml.ac_change` and `progress.md`
 - **Design Waiver Hard Gate**: when PM declares `design_status: waived`, a bare waiver is invalid; the contract must carry a four-element `design_waiver` (approver + reason + scope + review point) or be rejected
+- **Cross-package AC Traceability**: when both `pm-to-solo.md` and `design-to-solo.md` are present, solo's session-start extracts the "Inherited AC-xxx" list (PM-owned, excluding DAC-xxx) from the design handoff and verifies it is a superset of the `ac_ids` in the PM handoff envelope. Any dropped AC-xxx must have a corresponding entry in design-brief's `[AC Cleanup Log]`; otherwise the design handoff is rejected as "AC-xxx silently dropped". This closes the gap where Design could silently drop PM product logic without push-back record.
+- **WCAG 2.1 AA Audit Scope Boundary**: harness-design's design-review Axis 5 performs the static-checkable subset only (contrast / keyboard nav spec / semantic labels / responsive / reduced-motion / dark mode); DOM-level verification (live focus trap behavior, runtime ARIA, real screen reader output) is deferred to harness-solo's verify stage. This prevents the pure-document design framework from over-promising on checks that require a running DOM.
 - **Branch Isolation**: before any code mutation, work happens on a dedicated branch — standalone tasks use `feature/<task-id>`, product-level nested tasks share `feature/<product-task-id>` (per Nested Task Switch Protocol)
 - **Nested Task Switch Protocol**: product-level `current_nested_task` transitions require 4 gates (completion / worktree cleanliness / branch strategy / update + log); prevents building downstream on incomplete upstream and WIP pollution across nested tasks
 - **Fix Task Exception**: when product-engineering-review finds a Critical issue in a `done` nested task, the done task is NOT re-opened; a `<original-task-id>-fix-<N>` task is created with inherited ACs marked `[status: pending]` for re-verification, preserving the original audit trail
@@ -1071,7 +1073,7 @@ If multiple people + multiple Agents collaborate:
 **Choice**: harness-design introduces LOOP outer gate (design-review, which includes accessibility audit)
 **Rationale**:
 - verify inside LOOP is a fast check (AC + quick a11y + mechanical lint rules in one unified gate)
-- design-review outside LOOP is a deep review (adversarial + semantic-level, including full WCAG 2.1 AA audit as Axis 5)
+- design-review outside LOOP is a deep review (adversarial + semantic-level, including the WCAG 2.1 AA static-checkable subset as Axis 5; DOM-level checks deferred to harness-solo verify)
 - Splitting prevents LOOP from being too heavy while ensuring quality
 
 **Applicable Scope**:

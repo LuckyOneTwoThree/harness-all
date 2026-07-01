@@ -11,6 +11,11 @@
     "consumer": { "type": "string", "pattern": "^harness-(pm|design|solo|growth|ops)$" },
     "status": { "const": "ready" },
     "source_revision": { "type": "string", "minLength": 1 },
+    "mode": {
+      "type": "string",
+      "enum": ["family", "standalone-fallback"],
+      "description": "Declares whether the producer worked with upstream contracts (family) or without (standalone-fallback). Consumers use this to distinguish degraded output."
+    },
     "contract": { "$ref": "#/$defs/file" },
     "artifacts": { "type": "array", "items": { "$ref": "#/$defs/file" }, "uniqueItems": true }
   },

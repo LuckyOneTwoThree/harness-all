@@ -131,7 +131,7 @@ interaction-design → verify
 
 ### 7. design-review (gate outside LOOP, includes accessibility audit)
 
-- Five-Axis Review (5 axes, Axis 5 performs full WCAG 2.1 AA audit)
+- Five-Axis Review (5 axes, Axis 5 performs WCAG 2.1 AA static-checkable subset audit; DOM-level checks deferred to harness-solo verify)
 - Doubt-Driven (only Critical triggers adversarial debate)
 - Compare before/after
 - Output `loops/specs/<task>/evidence.md` + `docs/visual/accessibility-report.md`

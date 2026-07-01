@@ -13,13 +13,7 @@ description: Use when you need to evaluate acquisition channels or optimize the 
 
 ## Mode Boundary
 
-> ⚠️ **Standalone fallback only.**
->
-> In **family mode** (with harness-growth installed), this skill is NOT directly invoked. PM produces `docs/handoff/pm-to-growth.md` instead, and harness-growth owns channel/content/SEO/user operations and experiment execution (per `DOMAIN_BOUNDARIES.md` Ownership Matrix).
->
-> In **standalone mode** (PM is the only harness), this skill is the fallback for growth-related work. All outputs must be marked `mode: standalone-fallback`.
->
-> **Detection rule**: If `docs/handoff/pm-to-growth.md` exists or harness-growth is installed, do NOT invoke this skill; produce/refresh `pm-to-growth.md` instead.
+> ⚠️ **Standalone fallback only.** In family mode (harness-growth installed), this skill is NOT invoked; PM produces `pm-to-growth.md` instead (per `DOMAIN_BOUNDARIES.md`). In standalone mode, this skill is the fallback — mark outputs `mode: standalone-fallback`. Detection: if `pm-to-growth.md` exists or harness-growth is installed, do NOT invoke.
 
 ## Inputs
 - rules/security.md
@@ -42,7 +36,6 @@ description: Use when you need to evaluate acquisition channels or optimize the 
 6. **Experiment validation over guessing**: Optimization plans must be validated through A/B testing, replacing intuition with data
 
 ## Interaction Mode
-
 🤖→👤 AI suggests, human approves
 
 ## Input
@@ -91,7 +84,6 @@ Calculate the return on investment for each channel:
 
 ```
 Channel ROI = (Revenue from channel - Channel investment cost) / Channel investment cost
-
 LTV-based ROI = (User LTV from channel - Channel CAC) / Channel CAC
 ```
 

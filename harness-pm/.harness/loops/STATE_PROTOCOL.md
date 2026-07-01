@@ -41,6 +41,8 @@ This rule overrides any ambiguous wording elsewhere. One attempt can never incre
 
 Forbidden examples: `done → running`, `failed → retrying`, or any execution while `hard_limit_reached: true`.
 
+**Fix task exception (product-level only)**: when product-engineering-review finds a Critical issue in an already-`done` nested task, the done task is NOT re-opened (that would violate the terminal rule). Instead, a new `<original-task-id>-fix-<N>` task is created with its own spec/state, referencing the original task's evidence as input. The original task's `status: done` and evidence remain authoritative for the pre-fix revision; the original spec.md retains `AC [status: done]` for audit integrity. The fix task's spec.md marks the inherited ACs as `[status: pending]` for re-verification. This preserves the audit trail while allowing downstream-impacting issues to be addressed.
+
 ## Hard Circuit Breaker
 
 - Recommended domain limits trigger early escalation; the user may explicitly authorize further attempts up to 10.

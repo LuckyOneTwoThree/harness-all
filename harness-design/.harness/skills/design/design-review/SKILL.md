@@ -1,13 +1,13 @@
 ---
 name: design-review
-description: Final review combining Five-Axis review (including full WCAG 2.1 AA accessibility audit) with Doubt-Driven adversarial approach. Use after LOOP passes. Use before design-handoff. Replaces the former separate design-review + accessibility-audit steps.
+description: Final review combining Five-Axis review (including WCAG 2.1 AA static-checkable accessibility audit; DOM-level checks deferred to harness-solo verify) with Doubt-Driven adversarial approach. Use after LOOP passes. Use before design-handoff. Replaces the former separate design-review + accessibility-audit steps.
 ---
 # Design Review
 
 ## When to use
 - Final review after LOOP passes
 - Before design-handoff
-- Human-level comprehensive review needed (includes full WCAG 2.1 AA audit)
+- Human-level comprehensive review needed (includes WCAG 2.1 AA static-checkable audit; DOM-level checks deferred to harness-solo verify)
 
 ## Modes
 
@@ -40,7 +40,7 @@ In unified mode:
 
 ## Overview
 
-Final human-level comprehensive review combining Five-Axis review (with Axis 5 now performing full WCAG 2.1 AA audit, formerly the separate accessibility-audit skill) + Doubt-Driven adversarial approach. Merges the former `design-review` + `accessibility-audit` two-step into a single out-of-LOOP gate to halve the post-LOOP gate cost.
+Final human-level comprehensive review combining Five-Axis review (with Axis 5 now performing the WCAG 2.1 AA static-checkable subset audit, formerly the separate accessibility-audit skill; DOM-level checks deferred to harness-solo verify) + Doubt-Driven adversarial approach. Merges the former `design-review` + `accessibility-audit` two-step into a single out-of-LOOP gate to halve the post-LOOP gate cost.
 
 ## Process
 
@@ -68,9 +68,9 @@ Check axis by axis:
 - Same semantic component ≤3 implementations?
 - Component states complete?
 
-#### Axis 5: Accessibility (full WCAG 2.1 AA audit)
+#### Axis 5: Accessibility (WCAG 2.1 AA static-checkable subset audit)
 
-**Formerly the separate accessibility-audit skill. Performs in-depth WCAG 2.1 AA audit; accessibility is a hard constraint, not an afterthought.**
+**Formerly the separate accessibility-audit skill. Performs the static-checkable subset of WCAG 2.1 AA (contrast / keyboard nav spec / semantic labels / responsive / reduced-motion / dark mode). Accessibility is a hard constraint, not an afterthought. DOM-level verification (live focus trap behavior, runtime ARIA, real screen reader output) is deferred to harness-solo's verify stage — this skill audits design-stage annotations and token-level values only.**
 
 ##### 5.1 Contrast Check
 
@@ -281,10 +281,8 @@ Write to `loops/specs/<task>/evidence.md`:
 ## Verification
 
 - [ ] Five-Axis checked axis by axis (evidence: evidence.md contains 5 axes)
-- [ ] Axis 5 full WCAG 2.1 AA audit completed (evidence: accessibility-report.md exists with contrast/keyboard/screen-reader/responsive/reduced-motion/dark-mode checks)
-- [ ] Contrast computed item by item (evidence: report contains contrast values)
-- [ ] Keyboard navigation checked item by item (evidence: report contains ✓/✗)
-- [ ] Screen reader check completed (evidence: report contains semantic/ARIA/alt checks)
+- [ ] Axis 5 WCAG 2.1 AA static-checkable audit completed (evidence: accessibility-report.md with contrast/keyboard/screen-reader/responsive/reduced-motion/dark-mode)
+- [ ] Contrast + keyboard + screen reader checks done item by item (evidence: report contains values + ✓/✗ + semantic/ARIA/alt)
 - [ ] Three responsive breakpoints checked (evidence: 375/768/1280 all present)
 - [ ] Reduced-motion check (evidence: report contains animation alternatives)
 - [ ] Dark mode independently checked (evidence: report contains dark mode contrast)
@@ -296,10 +294,7 @@ Write to `loops/specs/<task>/evidence.md`:
 
 ## Relationship with LOOP
 
-- Stage: Out-of-LOOP gate (runs after LOOP exits)
-- Unified gate (former design-review + accessibility-audit merged)
-- Not run inside LOOP (avoids launching a sub-agent for Doubt-Driven adversarial review on every iteration—too costly)
-- Inside LOOP, verify performs quick checks (AC + quick a11y + lint); design-review does the final human-level comprehensive review including full WCAG audit
-- On failure: fixable → return to LOOP for re-DESIGN; needs replanning → return to PLAN
-- Does not consume iterations (out-of-LOOP failures don't count)
+- Out-of-LOOP unified gate (former design-review + accessibility-audit merged); not run inside LOOP (avoids sub-agent per iteration—too costly)
+- Inside LOOP, verify does quick checks (AC + quick a11y + lint); design-review does final review including WCAG 2.1 AA static-checkable subset (DOM-level checks deferred to harness-solo verify)
+- On failure: fixable → return to LOOP for re-DESIGN; needs replanning → return to PLAN; does not consume iterations
 - On pass, proceeds directly to handoff

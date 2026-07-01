@@ -18,6 +18,12 @@ try { $manifest = Read-Utf8 $manifestPath | ConvertFrom-Json } catch { throw "ma
 foreach ($field in @('schema_version','handoff_id','producer','consumer','status','source_revision','contract','artifacts')) {
     if ($null -eq $manifest.$field) { Fail "manifest missing $field" }
 }
+# mode is mandatory only for solo-produced handoffs (solo distinguishes family vs standalone-fallback);
+# pm/design/growth/ops producers may omit it (they don't have this distinction)
+if ([string]$manifest.producer -eq 'harness-solo') {
+    if ($null -eq $manifest.mode) { Fail "manifest missing mode (required for harness-solo producer)" }
+    if (@('family','standalone-fallback') -notcontains [string]$manifest.mode) { Fail "manifest mode must be 'family' or 'standalone-fallback', got: $($manifest.mode)" }
+}
 if ([string]$manifest.schema_version -ne '1.0') { Fail "unsupported schema_version: $($manifest.schema_version)" }
 if ([string]$manifest.status -ne 'ready') { Fail "status must be ready" }
 if ([string]$manifest.consumer -ne $ExpectedConsumer) { Fail "consumer mismatch: expected $ExpectedConsumer, got $($manifest.consumer)" }
@@ -59,11 +65,27 @@ if ($null -ne $contractPath) {
             for ($i=0; $i -lt $front.Count; $i++) {
                 if ($front[$i] -match '^([a-z_]+):\s*(.*)$') { $scalar[$Matches[1]] = Normalize-Scalar $Matches[2] }
             }
-            foreach ($field in @('schema_version','handoff_id','producer','consumer','created_at','source_revision','supersedes','status','ac_ids','artifacts')) {
+            # envelope required fields: mode is required only for solo producer
+            $envelopeRequired = @('schema_version','handoff_id','producer','consumer','created_at','source_revision','supersedes','status','ac_ids','artifacts')
+            if ([string]$manifest.producer -eq 'harness-solo') { $envelopeRequired += 'mode' }
+            foreach ($field in $envelopeRequired) {
                 if (-not $scalar.ContainsKey($field)) { Fail "contract envelope missing $field" }
             }
-            foreach ($field in @('schema_version','handoff_id','producer','consumer','source_revision','status')) {
+            # manifest/contract scalar consistency: include mode when present in envelope
+            $consistencyFields = @('schema_version','handoff_id','producer','consumer','source_revision','status')
+            if ($scalar.ContainsKey('mode')) { $consistencyFields += 'mode' }
+            foreach ($field in $consistencyFields) {
                 if ($scalar.ContainsKey($field) -and [string]$manifest.$field -ne $scalar[$field]) { Fail "manifest/contract mismatch: $field" }
+            }
+
+            # Supersedes freshness: if non-null, its date segment must be older than this handoff's date segment
+            $supersedes = $scalar['supersedes']
+            if ($supersedes -and $supersedes -ne 'null' -and $supersedes -match '-(\d{8})-') {
+                $superDate = [datetime]::ParseExact($Matches[1], 'yyyyMMdd', $null)
+                if ($manifest.handoff_id -match '-(\d{8})-') {
+                    $thisDate = [datetime]::ParseExact($Matches[1], 'yyyyMMdd', $null)
+                    if ($superDate -ge $thisDate) { Fail "supersedes freshness violation: $($supersedes) date ($($Matches[1])) is not older than this handoff ($($manifest.handoff_id))" }
+                }
             }
 
             function Envelope-List([string]$Name) {
