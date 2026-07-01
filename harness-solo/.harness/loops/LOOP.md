@@ -56,7 +56,7 @@ Do not use evidence.md as an ACT scratchpad. Actual Red/Green output may be reus
 | iteration | `0` | increment before ACT | never | never | never |
 | stage | `plan` | `act` | `verify` | `review` | `debug` |
 | status | `running` | running/retrying | running/retrying/needs-human/failed | done/retrying/needs-human | retrying/needs-human |
-| last error | clear | observed ACT failure | observed gate failure | blocking finding | root cause |
+| last error | clear | observed ACT failure | observed gate failure | blocking finding | symptom (entry) / cleared (exit; root cause logged in iterations.log) |
 
 **Valid stage values**: `plan`, `act`, `verify`, `review`, `debug`. The `debug` stage is entered when failure routing sends control to `systematic-debugging` (a diagnostic skill, NOT an ACT skill — it does not increment iteration or own per-attempt terminal outcomes). It exits when systematic-debugging returns to LOOP for verify-full.
 

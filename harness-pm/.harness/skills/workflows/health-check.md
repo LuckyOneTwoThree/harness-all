@@ -67,7 +67,7 @@ default_mode: skip
 │     not deep analysis)                  │
 │                                         │
 │  Output: docs/monitoring/diagnosis-report.md │
-│  ("Competitor Monitoring Report" section) │
+│  ("Competitor Diagnosis" section) │
 └────────┬────────────────────────────────┘
          ▼
 ┌─────────────────────────────────────────┐

@@ -1203,7 +1203,7 @@ harness-all is a multi-Agent framework family with **Independence First, Contrac
 | .harness/scripts/ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | docs/handoff/ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
-**Skill count note**: Each framework's total skill count = domain skills + 4 meta skills. harness-design totals 19, harness-solo 19, harness-pm 86, harness-growth 40, and harness-ops 32.
+**Skill count note**: Each framework's total skill count = domain skills + 4 meta skills. harness-design totals 17, harness-solo 19, harness-pm 84, harness-growth 40, and harness-ops 32.
 
 ## Appendix B: Contract Document Matrix
 

@@ -61,15 +61,14 @@ stages:
     name: "Health Diagnosis"
     depends_on: []
     skills: [diagnosis-health]
-    parallel_with: [phase-2]
     gate:
       condition: "Health score deviation within ±10%"
       fail_action: "Calibrate scoring model or supplement data"
 
   - id: phase-2
     name: "Competitor Tracking"
+    depends_on: []
     skills: [diagnosis-competition]
-    parallel_with: [phase-1]
     gate:
       condition: "Competitor dynamics tracked"
       fail_action: "Supplement competitor data sources or extend tracking period"

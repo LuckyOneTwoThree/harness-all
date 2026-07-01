@@ -45,6 +45,7 @@ Context must be loaded before the session starts; working in an "amnesic" state 
    - If a `solo-to-growth.md` file exists (from harness-solo), report to the user: "Found handoff document solo-to-growth.md (from harness-solo), consume it this session?"
    - This document may contain new feature release info, trackable events, API endpoints, etc., and is an important input for growth work.
    - If valid unconsumed handoffs exist, prioritize them. Report invalid packages precisely and retain the last valid input.
+   - After successful consumption of `solo-to-growth.md`, write `docs/handoff/receipts/<handoff_id>-receipt.json` with `consumer: harness-growth`, `consumed_at`, `manifest_sha256`, `status` (`accepted`/`rejected`), and `reasons`. Never edit the producer contract.
 
 6. **Confirm task scope**
    Confirm with the user what this session will do, and write a new session block to progress.md:

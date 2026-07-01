@@ -77,11 +77,11 @@ component-design → verify
 - Failure → back to component-design, iteration +1
 - More than 5 iterations → request human intervention
 
-### 7. design-review (gate outside LOOP)
+### 7. design-review (gate outside LOOP, includes accessibility audit)
 
-- Five-Axis Review (focus: component consistency axis)
+- Five-Axis Review (5 axes, Axis 5 performs WCAG 2.1 AA static-checkable subset audit; focus on component consistency axis)
 - Doubt-Driven (only Critical triggers adversarial debate)
-- Output `loops/specs/<task>/evidence.md`
+- Output `loops/specs/<task>/evidence.md` + `docs/visual/accessibility-report.md`
 - Not passed → back to LOOP (fixable) or PLAN (needs re-planning)
 
 ### 8. session-end

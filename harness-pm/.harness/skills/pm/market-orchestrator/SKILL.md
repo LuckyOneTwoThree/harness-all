@@ -165,8 +165,8 @@ Downstream handoff:
 | Exception Type | Handling Strategy |
 |----------|----------|
 | A sub-skill in Stage 1 fails | Do not block the other sub-skill; the failed sub-skill continues with a degraded solution, marked as "degraded execution" |
-| tam-som.json dual-path divergence > 30% | Mark as "severe dual-path divergence", escalate to human judgment, use neutral values in the report |
-| A dimension in pest.json has completely missing data | Fill with industry benchmark values, mark as "inferred value", annotate the dimension as incomplete in the report |
+| Market Size dual-path divergence > 30% | Mark as "severe dual-path divergence", escalate to human judgment, use neutral values in the report |
+| A dimension in PEST Analysis has completely missing data | Fill with industry benchmark values, mark as "inferred value", annotate the dimension as incomplete in the report |
 | competitor-analysis competitor list is empty | Prompt user to provide competitor list or category keywords; infer competitors based on AI knowledge, mark as "competitor list is AI-inferred" |
 | A quadrant in competitor-analysis is empty | Mark as "no competitors identified in this quadrant", suggest user provide leads, annotate quadrant coverage as incomplete in the report |
 | All upstream data missing | Degrade to lightweight workflow: user provides category keywords → generate brief competitive analysis report based on AI knowledge base |

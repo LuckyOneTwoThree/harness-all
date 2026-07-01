@@ -7,7 +7,7 @@ description: Test Coverage — coverage gap analysis + adding boundary/integrati
 ## When to use
 - When existing code lacks tests
 - When coverage drops
-- When adding tests before refactoring (Beyonce Rule)
+- When adding tests before refactoring/migration/optimization (Beyonce Rule)
 - When adding regression tests after a bug fix
 
 ## Inputs

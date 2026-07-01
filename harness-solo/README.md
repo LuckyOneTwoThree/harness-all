@@ -289,8 +289,8 @@ started_at: "2026-06-21T14:30:00"
 last_error: "Test failed: Expected 3, got 2"
 last_error_at: "2026-06-21T14:45:00"
 
-# Optional (sub-stage, used for optimize/migration)
-substage: "measure"
+# Optional (sub-stage, Solo verify substage per LOOP.md)
+substage: "awaiting-full"
 
 # Optional (exploration mode, see AGENTS.md)
 exploration_mode: standard   # deep / standard / skip

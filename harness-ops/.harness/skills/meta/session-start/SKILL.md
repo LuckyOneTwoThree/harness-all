@@ -44,6 +44,7 @@ Context must be loaded before the session starts; working in an "amnesic" state 
    - If a `solo-to-ops.md` file exists, report to the user: "Found engineering delivery document (from harness-solo), consume it this session to execute deployment?"
    - The handoff document contains image tags, environment variable lists, database migration scripts, and rollback plans, and is an important input for deployment.
    - If valid unconsumed handoffs exist, prioritize them. Never deploy from a draft, wrong-consumer, stale, incomplete, or hash-invalid package.
+   - After successful consumption of `solo-to-ops.md`, write `docs/handoff/receipts/<handoff_id>-receipt.json` with `consumer: harness-ops`, `consumed_at`, `manifest_sha256`, `status` (`accepted`/`rejected`), and `reasons`. Never edit the producer contract.
 
 6. **Confirm task scope**
    Confirm with the user what this session will do, and write a new session block to progress.md:

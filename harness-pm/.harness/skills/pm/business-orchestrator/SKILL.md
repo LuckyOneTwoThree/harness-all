@@ -204,4 +204,4 @@ Downstream Handoff:
 |--------|----------|----------|
 | Revenue model selection | phase 1 business-model-canvas generates multiple revenue model options | Human selects the final revenue model option |
 | Pricing number sign-off | phase 3 business-pricing provides pricing analysis and options | Human decides specific pricing numbers and tier structure |
-| Business strategy direction confirmation | phase 4 business-strategy-report recommends strategic directions | Human confirms the final strategic choice |
+| Business strategy direction confirmation | phase 5 business-strategy-report recommends strategic directions | Human confirms the final strategic choice |

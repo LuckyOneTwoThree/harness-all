@@ -35,7 +35,7 @@ Criteria for creating a new skill:
    - Name: lowercase-kebab-case, e.g. `refactoring-database`
    - One-sentence description: what it does + when to use it
    - Category: `engineering` / `meta` (engineering or meta)
-   - Is it inside LOOP? Which phase does it correspond to (PLAN/ACT/VERIFY)?
+   - Is it inside LOOP? Which phase does it correspond to (PLAN/ACT/VERIFY/REVIEW/DEBUG)?
 
 2. **Create the directory and file**
    - Directory: `.harness/skills/<category>/<skill-name>/SKILL.md`
