@@ -9,9 +9,9 @@
 
 ## Required Envelope
 
-Every dedicated handoff begins with YAML frontmatter containing `schema_version`, `handoff_id`, `producer`, `consumer`, `created_at`, `source_revision`, `supersedes`, `status`, `ac_ids`, and `artifacts`.
+Every dedicated handoff begins with YAML frontmatter containing `schema_version`, `handoff_id`, `producer`, `consumer`, `created_at`, `source_revision`, `supersedes`, `status`, `ac_ids`, and `artifacts`. Frameworks that distinguish family-produced contracts from degraded output (e.g., harness-solo) additionally carry a `mode` field (`family` | `standalone-fallback`); generic inbound templates remain mode-free. For solo-produced handoffs, `mode` is mandatory and validated by `validate-handoff.ps1`; other producers may omit it.
 
-`handoff_id` is immutable and follows `<SOURCE>-<TARGET>-<YYYYMMDD>-<NNN>`. `supersedes` points to the previous handoff ID or is `null`.
+`handoff_id` is immutable and follows `<SOURCE>-<TARGET>-<YYYYMMDD>-<NNN>`. `supersedes` points to the previous handoff ID or is `null`. When a handoff supersedes an already-consumed one, consumers compare the new envelope `ac_ids` against previously implemented ACs to flag rework (removed ACs) and new scope (added ACs). The `validate-handoff.ps1` script enforces supersedes freshness: when `supersedes` is non-null, its date segment must be older than the current handoff's date segment.
 
 ## Portable Package
 

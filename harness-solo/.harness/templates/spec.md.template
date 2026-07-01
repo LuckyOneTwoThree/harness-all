@@ -12,17 +12,23 @@
 
 ### Engineering AC (from pm-to-solo.md / brainstorming)
 
-- AC-F01-001: [stable testable description]
-- AC-F01-002: [stable testable description]
-- AC-F01-003: [stable testable description]
+> Each AC carries a status suffix for AC change impact analysis (session-start 1a):
+> - `[status: pending]` — not yet verified
+> - `[status: done]` — verify-full passed and code-review marked done
+> - `[status: superseded]` — withdrawn by an upstream supersedes; evidence no longer authoritative
+
+- AC-F01-001: [stable testable description] [status: pending]
+- AC-F01-002: [stable testable description] [status: pending]
+- AC-F01-003: [stable testable description] [status: pending]
 
 ### Design AC (from design-to-solo.md, if frontend is involved)
 
 > DAC-<scope>-<sequence> is design-derived and has its own stable identity. It may reference a related product AC, but never inherits or reuses that AC's number.
 > If there is no design-to-solo.md, skip this section.
+> DAC uses the same status suffix as engineering AC.
 
-- DAC-001: [design testable description, e.g., "contrast ≥ 4.5:1"]
-- DAC-002: [design testable description, e.g., "no overflow at 375px"]
+- DAC-001: [design testable description, e.g., "contrast ≥ 4.5:1"] [status: pending]
+- DAC-002: [design testable description, e.g., "no overflow at 375px"] [status: pending]
 
 ## Task breakdown
 

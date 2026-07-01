@@ -23,7 +23,7 @@ session-start
   → design-recommendation (data-driven recommendation)
   → design-system (create DESIGN.md 10 sections + tokens)
   → PLAN (inline, initialize LOOP state)
-  → LOOP(component-design → verify → design-lint)  [component, max 5]
+  → LOOP(component-design → verify)  [component, max 5]
   → design-review (gate outside LOOP)
   → session-end
 ```
@@ -66,14 +66,14 @@ Read `memory/progress.md` to restore context.
 For each core component (Button/Input/Card/Modal, etc.):
 
 ```
-component-design → verify → design-lint
+component-design → verify
   ↑                          |
   └──── on failure, back to component-design ┘
 ```
 
 - **component-design**: Design components based on the design system (states/variants/sizes/composition rules)
 - **verify**: Component integrity check (Props/States/Variants/Sizes/Composition/Accessibility)
-- **design-lint**: Token consistency check (L001-L015)
+- **verify**: Token consistency check (L001-L015, unified gate including lint)
 - Failure → back to component-design, iteration +1
 - More than 5 iterations → request human intervention
 
@@ -104,12 +104,13 @@ Update `memory/progress.md` and archive the session.
 | loops/specs/<task>/evidence.md | Validation evidence |
 | loops/specs/<task>/iterations.log | Iteration history |
 | loops/specs/<task>/lint-report.md | Lint report |
+| docs/visual/accessibility-report.md | WCAG 2.1 AA audit report (produced by design-review Axis 5) |
 
 ## Exit Criteria
 
 - DESIGN.md contains 10 sections
 - tokens.json conforms to W3C format
 - Core components (Button/Input/Card/Modal) all designed
-- LOOP passed (verify + lint)
+- LOOP passed (verify incl. lint)
 - design-review passed
 - state.yaml status=done

@@ -47,6 +47,8 @@ Three workflow modes balance speed vs rigor. The Agent auto-detects the appropri
 | `standard` | Pause only for material user decisions | Scope/criteria/verification boundary check |
 | `skip` (quick-fix) | No dialog pause | Skipped (trivial changes only) |
 
+**Long-task exploration auto-degradation**: In deep mode, when a product-level workflow runs ≥ 3 nested tasks, ⏸ exploration dialogs auto-degrade from "pause before every module" to "pause only for material decisions" — preventing dialog fatigue in long deliveries. 👤 human decision points remain unaffected (always pause). Record the degradation in `memory/progress.md`.
+
 **skip mode safety fallback**: Before starting quick-fix, run its risk gate. Any public API, schema, dependency, auth/security, payment, deployment, cross-module, design-contract, or ambiguous requirement impact **auto-upgrades to standard and is reported to the user**
 
 **Downgrade strategy linkage**:

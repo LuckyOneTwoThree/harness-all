@@ -126,7 +126,7 @@ Write to `docs/design-system/components/<ComponentName>.md`, one file per compon
 | "Too many variants will confuse users" | Variants are the value of a design system; semantic naming (primary/secondary/ghost) avoids confusion |
 | "Hardcoding colors is faster" | Hardcoding destroys design system consistency; lint will catch it |
 | "Components can be freely composed" | Components without composition rules get misused (e.g., Button nested inside Button) |
-| "Slightly smaller touch targets are fine" | 44pt is a WCAG requirement; anything smaller fails accessibility-audit |
+| "Slightly smaller touch targets are fine" | 44pt is a WCAG requirement; anything smaller fails design-review Axis 5 |
 
 ## Red Flags
 
@@ -154,5 +154,5 @@ Write to `docs/design-system/components/<ComponentName>.md`, one file per compon
 - Stage: DESIGN
 - Loop type: component
 - Max iterations: 5
-- After each iteration, verify runs; after verify passes, design-lint runs
+- After each iteration, verify runs (unified gate including lint)
 - After LOOP exits, design-review performs the Five-Axis review

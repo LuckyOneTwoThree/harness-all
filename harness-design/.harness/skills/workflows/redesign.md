@@ -23,10 +23,9 @@ session-start
   → design-system-import (import from existing code)
   → diff analysis
   → PLAN (inline, initialize LOOP state)
-  → LOOP(visual-design → verify → design-lint)        [visual-design, max 5] (always runs)
-  → LOOP(interaction-design → verify → design-lint)   [interaction-design, max 5] (conditional)
-  → design-review (gate outside LOOP)
-  → accessibility-audit (gate outside LOOP)
+  → LOOP(visual-design → verify)        [visual-design, max 5] (always runs)
+  → LOOP(interaction-design → verify)   [interaction-design, max 5] (conditional)
+  → design-review (gate outside LOOP, includes accessibility audit)
   → session-end
 ```
 
@@ -98,13 +97,13 @@ Compare the current design system with the redesign goals:
 ### 6. LOOP: visual-design (max 5, type visual-design)
 
 ```
-visual-design → verify → design-lint
+visual-design → verify
   ↑                          |
   └──── on failure, back to visual-design ┘
 ```
 
 - Based on the diff analysis, produce the new visual design
-- verify/design-lint failure → back to visual-design, iteration +1
+- verify failure → back to visual-design, iteration +1
 - More than 5 iterations → request human intervention
 
 ### 7. LOOP: interaction-design (max 5, conditional)
@@ -112,29 +111,24 @@ visual-design → verify → design-lint
 **Trigger conditions**: See "interaction-design LOOP trigger conditions" in the Orchestration section. If not triggered, skip this step.
 
 ```
-interaction-design → verify → design-lint
+interaction-design → verify
   ↑                          |
   └──── on failure, back to interaction-design ┘
 ```
 
 - Based on the new visual design, update component states/motion parameters
-- verify/design-lint failure → back to interaction-design, iteration +1
+- verify failure → back to interaction-design, iteration +1
 - More than 5 iterations → request human intervention
 
-### 8. design-review (gate outside LOOP)
+### 8. design-review (gate outside LOOP, includes accessibility audit)
 
-- Five-Axis Review
+- Five-Axis Review (5 axes, Axis 5 performs full WCAG 2.1 AA audit)
 - Doubt-Driven (only Critical triggers adversarial debate)
 - Focus of review: whether the redesign breaks the existing user experience
-- Output `loops/specs/<task>/evidence.md`
+- Output `loops/specs/<task>/evidence.md` + `docs/visual/accessibility-report.md`
 - Not passed → back to LOOP (fixable) or PLAN (needs re-planning)
 
-### 9. accessibility-audit (gate outside LOOP)
-
-- WCAG 2.1 AA full check
-- Not passed → back to LOOP
-
-### 10. session-end
+### 9. session-end
 
 Update `memory/progress.md` and archive the session.
 
@@ -158,7 +152,6 @@ Update `memory/progress.md` and archive the session.
 
 - design-system-import complete
 - Diff analysis complete
-- LOOP passed (verify + lint)
-- design-review passed
-- accessibility-audit passed
+- LOOP passed (verify incl. lint)
+- design-review passed (includes accessibility audit)
 - state.yaml status=done

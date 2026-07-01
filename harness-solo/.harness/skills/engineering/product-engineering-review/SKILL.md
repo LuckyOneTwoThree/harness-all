@@ -49,11 +49,11 @@ For each approved skip, state broken/unverified flows, blocked dependents, hando
 
 | Severity | Meaning | Route |
 |---|---|---|
-| Critical | runtime/integration/data-loss/deployment blocker | owning nested task LOOP, then rerun affected checkpoints |
-| Major | contract/dependency/shared-module inconsistency | owning task, reverify, rerun affected checks |
+| Critical | runtime/integration/data-loss/deployment blocker | create `<owning-task>-fix-<N>` task (done task is terminal, not re-opened; see STATE_PROTOCOL.md fix task exception), then rerun affected checkpoints |
+| Major | contract/dependency/shared-module inconsistency | owning task if not done; if done, create fix task per Critical route; reverify, rerun affected checks |
 | Minor | non-blocking integration debt | record owner/review point |
 
-Findings cite producer/consumer, location, evidence, expected contract, and owning nested task. No arbitrary minimum count.
+Findings cite producer/consumer, location, evidence, expected contract, and owning nested task. No arbitrary minimum count. A finding against a `done` task never reopens it; the fix task inherits the original spec's AC references and the original evidence as input.
 
 ## Evidence Shape
 

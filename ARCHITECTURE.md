@@ -439,7 +439,7 @@ PLAN (inline) → LOOP(DESIGN → VERIFY → LINT) → LOOP outer gate(DESIGN-RE
 - Requirements & Recommendations: design-brief / design-recommendation
 - Design System: design-system / design-system-import / design-system-refactor
 - Design Output: visual-design / interaction-design / wireframe / component-design
-- Review & Verification: verify / design-lint / design-review / product-design-review / accessibility-audit
+- Review & Verification: verify (incl. lint) / design-review (incl. WCAG audit) / product-design-review
 - Handoff: design-handoff-spec
 
 **Loop Types** (4 types):
@@ -458,7 +458,7 @@ PLAN (inline) → LOOP(DESIGN → VERIFY → LINT) → LOOP outer gate(DESIGN-RE
 **Signature Mechanisms**:
 - **Push-back Mechanism**: The first stop when the design Agent receives requirements is to forcibly review upstream ACs. If PM is found to have violated rules by hardcoding UI layout directives, the Agent has the right to refuse and Reframe them as UX goals, while publicly displaying the cleanup record to defend professional independence.
 - **Data-Driven Design Recommendations**: 8 CSV files (reasoning/products/styles/colors/typography/landing/ux-guidelines/vibes)
-- **Anti AI-Slop**: Disable Inter/purple gradients/uniform border radius/Lorem ipsum, mechanically checked by design-lint using Node.js
+- **Anti AI-Slop**: Disable Inter/purple gradients/uniform border radius/Lorem ipsum, mechanically checked by verify skill's lint step using Node.js
 - **Doubt-Driven Adversarial Review**: design-review uses a fresh-context sub-agent for adversarial review
 - **Two-layer Contract**: Design emits neutral semantics; Solo binds them to TECH_STACK and source modules
 
@@ -501,7 +501,19 @@ PLAN → ACT → VERIFY → Pass? DONE : Back to PLAN/ACT
 
 **Signature Mechanisms**:
 - **Dual-source AC Verification**: verify checks both engineering ACs (AC-xxx) and design ACs (DAC-xxx)
-- **Design Asset Consumption Contract**: frontend-implementation joins component-contract.json with Solo-owned component-bindings.json by stable component ID
+- **AC Status Tracking**: spec.md ACs carry a `[status: pending|done|superseded]` suffix; code-review owns the `done` transition, enabling session-start 1a AC Change Impact Analysis to identify affected tasks
+- **Design Asset Consumption Contract**: frontend-implementation joins component-contract.json with Solo-owned component-bindings.json by stable component ID; `component-bindings.json` carries a required `mode` field (`family` | `standalone-fallback`) and `component_contract_sha256` is nullable only in `standalone-fallback` mode (no design package)
+- **Operating-Mode Propagation**: solo outbound handoffs carry a `mode` field in the envelope so downstream consumers can distinguish family-produced contracts from `standalone-fallback` degraded output; `validate-handoff.ps1` enforces this for solo-produced packages
+- **AC Change Impact Analysis**: on accepting a handoff that `supersedes` an already-consumed one, session-start compares the new envelope `ac_ids` against implemented ACs — removed ACs flag their owning task for re-verification/rework, added ACs route through the normal Plan pipeline, unchanged ACs keep their evidence; the diff is recorded in `state.yaml.ac_change` and `progress.md`
+- **Design Waiver Hard Gate**: when PM declares `design_status: waived`, a bare waiver is invalid; the contract must carry a four-element `design_waiver` (approver + reason + scope + review point) or be rejected
+- **Branch Isolation**: before any code mutation, work happens on a dedicated branch — standalone tasks use `feature/<task-id>`, product-level nested tasks share `feature/<product-task-id>` (per Nested Task Switch Protocol)
+- **Nested Task Switch Protocol**: product-level `current_nested_task` transitions require 4 gates (completion / worktree cleanliness / branch strategy / update + log); prevents building downstream on incomplete upstream and WIP pollution across nested tasks
+- **Fix Task Exception**: when product-engineering-review finds a Critical issue in a `done` nested task, the done task is NOT re-opened; a `<original-task-id>-fix-<N>` task is created with inherited ACs marked `[status: pending]` for re-verification, preserving the original audit trail
+- **Plan-stage Gate (sole break point)**: Plan stage has exactly one unified Gate (writing-plans Gate); brainstorming does not pause independently; in family mode with PM-provided architecture/scope, the Gate is satisfied by the upstream contract without pausing
+- **Long-task Exploration Auto-degradation**: in deep mode with ≥ 3 nested tasks, ⏸ exploration dialogs auto-degrade from "pause before every module" to "pause only for material decisions" to prevent dialog fatigue; 👤 human decision points remain unaffected
+- **Brainstorming Conditional Skip**: when PM handoff provides an executable feature inventory with stable criteria and boundaries (family mode), brainstorming is skipped and writing-plans consumes the upstream contract directly
+- **TDD Hard Rule**: if implementation code is found to exist before a failing test, delete that implementation and return to RED
+- **Session Boundary Recommendation**: for deep/long tasks, writing-plans recommends starting a new session to execute the plan, preventing Plan-stage context from polluting execution focus
 - **Product-Level Engineering Orchestration**: new-product-engineering workflow plans all features + shared infrastructure + dependency order before per-feature LOOPs; product-engineering-review checks cross-feature consistency (API contract / dependency / data model / config / shared module reuse / integration runnability)
 - **Entropy Check**: verify checks file growth rate / LOC growth rate / dependency bloat / TODO backlog
 - **git hooks**: pre-commit (secret/sensitive file/commit-msg check) + pre-push
@@ -746,6 +758,8 @@ All frameworks must follow:
 | Deliverables List | ✅ | PRD path, design spec path, tracking plan path |
 | AC-xxx List | ✅ | Engineering ACs, for spec.md to reuse |
 | Business Context Summary | ✅ | Engineering-relevant business constraints, scale, concurrency, and performance expectations |
+| Delivery Routing | ✅ | `delivery_mode` / `frontend_scope` / `design_required` / `design_status` / `design_handoff_id` / `design_waiver` |
+| design_waiver | ○ | Required when `design_status: waived`; must include approver + reason + scope + review point (four elements). A bare `waived` without this field is rejected by solo's family frontend hard gate |
 | Key Decisions | ✅ | Decision + rationale + impact scope |
 | Open Items | ✅ | Questions for engineering to confirm |
 | Suggested Next Step | ✅ | What engineering can do |
@@ -811,7 +825,7 @@ All frameworks must follow:
 ```
 
 - Design's contract is framework-neutral and tied to token/design revisions by hash.
-- Solo's binding owns framework types, code names, modules, and the hash of the exact design contract it binds.
+- Solo's binding owns framework types, code names, modules, the hash of the exact design contract it binds, and a required `mode` field. `component_contract_sha256` is non-null in `family` mode (hash of `component-contract.json`) and `null` only in `standalone-fallback` mode (no design package; semantics derived from user conversation + `TECH_STACK.md`).
 
 **Consumer**: harness-solo's brainstorming / frontend-implementation / writing-plans / verify skill
 
@@ -1052,10 +1066,10 @@ If multiple people + multiple Agents collaborate:
 
 ### Decision 4: LOOP Outer Gate
 
-**Choice**: harness-design introduces LOOP outer gate (design-review + accessibility-audit)
+**Choice**: harness-design introduces LOOP outer gate (design-review, which includes accessibility audit)
 **Rationale**:
-- verify + lint inside LOOP are fast checks (mechanical rules)
-- design-review + accessibility-audit outside LOOP are deep reviews (adversarial + semantic-level)
+- verify inside LOOP is a fast check (AC + quick a11y + mechanical lint rules in one unified gate)
+- design-review outside LOOP is a deep review (adversarial + semantic-level, including full WCAG 2.1 AA audit as Axis 5)
 - Splitting prevents LOOP from being too heavy while ensuring quality
 
 **Applicable Scope**:
@@ -1170,7 +1184,7 @@ harness-all is a multi-Agent framework family with **Independence First, Contrac
 | .harness/loops/LOOP.md | ✅ | ✅ | ✅ | ✅ | ✅ |
 | .harness/skills/INDEX.md | ✅ | ✅ | ✅ | ✅ | ✅ |
 | .harness/skills/meta/ | ✅ (4 skills) | ✅ (4 skills) | ✅ (4 skills) | ✅ (4 skills) | ✅ (4 skills) |
-| .harness/skills/<domain>/ | ✅ (82 domain skills) | ✅ (15 domain skills) | ✅ (17 domain skills) | ✅ (36 domain skills) | ✅ (28 domain skills) |
+| .harness/skills/<domain>/ | ✅ (82 domain skills) | ✅ (15 domain skills) | ✅ (15 domain skills) | ✅ (36 domain skills) | ✅ (28 domain skills) |
 | .harness/skills/workflows/ | ✅ (10 workflows) | ✅ (7 workflows) | ✅ (9 workflows) | ✅ (7 workflows) | ✅ (8 workflows) |
 | .harness/rules/security.md | ✅ | ✅ | ✅ | ✅ | ✅ |
 | .harness/rules/prompt-defense.md | ✅ | ✅ | ✅ | ✅ | ✅ |

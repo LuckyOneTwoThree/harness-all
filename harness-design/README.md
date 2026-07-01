@@ -39,18 +39,18 @@ These four are the core constraints of this framework, corresponding to the Karp
 |------|------|---------|
 | User-Centered | Don't assume user aesthetics; let Persona drive | design-brief hard gate: stop and ask when requirements are vague |
 | System-First | Don't reinvent the wheel; build the design system first | design-system + tokens.json unified management |
-| Accessible by Design | WCAG 2.1 AA is a hard constraint | accessibility-audit mandatory check |
+| Accessible by Design | WCAG 2.1 AA is a hard constraint | design-review Axis 5 mandatory check |
 | Deliverable | Design must be implementable | design-handoff-spec produces annotations/specs/component-contract.json |
 
 ### LOOP Cycle Engine
 
 ```
-PLAN (inline) → LOOP(DESIGN → VERIFY → LINT) → LOOP outer gate(DESIGN-REVIEW + ACCESSIBILITY-AUDIT)
+PLAN (inline) → LOOP(DESIGN → VERIFY incl. lint) → LOOP outer gate(DESIGN-REVIEW incl. accessibility audit)
 ```
 
 - One `state.yaml` per task, supports checkpoint resume
-- LOOP inner = verify + design-lint (fast checks)
-- LOOP outer = design-review + accessibility-audit (deep review)
+- LOOP inner = verify (unified: AC check + quick a11y + lint)
+- LOOP outer = design-review (Five-Axis including WCAG audit)
 - Iteration limit protection: exceeding 5 requests human intervention
 - Evidence-driven: no claiming done without review passing
 
@@ -63,7 +63,7 @@ design-onboarding (first-time onboarding) → new-product-design (product-level)
 | Workflow | Scenario | LOOP Type | Iteration Limit |
 |--------|------|---------|:---:|
 | design-onboarding | First-time onboarding, quick design system skeleton | No LOOP | - |
-| new-product-design | Product-level design (plan all pages → per-page LOOPs → cross-page review) | wireframe/visual/interaction/component | 5/5/5/5 |
+| new-product-design | Product-level design (plan all pages + pre-gen specs → per-page LOOPs → cross-page review (product-design-review) → unified design-review) | wireframe/visual/interaction/component | 5/5/5/5 |
 | new-design | New design task (from 0 to 1, single page) | wireframe/visual/interaction | 5/5/5 |
 | design-iteration | Design iteration (existing design optimization) | visual (mandatory) + interaction (conditional) | 5/5 |
 | design-system-setup | Full design system build (with component LOOP + review) | component | 5 |
@@ -76,7 +76,7 @@ design-onboarding (first-time onboarding) → new-product-design (product-level)
 - Requirements & recommendation: design-brief / design-recommendation
 - Design system: design-system / design-system-import / design-system-refactor
 - Design output: visual-design / interaction-design / wireframe / component-design
-- Review & validation: verify / design-lint / design-review / product-design-review / accessibility-audit
+- Review & validation: verify / design-review / product-design-review
 - Handoff: design-handoff-spec
 
 **Meta skills** : session-start / session-end / skill-maintenance / memory-maintenance
@@ -104,7 +104,7 @@ Integrated from anthropics/skills + addyosmani/agent-skills, enforced as hard co
 - No #6366f1 purple or purple-blue gradients
 - No uniform border radius (rounded-2xl everywhere)
 - No Lorem ipsum placeholder text
-- Mechanically checked by the design-lint skill via a Node.js script
+- Mechanically checked by the verify skill's lint step via a Node.js script
 
 ### Cross-Platform Compatibility
 
@@ -228,7 +228,7 @@ Quick design system skeleton (no component LOOP, no review). For full build with
 ### new-design (New Design Task)
 
 ```
-session-start → design-brief (hard gate) → PLAN → LOOP(wireframe→verify→lint) → LOOP(visual→verify→lint) → LOOP(interaction→verify→lint) → design-review → accessibility-audit → session-end
+session-start → design-brief (hard gate) → PLAN → [conditional] LOOP(wireframe→verify) → LOOP(visual→verify) → LOOP(interaction→verify) → design-review (includes a11y audit) → session-end
 ```
 
 **design-brief hard gate** (5 checks; stop and ask if any one is not met):
@@ -241,19 +241,19 @@ session-start → design-brief (hard gate) → PLAN → LOOP(wireframe→verify�
 ### design-iteration (Design Iteration)
 
 ```
-session-start → Chesterton's Fence analysis → PLAN → LOOP(visual→verify→lint) → [LOOP(interaction→verify→lint) conditional] → design-review → accessibility-audit → session-end
+session-start → Chesterton's Fence analysis → PLAN → LOOP(visual→verify) → [LOOP(interaction→verify) conditional] → design-review (includes a11y audit) → session-end
 ```
 
 ### design-system-setup (Design System from 0 to 1)
 
 ```
-session-start → design-brief → design-recommendation → design-system → PLAN → LOOP(component→verify→lint) → design-review → session-end
+session-start → design-brief → design-recommendation → design-system → PLAN → LOOP(component→verify incl. lint) → design-review (includes a11y audit) → session-end
 ```
 
 ### redesign (Redesign)
 
 ```
-session-start → design-brief (hard gate) → design-system-import → diff analysis → PLAN → LOOP(visual→verify→lint) → [LOOP(interaction→verify→lint) conditional] → design-review → accessibility-audit → session-end
+session-start → design-brief (hard gate) → design-system-import → diff analysis → PLAN → LOOP(visual→verify) → [LOOP(interaction→verify) conditional] → design-review (includes a11y audit) → session-end
 ```
 
 ### design-handoff (Design Handoff)
@@ -279,7 +279,7 @@ session-start → Pre-condition check → design-handoff-spec → session-end (p
 # Required
 current_task: 001-login-page
 iteration: 2
-stage: lint         # plan / design / verify / lint / review
+stage: verify       # plan / design / verify / review
 status: retrying    # running / retrying / done / failed
 started_at: "2026-06-21T14:30:00"
 

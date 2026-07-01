@@ -11,12 +11,12 @@ default_mode: skip
 >
 > **Responsibility boundary**: This workflow is only responsible for deliverable generation + Pre-Delivery Checklist.
 > It trusts the gate-outside-LOOP results of the preceding workflow (new-design / design-iteration / redesign)
-> (design-review + accessibility-audit have already passed) and does not re-run reviews.
+> (design-review, which includes accessibility audit, has already passed) and does not re-run reviews.
 
 ## Applicable Scenarios
 
 - Design phase complete, needs handoff to engineering
-- The preceding workflow's gates outside LOOP have passed (design-review + accessibility-audit)
+- The preceding workflow's gate outside LOOP has passed (design-review includes accessibility audit)
 - Produce engineering-consumable deliverables
 
 ## Prerequisites (hard gate)
@@ -24,9 +24,9 @@ default_mode: skip
 Before entering this workflow, confirm the following prerequisites are met:
 
 - [ ] The preceding workflow (new-design / design-iteration / redesign) is complete
-- [ ] verify + design-lint inside the LOOP all passed (evidence: `loops/specs/<task>/lint-report.md` has no errors)
+- [ ] verify inside the LOOP passed (evidence: `loops/specs/<task>/lint-report.md` has no errors)
 - [ ] design-review outside the LOOP passed (evidence: `loops/specs/<task>/evidence.md` contains a "passed" conclusion)
-- [ ] accessibility-audit outside the LOOP passed (evidence: `docs/visual/accessibility-report.md` has no Critical failures)
+- [ ] design-review's Axis 5 accessibility audit passed (evidence: `docs/visual/accessibility-report.md` has no Critical failures)
 
 **Hard gate not passed**: Do not enter handoff; return to the preceding workflow to complete the reviews.
 

@@ -22,9 +22,10 @@ description: Resolves validated design semantics into Solo-owned tech-stack bind
 ## Hard Gates
 
 1. Apply `.harness/rules/handoff-protocol.md` before reading package content.
-2. Family-mode frontend work requires a ready design package and valid semantic component contract. An explicit PM waiver must include approver, reason, scope, and expiry/review point.
+2. Family-mode frontend work requires a ready design package and valid semantic component contract. An explicit PM waiver must include approver, reason, scope, and review point (per PM's `design_waiver` field).
 3. Confirm TECH_STACK.md before creating bindings. Design does not choose code names or framework types.
 4. Validate component-contract.json. Reject duplicate/unknown IDs, framework-specific types, missing token provenance, or invalid hashes.
+5. Standalone-fallback mode (no design package): set `mode: "standalone-fallback"` and `component_contract_sha256: null` in component-bindings.json. Derive component semantics from user conversation + TECH_STACK.md. Mark all downstream handoffs with `mode: standalone-fallback` so consumers can distinguish degraded output.
 
 ## Contract Precedence
 
@@ -42,7 +43,8 @@ Contradictions between design-owned sources are handoff defects; report them to 
 Join by immutable `component_id`. For each component being implemented, choose the source module, engineering component name, and property/type mapping appropriate to TECH_STACK.md. Write `docs/engineering/component-bindings.json` with:
 
 - schema version;
-- SHA-256 of the exact semantic contract;
+- mode (`family` when consuming a design package, `standalone-fallback` when no design package exists);
+- SHA-256 of the exact semantic contract (`null` only in standalone-fallback mode);
 - TECH_STACK revision;
 - component ID, engineering name, module, and property bindings.
 

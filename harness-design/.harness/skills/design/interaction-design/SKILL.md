@@ -152,5 +152,5 @@ Write to `docs/interaction/<page>.md`.
 - Stage: DESIGN
 - Loop type: interaction-design
 - Max iterations: 5
-- After each iteration, verify runs; after verify passes, design-lint runs
+- After each iteration, verify runs (unified gate including lint)
 - After LOOP exits, design-review performs the Five-Axis review

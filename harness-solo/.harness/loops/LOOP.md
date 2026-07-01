@@ -5,12 +5,12 @@ Solo uses one persisted PLAN → ACT → VERIFY loop. Routing is defined in `.ha
 ## Core Loop
 
 ```text
-PLAN (spec + task) → ACT (one attempt) → VERIFY-FAST
-        ↑                    │                 │
-        └── replan ──────────┴── fail by cause┘
-                                             │ pass all tasks
-                                             ▼
-                                     VERIFY-FULL → CODE-REVIEW → DONE
+PLAN (spec + task) → ACT (one attempt + inline verify-fast)
+        ↑                    │
+        └── replan ──────────┴── fail by cause
+                                  │ pass all tasks
+                                  ▼
+                          VERIFY-FULL → CODE-REVIEW → DONE
 ```
 
 ## Loop Types
@@ -31,7 +31,7 @@ The recommended limit is an escalation point, not a second breaker. Further atte
 2. If `iteration >= 10`, do not start another ACT.
 3. Increment iteration exactly once and persist `stage: act`, `status: running` before mutation.
 4. Execute one independently verifiable outcome.
-5. Run verify-fast. It writes the attempt's single terminal outcome to `iterations.log`.
+5. Run inline verify-fast within the ACT skill. It writes the attempt's single terminal outcome to `iterations.log` (exactly one PASSED/FAILED line; no second attempt record).
 6. Failure routes to ACT, PLAN, or systematic-debugging without another increment. The next ACT increments when it actually begins.
 7. After all tasks pass, run verify-full once, then code-review.
 
@@ -58,11 +58,11 @@ Do not use evidence.md as an ACT scratchpad. Actual Red/Green output may be reus
 | status | `running` | running/retrying | running/retrying/needs-human/failed | done/retrying/needs-human | retrying/needs-human |
 | last error | clear | observed ACT failure | observed gate failure | blocking finding | root cause |
 
-`done` belongs exclusively to code-review. Verify-full success means “verified and awaiting review”, represented by `stage: verify`, `status: running`.
+`done` belongs exclusively to code-review. Verify-full success means "verified and awaiting review", represented by `stage: verify`, `status: running`.
 
 ## Product Orchestration
 
-Product-level state stores only the current nested task. Aggregate feature status lives in `.harness/FEATURES.md`; `ENGINEERING_PLAN.md` remains the approved scope, dependency graph, and execution order. Do not maintain duplicate aggregate-progress fields or mutable status columns in all three files.
+Product-level state stores only the current nested task. Aggregate feature status lives in `.harness/FEATURES.md`; `ENGINEERING_PLAN.md` remains the approved scope, dependency graph, and execution order. Full nested-delivery and integration-checkpoint rules live in `engineering-pipeline.md` (Canonical Path §Product orchestration) and the `new-product-engineering` workflow; this file does not duplicate them.
 
 Resume order:
 
@@ -72,15 +72,7 @@ Resume order:
 
 ## Failure Routing
 
-| Cause | Route |
-|---|---|
-| incorrect/ambiguous requirement | brainstorming or writing-plans |
-| known implementation/test defect | next ACT attempt |
-| unknown root cause | systematic-debugging |
-| upstream design/product contract defect | block and produce feedback; do not guess |
-| recommended limit reached | `needs-human`; show attempts and alternatives |
-| failed attempt 10 / attempt 11 requested | hard breaker per STATE_PROTOCOL.md |
-| code-review change required | code-review records response, then re-enter ACT |
+Failure routes by cause are defined in `engineering-pipeline.md` (Routing Rules). The summary: requirement/spec → PLAN; implementation/test → ACT; unknown cause → systematic-debugging; upstream contract defect → block and feedback; recommended limit → `needs-human`; attempt 10 / attempt 11 → hard breaker per `STATE_PROTOCOL.md`; code-review finding → code-review response then ACT if code changes.
 
 ## Completion Gate
 

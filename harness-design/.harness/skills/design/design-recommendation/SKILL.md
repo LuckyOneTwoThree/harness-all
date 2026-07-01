@@ -147,5 +147,5 @@ Write to `docs/design-system/RECOMMENDATION.md`.
 
 - Not run inside LOOP (runs in the pre-LOOP recommendation stage)
 - The RECOMMENDATION.md produced is consumed by the design-system skill as a baseline
-- The Anti-patterns produced are checked by the design-lint skill
+- The Anti-patterns produced are checked by the verify skill's lint step
 - The Decision Rules produced are parsed by downstream skills

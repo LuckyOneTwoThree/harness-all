@@ -30,22 +30,24 @@ default_mode: deep
 session-start
   → design-brief (product-level, confirm page inventory)
   → Design System Gate (hard gate)
-  → Product-level PLAN (produce DESIGN_PLAN.md)
+  → Product-level PLAN (produce DESIGN_PLAN.md + pre-generate per-page spec skeletons + create unified lint script)
   → [Phase 1] Shared Components LOOP (conditional, skip if all exist)
       └─ PC1: after all shared components complete
-  → [Phase 2] Per-page new-design LOOPs (by priority + preference)
+  → [Phase 2] Per-page LOOPs (no per-page PLAN, no per-page design-review)
       └─ PC2: at P0 milestone
   → product-design-review (product-level consistency gate)
-      └─ PC3: full cross-page check runs as part of review
+  → Unified design-review (single product-level review, replaces N per-page reviews)
   → Product-level Handoff package (design-to-solo.md + component-contract.json)
   → session-end
 ```
 
 **Key principles**:
 - Plan before designing: DESIGN_PLAN.md is the blueprint, drives all downstream per-page work
+- Pre-generate per-page specs at product-level PLAN: eliminates per-page PLAN step
 - Shared components first: avoids re-creating variants per page
-- Per-page LOOPs run independently (each page = one new-design run, with its own spec/state/evidence)
-- Cross-page consistency is a separate gate after all pages pass their own gates
+- Per-page LOOPs run independently (each page runs visual + interaction LOOPs only; PLAN and design-review are product-level)
+- Unified design-review at the end: single sub-agent call scans all pages, replaces N per-page reviews
+- Cross-page consistency is a separate gate after all pages pass their own LOOPs
 
 ## Detailed Steps
 
@@ -74,7 +76,7 @@ Check whether a design system exists:
 
 ### 4. Product-level PLAN
 
-Produce `docs/visual/DESIGN_PLAN.md` based on the `DESIGN_PLAN-template.md`:
+Produce `docs/visual/DESIGN_PLAN.md` based on the `DESIGN_PLAN-template.md`, and **pre-generate per-page spec skeletons** to skip per-page PLAN:
 
 1. Read `docs/visual/DESIGN_BRIEF.md` for product scope, target audience, AC-xxx
 2. Read upstream `docs/handoff/pm-to-design.md` (if present) for PRD context, persona, page hints
@@ -92,7 +94,15 @@ Produce `docs/visual/DESIGN_PLAN.md` based on the `DESIGN_PLAN-template.md`:
    - **Section 10 Key Decisions**: record major design decisions and their rationale
    - **Section 11 Open Items**: list unresolved questions and follow-ups
 5. Initialize product-level `loops/specs/<product-task>/state.yaml` (stage=plan, iteration=0, status=running, substage=product-plan)
-6. User confirms DESIGN_PLAN.md before per-page work begins (👤 human decision point)
+6. **Pre-generate per-page spec skeletons**: For each page in Section 2, create `loops/specs/<product-task>-<page-name>/spec.md` containing:
+   - Page ID + page name + priority (from DESIGN_PLAN.md Section 2)
+   - AC-xxx list for this page (extracted from product-level DESIGN_BRIEF.md, filtered to page-relevant ACs)
+   - DAC-xxx placeholder (to be filled during per-page LOOP if design-specific ACs emerge)
+   - Initial `state.yaml` (stage=design, iteration=0, status=pending)
+   
+   This eliminates the per-page PLAN step. When a page enters its LOOP, the Agent directly loads the pre-generated spec.md, does a quick confirmation (< 30s), and starts visual-design. If page-specific ACs need adding, the Agent appends them in-place without a separate PLAN step.
+7. **Create unified lint script**: Write `loops/specs/<product-task>/lint-all.mjs` once, parameterized to accept a page file path. Each per-page verify calls this script with the current page's path instead of writing a new one-off script. The script implements L001-L015 per the verify skill's lint rule list.
+8. User confirms DESIGN_PLAN.md before per-page work begins (👤 human decision point)
 
 > **Task naming**: Product-level task uses `<NNN>-<product-name>` (e.g., `001-shopping-app`). Per-page tasks use `<NNN>-<product-name>-<page-name>` (e.g., `001-shopping-app-home`). See LOOP.md task granularity section.
 
@@ -101,7 +111,7 @@ Produce `docs/visual/DESIGN_PLAN.md` based on the `DESIGN_PLAN-template.md`:
 **Trigger**: DESIGN_PLAN.md Section 3 lists shared components, AND `docs/design-system/components/<Component>.md` does not exist for them.
 
 For each shared component (in priority order):
-- Run `component-design` → `verify` → `design-lint` LOOP (loop type: `component`, max 5)
+- Run `component-design` → `verify` LOOP (loop type: `component`, max 5; verify includes lint)
 - Output: `docs/design-system/components/<Component>.md`
 - Single component exceeding 5 iterations → pause the product workflow and report to the user; the user may choose to fix or skip that component
 
@@ -116,51 +126,77 @@ If all shared components already exist in the design system (e.g., design-system
 - **On pass**: record PC1 result in `loops/specs/<product-task>/pc1-evidence.md`, proceed to Phase 2
 - **On failure**: pause the workflow and report to the user with the specific component/token mismatch. Do not start Phase 2 per-page LOOPs until PC1 passes — per-page work would otherwise inherit inconsistent shared components and propagate the inconsistency across all pages.
 
-### 6. Phase 2: Per-page LOOPs (drive new-design for each page)
+### 6. Phase 2: Per-page LOOPs (no per-page PLAN, no per-page design-review)
 
 For each page in DESIGN_PLAN.md Section 6 execution order:
 
-1. Read DESIGN_PLAN.md entry for this page (Page ID, priority, dependencies, expected AC)
-2. Drive the `new-design` workflow for this single page:
-   - Skip design-brief (already done at product level); inherit product-level DESIGN_BRIEF.md + add page-specific AC if needed
-   - PLAN (inline, initialize page-level `loops/specs/<product-task>-<page-name>/state.yaml`)
-   - LOOP(wireframe → verify → design-lint) [wireframe, max 5]
-   - LOOP(visual-design → verify → design-lint) [visual-design, max 5]
-   - LOOP(interaction-design → verify → design-lint) [interaction-design, max 5] — conditional per new-design's interaction-design LOOP trigger rules
-   - design-review (gate outside LOOP, per-page)
-   - accessibility-audit (gate outside LOOP, per-page)
-3. After each page completes, update DESIGN_PLAN.md Section 2 Status column (pending → done)
-4. Update product-level state.yaml substage (e.g., `substage: page-P03`)
+1. Read the pre-generated `loops/specs/<product-task>-<page-name>/spec.md` (from Product-level PLAN step 6)
+2. Quick confirmation (< 30s): verify spec.md has the page's AC-xxx; if page-specific ACs are needed, append in-place (no separate PLAN step)
+3. Run per-page LOOPs (design-brief and PLAN already done at product level; design-review deferred to product-level step 8):
+   - [Conditional] LOOP(wireframe → verify) [wireframe, max 5] — skipped when component library covers the layout
+   - LOOP(visual-design → verify) [visual-design, max 5] — single variant when design system is complete
+   - LOOP(interaction-design → verify) [interaction-design, max 5] — conditional per new-design's interaction-design LOOP trigger rules
+   - **No per-page design-review** — deferred to product-level unified design-review (step 8)
+4. After each page's LOOPs pass, update DESIGN_PLAN.md Section 2 Status column (pending → loop-passed)
+5. Update product-level state.yaml substage (e.g., `substage: page-P03`)
+
+**Why no per-page design-review?** When pages share the same design system, Axis 1-4 (visual hierarchy / spacing / color / component consistency) review criteria are identical across pages. A unified product-level design-review (step 8) scans all pages in one fresh-context sub-agent call, emits per-page findings, and avoids N redundant sub-agent invocations. Per-page design-review is reserved for pages with non-standard layouts or custom interactions flagged by the unified review.
 
 **PC2: P0 Milestone Integration Checkpoint** (operationalizes the PC2 node in the Orchestration diagram)
 
-- **Trigger**: All P0-priority pages in DESIGN_PLAN.md Section 2 reach Status = done (each P0 page passed its own verify + lint + design-review + accessibility-audit). P1/P2 pages may still be pending. Runs once per product workflow, at the P0 milestone — not after every single page.
+- **Trigger**: All P0-priority pages in DESIGN_PLAN.md Section 2 reach Status = loop-passed (each P0 page passed its own verify for all triggered LOOPs). P1/P2 pages may still be pending. Runs once per product workflow, at the P0 milestone — not after every single page.
 - **Check items**:
   - Cross-page navigation: navigation structure (header/footer/routing) is consistent across all P0 pages; no broken cross-page links; auth/route guards match the user flows in DESIGN_PLAN.md Section 5
   - Flow integrity: every user flow in DESIGN_PLAN.md Section 5 that traverses only P0 pages is navigable end-to-end (entry → critical checkpoints → exit); no dead-ends or unreachable states
 - **On pass**: record PC2 result in `loops/specs/<product-task>/pc2-evidence.md`, continue with P1/P2 pages
-- **On failure**: pause the workflow and report to the user with the specific navigation/flow gap. Do not start P1/P2 pages until PC2 passes — P1/P2 work would otherwise build on a broken P0 foundation, and the same gap would be re-discovered (more expensively) at PC3.
+- **On failure**: pause the workflow and report to the user with the specific navigation/flow gap. Do not start P1/P2 pages until PC2 passes — P1/P2 work would otherwise build on a broken P0 foundation, and the same gap would be re-discovered (more expensively) at the unified design-review.
 
 **Interruption handling**: If a per-page LOOP fails or hits hard circuit breaker, pause the entire product workflow, report to user. User can: fix the page and resume, or skip the page and continue with others (mark as "skipped" in DESIGN_PLAN.md).
 
 **Context persistence**: Product-level state.yaml tracks overall progress; per-page state.yaml tracks page-level progress. On session resume, read product-level state first, then per-page state for the current page.
 
-### 7. product-design-review (product-level consistency gate)
+### 7. product-design-review (product-level consistency gate, conditional depth)
 
 After all pages in DESIGN_PLAN.md Section 2 reach Status = done or skipped:
 
 - Run the `product-design-review` skill
   - Inputs: DESIGN_PLAN.md + all per-page outputs + component-contract.json (with used_by) + tokens.json
+  - **Trigger condition**: Full 6-check review runs when page count >= 3 AND shared component count >= 3; otherwise degrades to lightweight 2-check (navigation + flow completeness only)
 - Output: `loops/specs/<product-task>/product-review-evidence.md`
-- Checks: navigation consistency / user flow completeness / component reuse / token consistency / responsive consistency / interaction consistency
+- Full mode checks: navigation consistency / user flow completeness / component reuse / token consistency / responsive consistency / interaction consistency
+- Lightweight mode checks: navigation consistency / user flow completeness only
 
 **On failure**:
 - Critical finding → return to the specific page's LOOP for fix, then re-run product-design-review
 - Nit/FYI → record, proceed
 
+**On pass**: proceed to unified design-review
+
+### 8. Unified design-review (product-level, replaces per-page design-review)
+
+Run the `design-review` skill once at product level, scanning all designed pages in a single fresh-context sub-agent call:
+
+- **Inputs**: all `docs/visual/<page>.md` + all `docs/interaction/<page>.md` + DESIGN.md + tokens.json + all per-page spec.md + all per-page lint-report.md
+- **Outputs**:
+  - `loops/specs/<product-task>/unified-review-evidence.md` — contains per-page Axis 1-5 findings (one section per page)
+  - `docs/visual/accessibility-report.md` — unified WCAG 2.1 AA audit with per-page sections
+- **Process**:
+  - Axis 1-4: scan each page, record findings per page; design-system-level issues (token mismatch, component inconsistency) are recorded once and marked as "applies to all pages"
+  - Axis 5 (WCAG audit): run per-page contrast/keyboard/screen-reader/responsive/reduced-motion/dark-mode checks, record per-page results
+  - Doubt-Driven: only Critical findings trigger adversarial debate; Nit/FYI recorded directly
+- **👤 Human decision point**: pause for Critical findings; user decides fix or accept risk
+
+**Per-page deep-dive trigger** (conditional, only when needed):
+- If the unified review flags a page with Critical findings that require deep investigation, run a targeted per-page design-review for that specific page only
+- This is the exception path, not the default — most pages should be covered by the unified scan
+
+**On failure**:
+- Critical finding on a specific page → return to that page's LOOP for fix, then re-run unified review (or targeted per-page review for that page only)
+- Design-system-level Critical (e.g., token inconsistency affecting all pages) → fix at design-system level, then re-verify affected pages' verify
+
 **On pass**: proceed to design-handoff
 
-### 8. design-handoff (product-level handoff)
+### 9. design-handoff (product-level handoff)
 
 Run the `design-handoff` workflow / `design-handoff-spec` skill at product level:
 
@@ -169,7 +205,7 @@ Run the `design-handoff` workflow / `design-handoff-spec` skill at product level
 - Generate `docs/handoff/component-contract.json` with `used_by` populated from DESIGN_PLAN.md Section 3
 - Run Pre-Delivery Checklist
 
-### 9. session-end
+### 10. session-end
 
 Update `memory/progress.md` and archive the session.
 
@@ -187,18 +223,26 @@ Update `memory/progress.md` and archive the session.
 | docs/handoff/design-to-solo.md | Product-level handoff (enhanced) |
 | docs/handoff/component-contract.json | Semantic component contract (with used_by) |
 | loops/specs/<product-task>/state.yaml | Product-level loop state |
-| loops/specs/<product-task>/product-review-evidence.md | Product-level review evidence |
+| loops/specs/<product-task>/lint-all.mjs | Unified lint script (parameterized per page) |
+| loops/specs/<product-task>/product-review-evidence.md | Product-level consistency review evidence |
+| loops/specs/<product-task>/unified-review-evidence.md | Unified design-review evidence (per-page Axis 1-5 findings) |
+| docs/visual/accessibility-report.md | Unified WCAG 2.1 AA audit (per-page sections) |
+| loops/specs/<product-task>-<page-name>/spec.md | Per-page spec skeleton (pre-generated, AC-xxx) |
 | loops/specs/<product-task>-<page-name>/state.yaml | Per-page loop state (one per page) |
-| loops/specs/<product-task>-<page-name>/evidence.md | Per-page review evidence (one per page) |
+| loops/specs/<product-task>-<page-name>/evidence.md | Per-page verify evidence (one per page) |
 | loops/specs/<product-task>-<page-name>/iterations.log | Per-page iteration history (one per page) |
+| loops/specs/<product-task>-<page-name>/lint-report.md | Per-page lint report (generated by unified script) |
 
 ## Exit Criteria
 
 - DESIGN_PLAN.md produced and user-confirmed
+- Per-page spec skeletons pre-generated (step 6 of Product-level PLAN)
+- Unified lint script created (step 7 of Product-level PLAN)
 - Design system gate passed
 - All shared components designed (Phase 1, if run)
-- All pages in DESIGN_PLAN.md Section 2 reach Status = done or skipped (each non-skipped page passed its own verify + lint + design-review + accessibility-audit; skipped pages must be acknowledged in Open Items)
+- All pages in DESIGN_PLAN.md Section 2 reach Status = loop-passed or skipped (each non-skipped page passed its own verify for all triggered LOOPs; skipped pages must be acknowledged in Open Items)
 - product-design-review passed (no open Critical findings)
+- Unified design-review passed (no open Critical findings; per-page Axis 1-5 findings recorded)
 - design-handoff package completed and validated (contract + manifest + artifacts)
 - Product-level state.yaml status = done
 
@@ -210,9 +254,9 @@ Update `memory/progress.md` and archive the session.
 | Aesthetic direction selection | 👤 human decision | Always pause |
 | Design system gate resolution (choose onboarding vs setup) | 👤 human decision | Always pause |
 | DESIGN_PLAN.md confirmation before per-page work | 👤 human decision | Always pause |
-| Per-page visual variant selection (2-3 options) | 👤 human decision | Always pause |
-| Per-page design-review Critical findings | 👤 human decision | Always pause |
+| Per-page visual variant selection (only when multi-variant triggered) | 👤 human decision | Always pause when triggered; skipped in single-variant mode (complete design system) |
 | Product-design-review Critical findings | 👤 human decision | Always pause |
+| Unified design-review Critical findings | 👤 human decision | Always pause (single point, replaces N per-page review pauses) |
 | Module boundary pauses (between Phase 1 → Phase 2 → review → handoff) | ⏸ exploration dialog | Controlled by exploration_mode |
 
 ## Comparison with new-design
@@ -220,9 +264,11 @@ Update `memory/progress.md` and archive the session.
 | Dimension | new-design | new-product-design |
 |-----------|-----------|-------------------|
 | Scope | Single page | Entire product (all pages) |
-| Planning | None (jumps to wireframe) | DESIGN_PLAN.md (page inventory + shared components + flows) |
+| Planning | Inline PLAN (per page) | Product-level PLAN + pre-generated per-page spec skeletons |
 | Design system | Hard gate (triggers onboarding/setup if missing) | Hard gate (triggers onboarding/setup if missing) |
-| Per-page LOOP | 3 LOOPs (wireframe/visual/interaction) | Drives new-design's 3 LOOPs per page |
+| Per-page LOOP | 3 LOOPs (wireframe/visual/interaction) + per-page design-review | 2-3 LOOPs (wireframe/visual/interaction) only; no per-page PLAN, no per-page design-review |
+| Design review | Per-page design-review (Five-Axis + WCAG audit) | Unified product-level design-review (single scan, per-page findings) |
+| Lint script | One-off per page | Unified script created at product-level PLAN, reused per page |
 | Cross-page consistency | None | product-design-review skill |
 | Handoff | Single page design-to-solo.md | Product-level design-to-solo.md (with Page Inventory + reuse matrix + consistency report) |
 | Task granularity | `<NNN>-<page-name>` | `<NNN>-<product-name>` (product) + `<NNN>-<product-name>-<page-name>` (per page) |

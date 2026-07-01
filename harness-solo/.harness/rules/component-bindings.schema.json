@@ -3,10 +3,17 @@
   "$id": "https://harness.local/schemas/component-bindings.schema.json",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "component_contract_sha256", "tech_stack_revision", "bindings"],
+  "required": ["schema_version", "mode", "component_contract_sha256", "tech_stack_revision", "bindings"],
   "properties": {
     "schema_version": { "const": "1.0" },
-    "component_contract_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "mode": { "enum": ["family", "standalone-fallback"] },
+    "component_contract_sha256": {
+      "oneOf": [
+        { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        { "type": "null" }
+      ],
+      "description": "Required non-null in family mode (hash of component-contract.json). Null only allowed when mode=standalone-fallback (no design package)."
+    },
     "tech_stack_revision": { "type": "string", "minLength": 1 },
     "bindings": {
       "type": "array",

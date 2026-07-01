@@ -133,7 +133,7 @@ After user confirmation, update:
 
 ### 6. Post-Refactor Verification
 
-Run design-lint to confirm the refactor introduced no errors.
+Run verify's lint step to confirm the refactor introduced no errors.
 
 ## Common Rationalizations
 
@@ -149,19 +149,19 @@ Run design-lint to confirm the refactor introduced no errors.
 - Not scanning all component directories
 - Refactor recommendations without Before/After comparison
 - No execution priority annotated
-- Not running design-lint to verify after refactoring
+- Not running verify's lint step to verify after refactoring
 
 ## Verification
 
 - [ ] Scan covers all component directories (evidence: scan scope record)
 - [ ] Each recommendation has a Before/After comparison (evidence: report content)
 - [ ] Execution priority annotated (evidence: P0/P1/P2 markers)
-- [ ] design-lint passes after refactoring (evidence: lint-report.md has no errors)
+- [ ] verify's lint step passes after refactoring (evidence: lint-report.md has no errors)
 - [ ] DESIGN.md + tokens.json + component-contract.json updated with matching revision/hash evidence
 
 ## Relationship with LOOP
 
 - Not run inside LOOP (runs in the post-LOOP design system maintenance stage)
 - Reads LOOP-produced docs/visual/ + docs/interaction/ as scan input
-- After refactoring, calls the design-lint skill to verify no errors were introduced (reuses the in-LOOP lint skill but does not enter the loop)
+- After refactoring, calls the verify skill to run its lint step and confirm no errors were introduced (reuses the in-LOOP verify skill but does not enter the loop)
 - The REFACTOR_REPORT.md produced is for the user to confirm before executing merges / abstractions / tokenization

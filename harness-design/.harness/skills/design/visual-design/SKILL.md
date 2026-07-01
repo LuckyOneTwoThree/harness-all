@@ -69,9 +69,16 @@ Check item by item against `.harness/craft/anti-ai-slop.md`:
 - [ ] No heavy shadows
 - [ ] No under-title emphasis lines
 
-### 8. Multiple Variants
+### 8. Variants (conditional)
 
-Produce 2-3 visual variants, separated within the same file:
+**Multi-variant trigger**: Produce 2-3 visual variants only when at least one of the following is met:
+- The project has no complete design system (tokens + components not fully defined)
+- The user explicitly requests visual exploration ("explore visual direction" / "give me options")
+- This is the first page of a brand-driven consumer product where visual direction is undecided
+
+**Default (single variant)**: When a complete design system exists and the user has not requested exploration, produce a single variant derived directly from the design system. The design system already encodes the visual decision; re-exploring it per page is redundant and consumes a human decision point without value.
+
+**When multi-variant runs**, produce 2-3 variants separated within the same file:
 
 ```markdown
 ## Variant A: <Direction name>
@@ -84,9 +91,11 @@ Produce 2-3 visual variants, separated within the same file:
 <Design description + annotations>
 ```
 
-### 9. User Selection
+### 9. User Selection (only when multi-variant runs)
 
-Present 2-3 variants for the user to choose. After the user selects, write to `docs/visual/<page>.md`.
+When multiple variants are produced, present them for the user to choose. After the user selects, write to `docs/visual/<page>.md`.
+
+When single variant is produced (default), write directly to `docs/visual/<page>.md` without a selection step.
 
 ### 10. Responsive Annotation
 
@@ -103,14 +112,15 @@ Each variant annotates:
 | "Purple gradients look nice" | #6366f1 is the AI default; all apps look the same |
 | "Uniform border radius is cleaner" | Maximum radius ignores the real radius hierarchy of design |
 | "Users won't notice a 1px deviation" | Accumulated deviations destroy visual hierarchy |
-| "Just one variant is enough" | Multiple variants are core to design exploration; at least 2 |
+| "Just one variant is enough" | When exploration is triggered (no design system / user requested), at least 2 variants are required; when design system is complete, one variant is correct and multi-variant is waste |
 
 ## Red Flags
 
 - Hardcoded hex colors (not from tokens)
 - Using a generic default font without an approved project-brand rationale
 - Using #6366f1 or purple-blue gradient
-- Only one variant produced
+- Multi-variant produced when design system is complete and user didn't request exploration (wasted effort)
+- Single variant produced when design system is incomplete or user requested exploration (skipped required exploration)
 - No responsive annotations
 
 ## Verification
@@ -119,7 +129,7 @@ Each variant annotates:
 - [ ] Every color comes from a design system token (evidence: Grep of design mockups finds no hardcoded hex)
 - [ ] Contrast ≥4.5:1 (evidence: manual calculation or tool check)
 - [ ] Anti AI-slop check fully passed (evidence: item-by-item checklist ✓)
-- [ ] 2-3 variants produced (evidence: file contains ## Variant A/B/C)
+- [ ] Variant count matches trigger rule: 2-3 variants when exploration triggered (evidence: file contains ## Variant A/B/C); 1 variant when design system is complete and no exploration requested (evidence: single design section)
 - [ ] Responsive annotations complete (evidence: 375px/768px/1280px all present)
 
 ## Relationship with LOOP
@@ -127,4 +137,4 @@ Each variant annotates:
 - Stage: DESIGN
 - Loop type: visual-design
 - Max iterations: 5
-- After each iteration, verify runs; after verify passes, design-lint runs
+- After each iteration, verify runs (unified gate including lint)

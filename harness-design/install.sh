@@ -28,9 +28,9 @@ if ! command -v git >/dev/null 2>&1; then
   exit 1
 fi
 
-# Check Node.js (design-lint hard dependency; WARN does not block install)
+# Check Node.js (verify lint step hard dependency; WARN does not block install)
 if ! command -v node >/dev/null 2>&1; then
-  echo "WARN: Node.js not found. design-lint hard-depends on Node; the LINT stage of LOOP will fail."
+  echo "WARN: Node.js not found. verify lint step hard-depends on Node; the LINT stage of LOOP will fail."
   echo "      Please install Node.js afterwards (v18+ recommended): https://nodejs.org/"
 fi
 

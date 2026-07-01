@@ -9,10 +9,11 @@ default_mode: standard
 ## Route
 
 1. session-start (on-demand) + Foundation gate.
-2. performance-optimization measures a representative baseline, confirms target, and identifies one proven bottleneck.
-3. writing-plans records metric, environment, target, behavioral guard, and rollback.
-4. LOOP: performance-optimization as ACT owner with inline verify-fast (same benchmark method + affected tests).
-5. verify-full → code-review → session-end (on-demand baseline).
+2. Branch Isolation: ensure a dedicated branch or git worktree before mutation (per `engineering-pipeline.md` Canonical Path step 3).
+3. performance-optimization measures a representative baseline, confirms target, and identifies one proven bottleneck.
+4. writing-plans records metric, environment, target, behavioral guard, and rollback.
+5. LOOP: performance-optimization as ACT owner with inline verify-fast (same benchmark method + affected tests).
+6. verify-full → code-review → session-end (on-demand baseline).
 
 ## Specialization
 

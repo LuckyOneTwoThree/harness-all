@@ -1,13 +1,28 @@
 ---
 name: product-design-review
-description: Performs product-level cross-page consistency review after all pages are designed. Use after new-product-design's per-page LOOPs complete, before design-handoff. Complements single-page design-review.
+description: Performs product-level cross-page consistency review after all pages are designed. Use after new-product-design's per-page LOOPs complete, before design-handoff. Complements single-page design-review. Conditional: full 6-check review runs only when page count >= 3 AND shared component count >= 3; otherwise degrades to lightweight consistency check.
 ---
 # Product Design Review
 
 ## When to use
-- After all pages in a DESIGN_PLAN.md complete their per-page LOOPs (verify + lint + design-review + accessibility-audit)
+- After all pages in a DESIGN_PLAN.md complete their per-page LOOPs (verify + design-review including accessibility audit)
 - Before product-level design-handoff
 - Cross-page consistency check needed (single-page design-review cannot catch these)
+
+## Trigger Condition (full vs lightweight)
+
+The review depth is conditional based on product complexity:
+
+**Full review (6 checks)** runs when BOTH conditions are met:
+- Page count in DESIGN_PLAN.md Section 2 >= 3
+- Shared component count in DESIGN_PLAN.md Section 3 >= 3
+
+**Lightweight consistency check (2 checks)** runs when EITHER condition is not met (page count < 3 OR shared component count < 3):
+- Check 1: Navigation Consistency Check (from full review step 1)
+- Check 2: User Flow Completeness Check (from full review step 2)
+- Skip checks 3-6 (Component Reuse / Token Consistency / Responsive Consistency / Interaction Consistency) — with fewer pages or shared components, cross-page drift risk is low and per-page verify + design-review already cover these dimensions adequately
+
+Record which mode ran in the review evidence header: `Mode: full (6 checks)` or `Mode: lightweight (2 checks, reason: page_count=N, shared_component_count=N)`.
 
 ## Inputs
 - docs/visual/DESIGN_PLAN.md
@@ -95,7 +110,7 @@ Cross-page token usage:
 - Verify all values reference tokens.json
 
 **Pass criteria**:
-- Zero hardcoded hex across all pages (design-lint L001-L005 already checks per-page; this is the cross-page aggregate)
+- Zero hardcoded hex across all pages (verify lint step L001-L005 already checks per-page; this is the cross-page aggregate)
 - Motion parameters consistent for the same component across pages (e.g., Button hover = 150ms in all pages)
 
 **Fail example**:
@@ -194,7 +209,7 @@ Write to `loops/specs/<task>/product-review-evidence.md`:
 ## Red Flags
 
 - Skipping flow completeness check (most common product-level failure)
-- Treating component duplication as "intentional variant" without checking design-lint L006-L008
+- Treating component duplication as "intentional variant" without checking verify lint step L006-L008
 - Not cross-referencing component-contract.json's used_by field
 - Approving with open Critical findings
 
@@ -210,8 +225,9 @@ Write to `loops/specs/<task>/product-review-evidence.md`:
 
 ## Relationship with LOOP
 
-- Stage: Out-of-LOOP gate, runs after all per-page LOOPs + per-page design-review + per-page accessibility-audit pass
-- Product-level review; does not replace per-page design-review
+- Stage: Out-of-LOOP gate, runs after all per-page LOOPs pass (per-page verify only; per-page design-review is deferred to the unified product-level design-review in new-product-design workflow)
+- In new-product-design workflow: product-design-review runs BEFORE the unified design-review (checks cross-page consistency); the unified design-review runs AFTER (checks per-page Five-Axis + WCAG)
+- In new-design workflow (single page): product-design-review is not used; the per-page design-review handles everything
 - On failure: Critical → return to specific page's LOOP for fix; Nit/FYI → record only
 - Does not consume iterations (out-of-LOOP)
 - On pass, enters product-level design-handoff

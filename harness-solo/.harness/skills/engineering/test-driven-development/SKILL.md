@@ -28,6 +28,7 @@ Verify owns `evidence.md`. TDD owns the per-attempt terminal outcome (inline ver
 ## Hard Rules
 
 - Behavior change: no production code before a test fails for the intended missing behavior.
+- **If implementation code is found to exist before a failing test for the intended behavior, delete that implementation and return to RED.** Writing tests to fit existing code is not TDD; it rationalizes unverified implementation.
 - Refactor: baseline tests must already pass; the red signal is the explicit structural target, not a fabricated failing behavior test.
 - Pure text/comment/format changes belong to quick-fix and may skip a new test.
 

@@ -86,6 +86,15 @@ Common bottleneck quick reference:
 - Run the full test suite and confirm **no behavioral regression** (performance optimization is a subset of refactor; behavior is unchanged)
 - Numbers did not improve → return to IDENTIFY and re-locate (you may have fixed the wrong bottleneck)
 
+### 4.5. Inline Verify-Fast (merged)
+
+- **Validate tests + benchmark re-measurement**: reuse the exact output from step 4 only when produced in the same execution context and neither command, code, nor attempt changed; otherwise rerun. Reject `0 tests`, stale output, or different commands.
+- **AC/DAC check**: every stable AC/DAC for this task has evidence; frontend tasks reference contract/binding by stable component ID.
+- **Changed-file security scan**: quick scan on changed files and disposition every hit (cite `verify/Reference/security-patterns.md` Patterns 1-3).
+- **Append terminal outcome**: append exactly one PASSED/FAILED line to `iterations.log`; do not append a second attempt record.
+
+Pass → `stage: verify, status: running, clear error`. Fail → `stage: verify, status: retrying, concrete error`. Numbers did not improve → return to IDENTIFY (domain-specific route, not a retry). At the recommended failed-attempt limit (3 for optimize), set `needs-human`. Never increment during failure handling.
+
 ### 5. GUARD — Prevent regression
 - Add regression tests or monitoring to prevent performance regression:
   - Backend: include benchmarks in CI

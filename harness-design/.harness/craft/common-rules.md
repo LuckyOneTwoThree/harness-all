@@ -1,6 +1,6 @@
 # Common Rules for Professional UI
 
-> Generic craft rules (brand-agnostic) · referenced by visual-design / design-lint / design-review
+> Generic craft rules (brand-agnostic) · referenced by visual-design / verify (lint step) / design-review
 >
 > Source: UI UX Pro Max's Common Rules for Professional UI
 
@@ -60,5 +60,5 @@
 ## Check timing
 
 - **visual-design**: cross-check the three-column table when producing design specs
-- **design-lint**: L006-L010 rules check layout consistency
+- **verify (lint step)**: L006-L010 rules check layout consistency
 - **design-review**: Five-Axis Review's "spacing and alignment" axis check

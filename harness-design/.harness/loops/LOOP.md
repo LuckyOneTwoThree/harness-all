@@ -1,6 +1,6 @@
 # LOOP.md — Loop Engine Definition + Verification Protocol
 
-> Source: ospec (plan→act→verify) adapted to a design loop (plan→design→verify+lint)
+> Source: ospec (plan→act→verify) adapted to a design loop (plan→design→verify incl. lint)
 > Purpose: replaces linear workflows to implement a closed verification loop
 > Merges the original verification.md content
 
@@ -25,7 +25,7 @@
 │  └──────┬──────┘                                    │
 │         ▼                                           │
 │  ┌─────────────┐                                    │
-│  │    LINT     │ ← design-lint skill: mechanical rules (script execution) │
+│  │    LINT     │ ← verify skill's lint step: mechanical rules (script execution) │
 │  └──────┬──────┘                                    │
 │         │                                           │
 │         ├── All passed → exit LOOP                  │
@@ -37,31 +37,27 @@
 │  Outside-LOOP Gate (final review, non-loop)         │
 │  ┌─────────────────┐                                │
 │  │ DESIGN-REVIEW   │ ← Five-Axis + Doubt-Driven     │
+│  │  (incl. Axis 5  │   + Axis 5 full WCAG 2.1 AA    │
+│  │   WCAG audit)   │   accessibility audit           │
 │  └────────┬────────┘                                │
 │           ├── Pass → enter handoff                  │
 │           └── Fail → back to LOOP (fixable) or PLAN (needs replanning) │
-│                      ▼                              │
-│  ┌─────────────────┐                                │
-│  │ ACCESSIBILITY   │ ← WCAG 2.1 AA dedicated review │
-│  └────────┬────────┘                                │
-│           ├── Pass → enter handoff                  │
-│           └── Fail → back to LOOP                   │
 └─────────────────────────────────────────────────────┘
 ```
 
 **Key boundaries**:
-- Inside LOOP = verify + design-lint (fast checks, run on every iteration)
-- Outside LOOP = design-review + accessibility-audit (deep review, run once after LOOP exits)
+- Inside LOOP = verify (unified: AC + quick a11y + lint, run on every iteration)
+- Outside LOOP = design-review (Five-Axis including WCAG audit, run once after LOOP exits)
 - design-review is not inside the LOOP, to avoid spawning a sub-agent for Doubt-Driven adversarial review on every iteration
 
 ## Loop Types
 
 | Type | Trigger Scenario | Max Iterations | Stop Condition |
 |------|------------------|----------------|----------------|
-| **visual-design** | Visual design tasks | 5 | verify + lint pass + AC satisfied |
-| **interaction-design** | Interaction design tasks | 5 | verify + lint pass + AC satisfied |
-| **wireframe** | Wireframe / low-fidelity prototype | 5 | verify + lint pass + AC satisfied |
-| **component** | Component design (Button/Input/Card, etc.) | 5 | verify + lint pass + AC satisfied |
+| **visual-design** | Visual design tasks | 5 | verify (incl. lint) pass + AC satisfied |
+| **interaction-design** | Interaction design tasks | 5 | verify (incl. lint) pass + AC satisfied |
+| **wireframe** | Wireframe / low-fidelity prototype | 5 | verify (incl. lint) pass + AC satisfied |
+| **component** | Component design (Button/Input/Card, etc.) | 5 | verify (incl. lint) pass + AC satisfied |
 
 **Removal notes**:
 - `prototype` changed to `wireframe`, semantics more accurate (the output is low-fidelity wireframes, not interactive prototypes)
@@ -121,8 +117,8 @@ loops/specs/001-login-page/
 iterations.log example:
 ```
 [2026-06-20 14:30] iter=1 stage=design → verify FAILED: AC-002 not satisfied (missing hover state)
-[2026-06-20 14:35] iter=2 stage=design → lint FAILED: L001 hardcoded #3B82F6
-[2026-06-20 14:40] iter=3 stage=verify+lint → PASSED
+[2026-06-20 14:35] iter=2 stage=design → verify FAILED: L001 hardcoded #3B82F6 (lint sub-step)
+[2026-06-20 14:40] iter=3 stage=verify → PASSED (incl. lint)
 ```
 
 Why designed this way?
@@ -165,7 +161,7 @@ Shared counting, status-transition, and circuit-breaker semantics are defined in
 ```yaml
 # Required fields
 current_task: <NNN>-<task-name>           # Task number + name, consistent with directory name
-iteration: <int>                           # Current iteration count, starts from 0, +1 per DESIGN→VERIFY+LINT loop
+iteration: <int>                           # Current iteration count, starts from 0, +1 per DESIGN→VERIFY (incl. lint) loop
 stage: <enum>                              # Current stage, see enum table below
 status: <enum>                             # Task status, see enum table below
 started_at: "<ISO 8601>"                   # Task start time, e.g., "2026-06-20T14:30:00"
@@ -191,7 +187,7 @@ hard_limit_reached: <bool>                 # True after failed attempt 10 or blo
 | `plan` | Planning stage | When PLAN initializes inline |
 | `design` | Design stage | When visual-design/interaction-design/wireframe/component-design completes |
 | `verify` | Verification stage | When verify skill runs checks |
-| `lint` | Lint stage | When design-lint skill runs checks |
+| `lint` | Lint stage | When verify skill's lint step runs checks |
 | `review` | Final review stage (outside LOOP) | When design-review runs |
 
 **status enum values (global unified spec)**:
@@ -200,18 +196,18 @@ hard_limit_reached: <bool>                 # True after failed attempt 10 or blo
 |-------|---------|--------------|
 | `running` | Task is executing | PLAN init / design succeeds and continues |
 | `retrying` | Task failed, retrying or auto-rolling back | After design/verify/lint failure |
-| `done` | Task successfully verified and completed | LOOP exit + design-review + accessibility-audit pass |
+| `done` | Task successfully verified and completed | LOOP exit + design-review (incl. accessibility audit) pass |
 | `failed` | Task failed and retries exhausted | Iteration exceeded (hit max iteration circuit breaker threshold) |
 | `needs-human` | Human intervention needed (e.g., must approve, auto-fix failed) | Auto-fix failed / hit an operation requiring human approval |
 | `blocked` | Task blocked (e.g., waiting for upstream deliverables, waiting for environment permissions) | Waiting for upstream deliverables / waiting for environment permissions / dependencies not ready |
 
 **Field write responsibility**:
 
-| Field | PLAN (inline) | design skill | verify/lint | design-review |
+| Field | PLAN (inline) | design skill | verify (incl. lint) | design-review |
 |-------|:---:|:---:|:---:|:---:|
 | current_task | Write (init) | No change | No change | No change |
 | iteration | Write (0) | Write (+1) | No change | No change |
-| stage | Write (plan) | Write (design) | Write (verify/lint) | Write (review) |
+| stage | Write (plan) | Write (design) | Write (verify) | Write (review) |
 | status | Write (running) | Write (running/retrying) | Write (retrying/done) | Write (done/retrying) |
 | exploration_mode | Write (workflow default_mode) | No change | No change | No change |
 | last_error | Write ("") | Write (on failure / cleared on success) | Write (on failure / cleared on success) | Write (on failure / cleared on success) |
@@ -223,7 +219,7 @@ hard_limit_reached: <bool>                 # True after failed attempt 10 or blo
 # loops/specs/001-login-page/state.yaml example
 current_task: 001-login-page
 iteration: 3
-stage: lint
+stage: verify
 status: retrying
 last_error: "Lint L001: hardcoded #3B82F6, should use token color.primary"
 last_error_at: "2026-06-20T14:35:00"
@@ -256,14 +252,14 @@ nested_progress: "<progress overview>"                    # Nested sub-task prog
 4. **Basic accessibility**: Contrast + keyboard navigation (quick check, not full)
 5. **Deliverability check**: Are annotations / specs complete
 
-**LINT stage required checks** (design-lint skill):
+**LINT stage required checks** (verify skill's lint step):
 
 1. **Token consistency**: L001-L005 (color/spacing/radius/font-size/shadow must come from tokens)
 2. **Component consistency**: L006-L008 (same semantic component ≤3 implementations / variant merging / complete states)
 3. **Layout consistency**: L009-L010 (alignment baseline / grid column count)
 4. **Anti AI-slop**: L011-L015 (prohibit Inter/purple gradient/uniform radius/Lorem ipsum)
 
-**Lint failure handling**: When design-lint fails, update the `last_error` field of state.yaml, format: `Lint L00X: <description>`, reusing the existing field; do not add a new lint_status field.
+**Lint failure handling**: When verify's lint step fails, update the `last_error` field of state.yaml, format: `Lint L00X: <description>`, reusing the existing field; do not add a new lint_status field.
 
 ### Outside-LOOP Checks (final gate)
 
@@ -275,7 +271,7 @@ nested_progress: "<progress overview>"                    # Nested sub-task prog
    - Critical level: triggers fresh-context sub-agent adversarial review
 3. **Severity Labeling**: Critical / no prefix / Nit / FYI
 
-**ACCESSIBILITY-AUDIT** (accessibility-audit skill):
+**ACCESSIBILITY AUDIT** (design-review skill Axis 5):
 
 1. WCAG 2.1 AA full check (contrast / keyboard / screen reader / responsive / reduced-motion)
 
@@ -283,9 +279,9 @@ nested_progress: "<progress overview>"                    # Nested sub-task prog
 
 Before claiming a task complete, the Agent **must**:
 - [ ] All inside-LOOP verify passed (each AC-xxx ✓)
-- [ ] All inside-LOOP design-lint passed (no error-level violations)
+- [ ] All inside-LOOP verify lint step passed (no error-level violations)
 - [ ] Outside-LOOP design-review passed (Five-Axis + Doubt-Driven)
-- [ ] Outside-LOOP accessibility-audit passed (WCAG 2.1 AA)
+- [ ] Outside-LOOP design-review Axis 5 passed (WCAG 2.1 AA)
 - [ ] Write evidence to `loops/specs/<task>/evidence.md`
 - [ ] Update `loops/specs/<task>/state.yaml` status to done
 
@@ -301,7 +297,7 @@ Before claiming a task complete, the Agent **must**:
    - Needs replanning (requirement misunderstanding, direction deviation) → back to PLAN
 4. Check the current iteration against the recommended and hard limits; do not increment here. The next DESIGN attempt increments exactly once when it begins
 
-**Outside-LOOP failure** (design-review/accessibility-audit):
+**Outside-LOOP failure** (design-review):
 1. Write failure info to the `last_error` field of `state.yaml`
 2. Analyze the failure reason:
    - Fixable (visual hierarchy issue, contrast not met) → back to LOOP (re-DESIGN)

@@ -20,20 +20,18 @@
 - **interaction-design** — Interaction design (state machine + motion parameters)
 - **wireframe** — Low-fidelity wireframe (structure validation)
 - **component-design** — Atomic component design (Props/States/Variants/Composition Rules)
-- **design-lint** — AI design Linter (mechanical rule check, script execution)
-- **design-review** — Final review (Five-Axis + Doubt-Driven)
+- **design-review** — Final review (Five-Axis including WCAG 2.1 AA audit + Doubt-Driven)
 - **product-design-review** — Product-level cross-page consistency review (after all pages designed, before handoff)
 - **design-handoff-spec** — Engineering handoff with portable semantic component contract
-- **accessibility-audit** — WCAG 2.1 AA dedicated review
-- **verify** — Inside-LOOP quick check
+- **verify** — Inside-LOOP unified gate (AC check + quick a11y + mechanical lint)
 - **design-system-refactor** — Design system refactor (merge/abstract/tokenize)
 
 ## Workflows
 > `default_mode`: deep=forced exploration / standard=pause at module boundaries / skip=direct execution (user can switch at any time)
 - **design-onboarding** [skip] — First-time onboarding, quick design system skeleton (brief → recommendation → system)
-- **new-product-design** [deep] — Product-level design (plan all pages → shared components → per-page new-design LOOPs → product-review → handoff)
+- **new-product-design** [deep] — Product-level design (plan all pages + pre-gen per-page specs → shared components → per-page LOOPs → product-review → unified design-review → handoff)
 - **new-design** [deep] — New design task (3 independent LOOPs + design-review)
 - **design-iteration** [standard] — Design iteration (Chesterton's Fence + LOOP)
 - **redesign** [deep] — Redesign (design-system-import + diff analysis + LOOP)
 - **design-system-setup** [standard] — Full design system build (recommendation → system → component LOOP → review)
-- **design-handoff** [skip] — Design handoff (handoff-spec + accessibility + lint + verify)
+- **design-handoff** [skip] — Design handoff (handoff-spec; reviews already passed upstream)

@@ -22,10 +22,9 @@ session-start
   → Design System Gate (lightweight existence check)
   → Chesterton's Fence analysis (understand the original design)
   → PLAN (inline, initialize LOOP state)
-  → LOOP(visual-design → verify → design-lint)        [visual-design, max 5] (always runs)
-  → LOOP(interaction-design → verify → design-lint)   [interaction-design, max 5] (conditional)
-  → design-review (gate outside LOOP)
-  → accessibility-audit (gate outside LOOP)
+  → LOOP(visual-design → verify)        [visual-design, max 5] (always runs)
+  → LOOP(interaction-design → verify)   [interaction-design, max 5] (conditional)
+  → design-review (gate outside LOOP, includes accessibility audit)
   → session-end
 ```
 
@@ -44,7 +43,7 @@ Read `memory/progress.md` to restore context.
 
 ### 2. Design System Gate (lightweight existence check)
 
-The `visual-design` SKILL requires `docs/design-system/DESIGN.md` as input, and `design-lint` validates against `docs/design-system/tokens.json`. Before iterating, confirm the design system exists so the iterated output can be token-validated:
+The `visual-design` SKILL requires `docs/design-system/DESIGN.md` as input, and `verify`'s lint step validates against `docs/design-system/tokens.json`. Before iterating, confirm the design system exists so the iterated output can be token-validated:
 
 - [ ] Read `docs/design-system/DESIGN.md` — exists?
 - [ ] Read `docs/design-system/tokens.json` — exists?
@@ -56,7 +55,7 @@ The `visual-design` SKILL requires `docs/design-system/DESIGN.md` as input, and 
 - Run the `design-system-setup` workflow first (full system with components)
 - User confirms they will provide the design system externally, then proceed
 
-This is a lighter check than `new-product-design`'s Design System Gate (which verifies 10-section completeness): iteration only requires existence, because the iteration target already references the design system. Do not proceed without resolving — `visual-design` would otherwise produce outputs that `design-lint` cannot token-validate.
+This is a lighter check than `new-product-design`'s Design System Gate (which verifies 10-section completeness): iteration only requires existence, because the iteration target already references the design system. Do not proceed without resolving — `visual-design` would otherwise produce outputs that `verify`'s lint step cannot token-validate.
 
 ### 3. Chesterton's Fence analysis
 
@@ -107,13 +106,13 @@ Output `loops/specs/<task>/context-analysis.md`:
 ### 5. LOOP: visual-design (max 5)
 
 ```
-visual-design → verify → design-lint
+visual-design → verify
   ↑                          |
   └──── on failure, back to visual-design ┘
 ```
 
 - **Scope Discipline**: Only touch what the task requires; record unrelated issues in the "NOTICED BUT NOT TOUCHING" list
-- verify/design-lint failure → back to visual-design, iteration +1
+- verify failure → back to visual-design, iteration +1
 - More than 5 iterations → request human intervention
 
 ### 6. LOOP: interaction-design (max 5, conditional)
@@ -121,29 +120,24 @@ visual-design → verify → design-lint
 **Trigger conditions**: See "interaction-design LOOP trigger conditions" in the Orchestration section. If not triggered, skip this step.
 
 ```
-interaction-design → verify → design-lint
+interaction-design → verify
   ↑                          |
   └──── on failure, back to interaction-design ┘
 ```
 
 - Based on the iterated visual design, update component states/motion parameters
-- verify/design-lint failure → back to interaction-design, iteration +1
+- verify failure → back to interaction-design, iteration +1
 - More than 5 iterations → request human intervention
 
-### 7. design-review (gate outside LOOP)
+### 7. design-review (gate outside LOOP, includes accessibility audit)
 
-- Five-Axis Review
+- Five-Axis Review (5 axes, Axis 5 performs full WCAG 2.1 AA audit)
 - Doubt-Driven (only Critical triggers adversarial debate)
 - Compare before/after
-- Output `loops/specs/<task>/evidence.md`
+- Output `loops/specs/<task>/evidence.md` + `docs/visual/accessibility-report.md`
 - Not passed → back to LOOP (fixable) or PLAN (needs re-planning)
 
-### 8. accessibility-audit (gate outside LOOP)
-
-- WCAG 2.1 AA full check
-- Not passed → back to LOOP
-
-### 9. session-end
+### 8. session-end
 
 Update `memory/progress.md` and archive the session.
 
@@ -163,8 +157,7 @@ Update `memory/progress.md` and archive the session.
 ## Exit Criteria
 
 - Chesterton's Fence analysis complete
-- LOOP passed (verify + lint)
-- design-review passed
-- accessibility-audit passed
+- LOOP passed (verify incl. lint)
+- design-review passed (includes accessibility audit)
 - before/after comparison recorded
 - state.yaml status=done

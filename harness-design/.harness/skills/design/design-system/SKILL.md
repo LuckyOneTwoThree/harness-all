@@ -159,7 +159,7 @@ Retrieval rules (for use by downstream skills):
 ## Relationship with LOOP
 
 - Not run inside LOOP (runs in the pre-LOOP design system setup stage)
-- The DESIGN.md + tokens.json + tokens.css produced are read by all in-LOOP skills (visual-design / interaction-design / wireframe / component-design / verify / design-lint)
+- The DESIGN.md + tokens.json + tokens.css produced are read by all in-LOOP skills (visual-design / interaction-design / wireframe / component-design / verify)
 - The Section 10 Semantic Vocabulary produced is used by the component-design skill to identify the component list
-- The tokens produced are checked for consistency by design-lint rules L001-L005
+- The tokens produced are checked for consistency by verify's lint step rules L001-L005
 - The pages/ directory produced is used by the visual-design skill to retrieve page-level overrides

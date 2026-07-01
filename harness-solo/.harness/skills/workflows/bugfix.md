@@ -11,10 +11,11 @@ Use for incorrect existing behavior. If the requested behavior is new rather tha
 ## Route
 
 1. session-start (on-demand) + Foundation gate.
-2. systematic-debugging until the symptom is reproducible and the root-cause hypothesis is evidence-backed.
-3. writing-plans with reproduction, affected surface, non-goals, and rollback.
-4. LOOP: test-driven-development fixes the root cause with inline verify-fast (regression test + affected suite required).
-5. verify-full, code-review, session-end (on-demand baseline).
+2. Branch Isolation: ensure a dedicated branch or git worktree before mutation (per `engineering-pipeline.md` Canonical Path step 3).
+3. systematic-debugging until the symptom is reproducible and the root-cause hypothesis is evidence-backed.
+4. writing-plans with reproduction, affected surface, non-goals, and rollback.
+5. LOOP: test-driven-development fixes the root cause with inline verify-fast (regression test + affected suite required).
+6. verify-full, code-review, session-end (on-demand baseline).
 
 ## Specialization
 

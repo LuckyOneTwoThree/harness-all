@@ -33,7 +33,7 @@ All design must satisfy WCAG 2.1 AA:
 - Do not rely on color alone to convey information
 - Touch targets ≥ 44px
 
-**Verification method**: accessibility-audit skill check
+**Verification method**: design-review skill Axis 5 WCAG audit
 
 ### Principle 3: Mobile first; responsive is mandatory
 All design must be mobile first:

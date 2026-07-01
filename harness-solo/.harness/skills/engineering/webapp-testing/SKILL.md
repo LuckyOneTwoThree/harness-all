@@ -81,14 +81,10 @@ This skill is a **frontend-specific supplement to the verify skill** and does no
 | Output | Canonical evidence.md | Structured frontend results for verify to merge |
 | Relationship | verify invokes and records | webapp-testing checks but does not write evidence |
 
-**Invocation**: when the verify skill detects frontend code changes, it invokes this skill for frontend-specific verification, and the results are merged into evidence.md.
+**Invocation**: invoked by verify at verify-full (LOOP exit gate) when frontend code is detected; verify-fast per iteration does not invoke. verify owns the canonical "no duplicate frontend checks outside webapp-testing" rule; this skill returns structured results for verify to merge into evidence.md.
 
 ## Prohibitions
 - Skipping build verification (frontend code that fails to build cannot be delivered)
 - Reading code without running the build ("I think it compiles" is not evidence)
 - Ignoring accessibility issues (not optional; it is a baseline quality)
 - Introducing external dependencies like Playwright/Cypress for E2E (violates the zero-new-dependency principle; if E2E is needed, the user configures it separately)
-
-## Relationship with LOOP
-
-Invoked by verify at verify-full (LOOP exit gate) when frontend code is detected; verify-fast per iteration does not invoke. See `.harness/loops/LOOP.md`.

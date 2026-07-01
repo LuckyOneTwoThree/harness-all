@@ -23,9 +23,8 @@ artifacts: []
 |---|---|
 | Asset inventory + hashes | Validate and resolve package-relative files |
 | Stable AC/DAC IDs | Copy unchanged into specs and verification evidence |
-| Component contract | Create Solo-owned bindings and implement by stable component ID |
+| Component contract (component-contract.json) | Create Solo-owned bindings and implement by stable component ID |
 | Tokens / DESIGN.md | Enforce token and system compliance |
-| Pages / flows / states | Plan composition, navigation, and interaction tests |
 | Open items / risks | Assign an owner or block when implementation would require guessing |
 
 Any context without a downstream action belongs under Notes, not a new required section.
@@ -41,34 +40,27 @@ Any context without a downstream action belongs under Notes, not a new required 
 | Design system | artifacts/design-system/DESIGN.md | Color / typography / spacing / shadow / radius / breakpoints |
 | Design tokens (JSON) | artifacts/design-system/tokens.json | Machine-readable token definitions |
 | Design tokens (CSS) | artifacts/design-system/tokens.css | CSS variables for direct engineering consumption |
-| Component spec | artifacts/interaction/component-spec.md | Component properties/states table |
-| Semantic component contract | artifacts/component-contract.json | Framework-neutral component intent, states, properties, and token references |
+| Component spec | artifacts/interaction/component-spec.md | Component properties/states table (explanatory) |
+| Semantic component contract | artifacts/component-contract.json | **Machine-readable authority**; harness-solo's frontend-implementation reads this as the single source of truth for component semantics |
+| Flow spec | artifacts/prototype/flow.md | Cross-page user flows with entry/exit/checkpoints (explanatory) |
+
+> Component List (ID / states / variants / used_by) and Interaction Flows are **not duplicated here**. harness-solo's frontend-implementation reads them directly from `component-contract.json` (Contract Precedence #1) and `flow.md`. Refer to those files for full detail.
 
 ## Page List
 
 > For single-page handoff (new-design workflow): list only the designed page.
-> For product-level handoff (new-product-design workflow): list all pages with navigation structure and dependencies. See "Cross-Page Consistency Report" section below for consistency details.
+> For product-level handoff (new-product-design workflow): list all pages with priority + dependencies. Full page inventory + navigation structure is in DESIGN_PLAN.md (reference only, not directly consumed by engineering).
 
-| Page ID | Page | Priority | Depends On | Visual draft | Interaction draft | Wireframe |
-|---------|------|----------|------------|--------------|-------------------|-----------|
-| P01 | <Home> | P0 | — | artifacts/visual/home.md | artifacts/interaction/home.md | - |
-| P02 | <Login> | P0 | — | artifacts/visual/login.md | artifacts/interaction/login.md | - |
-| P03 | <Dashboard> | P0 | P02 | artifacts/visual/dashboard.md | artifacts/interaction/dashboard.md | artifacts/prototype/wireframe-dashboard.md |
+| Page ID | Page | Priority | Depends On |
+|---------|------|----------|------------|
+| P01 | <Home> | P0 | — |
+| P02 | <Login> | P0 | — |
+| P03 | <Dashboard> | P0 | P02 |
 
 **Navigation structure** (product-level handoff only):
 - Global Header: [Logo, Nav(<pages>), UserMenu] — consistent across P01/P03/P04
 - Global Footer: [Links, Copyright] — consistent across P01/P03/P04
 - Authenticated vs anonymous header variants defined in artifacts/visual/header.md
-
-## Component List
-
-> Component list + states + variants. For product-level handoff, the "Used By" column indicates which pages use each component. See component-spec.md and component-contract.json for details.
-
-| Component ID | Component | States | Used By Pages | Notes |
-|--------------|-----------|--------|---------------|-------|
-| C01 | Button | default, hover, active, disabled, loading | P01, P02, P03, P04 | Primary CTA |
-| C02 | FormField | default, focus, error, disabled | P02, P04 | Reuse validation logic |
-| C03 | Modal | open, closing, closed | P03, P04 | Trap focus when open |
 
 ## Acceptance Criteria (AC-xxx)
 
@@ -82,48 +74,23 @@ Any context without a downstream action belongs under Notes, not a new required 
 - [ ] DAC-P01-001: <stable page-scoped design criterion, e.g., "button hover state has a 200ms transition animation">
 - [ ] DAC-GLOBAL-001: <stable cross-page design criterion, e.g., "first screen LCP <= 2.5s">
 
-## Interaction Flows
-
-> For single-page handoff (new-design workflow): describe intra-page interactions only.
-> For product-level handoff (new-product-design workflow): describe cross-page user flows with entry/exit/checkpoints. Engineering should ensure route guards and state preservation match these flows.
-
-### Flow 1: <New User Signup>
-```
-Landing Page (P01) → Click "Get Started" → Login Page (P02) → Signup → Dashboard (P03) → Onboarding
-```
-- **Entry**: Landing page hero CTA
-- **Exit**: Dashboard first-screen load
-- **Critical checkpoints**: Form validation feedback, loading state, error recovery
-- **Engineering notes**: Redirect unauthenticated users from P03 → P02; preserve redirect target
-
-### Flow 2: <Returning User Login>
-```
-Login Page (P02) → Enter credentials → Dashboard (P03)
-```
-- **Entry**: Direct visit or "Login" from header
-- **Exit**: Dashboard load
-- **Critical checkpoints**: Wrong password hint, "forgot password" link
-
-See artifacts/prototype/flow.md for full flow diagrams.
-
-## Cross-Page Consistency Report
+## Cross-Page Consistency Constraints
 
 > Product-level handoff only (new-product-design workflow). Single-page handoff (new-design) omits this section.
-> Generated by the product-design-review skill. Engineering should treat these as hard constraints during implementation.
+> Hard constraints checked by product-design-review. Engineering should treat these as hard constraints during implementation.
+> Full review evidence (pass/fail per dimension + critical findings): `loops/specs/<product-task>/product-review-evidence.md`
 
-| Consistency Dimension | Status | Notes |
-|----------------------|--------|-------|
-| Navigation consistency | ✓ Pass / ✗ <issue> | Header/Footer structure identical across all pages |
-| User flow completeness | ✓ Pass / ✗ <issue> | All flows in "Interaction Flows" navigable end-to-end |
-| Component reuse | ✓ Pass / ✗ <issue> | Shared components not re-implemented per page; matches component-contract.json used_by |
-| Token consistency | ✓ Pass / ✗ <issue> | Zero hardcoded hex across all pages; motion params consistent for same component |
-| Responsive consistency | ✓ Pass / ✗ <issue> | All pages have 375px/768px/1280px; mobile-first strategy uniform |
-| Interaction consistency | ✓ Pass / ✗ <issue> | Same component has same states + motion params across pages |
+| Constraint | Status | Reference |
+|------------|--------|-----------|
+| Navigation consistency | ✓ Pass / ✗ <issue> | See evidence file |
+| User flow completeness | ✓ Pass / ✗ <issue> | See evidence file |
+| Component reuse (used_by match) | ✓ Pass / ✗ <issue> | See evidence file |
+| Token consistency (zero hardcoded hex) | ✓ Pass / ✗ <issue> | See evidence file |
+| Responsive consistency | ✓ Pass / ✗ <issue> | See evidence file |
+| Interaction consistency | ✓ Pass / ✗ <issue> | See evidence file |
 
 **Critical findings** (must fix before handoff, or acknowledged as accepted risk):
 - None / <list with page reference and fix recommendation>
-
-**Full review evidence**: `loops/specs/<product-task>/product-review-evidence.md`
 
 ## Key Decisions
 
@@ -149,18 +116,9 @@ Issues for harness-solo to handle or confirm with harness-design:
 ## Product Design Plan Reference
 
 > Product-level handoff only (new-product-design workflow). For reference only; engineering does not directly consume this document, but it is the source of truth for page inventory, shared component inventory, and cross-page user flows. If any ambiguity arises about page scope or flow, consult this document first.
->
-> **Inline carry note**: design-to-solo.md already carries DESIGN_PLAN.md's key content inline — Page List / Component List / Interaction Flows / Cross-Page Consistency Report are all present in the earlier sections of this file. Engineering can obtain the information it needs via those sections, with no need to read DESIGN_PLAN.md directly. If finer granularity is required (e.g., the full wireframe path), it may be indirectly consulted via the Path below — but this consultation is optional, not mandatory.
 
 - **Path**: `artifacts/visual/DESIGN_PLAN.md`
-- **Contents**:
-  - Section 2 Page Inventory (full list with priority + dependencies)
-  - Section 3 Shared Component Inventory (with used_by mapping)
-  - Section 4 Page Dependency Graph (soft dependencies; informational)
-  - Section 5 Product User Flows (cross-page flows with checkpoints)
-  - Section 6 Design Execution Order (informational; engineering need not follow)
-  - Section 7 Integration Checkpoints (PC1-PC3; informational)
-  - Section 8 Cross-Page Consistency Constraints (hard constraints, same as Cross-Page Consistency Report above)
+- **Note**: The key content of DESIGN_PLAN.md (Page Inventory / Shared Component Inventory / Cross-Page User Flows / Cross-Page Consistency Constraints) is already carried inline in the sections above. Engineering can obtain the information it needs via those sections + component-contract.json, with no need to read DESIGN_PLAN.md directly. Consultation is optional, not mandatory.
 
 ## Suggested Next Steps
 

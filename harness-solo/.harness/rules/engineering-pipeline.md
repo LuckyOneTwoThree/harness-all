@@ -6,13 +6,25 @@ This is the single routing contract for Solo delivery. Workflows select a varian
 
 1. **Restore** — `session-start` loads active state and validates inbound handoffs. **On-demand**: skip when no active state exists and an upstream handoff is unambiguous; go straight to Plan.
 2. **Foundation** — confirm `PROJECT.md`, `TECH_STACK.md`, and executable verification commands. Use `setup` only when missing.
-3. **Clarify + Plan (merged)** — `brainstorming` resolves material ambiguity, then `writing-plans` immediately consumes the resolved requirements to produce one spec + state. The two skills run as one continuous Plan stage without a pause between them unless a material user-owned decision surfaces. Skip brainstorming only when an existing valid spec or the quick-fix gate makes scope unambiguous.
-4. **Attempt + inline verify-fast (merged)** — the selected ACT skill increments iteration once before mutation, executes the smallest verifiable outcome, then performs the 4 fast-verify duties inline (test validation / AC-DAC check / changed-file security scan / append terminal outcome to iterations.log). verify-fast is no longer a separate skill invocation.
-5. **Verify-full** — owned by `verify`; runs once after every planned task passes inline fast verification.
-6. **Code review** — reviews maintainability and resolves review feedback. Only this gate marks a delivery task `done`.
-7. **Close** — `session-end` records progress, syncs the task board, refreshes baseline **only when source files changed**, and publishes only explicitly needed handoffs.
+3. **Branch Isolation** — before any code mutation, ensure work happens on a dedicated branch (not `main`/`master`) or a git worktree. **Standalone single-task workflow**: create `feature/<task-id>` per task. **Product-level nested task**: use the shared `feature/<product-task-id>` across all nested tasks (see Nested Task Switch Protocol below for the rationale and switch gates). Quick-fix may skip this when the change is single-file and low-risk.
+4. **Clarify + Plan (merged)** — `brainstorming` resolves material ambiguity, then `writing-plans` immediately consumes the resolved requirements to produce one spec + state. The two skills run as one continuous Plan stage without a pause between them unless a material user-owned decision surfaces. Skip brainstorming only when an existing valid spec or the quick-fix gate makes scope unambiguous.
+5. **Attempt + inline verify-fast (merged)** — the selected ACT skill increments iteration once before mutation, executes the smallest verifiable outcome, then performs the 4 fast-verify duties inline (test validation / AC-DAC check / changed-file security scan / append terminal outcome to iterations.log). verify-fast is no longer a separate skill invocation.
+6. **Verify-full** — owned by `verify`; runs once after every planned task passes inline fast verification.
+7. **Code review** — reviews maintainability and resolves review feedback. Only this gate marks a delivery task `done`.
+8. **Close** — `session-end` records progress, syncs the task board, refreshes baseline **only when source files changed**, and publishes only explicitly needed handoffs.
 
 **Product orchestration (new-product-engineering)**: session-start/end run once at product level; nested features do not re-run session ceremony. Integration checkpoints are inlined into the owning nested task's verify-full rather than a separate stage.
+
+## Nested Task Switch Protocol (product-level only)
+
+When `current_nested_task` transitions from one nested task to the next in a product-level workflow, the orchestrator (new-product-engineering workflow, acting through session-start on resume) must execute these switch gates in order:
+
+1. **Completion gate** — the outgoing nested task's `state.yaml` must read `status: done` (terminal). If it reads `retrying`/`needs-human`/`blocked`/`failed`, do not advance; surface the blocker. This prevents building downstream on an incomplete upstream task.
+2. **Worktree cleanliness gate** — run `git status --porcelain` (or equivalent) on the outgoing task's branch. Uncommitted changes must be committed or stashed before switching. This prevents outgoing WIP from polluting the incoming task.
+3. **Branch strategy** — use a single shared product branch `feature/<product-task-id>` across all nested tasks, not per-nested branches. Rationale: nested tasks in a product have interdependencies (F02 consumes F01's code), and per-nested branches would require merge-before-switch with conflict risk. The shared branch accumulates each nested task's reviewed commits; each nested task's code-review "done" commits to this branch. Quick-fix within a nested task may use a short-lived sub-branch merged back before review.
+4. **Update `current_nested_task`** — only after gates 1-2 pass, overwrite `current_nested_task` in the product `state.yaml` with the incoming task ID. Append a switch record to the product-level session block in `progress.md`: `Nested switch: <outgoing> → <incoming> at <timestamp>, outgoing status: done, worktree: clean`.
+
+This protocol is the authoritative switch mechanism; `current_nested_task` is never updated outside these gates. The workflow's `current_nested_task` field ownership (STATE_PROTOCOL.md) is exercised through this protocol on session-start resume and on nested task completion.
 
 ## State and Artifact Ownership
 
@@ -22,7 +34,7 @@ This is the single routing contract for Solo delivery. Workflows select a varian
 | `iteration`, `stage: act` | active ACT skill, immediately before mutation |
 | per-attempt terminal outcome in `iterations.log` | active ACT skill (inline verify-fast) |
 | `evidence.md` (full verification) | verify |
-| `review.md`, delivery-task `status: done` | code-review |
+| `review.md`, delivery-task `status: done`, AC `[status: done]` in spec.md | code-review |
 | product-orchestrator `status: done` | product-engineering-review, after all nested reviews and integration checks pass |
 | `.harness/FEATURES.md` aggregate status | session-end |
 | `ENGINEERING_PLAN.md` scope/order | product workflow; not a second status board |

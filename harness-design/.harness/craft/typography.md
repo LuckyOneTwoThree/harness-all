@@ -1,6 +1,6 @@
 # Typography Craft Rules
 
-> Generic craft rules (brand-agnostic) · referenced by visual-design / design-system / design-lint
+> Generic craft rules (brand-agnostic) · referenced by visual-design / design-system / verify (lint step)
 >
 > Source: Open Design craft/typography.md + typography best practices
 
@@ -73,4 +73,4 @@ Uses a 1.25 ratio (Major Third):
 
 - **design-system**: cross-check when defining the typography system
 - **visual-design**: cross-check forbidden pairings when choosing fonts
-- **design-lint**: L004 rule checks that font sizes are on the type scale
+- **verify (lint step)**: L004 rule checks that font sizes are on the type scale

@@ -107,7 +107,35 @@ Stop immediately and reassess if you observe any of:
 - The fix is a `try/except` or `if x is not None` guard around the failure point — this is symptom suppression
 - You cannot state the root cause in one sentence — you have not found the cause yet
 
-Good vs Bad 修复示例见 `Reference/good-vs-bad-fix.md`
+Good vs Bad 修复示例：
+
+Scenario: `load_config()` returns `None` under a timing race, causing `build_parser(None)` to return `None`.
+
+<Good>
+```python
+# Fix the root cause: ensure config loads before use, lock with a regression test
+def init():
+    y = load_config()
+    assert y is not None, "config must load before parser build"
+    x = build_parser(y)
+
+# Regression test locks the fix
+def test_init_loads_config_before_parser():
+    with patch("load_config", return_value={"key": "val"}):
+        x = init()
+    assert x is not None
+```
+</Good>
+
+<Bad>
+```python
+# Patch the symptom: guard None, leave the timing bug free to resurface
+def init():
+    x = build_parser(load_config())   # still None under the same race
+    if x is None:
+        x = DEFAULT_PARSER            # symptom masked, no test, silent failure
+```
+</Bad>
 
 ## Relationship with LOOP
 

@@ -18,4 +18,9 @@
 ### Evidence
 [verify output summary / test results / key decisions]
 
+### AC Change (when a newly accepted handoff supersedes a previously consumed one)
+- removed: [AC IDs in old set but not in new]
+- added: [AC IDs in new set but not in old]
+- affected_tasks: [task IDs owning removed ACs; may need re-verification or rework]
+
 ---

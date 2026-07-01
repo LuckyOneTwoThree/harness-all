@@ -9,11 +9,12 @@ default_mode: standard
 ## Route
 
 1. session-start (on-demand) + Foundation gate.
-2. Run migration's decision gate: justified replacement, complete consumer inventory, compatibility target, rollback, and sufficient safety tests.
-3. writing-plans orders replacement first, consumers incrementally, zero-usage verification, then cleanup.
-4. LOOP: migration as ACT owner with inline verify-fast (equivalence + affected tests) for one consumer/batch per attempt.
-5. After all consumers move, prove zero active usage before removing old code/config/docs.
-6. verify-full → code-review → session-end (on-demand baseline).
+2. Branch Isolation: ensure a dedicated branch or git worktree before mutation (per `engineering-pipeline.md` Canonical Path step 3).
+3. Run migration's decision gate: justified replacement, complete consumer inventory, compatibility target, rollback, and sufficient safety tests.
+4. writing-plans orders replacement first, consumers incrementally, zero-usage verification, then cleanup.
+5. LOOP: migration as ACT owner with inline verify-fast (equivalence + affected tests) for one consumer/batch per attempt.
+6. After all consumers move, prove zero active usage before removing old code/config/docs.
+7. verify-full → code-review → session-end (on-demand baseline).
 
 ## Specialization
 

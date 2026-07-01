@@ -45,9 +45,10 @@ For each selected route:
 
 1. fill its dedicated template from reviewed evidence;
 2. preserve stable IDs and include only consumer-actionable fields;
-3. apply `.harness/rules/handoff-protocol.md` and acceptance-ID protocol;
-4. create the self-contained package, run `validate-handoff.ps1`, archive prior current pointer, publish ready, and record receipt expectations;
-5. record handoff ID, manifest hash, and supersedes ID in progress.md.
+3. set `mode` in the envelope: `family` when consuming upstream PM/Design contracts, `standalone-fallback` when working without upstream handoffs (consumers use this to distinguish degraded output);
+4. apply `.harness/rules/handoff-protocol.md` and acceptance-ID protocol;
+5. create the self-contained package, run `validate-handoff.ps1`, archive prior current pointer, publish ready, and record receipt expectations;
+6. record handoff ID, manifest hash, and supersedes ID in progress.md.
 
 Never publish a draft as ready, reference producer-local files outside the package, or write the same handoff from a workflow and session-end.
 

@@ -1,6 +1,6 @@
 # Color Craft Rules
 
-> Generic craft rules (brand-agnostic) · referenced by visual-design / design-system / design-lint
+> Generic craft rules (brand-agnostic) · referenced by visual-design / design-system / verify (lint step)
 >
 > Source: Open Design craft/color.md + color theory best practices
 
@@ -74,5 +74,5 @@ Color is the core of brand identity. The second sign of AI slop is the purple gr
 
 - **design-system**: cross-check when defining the color system
 - **visual-design**: cross-check forbidden colors when choosing colors
-- **design-lint**: L001 rule checks colors come from tokens, L011-L012 check AI slop colors
-- **accessibility-audit**: dedicated contrast check
+- **verify (lint step)**: L001 rule checks colors come from tokens, L011-L012 check AI slop colors
+- **design-review (Axis 5)**: dedicated contrast check

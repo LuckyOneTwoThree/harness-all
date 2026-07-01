@@ -1,6 +1,6 @@
 # Anti AI-Slop Rules
 
-> Generic craft rules (brand-agnostic) · referenced by visual-design / design-lint / design-review
+> Generic craft rules (brand-agnostic) · referenced by visual-design / verify (lint step) / design-review
 >
 > Source: integrates the anti-AI homogenization consensus from anthropics/skills + addyosmani/agent-skills + Open Design
 
@@ -56,5 +56,5 @@ AI-generated designs have strong "homogenized defaults" — every app looks the 
 ## Check timing
 
 - **visual-design**: cross-check item by item when producing design specs
-- **design-lint**: L011-L015 rules auto-check
+- **verify (lint step)**: L011-L015 rules auto-check
 - **design-review**: Five-Axis Review's "visual hierarchy" axis check

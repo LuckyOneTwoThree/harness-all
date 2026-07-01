@@ -28,16 +28,22 @@ session-start
   → design-brief (hard gate)
   → Design System Gate (hard gate)
   → PLAN (inline, initialize LOOP state)
-  → LOOP(wireframe → verify → design-lint)            [wireframe, max 5]
-  → LOOP(visual-design → verify → design-lint)        [visual-design, max 5]
-  → LOOP(interaction-design → verify → design-lint)   [interaction-design, max 5]
-  → design-review (gate outside LOOP)
-  → accessibility-audit (gate outside LOOP)
+  → [Conditional] LOOP(wireframe → verify)            [wireframe, max 5]
+  → LOOP(visual-design → verify)        [visual-design, max 5]
+  → LOOP(interaction-design → verify)   [interaction-design, max 5]
+  → design-review (gate outside LOOP, includes accessibility audit)
   → session-end
 ```
 
-**Sequencing principle**: Structure first (wireframe) → then visual → then interaction.
+**Sequencing principle**: Structure first (when wireframe runs) → then visual → then interaction.
 Doing visual design on top of a flawed structure is a waste of time; the same applies to interaction design on top of flawed visuals.
+
+**Wireframe conditional trigger**: The wireframe LOOP is skipped by default when the project uses a component library (e.g., shadcn/ui, Ant Design, Material UI) that already guarantees structural consistency. The LOOP runs only when at least one of the following is met:
+- The page has a non-standard custom layout that the component library cannot cover
+- The user explicitly requests "see structure first" / "validate layout first"
+- The design system lacks page-level layout patterns for this page type
+
+Skipping wireframe does not skip structural validation: visual-design's verify step still checks information architecture and responsive structure.
 
 ## Detailed Steps
 
@@ -71,32 +77,32 @@ Check whether a design system exists before any wireframe/visual work:
 
 > **Task granularity**: `<task>` here is page-level or component-level. Use `<NNN>-<page-name>` (e.g., `001-login-page`) for page design, `<NNN>-<component-name>` (e.g., `002-button`) for component design. For product-level multi-page design, use `new-product-design` workflow instead, which uses `<NNN>-<product-name>` at product level and `<NNN>-<product-name>-<page-name>` per page. See LOOP.md "Task Granularity" section for full rules.
 
-### 5. LOOP 1: wireframe (max 5)
+### 5. LOOP 1: wireframe (max 5, conditional)
+
+**Trigger**: See "Wireframe conditional trigger" in the Orchestration section above. When skipped, proceed directly to LOOP 2 (visual-design).
 
 ```
-wireframe → verify → design-lint
-  ↑                       |
+wireframe → verify
+  ↑            |
   └── on failure, back to wireframe ──┘
 ```
 
 - **wireframe**: Low-fidelity wireframe (black/white/gray, validate structure)
-- **verify**: Structural integrity check + AC check
-- **design-lint**: Mechanical rule check
+- **verify**: Structural integrity check + AC check + mechanical lint rules (unified gate)
 - Failure → back to wireframe, iteration +1
 - More than 5 iterations → request human intervention
 
 ### 6. LOOP 2: visual-design (max 5)
 
 ```
-visual-design → verify → design-lint
-  ↑                          |
+visual-design → verify
+  ↑                     |
   └──── on failure, back to visual-design ┘
 ```
 
-- **visual-design**: Based on the approved wireframe, produce 2-3 visual proposals; after the user selects one, write it to docs/visual/
-- **verify**: AC item-by-item check + constitution + quick accessibility check
-- **design-lint**: Write and run a Node.js script for mechanical rule checks
-- verify or design-lint failure → back to visual-design, iteration +1
+- **visual-design**: Based on the approved wireframe (or directly on the design system when wireframe was skipped), produce variants per the visual-design skill's conditional trigger: multi-variant only when design system is incomplete or user requested exploration; otherwise single variant derived from design system
+- **verify**: AC item-by-item check + constitution + quick accessibility + mechanical lint (unified gate)
+- verify failure → back to visual-design, iteration +1
 - More than 5 iterations → request human intervention
 
 ### 7. LOOP 3: interaction-design (max 5, conditional)
@@ -109,31 +115,25 @@ visual-design → verify → design-lint
 If the AC only involves static visuals (color / spacing / typography / layout) and the page has no interactive components, skip the interaction-design LOOP and proceed directly to step 8 (design-review).
 
 ```
-interaction-design → verify → design-lint
-  ↑                          |
+interaction-design → verify
+  ↑                     |
   └──── on failure, back to interaction-design ┘
 ```
 
 - **interaction-design**: Based on the approved visual design, produce component states + state transitions + motion parameters
-- **verify**: AC check + keyboard navigation check
-- **design-lint**: Mechanical rule check
+- **verify**: AC check + keyboard navigation check + mechanical lint (unified gate)
 - Failure → back to interaction-design, iteration +1
 - More than 5 iterations → request human intervention
 
-### 8. design-review (gate outside LOOP)
+### 8. design-review (gate outside LOOP, includes accessibility audit)
 
-- Five-Axis Review (5 axes)
+- Five-Axis Review (5 axes, Axis 5 performs full WCAG 2.1 AA audit)
 - Doubt-Driven (only Critical triggers adversarial debate; Nit/FYI are recorded directly)
 - Severity Labeling
-- Output `loops/specs/<task>/evidence.md`
+- Output `loops/specs/<task>/evidence.md` + `docs/visual/accessibility-report.md`
 - Not passed → back to LOOP (fixable) or PLAN (needs re-planning)
 
-### 9. accessibility-audit (gate outside LOOP)
-
-- WCAG 2.1 AA full check
-- Not passed → back to LOOP
-
-### 10. session-end
+### 9. session-end
 
 Update `memory/progress.md` and archive the session.
 
@@ -142,9 +142,10 @@ Update `memory/progress.md` and archive the session.
 | File | Description |
 |------|------|
 | docs/visual/DESIGN_BRIEF.md | Requirements document (with AC-xxx) |
-| docs/prototype/wireframe.md | Wireframe (structural validation) |
+| docs/prototype/wireframe.md | Wireframe (structural validation) — conditional, only if wireframe LOOP ran |
 | docs/visual/<page>.md | Visual design |
 | docs/interaction/<page>.md | Interaction design |
+| docs/visual/accessibility-report.md | WCAG 2.1 AA audit report (produced by design-review Axis 5) |
 | loops/specs/<task>/spec.md | Design spec (with AC list) |
 | loops/specs/<task>/state.yaml | Loop state |
 | loops/specs/<task>/evidence.md | Validation evidence |
@@ -153,9 +154,8 @@ Update `memory/progress.md` and archive the session.
 
 ## Exit Criteria
 
-- All 3 LOOPs passed (verify + lint)
-- design-review passed
-- accessibility-audit passed
+- All triggered LOOPs passed (verify); wireframe LOOP is optional per the trigger rule
+- design-review passed (includes accessibility audit)
 - evidence.md contains a review conclusion of "passed"
 - state.yaml status=done
 
@@ -165,6 +165,6 @@ Update `memory/progress.md` and archive the session.
 |------|------|-----------------|
 | design-brief assumptions confirmation | 👤 human decision | Always pause |
 | Design System Gate resolution | 👤 human decision | Always pause |
-| visual variant selection | 👤 human decision | Always pause |
+| visual variant selection (only when multi-variant triggered) | 👤 human decision | Always pause when triggered; skipped in single-variant mode |
 | design-review Critical findings | 👤 human decision | Always pause |
 | Module boundary pauses | ⏸ exploration dialog | Controlled by exploration_mode |

@@ -86,5 +86,5 @@ Update `memory/progress.md` and archive the session.
 If the project needs a **complete** design system with component design and review (not just a skeleton), use the `design-system-setup` workflow instead, which adds:
 
 ```
-→ PLAN → LOOP(component-design → verify → design-lint) → design-review
+→ PLAN → LOOP(component-design → verify) → design-review
 ```

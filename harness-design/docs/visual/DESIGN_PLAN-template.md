@@ -45,7 +45,7 @@
 
 **Design rules**:
 - Shared components are designed first in the component-design LOOP (driven by design-system-setup or this workflow)
-- Pages must reuse shared components; re-creating variants with the same semantics is prohibited (enforced by design-lint L006-L008)
+- Pages must reuse shared components; re-creating variants with the same semantics is prohibited (enforced by verify lint step L006-L008)
 - Page-specific components (used by only one page) are designed within that page's LOOP
 
 ## 4. Page Dependency Graph
@@ -135,7 +135,7 @@ Dashboard (P03) → Click avatar → Settings (P04) → Modify → Save → Dash
 | Navigation consistency | Header/Footer structure identical across all pages, only active state differs | Grep all docs/visual/*.md for nav structure |
 | Flow completeness | Each flow in Section 5 must be navigable end-to-end | Manual walkthrough + flow.md diagram |
 | Component reuse | Shared components (Section 3) must not be re-implemented per page | Cross-reference component-contract.json used_by |
-| Token consistency | All pages use tokens from the same tokens.json, no hardcoded hex | design-lint L001-L005 per page + product-level Grep |
+| Token consistency | All pages use tokens from the same tokens.json, no hardcoded hex | verify lint step L001-L005 per page + product-level Grep |
 | Responsive consistency | Breakpoint behavior consistent across pages (e.g., all use mobile-first) | Review docs/visual/*.md responsive sections |
 | Interaction consistency | Same component has same motion params across pages (e.g., Button hover 150ms) | Review docs/interaction/*.md motion sections |
 

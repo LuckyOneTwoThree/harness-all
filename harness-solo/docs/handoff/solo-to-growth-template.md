@@ -7,6 +7,7 @@ created_at: "<ISO-8601>"
 source_revision: "<commit-or-artifact-revision>"
 supersedes: null
 status: draft
+mode: family
 ac_ids: []
 artifacts: []
 ---

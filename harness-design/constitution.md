@@ -60,7 +60,7 @@ All design drafts (visual / interaction / prototype) must mark their WCAG compli
 - WCAG 2.1 A / AA / AAA
 - Non-compliant items must list the reason and remediation plan
 
-**Verification**: `accessibility-audit` skill check + `verify` skill comprehensive validation.
+**Verification**: `design-review` skill Axis 5 WCAG audit + `verify` skill comprehensive validation.
 
 ### Principle 7: Exploration-First Cannot Be Bypassed
 

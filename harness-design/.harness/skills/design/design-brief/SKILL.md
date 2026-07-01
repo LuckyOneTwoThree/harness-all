@@ -200,4 +200,4 @@ DESIGN_BRIEF.md is treated as passed only when ALL of the following are satisfie
 - Not run inside LOOP (runs in the pre-LOOP design-brief stage)
 - The AC-xxx list produced is consumed directly by the LOOP.md PLAN stage and written into spec.md
 - The Aesthetic Direction produced is consumed by the visual-design skill
-- The Anti AI-Slop Requirements produced are checked by the design-lint skill
+- The Anti AI-Slop Requirements produced are checked by the verify skill's lint step

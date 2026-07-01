@@ -58,6 +58,8 @@ Validate against `state.schema.json`. `ready` is not a valid status.
 
 5. **Gate** — unresolved material decisions become `needs-human` before ACT. Otherwise begin the selected ACT skill.
 
+**Session boundary recommendation**: for deep/long tasks, consider starting a new session to execute this plan. Plan-stage context (exploration, alternatives, discarded options) can pollute execution-stage focus. The spec + state.yaml carry everything needed to resume; no context loss occurs across a clean session boundary.
+
 ## Replanning
 
 When an active task returns to PLAN:
