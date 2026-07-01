@@ -46,6 +46,7 @@ Context must be loaded before the session begins; working with "amnesia" is not 
    - If `growth-to-pm.md` exists (from harness-growth), report the growth data feedback.
    - If `design-to-pm.md` exists, validate it, report its feedback IDs, and route accepted consumption to prd-orchestrator phase 0.
    - If valid unconsumed handoffs exist, remind the user to prioritize them. Report invalid handoffs precisely and do not consume them partially.
+   - After successful consumption of any inbound handoff, write `docs/handoff/receipts/<handoff_id>-receipt.json` with `consumer: harness-pm`, `consumed_at`, `manifest_sha256`, `status` (`accepted`/`rejected`), and `reasons`. Never edit the producer contract.
 
 6. **Confirm task scope**
    Confirm with the user what this session will accomplish, and write a new session block to progress.md:

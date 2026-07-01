@@ -27,6 +27,12 @@ This skill is a **frontend-specific supplement to the verify skill** and does no
 - Integration tests (API integration) → handled by the tdd skill
 - **Frontend structure/accessibility/build verification** → handled by this skill
 
+## DOM-Level Checks (opt-in)
+
+This skill performs **static code checks only** by default (zero-dependency principle). DOM-level WCAG checks (live focus trap, runtime ARIA, screen reader output, dynamic focus order) require a running DOM and are **opt-in**:
+- If no E2E tool is configured (per `constitution.md` dependency whitelist): record `DOM-level WCAG checks skipped (no E2E tool configured; static subset verified)` in the returned results — explicit, auditable skip.
+- If an E2E tool is configured (approved in `constitution.md`): invoke this skill with `dom_check: true` flag to run dynamic DOM-level checks. See `Reference/frontend-check-patterns.md` §Opt-in E2E mode for details.
+
 ## Process
 
 1. **Confirm the frontend tech stack**
@@ -40,7 +46,7 @@ This skill is a **frontend-specific supplement to the verify skill** and does no
      <build command, e.g. npm run build>
      ```
    - Show the full output; do not just say "build passed"
-   - Build failure → return to tdd to fix
+   - Build failure → route to systematic-debugging for root-cause analysis (per engineering-pipeline.md Routing Rules: unknown cause → systematic-debugging)
 
 3. **Type check** (if TypeScript)
    - Run the type check command:

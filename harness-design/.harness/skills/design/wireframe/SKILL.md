@@ -15,7 +15,7 @@ description: Produces low-fidelity wireframes for structure validation. Use befo
 - docs/design-system/DESIGN.md
 
 ## Outputs
-- docs/prototype/wireframe.md
+- docs/prototype/wireframe-<page>.md (per-page; supports product-level multi-page workflows)
 
 ## Overview
 

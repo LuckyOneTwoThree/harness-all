@@ -10,7 +10,6 @@ description: Maintain the memory directory, execute retention policy, prevent pr
 - When memory files exceed thresholds
 
 ## Inputs
-- .harness/loops/LOOP.md
 - .harness/skills/meta/session-end/SKILL.md
 
 ## Outputs

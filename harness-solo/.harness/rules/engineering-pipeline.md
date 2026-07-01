@@ -33,6 +33,7 @@ This protocol is the authoritative switch mechanism; `current_nested_task` is ne
 |---|---|
 | `spec.md`, initial `state.yaml` | writing-plans |
 | `iteration`, `stage: act` | active ACT skill, immediately before mutation |
+| `substage` (Solo only) | active ACT skill (inline-passed/inline-failed/awaiting-full) or verify (full-running/full-passed/full-failed); see Solo LOOP.md substage table |
 | per-attempt terminal outcome in `iterations.log` | active ACT skill (inline verify-fast) |
 | `evidence.md` (full verification) | verify |
 | `review.md`, delivery-task `status: done`, AC `[status: done]` in spec.md | code-review |

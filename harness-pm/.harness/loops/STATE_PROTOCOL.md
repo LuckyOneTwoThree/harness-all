@@ -60,6 +60,7 @@ Forbidden examples: `done → running`, `failed → retrying`, or any execution 
 | iteration | Domain execution stage, once per attempt |
 | stage | The stage currently entered |
 | status / last_error / last_error_at | Current stage based on observed outcome |
+| substage | Active ACT skill (inline-passed/inline-failed/awaiting-full) or verify (full-running/full-passed/full-failed); Solo-specific, documented in Solo's LOOP.md |
 | hard_limit_reached | Verification or explicit user-authorized reset |
 | current_nested_task | Product-level orchestration only; aggregate progress remains in the canonical task board |
 

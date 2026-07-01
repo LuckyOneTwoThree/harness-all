@@ -106,7 +106,7 @@ Follow `.harness/loops/STATE_PROTOCOL.md`: the active ACT skill owns the per-att
 
 ## Relationship with LOOP
 
-Triggered inside LOOP as a PLAN prerequisite (before refactor/migration) or outside LOOP as a standalone test-adding task. See `.harness/loops/LOOP.md`.
+Triggered inside LOOP as a PLAN prerequisite (before refactor/migration/optimize) or outside LOOP as a standalone test-adding task. See `.harness/loops/LOOP.md`.
 
 ## Division of Labor with Other Skills
 | Skill | Responsibility |

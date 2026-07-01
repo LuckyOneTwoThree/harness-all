@@ -17,6 +17,16 @@ harness-solo is a **pure documentation / rules framework** and introduces no run
 
 **Verification**: No `package.json` / `requirements.txt` / `Cargo.toml` or other runtime dependency manifests exist at the repository root.
 
+### Approved Dependency Whitelist (optional, user-governed)
+
+The zero-dependency principle applies to the framework itself. A **target project** using harness-solo may approve specific runtime dependencies (e.g., an E2E testing tool for DOM-level WCAG verification) by registering them here. Each entry requires: tool name, approver, date, scope, and review point.
+
+| Tool | Approver | Date | Scope | Review Point |
+|------|----------|------|-------|---------------|
+| _(empty — add user-approved exceptions here, e.g., Playwright for DOM-level accessibility E2E checks)_ | | | | |
+
+When a tool is listed here, skills may invoke its opt-in capabilities (e.g., `webapp-testing` with `dom_check: true`). When the list is empty, all DOM-level checks that require a running DOM are explicitly skipped with an auditable evidence record.
+
 ### Principle 2: Agent Tools First, Not Bound to bash
 
 All framework processes must work in a bash-free environment (e.g., Windows PowerShell).

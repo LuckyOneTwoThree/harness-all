@@ -209,7 +209,7 @@ hard_limit_reached: <bool>                 # True after failed attempt 10 or blo
 | current_task | Write (init) | No change | No change | No change |
 | iteration | Write (0) | Write (+1) | No change | No change |
 | stage | Write (plan) | Write (design) | Write (verify) | Write (review) |
-| status | Write (running) | Write (running/retrying) | Write (retrying/done) | Write (done/retrying) |
+| status | Write (running) | Write (running/retrying) | Write (retrying/done) | Write (done/retrying/blocked) |
 | exploration_mode | Write (workflow default_mode) | No change | No change | No change |
 | last_error | Write ("") | Write (on failure / cleared on success) | Write (on failure / cleared on success) | Write (on failure / cleared on success) |
 | started_at | Write (init) | No change | No change | No change |
@@ -308,7 +308,7 @@ Before claiming a task complete, the Agent **must**:
 | Critical (Doubt-Driven adversarial finding) | `status: blocked`, surface to user for decision (may require spec change or scope reduction) | Does not consume iteration | No retry limit — requires explicit user resolution |
 | Needs replanning (direction deviation / requirement misunderstanding) | Back to PLAN (`stage: plan`) | PLAN re-entry resets the design but preserves iteration count for limit tracking | After 2 PLAN re-entries from review failure, escalate to `needs-human` |
 
-3. Iteration accounting: design-review failure itself does not increment `iteration`, but any subsequent re-DESIGN attempt increments as normal (per the inside-LOOP rule). The consecutive-review-failure counter tracks how many times design-review has failed and sent back to the same LOOP without exiting — reset to 0 when a LOOP cycle exits successfully (verify pass) and re-enters review.
+3. Iteration accounting: design-review failure itself does not increment `iteration`, but any subsequent re-DESIGN attempt increments as normal (per the inside-LOOP rule). The consecutive-review-failure counter is tracked by counting `review-failure` markers in `iterations.log` for the current LOOP cycle (no separate state.yaml field needed). Reset occurs when a LOOP cycle exits successfully (verify pass) and re-enters review — the count is derived fresh from iterations.log on each review entry.
 
 ### Checkpoint Resume
 

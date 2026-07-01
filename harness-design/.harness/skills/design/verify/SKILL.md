@@ -174,7 +174,7 @@ A constitution/brand-system override may downgrade a named rule (L011-L015) when
 ### 8. Update state.yaml
 
 ```yaml
-iteration: <N+1>
+# iteration is NOT incremented by verify — only the DESIGN stage increments it (per LOOP.md and STATE_PROTOCOL.md)
 stage: verify
 status: retrying  # or running (on pass)
 last_error: "AC-003 not satisfied; L001: 2 hardcoded hex"  # or "" (on pass)
@@ -192,9 +192,9 @@ last_error_at: "<ISO 8601>"
 1. Write failure info to `state.yaml` `last_error`
 2. Append a line to `iterations.log`
 3. Analyze the failure reason:
-   - AC failure or fixable lint error → return to DESIGN
+   - AC failure or fixable lint error → return to DESIGN (the next DESIGN attempt increments iteration, not verify)
    - Needs replanning (misunderstood requirements, direction drift) → return to PLAN
-4. Iteration count +1; check whether max iterations exceeded
+4. Check whether max iterations exceeded (iteration was already incremented by the DESIGN stage; verify does not increment)
 
 ## Common Rationalizations
 

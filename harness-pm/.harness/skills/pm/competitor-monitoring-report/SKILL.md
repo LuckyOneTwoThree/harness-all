@@ -126,8 +126,8 @@ Assemble the above content into a complete monitoring report.
 
 | File | Path | Description |
 |------|------|------|
-| Competitor monitoring report | `docs/monitoring/diagnosis-report.md ("Competitor Monitoring Report" section)` | Human-readable complete report |
-| Structured data | `docs/monitoring/diagnosis-report.md ("Competitor Monitoring Report" section)` | Machine-consumable structured data |
+| Competitor monitoring report | `docs/monitoring/diagnosis-report.md ("Competitor Monitoring Report" section)` | Human-readable complete report (contains both narrative and embedded structured data) |
+| Structured data | `docs/monitoring/competitor-monitoring.json` | Machine-consumable structured data (separate JSON file for downstream programmatic consumption) |
 
 **Output Schema**:
 

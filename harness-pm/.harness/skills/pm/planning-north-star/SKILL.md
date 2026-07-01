@@ -18,6 +18,8 @@ description: Use when you need to determine product core metrics, OKR North Star
 
 1. **Multi-candidate comparison** — Generate 3-5 candidate metrics, score them across four dimensions, and recommend; humans make the final choice
 2. **Value-Business dual anchor** — The North Star must link to both user value and business success; neither can be missing
+3. **Input variables must be actionable** — The recommended metric must be decomposed into 3 quantifiable, trackable, and influenceable input variables
+4. **Gaming-resistant design** — Assess the risks of the metric being gamed, becoming invalid, or misleading, and provide warnings
 
 ## Ownership Boundary (division of labor with metrics-system)
 
@@ -33,8 +35,6 @@ This skill owns **North Star SELECTION** only:
 - If metrics-system's validation score < 0.6, it suggests re-selecting — in that case, return to this skill for re-selection.
 
 **Routing rule**: planning-north-star runs first (selection) → metrics-system runs second (validation + breakdown). Do NOT invoke metrics-system's "North Star Not Defined" auto-recommendation branch when planning-north-star has already produced candidates.
-3. **Input variables must be actionable** — The recommended metric must be decomposed into 3 quantifiable, trackable, and influenceable input variables
-4. **Gaming-resistant design** — Assess the risks of the metric being gamed, becoming invalid, or misleading, and provide warnings
 
 ## Interaction Mode
 👤→🤖 Human executes, AI assists

@@ -8,7 +8,7 @@ Acceptance criteria are durable cross-framework identifiers, not list positions.
 - Page-scoped design criterion: `DAC-<page>-<sequence>`, for example `DAC-P03-002`.
 - Cross-page design criterion: `DAC-GLOBAL-<sequence>`.
 
-Each registry entry also records `source_handoff_id`, `scope`, `revision_introduced`, optional `related_ac_ids`, and lifecycle status.
+Each AC/DAC ID is tracked across `spec.md`, `evidence.md`, and handoff envelopes (no separate registry file). The combined record across these files captures `source_handoff_id`, `scope`, `revision_introduced`, optional `related_ac_ids`, and lifecycle status.
 
 ## Rules
 

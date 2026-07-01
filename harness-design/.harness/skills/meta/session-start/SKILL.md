@@ -44,7 +44,8 @@ Context must be loaded before the session begins; working with "amnesia" is not 
    - If `pm-to-design.md` exists, report to the user: "Found handoff document (from harness-pm). Consume it in this session?"
    - Handoff documents may include PRD paths, key decisions, and open items; they are important input for design-brief
    - Resolve PRD and research artifacts from inside the package; producer-local `docs/...` paths outside it are invalid
-   - Report valid unconsumed handoffs. Report exact validation failures and do not consume a package partially
+   - Report valid unconsumed handoffs. Report exact validation failures and do not consume a package partially.
+   - After successful consumption of `pm-to-design.md`, write `docs/handoff/receipts/<handoff_id>-receipt.json` with `consumer: harness-design`, `consumed_at`, `manifest_sha256`, `status` (`accepted`/`rejected`), and `reasons`. Never edit the producer contract.
 
 ### 5a. AC Change Impact Analysis (when supersedes an already-consumed handoff)
 

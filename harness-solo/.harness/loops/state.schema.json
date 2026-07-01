@@ -18,7 +18,8 @@
     "substage": { "type": "string" },
     "exploration_mode": { "type": "string", "enum": ["deep", "standard", "skip"] },
     "hard_limit_reached": { "type": "boolean" },
-    "current_nested_task": { "type": "string" },
+    "current_nested_task": { "type": "string", "pattern": "^[0-9]{3}-[a-z0-9][a-z0-9-]*$" },
+    "nested_progress": { "type": "string", "description": "Product-level progress overview; written by product-level orchestration when current_nested_task is active." },
     "ac_change": {
       "type": "object",
       "description": "Recorded by session-start 1a when a newly accepted handoff supersedes a previously consumed one. Null or absent when no AC-level change occurred.",

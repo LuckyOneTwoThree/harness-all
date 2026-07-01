@@ -70,7 +70,12 @@ The linear 5 Whys chain can stall when the bug spans modules or involves hidden 
 
 ## State Maintenance
 
-Follow `.harness/loops/STATE_PROTOCOL.md`: the active ACT skill owns the per-attempt terminal outcome; verify owns `evidence.md`.
+This skill is a **diagnostic skill invoked BY the active ACT skill or by LOOP failure routing** — it is NOT itself an ACT skill. It does not increment iteration, does not own per-attempt terminal outcomes, and does not perform inline verify-fast. It returns to LOOP for verify-full after the root-cause fix + regression test.
+
+**State.yaml writes**:
+- On entry: write `stage: debug`, `status: retrying`, `last_error: <symptom>`. Do NOT increment iteration.
+- On exit (root cause fixed + regression test passes): write `stage: verify`, `status: running`, `substage: awaiting-full`, clear `last_error`. Append the terminal outcome to iterations.log (see format below). Control returns to LOOP for verify-full.
+- If root cause not found after 5 Whys: write `status: needs-human` and report to user.
 
 **Update iterations.log (must append, overwriting is forbidden)**:
 - Tool approach: first Read the current iterations.log → append the new line → Write it back

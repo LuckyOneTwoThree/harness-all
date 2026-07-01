@@ -72,7 +72,7 @@ stages:
 Skill: decision-dace
 Input:
   okr_data: User-provided
-  kr_progress: analysis-anomaly → anomaly_report.json
+  kr_progress: docs/strategy/OKR.md (KR achievement progress from metrics tracking)
   experiment_result: experiment-execution → experiment_result.json
   analysis_result: analysis-anomaly → anomaly_report.json
   business_context: User-provided (optional)

@@ -21,7 +21,7 @@ description: Owns verify-full (final delivery evidence gate); fast verification 
 
 ## Mode Selection
 
-- **verify-fast**: inlined into the ACT skill (test-driven-development / performance-optimization / migration). The ACT owner performs the 4 fast-verify duties (test validation / AC-DAC check / changed-file security scan / append terminal outcome) inline before declaring the attempt outcome. See each ACT skill's "Inline Verify-Fast" step.
+- **verify-fast**: inlined into the ACT skill (test-driven-development / performance-optimization / migration). The ACT owner performs the 4 fast-verify duties (test validation / AC-DAC check / changed-file security scan / append terminal outcome) inline before declaring the attempt outcome. See each ACT skill's "Inline Verify-Fast" step. (Note: `systematic-debugging` is NOT an ACT skill — it is a diagnostic skill invoked by failure routing; it does not perform inline verify-fast.)
 - **verify-full**: owned by this skill; runs once after all planned outcomes pass fast verification. Scope is the complete change.
 
 Do not run verify-full after every task — only once before code-review.
@@ -32,7 +32,7 @@ Run once, in this order (8 sub-checks merged into 4 groups):
 
 1. **Tests + AC/DAC** — full test command with actual runner output/summary; every stable AC/DAC has test/assertion/demo evidence (design-only criteria route to Design rather than being guessed).
 2. **Constitution + Security** — dependencies, API tests, migrations, project clauses, unrelated-file check; changed-file patterns from `security-patterns.md` with explicit dispositions.
-3. **Entropy + Frontend + Documentation** — compare exact current metrics to baseline using `entropy-baseline.md` (do not estimate LOC from file count); when frontend files changed, invoke webapp-testing once (semantic contract, binding hash/revision, token use, accessibility, build, typecheck, lint); changed public API/schema/config has documentation or explicit n/a reason.
+3. **Entropy + Frontend + Documentation** — compare exact current metrics to baseline using `entropy-baseline.md` (do not estimate LOC from file count); when frontend files changed, invoke webapp-testing once (semantic contract, binding hash/revision, token use, accessibility, build, typecheck, lint); if no E2E tool is configured, record `DOM-level WCAG checks skipped (no E2E tool configured; static subset verified)` in evidence.md; changed public API/schema/config has documentation or explicit n/a reason.
 4. **Evidence** — overwrite evidence.md using the canonical headings and actual outputs.
 
 Full pass writes `stage: verify`, `status: running`, `substage: full-passed`, and clears error: verified, awaiting code review. It does **not** mark done.

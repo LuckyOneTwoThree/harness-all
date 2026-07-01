@@ -137,14 +137,9 @@ Draw a perceptual map based on two core dimensions.
 
 ## Output
 
-**Storage path**: `docs/discovery/market-analysis.md ("Competitive Analysis" section)`
+**Storage path**: `docs/discovery/market-analysis.md ("Competitive Analysis" section)` — primary output (human-readable report section).
 
-**Output files:**
-
-| File | Format | Description |
-|------|------|------|
-| competitor-analysis.json | JSON | Structured data (including intel data + quadrant data + report summary) |
-| competitor-analysis.md | Markdown | Complete competitive analysis report |
+**Structured data**: `competitor-analysis.json` (intermediate artifact, consumed by downstream skills for quadrant/intel data; not the primary deliverable).
 
 > See [Reference/schema.md](./Reference/schema.md) for the competitor-analysis.json Output Schema and Output Validation Rules.
 

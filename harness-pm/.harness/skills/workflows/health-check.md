@@ -48,7 +48,8 @@ default_mode: skip
 │     prediction + bottleneck             │
 │     identification)                     │
 │                                         │
-│  Output: docs/monitoring/health-check-report.md │
+│  Output: docs/monitoring/diagnosis-report.md │
+│  ("Health Diagnosis" section)         │
 └────────┬────────────────────────────────┘
          ▼
 ┌─────────────────────────────────────────┐
@@ -65,7 +66,8 @@ default_mode: skip
 │    (Quick scan of competitor dynamics,  │
 │     not deep analysis)                  │
 │                                         │
-│  Output: docs/monitoring/competitor-monitoring-report.md │
+│  Output: docs/monitoring/diagnosis-report.md │
+│  ("Competitor Monitoring Report" section) │
 └────────┬────────────────────────────────┘
          ▼
 ┌─────────────────────────────────────────┐

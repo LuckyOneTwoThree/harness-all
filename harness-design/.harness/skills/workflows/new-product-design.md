@@ -93,12 +93,12 @@ Produce `docs/visual/DESIGN_PLAN.md` based on the `templates/DESIGN_PLAN-templat
    - **Section 9 Design System Dependency**: confirm gate passed
    - **Section 10 Key Decisions**: record major design decisions and their rationale
    - **Section 11 Open Items**: list unresolved questions and follow-ups
-5. Initialize product-level `loops/specs/<product-task>/state.yaml` (stage=plan, iteration=0, status=running, substage=product-plan)
+5. Initialize product-level `loops/specs/<product-task>/state.yaml` (stage=plan, iteration=0, status=running)
 6. **Pre-generate per-page spec skeletons**: For each page in Section 2, create `loops/specs/<product-task>-<page-name>/spec.md` containing:
    - Page ID + page name + priority (from DESIGN_PLAN.md Section 2)
    - AC-xxx list for this page (extracted from product-level DESIGN_BRIEF.md, filtered to page-relevant ACs)
    - DAC-xxx placeholder (to be filled during per-page LOOP if design-specific ACs emerge)
-   - Initial `state.yaml` (stage=design, iteration=0, status=pending)
+   - Initial `state.yaml` (stage=design, iteration=0, status=running)
    
    This eliminates the per-page PLAN step. When a page enters its LOOP, the Agent directly loads the pre-generated spec.md, does a quick confirmation (< 30s), and starts visual-design. If page-specific ACs need adding, the Agent appends them in-place without a separate PLAN step.
 7. **Create unified lint script**: Write `loops/specs/<product-task>/lint-all.mjs` once, parameterized to accept a page file path. Each per-page verify calls this script with the current page's path instead of writing a new one-off script. The script implements L001-L015 per the verify skill's lint rule list.
@@ -138,7 +138,7 @@ For each page in DESIGN_PLAN.md Section 6 execution order:
    - LOOP(interaction-design → verify) [interaction-design, max 5] — conditional per new-design's interaction-design LOOP trigger rules
    - **No per-page design-review** — deferred to product-level unified design-review (step 8)
 4. After each page's LOOPs pass, update DESIGN_PLAN.md Section 2 Status column (pending → loop-passed)
-5. Update product-level state.yaml substage (e.g., `substage: page-P03`)
+5. Update product-level state.yaml `current_nested_task` (e.g., `current_nested_task: <product-task>-<page-name>`)
 
 **Why no per-page design-review?** When pages share the same design system, Axis 1-4 (visual hierarchy / spacing / color / component consistency) review criteria are identical across pages. A unified product-level design-review (step 8) scans all pages in one fresh-context sub-agent call, emits per-page findings, and avoids N redundant sub-agent invocations. Per-page design-review is reserved for pages with non-standard layouts or custom interactions flagged by the unified review.
 

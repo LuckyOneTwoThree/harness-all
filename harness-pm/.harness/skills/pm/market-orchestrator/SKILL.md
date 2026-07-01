@@ -148,7 +148,7 @@ Downstream handoff:
 | Gate | Condition | Not-Passed Handling |
 |------|------|------------|
 | Stage 1 complete | tam-som.json + pest.json are both generated and non-empty | Provide additional category keywords and target market information, or check sub-skill execution results |
-| Stage 2 complete | competitor-analysis.json + competitor-analysis.md are both generated and non-empty | Check whether the competitor list is sufficient or whether upstream data is complete |
+| Stage 2 complete | `docs/discovery/market-analysis.md` ("Competitive Analysis" section) is generated and non-empty | Check whether the competitor list is sufficient or whether upstream data is complete |
 | Stage summary generated | output/phase-reports/market-orchestrator.json is generated and all 6 structural sections are non-empty | Regenerate after supplementing missing structural sections |
 
 ## Human Decision Points

@@ -296,5 +296,5 @@ Write to `loops/specs/<task>/evidence.md`:
 
 - Out-of-LOOP unified gate (former design-review + accessibility-audit merged); not run inside LOOP (avoids sub-agent per iteration—too costly)
 - Inside LOOP, verify does quick checks (AC + quick a11y + lint); design-review does final review including WCAG 2.1 AA static-checkable subset (DOM-level checks deferred to harness-solo verify)
-- On failure: fixable → return to LOOP for re-DESIGN; needs replanning → return to PLAN; does not consume iterations
+- On failure: fixable → return to LOOP for re-DESIGN; critical (Doubt-Driven adversarial finding) → set `status: blocked`, surface to user for decision; needs replanning → return to PLAN; does not consume iterations
 - On pass, proceeds directly to handoff

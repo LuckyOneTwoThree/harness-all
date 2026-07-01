@@ -71,7 +71,7 @@ TDD owns the per-attempt fast verification inline (verify-fast is no longer a se
 4. **Append terminal outcome** — append exactly one terminal PASSED/FAILED line to `iterations.log` for this attempt.
 
 On pass: `stage: verify`, `status: running`, `substage: inline-passed`, clear error. Continue to the next planned outcome; set `substage: awaiting-full` when all planned outcomes are done and handing off to verify-full.
-On failure: `stage: verify`, `status: retrying`, `substage: inline-passed`, concrete error, then route by cause (see Failure Handling). At the recommended failed-attempt limit, set `needs-human`. A failed attempt 10 triggers the hard breaker.
+On failure: `stage: verify`, `status: retrying`, `substage: inline-failed`, concrete error, then route by cause (see Failure Handling). At the recommended failed-attempt limit, set `needs-human`. A failed attempt 10 triggers the hard breaker.
 
 Do not append a second attempt record. This inline step writes the one terminal outcome.
 

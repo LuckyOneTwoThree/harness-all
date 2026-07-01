@@ -29,7 +29,7 @@ Answer the following questions. If any item is not satisfied → do not introduc
 
 - [ ] **Is it really needed?** Can it be replaced with under 50 lines of code or existing primitives?
 - [ ] **Is it actively maintained?** Most recent commit < 6 months, with ongoing maintenance
-- [ ] **Download volume?** Enough users to validate it (avoid tyquat / abandoned-package risk)
+- [ ] **Download volume?** Enough users to validate it (avoid typosquat / abandoned-package risk)
 - [ ] **Known CVEs?** `npm audit` / `pip-audit` shows no critical/high vulnerabilities
 - [ ] **Constitution compliance?** Check the dependency principles in `constitution.md` (e.g. for zero-runtime-dependency projects, reject outright)
 

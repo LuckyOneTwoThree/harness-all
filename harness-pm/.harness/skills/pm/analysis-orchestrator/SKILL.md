@@ -58,7 +58,7 @@ stages:
 
   - id: phase-2
     name: "Funnel Analysis"
-    parallel_with: [phase-3]
+    depends_on: []
     skills: [analysis-funnel]
     gate:
       condition: "Core business funnel defined and data complete"
@@ -66,7 +66,7 @@ stages:
 
   - id: phase-3
     name: "Retention Analysis"
-    parallel_with: [phase-2]
+    depends_on: []
     skills: [analysis-retention]
     gate:
       condition: "At least 1 Aha Moment candidate behavior produced"

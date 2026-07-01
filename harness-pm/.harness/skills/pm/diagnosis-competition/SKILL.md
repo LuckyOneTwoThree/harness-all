@@ -23,13 +23,13 @@ description: Used when tracking competitor dynamics and formulating response str
 
 1. **Feature changes are signals not noise**: Each competitor feature change reflects their strategic intent; the key is to identify intent rather than list changes
 2. **Advantages are dynamic not static**: Competitive advantages are constantly changing; yesterday's lead does not guarantee tomorrow's lead
+3. **Response strategies must be trackable**: The value of a strategy lies in execution and effectiveness validation, rather than staying at the recommendation level
 
 ## Ownership Boundary (vs competitor-monitoring-report)
 
 - **This skill (phase-2)**: real-time tracking — feature changes, advantage assessment, immediate response strategy, effectiveness tracking. Writes tracking data INTO `docs/monitoring/diagnosis-report.md`.
 - **competitor-monitoring-report (phase-3, downstream)**: periodic report assembly + market strategy analysis. Consumes this skill's output; assembles final structured report.
 - **Routing**: diagnosis-competition (phase-2) → competitor-monitoring-report (phase-3). Do NOT invoke the report skill's threat/response steps independently — they consume this skill's output.
-3. **Response strategies must be trackable**: The value of a strategy lies in execution and effectiveness validation, rather than staying at the recommendation level
 
 ## Interaction Mode
 

@@ -14,7 +14,7 @@ Use for incorrect existing behavior. If the requested behavior is new rather tha
 2. Branch Isolation: ensure a dedicated branch or git worktree before mutation (per `engineering-pipeline.md` Canonical Path step 3).
 3. systematic-debugging until the symptom is reproducible and the root-cause hypothesis is evidence-backed.
 4. writing-plans with reproduction, affected surface, non-goals, and rollback.
-5. LOOP: test-driven-development fixes the root cause with inline verify-fast (regression test + affected suite required).
+5. LOOP: systematic-debugging fixes the root cause (reproduce + fix + regression test) with inline verify-fast (regression test + affected suite required).
 6. verify-full, code-review, session-end (on-demand baseline).
 
 ## Specialization
