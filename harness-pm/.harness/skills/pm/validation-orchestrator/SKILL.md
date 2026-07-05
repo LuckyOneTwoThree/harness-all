@@ -97,7 +97,7 @@ stages:
 ```
 Skill: validation-assumption-map
 Inputs:
-  design_output: User-provided or harness-design output (optional)
+  design_output: User-provided design assets (Figma/v0/md/image paths, optional)
   prd: docs/product/PRD.md
 Output: docs/product/PRD.md ("Assumption Map" section)
 Validation: Maximum risk hypothesis identified, at least 1 hypothesis per feature point
@@ -109,7 +109,7 @@ Mode: 🤖
 ```
 Skill: validation-mvp
 Inputs:
-  design_output: User-provided or harness-design output (optional)
+  design_output: User-provided design assets (Figma/v0/md/image paths, optional)
   assumption_map: docs/product/PRD.md ("Assumption Map" section)
   resource_constraints: Optional
 Output: docs/product/PRD.md ("MVP Plan" section)
@@ -137,7 +137,7 @@ Skill: validation-usability
 Inputs:
   test_plan: docs/product/PRD.md ("Assumption Map" section)
   participants: User-provided
-  test_scenarios: User-provided or harness-design output
+  test_scenarios: User-provided design assets (Figma/v0/md/image paths)
   experiment_method: docs/metrics/experiment-report.md ("Experiment Design" section)
 Output: docs/product/PRD.md ("Usability Testing" section)
 Validation: Problem severity grading reasonable (P0/P1/P2/P3), insights correspond to assumption map

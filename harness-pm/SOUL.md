@@ -20,16 +20,16 @@ Engineering development / UI design / growth operations are handled by other har
 
 ## Memory protocol
 
-- **Session start**: read `memory/progress.md` for context
-- **Session end**: update `memory/progress.md`, then follow the `session-end` SKILL.md steps to archive (cross-platform, does not depend on bash)
+- **Session start**: read `memory/progress.md` for context; read `memory/index.json` (if present) to discover archived sessions
+- **Session end**: update `memory/progress.md`, then delegate archiving to `memory-maintenance` when retention thresholds are exceeded (cross-platform, does not depend on bash)
 - **Important findings**: write to `memory/knowledge-base.md`
 
 > **Session definition**: Session = one Loop from when the Agent receives a task to when it claims completion.
 > session-start = load state before the Loop begins; session-end = archive after the Loop ends.
 > "Single session" is equivalent to "single Loop" in entropy-check.
 >
-> **session-end hard directive**: after updating progress.md, you must follow the archiving steps in `session-end` SKILL.md.
-> Archiving logic (line count detection + splitting) is executed by the Agent following SKILL.md instructions, without depending on external bash scripts, ensuring cross-platform availability on Windows/macOS/Linux.
+> **session-end hard directive**: after updating progress.md, check retention thresholds. If exceeded, invoke `memory-maintenance` as the sole owner of progress/knowledge/iteration/archive rotation — session-end does not implement a second archive algorithm.
+> Archiving logic (line count detection + splitting + index rebuild) is executed by `memory-maintenance` following SKILL.md instructions, without depending on external bash scripts, ensuring cross-platform availability on Windows/macOS/Linux.
 > `.harness/scripts/*.sh` serve only as optional fallbacks (executable when bash is available, not mandatory).
 
 ## Product values

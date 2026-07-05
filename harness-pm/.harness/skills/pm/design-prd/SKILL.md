@@ -66,9 +66,9 @@ At skill start, detect which mode to enter:
 **Key constraints**: MUST NOT overwrite "Keep" content; MUST NOT auto-correct UI overreach without approval; MUST NOT re-challenge decided issues; MUST assign stable AC-xxx IDs; MUST compute source_sha256 from final PRD.md.
 
 **Key Output Requirements**:
-- **entities describe business semantics**: define identity, lifecycle, business attributes, relationships, retention, volume, and compliance constraints. Harness-solo owns physical schema, indexes, storage types, and migrations.
+- **entities describe business semantics**: define identity, lifecycle, business attributes, relationships, retention, volume, and compliance constraints. Harness-engineering owns physical schema, indexes, storage types, and migrations.
 - **pages[].data_requirements describe information needs**: state what information and business operations a user needs, not API paths, cache strategy, or database fields.
-- **interfaces describe business capabilities**: PM may specify actors, inputs/outputs, invariants, scale, latency expectations, and failure impact. Harness-solo owns endpoints, protocols, error codes, dependencies, and implementation design.
+- **interfaces describe business capabilities**: PM may specify actors, inputs/outputs, invariants, scale, latency expectations, and failure impact. Harness-engineering owns endpoints, protocols, error codes, dependencies, and implementation design.
 
 ## 1. PRD Complete 9-Section Structure
 
@@ -158,13 +158,12 @@ Strategic objectives → OKR → Key Results → Primary metrics → Functional 
 
 | Downstream Party | Driving Content | Deliverable | Consumption Source | Handoff Path |
 |--------|----------|--------|----------|----------|
-| **UI/Frontend** | Interaction logic, state design, page specs, data model | Component intent description + page data requirements | prd.json.pages[] + prd.json.user_flows[] | pm-to-design.md → design-brief reads PRD.md + prd.json directly |
-| **Backend Architecture** | Feature specs, interface definition, data entities, boundary conditions | API contract input + data model input | prd.json.features[] + prd.json.entities[] | pm-to-solo.md → brainstorming reads PRD.md + prd.json directly |
-| **Development** | Feature specs, interface definition, boundary conditions | Technical design document | prd.md + prd.json | pm-to-solo.md → brainstorming → writing-plans |
-| **Design** | Interaction logic, state design, page specs | Design specification document | prd.md + prd.json.pages[] | pm-to-design.md → design-brief reads PRD sections 3.2.3-3.2.5 + 5.1 |
-| **Testing** | Acceptance criteria, test cases, environment requirements | Test plan | prd.json.features[].acceptance_criteria[] | pm-to-solo.md → writing-plans writes AC-xxx into spec.md |
+| **Engineering (Phase 0 design-intake)** | PRD + design asset paths + API contract | contract.json + tokens.json | prd.md + prd.json + design assets | pm-to-engineering.md → design-intake reads PRD.md + prd.json + design assets directly |
+| **Engineering (Phase 1 frontend)** | Interaction logic, state design, page specs, data model | Frontend code (TDD, mock-backed) | contract.json + tokens.json + design assets | (intra-framework; no handoff) |
+| **Engineering (Phase 2 backend)** | Feature specs, interface definition, data entities, boundary conditions | API + data layer + migration | contract.json (API contract) | (intra-framework; no handoff) |
+| **Engineering (Phase 3 integration)** | Acceptance criteria, test cases, environment requirements | mock→real switch + e2e verification | prd.json.features[].acceptance_criteria[] | engineering-to-pm.md (reverse feedback) |
 
-> **Handoff protocol**: handoff documents (pm-to-design.md, pm-to-solo.md) carry PRD.md + prd.json paths + AC-xxx list. Direct consumers (design-brief, brainstorming) read PRD directly for full context. See [docs/handoff/](docs/handoff/) templates for the consumption contract.
+> **Handoff protocol**: pm-to-engineering.md carries PRD.md + prd.json paths + AC-xxx list + project_mode + exploration_mode + task_type + scope + design asset paths + Business Context Digest. Direct consumers (design-intake, brainstorming) read PRD directly for full context. See [docs/handoff/](docs/handoff/) templates for the consumption contract.
 
 ### 5.3 Data Flow Diagram
 

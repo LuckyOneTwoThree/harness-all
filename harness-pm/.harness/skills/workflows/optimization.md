@@ -96,9 +96,8 @@ Have clear change requirements (user feedback/business needs/missing features)?
          ▼
 ┌─────────────────┐
 │ session-end     │  Archive + update FEATURES.md
-│                 │  + Output docs/handoff/pm-to-solo.md (optimization solution handoff to engineering)
+│                 │  + Output docs/handoff/pm-to-engineering.md (optimization solution handoff to engineering)
 │                 │  + Record data insights to memory/knowledge-base.md
-│                 │  + Conditional: when involves design requirements → also produce pm-to-design.md
 └─────────────────┘
 ```
 

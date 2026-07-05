@@ -77,7 +77,7 @@ setup (project initiation) → new-product/iteration/growth/optimization/pivot (
 
 **Module 1 Discovery** : 10 pipelines + 2 orchestrators = 12 (user-research / market; insight/opportunity stubs removed)
 **Module 2 Business Strategy** : 11 pipelines + 2 orchestrators = 13 (business / planning; positioning/stakeholder stubs removed)
-**Module 3 Concept & Design** : 7 pipelines + 2 orchestrators = 9 (prd / validation; ideation stub removed; visual/interaction handed off to harness-design)
+**Module 3 Concept & Design** : 7 pipelines + 2 orchestrators = 9 (prd / validation; ideation stub removed; visual/interaction design assets are user-provided)
 **Module 4 Metrics Design** : 3 pipelines + 1 orchestrator = 4 (metrics)
 **Module 5 Metrics Operations** : 8 pipelines + 3 orchestrators = 11 (analysis / decision / experiment)
 **Module 6 Growth Operations** : 11 pipelines + 3 orchestrators = 14 (growth / activation / revenue; acquisition/retention stubs removed)
@@ -175,8 +175,7 @@ harness-pm/
         ├── README.md
         └── templates/                 # handoff templates (scaffolds)
             ├── handoff-template.md
-            ├── pm-to-design-template.md
-            └── pm-to-solo-template.md
+            └── pm-to-engineering-template.md
 ```
 
 ## Document System
@@ -293,13 +292,12 @@ After a session interruption, session-start reads `state.yaml` and resumes from 
 
 ## harness Family
 
-harness-pm is the **product management** member of the harness family, focused on doing the right things. Other members collaborate via document handoff:
+harness-pm is the **product management** member of the harness family, focused on doing the right things. The other member collaborates via document handoff:
 
 | Family Member | Responsibility | Handoff |
 |---------|------|---------|
-| **harness-pm (this framework)** | **Product research / market / PRD / metrics** | Produces `docs/handoff/pm-to-solo.md` → handed to engineering |
-| harness-solo | Engineering development | Consumes this framework's PRD; produces `solo-to-pm.md` (reverse feedback) |
-| harness-design | UI/visual design (on demand) | Consumes this framework's PRD and positioning statement |
+| **harness-pm (this framework)** | **Product research / market / PRD / metrics** | Produces `docs/handoff/pm-to-engineering.md` (incl. user-provided design asset paths) → handed to engineering |
+| harness-engineering | Engineering development | Consumes this framework's PRD + AC-xxx + design asset paths; produces `engineering-to-pm.md` (reverse feedback) |
 
 ## Product Four Principles in Detail
 

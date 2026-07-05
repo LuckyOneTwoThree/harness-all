@@ -100,14 +100,13 @@ Have clear change requirements (user feedback/business needs/missing features)?
          ▼
 ┌─────────────────┐
 │ session-end     │  Archive + update FEATURES.md
-│                 │  + Output docs/handoff/pm-to-solo.md (changed parts handoff to engineering)
-│                 │  + Conditional: when involves design requirements → also produce pm-to-design.md
+│                 │  + Output docs/handoff/pm-to-engineering.md (changed parts handoff to engineering)
 └─────────────────┘
 ```
 
 ### Handoff batch rules (iteration scenario)
 
-When the iteration workflow produces a new pm-to-solo.md / pm-to-design.md, the handoff MUST follow the batch delivery protocol:
+When the iteration workflow produces a new pm-to-engineering.md, the handoff MUST follow the batch delivery protocol:
 
 | Field | Value for iteration handoff |
 |-------|-----------------------------|
@@ -120,7 +119,7 @@ When the iteration workflow produces a new pm-to-solo.md / pm-to-design.md, the 
 | `ac_ids` (envelope) | MUST be FULL SET of valid AC IDs = `added_acs` + `modified_acs` (new IDs) + `unchanged_acs`. Never just the changed subset. |
 
 **Critical**: even though Module 3 Solution Design only updates the PRD for changed modules (line 73), the handoff's `ac_ids` envelope and `unchanged_acs` MUST include ALL valid ACs from the previous delivery. This ensures:
-- Solo's session-start 1a can correctly identify unchanged vs added ACs
+- Engineering's session-start can correctly identify unchanged vs added ACs
 - If a previous handoff was never consumed, no ACs are lost
 
 **Body format**: unchanged ACs use one-line summary + reference to prior handoff; added/modified ACs use full Given-When-Then.

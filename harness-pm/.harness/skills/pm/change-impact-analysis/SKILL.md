@@ -8,7 +8,7 @@ description: Used when analyzing the impact scope of PRD changes, design changes
 - Requirements changed, check the impact scope
 - Analyze which modules this change will affect
 - Requirements changed, help me evaluate the impact
-- Engineering feedback from harness-solo (via `docs/handoff/solo-to-pm.md`) accepted by prd-orchestrator phase 0 Branch B requires impact analysis on PRD assumptions, AC feasibility, and tech-stack alignment
+- Engineering feedback from harness-engineering (via `docs/handoff/engineering-to-pm.md`) accepted by prd-orchestrator phase 0 Branch B requires impact analysis on PRD assumptions, AC feasibility, and tech-stack alignment
 - Keywords: change impact, requirement change, impact analysis, change review, PRD change
 
 ## Inputs
@@ -24,11 +24,11 @@ description: Used when analyzing the impact scope of PRD changes, design changes
 
 ## Core Principles
 
-1. **Change-driven**: Triggered by prd-orchestrator on PRD changes (PRD-driven path), OR by prd-orchestrator phase 0 Branch B on accepted engineering feedback from `solo-to-pm.md` (engineering-feedback-driven path), OR by iteration/pivot workflows on broader change requirements (user feedback, strategic direction change). Not limited to PRD-only changes.
+1. **Change-driven**: Triggered by prd-orchestrator on PRD changes (PRD-driven path), OR by prd-orchestrator phase 0 Branch B on accepted engineering feedback from `engineering-to-pm.md` (engineering-feedback-driven path), OR by iteration/pivot workflows on broader change requirements (user feedback, strategic direction change). Not limited to PRD-only changes.
 2. **Automated validation**: Change classification, impact propagation analysis, re-review judgment fully automated
-3. **Scope boundary — PM-owned vs Design-owned**:
-   - PM-owned artifacts (assessed directly by this skill): PRD, IA structure, user flows — these are product-level artifacts that PM owns even after the visual/interaction design migration.
-   - Design-owned artifacts (notified via handoff): prototypes, interaction specifications, visual mockups — these have been migrated to harness-design. This skill identifies the impact on them and records it in the impact report, but the actual design-side assessment is delegated to harness-design via `docs/handoff/pm-to-design.md`.
+3. **Scope boundary — PM-owned vs user-owned design assets**:
+   - PM-owned artifacts (assessed directly by this skill): PRD, IA structure, user flows — these are product-level artifacts that PM owns.
+   - User-owned design assets (surfaced to user): prototypes, interaction specifications, visual mockups — these are user-provided (Figma/v0/md). This skill identifies the impact on them and records it in the impact report, but the actual design-side adjustment is owned by the user; PM only carries design asset paths in pm-to-engineering.md.
 4. **Real-time retrospective**: Version linkage recommendations generated immediately after change impact analysis completes
 
 ## Interaction Mode
@@ -37,7 +37,7 @@ description: Used when analyzing the impact scope of PRD changes, design changes
 
 Trigger conditions:
 - prd-orchestrator triggers on PRD changes (PRD-driven path)
-- prd-orchestrator phase 0 Branch B triggers on accepted engineering feedback from solo-to-pm.md (engineering-feedback-driven path) — analyzes impact of AC scope/feasibility/tech-stack/architecture changes reported by harness-solo
+- prd-orchestrator phase 0 Branch B triggers on accepted engineering feedback from engineering-to-pm.md (engineering-feedback-driven path) — analyzes impact of AC scope/feasibility/tech-stack/architecture changes reported by harness-engineering
 - iteration workflow triggers on clear change requirements from user feedback/business needs (change-driven path)
 - pivot workflow triggers on strategic direction changes (strategic-driven path)
 
@@ -45,14 +45,14 @@ Trigger conditions:
 
 | Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| Change request | JSON | Yes | User-provided (PRD change content) or workflow-provided (iteration/pivot change requirement) or engineering-feedback-provided (accepted solo-to-pm.md items routed via prd-orchestrator phase 0 Branch B) | Change content to be analyzed |
+| Change request | JSON | Yes | User-provided (PRD change content) or workflow-provided (iteration/pivot change requirement) or engineering-feedback-provided (accepted engineering-to-pm.md items routed via prd-orchestrator phase 0 Branch B) | Change content to be analyzed |
 | Current PRD | JSON | Yes | docs/product/PRD.md | Currently effective PRD version |
 
 > Note: Previously also assessed impact on design outputs such as prototypes/interaction-spec in full.
-> Visual/interaction design outputs have been migrated to harness-design. This skill now:
+> Visual/interaction design assets are now user-provided (Figma/v0/md). This skill now:
 > 1. Directly assesses impact on PM-owned artifacts (PRD, IA, user flows) — Steps 2.2-2.3 and 4.2-4.3 remain active.
-> 2. Identifies impact on design-owned artifacts (prototypes, interaction specs) — Steps 2.4-2.5 remain active but produce a "design impact notification" entry rather than a full design assessment.
-> 3. The full design-side assessment is delegated to harness-design, notified via docs/handoff/pm-to-design.md.
+> 2. Identifies impact on user-owned design assets (prototypes, interaction specs) — Steps 2.4-2.5 remain active but produce a "design impact notification" entry rather than a full design assessment.
+> 3. The full design-side adjustment is owned by the user (design assets are user-owned); design asset paths are carried in pm-to-engineering.md.
 
 > See [Reference/examples.md](./Reference/examples.md) → "Change Request Structure" for the change request JSON example.
 

@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
-$validator = Join-Path $root 'harness-solo/.harness/scripts/validate-handoff.ps1'
+$validator = Join-Path $root 'harness-engineering/.harness/scripts/validate-handoff.ps1'
 $powerShellHost = if (Get-Command pwsh -ErrorAction SilentlyContinue) { 'pwsh' } else { 'powershell.exe' }
 $tempBase = Join-Path ([IO.Path]::GetTempPath()) ("harness-handoff-test-" + [guid]::NewGuid().ToString('N'))
 $null = New-Item -ItemType Directory -Path $tempBase -Force
@@ -31,8 +31,8 @@ function Build-HandoffPackage {
         [string]$BodyContent = $null,
         [switch]$TamperArtifact,
         [string]$Producer = 'harness-pm',
-        [string]$Consumer = 'harness-solo',
-        [string]$HandoffId = 'PM-SOLO-20260629-001'
+        [string]$Consumer = 'harness-engineering',
+        [string]$HandoffId = 'PM-ENG-20260629-001'
     )
 
     $pkg = Join-Path $script:tempBase $ScenarioName
@@ -117,7 +117,7 @@ function Run-Scenario {
     param(
         [string]$Name,
         [string]$ExpectedResult,  # 'pass' or 'fail'
-        [string]$ExpectedConsumer = 'harness-solo',
+        [string]$ExpectedConsumer = 'harness-engineering',
         [scriptblock]$Build
     )
     $pkg = & $Build
@@ -210,8 +210,8 @@ try {
 
     # Positive: standalone-fallback mode (no batch required)
     Run-Scenario -Name 'standalone-fallback mode accepted without batch' -ExpectedResult 'pass' -ExpectedConsumer 'harness-pm' -Build {
-        Build-HandoffPackage -ScenarioName 'standalone' -Producer 'harness-solo' -Consumer 'harness-pm' `
-            -HandoffId 'SOLO-PM-20260629-001' -Mode 'standalone-fallback' -EnvelopeAcIds @()
+        Build-HandoffPackage -ScenarioName 'standalone' -Producer 'harness-engineering' -Consumer 'harness-pm' `
+            -HandoffId 'ENG-PM-20260629-001' -Mode 'standalone-fallback' -EnvelopeAcIds @()
     }
 
     Write-Host ''

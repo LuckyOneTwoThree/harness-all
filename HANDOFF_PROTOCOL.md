@@ -1,5 +1,7 @@
 # Handoff Protocol
 
+> **Scope**: harness-all is a **framework collection**. This protocol defines how independent frameworks exchange contracts. Today's handoff types: `pm-to-engineering.md` + `engineering-to-pm.md`. When extension frameworks (data / qa / security) join the family, new handoff types (e.g., `engineering-to-qa.md`, `qa-to-engineering.md`) are added following the same envelope schema — no protocol changes needed.
+
 ## Current Pointer and History
 
 - `docs/handoff/<source>-to-<target>.md` is the **current pointer**. It contains exactly one latest contract.
@@ -9,13 +11,13 @@
 
 ## Required Envelope
 
-Every dedicated handoff begins with YAML frontmatter containing `schema_version`, `handoff_id`, `producer`, `consumer`, `created_at`, `source_revision`, `supersedes`, `status`, `ac_ids`, `batch`, and `artifacts`. Frameworks that distinguish family-produced contracts from degraded output (e.g., harness-solo) additionally carry a `mode` field (`family` | `standalone-fallback`); generic inbound templates remain mode-free. For solo-produced handoffs, `mode` is mandatory and validated by `validate-handoff.ps1`; other producers may omit it.
+Every dedicated handoff begins with YAML frontmatter containing `schema_version`, `handoff_id`, `producer`, `consumer`, `created_at`, `source_revision`, `supersedes`, `status`, `ac_ids`, `batch`, and `artifacts`.
 
-`handoff_id` is immutable and follows `<SOURCE>-<TARGET>-<YYYYMMDD>-<NNN>`. `supersedes` points to the previous handoff ID or is `null`. When a handoff supersedes an already-consumed one, consumers use the envelope `batch` field as the primary change signal (with first-consumption guard: if no prior handoff was consumed, ALL ACs are treated as added). The `validate-handoff.ps1` script enforces supersedes freshness: when `supersedes` is non-null, its date segment must be strictly older than the current handoff's date segment (same-day incremental iterations are allowed, e.g., PM-SOLO-20260704-002 may supersede PM-SOLO-20260704-001).
+`handoff_id` is immutable and follows `<SOURCE>-<TARGET>-<YYYYMMDD>-<NNN>` (e.g., `PM-ENGINEERING-20260706-001`). `supersedes` points to the previous handoff ID or is `null`. When a handoff supersedes an already-consumed one, consumers use the envelope `batch` field as the primary change signal (with first-consumption guard: if no prior handoff was consumed, ALL ACs are treated as added). The `validate-handoff.ps1` script enforces supersedes freshness: when `supersedes` is non-null, its date segment must be strictly older than the current handoff's date segment (same-day incremental iterations are allowed, e.g., PM-ENGINEERING-20260706-002 may supersede PM-ENGINEERING-20260706-001).
 
 ### Batch Delivery (incremental handoffs)
 
-When a producer delivers a subsequent handoff (e.g., PM iteration after MVP, Solo reverse feedback after a feature delivery), the envelope MUST carry a `batch` field:
+When a producer delivers a subsequent handoff (e.g., PM iteration after MVP, Engineering reverse feedback after a feature delivery), the envelope MUST carry a `batch` field:
 
 - `batch.type`: `full` (first-time delivery) or `incremental` (subsequent deliveries)
 - `batch.added_acs` / `batch.modified_acs` / `batch.superseded_acs` / `batch.unchanged_acs`: AC ID lists partitioning the change scope
@@ -29,8 +31,8 @@ The `modified_acs` field has different semantics depending on whether the channe
 
 | Channel type | Examples | `modified_acs` contains | `superseded_acs` contains |
 |---|---|---|---|
-| **Forward delivery** (producer owns ACs) | PM→Solo, Design→Solo | New replacement AC IDs (old IDs go to `superseded_acs`) | Old AC IDs being replaced/retired |
-| **Reverse feedback** (producer does NOT own ACs) | Solo→PM, Design→PM | Same AC IDs with changed feedback content (re-triage needed) | AC IDs whose feedback was withdrawn (AC itself may still be valid in PM's PRD) |
+| **Forward delivery** (producer owns ACs) | PM→Engineering | New replacement AC IDs (old IDs go to `superseded_acs`) | Old AC IDs being replaced/retired |
+| **Reverse feedback** (producer does NOT own ACs) | Engineering→PM | Same AC IDs with changed feedback content (re-triage needed) | AC IDs whose feedback was withdrawn (AC itself may still be valid in PM's PRD) |
 
 For both channel types: `ac_ids = added_acs + modified_acs + unchanged_acs`; superseded AC IDs never appear in `ac_ids`. The difference is only in what `modified_acs` and `superseded_acs` mean: forward = AC replacement, reverse = feedback content change/withdrawal.
 
@@ -38,10 +40,10 @@ For both channel types: `ac_ids = added_acs + modified_acs + unchanged_acs`; sup
 
 | Channel | First delivery | Incremental delivery | Consumer-side action |
 |---------|----|----|----|
-| PM → Solo (`pm-to-solo.md`) | `batch.type: full`, `batch.id: 1`, all ACs in `added_acs` | PM iteration after MVP: `batch.type: incremental`, `batch.id: 2`, new ACs in `added_acs`, retired ACs in `superseded_acs`, untouched ACs in `unchanged_acs` | Solo session-start 1a uses `batch` as primary signal; first-consumption guard treats ALL as `[added]` if no prior handoff was consumed |
-| Solo → PM (`solo-to-pm.md`) | `batch.type: full`, `batch.id: 1`, all feedback ACs in `added_acs` | Subsequent Solo reverse feedback after another feature delivery: `batch.type: incremental`, `batch.id: 2`, new feedback ACs in `added_acs`, withdrawn suggestions in `superseded_acs` (PM skips re-triage per prd-orchestrator phase 0 Branch B step 3 pre-filter), carried-forward undecided suggestions in `unchanged_acs` | PM session-start 5a batch-aware detection; routes to Branch B; Branch B pre-filters `superseded_acs` items as "already-decided" |
+| PM → Engineering (`pm-to-engineering.md`) | `batch.type: full`, `batch.id: 1`, all ACs in `added_acs` | PM iteration after MVP: `batch.type: incremental`, `batch.id: 2`, new ACs in `added_acs`, retired ACs in `superseded_acs`, untouched ACs in `unchanged_acs` | Engineering session-start uses `batch` as primary signal; first-consumption guard treats ALL as `[added]` if no prior handoff was consumed |
+| Engineering → PM (`engineering-to-pm.md`) | `batch.type: full`, `batch.id: 1`, all feedback ACs in `added_acs` | Subsequent Engineering reverse feedback after another feature delivery: `batch.type: incremental`, `batch.id: 2`, new feedback ACs in `added_acs`, withdrawn suggestions in `superseded_acs` (PM skips re-triage per prd-orchestrator phase 0 Branch B step 3 pre-filter), carried-forward undecided suggestions in `unchanged_acs` | PM session-start batch-aware detection; routes to Branch B; Branch B pre-filters `superseded_acs` items as "already-decided" |
 
-> **Implemented Features reference**: When Solo produces `solo-to-pm.md`, the body's "Implemented Features" section is the data source for PM's FEATURES.md Cross-Framework Reconciliation (see `DOMAIN_BOUNDARIES.md`). The `batch` field partitions AC-level changes; the Implemented Features section reports feature-level status independently. Both are required for the consumer to detect drift correctly.
+> **Implemented Features reference**: When Engineering produces `engineering-to-pm.md`, the body's "Implemented Features" section is the data source for PM's FEATURES.md Cross-Framework Reconciliation (see `DOMAIN_BOUNDARIES.md`). The `batch` field partitions AC-level changes; the Implemented Features section reports feature-level status independently. Both are required for the consumer to detect drift correctly.
 
 ## Portable Package
 
@@ -59,7 +61,7 @@ All paths are package-relative. The manifest records the contract and every arti
 
 ## Consumer Gate and Receipt
 
-Before consumption, validate the schema version, ready status, target consumer, freshness/supersedes chain, envelope-manifest parity, path containment, hashes, and exact parity between envelope `ac_ids` and body AC/DAC IDs. A failed delivery is not partially consumed; the last valid contract remains active.
+Before consumption, validate the schema version, ready status, target consumer, freshness/supersedes chain, envelope-manifest parity, path containment, hashes, and exact parity between envelope `ac_ids` and body AC IDs (including BAC-xxx and IAC-xxx where present). A failed delivery is not partially consumed; the last valid contract remains active.
 
 After acceptance or rejection, write `docs/handoff/receipts/<handoff_id>-receipt.json`. Consumers never edit the producer contract.
 

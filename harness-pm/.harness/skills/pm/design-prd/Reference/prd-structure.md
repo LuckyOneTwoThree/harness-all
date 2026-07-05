@@ -178,7 +178,7 @@ Entity C (N:1) → Entity D
 
 **Entity Migration Plan** (required when an entity evolves from existing data — greenfield entities may mark "N/A")
 
-> Rationale: downstream engineering (solo brainstorming) and ops (migration runbook) both need to know how to move from the current schema to the target schema. Without this field, migration becomes an ad-hoc engineering decision, risking data loss.
+> Rationale: downstream engineering (brainstorming phase) and ops (migration runbook) both need to know how to move from the current schema to the target schema. Without this field, migration becomes an ad-hoc engineering decision, risking data loss.
 
 | Entity | from_version | to_version | strategy | rollback |
 |--------|----------|----------|----------|----------|
@@ -215,7 +215,7 @@ Response Example:
 
 **Error Code Table** (required for all user-facing APIs)
 
-> Rationale: downstream engineering (solo) needs the error code contract to implement error handling; frontend needs it to render user-friendly error messages; growth needs it to attribute funnel drop-offs. Without a defined error code table, each layer invents its own codes, breaking cross-layer consistency.
+> Rationale: downstream engineering needs the error code contract to implement error handling; frontend needs it to render user-friendly error messages; growth needs it to attribute funnel drop-offs. Without a defined error code table, each layer invents its own codes, breaking cross-layer consistency.
 
 | HTTP Status | error_code | error_message (user-facing) | Trigger condition | Recovery guidance |
 |----------|------------|--------------------------|----------|----------|

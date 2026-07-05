@@ -13,7 +13,7 @@ When upstream inputs change, this Skill's response strategy:
 | User flow change | User flow impact analysis | Update user flow impact matrix, re-evaluate dead-end risks |
 | Prototype change | Prototype impact analysis | Update prototype impact matrix, re-evaluate design specification consistency |
 | Interaction specification change | Interaction specification impact analysis | Update interaction specification impact matrix, re-evaluate state machine coverage |
-| Engineering feedback (solo-to-pm) | PRD assumption validation, AC feasibility, tech-stack alignment | Update functional impact matrix with engineering-identified AC changes; re-evaluate PRD NFR constraints against reported TECH_STACK.md changes; mark architecture-decision-impacted ACs for re-review; route design-impact items to pm-to-design.md |
+| Engineering feedback (engineering-to-pm) | PRD assumption validation, AC feasibility, tech-stack alignment | Update functional impact matrix with engineering-identified AC changes; re-evaluate PRD NFR constraints against reported TECH_STACK.md changes; mark architecture-decision-impacted ACs for re-review; surface design-impact items to the user (design assets are user-owned) |
 
 When the change impact analysis results themselves change, the downstream notification mechanism:
 

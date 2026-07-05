@@ -140,8 +140,8 @@ default_mode: deep
 │  │  - ideation-workshop            │    │
 │  │    (Idea divergence: workshop)  │    │
 │  │  - prd-orchestrator             │    │
-│  │    (PRD generation, design      │    │
-│  │     handed to harness-design)   │    │
+│  │    (PRD generation + API        │    │
+│  │     contract + design assets)   │    │
 │  │    👤 PRD final approval        │    │
 │  │      (Human Decision Point)     │    │
 │  │  - validation-orchestrator      │    │
@@ -222,9 +222,8 @@ default_mode: deep
          ▼
 ┌─────────────────┐
 │ session-end     │  Archive + baseline + update FEATURES.md
-│                 │  + Output docs/handoff/pm-to-solo.md
-│                 │    (PRD + design spec + tracking plan handoff to engineering)
-│                 │  + Conditional: when involves design requirements → also produce pm-to-design.md
+│                 │  + Output docs/handoff/pm-to-engineering.md
+│                 │    (PRD + API contract + design asset paths + project_mode/exploration_mode + tracking plan handoff to engineering)
 │                 │  + Prompt next step: enter launch after engineering complete
 └─────────────────┘
 ```
@@ -237,7 +236,7 @@ default_mode: deep
 - [ ] Confidence check passed? (Low-confidence items human-confirmed)
 - [ ] Tracking plan designed? (Produced by metrics-orchestrator)
 - [ ] Monitoring system established? (Produced by monitoring-orchestrator, prevent launching blind)
-- [ ] docs/handoff/pm-to-solo.md handoff document produced?
+- [ ] docs/handoff/pm-to-engineering.md handoff document produced?
 
 ## Failure Handling
 

@@ -11,7 +11,7 @@
 2. **Contract-Driven** — PRD drives design, positioning drives brand, tracking drives data; the key deliverables are downstream contracts
 3. **Data-Driven** — Use data to reduce guessing; AI proposes, humans decide; confidence < 0.3 blocks automatic propagation
 4. **Loop-First** — Product work runs in a Loop (plan→research→validate), max 5 iterations; request human intervention after 10
-5. **Session End** — Update `memory/progress.md`, then follow the `session-end` SKILL.md steps to archive (no bash dependency, cross-platform)
+5. **Session End** — Update `memory/progress.md`, then delegate to `memory-maintenance` when retention thresholds are exceeded (no bash dependency, cross-platform)
 6. **Interact First** — Workflows are not auto-execution scripts; exploration dialog points (⏸) are controlled by exploration_mode, human decision points (👤) always pause
 
 ## Exploration Mode (exploration_mode)
@@ -52,7 +52,7 @@ The following scenarios **always pause**, unaffected by exploration_mode:
 
 ## PM Four Principles (PM Principles)
 
-> Corresponds to harness-solo's Karpathy engineering four principles; see `constitution.md` for details.
+> Corresponds to harness-engineering's Karpathy engineering four principles; see `constitution.md` for details.
 
 1. **Discovery First** — Do not assume user needs; let research data speak. Cross-validate VOC and behavioral data; interviews anchor hypotheses to be validated; mark "exploratory conclusion" when there is no data (confidence ≤ 0.5)
 2. **Contract-Driven** — PRD / positioning statement / metrics system are downstream contracts; changes require a change impact analysis and must pass 4 quality gates (completeness / consistency / ambiguity elimination / traceability)
@@ -82,16 +82,12 @@ harness-pm is the **Product Management** member of the harness family, focused o
 
 | Family Member | Responsibility | Handoff Method |
 |---------|------|---------|
-| **harness-pm (this framework)** | **Product research / market / PRD / metrics** | Produces `docs/handoff/pm-to-solo.md` → handed to engineering |
-| harness-solo | Engineering development | Consumes this framework's PRD; produces `solo-to-pm.md` (reverse feedback) |
-| harness-design | UI / visual design (on demand) | Consumes this framework's PRD and positioning statement |
+| **harness-pm (this framework)** | **Product research / market / PRD / API contract / design asset paths / metrics** | Produces `docs/handoff/pm-to-engineering.md` → handed to engineering |
+| harness-engineering | 4-stage engineering delivery (design-intake → frontend → backend → integration) | Consumes this framework's PRD + API contract + design asset paths; produces `engineering-to-pm.md` (reverse feedback) |
 
 **Handoff protocol**: See the handoff documents under the `docs/handoff/` directory. Drop them in manually and downstream frameworks will recognize them.
 
-### Standalone vs Family Mode
-
-- **Standalone mode**: PM may use its local growth and monitoring skills to remain self-sufficient.
-- **Family mode**: PM owns product strategy, PRD, product analytics definitions, growth goals/hypotheses/guardrails, and roadmap decisions.
+**PM owns product strategy, PRD, API contract, and product analytics**. Engineering implementation is handed to harness-engineering via `docs/handoff/pm-to-engineering.md`. Design assets (Figma/v0/markdown designs) are collected by PM and passed through as paths in the handoff — PM does NOT produce visual designs.
 
 ## Project Context
 
@@ -106,9 +102,9 @@ harness-pm is the **Product Management** member of the harness family, focused o
 - Metrics operations: `docs/metrics/metrics-system.md`, `docs/metrics/tracking-plan.md`, `docs/metrics/dashboard.md`, `docs/metrics/experiment-report.md`, `docs/metrics/data-analysis-report.md`, `docs/metrics/decision-report.md`
 - Growth strategy: `docs/growth/growth-strategy.md`, `docs/growth/gtm.md`, `docs/growth/operations-manual.md`
 - Monitoring and iteration: `docs/monitoring/monitoring-config.md`, `docs/monitoring/diagnosis-report.md`, `docs/monitoring/feedback-loop.md`, `docs/monitoring/release-notes.md`, `docs/monitoring/health-check-report.md`, `docs/monitoring/competitor-monitoring-report.md`
-- Handoff documents: `docs/handoff/pm-to-solo.md`, `docs/handoff/pm-to-design.md` (synthesized by session-end based on the current contents of docs/)
+- Handoff documents: `docs/handoff/pm-to-engineering.md` (synthesized by session-end based on the current contents of docs/)
 
-> Note: Visual / interaction / component / prototype and other design outputs belong to harness-design (`docs/visual/`, `docs/interaction/`, `docs/prototype/`, `docs/design-system/`) and are outside the scope of harness-pm. harness-pm only produces PRD and product strategy; design implementation is handed to harness-design via `docs/handoff/pm-to-design.md` for consumption.
+> Note: Visual / interaction / component / prototype and other design outputs are owned by the user (Figma / v0 / markdown designs). harness-pm only collects asset paths and passes them through to harness-engineering via `docs/handoff/pm-to-engineering.md`; PM does NOT produce or transform visual designs.
 
 **Other**:
 - Feature progress: see `.harness/FEATURES.md`

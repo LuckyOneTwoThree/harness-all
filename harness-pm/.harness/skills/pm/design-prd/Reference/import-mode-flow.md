@@ -59,7 +59,7 @@
 - Write rebuilt `docs/product/PRD.md` (with user-approved fixes applied, "Keep" content preserved, deferred markers added, Open Issues recorded)
 - Write `docs/product/prd.json` (with source_sha256 matching the rebuilt PRD.md)
 - Update `memory/progress.md` with: Import Mode run summary, audit issues list, user decisions, Gate results
-- The output is now ready for session-end to produce pm-to-solo.md / pm-to-design.md handoff documents
+- The output is now ready for session-end to produce pm-to-engineering.md handoff document
 
 ## Import Mode Constraints
 

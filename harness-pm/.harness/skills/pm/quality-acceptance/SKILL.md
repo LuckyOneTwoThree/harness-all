@@ -64,8 +64,8 @@ Trigger conditions:
 | Version number | string | Yes | User-provided | Version number for acceptance |
 | Acceptance scope | string | Yes | User-provided | Functional scope of this acceptance |
 | Acceptance party | string | ○ | User-provided | Acceptance owner/team |
-| Backend review report | JSON | ○ | docs/handoff/solo-to-pm.md (from harness-solo) | Backend architecture review results |
-| API coverage report | JSON | ○ | docs/handoff/solo-to-pm.md (from harness-solo) | PRD/frontend alignment coverage report |
+| Backend review report | JSON | ○ | docs/handoff/engineering-to-pm.md (from harness-engineering) | Backend architecture review results |
+| API coverage report | JSON | ○ | docs/handoff/engineering-to-pm.md (from harness-engineering) | PRD/frontend alignment coverage report |
 
 > See [Reference/examples.md](./Reference/examples.md) for the Story Acceptance Criteria Structure JSON example.
 

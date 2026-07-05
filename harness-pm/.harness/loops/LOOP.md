@@ -1,7 +1,7 @@
 # LOOP.md — PM Loop Engine Definition + Validation Protocol
 
 > Purpose: Replaces linear workflows to implement a cyclic validation loop for product work
-> Difference from harness-solo's LOOP: solo is plan→act→verify (test-driven); pm is plan→research→validate (data-driven)
+> Difference from harness-engineering's LOOP: engineering is plan→act→verify (test-driven); pm is plan→research→validate (data-driven)
 
 ## Core Loop
 

@@ -14,7 +14,7 @@ description: Used when defining the MVP feature scope. MVP scope auto-definition
 - rules/security.md
 - loops/LOOP.md
 - docs/product/PRD.md
-- docs/handoff/design-to-solo.md
+- User-provided design assets (Figma/v0/md/image paths, optional)
 
 ## Outputs
 - docs/product/PRD.md
@@ -45,7 +45,7 @@ description: Used when defining the MVP feature scope. MVP scope auto-definition
 
 | Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| Solution design | JSON | Yes | User-provided or harness-design output | Complete feature list and descriptions |
+| Solution design | JSON | Yes | User-provided design assets (Figma/v0/md/image paths) or user-provided solution description | Complete feature list and descriptions |
 | Assumption map | JSON | Yes | docs/product/PRD.md ("Assumption Map" section) | Assumption map output from Pipeline 10 |
 | Resource constraints | JSON | ○ | User-provided | Time, staffing, and budget constraints |
 

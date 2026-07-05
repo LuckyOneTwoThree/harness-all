@@ -12,11 +12,13 @@ description: Maintain the memory directory, execute retention strategy, prevent 
 ## Inputs
 - .harness/loops/LOOP.md
 - .harness/skills/meta/session-end/SKILL.md
+- .harness/rules/memory.schema.json
 
 ## Outputs
 - memory/progress.md
 - memory/knowledge-base.md
 - memory/archives/
+- memory/index.json
 - loops/specs/*/iterations.log
 
 ## Core Principle
@@ -31,6 +33,7 @@ The Agent's context is limited. Unbounded growth of progress.md / knowledge-base
 - Length of `memory/knowledge-base.md`
 - Retention period of `memory/archives/`
 - Length of `loops/specs/<task>/iterations.log`
+- `memory/index.json` (machine-readable archive index for session-start discovery)
 
 **What it is not:**
 - Deleting state.yaml / spec.md / evidence.md of the current active task
@@ -106,7 +109,26 @@ The Agent's context is limited. Unbounded growth of progress.md / knowledge-base
    | knowledge-base.md | 180 lines | 60 lines | Split and archived 2 topics |
    | iterations.log | 120 lines | 20 lines | Archived to archives/iterations-xxx-2026-06-20.log |
    | archives/ | 5 old files | Deleted 3 | User confirmed |
+   | index.json | absent | rebuilt | 4 archive entries indexed |
    ```
+
+8. **Rebuild memory/index.json**
+   After all archiving and cleanup is complete, rebuild the machine-readable archive index so session-start can discover archived sessions without Globbing:
+
+   - Use Glob to scan `memory/archives/*` and `loops/archives/*`
+   - For each archive file, extract metadata from the filename and content header:
+     - `filename`: basename of the archive file
+     - `type`: `progress` / `knowledge` / `iterations` (derived from filename prefix)
+     - `archived_at`: ISO-8601 timestamp (from filename date or file content)
+     - `section`: knowledge section slug (type=knowledge only)
+     - `task`: task/feature ID (type=iterations only)
+     - `reason`: `size-threshold` or `task-completion` (type=iterations only)
+     - `session_range` / `summary`: extracted from the archive file's first line/header (type=progress only)
+     - `entry_count`: number of entries in the archive (type=knowledge only)
+   - Read current `memory/progress.md` to compute `current_progress` (session_count, line_count, date_range)
+   - Read current `memory/knowledge-base.md` to compute `knowledge_base` (sections, total_entries, line_count)
+   - Write the complete index to `.harness/memory/index.json` with `schema_version: "1.0"`, `last_updated: <current ISO-8601>`, `framework: "harness-pm"`
+   - Validate the output against `.harness/rules/memory.schema.json`
 
 ## Evidence Requirements
 
@@ -115,6 +137,7 @@ After running this skill, you must show:
 - Post-operation line count/size of each file
 - Specific paths of archived files
 - User confirmation records for deleted files
+- index.json rebuilt with N archive entries (or "index.json unchanged — no archives modified this run")
 
 You cannot just write "cleaned up".
 

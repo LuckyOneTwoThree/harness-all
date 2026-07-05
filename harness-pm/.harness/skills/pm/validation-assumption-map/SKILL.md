@@ -39,7 +39,7 @@ description: Used when extracting and evaluating product hypotheses. Assumption 
 
 | Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
-| Solution design output | JSON | Yes | User-provided or harness-design output | Feature list, user journey, interaction design description (if harness-design has produced output, read from prototype/user flow paths referenced in docs/handoff/design-to-solo.md) |
+| Solution design output | JSON | Yes | User-provided design assets (Figma/v0/md/image paths) or user-provided solution description | Feature list, user journey, interaction design description (when the user provides design asset paths, read them for solution design context) |
 | PRD | markdown | Yes | docs/product/PRD.md | Problem statement, target users, core value proposition |
 | PRD structured data | JSON | ○ | docs/product/PRD.md | Machine-consumable PRD version, contains features[], for hypothesis extraction alignment |
 
@@ -189,7 +189,7 @@ Based on hypothesis type, recommend validation methods:
 
 | Missing Upstream Input | Degradation Plan | Output Impact | Data Acquisition Instructions |
 |---------------|---------|---------|------------|
-| Solution design data missing | User provides solution description, extract hypotheses | Lacks structured solution data, hypothesis coverage may be incomplete | Require user to provide solution description, or obtain design solution from harness-design handoff document (docs/handoff/design-to-solo.md) |
+| Solution design data missing | User provides solution description, extract hypotheses | Lacks structured solution data, hypothesis coverage may be incomplete | Require user to provide solution description, or obtain design solution from user-provided design assets (Figma/v0/md/image paths) |
 | PRD document missing | User provides solution description, extract hypotheses | Lacks PRD data, hypotheses may be disconnected from requirements | Require user to provide feature requirement description or upload prd.json file |
 | Solution design + PRD both missing | User provides solution description, extract hypotheses | Overall confidence reduced, hypotheses may not be complete enough | Require user to provide core hypotheses and feature requirement description |
 | All upstream files missing | Prompt user to execute prior stages first, or extract hypotheses based on user solution description | Output is only a basic hypothesis list | Require user to provide core hypotheses, user pain points, and feature requirements |

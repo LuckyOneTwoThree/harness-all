@@ -7,7 +7,6 @@ created_at: "<ISO-8601>"
 source_revision: "<commit-or-artifact-revision>"
 supersedes: null
 status: draft
-mode: family
 ac_ids: []
 batch:
   id: 1
@@ -22,8 +21,8 @@ artifacts: []
 # Handoff: <source framework> → <target framework>
 
 > Generated at: YYYY-MM-DD HH:MM
-> Source framework: <harness-pm / harness-solo / harness-design / ...>
-> Target framework: <harness-solo / harness-design / ...>
+> Source framework: <harness-pm / harness-engineering>
+> Target framework: <harness-pm / harness-engineering>
 
 ## Phase Summary
 
@@ -37,8 +36,8 @@ artifacts: []
 | Tracking plan | docs/metrics/tracking-plan.md | Markdown | Event tracking definitions |
 
 > Note: harness-pm produces this handoff document (with PRD path references), not the engineering PROJECT.md directly.
-> The engineering PROJECT.md is maintained by harness-solo's brainstorming skill (written after extracting requirements from the handoff document).
-> Visual / interaction / component design outputs belong to harness-design, handed off via pm-to-design.md, and are out of scope for this template.
+> The engineering PROJECT.md is maintained by harness-engineering's brainstorming skill (written after extracting requirements from the handoff document).
+> Visual / interaction / component design assets are user-owned (Figma / v0 / markdown designs); PM collects their paths and passes them through via pm-to-engineering.md.
 
 ## Key Decisions
 
@@ -54,6 +53,8 @@ Testable conditions that downstream frameworks must satisfy when implementing:
 - [ ] AC-F01-001: <stable testable description>
 - [ ] AC-F01-002: <stable testable description>
 - [ ] AC-F02-001: <stable testable description; gaps are valid>
+
+> Note: BAC-xxx (backend acceptance) and IAC-xxx (integration acceptance) are produced by harness-engineering, not PM.
 
 ## Open Items
 

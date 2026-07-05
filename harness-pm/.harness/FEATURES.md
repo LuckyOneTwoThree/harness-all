@@ -16,7 +16,7 @@
 - `in_progress` — in product design (corresponding loops/specs/ has state.yaml)
 - `review` — design complete, awaiting human approval
 - `approved` — approval passed, ready for engineering handoff
-- `developing` — in engineering development (taken over by harness-solo)
+- `developing` — in engineering development (taken over by harness-engineering)
 - `launched` — launched
 - `blocked` — blocked (explain the reason)
 
@@ -24,7 +24,7 @@
 
 1. **Start product design**: change status to `in_progress`, create `loops/specs/<task>/`
 2. **Design complete**: change status to `review`, awaiting human approval
-3. **Approval passed**: change status to `approved`, produce handoff document `docs/handoff/pm-to-solo.md`
-4. **In engineering development**: change status to `developing` (fed back by harness-solo)
+3. **Approval passed**: change status to `approved`, produce handoff document `docs/handoff/pm-to-engineering.md`
+4. **In engineering development**: change status to `developing` (fed back by harness-engineering)
 5. **Launch**: change status to `launched`
 6. **session-end batch update**: scan tasks with status:done in `loops/specs/*/state.yaml`, batch sync to this file

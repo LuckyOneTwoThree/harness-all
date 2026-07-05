@@ -1,0 +1,3 @@
+# Portable handoff packages live here.
+# Each package is a directory named <handoff_id>/ containing manifest.json + contract.md + artifacts/.
+# See ../../HANDOFF_PROTOCOL.md "Portable Package" section.

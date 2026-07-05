@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harness.local/schemas/memory.schema.json",
+  "title": "Memory Index",
+  "description": "Schema for .harness/memory/index.json — a machine-readable index of memory archives maintained by memory-maintenance. Enables session-start to discover archived sessions without Globbing the entire archives/ directory.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "last_updated", "framework", "current_progress", "knowledge_base", "archives"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "last_updated": { "type": "string", "description": "ISO-8601 timestamp of the last index rebuild" },
+    "framework": { "type": "string", "pattern": "^harness-(pm|engineering)$" },
+    "current_progress": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["session_count", "line_count"],
+      "properties": {
+        "session_count": { "type": "integer", "minimum": 0 },
+        "line_count": { "type": "integer", "minimum": 0 },
+        "date_range": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "earliest": { "type": "string" },
+            "latest": { "type": "string" }
+          }
+        }
+      }
+    },
+    "knowledge_base": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sections", "line_count"],
+      "properties": {
+        "sections": { "type": "array", "items": { "type": "string" } },
+        "total_entries": { "type": "integer", "minimum": 0 },
+        "line_count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "archives": {
+      "type": "array",
+      "description": "List of archive files in memory/archives/ and loops/archives/",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["filename", "type", "archived_at"],
+        "properties": {
+          "filename": { "type": "string", "description": "Basename of the archive file" },
+          "type": { "type": "string", "enum": ["progress", "knowledge", "iterations"] },
+          "archived_at": { "type": "string", "description": "ISO-8601 timestamp" },
+          "section": { "type": "string", "description": "Knowledge section slug (type=knowledge only)" },
+          "task": { "type": "string", "description": "Task/feature ID (type=iterations only)" },
+          "reason": { "type": "string", "enum": ["size-threshold", "task-completion"] },
+          "session_range": { "type": "string", "description": "Human-readable date range (type=progress only)" },
+          "summary": { "type": "string", "description": "One-line summary of archived content" },
+          "entry_count": { "type": "integer", "minimum": 0 }
+        }
+      }
+    }
+  }
+}

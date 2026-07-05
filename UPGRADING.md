@@ -3,9 +3,9 @@
 The upgrade tool updates framework-managed rules and skills while preserving project-owned state and documents.
 
 ```powershell
-./scripts/upgrade.ps1 -Framework harness-solo -TargetProject D:/path/to/project -Mode Check
-./scripts/upgrade.ps1 -Framework harness-solo -TargetProject D:/path/to/project -Mode DryRun
-./scripts/upgrade.ps1 -Framework harness-solo -TargetProject D:/path/to/project -Mode Apply
+./scripts/upgrade.ps1 -Framework harness-engineering -TargetProject D:/path/to/project -Mode Check
+./scripts/upgrade.ps1 -Framework harness-engineering -TargetProject D:/path/to/project -Mode DryRun
+./scripts/upgrade.ps1 -Framework harness-engineering -TargetProject D:/path/to/project -Mode Apply
 ```
 
 Safety properties:

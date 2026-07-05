@@ -11,8 +11,7 @@
 An **attempt** is one domain execution followed by verification:
 
 - PM: RESEARCH → VALIDATE
-- Design: DESIGN → VERIFY/LINT
-- Solo: ACT → VERIFY
+- Engineering: ACT → VERIFY (4-phase: design-intake / frontend / backend / integration)
 
 Rules:
 
@@ -60,7 +59,7 @@ Forbidden examples: `done → running`, `failed → retrying`, or any execution 
 | iteration | Domain execution stage, once per attempt |
 | stage | The stage currently entered |
 | status / last_error / last_error_at | Current stage based on observed outcome |
-| substage | Family-wide field with framework-local semantics. Solo uses enum {inline-passed, inline-failed, awaiting-full, full-running, full-passed, full-failed} (see Solo's LOOP.md); PM/Design use their own sub-stage values documented in each framework's LOOP.md |
+| substage | Family-wide field with framework-local semantics. Engineering uses enum {inline-passed, inline-failed, awaiting-full, full-running, full-passed, full-failed} (see Engineering's LOOP.md); PM uses its own sub-stage values documented in PM's LOOP.md |
 | hard_limit_reached | Verification or explicit user-authorized reset |
 | current_nested_task | Product-level orchestration only; aggregate progress remains in the canonical task board |
 

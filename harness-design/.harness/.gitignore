@@ -1,8 +1,0 @@
-# .harness/.gitignore — framework internal gitignore
-
-# === Do not commit (runtime state) ===
-memory/progress.md
-memory/baseline.json
-memory/archives/
-loops/specs/
-*.log

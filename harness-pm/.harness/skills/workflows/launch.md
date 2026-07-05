@@ -34,8 +34,8 @@ default_mode: skip
 │  - Tracking plan implemented?           │
 │  - Security compliance check passed?    │
 │  - Constitution compliant?              │
-│  - Engineering feedback (solo-to-pm.md) │
-│    confirmed?                           │
+│  - Engineering feedback (engineering-to-pm.md) │
+│    confirmed?                                  │
 │                                         │
 │  ★ Any item not met → no release        │
 │                                         │
@@ -69,8 +69,7 @@ default_mode: skip
 ┌─────────────────┐
 │ session-end     │  Archive + update FEATURES.md (status → launched)
 │                 │  + Record release info to progress.md
-│                 │  + Output docs/handoff/pm-to-solo.md (monitoring config handoff)
-│                 │  + Conditional: when involves design requirements → also produce pm-to-design.md
+│                 │  + Output docs/handoff/pm-to-engineering.md (monitoring config handoff)
 └─────────────────┘
 ```
 

@@ -1,0 +1,55 @@
+# <feature name>
+
+> Source: produced by the writing-plans skill.
+> Load timing: read by tdd / verify.
+> File semantics: overwrite write (only the final passed spec is kept).
+
+## Goal
+
+[One-sentence goal, from brainstorming]
+
+## Acceptance criteria
+
+### Product AC (from pm-to-engineering.md)
+
+> Each AC carries a status suffix for AC change impact analysis (session-start 1a):
+> - `[status: pending]` — not yet verified
+> - `[status: done]` — verify-full passed and code-review marked done
+> - `[status: superseded]` — withdrawn by an upstream supersedes; evidence no longer authoritative
+
+- AC-F01-001: [stable testable description] [status: pending]
+- AC-F01-002: [stable testable description] [status: pending]
+- AC-F01-003: [stable testable description] [status: pending]
+
+### Backend AC (produced in Phase 2, verified in Phase 3)
+
+> BAC-<feature>-<sequence> is produced by api-implementation / data-layer in Phase 2.
+> It may reference a related product AC, but never inherits or reuses that AC's number.
+> BAC uses the same status suffix as product AC.
+
+- BAC-F01-001: [backend testable description, e.g., "POST /todos returns 201"] [status: pending]
+- BAC-F01-002: [backend testable description, e.g., "GET /todos/:id returns 404 for unknown id"] [status: pending]
+
+### Integration AC (produced and verified in Phase 3)
+
+> IAC-<feature>-<sequence> is produced by mock-to-real-switch / contract-verify / e2e-verification in Phase 3.
+> It verifies frontend ↔ backend contract consistency and end-to-end user flows.
+> IAC uses the same status suffix as product AC.
+
+- IAC-F01-001: [integration testable description, e.g., "E2E create-todo flow passes"] [status: pending]
+- IAC-F01-002: [integration testable description, e.g., "frontend mock→real switch succeeds without code changes"] [status: pending]
+
+## Task breakdown
+
+- [ ] T1: [one independently verifiable outcome; normally 15-45 minutes]
+- [ ] T2: [task 2]
+- [ ] T3: [task 3]
+- [ ] T4: [frontend task, if any] Contract: contract.json#<ComponentID> (required for frontend tasks; references the stable component ID from Phase 0)
+
+## Technical plan
+
+[Briefly: which files to change, what modules to add, key design decisions]
+
+## Out of scope
+
+[Explicit boundaries to avoid scope creep]

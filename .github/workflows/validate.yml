@@ -21,4 +21,4 @@ jobs:
         run: ./scripts/test-handoff-validator.ps1
       - name: Check shell syntax
         shell: bash
-        run: bash -n scripts/sync-base.sh harness-*/install.sh harness-solo/.harness/hooks/*.sh harness-solo/.harness/hooks/guards/*.sh harness-solo/.harness/scripts/*.sh
+        run: bash -n scripts/sync-base.sh harness-*/install.sh harness-engineering/.harness/hooks/*.sh harness-engineering/.harness/hooks/guards/*.sh harness-engineering/.harness/scripts/*.sh

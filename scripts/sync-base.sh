@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # sync-base.sh — harness-all development sync script
-# Ensure base files across the 3 frameworks stay consistent, preventing version fragmentation
+# Ensure base files across the 2 frameworks stay consistent, preventing version fragmentation
 #
 # Usage: bash scripts/sync-base.sh [--dry-run] [--check]
 #   --dry-run  Only show differences, do not sync
@@ -11,7 +11,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 
-FRAMEWORKS=("harness-pm" "harness-design" "harness-solo")
+FRAMEWORKS=("harness-pm" "harness-engineering")
 DRY_RUN=false
 CHECK_MODE=false
 
@@ -360,7 +360,7 @@ done
 echo ""
 echo "========================================="
 if [ "$DIFF_COUNT" -eq 0 ]; then
-  echo " ✓ All checks passed; base files across the 3 frameworks are consistent"
+  echo " ✓ All checks passed; base files across the 2 frameworks are consistent"
 else
   echo " ✗ Found $DIFF_COUNT inconsistency(ies)"
 fi

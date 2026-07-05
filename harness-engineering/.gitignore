@@ -1,0 +1,45 @@
+# Project root .gitignore — sensitive files + common ignores
+
+# Sensitive files (do not commit)
+.env
+.env.local
+.env.production
+.env.staging
+*.pem
+*.key
+id_rsa
+id_ed25519
+credentials.json
+service-account*.json
+
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Build artifacts
+dist/
+build/
+.next/
+.nuxt/
+out/
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# harness-engineering install/runtime residue
+.workbuddy/
+.harness-engineering-tmp-*/
+
+# System
+.DS_Store
+Thumbs.db

@@ -29,6 +29,49 @@
         "affected_tasks": { "type": "array", "items": { "type": "string" }, "description": "Task IDs owning removed/superseded ACs; may need re-verification or rework" }
       },
       "additionalProperties": false
+    },
+    "substage_progress": {
+      "type": "object",
+      "description": "Engineering 4-phase progress tracking. Each substage records completion status, user confirmation, and report path. Used by session-start to resume interrupted workflows.",
+      "properties": {
+        "design-intake": {
+          "type": "object",
+          "properties": {
+            "completed": { "type": "boolean" },
+            "user_confirmed": { "type": "boolean", "description": "false = waiting for user confirmation to proceed to next phase" },
+            "report": { "type": "string", "description": "Path to phase-N-report.md relative to framework root" }
+          },
+          "additionalProperties": false
+        },
+        "frontend": {
+          "type": "object",
+          "properties": {
+            "completed": { "type": "boolean" },
+            "user_confirmed": { "type": "boolean" },
+            "report": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "backend": {
+          "type": "object",
+          "properties": {
+            "completed": { "type": "boolean" },
+            "user_confirmed": { "type": "boolean" },
+            "report": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "integration": {
+          "type": "object",
+          "properties": {
+            "completed": { "type": "boolean" },
+            "user_confirmed": { "type": "boolean" },
+            "report": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
     }
   },
   "allOf": [

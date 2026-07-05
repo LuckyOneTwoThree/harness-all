@@ -1,6 +1,6 @@
 param(
     [Parameter(Mandatory = $true)]
-    [ValidateSet('harness-pm', 'harness-design', 'harness-solo')]
+    [ValidateSet('harness-pm', 'harness-engineering')]
     [string]$Framework,
     [Parameter(Mandatory = $true)]
     [string]$TargetProject,

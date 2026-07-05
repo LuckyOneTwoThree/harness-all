@@ -82,7 +82,7 @@ default_mode: skip
 ┌─────────────────┐
 │ session-end     │  Archive + update progress.md
 │                 │  + Record diagnosis conclusion to memory/knowledge-base.md
-│                 │  + No handoff by default; if sunset plan exists, output handoff document
+│                 │  + No handoff by default; if sunset plan exists, output pm-to-engineering.md
 └─────────────────┘
 ```
 

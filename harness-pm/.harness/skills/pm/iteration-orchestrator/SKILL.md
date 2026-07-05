@@ -9,7 +9,7 @@ description: Used when planning iteration cycles or adjusting product priorities
 - Adjust priorities
 - Optimize the Backlog
 - Run an iteration retrospective
-- Triage engineering feedback from harness-solo (`docs/handoff/solo-to-pm.md`) and feed accepted items into the iteration pipeline
+- Triage engineering feedback from harness-engineering (`docs/handoff/engineering-to-pm.md`) and feed accepted items into the iteration pipeline
 - Keywords: iteration decision, Backlog optimization, priority adjustment, iteration retrospective, iteration planning, requirement restructuring, RICE scoring, iteration management
 
 ## Inputs
@@ -18,7 +18,7 @@ description: Used when planning iteration cycles or adjusting product priorities
 - templates/orchestrator-protocol.md
 - docs/monitoring/iteration-plan.md
 - docs/monitoring/iteration-retrospective.md
-# Note: solo-to-pm.md is consumed by prd-orchestrator phase 0 Branch B, not directly by this orchestrator
+# Note: engineering-to-pm.md is consumed by prd-orchestrator phase 0 Branch B, not directly by this orchestrator
 
 ## Outputs
 - output/phase-reports/iteration-orchestrator.json
@@ -31,7 +31,7 @@ description: Used when planning iteration cycles or adjusting product priorities
 
 Iteration is not simply queuing requirements; it is making optimal trade-offs under constrained resources. Every priority adjustment seeks a balance between short-term fixes and long-term value. Data informs decisions but does not make them.
 
-> **Engineering-feedback-driven trigger path**: When `docs/handoff/solo-to-pm.md` is consumed, PM session-start routes accepted engineering feedback to prd-orchestrator phase 0 Branch B (engineering feedback triage). Branch B triages each feedback item (accept/reject/defer) and routes accepted PRD-impact items to phase 1 (design-prd) for PRD update with 4 quality gates. Iteration-orchestrator consumes the PRD changes (if any) produced by phase 1 to drive Backlog priority adjustment. Engineering feedback thus flows: `solo-to-pm.md` → session-start → prd-orchestrator phase 0 Branch B → phase 1 (PRD update) → iteration-orchestrator (Backlog re-prioritization). Iteration-orchestrator never directly consumes `solo-to-pm.md` (Branch B owns triage); it consumes the PRD changes downstream.
+> **Engineering-feedback-driven trigger path**: When `docs/handoff/engineering-to-pm.md` is consumed, PM session-start routes accepted engineering feedback to prd-orchestrator phase 0 Branch B (engineering feedback triage). Branch B triages each feedback item (accept/reject/defer) and routes accepted PRD-impact items to phase 1 (design-prd) for PRD update with 4 quality gates. Iteration-orchestrator consumes the PRD changes (if any) produced by phase 1 to drive Backlog priority adjustment. Engineering feedback thus flows: `engineering-to-pm.md` → session-start → prd-orchestrator phase 0 Branch B → phase 1 (PRD update) → iteration-orchestrator (Backlog re-prioritization). Iteration-orchestrator never directly consumes `engineering-to-pm.md` (Branch B owns triage); it consumes the PRD changes downstream.
 
 ## Orchestration Philosophy
 

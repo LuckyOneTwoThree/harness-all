@@ -1,0 +1,4 @@
+# Consumer receipt JSON files live here.
+# Format: <handoff_id>-receipt.json (ack/reject + reason + consumed_ac_ids).
+# Consumers never edit the producer contract; receipts are the only write-back channel.
+# See ../../HANDOFF_PROTOCOL.md "Consumer Gate and Receipt" section.

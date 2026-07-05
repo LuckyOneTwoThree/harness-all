@@ -1,0 +1,27 @@
+# Session progress log
+
+> append-only, maintained by session-start / session-end.
+> When retention thresholds are exceeded, session-end delegates to memory-maintenance as the sole archive owner; keep the last complete session block.
+> Archived sessions are indexed in memory/index.json (maintained by memory-maintenance) for session-start discovery.
+> First use: copy this file to .harness/memory/progress.md.
+
+## Session: YYYY-MM-DD HH:MM
+
+### Task
+[Goal of this session, in one sentence]
+
+### Completed
+- [Completed items, with evidence]
+
+### To continue
+- [Context to continue in the next session]
+
+### Evidence
+[verify output summary / test results / key decisions]
+
+### AC Change (when a newly accepted handoff supersedes a previously consumed one)
+- removed: [AC IDs in old set but not in new]
+- added: [AC IDs in new set but not in old]
+- affected_tasks: [task IDs owning removed ACs; may need re-verification or rework]
+
+---

@@ -1,0 +1,110 @@
+# harness-engineering — Project requirements document
+
+> Source: produced by harness-pm (dropped into docs/handoff/pm-to-engineering.md and extracted by brainstorming), or filled in directly by the individual developer, or written by this framework's brainstorming.
+> Load timing: read by brainstorming / writing-plans / performance-optimization / release.
+> Positioning: establish the baseline at project initiation; append revision records when requirements change; do not delete confirmed requirements.
+> Division of labor with FEATURES.md: this file is the **requirements definition** (written at initiation, with revision records appended on change), FEATURES.md is the **dynamic status board** (updated during development; all status lives here).
+> Feature numbering rule: F-xxx is assigned in this file at initiation and referenced in FEATURES.md; once assigned, numbers are not reused.
+
+## Project overview
+
+[One sentence: what problem to solve, for whom]
+
+## Background and motivation
+
+[Why build this project? What are the current pain points?]
+
+## Target users
+
+| User role | Typical scenario | Core pain point |
+|---------|---------|---------|
+| [role 1] | [scenario description] | [pain point description] |
+| [role 2] | [scenario description] | [pain point description] |
+
+## Functional requirements
+
+| Number | Feature | Priority | Acceptance criteria |
+|------|------|--------|---------|
+| F-001 | [feature name] | P0 | AC-F01-001: [testable description, e.g., "input X returns Y"] |
+| F-002 | [feature name] | P1 | AC-F02-001: [testable description] |
+
+### Acceptance criteria notes
+
+Acceptance criteria must be **testable** — not "the system should be easy to use", but "input X returns Y".
+
+**AC layering**: the ACs in PROJECT.md are **project-level acceptance conditions** (defined at initiation), while the ACs in spec.md are **single-feature refined acceptance conditions** (produced by writing-plans); the latter must cover the former.
+
+Good AC examples:
+- AC-F01-001: given a Todo array, return a new array sorted by deadline ascending (without mutating the original)
+- AC-F01-002: Todos with no due date sort to the end of the list
+- AC-F01-003: all existing tests do not regress
+
+Bad AC examples (forbidden):
+- "The system should respond quickly" (not testable)
+- "Good user experience" (not testable)
+
+## Out of scope (boundaries)
+
+[Explicitly excluded scope to avoid creep]
+
+- No [feature X], because [reason]
+- No support for [scenario Y], because [reason]
+
+## Project-specific constraints (non-constitution)
+
+[External constraints not covered by constitution.md, e.g., customer mandates, compliance requirements]
+
+- [Constraint 1, e.g., customer requires IE11 support]
+- [Constraint 2, e.g., must pass GDPR compliance audit]
+
+> Note: constitution-level constraints (zero new dependencies, APIs have tests, etc.) are written in constitution.md and not repeated here.
+
+## Non-functional requirements (runtime constraints)
+
+[Runtime quality constraints that must be met; not meeting them is a defect]
+
+- Performance: [e.g., P95 latency < 200ms]
+- Security: [e.g., no hardcoded secrets]
+- Accessibility: [e.g., WCAG 2.1 AA]
+
+## Success metrics (project completeness measure)
+
+[After the project is done, what metrics measure project success? Meeting the bar means success]
+
+- Metric 1: [e.g., CLI startup time < 500ms]
+- Metric 2: [e.g., core command test coverage > 80%]
+- Metric 3: [e.g., users can complete flow X without errors]
+
+> Difference from "non-functional requirements": non-functional requirements are runtime constraints that must be met (not meeting = defect), while success metrics are the measure of project completeness (meeting = success).
+
+## Milestones
+
+[Phased delivery, each phase has verifiable output. Status tracking is in FEATURES.md; only phases are defined here]
+
+| Phase | Goal | Output |
+|------|------|------|
+| M1 | MVP core features usable | F-001, F-002 complete |
+| M2 | Full features + tests | F-003, F-004 complete |
+| M3 | Optimization + docs | Performance met, docs complete |
+
+## Dependencies and risks
+
+[External dependencies, technical risks, mitigation measures]
+
+| Type | Description | Impact | Response |
+|------|------|------|------|
+| Dependency | [e.g., depends on XX API] | [high/medium/low] | [action] |
+| Risk | [e.g., tech selection uncertain] | [high/medium/low] | [action] |
+
+## Open items
+
+[Questions that need discussion or confirmation]
+
+- Open 1: [question description]
+- Open 2: [question description]
+
+## Revision history
+
+| Date | Revision | Reason |
+|------|---------|------|
+| YYYY-MM-DD | Initial version | Project initiation |

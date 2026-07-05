@@ -15,11 +15,10 @@ description: Used when assistance is needed for usability testing. Usability tes
 - loops/LOOP.md
 - docs/product/PRD.md
 - docs/metrics/experiment-report.md
-- docs/handoff/design-to-solo.md
+- User-provided design assets (Figma/v0/md/image paths, optional)
 
 ## Outputs
 - docs/product/PRD.md
-- docs/handoff/pm-to-design.md
 - memory/progress.md
 - memory/knowledge-base.md
 
@@ -49,7 +48,7 @@ description: Used when assistance is needed for usability testing. Usability tes
 |--------|------|------|------|------|
 | Usability test plan | object | Yes | docs/product/PRD.md ("Assumption Map" section) | Test goals, assumption map, MVP features |
 | Test participants | object | Yes | User-provided | Target user personas, recruitment screening criteria |
-| Test task scenarios | object | Yes | User-provided or harness-design output | Usability hypotheses to validate and task scripts (if harness-design has produced prototypes, read prototype paths referenced in docs/handoff/design-to-solo.md) |
+| Test task scenarios | object | Yes | User-provided design assets (Figma/v0/md/image paths) | Usability hypotheses to validate and task scripts (when the user provides prototype/design asset paths, read them for task script generation) |
 | Experiment method selection | object | ○ | docs/metrics/experiment-report.md ("Experiment Design" section) | When method=usability test, consumes the method selection and experiment framework from validation-experiment |
 
 ## Execution Steps
@@ -213,9 +212,9 @@ Convert raw test records into structured data.
 
 | Usability Test Report Change Type | Notification Scope | Notification Method |
 |----------------------|----------|----------|
-| Problem finding add/remove | harness-design (via docs/handoff/pm-to-design.md feedback) | Mark problem change, trigger harness-design prototype and interaction spec update |
+| Problem finding add/remove | User (design assets are user-owned); recorded in PRD for downstream visibility via pm-to-engineering.md | Mark problem change; surface to user who owns design assets (Figma/v0/md); record in PRD so pm-to-engineering.md carries the updated context |
 | Hypothesis validation result change | validation-assumption-map, validation-mvp | Mark validation result change, trigger assumption map and MVP scope update |
-| Improvement suggestion change | harness-design (via docs/handoff/pm-to-design.md feedback) | Mark suggestion change, trigger harness-design prototype update |
+| Improvement suggestion change | User (design assets are user-owned); recorded in PRD for downstream visibility via pm-to-engineering.md | Mark suggestion change; surface to user who owns design assets; record in PRD so pm-to-engineering.md carries the updated context |
 
 ---
 
