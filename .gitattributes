@@ -17,14 +17,14 @@
 .harness/hooks/* text eol=lf
 .harness/hooks/guards/* text eol=lf
 
-# General text files — auto-normalize (follow local settings on checkout, convert to LF on commit)
-*.md text auto
-*.yaml text auto
-*.yml text auto
-*.json text auto
-*.toml text auto
-*.txt text auto
-*.csv text auto
+# General text files — force LF (required for cross-framework byte-equality checks in validate.ps1)
+*.md text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.txt text eol=lf
+*.csv text eol=lf
 
 # Web/code files — force LF
 *.js text eol=lf

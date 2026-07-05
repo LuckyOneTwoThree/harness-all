@@ -11,13 +11,13 @@
 .harness/hooks/* text eol=lf
 .harness/hooks/guards/* text eol=lf
 
-# General text — auto-normalize
-*.md text auto
-*.yaml text auto
-*.yml text auto
-*.json text auto
-*.toml text auto
-*.txt text auto
+# General text — force LF (required for cross-framework byte-equality checks)
+*.md text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.txt text eol=lf
 
 # Code files — force LF
 *.js text eol=lf
