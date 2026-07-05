@@ -14,9 +14,13 @@ $root = Split-Path -Parent $PSScriptRoot
 $frameworks = @('harness-pm', 'harness-design', 'harness-solo')
 $errors = New-Object System.Collections.Generic.List[string]
 $warnings = New-Object System.Collections.Generic.List[string]
+$whitelistedWarnings = New-Object System.Collections.Generic.List[string]
 
 function Add-ValidationError([string]$Message) { $script:errors.Add($Message) }
 function Add-ValidationWarning([string]$Message) { $script:warnings.Add($Message) }
+# Whitelisted warnings document legitimate per-framework differences that have already
+# been verified by key-section checks above. They must NOT fail -Strict mode.
+function Add-WhitelistedWarning([string]$Message) { $script:whitelistedWarnings.Add($Message) }
 function Read-Utf8([string]$Path) { return [System.IO.File]::ReadAllText($Path, [System.Text.Encoding]::UTF8) }
 
 function Get-Frontmatter([string]$Path) {
@@ -188,7 +192,7 @@ foreach ($fw in $frameworks) {
     }
 }
 if (@($stateProtocolHashes.Values | Select-Object -Unique).Count -ne 1) {
-    Add-ValidationWarning 'STATE_PROTOCOL.md differs across frameworks (legitimate per A2/Solo extensions; key sections verified above)'
+    Add-WhitelistedWarning 'STATE_PROTOCOL.md differs across frameworks (legitimate per A2/Solo extensions; key sections verified above)'
 }
 
 # state.schema.json: Design has spec_ref/nested_progress (A2); Solo has substage enum; PM has neither.
@@ -207,7 +211,7 @@ foreach ($fw in $frameworks) {
     }
 }
 if (@($stateSchemaHashes.Values | Select-Object -Unique).Count -ne 1) {
-    Add-ValidationWarning 'state.schema.json differs across frameworks (legitimate per A2/Solo extensions; required fields verified above)'
+    Add-WhitelistedWarning 'state.schema.json differs across frameworks (legitimate per A2/Solo extensions; required fields verified above)'
 }
 
 if (@($riskModelHashes.Values | Select-Object -Unique).Count -ne 1) {
@@ -226,7 +230,7 @@ foreach ($fw in $frameworks) {
     if ($hpContent -notmatch 'ac_ids') { Add-ValidationError "$fw handoff-protocol.md missing ac_ids" }
 }
 if (@($handoffProtocolHashes.Values | Select-Object -Unique).Count -ne 1) {
-    Add-ValidationWarning 'handoff-protocol.md differs across frameworks (legitimate Solo Standalone Mode extension; key sections verified above)'
+    Add-WhitelistedWarning 'handoff-protocol.md differs across frameworks (legitimate Solo Standalone Mode extension; key sections verified above)'
 }
 
 if (@($handoffManifestSchemaHashes.Values | Select-Object -Unique).Count -ne 1) { Add-ValidationError 'handoff-manifest.schema.json differs across frameworks' }
@@ -239,7 +243,7 @@ foreach ($fw in $frameworks) {
     if ($aipContent -notmatch 'supersed') { Add-ValidationError "$fw acceptance-id-protocol.md missing supersede mechanism" }
 }
 if (@($acceptanceProtocolHashes.Values | Select-Object -Unique).Count -ne 1) {
-    Add-ValidationWarning 'acceptance-id-protocol.md differs across frameworks (legitimate Design A2 review-evidence.md reference; key sections verified above)'
+    Add-WhitelistedWarning 'acceptance-id-protocol.md differs across frameworks (legitimate Design A2 review-evidence.md reference; key sections verified above)'
 }
 
 if (@($handoffValidatorHashes.Values | Select-Object -Unique).Count -ne 1) { Add-ValidationError 'validate-handoff.ps1 differs across frameworks' }
@@ -418,11 +422,12 @@ foreach ($file in $markdownFiles) {
 
 Write-Host "Validated $totalSkills skills and $totalWorkflows workflows across $($frameworks.Count) frameworks."
 foreach ($warning in $warnings) { Write-Warning $warning }
+foreach ($whitelisted in $whitelistedWarnings) { Write-Host "WHITELISTED: $whitelisted" -ForegroundColor Yellow }
 foreach ($validationError in $errors) { Write-Host "ERROR: $validationError" -ForegroundColor Red }
 
 if ($errors.Count -gt 0 -or ($Strict -and $warnings.Count -gt 0)) {
-    Write-Host "Validation failed: $($errors.Count) error(s), $($warnings.Count) warning(s)." -ForegroundColor Red
+    Write-Host "Validation failed: $($errors.Count) error(s), $($warnings.Count) warning(s), $($whitelistedWarnings.Count) whitelisted warning(s)." -ForegroundColor Red
     exit 1
 }
 
-Write-Host "Validation passed: 0 errors, $($warnings.Count) warning(s)." -ForegroundColor Green
+Write-Host "Validation passed: 0 errors, $($warnings.Count) warning(s), $($whitelistedWarnings.Count) whitelisted warning(s)." -ForegroundColor Green
