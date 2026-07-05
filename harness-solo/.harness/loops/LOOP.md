@@ -1,0 +1,98 @@
+# Solo LOOP
+
+Solo uses one persisted PLAN → ACT → VERIFY loop. Routing is defined in `.harness/rules/engineering-pipeline.md`; shared counting and breaker semantics are defined in `STATE_PROTOCOL.md`; `state.schema.json` is the machine-readable state shape.
+
+## Core Loop
+
+```text
+PLAN (spec + task) → ACT (one attempt + inline verify-fast)
+        ↑                    │
+        └── replan ──────────┴── fail by cause
+                                  │ pass all tasks
+                                  ▼
+                          VERIFY-FULL → CODE-REVIEW → DONE
+```
+
+## Loop Types
+
+| Type | ACT owner | Recommended failed-attempt limit | Success condition |
+|---|---|---:|---|
+| feature | test-driven-development | 5 | stable criteria satisfied |
+| bugfix | test-driven-development | 3 | regression reproduced then fixed |
+| refactor | test-driven-development | 3 | behavior preserved and target improved |
+| optimize | performance-optimization | 3 | benchmark target met without regression |
+| migration | migration | 3 | behavior equivalent and old usage removed safely |
+
+The recommended limit is an escalation point, not a second breaker. Further attempts require explicit user authorization. The hard cap and attempt-10 behavior come only from `STATE_PROTOCOL.md`.
+
+## Attempt Lifecycle
+
+1. Read raw `state.yaml`; reject terminal state or active breaker.
+2. If `iteration >= 10`, do not start another ACT.
+3. Increment iteration exactly once and persist `stage: act`, `status: running` before mutation.
+4. Execute one independently verifiable outcome.
+5. Run inline verify-fast within the ACT skill. It writes the attempt's single terminal outcome to `iterations.log` (exactly one PASSED/FAILED line; no second attempt record).
+6. Failure routes to ACT, PLAN, or systematic-debugging without another increment. The next ACT increments when it actually begins.
+7. After all tasks pass, run verify-full once, then code-review.
+
+## Persistent Artifacts
+
+```text
+loops/specs/<task>/
+├── spec.md       # current approved plan; overwrite on explicit replan
+├── state.yaml    # current state; overwrite
+├── evidence.md   # final verification evidence; verify owns it
+├── review.md     # final review and responses; code-review owns it
+└── iterations.log# append-only attempt/review/reset events
+```
+
+Do not use evidence.md as an ACT scratchpad. Actual Red/Green output may be reused by the ACT skill's inline verify-fast only when it is still present in the same execution context and the command, code, and attempt have not changed; otherwise rerun.
+
+## State Responsibilities
+
+| Field | Plan | ACT skill | Verify | Code review | Debug |
+|---|---:|---:|---:|---:|---:|
+| task/start/mode | initialize | — | — | — | — |
+| iteration | `0` | increment before ACT | never | never | never |
+| stage | `plan` | `act` | `verify` | `review` | `debug` |
+| status | `running` | running/retrying | running/retrying/needs-human/failed | done/retrying/needs-human | retrying/needs-human |
+| last error | clear | observed ACT failure | observed gate failure | blocking finding | symptom (entry) / cleared (exit; root cause logged in iterations.log) |
+
+**Valid stage values**: `plan`, `act`, `verify`, `review`, `debug`. The `debug` stage is entered when failure routing sends control to `systematic-debugging` (a diagnostic skill, NOT an ACT skill — it does not increment iteration or own per-attempt terminal outcomes). It exits when systematic-debugging returns to LOOP for verify-full.
+
+`done` belongs exclusively to code-review. The `stage: verify` value is disambiguated by the `substage` field (see state.schema.json):
+
+| substage | Meaning | Written by |
+|---|---|---|
+| `inline-passed` | ACT inline fast-verify passed (per-attempt); may continue to next consumer or hand off to verify-full | active ACT skill (inline verify-fast) |
+| `inline-failed` | ACT inline fast-verify failed (per-attempt); routed for rework within the same ACT skill | active ACT skill (inline verify-fast) |
+| `awaiting-full` | ACT fully complete; verify-full not yet started | active ACT skill (after last consumer) |
+| `full-running` | verify-full skill executing | verify |
+| `full-passed` | verify-full passed; awaiting code-review | verify |
+| `full-failed` | verify-full failed; routed for rework | verify |
+
+`stage: verify` without a `substage` is ambiguous and should not be written. Verify-full success transitions to `substage: full-passed, status: running` (awaiting review), not back to `substage: inline-passed`.
+
+## Product Orchestration
+
+Product-level state stores only the current nested task. Aggregate feature status lives in `.harness/FEATURES.md`; `ENGINEERING_PLAN.md` remains the approved scope, dependency graph, and execution order. Full nested-delivery and integration-checkpoint rules live in `engineering-pipeline.md` (Canonical Path §Product orchestration) and the `new-product-engineering` workflow; this file does not duplicate them.
+
+Resume order:
+
+1. product state → `current_nested_task`;
+2. nested task state → exact LOOP position;
+3. FEATURES.md → aggregate completion/dependency status.
+
+## Failure Routing
+
+Failure routes by cause are defined in `engineering-pipeline.md` (Routing Rules). The summary: requirement/spec → PLAN; implementation/test → ACT; unknown cause → systematic-debugging; upstream contract defect → block and feedback; recommended limit → `needs-human`; attempt 10 / attempt 11 → hard breaker per `STATE_PROTOCOL.md`; code-review finding → code-review response then ACT if code changes.
+
+## Completion Gate
+
+A task is complete only when:
+
+- every planned stable AC/DAC has cited evidence;
+- verify-full passes with actual command output;
+- code-review has no unresolved blocking findings;
+- `review.md` exists and code-review writes `status: done`;
+- session-end synchronizes the task board.

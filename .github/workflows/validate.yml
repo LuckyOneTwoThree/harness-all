@@ -1,0 +1,24 @@
+name: Validate harness protocols
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate framework structure and protocol invariants
+        shell: pwsh
+        run: ./scripts/validate.ps1 -Strict
+      - name: Test handoff package validator
+        shell: pwsh
+        run: ./scripts/test-handoff-validator.ps1
+      - name: Check shell syntax
+        shell: bash
+        run: bash -n scripts/sync-base.sh harness-*/install.sh harness-solo/.harness/hooks/*.sh harness-solo/.harness/hooks/guards/*.sh harness-solo/.harness/scripts/*.sh

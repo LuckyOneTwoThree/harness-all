@@ -1,0 +1,50 @@
+# Sensitive files (do not commit)
+.env
+.env.local
+.env.production
+.env.staging
+*.pem
+*.key
+id_rsa
+id_ed25519
+credentials.json
+service-account*.json
+
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Build artifacts
+dist/
+build/
+.next/
+.nuxt/
+out/
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Archives
+*.zip
+*.tar.gz
+
+# Temp
+*.tmp
+*.bak
+
+# Tool local state
+.workbuddy/

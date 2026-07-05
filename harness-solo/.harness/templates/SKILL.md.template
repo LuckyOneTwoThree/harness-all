@@ -1,0 +1,61 @@
+---
+name: skill-name                    # Required, must match the directory name
+description: One-sentence description, used for INDEX.md reference  # Required
+---
+
+# Skill Title
+
+## When to use
+- Scenario 1
+- Scenario 2
+[Replaces the former `triggers` frontmatter field]
+
+## Iron Rules / Core Principles
+[Non-negotiable rules, placed at the top to avoid lost-in-the-middle]
+
+## Inputs
+- rules/security.md (read-only, constraint reference)
+- loops/specs/<feature>/state.yaml (read-write)
+[Files this skill depends on. Annotate read-only vs read-write. Replaces the former `reads` field]
+
+## Outputs
+- loops/specs/<feature>/state.yaml
+[Files this skill produces. Replaces the former `writes` field]
+
+## Process
+1. Step 1
+   *Exit condition: <verifiable criterion, not met → redo this step>*
+2. Step 2
+   *Exit condition: <verifiable criterion>*
+3. Step 3
+   *Exit condition: <verifiable criterion>*
+
+## Quality gates
+- [Quality gate rule 1]
+- [Quality gate rule 2]
+[Replaces the former `quality_gates` field. If this skill runs inside a LOOP, the iteration cap follows the LOOP.md default; the former `max_iterations` field is no longer used. Exception: orchestrator skills may use `## Phase Gates` instead — see orchestrator-protocol.md section 11]
+
+## Anti-Rationalization Table
+| Anti-pattern | Common excuse | Why it doesn't hold |
+|---------------|---------------|---------------------|
+| Skip step X | "It's simple enough" | Simple cases hide assumptions; later fix cost is 10x |
+[Pre-empt common shortcuts the Agent might take. Inspired by superpowers]
+
+## Red Flags
+- Signal 1 that means "stop immediately"
+- Signal 2 that means "stop immediately"
+[If any flag appears, halt and report to the user]
+
+## Prohibited
+- Do not do X
+- Do not do Y
+
+## Relationship with LOOP
+[Which LOOP phase this corresponds to (PLAN/ACT/VERIFY), and how it interacts]
+[If not inside a LOOP, describe the trigger timing]
+
+## Reference (optional)
+[If the skill exceeds ~100 lines, move deep content (schemas, long examples, pattern lists) to Reference/ subdirectory]
+- Reference/schema.md — Full schema definition
+- Reference/examples.md — Good/Bad examples
+[Agent reads SKILL.md first, fetches Reference files only when needed]

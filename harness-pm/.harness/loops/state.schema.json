@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/LuckyOneTwoThree/harness-all/state.schema.json",
+  "title": "Harness LOOP state",
+  "type": "object",
+  "required": ["current_task", "iteration", "stage", "status", "started_at"],
+  "properties": {
+    "current_task": { "type": "string", "pattern": "^[0-9]{3}-[a-z0-9][a-z0-9-]*$" },
+    "iteration": { "type": "integer", "minimum": 0, "maximum": 10 },
+    "stage": { "type": "string", "minLength": 1 },
+    "status": {
+      "type": "string",
+      "enum": ["new", "running", "retrying", "done", "failed", "needs-human", "blocked"]
+    },
+    "started_at": { "type": "string", "format": "date-time" },
+    "last_error": { "type": "string" },
+    "last_error_at": { "type": "string", "format": "date-time" },
+    "substage": { "type": "string" },
+    "exploration_mode": { "type": "string", "enum": ["deep", "standard", "skip"] },
+    "hard_limit_reached": { "type": "boolean" },
+    "current_nested_task": { "type": "string", "pattern": "^[0-9]{3}-[a-z0-9][a-z0-9-]*$" },
+    "ac_change": {
+      "type": "object",
+      "description": "Recorded by session-start's Batch-aware Detection step (5a) when a newly accepted handoff supersedes a previously consumed one. Null or absent when no AC-level change occurred.",
+      "properties": {
+        "removed": { "type": "array", "items": { "type": "string" }, "description": "AC IDs in old set but not in new (forward delivery: retired ACs)" },
+        "added": { "type": "array", "items": { "type": "string" }, "description": "AC IDs in new set but not in old (forward delivery: new ACs; reverse feedback: newly referenced ACs)" },
+        "superseded": { "type": "array", "items": { "type": "string" }, "description": "AC IDs explicitly marked as superseded by batch.superseded_acs (forward: replaced ACs; reverse: feedback withdrawn)" },
+        "affected_tasks": { "type": "array", "items": { "type": "string" }, "description": "Task IDs owning removed/superseded ACs; may need re-verification or rework" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "hard_limit_reached": { "const": true } },
+        "required": ["hard_limit_reached"]
+      },
+      "then": {
+        "properties": { "status": { "const": "failed" }, "iteration": { "minimum": 10 } },
+        "required": ["last_error"]
+      }
+    }
+  ],
+  "additionalProperties": false
+}

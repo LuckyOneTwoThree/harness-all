@@ -1,0 +1,7 @@
+product_type,keywords,primary_style,secondary_styles,landing_pattern,dashboard_style,color_palette_focus,key_considerations
+SaaS Analytics,"saas,analytics,dashboard,data",Minimal Clean,Functional+Data-dense,Hero-Centric+Feature-Grid,Data-dense Table,Neutral+Blue,Data density+Real-time+Export
+E-commerce Store,"ecommerce,shop,store,retail",Bold Vibrant,Trust+Conversion,Hero-Centric+Product-Grid,Product Management,Warm+Accent,Trust+Checkout+Mobile
+Fintech App,"fintech,finance,banking,payment",Clean Professional,Secure+Trust,Trust-Focused+Data-Viz,Portfolio+Transaction,Blue+Green,Security+Compliance+Real-time
+Healthcare Portal,"healthcare,medical,patient,clinic",Soft Minimal,Accessible+Trust,Calm+Accessible,Patient+Appointment,Calm+Green+Blue,Accessibility+Privacy+Calm
+Education Platform,"education,learning,course,lms",Friendly Modern,Structured+Engaging,Feature-Grid+Testimonial,Course+Progress,Warm+Accent,Engagement+Progress+Mobile
+Beauty Spa,"beauty,spa,wellness,cosmetics",Soft Elegant,Calm+Luxury,Hero-Centric+Service-Menu,Booking+Service,Calming+Gold,Aesthetics+Booking+Mobile

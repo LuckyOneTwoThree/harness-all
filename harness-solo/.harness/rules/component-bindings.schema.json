@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harness.local/schemas/component-bindings.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "mode", "component_contract_sha256", "tech_stack_revision", "bindings"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "mode": { "enum": ["family", "standalone-fallback"] },
+    "component_contract_sha256": {
+      "oneOf": [
+        { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        { "type": "null" }
+      ],
+      "description": "Required non-null in family mode (hash of component-contract.json). Null only allowed when mode=standalone-fallback (no design package)."
+    },
+    "tech_stack_revision": { "type": "string", "minLength": 1 },
+    "bindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["component_id", "engineering_component", "module", "property_bindings"],
+        "properties": {
+          "component_id": { "type": "string", "pattern": "^CMP-[A-Z0-9-]+$" },
+          "engineering_component": { "type": "string", "minLength": 1 },
+          "module": { "type": "string", "minLength": 1 },
+          "property_bindings": { "type": "object", "additionalProperties": { "type": "string" } }
+        }
+      }
+    }
+  }
+}

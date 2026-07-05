@@ -1,0 +1,125 @@
+# harness-design — Design system configuration
+
+> Fill in at project initiation. Maintained by design-system / design-token / component-design skills.
+> Load timing: read by design-brief / ui-design (A1: replaces former visual-design + interaction-design) / verify.
+
+## Color system
+
+### Primary
+
+| Token name | HEX | RGB | Usage | Contrast (on white) |
+|--------|-----|-----|------|---------------|
+| color-primary-500 | [#xxxxxx] | [rgb()] | Brand primary | [X:1] |
+| color-primary-600 | [#xxxxxx] | [rgb()] | Primary hover | [X:1] |
+| color-primary-700 | [#xxxxxx] | [rgb()] | Primary active | [X:1] |
+
+### Secondary
+
+| Token name | HEX | RGB | Usage | Contrast (on white) |
+|--------|-----|-----|------|---------------|
+| color-secondary-500 | [#xxxxxx] | [rgb()] | Secondary color | [X:1] |
+
+### Neutral
+
+| Token name | HEX | RGB | Usage |
+|--------|-----|-----|------|
+| color-gray-100 | [#xxxxxx] | [rgb()] | Background |
+| color-gray-500 | [#xxxxxx] | [rgb()] | Secondary text |
+| color-gray-900 | [#xxxxxx] | [rgb()] | Primary text |
+
+### Semantic colors
+
+| Token name | HEX | Usage | Contrast (on white) |
+|--------|-----|------|---------------|
+| color-success | [#xxxxxx] | Success | [X:1] |
+| color-warning | [#xxxxxx] | Warning | [X:1] |
+| color-error | [#xxxxxx] | Error | [X:1] |
+| color-info | [#xxxxxx] | Info | [X:1] |
+
+## Typography system
+
+### Font family
+
+| Token name | Font stack | Usage |
+|--------|--------|------|
+| font-family-sans | ["IBM Plex Sans", "Noto Sans SC", sans-serif] | Body |
+| font-family-mono | ["JetBrains Mono", monospace] | Code |
+
+### Font size scale
+
+| Token name | Value | Usage |
+|--------|-----|------|
+| font-size-sm | [0.875rem] | Secondary text |
+| font-size-md | [1rem] | Body |
+| font-size-lg | [1.125rem] | Subtitle |
+| font-size-xl | [1.25rem] | Heading |
+| font-size-2xl | [1.5rem] | Large heading |
+
+### Font weight
+
+| Token name | Value | Usage |
+|--------|-----|------|
+| font-weight-regular | [400] | Body |
+| font-weight-medium | [500] | Emphasis |
+| font-weight-bold | [700] | Heading |
+
+### Line height
+
+| Token name | Value | Usage |
+|--------|-----|------|
+| line-height-tight | [1.25] | Heading |
+| line-height-normal | [1.5] | Body |
+| line-height-relaxed | [1.625] | Long-form text |
+
+## Spacing system
+
+Base spacing: [8px]
+
+| Token name | Value | Usage |
+|--------|-----|------|
+| spacing-1 | [0.25rem / 4px] | Small spacing |
+| spacing-2 | [0.5rem / 8px] | Within components |
+| spacing-4 | [1rem / 16px] | Between components |
+| spacing-6 | [1.5rem / 24px] | Between blocks |
+| spacing-8 | [2rem / 32px] | Between large blocks |
+
+## Shadow system
+
+| Token name | Value | Usage |
+|--------|-----|------|
+| shadow-sm | [0 1px 2px rgba(0,0,0,0.05)] | Subtle |
+| shadow-md | [0 4px 6px rgba(0,0,0,0.1)] | Card |
+| shadow-lg | [0 10px 15px rgba(0,0,0,0.1)] | Floating |
+
+## Radius system
+
+| Token name | Value | Usage |
+|--------|-----|------|
+| radius-sm | [0.25rem / 4px] | Small radius |
+| radius-md | [0.5rem / 8px] | Medium radius |
+| radius-lg | [1rem / 16px] | Large radius |
+| radius-full | [9999px] | Circle |
+
+## Breakpoint system
+
+| Token name | Value | Target device |
+|--------|-----|---------|
+| breakpoint-sm | [640px] | Large phone / small tablet portrait |
+| breakpoint-md | [768px] | Tablet portrait |
+| breakpoint-lg | [1024px] | Tablet landscape / small desktop |
+| breakpoint-xl | [1280px] | Desktop |
+| breakpoint-2xl | [1536px] | Large desktop |
+
+## Accessibility compliance
+
+- [ ] All text contrast ≥ 4.5:1 (AA)
+- [ ] Large text contrast ≥ 3:1 (AA)
+- [ ] Body font size ≥ 16px
+- [ ] Line height ≥ 1.5
+- [ ] Touch targets ≥ 44px
+
+## Decision log
+
+| Date | Decision | Reason |
+|------|------|------|
+| YYYY-MM-DD | [selection decision] | [why] |

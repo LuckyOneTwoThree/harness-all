@@ -1,0 +1,195 @@
+---
+name: design-brief
+description: Guides agents through design requirement discovery. Use when starting a new design task or when requirements are unclear. Use when no DESIGN_BRIEF.md exists. B4 (2026-07-05): Vibe Translation / Aesthetic Direction exploration stripped for Solo mode — style is either user-given or provided via image-to-contract workflow; AC transmission + Anti AI-Slop are the only mandatory outputs.
+---
+# Design Brief
+
+## When to use
+- New design task starting
+- Requirements unclear
+- No DESIGN_BRIEF.md
+
+## Inputs
+- .harness/rules/security.md
+- .harness/data/design/vibes.csv (B4: only used when user explicitly provides vibe words; not probed for by default)
+- .harness/craft/anti-ai-slop.md
+- docs/handoff/pm-to-design.md
+- Handoff package's `artifacts/product/PRD.md` (preferred; read-only; sections 3.2.3 interaction logic, 3.2.4 state design, 3.2.5 data model, 5.1 performance). Fallback to producer-local `docs/product/PRD.md` only when the handoff package does not carry the PRD artifact (e.g., standalone PM contract without artifact bundle). Per handoff-protocol.md, producer-local paths outside a valid package are invalid in family mode.
+- Handoff package's `artifacts/product/prd.json` (preferred; read-only; pages[], entities[], user_flows[] for structured design input). Same fallback rule as PRD.md.
+
+## Outputs
+- docs/visual/DESIGN_BRIEF.md (B4: target <60 lines; AC transmission + Anti AI-Slop are mandatory; style exploration is optional/condensed)
+
+## Overview
+
+The entry skill for design tasks; forces requirement clarification and produces DESIGN_BRIEF.md. A 15-minute brief prevents hours of rework.
+
+**B4 scope (2026-07-05 audit)**: In Solo mode, users typically already have a clear style direction (or it arrives via the image-to-contract workflow). The former Vibe Translation (step 4) and Aesthetic Direction Selection (step 5) — which generated long vibe-word-to-token mappings and 2-3 visual direction options — are **condensed to a single optional step**. The mandatory outputs are: Product Type + 4 Requirement Elements + Reframe (AC-xxx) + Anti AI-Slop field. This keeps the brief under 60 lines and focused on AC transmission (the only thing solo's writing-plans consumes).
+
+## Process
+
+### 1. Surface Assumptions (Explicitly List Assumptions)
+
+Before non-trivial decisions, explicitly list assumptions for user confirmation:
+
+```
+ASSUMPTIONS I'M MAKING:
+1. This is web, not mobile
+2. Use the project's existing color palette
+3. Target modern browsers
+ Correct me now or I'll proceed with these.
+```
+
+### 0.5 Read PRD Directly (Upstream Requirement Source)
+
+Before consuming the handoff's AC-xxx list, read the PRD itself for full context:
+- Resolve PRD path from the handoff package first: `artifacts/product/PRD.md` and `artifacts/product/prd.json`. Only fall back to producer-local `docs/product/PRD.md` / `docs/product/prd.json` when the package does not carry these artifacts (e.g., standalone PM contract).
+- Read PRD.md sections 3.2.3 (interaction logic), 3.2.4 (state design), 3.2.5 (data model), 5.1 (performance)
+- Read prd.json arrays: `pages[]` (page list + flows), `entities[]` (for form/component design), `user_flows[]` (for flow diagrams)
+- The unified PRD always produces all arrays — no fallback needed
+- These sections provide the structural foundation that handoff AC-xxx alone cannot convey
+
+*Exit condition: PRD sections read and understood; key pages/entities/states are noted for design exploration.*
+
+### 1.5 Review and Strip Overreach ACs (Push-back Mechanism)
+
+Review the AC-xxx items passed down from upstream `pm-to-design.md`. If you find PM ACs that contain specific UI form directives (e.g., "put a shopping cart icon in the top nav bar", "pop up a red confirmation box"), you must **exercise push-back authority**:
+1. Refuse the overreaching wording; preserve the original AC ID and text in the cleanup log for traceability.
+2. Do not silently change meaning under the same ID. Request harness-pm to supersede the AC through a new PRD revision, or add a separately scoped DAC for a design-verifiable constraint.
+3. Record the proposed UX-intent wording, affected ID, and required PM decision in the `[AC Cleanup Log]`; unresolved product AC defects block a ready handoff.
+
+### 2. Product Type Identification
+
+Identify the product type (SaaS / E-commerce / Finance / Healthcare / Education / ...) for downstream design-recommendation.
+
+### 3. Extract the 4 Requirement Elements
+
+- Product Type (required)
+- Target Audience (required)
+- Style Keywords (optional; B4: only if user explicitly provides — do not probe)
+- Platform constraints (optional; framework choice belongs to harness-solo)
+
+### 4. Style Direction (B4: condensed — replaces former Vibe Translation + Aesthetic Direction)
+
+**Default (Solo mode)**: Skip detailed vibe-to-token mapping. If the user provided style keywords in step 3, record them verbatim. If style arrives via image-to-contract workflow, record "style: from reference image" and skip this step entirely.
+
+**Only when user explicitly asks for style exploration** (or provides vibe words like "warm, retro, niche"):
+1. Grep `.harness/data/design/vibes.csv` to match vibe words
+2. **Fallback**: If vibes.csv has no match or is empty, invoke prior knowledge reasoning, but must add a warning:
+   ```
+   [WARNING: Using LLM Prior Knowledge due to empty/unmatched CSV]
+   ```
+3. Output: one-line style summary (color palette / font / border radius / shadow) — NOT 2-3 full visual directions
+
+**B4 rationale**: The former 2-3 Aesthetic Direction options (each with tone/scenarios/risks) generated excessive prose for Solo mode. Solo users either know their style or get it from a reference image. Detailed multi-direction exploration belongs to team-mode design reviews, not Solo fast-path.
+
+### 5. Reframe (Translate Vague Requirements into Testable ACs) — MANDATORY
+
+Preserve valid upstream `AC-<feature>-<sequence>` IDs. Add design-derived criteria only as stable `DAC-<page>-<sequence>` or `DAC-GLOBAL-<sequence>` IDs:
+
+| Vague Requirement | Testable Condition (AC) |
+|-------------------|-------------------------|
+| "make it look better" | DAC-P01-001: Card spacing uses token scale / DAC-GLOBAL-001: Contrast ≥4.5:1 |
+| "make a nice button" | DAC-GLOBAL-002: Button has required interaction states |
+| "this page should be modern" | Clarify intended qualities first; then allocate scoped DAC IDs to testable design outcomes |
+
+**Acceptance ID Rules**:
+- Follow `.harness/rules/acceptance-id-protocol.md`; gaps are valid and IDs are never renumbered or reused.
+- PM-owned AC meaning is immutable in Design. Design additions use DAC IDs and may reference related AC IDs.
+- Every criterion records source, scope, revision introduced, and a verifiable value/condition/state.
+
+### 6. Anti AI-Slop Explicit Field — MANDATORY
+
+Add an Anti AI-Slop Requirements field to DESIGN_BRIEF.md, referencing craft/anti-ai-slop.md.
+
+### 7. Constitution Check
+
+Check for violations of constitution.md.
+
+### 8. Output
+
+Write to `docs/visual/DESIGN_BRIEF.md`, format below. **B4 target: <60 lines.**
+
+## DESIGN_BRIEF.md Output Format (B4: condensed)
+
+```markdown
+# Design Brief
+
+## Product Type
+<Identification result>
+
+## Target Audience
+<Target users>
+
+## Style Keywords
+<Style keywords from user, or "from reference image", or "None provided">
+
+## Platform Constraints
+<Device/browser/platform constraints, or "None known"; no framework selection required>
+
+## Style Direction
+<One-line summary if user provided style; or "from reference image"; or "default to existing design system">
+
+## Reframed Success Criteria
+- AC-F01-001: <Preserved product criterion, if applicable>
+- DAC-P01-001: <Page-scoped design criterion>
+- DAC-GLOBAL-001: <Cross-page design criterion>
+
+## AC Cleanup Log (Push-back Log)
+> Records overreaching UI directives refused and rewritten by the design side
+- Original AC-xxx: <PM's rigid directive> → Rewritten as: <Pure UX goal>
+
+## Anti AI-Slop Requirements
+- Defaults to avoid: purple-blue gradient / symmetric three-column / emoji icons / generic default font
+- Approved brand overrides: <rule ID + source + rationale + scope + review point, or None>
+- Required: Use the project design system's fonts and color palette
+
+## Assumptions
+1. <Assumption 1>
+2. <Assumption 2>
+```
+
+## Common Rationalizations
+
+| Excuse | Reality |
+|--------|---------|
+| "Requirements are clear, let's just start designing" | A 15-minute brief prevents hours of rework |
+| "What the user says is what they want" | Users describe solutions, not requirements; Reframe them |
+| "B4: skipping style exploration means low quality" | Solo mode users know their style or get it from reference images; detailed multi-direction exploration is team-mode overhead |
+| "Assumptions are obvious, no need to list them" | Unlisted assumptions get silently filled in by the Agent, causing direction drift |
+
+## Red Flags
+
+- Skipping Surface Assumptions and starting design directly
+- Copying upstream ACs containing rigid UI directives verbatim (abandoning professional design judgment)
+- Using vague requirements as acceptance criteria
+- Entering design without identifying the product type
+- Missing the Anti AI-Slop field
+- B4 violation: generating 2-3 full Aesthetic Direction options with tone/scenarios/risks in Solo mode (condensed to one-line summary or skipped)
+
+## Hard Gate (5 checks)
+
+DESIGN_BRIEF.md is treated as passed only when ALL of the following are satisfied; otherwise the workflow does not proceed:
+
+1. **Requirements clear** — Product Type and Target Audience are explicit; Style Keywords and Platform Constraints are either explicit or recorded as not provided
+2. **ACs testable** — every AC-xxx contains a specific value / condition / state and is verifiable
+3. **Constitution compliant** — no violation of `constitution.md` (WCAG 2.1 AA, mobile-first, design-system-first, etc.)
+4. **User confirmed** — Assumptions are explicitly listed and the user has confirmed them (evidence: conversation record)
+5. **Technically feasible** — token and interaction recommendations respect known platform constraints without choosing harness-solo's tech stack
+
+## Verification
+
+- [ ] DESIGN_BRIEF.md contains required product/audience fields and explicit status for optional style/platform fields
+- [ ] Assumptions explicitly listed and confirmed by the user (evidence: conversation record)
+- [ ] B4: Style Direction is either one-line summary, "from reference image", or "default to existing design system" (NOT 2-3 full visual directions in Solo mode)
+- [ ] Anti AI-Slop Requirements field present (evidence: file content)
+- [ ] If upstream overreaching ACs exist, push-back executed and recorded in "AC Cleanup Log" (evidence: file content)
+- [ ] Reframed Success Criteria are testable and numbered as AC-xxx (evidence: each contains AC number + specific value/condition)
+- [ ] B4: DESIGN_BRIEF.md under 60 lines (evidence: line count)
+
+## Relationship with LOOP
+
+- Not run inside LOOP (runs in the pre-LOOP design-brief stage)
+- The AC-xxx list produced is consumed directly by the LOOP.md PLAN stage and written into spec.md (AC transmission is the mandatory core output)
+- The Style Direction produced is consumed by the visual-design skill (B4: condensed form still sufficient — visual-design derives from design system + style summary, not from 2-3 full directions)
+- The Anti AI-Slop Requirements produced are checked by the verify skill's lint step

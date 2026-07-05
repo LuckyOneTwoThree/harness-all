@@ -1,0 +1,70 @@
+# constitution.md — Project constitution (template)
+
+> **Role note**: This file is the constitution for **your own project**, constraining the design behavior of this project.
+> It is a different file from the harness-design framework repository's own constitution (the source file of `.harness/templates/constitution.md.template`) — that one constrains "developing the framework itself", while this one constrains "using the framework to design your project".
+>
+> Non-negotiable principles unique to each project.
+> Division of labor with AGENTS.md: AGENTS.md contains general work rules (the same for all projects), while constitution.md contains project-specific constraints (different for each project).
+> Load timing: after AGENTS.md, read on first interaction.
+
+## How to use this file
+
+1. At project initiation, fill in the clauses below based on project characteristics
+2. Each clause must be **verifiable** (confirmable through inspection)
+3. The Agent must check whether tasks comply with the constitution during the PLAN phase
+4. On constitution conflicts, the constitution takes priority over the user's current instruction (unless the user explicitly says "modify the constitution")
+
+## Project-specific principles
+
+<!-- Fill in based on actual project conditions; below are examples -->
+
+### Principle 1: Design system first; do not reinvent components
+All design in this project must be based on the design system; do not reinvent the wheel.
+- Before adding a new component, you must check the existing component library
+- All colors / typography / spacing must use design tokens
+- Hardcoded values are not allowed (e.g., `#3b82f6` must use `color-primary-500`)
+
+**Verification method**: design-review skill checks whether the design uses tokens
+
+### Principle 2: Accessibility WCAG 2.1 AA is a hard constraint
+All design must satisfy WCAG 2.1 AA:
+- Text contrast ≥ 4.5:1 (body) / 3:1 (large text)
+- All interactive elements support keyboard navigation
+- Do not rely on color alone to convey information
+- Touch targets ≥ 44px
+
+**Verification method**: design-review skill Axis 5 WCAG audit
+
+### Principle 3: Mobile first; responsive is mandatory
+All design must be mobile first:
+- Design mobile first, then expand to desktop
+- Use fluid layouts (relative units)
+- Define responsive breakpoints
+- Touch-friendly
+
+**Verification method**: responsive-design skill check
+
+### Principle 4: Design specs must be deliverable and implementable
+All design specs must be engineering-implementable:
+- Complete annotations (size / color / typography / radius / shadow)
+- Clear component specs (Props / states / variants)
+- Explicit interaction specs (animation / state transitions)
+- Design token export
+
+**Verification method**: verify skill deliverability check
+
+### Principle 5: [Add as needed]
+
+## Constitution checkpoints (must check during PLAN phase)
+
+- [ ] Does the current task violate "design system first"?
+- [ ] Does the design satisfy WCAG 2.1 AA?
+- [ ] Is it mobile first?
+- [ ] Is the design spec deliverable?
+- [ ] [Other project-specific checks]
+
+## Revision history
+
+| Date | Revision | Reason |
+|------|---------|------|
+| YYYY-MM-DD | Initial version | Project initiation |

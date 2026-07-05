@@ -1,0 +1,56 @@
+# constitution.md — Project constitution (template)
+
+> **Role note**: This file is the constitution for **your own project**, constraining the development behavior of this project.
+> It is a different file from the harness-solo framework repository's own constitution (the source file of `.harness/templates/constitution.md.template`) — that one constrains "developing the framework itself", while this one constrains "using the framework to develop your project".
+>
+> Non-negotiable principles unique to each project.
+> Division of labor with AGENTS.md: AGENTS.md contains general work rules (the same for all projects), while constitution.md contains project-specific constraints (different for each project).
+> Load timing: after AGENTS.md, read on first interaction.
+> Source: the constitution.md concept from spec-kit — derived from codebase analysis, not copied from generic rules.
+
+## How to use this file
+
+1. At project initiation, fill in the clauses below based on project characteristics
+2. Each clause must be **verifiable** (confirmable through tests or inspection)
+3. The Agent must check whether tasks comply with the constitution during the PLAN phase
+4. On constitution conflicts, the constitution takes priority over the user's current instruction (unless the user explicitly says "modify the constitution")
+
+## Project-specific principles
+
+<!-- Fill in based on actual project conditions; below are examples -->
+
+### Principle 1: Zero New Runtime Dependencies
+This project does not accept new runtime dependencies unless:
+- Explicitly approved by the user
+- No existing primitive can be reused
+- The new dependency's maintenance activity > 80%
+
+**Verification method**: `package.json` dependencies diff review
+
+### Principle 2: Public APIs Must Have Integration Tests
+All externally exposed API endpoints must have corresponding integration tests covering:
+- Happy path (200)
+- Edge cases (400 parameter errors)
+- Permission denial (401/403)
+
+**Verification method**: verify skill checks test coverage
+
+### Principle 3: Database Changes Must Generate Migration Scripts
+Any schema change must have a rollback-capable migration script; manual database modifications are forbidden.
+
+**Verification method**: `migrations/` directory has corresponding files + migration tool (e.g., drizzle-kit / prisma migrate / knex migrate) has no diff
+
+### Principle 4: [Add as needed]
+
+## Constitution checkpoints (must check during PLAN phase)
+
+- [ ] Does the current task violate "zero new dependencies"?
+- [ ] Do new APIs have a test plan?
+- [ ] Does it involve schema changes? Are there migration scripts?
+- [ ] [Other project-specific checks]
+
+## Revision history
+
+| Date | Revision | Reason |
+|------|---------|------|
+| YYYY-MM-DD | Initial version | Project initiation |

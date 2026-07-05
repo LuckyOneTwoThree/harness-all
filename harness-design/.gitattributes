@@ -1,0 +1,35 @@
+# .gitattributes — harness-design line ending policy
+#
+# Core principle: all shell scripts (.sh) must use LF line endings
+# Reason: Git Bash (MINGW64) cannot execute CRLF scripts
+
+# Shell scripts — force LF
+*.sh text eol=lf
+
+# Harness hooks — force LF (defensive; avoids CRLF pitfalls when hooks are introduced in the future)
+.harness/hooks/* text eol=lf
+.harness/hooks/guards/* text eol=lf
+
+# General text — auto-normalize
+*.md text auto
+*.yaml text auto
+*.yml text auto
+*.json text auto
+*.toml text auto
+*.txt text auto
+
+# Code files — force LF
+*.js text eol=lf
+*.ts text eol=lf
+*.py text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+
+# Config files — force LF
+.gitignore text eol=lf
+.gitattributes text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.pdf binary

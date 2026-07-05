@@ -1,0 +1,50 @@
+# constitution.md — Project constitution (template)
+
+> **Role note**: This file is the constitution for **your own project**, constraining the product work of this project.
+> Non-negotiable principles unique to each project.
+> Division of labor with AGENTS.md: AGENTS.md contains general work rules (the same for all projects), while constitution.md contains project-specific constraints.
+> Load timing: after AGENTS.md, read on first interaction.
+
+## How to use this file
+
+1. At project initiation, fill in the clauses below based on product characteristics
+2. Each clause must be **verifiable** (confirmable through inspection)
+3. The Agent must check whether tasks comply with the constitution during the PLAN phase
+4. On constitution conflicts, the constitution takes priority over the user's current instruction (unless the user explicitly says "modify the constitution")
+
+## Project-specific principles
+
+<!-- Fill in based on actual project conditions; below are examples -->
+
+### Principle 1: PRDs must pass 4 quality gates
+All PRD outputs must pass the 4 gates of completeness / consistency / ambiguity elimination / traceability; without passing, no handoff to engineering.
+
+**Verification method**: verify skill checks the PRD gate pass record
+
+### Principle 2: Key decisions must be human-approved
+The following decisions must be human-confirmed; AI cannot decide on its behalf:
+- Option selection (option A vs option B)
+- Priority ranking (feature priority / requirement priority)
+- Strategy direction (product positioning / growth strategy)
+
+**Verification method**: the output file has a `human_approved: true` marker
+
+### Principle 3: An event tracking plan must exist before launch
+Before any feature goes live, there must be a corresponding event tracking plan and metric system; otherwise it cannot be released.
+
+**Verification method**: the launch workflow pre-checks that the tracking plan exists
+
+### Principle 4: [Add as needed]
+
+## Constitution checkpoints (must check during PLAN phase)
+
+- [ ] Does the current task violate "PRDs must pass gates"?
+- [ ] Have key decisions been human-approved?
+- [ ] Does it involve launch? Is the tracking plan ready?
+- [ ] [Other project-specific checks]
+
+## Revision history
+
+| Date | Revision | Reason |
+|------|---------|------|
+| YYYY-MM-DD | Initial version | Project initiation |

@@ -1,0 +1,9 @@
+vibe_keywords,style_direction,color_palette,typography,radius,shadow,texture
+"warm,vintage,niche",editorial-vintage,"#D4A574/#8B4513/#F5E6D3","Cormorant Garamond+Lora",2-4px,none,paper
+"minimal,modern,restrained",minimal-clean,"#000000/#FFFFFF/#F5F5F5","IBM Plex Sans+IBM Plex Mono",0px,none,flat
+"bold,lively,young",bold-playful,"#FF6B6B/#4ECDC4/#FFE66D","Space Grotesk+DM Sans",8-16px,medium,gradient
+"elegant,refined,high-end",elegant-sophisticated,"#1C1917/#FAFAF9/#D4A574","Playfair Display+Source Sans 3",2px,subtle,matte
+"soft,healing,natural",soft-calming,"#F0FDFA/#059669/#FFFFFF","Lora+Source Sans 3",8-12px,soft,organic
+"tech,future,cold",tech-futuristic,"#0F172A/#3B82F6/#FFFFFF","JetBrains Mono+IBM Plex Sans",0-2px,glow,digital
+"business,professional,trustworthy",business-trust,"#1E40AF/#FFFFFF/#F8FAFC","IBM Plex Sans+Source Sans 3",4px,subtle,clean
+"childlike,cute,friendly",playful-cute,"#FF6B6B/#FFE66D/#4ECDC4","Quicksand+Nunito",12-24px,soft,rounded

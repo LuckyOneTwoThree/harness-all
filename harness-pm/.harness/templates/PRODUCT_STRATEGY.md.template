@@ -1,0 +1,71 @@
+# harness-pm — Product strategy document
+
+> Source: produced by planning-orchestrator / business-orchestrator in module 2 (business strategy), or guided by the setup workflow.
+> Load timing: read by discovery / ideation and design / acceptance and release.
+> Positioning: establish the baseline in the strategy phase; append revision records when the strategy changes.
+> Division of labor with PRD.md: this file is the **strategy definition** (target users + success metrics), PRD.md is the **requirements definition** (features + acceptance criteria).
+
+## Product overview
+
+[One sentence: what problem to solve, for whom, core value]
+
+## Background and motivation
+
+[Why build this product? What is the market opportunity?]
+
+## Target users
+
+| User role | Typical scenario | Core pain point | Value proposition |
+|---------|---------|---------|---------|
+| [role 1] | [scenario description] | [pain point description] | [value] |
+| [role 2] | [scenario description] | [pain point description] | [value] |
+
+## Core value proposition
+
+[The core value the product provides to users, in one sentence]
+
+## Business model
+
+[How to create value, deliver value, capture value]
+
+## Product positioning
+
+[Positioning in the market, differentiated advantage]
+
+## Success metrics (quantifiable)
+
+[After the product is done, what metrics measure success? Meeting the bar means success]
+
+- Metric 1: [e.g., DAU > 10000]
+- Metric 2: [e.g., D1 user retention > 40%]
+- Metric 3: [e.g., paid conversion rate > 5%]
+
+> Metrics must be quantifiable — not "users like it", but specific numbers.
+
+## Out of scope (boundaries)
+
+[Explicitly excluded scope to avoid creep]
+
+- No [feature X], because [reason]
+- No support for [scenario Y], because [reason]
+
+## Milestones
+
+| Phase | Goal | Output |
+|------|------|------|
+| M1 | MVP validates the core hypothesis | Core features go live |
+| M2 | Growth validation | Growth metrics met |
+| M3 | Commercialization validation | Revenue metrics met |
+
+## Dependencies and risks
+
+| Type | Description | Impact | Response |
+|------|------|------|------|
+| Dependency | [e.g., depends on XX data source] | [high/medium/low] | [action] |
+| Risk | [e.g., market change] | [high/medium/low] | [action] |
+
+## Revision history
+
+| Date | Revision | Reason |
+|------|---------|------|
+| YYYY-MM-DD | Initial version | Project initiation |

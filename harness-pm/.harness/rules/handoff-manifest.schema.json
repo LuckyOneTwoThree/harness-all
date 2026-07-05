@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harness.local/schemas/handoff-manifest.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "handoff_id", "producer", "consumer", "status", "source_revision", "contract", "artifacts"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "handoff_id": { "type": "string", "pattern": "^[A-Z]+-[A-Z]+-[0-9]{8}-[0-9]{3}$" },
+    "producer": { "type": "string", "pattern": "^harness-(pm|design|solo)$" },
+    "consumer": { "type": "string", "pattern": "^harness-(pm|design|solo)$" },
+    "status": { "const": "ready" },
+    "source_revision": { "type": "string", "minLength": 1 },
+    "mode": {
+      "type": "string",
+      "enum": ["family", "standalone-fallback"],
+      "description": "Declares whether the producer worked with upstream contracts (family) or without (standalone-fallback). Consumers use this to distinguish degraded output."
+    },
+    "contract": { "$ref": "#/$defs/file" },
+    "artifacts": { "type": "array", "items": { "$ref": "#/$defs/file" }, "uniqueItems": true }
+  },
+  "$defs": {
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "bytes"],
+      "properties": {
+        "path": { "type": "string", "pattern": "^(contract\\.md|artifacts/.+)$" },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "bytes": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}
+

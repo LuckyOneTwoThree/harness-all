@@ -1,0 +1,205 @@
+---
+schema_version: "1.0"
+handoff_id: "<PM-SOLO-YYYYMMDD-NNN>"
+producer: "harness-pm"
+consumer: "harness-solo"
+created_at: "<ISO-8601>"
+source_revision: "<commit-or-artifact-revision>"
+supersedes: null
+status: draft
+mode: family
+ac_ids: []
+batch:
+  id: 1
+  type: full
+  added_acs: []
+  modified_acs: []
+  superseded_acs: []
+  unchanged_acs: []
+artifacts: []
+---
+
+# Handoff: harness-pm → harness-solo
+
+> Generated at: YYYY-MM-DD HH:MM
+> Source framework: harness-pm
+> Target framework: harness-solo
+
+## Delivery Routing
+
+| Field | Value | Rule |
+|---|---|---|
+| delivery_mode | <standalone / family> | `family` enables cross-framework gates |
+| frontend_scope | <true / false> | True when implementation includes user-facing frontend UI |
+| design_required | <true / false> | In family mode, normally true when frontend_scope is true |
+| design_status | <not-required / pending / ready / waived> | `ready` requires a validated design package |
+| design_handoff_id | <DESIGN-SOLO-... / null> | Required when design_status is ready |
+| design_waiver | <approver + reason + scope + review point / null> | Required when design_status is waived |
+
+## Consumer Action Map
+
+| Contract section | Engineering consumer action or gate |
+|---|---|
+| Delivery Routing | Select standalone/family path and enforce the frontend design gate |
+| PRD + stable AC IDs | Generate specs/tests without renumbering |
+| Business Context Digest / NFR | Drive architecture tradeoffs and measurable constraints |
+| Priority / out of scope | Define engineering plan boundaries |
+| Tracking plan | Preserve instrumentation requirements in implementation and downstream handoff |
+| Decisions / open items / risks | Apply, assign an owner, or stop when materially unresolved |
+
+Any context without a downstream action belongs under Notes, not a new required section.
+
+## Phase Summary
+
+<One-sentence summary of what was done in this phase. e.g., Completed V1 PRD, including 3 core features + acceptance criteria + tracking plan>
+
+## Product Basics
+
+| Field | Value | Notes |
+|------|-----|------|
+| Product name | <name> | |
+| Product type | <web app / mobile app / desktop / landing page / ...> | Determines engineering architecture |
+| Tech constraints (optional) | <platform/integration constraints, or unknown> | Context only; harness-solo owns the final tech-stack decision |
+| Platform | <iOS / Android / Web / desktop> | Determines deployment strategy |
+| Current stage | <MVP / PMF / Scaling / ...> | Determines development priorities |
+
+## Positioning Statement
+
+<One-sentence positioning, from positioning skill output. e.g., A one-stop project management tool for indie developers>
+
+## PRD Path and Acceptance Criteria
+
+**PRD document**: `artifacts/product/PRD.md`
+**PRD structured data**: `artifacts/product/prd.json` (generated projection with matching source hash)
+
+**Acceptance criteria list (AC-xxx)**:
+
+> The following ACs directly reuse the acceptance_criteria from the PRD, already numbered with ac_id.
+> harness-solo's writing-plans skill should reuse these IDs as-is, do not renumber.
+> If harness-design produced a design-to-solo.md, the DAC-xxx entries there are design-specific acceptance points and must also be written into spec.md.
+>
+> **Batch delivery rule** (when `batch.type: incremental`):
+> - `ac_ids` envelope field MUST contain ALL valid AC IDs (unchanged + added + modified), never just the changed subset — this prevents AC loss if a previous handoff was never consumed.
+> - ACs marked `[unchanged]` may use a one-line summary + reference to the prior handoff (e.g., "see PM-SOLO-20260704-001"); they do NOT need full Given-When-Then repetition.
+> - ACs marked `[added]` or `[modified]` MUST include the full Given-When-Then description.
+> - ACs marked `[superseded]` MUST include a pointer to the replacement AC ID (e.g., "superseded by AC-F01-002"); the superseded ID does NOT appear in `ac_ids` (only the replacement does).
+
+| AC ID | Change | Description |
+|-------|--------|-------------|
+| AC-F01-001 | [added] | <full Given-When-Then or testable description> |
+| AC-F01-002 | [added] | <full testable description> |
+| AC-F02-001 | [added] | <full testable description; gaps are valid> |
+
+> For incremental batches, the table would look like:
+>
+> | AC ID | Change | Description |
+> |-------|--------|-------------|
+> | AC-F01-001 | [unchanged] | (see PM-SOLO-20260704-001) User login email verification |
+> | AC-F02-001 | [unchanged] | (see PM-SOLO-20260704-001) Password strength check |
+> | AC-F06-001 | [added] | <full Given-When-Then for new feature> |
+> | AC-F07-001 | [added] | <full Given-When-Then for new feature> |
+> | AC-F03-001 | [superseded] | superseded by AC-F03-002 — original checkout flow replaced |
+> | AC-F03-002 | [added] | <full Given-When-Then for replacement AC> |
+
+## Engineering-Consumable PRD Sections
+
+> harness-solo's brainstorming should read these PRD sections as direct input (not just the AC-xxx list):
+
+| PRD section | What engineering consumes | Where in prd.json |
+|------|------|------|
+| 3.2.1 Feature list | MoSCoW priorities, feature dependencies | `features[].priority` + `features[].dependencies` |
+| 3.2.5 Data model | Entities, fields, relationships (for ER design + migration) | `entities[]` |
+| 3.2.6 Interface definition | API contract input (method/path/params/response) | `features[].api_endpoints[]` (advisory; final API design by solo) |
+| 4.2 Technical constraints | Architecture constraints, known tech debt | (in prd.md Section 4.2) |
+| 5.1-5.4 NFR | Performance, availability, security, observability targets | `non_functional_requirements[]` |
+| 7.1 Functional acceptance | AC-xxx (Happy Path + boundary + exception) | `features[].acceptance_criteria[]` |
+
+## Business Context Digest
+
+> Engineering-relevant constraints extracted by PM from user-research.md / market-analysis.md.
+> harness-solo **must reference** these when making architecture and tech-stack decisions, to avoid technical choices detached from business reality.
+>
+> Extraction rules:
+> - ✅ Extract: constraints that affect architecture / tech selection / performance requirements / capacity planning / data scale
+> - ❌ Do not extract: user personas / mental models / aesthetic preferences (these go to harness-design, not engineering)
+
+| Constraint | Engineering impact | Source |
+|--------|---------|------|
+| <e.g., single export can be up to 5GB> | <e.g., requires async queue, cannot generate synchronously> | <user-research.md#export-scenarios> |
+| <e.g., 70% of target users on mobile> | <e.g., mobile-first, first screen < 2s> | <user-research.md#device-distribution> |
+| <e.g., peak concurrency estimated at 1000 QPS> | <e.g., requires cache layer + rate limiting> | <market-analysis.md#capacity-estimate> |
+
+> If user-research.md / market-analysis.md do not exist, record "No additional business context; use the stated ACs".
+
+## Feature Priorities
+
+| Priority | Feature | Source | Notes |
+|--------|------|------|------|
+| P0 | <core feature 1> | PRD | MVP must-do |
+| P1 | <important feature 2> | PRD | Important but can be deferred |
+| P2 | <enhancement 3> | PRD | Optional |
+
+## Tracking Plan (if any)
+
+| Asset | Path | Notes |
+|------|------|------|
+| Tracking plan | artifacts/metrics/tracking-plan.md | Event tracking definitions |
+| Metric system | artifacts/metrics/metrics-system.md | North Star + key metrics |
+
+> If not yet produced, fill in "To be supplemented".
+>
+> **Note**: the unified PRD always includes Section 6 (Tracking Plan) and Section 6.3 (Experiment Hypothesis Reference). Ensure the experiment_hypothesis_ref in prd.json is filled when applicable — downstream analysis skills depend on event definitions and hypotheses.
+
+## Design Assets (if any, from harness-design)
+
+> The following paths are inside the harness-design project, not harness-pm. If harness-design has not run yet, fill in "Pending harness-design output".
+
+| Asset | Path inside harness-design | Produced? |
+|------|----------------------|-----------|
+| Design handoff package | <design_handoff_id> | <ready/pending/waived/not-required> |
+| Semantic component contract | <inside design package> | <yes/no> |
+| Design system and tokens | <inside design package> | <yes/no> |
+
+## Out of Scope
+
+Content explicitly excluded from this engineering scope:
+
+- Not doing <X>
+- Not doing <Y>
+
+## Key Decisions
+
+| Decision | Rationale | Impact scope |
+|------|------|---------|
+| Choose tech stack X | Team familiarity + mature ecosystem | Whole project |
+| Skip feature Y | Not in MVP scope | Scope boundary |
+
+## Open Items
+
+Issues for harness-solo to handle or confirm with harness-pm:
+
+- TBD 1: <issue description>
+- TBD 2: <issue description>
+
+## Suggested Next Steps
+
+harness-solo should prioritize:
+
+1. Run the brainstorming skill, consume the AC-xxx + feature priorities in this file
+2. Run the writing-plans skill, write AC-xxx (+ DAC-xxx if any) into spec.md
+3. If the ready design package exists, run frontend-implementation, create engineering bindings, and implement against component-contract.json
+
+## Risk Notes
+
+| Risk | Level | Mitigation |
+|------|------|---------|
+| Tech stack undecided | High/Medium/Low | <action> |
+| Design assets not ready | High/Medium/Low | <action> |
+| Tracking plan missing | High/Medium/Low | <action> |
+
+---
+
+## Downstream Framework Usage Notes
+
+harness-solo's brainstorming / writing-plans / verify skills will auto-detect this file and read stable AC IDs, feature priorities, and the Business Context Digest.
+If not auto-detected, you can manually point the Agent to this file path to read it.
