@@ -202,16 +202,17 @@ try {
             -AddedAcs @('DAC-P1-001') -EnvelopeAcIds @('DAC-P1-001')
     }
 
-    # Positive: DAC-GLOBAL-001 and DAC-P01-001 should pass
-    Run-Scenario -Name 'J5c: valid DAC GLOBAL + P01 IDs accepted' -ExpectedResult 'pass' -Build {
-        Build-HandoffPackage -ScenarioName 'j5c-valid-dac' -Mode 'family' -BatchId 1 -BatchType 'full' `
+    # J5c: well-formed DAC IDs are rejected (retired in v3.0.0)
+    Run-Scenario -Name 'J5c: retired DAC IDs rejected' -ExpectedResult 'fail' -Build {
+        Build-HandoffPackage -ScenarioName 'j5c-retired-dac' -Mode 'family' -BatchId 1 -BatchType 'full' `
             -AddedAcs @('DAC-P01-001','DAC-GLOBAL-001') -EnvelopeAcIds @('DAC-P01-001','DAC-GLOBAL-001')
     }
 
-    # Positive: standalone-fallback mode (no batch required)
-    Run-Scenario -Name 'standalone-fallback mode accepted without batch' -ExpectedResult 'pass' -ExpectedConsumer 'harness-pm' -Build {
-        Build-HandoffPackage -ScenarioName 'standalone' -Producer 'harness-engineering' -Consumer 'harness-pm' `
-            -HandoffId 'ENG-PM-20260629-001' -Mode 'standalone-fallback' -EnvelopeAcIds @()
+    # Positive: valid reverse handoff (engineering->PM) with batch accepted
+    Run-Scenario -Name 'valid reverse handoff (engineering->PM) accepted' -ExpectedResult 'pass' -ExpectedConsumer 'harness-pm' -Build {
+        Build-HandoffPackage -ScenarioName 'reverse-valid' -Producer 'harness-engineering' -Consumer 'harness-pm' `
+            -HandoffId 'ENG-PM-20260629-001' -Mode 'family' -BatchId 1 -BatchType 'full' `
+            -AddedAcs @('AC-F01-001') -EnvelopeAcIds @('AC-F01-001')
     }
 
     Write-Host ''
