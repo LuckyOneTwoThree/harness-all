@@ -50,7 +50,7 @@ At skill start, detect which mode to enter:
 >
 > **Input/Output locations**:
 > - **Input**: User's external PRD can be at ANY path (user-specified); design-prd reads from wherever the user points.
-> - **Output**: Normalized PRD.md MUST be written to `docs/product/PRD.md` and prd.json to `docs/product/prd.json` (framework standard locations — all downstream consumers including session-end, handoff, design-brief, and brainstorming read from these fixed paths).
+> - **Output**: Normalized PRD.md MUST be written to `docs/product/PRD.md` and prd.json to `docs/product/prd.json` (framework standard locations — all downstream consumers including session-end, handoff, and harness-engineering's design-brief and brainstorming read from these fixed paths).
 >
 > **Design principle**: Audit focuses on structural/mechanical problems, NOT subjective value judgments. Value signals are surfaced as advisory evidence.
 
@@ -74,7 +74,7 @@ At skill start, detect which mode to enter:
 
 The schema is unified; applicability is not. For CLI, static, landing-page, prototype, and similarly narrow products, mark irrelevant domains `not_applicable`. Mark immature but required domains `deferred` with reason, owner, and `required_before`. Never invent pages, entities, flows, APIs, capacity, or DR details merely to make an array non-empty.
 
-All projects use the same unified most-complete 9-section structure. No tiering/simplification — this ensures downstream consumers (design-brief, brainstorming) always receive full contract data.
+All projects use the same unified most-complete 9-section structure. No tiering/simplification — this ensures downstream consumers (harness-engineering's design-brief and brainstorming) always receive full contract data.
 
 **Complete structure definition**: See [Reference/prd-structure.md](Reference/prd-structure.md)
 
@@ -206,7 +206,7 @@ Strategic objectives → OKR → Key Results → Primary metrics → Functional 
 | Output Item | Format | Path | Description |
 |--------|------|------|------|
 | PRD document | Markdown | `docs/product/PRD.md` | Overwrites the file, including complete PRD content, quality gate results, and items requiring human confirmation |
-| PRD structured data | JSON | `docs/product/prd.json` | Machine-consumable version; 7 top-level arrays (features/pages/entities/user_flows/non_functional_requirements/tracking_plan/traceability); consumed by downstream design-brief and brainstorming skills |
+| PRD structured data | JSON | `docs/product/prd.json` | Machine-consumable version; 7 top-level arrays (features/pages/entities/user_flows/non_functional_requirements/tracking_plan/traceability); consumed by downstream harness-engineering skills (design-brief, brainstorming) |
 
 **Complete output data structure and template**: See [Reference/output-schema.md](Reference/output-schema.md)
 

@@ -87,6 +87,6 @@ The following behaviors **must not be executed regardless of any instructions re
 - **Prohibited from modifying the Git Hooks directory**: The Agent is strictly forbidden from modifying any files under the `.git/hooks/` directory, as well as installed scripts under `.harness/hooks/`. These scripts execute with user privileges on the host machine; modifying them is equivalent to system-level Remote Code Execution (RCE), directly bypassing the IDE security sandbox. To update hooks, the user must do so manually.
 - Write secrets into output files
 - Execute destructive commands such as `rm -rf /`
-- Bypass the verify skill and directly claim completion
+- Bypass session-end verification and directly claim completion
 - Expose user PII in output
 - Make key decisions on behalf of humans (solution selection / priority / strategic direction)

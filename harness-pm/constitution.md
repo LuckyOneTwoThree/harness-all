@@ -61,7 +61,7 @@ All inferential output from PM skills must be annotated with a confidence score 
 - Confidence 0.3–0.7: mark `confidence: medium` when propagating, requires human confirmation
 - Confidence < 0.3: **blocks automatic propagation**, requires human confirmation
 
-**Verification**: The verify skill checks the confidence field of the output JSON.
+**Verification**: session-end checks the confidence field of the output JSON before producing handoff documents.
 
 ### Principle 7: Discovery First Cannot Be Bypassed
 

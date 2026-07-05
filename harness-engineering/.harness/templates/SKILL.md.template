@@ -33,7 +33,7 @@ description: One-sentence description, used for INDEX.md reference  # Required
 ## Quality gates
 - [Quality gate rule 1]
 - [Quality gate rule 2]
-[Replaces the former `quality_gates` field. If this skill runs inside a LOOP, the iteration cap follows the LOOP.md default; the former `max_iterations` field is no longer used. Exception: orchestrator skills may use `## Phase Gates` instead — see orchestrator-protocol.md section 11]
+[Replaces the former `quality_gates` field. If this skill runs inside a LOOP, the iteration cap follows the LOOP.md default; the former `max_iterations` field is no longer used. Exception: orchestrator skills (when present in the framework) may use `## Phase Gates` instead of `## Quality Gates`]
 
 ## Anti-Rationalization Table
 | Anti-pattern | Common excuse | Why it doesn't hold |

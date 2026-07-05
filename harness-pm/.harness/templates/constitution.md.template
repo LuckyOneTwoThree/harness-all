@@ -19,7 +19,7 @@
 ### Principle 1: PRDs must pass 4 quality gates
 All PRD outputs must pass the 4 gates of completeness / consistency / ambiguity elimination / traceability; without passing, no handoff to engineering.
 
-**Verification method**: verify skill checks the PRD gate pass record
+**Verification method**: session-end checks the PRD gate pass record before producing handoff documents
 
 ### Principle 2: Key decisions must be human-approved
 The following decisions must be human-confirmed; AI cannot decide on its behalf:

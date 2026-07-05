@@ -35,7 +35,7 @@ Skills are the organs of the framework. This skill ensures all organs are in the
 
 **What it is not:**
 - Modifying a skill's business logic (that's the skill's own business)
-- Creating new skills (use `writing-skills`)
+- Creating new skills (PM framework does not include a writing-skills skill; if needed, follow `.harness/templates/SKILL.md.template` manually)
 - Deleting skills in use (must be confirmed manually)
 
 ## When to run
@@ -52,7 +52,7 @@ Skills are the organs of the framework. This skill ensures all organs are in the
 1. **Scan the actual skill directory**
    - Use Glob to scan all SKILL.md under `.harness/skills/meta/*/`
    - Use Glob to scan `.harness/skills/workflows/*.md`
-   - Use Glob to scan `.harness/skills/pm/*/SKILL.md` (82 PM skills, flat organization)
+   - Use Glob to scan `.harness/skills/pm/*/SKILL.md` (80 PM skills, flat organization)
    - Collect all actually existing skill/workflow names
 
 2. **Parse INDEX.md**
@@ -64,7 +64,7 @@ Skills are the organs of the framework. This skill ensures all organs are in the
    |------------|---------------|------------------|
    | Meta skill completeness | All 4 skills under meta/ have SKILL.md | Mark "missing" |
    | Workflow completeness | All 10 .md files under workflows/ exist | Mark "missing" |
-   | PM skill completeness | All 82 skill directories under pm/ have SKILL.md | Mark "skill missing" |
+   | PM skill completeness | All 80 skill directories under pm/ have SKILL.md | Mark "skill missing" |
 
 4. **Check SKILL.md frontmatter**
    For each SKILL.md check whether it contains:
@@ -93,7 +93,7 @@ Skills are the organs of the framework. This skill ensures all organs are in the
    | Meta skill | ✓ / ✗ | 4/4 exist |
    | Workflows | ✓ / ✗ | 10/10 exist |
    | Workflow frontmatter | ✓ / ✗ | 10/10 have workflow_id+name+default_mode |
-   | PM skill | ✓ / ✗ | 82/82 skills exist |
+   | PM skill | ✓ / ✗ | 80/80 skills exist |
    | Frontmatter | ✓ / ✗ | [issue list or "none"] |
    ```
 

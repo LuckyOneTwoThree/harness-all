@@ -1,7 +1,7 @@
 #!/bin/bash
 # verify-harness.sh — Framework health check (optional fallback script)
 # Usage: bash verify-harness.sh [framework-type]
-#   framework-type: pm | design | engineering (default: auto-detect)
+#   framework-type: pm | engineering (default: auto-detect)
 #
 # Check .harness/ structural integrity and required file existence
 #
@@ -28,8 +28,6 @@ if [ -z "$FW_TYPE" ]; then
     FW_TYPE="engineering"
   elif [ -d ".harness/skills/pm" ]; then
     FW_TYPE="pm"
-  elif [ -d ".harness/skills/design" ]; then
-    FW_TYPE="design"
   else
     FW_TYPE="unknown"
   fi
@@ -91,7 +89,6 @@ REQUIRED_DIRS_COMMON=(
 # Framework-specific domain skill directory
 case "$FW_TYPE" in
   pm)     REQUIRED_DIRS_DOMAIN=(".harness/skills/pm") ;;
-  design) REQUIRED_DIRS_DOMAIN=(".harness/skills/design") ;;
   engineering)   REQUIRED_DIRS_DOMAIN=(".harness/skills/engineering") ;;
   *)      REQUIRED_DIRS_DOMAIN=() ;;
 esac
@@ -135,7 +132,6 @@ OPTIONAL_DIRS_COMMON=(
 # Framework-specific optional docs directories
 case "$FW_TYPE" in
   pm)     OPTIONAL_DIRS_DOMAIN=("docs/product" "docs/strategy" "docs/discovery" "docs/monitoring") ;;
-  design) OPTIONAL_DIRS_DOMAIN=("docs/visual" "docs/interaction" "docs/prototype" "docs/design-system") ;;
   engineering)   OPTIONAL_DIRS_DOMAIN=("docs/product" "docs/engineering" "docs/acceptance" "docs/decisions") ;;
   *)      OPTIONAL_DIRS_DOMAIN=() ;;
 esac

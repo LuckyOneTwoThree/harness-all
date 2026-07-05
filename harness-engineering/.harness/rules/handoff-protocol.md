@@ -24,7 +24,7 @@ When a subsequent handoff supersedes a previously produced one, the envelope MUS
 - `batch.added_acs` / `batch.modified_acs` / `batch.superseded_acs` / `batch.unchanged_acs`: AC ID lists partitioning the change scope
 - `ac_ids` MUST be the FULL SET of valid AC IDs (= `added_acs` + `modified_acs` + `unchanged_acs`); superseded AC IDs do NOT appear in `ac_ids`
 - Body uses a `Change` column with `[added]`/`[unchanged]`/`[modified]`/`[superseded]` tags
-- **Forward vs Reverse semantics**: see family-level HANDOFF_PROTOCOL.md "Forward vs Reverse batch semantics" for the distinction between forward delivery (modified_acs = new replacement IDs) and reverse feedback (modified_acs = same AC IDs with changed content)
+- **Forward vs Reverse semantics**: see family-level HANDOFF_PROTOCOL.md (in the harness-all repo root) "Forward vs Reverse batch semantics" for the distinction between forward delivery (modified_acs = new replacement IDs) and reverse feedback (modified_acs = same AC IDs with changed content)
 - Legacy handoffs without a `batch` field: consumers fall back to set-diff detection on `ac_ids`
 
 ## Consumer Gate

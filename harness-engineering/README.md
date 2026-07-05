@@ -96,7 +96,7 @@ setup (project initiation) → new-product-engineering/new-feature/bugfix/refact
 | release | Version release | No LOOP |
 | quick-fix | One low-risk outcome | No LOOP state |
 
-### 26 Skills (22 domain + 4 meta)
+### 25 Skills (21 domain + 4 meta)
 
 Domain skills are organized by phase ownership. Execution routing is owned by `.harness/rules/engineering-pipeline.md`; each workflow selects the ACT skill appropriate to the active phase.
 
@@ -397,10 +397,26 @@ hard_limit_reached: false
 
 # 4-phase tracking (NEW in v3.0.0)
 substage_progress:
-  phase_0: "done"
-  phase_1: "in_progress"
-  phase_2: "pending"
-  phase_3: "pending"
+  design-intake:
+    completed: true
+    user_confirmed: true
+    report: "phase-0-design-intake-report.md"
+    verify_state: "full-passed"
+  frontend:
+    completed: false
+    user_confirmed: false
+    report: ""
+    verify_state: "awaiting-full"
+  backend:
+    completed: false
+    user_confirmed: false
+    report: ""
+    verify_state: "inline-passed"
+  integration:
+    completed: false
+    user_confirmed: false
+    report: ""
+    verify_state: "awaiting-full"
 ```
 
 ### Checkpoint Resume

@@ -42,7 +42,7 @@ Context must be loaded before the session begins; working with "amnesia" is not 
 
 4. **Read the feature board**
    Read `.harness/FEATURES.md` to understand overall product progress.
-   - **Cross-framework reconciliation**: if an `engineering-to-pm.md` handoff has been consumed (receipt exists in `docs/handoff/receipts/`), cross-check engineering's reported "Implemented Features" status against PM's `FEATURES.md`. For each feature engineering reports as `done`, PM's status should be at least `developing`. If PM shows `approved` while engineering reports `done`, flag the drift to the user: "Feature F-XXX is done in engineering but still 'approved' in PM — advance to 'developing' or 'launched'?". See DOMAIN_BOUNDARIES.md "FEATURES.md Cross-Framework Reconciliation" for the full status mapping.
+   - **Cross-framework reconciliation**: if an `engineering-to-pm.md` handoff has been consumed (receipt exists in `docs/handoff/receipts/`), cross-check engineering's reported "Implemented Features" status against PM's `FEATURES.md`. For each feature engineering reports as `done`, PM's status should be at least `developing`. If PM shows `approved` while engineering reports `done`, flag the drift to the user: "Feature F-XXX is done in engineering but still 'approved' in PM — advance to 'developing' or 'launched'?". See the family-level DOMAIN_BOUNDARIES.md (in the harness-all repo root; absent in standalone PM install) "FEATURES.md Cross-Framework Reconciliation" for the full status mapping.
 
 5. **Check handoff documents** (from other harness family members)
    Scan `docs/handoff/` and apply `.harness/rules/handoff-protocol.md` before consuming any contract:
@@ -67,7 +67,7 @@ When a newly accepted `engineering-to-pm.md` supersedes a previously consumed ha
 
 4. **Body change-tag cross-check**: for ACs listed in `ac_ids`, read the body's `Change` column. If an AC is marked `[superseded]` in the body but still appears in `ac_ids`, flag as invalid.
 
-Record the diff in two places (per ARCHITECTURE.md contract and state.schema.json):
+Record the diff in two places (per the family-level ARCHITECTURE.md contract in the harness-all repo root and state.schema.json; absent in standalone PM install):
 
 1. **state.yaml** (active task's `ac_change` field): write `ac_change: {removed: [AC-xxx,...], added: [AC-yyy,...], superseded: [AC-zzz,...], affected_tasks: [task-id,...]}` to the current task's state.yaml. This is the machine-readable source of truth consumed by downstream PM skills (prd-orchestrator phase 0 Branch A/B reads `ac_change` to scope triage; change-impact-analysis reads it to assess blast radius of added/superseded ACs). For reverse feedback channels (engineering-to-pm), `added` = newly referenced ACs, `superseded` = feedback withdrawn, `removed` = unused for reverse channels (use `superseded` instead).
 2. **progress.md** (session block, one-line summary only): `Feedback Change: N added, M superseded, K affected_tasks (see state.yaml.ac_change)`. Do NOT duplicate the full AC ID lists in progress.md — downstream skills read state.yaml, not progress.md.

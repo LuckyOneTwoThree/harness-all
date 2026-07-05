@@ -24,12 +24,12 @@ When a subsequent handoff supersedes a previously produced one, the envelope MUS
 - `batch.added_acs` / `batch.modified_acs` / `batch.superseded_acs` / `batch.unchanged_acs`: AC ID lists partitioning the change scope
 - `ac_ids` MUST be the FULL SET of valid AC IDs (= `added_acs` + `modified_acs` + `unchanged_acs`); superseded AC IDs do NOT appear in `ac_ids`
 - Body uses a `Change` column with `[added]`/`[unchanged]`/`[modified]`/`[superseded]` tags
-- **Forward vs Reverse semantics**: see family-level HANDOFF_PROTOCOL.md "Forward vs Reverse batch semantics" for the distinction between forward delivery (modified_acs = new replacement IDs) and reverse feedback (modified_acs = same AC IDs with changed content)
+- **Forward vs Reverse semantics**: see family-level HANDOFF_PROTOCOL.md (in the harness-all repo root; absent in standalone PM install) "Forward vs Reverse batch semantics" for the distinction between forward delivery (modified_acs = new replacement IDs) and reverse feedback (modified_acs = same AC IDs with changed content)
 - Legacy handoffs without a `batch` field: consumers fall back to set-diff detection on `ac_ids`
 
 ## Consumer Gate
 
-Run `pwsh -File .harness/scripts/validate-handoff.ps1 -Package <package-path> -ExpectedConsumer <this-framework>` (or Windows PowerShell) and require exit code 0 before semantic review.
+Run `pwsh -File .harness/scripts/validate-handoff.ps1 -Package <package-path> -ExpectedConsumer <this-framework>` (or Windows PowerShell) and require exit code 0 before semantic review. **Agent-tool fallback** (per constitution Principle 2): when PowerShell is unavailable, the Agent may perform the equivalent checks below using Read/Glob/Grep — manifest SHA-256 verification uses a hash tool if available, otherwise the check is downgraded to structural + path + ID-parity validation only and the consumption receipt records `hash_verification: skipped-no-powershell`.
 
 Before using a handoff, verify all of the following:
 

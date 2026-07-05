@@ -6,7 +6,7 @@ description: Maintain the memory directory, execute retention policy, prevent pr
 
 ## When to use
 - session-end invocation when a retention threshold is exceeded
-- When the user says "clean up history" / "archive" / "memory too large
+- When the user says "clean up history" / "archive" / "memory too large"
 - When memory files exceed thresholds
 
 ## Inputs

@@ -42,12 +42,12 @@ Archiving is required before the session ends; "bare exit" is not allowed — th
    - Tasks with status `done` → change the corresponding feature status in FEATURES.md to `approved` or `review`
    - Tasks with status `running` → keep status as `in_progress`
    - Record the last updated date
-   - **Engineering-feedback-driven advancement**: if a consumed `engineering-to-pm.md` reports a feature as `done` in its "Implemented Features" section (per FEATURES.md Cross-Framework Reconciliation, see DOMAIN_BOUNDARIES.md):
+   - **Engineering-feedback-driven advancement**: if a consumed `engineering-to-pm.md` reports a feature as `done` in its "Implemented Features" section (per FEATURES.md Cross-Framework Reconciliation, see the family-level DOMAIN_BOUNDARIES.md in the harness-all repo root; absent in standalone PM install):
      - Advance FEATURES.md status from `approved` → `developing` (engineering has started/finished work)
      - If PM has also made a launch decision, advance to `launched`
      - PM never marks `launched` without its own launch decision
 
-3. **Write baseline.json** (for entropy-check)
+3. **Write baseline.json** (for cross-session metric comparison)
    Compute current project metrics and write to `.harness/memory/baseline.json`:
    ```json
    {
@@ -154,7 +154,7 @@ For every outbound contract, apply `.harness/rules/handoff-protocol.md` and `.ha
 - Ending without updating progress.md (next session loses context)
 - Skipping threshold check in step 4 (progress.md grows unbounded)
 - Duplicating memory-maintenance archiving logic (session-end delegates, does not implement a second archive algorithm)
-- Not writing baseline.json (entropy-check cannot compute growth rate)
+- Not writing baseline.json (next session-start cannot compute cross-session metric deltas)
 - Forcing .sh script execution in a bash-less environment (will hang)
 - Producing pm-to-design.md or pm-to-solo.md (obsolete; only pm-to-engineering.md is valid under the two-framework architecture)
 - Producing design outputs directly (PM only collects design asset paths; visual design is owned by the user)

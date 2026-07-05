@@ -5,7 +5,7 @@ description: Framework skill health check, detect empty directories, unregistere
 # Skill Maintenance
 
 ## When to use
-- When the user says "check framework health" / "troubleshoot skill" / "skill index inconsistent
+- When the user says "check framework health" / "troubleshoot skill" / "skill index inconsistent"
 - session-start optional invocation (report when anomalies are found)
 - Validate consistency after adding/removing a skill
 
@@ -128,7 +128,7 @@ You cannot just write "check passed".
 
 ## Division of Labor with writing-skills
 
-skill 定位见 INDEX.md；特有协作见上方 Process 段落。
+For skill location see INDEX.md; for skill-specific collaboration see the Process section above.
 
 ## Relationship with session-start
 session-start may lightly invoke this skill's check logic:

@@ -24,7 +24,7 @@ description: Use when you need to generate a PRD or assess the impact of PRD cha
 - memory/progress.md
 - memory/knowledge-base.md
 
-> **Handoff publication note**: PRD 产出后，handoff 文档（`pm-to-engineering.md`）由 `session-end` skill 统一发布，遵循 publication gate（SHA-256 校验 + 包结构 + envelope 完整性）。prd-orchestrator 不直接产 handoff 文档，避免绕过 Consumer Gate 校验。
+> **Handoff publication note**: After PRD production, the handoff document (`pm-to-engineering.md`) is published centrally by the `session-end` skill, following the publication gate (SHA-256 verification + package structure + envelope integrity). prd-orchestrator does not directly produce handoff documents, to avoid bypassing Consumer Gate verification.
 
 ## Core Principles
 

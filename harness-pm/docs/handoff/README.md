@@ -48,4 +48,4 @@ Copy and fill in based on actual conditions.
 
 ## Write Access
 
-Contract documents follow one-way write permission isolation (per ARCHITECTURE.md §4.3). Only the source framework may write/modify a contract document; consumers read-only. Templates are scaffolds and do not participate in cross-framework flow until instantiated.
+Contract documents follow one-way write permission isolation (per the family-level ARCHITECTURE.md §4.3, in the harness-all repo root; absent in standalone PM install). Only the source framework may write/modify a contract document; consumers read-only. Templates are scaffolds and do not participate in cross-framework flow until instantiated.

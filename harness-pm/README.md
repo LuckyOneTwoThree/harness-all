@@ -113,7 +113,7 @@ bash install.sh
 install.sh will:
 - Create the `.harness/` directory structure
 - Generate `AGENTS.md` / `SOUL.md` / `constitution.md` from templates
-- Create the `docs/` directory (discovery/strategy/product/metrics/growth/monitoring/project/handoff)
+- Create the `docs/` directory (discovery/strategy/product/metrics/growth/monitoring/handoff)
 - Initialize `docs/product/PRD.md` and `docs/strategy/PRODUCT_STRATEGY.md`
 
 > Windows users: run install.sh with Git Bash or WSL.
@@ -170,7 +170,6 @@ harness-pm/
     ├── metrics/                       # Metric system, instrumentation plan
     ├── growth/                        # Growth strategy, GTM
     ├── monitoring/                    # Monitoring, release
-    ├── project/                       # Project charter, Sprint
     └── handoff/                       # harness family handoff documents
         ├── README.md
         └── templates/                 # handoff templates (scaffolds)

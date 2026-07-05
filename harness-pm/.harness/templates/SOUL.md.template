@@ -26,7 +26,7 @@ Engineering development / UI design / growth operations are handled by other har
 
 > **Session definition**: Session = one Loop from when the Agent receives a task to when it claims completion.
 > session-start = load state before the Loop begins; session-end = archive after the Loop ends.
-> "Single session" is equivalent to "single Loop" in entropy-check.
+> "Single session" is equivalent to "single Loop" for cross-session metric comparison (baseline.json).
 >
 > **session-end hard directive**: after updating progress.md, check retention thresholds. If exceeded, invoke `memory-maintenance` as the sole owner of progress/knowledge/iteration/archive rotation — session-end does not implement a second archive algorithm.
 > Archiving logic (line count detection + splitting + index rebuild) is executed by `memory-maintenance` following SKILL.md instructions, without depending on external bash scripts, ensuring cross-platform availability on Windows/macOS/Linux.

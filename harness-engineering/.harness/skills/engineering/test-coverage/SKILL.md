@@ -63,7 +63,7 @@ Show the full output and record the current coverage.
 - Not mandatory in this skill (abide by the constitution's zero-new-dependency principle)
 
 ### 3. Test Quality Rules
-gap 分类表、Test pyramid、Test Quality Rules 见 `Reference/test-quality-principles.md`
+For the gap classification table, test pyramid, and test quality rules, see `Reference/test-quality-principles.md`
 
 ### 4. Verification
 

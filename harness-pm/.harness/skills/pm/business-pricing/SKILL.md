@@ -36,7 +36,7 @@ description: Used when formulating or optimizing a product pricing strategy. Aut
 | Competitor Pricing Data | JSON | Yes | docs/discovery/market-analysis.md ("Competitive Analysis" section) | Competitor pricing tiers, market positioning, market share |
 | Willingness-to-Pay Inference Data | JSON | ○ | User provided | User willingness-to-pay range, inference method, confidence |
 
-> See [Reference/examples.md](./Reference/examples.md) → "Inputs 示例" for BMC Data, Competitor Pricing Data, and Willingness-to-Pay Inference Data JSON examples.
+> See [Reference/examples.md](./Reference/examples.md) → "Inputs examples" for BMC Data, Competitor Pricing Data, and Willingness-to-Pay Inference Data JSON examples.
 
 ## Execution Steps
 

@@ -2,7 +2,7 @@
 
 > Dynamic status tracking (updated during product work).
 > Division of labor with PRD.md: PRD.md is a static definition (written during the design phase), while this file is dynamic status (updated during development/launch).
-> Update trigger: after the verify skill passes, change the corresponding feature status to done.
+> Update trigger: after session-end confirms the deliverable, change the corresponding feature status to done.
 
 ## Feature status
 

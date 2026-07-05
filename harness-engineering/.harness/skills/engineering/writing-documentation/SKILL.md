@@ -32,7 +32,7 @@ description: Documentation — ADR/API doc/CHANGELOG, document the why
 1. Create `ADR-NNN-<short-title>.md` under `docs/decisions/`
    - Numbering: use Glob to scan `docs/decisions/ADR-*` and take the max number +1
    - If the directory does not exist, create it with a tool (do not use `mkdir -p`)
-2. Fill in the template — 完整模板与示例见 `Reference/templates.md`
+2. Fill in the template — For complete templates and examples, see `Reference/templates.md`
 3. **Do not delete old ADRs** — they record history; new decisions get new ADRs and the old ones are marked `SUPERSEDED by ADR-XXX`
 
 ### 2. API Documentation
@@ -44,15 +44,15 @@ description: Documentation — ADR/API doc/CHANGELOG, document the why
 - REST API: maintain OpenAPI/Swagger spec files
 - GraphQL: the schema is the doc; ensure there are descriptions
 
-完整模板与示例见 `Reference/templates.md`
+For complete templates and examples, see `Reference/templates.md`
 
 ### 3. CHANGELOG
 **When to write**: on release
 
-完整模板与示例见 `Reference/templates.md`
+For complete templates and examples, see `Reference/templates.md`
 
 ### 4. README
-完整模板与示例见 `Reference/templates.md`
+For complete templates and examples, see `Reference/templates.md`
 
 ### 5. Code Comments
 **Principles for writing comments**:
@@ -61,7 +61,7 @@ description: Documentation — ADR/API doc/CHANGELOG, document the why
 - Delete commented-out code (git has history)
 - TODOs must have a date and owner: `// TODO(2026-06-21): <description>`
 
-完整模板与示例见 `Reference/templates.md`
+For complete templates and examples, see `Reference/templates.md`
 
 ## Anti-Rationalization Table
 

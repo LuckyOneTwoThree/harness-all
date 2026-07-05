@@ -43,15 +43,16 @@ description: Systematic Debugging — root cause analysis rather than symptom pa
    - Why was Y not initialized? → Because Z's execution order is wrong
    - **The root cause is Z's ordering, not "X is null"**
 
-4. **Fix the root cause**
-   - Fix the real cause (Z's ordering), not the symptom (add a null check for X)
-   - After the fix, the reproduction test should pass
+4. **Hand off to test-driven-development for the fix**
+   - This skill stops at step 3 (analyze root cause). Step 4 (fix) and step 5 (regression check) are owned by `test-driven-development`.
+   - Hand off: reproduction test (red) + root-cause description + suggested fix location
+   - tdd increments iteration, performs the fix, runs regression, and owns the per-attempt terminal outcome
 
-5. **Regression check**
-   - Run the full test suite and confirm the fix did not introduce new issues
+5. **Regression check** (performed by tdd after the fix)
+   - tdd runs the full test suite and confirms the fix did not introduce new issues
    - Check for similar issues (the same root cause may exist elsewhere)
 
-6. **Record the lesson**
+6. **Record the lesson** (performed by systematic-debugging after diagnosis, before handoff)
    If the root cause is general, write it into the **"Pitfall Log" table** in `memory/knowledge-base.md` (not the "Technical Decisions" or "Pattern Repository" table):
    ```
    ## Pitfall Log
@@ -70,11 +71,11 @@ The linear 5 Whys chain can stall when the bug spans modules or involves hidden 
 
 ## State Maintenance
 
-This skill is a **diagnostic skill invoked BY the active ACT skill or by LOOP failure routing** — it is NOT itself an ACT skill. It does not increment iteration, does not own per-attempt terminal outcomes, and does not perform inline verify-fast. It returns to LOOP for verify-full after the root-cause fix + regression test.
+This skill is a **diagnostic skill invoked BY the active ACT skill or by LOOP failure routing** — it is NOT itself an ACT skill. It performs diagnosis only (steps 1-3: reproduce + locate + analyze root cause) and produces a reproduction test + root-cause description. It does not increment iteration, does not own per-attempt terminal outcomes, does not perform the fix (step 4 is owned by `test-driven-development`), and does not run inline verify-fast.
 
 **State.yaml writes**:
 - On entry: write `stage: debug`, `status: retrying`, `last_error: <symptom>`. Do NOT increment iteration.
-- On exit (root cause fixed + regression test passes): write `stage: verify`, `status: running`, `substage_progress[<active-phase>].verify_state: awaiting-full`, clear `last_error`. Append the terminal outcome to iterations.log (see format below). Control returns to LOOP for verify-full.
+- On diagnosis complete (root cause identified + reproduction test committed): write `stage: act`, `status: running`, `substage_progress[<active-phase>].verify_state: inline-failed`, set `last_error: <root cause description>`. Append the diagnostic outcome to iterations.log (see format below). Control transfers to `test-driven-development` for the fix + regression test (steps 4-5) — tdd owns the iteration increment and per-attempt terminal outcome.
 - If root cause not found after 5 Whys: write `status: needs-human` and report to user.
 
 **Update iterations.log (must append, overwriting is forbidden)**:
@@ -112,7 +113,7 @@ Stop immediately and reassess if you observe any of:
 - The fix is a `try/except` or `if x is not None` guard around the failure point — this is symptom suppression
 - You cannot state the root cause in one sentence — you have not found the cause yet
 
-Good vs Bad 修复示例：
+Good vs Bad fix examples:
 
 Scenario: `load_config()` returns `None` under a timing race, causing `build_parser(None)` to return `None`.
 
@@ -144,6 +145,6 @@ def init():
 
 ## Relationship with LOOP
 
-Triggered when LOOP fails (tdd or verify): this skill owns the **diagnose-and-fix cycle** (reproduce → locate → analyze → fix root cause → regression test), then returns to LOOP for verify-full. Bug fix workflow: session-start (on-demand) → systematic-debugging (reproduce + root cause + fix + regression test) → verify-full → code-review → session-end (on-demand baseline). See `.harness/loops/LOOP.md`.
+Triggered when LOOP fails (tdd or verify): this skill owns the **diagnose cycle** (reproduce → locate → analyze root cause), then hands off to `test-driven-development` for the fix + regression test. After tdd's fix passes regression, control returns to LOOP for verify-full. Bug fix workflow: session-start (on-demand) → systematic-debugging (diagnosis: reproduce + locate + root cause) → tdd (fix + regression test) → verify-full → code-review → session-end (on-demand baseline). See `.harness/loops/LOOP.md`.
 
 **Division of labor with tdd**: systematic-debugging performs **diagnosis only** (steps 1-3: reproduce + locate + analyze root cause) and produces a reproduction test + root-cause description. It hands these off to tdd, which performs the fix (step 4), regression check (step 5), owns the iteration increment and per-attempt terminal outcome, and runs inline verify-fast. After tdd's fix passes regression, control returns to LOOP's verify-full for full-suite confirmation.

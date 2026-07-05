@@ -103,7 +103,7 @@ If `tokens.json` already exists, **merge** — image/code-derived tokens fill ga
 
 Write `docs/handoff/contract.json` following `.harness/templates/component-contract.example.json` and validate against `.harness/rules/component-contract.schema.json`.
 
-Required provenance: `schema_version` (`1.0`), `design_revision` (handoff ID), `token_source.path` (package-relative, `^artifacts/`), `token_source.sha256`.
+Required provenance: `schema_version` (`1.0`), `design_revision` (handoff ID), `token_source.path` (package-relative, `^(docs/design-system/|artifacts/)`), `token_source.sha256`.
 
 Each component requires a stable `component_id` (`^CMP-[A-Z0-9-]+$`), semantic `name` + `purpose`, neutral `properties` (types: `string` / `boolean` / `number` / `enum` / `slot` / `collection` / `object`), `states`, `token_refs`, and `accessibility` constraints. Component IDs are immutable; removed IDs are retired, never reassigned.
 

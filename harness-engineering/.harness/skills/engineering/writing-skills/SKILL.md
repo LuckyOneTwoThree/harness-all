@@ -88,7 +88,7 @@ Criteria for creating a new skill:
 - **Minimal necessary**: fill in only the required fields in frontmatter (name+description); do not fill in for the sake of completeness
 - **Composable**: skills declare dependencies via Inputs/Outputs sections; do not hardcode invocations
 
-完整约定与示例见 `Reference/skill-conventions.md`
+For complete conventions and examples, see `Reference/skill-conventions.md`
 
 ## Prohibited
 - Not creating from the template (inconsistent structure; hard for the Agent to parse)

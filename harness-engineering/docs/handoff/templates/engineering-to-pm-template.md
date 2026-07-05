@@ -112,13 +112,13 @@ Issues for harness-pm to handle or confirm with harness-engineering:
 
 ### Implemented Features
 
-> Feature-level implementation status, consumed by PM session-start for FEATURES.md Cross-Framework Reconciliation (see DOMAIN_BOUNDARIES.md). For each feature marked `done`, PM advances its FEATURES.md status to at least `developing`.
+> Feature-level implementation status, consumed by PM session-start for FEATURES.md Cross-Framework Reconciliation (see the family-level DOMAIN_BOUNDARIES.md in the harness-all repo root). For each feature marked `done`, PM advances its FEATURES.md status to at least `developing`.
 
 | Feature ID | Feature | Status | Path/Endpoint | Notes |
 |--------|------|------|---------|------|
 | F-xxx | <feature name> | pending/in_progress/review/done | <path or endpoint> | <notes> |
 
-> Status values align with harness-engineering's FEATURES.md definitions: `pending` / `in_progress` / `review` / `done` / `blocked`. PM maps these to its own lifecycle per DOMAIN_BOUNDARIES.md reconciliation table.
+> Status values align with harness-engineering's FEATURES.md definitions: `pending` / `in_progress` / `review` / `done` / `blocked`. PM maps these to its own lifecycle per the family-level DOMAIN_BOUNDARIES.md reconciliation table (in the harness-all repo root).
 
 ### Key Decisions
 

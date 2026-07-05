@@ -8,7 +8,7 @@
 >
 > DOM-level verification (live focus trap behavior, runtime ARIA, real screen reader output) is deferred to harness-engineering's verify stage.
 
-This checklist is run by `design-review` Axis 5. Run all checks below and record results directly into `review-evidence.md`'s `## WCAG Audit` section (A2: no separate accessibility-report.md).
+This checklist is run by `webapp-testing`. Run all checks below and record results directly into `evidence.md`'s `## WCAG Audit` section (no separate accessibility-report.md).
 
 ## 5.1 Contrast Check (machine-assertable: hex computation)
 
