@@ -6,6 +6,8 @@ default_mode: standard
 ---
 # Workflow: Refactor
 
+> **Matrix**: workflow `D` — see `engineering-pipeline.md` Workflow × Phase × ACT Matrix. Activates Phases 1-3 (full multi-phase: frontend TDD → backend TDD → integration mock→real → contract-verify → e2e → verify).
+
 ## Route
 
 1. session-start (on-demand) + Foundation gate.

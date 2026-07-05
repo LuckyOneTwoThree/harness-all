@@ -2,11 +2,13 @@
 workflow_id: I
 name: quick-fix
 description: "Fast path for one unambiguous low-risk outcome with scoped evidence and no LOOP state"
-default_mode: skip
+default_mode: none
 ---
 # Workflow: Quick Fix
 
 Line count and elapsed time are signals, not gates.
+
+> **Matrix**: non-LOOP path (workflow `I`) — see `engineering-pipeline.md` Non-LOOP Paths. No phase routing, no state.yaml, no task_type.
 
 ## Risk Gate (Admission)
 

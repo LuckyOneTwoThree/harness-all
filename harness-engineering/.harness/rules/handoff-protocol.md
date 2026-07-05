@@ -40,7 +40,7 @@ Before using a handoff, verify all of the following:
 - `handoff_id`, producer, consumer, source revision, and artifact list match the manifest;
 - all paths stay inside the package (no absolute path or `..`);
 - every artifact exists and its SHA-256/size match;
-- envelope `ac_ids` exactly equals unique AC/DAC IDs in the body;
+- envelope `ac_ids` exactly equals unique AC IDs in the body;
 - if `supersedes` is present, this ID is newer than the last consumed ID;
 - any domain-specific routing gate passes.
 

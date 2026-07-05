@@ -12,8 +12,58 @@
       "additionalProperties": false,
       "required": ["path", "sha256"],
       "properties": {
-        "path": { "type": "string", "pattern": "^artifacts/" },
+        "path": { "type": "string", "pattern": "^(docs/design-system/|artifacts/)", "description": "Path to tokens.json. In engineering, tokens.json lives at docs/design-system/tokens.json. The artifacts/ prefix is retained for handoff-package-relative paths." },
         "sha256": { "type": "string", "pattern": "^([a-f0-9]{64}|<sha256>)$" }
+      }
+    },
+    "entities": {
+      "type": "array",
+      "description": "Data model entities surfaced from PRD (Phase 0) or user conversation (degraded mode). Consumed by Phase 2 data-layer to drive schema/ORM/migration design. Optional in family mode (Phase 2 can read PRD directly); required in standalone-fallback mode (no PM handoff).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["entity_id", "name", "fields"],
+        "properties": {
+          "entity_id": { "type": "string", "pattern": "^ENT-[A-Z0-9-]+$" },
+          "name": { "type": "string", "minLength": 1 },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["name", "type", "required"],
+              "properties": {
+                "name": { "type": "string", "minLength": 1 },
+                "type": { "type": "string", "description": "Field type (string, number, boolean, date, enum, json, reference)" },
+                "required": { "type": "boolean" },
+                "unique": { "type": "boolean", "description": "Field must be unique (e.g., email, slug)" },
+                "enum_values": { "type": "array", "items": { "type": "string" } },
+                "default": {},
+                "reference": { "type": "string", "description": "Referenced entity_id (for reference type fields)" }
+              }
+            },
+            "minItems": 1
+          },
+          "relationships": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["type", "target", "from_field"],
+              "properties": {
+                "type": { "enum": ["one-to-one", "one-to-many", "many-to-one", "many-to-many"] },
+                "target": { "type": "string", "description": "Target entity_id" },
+                "from_field": { "type": "string", "description": "Field on this entity that holds the reference" },
+                "through": { "type": "string", "description": "Junction table/entity name (many-to-many only)" }
+              }
+            }
+          },
+          "ac_refs": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "AC-xxx IDs from PRD that this entity satisfies. Enables AC-to-entity traceability."
+          }
+        }
       }
     },
     "components": {

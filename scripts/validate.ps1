@@ -145,7 +145,7 @@ foreach ($framework in $frameworks) {
             $id = $Matches[1]
             if ($ids.ContainsKey($id)) { Add-ValidationError "$framework has duplicate workflow_id: $id" } else { $ids[$id] = $file.Name }
         }
-        if ($frontmatter -notmatch '(?m)^default_mode:\s*(deep|standard|skip)\s*$') {
+        if ($frontmatter -notmatch '(?m)^default_mode:\s*(deep|standard|skip|none)\s*$') {
             Add-ValidationError "$relative has invalid or missing default_mode"
         }
     }

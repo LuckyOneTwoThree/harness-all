@@ -8,6 +8,8 @@ default_mode: deep
 
 Use only when multiple features share infrastructure/contracts and require coordinated order. A single feature uses new-feature.
 
+> **Matrix**: workflow `H` — see `engineering-pipeline.md` Workflow × Phase × ACT Matrix. Orchestration workflow; each nested task follows its own matrix row (normally `B` new-feature). Phase routing is per nested task.
+
 ## Canonical Sources
 
 - `ENGINEERING_PLAN.md`: approved scope, dependencies, shared infrastructure, order, checkpoints; not a live status board.

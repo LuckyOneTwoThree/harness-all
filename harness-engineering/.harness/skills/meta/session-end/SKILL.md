@@ -71,7 +71,7 @@ For each selected route:
 1. fill its dedicated template from reviewed evidence;
 2. preserve stable IDs and include only consumer-actionable fields;
 3. set `mode: family` in the envelope (engineering always consumes upstream PM/Design contracts in the 2-framework architecture) and `producer: harness-engineering`;
-4. **populate the `batch` field**: `batch.type: full` for first delivery to this consumer, `batch.type: incremental` for any subsequent delivery (bugfix/refactor/optimize/release re-handoff). `ac_ids` MUST always be the full set of valid AC/DAC IDs (added + modified new IDs + unchanged), never just the changed subset. Superseded IDs go to `batch.superseded_acs` and do NOT appear in `ac_ids`. Body AC/DAC tables use a `Change` column with `[added]`/`[unchanged]`/`[modified]`/`[superseded]` tags;
+4. **populate the `batch` field**: `batch.type: full` for first delivery to this consumer, `batch.type: incremental` for any subsequent delivery (bugfix/refactor/optimize/release re-handoff). `ac_ids` MUST always be the full set of valid AC/BAC/IAC IDs (added + modified new IDs + unchanged), never just the changed subset. Superseded IDs go to `batch.superseded_acs` and do NOT appear in `ac_ids`. Body AC/BAC/IAC tables use a `Change` column with `[added]`/`[unchanged]`/`[modified]`/`[superseded]` tags;
 5. apply `.harness/rules/handoff-protocol.md` and acceptance-ID protocol;
 6. create the self-contained package, run `validate-handoff.ps1`, archive prior current pointer, publish ready, and record receipt expectations;
 7. record handoff ID, manifest hash, and supersedes ID in progress.md.

@@ -47,8 +47,8 @@ Each of the 4 phases (design-intake → frontend → backend → integration) re
 
 Target projects using harness-engineering must respect directory boundaries per mode:
 
-- **Full-stack mode** (Next.js / Remix, single repo): `app/` (frontend: pages, components, hooks, styles) + `api/` (backend: route handlers, services) + `lib/` (shared: types, schemas, utils); `contract.json` and `tokens.css` live at repo root
-- **Separated mode** (React + Express, two roots): each root keeps its own structure; `contract.json` is the single source of truth shared via a path both roots reference
+- **Full-stack mode** (Next.js / Remix, single repo): `app/` (frontend: pages, components, hooks, styles) + `api/` (backend: route handlers, services) + `lib/` (shared: types, schemas, utils); `contract.json` lives at `docs/handoff/contract.json` and `tokens.css` lives at `docs/design-system/tokens.css`
+- **Separated mode** (React + Express, two roots): each root keeps its own structure; `docs/handoff/contract.json` is the single source of truth shared via a path both roots reference
 - Frontend must not import from `api/` internals; backend must not import from `app/` UI components; cross-root communication is via the contract only
 
 **Verification**: Grep for cross-boundary imports; any hit must be removed or explicitly whitelisted in this constitution.

@@ -70,6 +70,7 @@ $ <command>
 (If no backend ACs apply, fill in "no backend AC in this phase")
 
 ## Phase 3 — integration
+<!-- Terminal evidence block: Phase 3 is the final phase. This block must be complete (every sub-section below filled, or explicitly marked n/a with reason) before code-review runs. Downstream reviewers (code-review, harness-pm) treat this block as the delivery gate. -->
 ### Time
 YYYY-MM-DD HH:MM
 ### 1. Test Results
@@ -80,6 +81,37 @@ $ <command>
 - IAC-F01-001: ✓ E2E create-todo flow passes (manual trace + contract-verify output)
 - IAC-F01-002: ✓ mock→real switch succeeds without business-code edits
 (If no integration ACs apply, fill in "no integration AC in this phase")
+### 3. Mock→Real Switch Evidence
+- Config diff (before → after): <paste `git diff` of mock config vs real config, or path to the diff file>
+- Mock endpoints retired: <list each retired mock endpoint, e.g. `GET /api/todos (mock) — retired`>
+- Real endpoints active: <list each active real endpoint, e.g. `GET /api/todos (real) — active`>
+- Switch commit SHA: <git SHA at which the mock→real switch was committed>
+(If no mock→real switch occurred in this feature, write `n/a — no mock layer in this feature`)
+### 4. Contract Verification Evidence
+- Frontend ↔ Backend contract consistency: <result — e.g. "all routes and DTOs match contract.json">
+- Backend ↔ PRD consistency: <result — e.g. "all BACs trace to a PRD requirement">
+- Mismatch findings: <list each mismatch with `file:line`, or write `none`>
+(Any mismatch must be resolved or explicitly accepted per the Contract Deviation Protocol before this block is marked complete.)
+### 5. E2E Test Evidence
+- AC-driven user flow list (pass/fail per flow):
+  - <flow name, e.g. `create-todo`>: ✓ pass (<test file:line>)
+  - <flow name, e.g. `update-todo`>: ✗ fail — <reason>
+- Test runner output summary: <paste the runner's summary line, e.g. `Tests: 5 passed, 5 total`>
+- Skipped flows: <list each skipped flow with reason, or write `none`>
+### 6. AC/BAC/IAC Reconciliation
+- Result of verify-full step 1a reconciliation:
+  - When complete: `N ACs, M BACs, K IACs — all traced`
+  - When gaps exist: list each gap, e.g. `AC-F01-003 has no BAC`, `BAC-F01-002 has no IAC`
+(Every AC must trace to at least one BAC, and every BAC to at least one IAC, before this block is marked complete.)
+### 7. Cross-Phase Evidence Rollup
+- Phase 1 (frontend) evidence: <summary — e.g. "AC-F01-001 ✓, no unresolved findings">
+- Phase 2 (backend) evidence: <summary — e.g. "BAC-F01-001 ✓, BAC-F01-002 ✓, no unresolved findings">
+- Phase 3 (integration) evidence: <summary — e.g. "IAC-F01-001 ✓, IAC-F01-002 ✓, no unresolved findings">
+- Confirmation: `No phase has unresolved blocking findings` (or list the blocking findings per phase)
+### 8. Final Delivery Status
+- All planned stable AC/BAC/IAC have cited evidence: <yes/no — if no, list which lack evidence>
+- Code-review has no unresolved blocking findings: <yes/no — if no, list the blocking findings>
+(This is the terminal gate — Phase 3 evidence must be complete before code-review runs.)
 ```
 
 ## Section-by-Section Instructions

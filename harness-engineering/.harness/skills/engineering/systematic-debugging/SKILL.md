@@ -74,7 +74,7 @@ This skill is a **diagnostic skill invoked BY the active ACT skill or by LOOP fa
 
 **State.yaml writes**:
 - On entry: write `stage: debug`, `status: retrying`, `last_error: <symptom>`. Do NOT increment iteration.
-- On exit (root cause fixed + regression test passes): write `stage: verify`, `status: running`, `substage: awaiting-full`, clear `last_error`. Append the terminal outcome to iterations.log (see format below). Control returns to LOOP for verify-full.
+- On exit (root cause fixed + regression test passes): write `stage: verify`, `status: running`, `substage_progress[<active-phase>].verify_state: awaiting-full`, clear `last_error`. Append the terminal outcome to iterations.log (see format below). Control returns to LOOP for verify-full.
 - If root cause not found after 5 Whys: write `status: needs-human` and report to user.
 
 **Update iterations.log (must append, overwriting is forbidden)**:

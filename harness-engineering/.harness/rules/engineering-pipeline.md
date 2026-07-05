@@ -17,7 +17,7 @@ The single routing contract for 4-phase engineering delivery. Phases are sequent
 
 ## Canonical Phase Path
 
-For each phase N in the active phase set:
+For each phase N in the active set (phases 1-3):
 
 1. **Entry check** — verify the phase's preconditions (see Phase Entry Gates). If a prior phase is unconfirmed, halt and surface the missing confirmation.
 2. **Plan** — `brainstorming` (only when material ambiguity exists) → `writing-plans` produces a phase-scoped spec. Phase 0 plan consumes design assets; phases 1-3 plan consumes the prior phase's report.
@@ -25,6 +25,18 @@ For each phase N in the active phase set:
 4. **Verify** — `verify` runs once after all planned phase outcomes pass inline fast verification; produces `evidence.md` for the phase.
 5. **Checkpoint** — write `phase-N-<phase-name>-report.md` to `loops/specs/<task>/`; set `substage_progress[<phase>].completed = true`, `user_confirmed = false`, `report = <path>`. Set `status: needs-human`. Pause. Do not enter the next phase.
 6. **Advance** — only after explicit user confirmation, set `substage_progress[<phase>].user_confirmed = true`, `status: running`, then enter the next phase's entry check.
+
+### Phase 0 Exception
+
+Phase 0 (design-intake) is a **simplified path** that does not run inside LOOP:
+
+- **No PLAN→ACT→VERIFY→CHECKPOINT cycle**: design-intake executes its 4-step extraction process directly (classify → extract → parse → structure), not as a LOOP iteration.
+- **No inline verify-fast**: design-intake does not increment `iteration` or append terminal outcomes to `iterations.log`.
+- **No verify-full / no evidence.md**: design-intake does not run the `verify` skill. Phase 0's quality gate is the self-check checklist (step 7 in design-intake SKILL.md).
+- **Report ownership**: design-intake writes `phase-0-design-intake-report.md` itself (not verify).
+- **Checkpoint still applies**: after design-intake completes, `substage_progress.design-intake.completed = true`, `user_confirmed = false`, `report = <path>` is set, and the orchestrator pauses for user confirmation before advancing to Phase 1.
+
+Phases 1-3 follow the full Canonical Phase Path.
 
 `code-review` runs once after verify-full passes, before `status: done`. For multi-phase workflows (new-feature full / refactor), code-review runs at the end of Phase 3 (integration). For single-phase workflows (bugfix / optimize / migration), code-review runs within the single active phase — Phase 3 is not invoked because no cross-phase integration is needed. See the Workflow × Phase × ACT Sequence Matrix below for which workflows invoke code-review in which phase.
 
@@ -127,6 +139,21 @@ Resume order: (a) product state → `current_nested_task`; (b) nested task state
 - Failure routes by cause: requirement/spec → phase PLAN; implementation/test → phase ACT; unknown cause → systematic-debugging; review finding → code-review response then ACT.
 - `done` is terminal. Follow-up work creates a new task/spec.
 - Phase-level `done` (checkpoint confirmed) is also terminal: a confirmed phase is not re-opened; rework creates a follow-up task.
+
+## Contract Deviation Protocol
+
+When Phase 1 or Phase 2 discovers that `contract.json` (Phase 0 output) needs to deviate from the original design contract (e.g., a component property is impractical, an entity field type is wrong, a token value is inaccessible), the agent must follow this protocol — **silent deviation is prohibited**.
+
+1. **Detect** — the ACT skill identifies the deviation: which `component_id` / `entity_id` / token needs to change, and why.
+2. **Classify** — determine the deviation severity:
+   - **Minor** (token value adjustment, property default change, non-breaking field addition): does not affect downstream consumers. Record in `memory/progress.md` as a deviation note.
+   - **Major** (component property removed/renamed, entity field removed/retyped, breaking API shape change): affects downstream consumers. Requires user approval.
+3. **Record** — write a `contract-deviation` entry to `memory/progress.md` with: deviation ID (`DEV-<task>-<N>`), affected contract field, reason, severity, and proposed change.
+4. **Update contract.json** — for Minor deviations, the ACT skill updates `contract.json` directly and re-validates against `component-contract.schema.json`. For Major deviations, the agent surfaces to the user: "Contract deviation DEV-xxx requires changing <field>. This is a breaking change — approve?" Only after user approval does the agent update `contract.json`.
+5. **Propagate** — if the deviation affects Phase 1 (frontend), Phase 2 (backend) must be informed via `phase-N-report.md` notes. If the deviation affects Phase 2, Phase 3 (integration) must be informed. The deviation is also recorded in `evidence.md` under the current phase's block.
+6. **Phase 3 reconciliation** — `contract-verify` in Phase 3 cross-checks the final `contract.json` against both frontend implementation and backend implementation. Any unresolved deviation is flagged as a `mismatch` finding.
+
+This protocol ensures contract changes are explicit, recorded, and propagated — never silent.
 
 ## State and Artifact Ownership
 

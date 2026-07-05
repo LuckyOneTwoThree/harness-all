@@ -20,7 +20,7 @@
       "enum": ["design-intake", "frontend", "backend", "integration"],
       "description": "Engineering 4-phase substage. Phase-internal progress (PLAN/ACT/VERIFY/CHECKPOINT) is tracked in substage_progress, not here."
     },
-    "exploration_mode": { "type": "string", "enum": ["deep", "standard", "skip"] },
+    "exploration_mode": { "type": "string", "enum": ["deep", "standard", "skip", "none"] },
     "hard_limit_reached": { "type": "boolean" },
     "current_nested_task": { "type": "string", "pattern": "^[0-9]{3}-[a-z0-9][a-z0-9-]*$" },
     "ac_change": {
@@ -36,14 +36,15 @@
     },
     "substage_progress": {
       "type": "object",
-      "description": "Engineering 4-phase progress tracking. Each substage records completion status, user confirmation, and report path. Used by session-start to resume interrupted workflows.",
+      "description": "Engineering 4-phase progress tracking. Each substage records completion status, user confirmation, report path, and inline verify state. Used by session-start to resume interrupted workflows.",
       "properties": {
         "design-intake": {
           "type": "object",
           "properties": {
             "completed": { "type": "boolean" },
             "user_confirmed": { "type": "boolean", "description": "false = waiting for user confirmation to proceed to next phase" },
-            "report": { "type": "string", "description": "Path to phase-N-report.md relative to framework root" }
+            "report": { "type": "string", "description": "Path to phase-N-report.md relative to framework root" },
+            "verify_state": { "type": "string", "enum": ["inline-passed", "inline-failed", "awaiting-full", "full-running", "full-passed", "full-failed"], "description": "Phase-internal verify progress. Written by ACT skills (inline-passed/inline-failed/awaiting-full) and verify (full-running/full-passed/full-failed). The top-level substage field only identifies the active phase." }
           },
           "additionalProperties": false
         },
@@ -52,7 +53,8 @@
           "properties": {
             "completed": { "type": "boolean" },
             "user_confirmed": { "type": "boolean" },
-            "report": { "type": "string" }
+            "report": { "type": "string" },
+            "verify_state": { "type": "string", "enum": ["inline-passed", "inline-failed", "awaiting-full", "full-running", "full-passed", "full-failed"] }
           },
           "additionalProperties": false
         },
@@ -61,7 +63,8 @@
           "properties": {
             "completed": { "type": "boolean" },
             "user_confirmed": { "type": "boolean" },
-            "report": { "type": "string" }
+            "report": { "type": "string" },
+            "verify_state": { "type": "string", "enum": ["inline-passed", "inline-failed", "awaiting-full", "full-running", "full-passed", "full-failed"] }
           },
           "additionalProperties": false
         },
@@ -70,7 +73,8 @@
           "properties": {
             "completed": { "type": "boolean" },
             "user_confirmed": { "type": "boolean" },
-            "report": { "type": "string" }
+            "report": { "type": "string" },
+            "verify_state": { "type": "string", "enum": ["inline-passed", "inline-failed", "awaiting-full", "full-running", "full-passed", "full-failed"] }
           },
           "additionalProperties": false
         }

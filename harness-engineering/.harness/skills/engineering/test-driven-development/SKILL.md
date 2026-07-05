@@ -66,12 +66,12 @@ With the focused test green, improve only code touched by this outcome when it m
 TDD owns the per-attempt fast verification inline (verify-fast is no longer a separate skill invocation). Keep `stage: act`, `status: running`, and the current iteration. Perform these 4 fast-verify duties before declaring the attempt outcome:
 
 1. **Validate tests** — reuse the exact green output from step 3 only when produced in the same execution context and neither command, code, nor attempt changed; otherwise rerun the affected test set. Reject `0 tests`, stale output, or a different command than claimed.
-2. **AC/DAC check** — confirm the stable AC/DAC IDs exercised by this task have evidence; cite component contract/binding when frontend.
+2. **AC/BAC/IAC check** — confirm the stable AC/BAC/IAC IDs exercised by this task have evidence; cite component contract/binding when frontend.
 3. **Changed-file security scan** — run the quick security scan on changed files and disposition every hit.
 4. **Append terminal outcome** — append exactly one terminal PASSED/FAILED line to `iterations.log` for this attempt.
 
-On pass: `stage: verify`, `status: running`, `substage: inline-passed`, clear error. Continue to the next planned outcome; set `substage: awaiting-full` when all planned outcomes are done and handing off to verify-full.
-On failure: `stage: verify`, `status: retrying`, `substage: inline-failed`, concrete error, then route by cause (see Failure Handling). At the recommended failed-attempt limit, set `needs-human`. A failed attempt 10 triggers the hard breaker.
+On pass: `stage: verify`, `status: running`, `substage_progress[<active-phase>].verify_state: inline-passed`, clear error. Continue to the next planned outcome; set `substage_progress[<active-phase>].verify_state: awaiting-full` when all planned outcomes are done and handing off to verify-full.
+On failure: `stage: verify`, `status: retrying`, `substage_progress[<active-phase>].verify_state: inline-failed`, concrete error, then route by cause (see Failure Handling). At the recommended failed-attempt limit, set `needs-human`. A failed attempt 10 triggers the hard breaker.
 
 Do not append a second attempt record. This inline step writes the one terminal outcome.
 

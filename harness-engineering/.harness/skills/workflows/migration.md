@@ -6,6 +6,8 @@ default_mode: standard
 ---
 # Workflow: Migration
 
+> **Matrix**: workflow `F` — see `engineering-pipeline.md` Workflow × Phase × ACT Matrix. Activates exactly one phase (Phase 2 backend) with `migration` as specialist ACT; Phase 3 not invoked.
+
 ## Route
 
 1. session-start (on-demand) + Foundation gate.

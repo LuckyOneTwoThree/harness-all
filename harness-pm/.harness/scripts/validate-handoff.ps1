@@ -171,7 +171,7 @@ if ($null -ne $contractPath) {
             $body = ($lines[($end+1)..($lines.Count-1)] -join "`n")
             $bodyIds = @([regex]::Matches($body, '\b(?:AC-[A-Z0-9]+-[0-9]{3}|DAC-(?:[A-Z0-9]+|GLOBAL)-[0-9]{3})\b') | ForEach-Object Value | Sort-Object -Unique)
             $envelopeIds = @(Envelope-List 'ac_ids' | Sort-Object -Unique)
-            if (($bodyIds -join ',') -ne ($envelopeIds -join ',')) { Fail "envelope/body AC-DAC ID mismatch" }
+            if (($bodyIds -join ',') -ne ($envelopeIds -join ',')) { Fail "envelope/body AC ID mismatch" }
 
             # batch field validation (required when mode: family)
             $batch = Envelope-Batch
@@ -208,9 +208,11 @@ if ($null -ne $contractPath) {
                 }
             }
 
-            # J5: AC/DAC ID strict pattern validation (AC-F01-001 / DAC-P01-001 / DAC-GLOBAL-001)
+            # J5: AC ID strict pattern validation (AC-F01-001).
+            # DAC-xxx IDs were retired in v3.0.0; reject them with a clear message.
             # Runs regardless of mode; checks all envelope + batch AC IDs.
-            $acIdPattern = '^(AC-[A-Z][0-9]{2}-[0-9]{3}|DAC-(?:[A-Z][0-9]{2}|GLOBAL)-[0-9]{3})$'
+            $acIdPattern = '^AC-[A-Z][0-9]{2}-[0-9]{3}$'
+            $dacIdPattern = '^DAC-(?:[A-Z][0-9]{2}|GLOBAL)-[0-9]{3}$'
             $allAcIdsToCheck = New-Object System.Collections.Generic.List[string]
             foreach ($id in $envelopeIds) { $allAcIdsToCheck.Add($id) }
             if ($batch.present) {
@@ -220,8 +222,13 @@ if ($null -ne $contractPath) {
                 foreach ($id in $batch.unchanged_acs) { $allAcIdsToCheck.Add($id) }
             }
             foreach ($id in ($allAcIdsToCheck | Sort-Object -Unique)) {
-                if ($id -and $id -ne 'null' -and $id -notmatch $acIdPattern) {
-                    Fail "invalid AC/DAC ID format (expected AC-F01-001 or DAC-P01-001/DAC-GLOBAL-001): $id"
+                if ($id -and $id -ne 'null') {
+                    if ($id -match $dacIdPattern) {
+                        Fail "DAC-xxx IDs are retired in v3.0.0; use AC/BAC/IAC instead: $id"
+                    }
+                    elseif ($id -notmatch $acIdPattern) {
+                        Fail "invalid AC ID format (expected AC-F01-001): $id"
+                    }
                 }
             }
 

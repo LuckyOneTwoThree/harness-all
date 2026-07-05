@@ -8,12 +8,12 @@ Engineering uses 4 sequential substages, each running its own PLAN → ACT → V
 
 | substage | Meaning | Written by |
 |---|---|---|
-| `design-intake` | phase 0 LOOP active | phase 0 ACT/verify |
+| `design-intake` | phase 0 active (non-LOOP; see Phase 0 Exception in `engineering-pipeline.md`) | design-intake skill (checkpoint still applies) |
 | `frontend` | phase 1 LOOP active | phase 1 ACT/verify |
 | `backend` | phase 2 LOOP active | phase 2 ACT/verify |
 | `integration` | phase 3 LOOP active | phase 3 ACT/verify |
 
-Phase-internal verify progress is encoded in `substage_progress[<phase>]` (`completed` / `user_confirmed`), not in the `substage` enum. The enum only identifies the active phase.
+Phase-internal verify progress is encoded in `substage_progress[<phase>]` (`completed` / `user_confirmed`, `verify_state`), not in the `substage` enum. The enum only identifies the active phase. Phase 0 sets `substage: design-intake` to identify itself as active, but does not run the PLAN→ACT→VERIFY loop (see Phase 0 Exception).
 
 ## Core Loop (per phase)
 
@@ -30,12 +30,18 @@ Within one phase, the LOOP is the classic PLAN → ACT → VERIFY with failure r
 
 ## Loop Types (per phase)
 
-| Phase | ACT owner sequence | Recommended failed-attempt limit | Success condition |
-|---|---|---:|---|
-| design-intake | design-intake | 3 | contract.json + tokens.json valid |
+Phase 0 (design-intake) does not run LOOP — see Phase 0 Exception in `engineering-pipeline.md`. The table below covers phases 1-3 only.
+
+| Phase | Default ACT owner sequence | Recommended failed-attempt limit | Success condition |
+|---|---|---|---|
 | frontend | frontend-implementation → test-driven-development | 5 | affected tests pass + AC evidence |
 | backend | data-layer → api-implementation → test-driven-development | 5 | API contract implemented + BAC evidence + tests pass |
 | integration | mock-to-real-switch → contract-verify → e2e-verification → verify | 3 | mock→real migration + IAC evidence + e2e suite passes |
+
+**Specialist ACT replacement** (per `engineering-pipeline.md` Workflow × Phase × ACT Matrix):
+- `optimize` workflow (E): the default ACT sequence is replaced by `performance-optimization` (specialist ACT) in the single active phase.
+- `migration` workflow (F): the default ACT sequence is replaced by `migration` (specialist ACT) in Phase 2.
+- `bugfix` workflow (C): the default ACT sequence is replaced by `test-driven-development` (regression test + fix) in the single active phase.
 
 The recommended limit is an escalation point. The hard cap (attempt 10) and attempt-10/11 behavior come only from `STATE_PROTOCOL.md`.
 
@@ -90,11 +96,14 @@ loops/specs/<task>/
 | task/start/mode | initialize | — | — | — |
 | iteration | `0` | increment before ACT | never | never |
 | stage | `plan` | `act` | `verify` | `review` |
-| substage | `<active-phase>` | `<active-phase>` | `<active-phase>` | `integration` |
+| substage | `<active-phase>` | `<active-phase>` | `<active-phase>` | `<active-phase>` (stays in the active phase; multi-phase = `integration`, single-phase = the single active phase) |
 | status | running | running/retrying | running/needs-human (checkpoint) | done/retrying/needs-human |
+| substage_progress[<phase>].verify_state | — | `inline-passed` / `inline-failed` / `awaiting-full` | `full-running` / `full-passed` / `full-failed` | — |
 | substage_progress[<phase>].completed / .report | — | — | verify sets on phase pass | — |
 | substage_progress[<phase>].user_confirmed | — | — | orchestrator on user message | — |
 | last error | clear | observed ACT failure | observed gate failure | blocking finding |
+
+> **substage vs verify_state**: `substage` (top-level field) only identifies the active phase (`design-intake` / `frontend` / `backend` / `integration`); it does NOT change during PLAN/ACT/VERIFY/review within the same phase. Phase-internal verify progress (inline-passed, full-passed, etc.) is written to `substage_progress[<active-phase>].verify_state`. ACT skills must NOT overwrite `substage` with verify state values.
 
 **Valid stage values**: `plan`, `act`, `verify`, `review`, `debug`. The `debug` stage is entered when failure routing sends control to `systematic-debugging` (a diagnostic skill, NOT an ACT skill — it does not increment iteration or own per-attempt terminal outcomes). It exits when systematic-debugging returns to LOOP for verify-full.
 
@@ -106,10 +115,12 @@ loops/specs/<task>/
 
 | mode | Phase 0 | Phase 1 | Phase 2 | Phase 3 |
 |---|---|---|---|---|
+| none | — | — | — | — |
 | skip | — | — | — | ✓ |
 | standard | ✓ | ✓ | ✓ | ✓ |
 | deep | ✓ | ✓ | ✓ | ✓ + OpenAPI contract generation in phase 0 |
 
+- **none**: non-LOOP path. No phase routing, no task_type, no state.yaml. Used by setup, quick-fix, and release workflows.
 - **skip**: jump directly to phase 3 integration; assumes frontend + backend already exist. Used for smoke/regression runs.
 - **standard**: full 4-phase path. Default.
 - **deep**: standard + machine-readable contract artifacts (OpenAPI/async-api) emitted from phase 0; phase 2 consumes the contract; phase 3 validates against it.

@@ -8,6 +8,8 @@ default_mode: standard
 
 Use for incorrect existing behavior. If the requested behavior is new rather than broken, route to new-feature.
 
+> **Matrix**: workflow `C` — see `engineering-pipeline.md` Workflow × Phase × ACT Matrix. Activates exactly one phase (Phase 1 frontend or Phase 2 backend); Phase 3 not invoked.
+
 ## Route
 
 1. session-start (on-demand) + Foundation gate.

@@ -25,7 +25,7 @@ description: Phase 0 skill. Ingests design assets (image / v0 code / md spec) an
 
 - `docs/design-system/tokens.json` (W3C format, `$value` + `$description`).
 - `docs/design-system/tokens.css` (CSS custom properties).
-- `docs/handoff/contract.json` (validates against `.harness/rules/component-contract.schema.json`).
+- `docs/handoff/contract.json` (validates against `.harness/rules/component-contract.schema.json`; includes `entities[]` array surfacing PRD data model for Phase 2 consumption, and `token_source.path` pointing to `docs/design-system/tokens.json`).
 - `loops/specs/<task>/phase-0-design-intake-report.md` (checkpoint artifact, see step 8).
 
 ## Process
@@ -141,6 +141,83 @@ Produce `loops/specs/<task>/phase-0-design-intake-report.md` containing:
 | Token conflict (incremental) | Same token name, different value | Pause, ask which wins |
 | AI-slop default detected | Image is Inter + #6366f1 + uniform radius | Warn, ask proceed or override |
 | Component ID collision (incremental) | New component reuses retired ID | Pause, assign new ID |
+
+## Degraded Mode Extraction (No PM Handoff)
+
+Trigger condition: `docs/handoff/pm-to-engineering.md` does not exist OR session-start confirms degraded mode (standalone-fallback). In this mode there is no PM contract package, so design-intake must derive `contract.json` + `tokens.json` from user-provided inputs alone.
+
+### 1. Classify Available Inputs
+
+Inventory what the user actually provided:
+- User-provided images (screenshots, sketches, mockups).
+- v0 / LLM-generated code (component files, `tailwind.config.*`, `globals.css`).
+- Markdown design docs (structured or free-form).
+- Figma exports (image snapshots, exported CSS, design tokens JSON).
+- Verbal requirements (chat / call notes).
+- PRD draft (`artifacts/product/PRD.md` or inline).
+
+Route each input to the matching extractor from the main Process (image → step 2; code → step 3; md → step 4). Verbal requirements and PRD drafts feed entity extraction (step 3 below).
+
+### 2. Extract Design Tokens
+
+If no `docs/design-system/tokens.json` exists, derive a minimal token set from the provided assets:
+- Colors (primary, secondary, neutrals, semantic states).
+- Spacing (4dp / 8dp grid estimate).
+- Typography (font family, size hierarchy, weight).
+
+Write to `docs/design-system/tokens.json` (W3C format). Mark every inferred token with `inferred: true` in a `$description` note or a top-level `notes` field so downstream phases know these are non-authoritative.
+
+If `tokens.json` already exists, merge per the main flow (step 5) — never silently override.
+
+### 3. Extract Entities
+
+If no PRD entities section exists, derive entities from:
+- User conversation (nouns surfaced in requirements).
+- Provided API examples (request/response shapes, endpoint paths).
+- Component properties inferred from code/images.
+
+Write to `docs/handoff/contract.json` `entities[]` with:
+- `ac_refs: []` — AC IDs are NOT available in degraded mode.
+- A `notes` field marking each entity as `pending-AC`.
+
+### 4. Extract Components
+
+Derive components from provided UI:
+- If v0 / code is provided → parse component structure (props, states, variants) per step 3 of the main Process.
+- If images only → describe components from visual inspection per step 2.
+- If markdown design doc → map per step 4.
+
+Each component still requires `component_id` (`^CMP-[A-Z0-9-]+$`), `purpose`, `properties`, `states`, `token_refs`, `accessibility`.
+
+### 5. Validate
+
+Run `validate-artifacts.ps1` to check:
+- `contract.json` against `.harness/rules/component-contract.schema.json`.
+- `tokens.json` W3C format (every entry has `$value`).
+
+Fix any schema violations before proceeding.
+
+### 6. Record Degraded-Mode Waiver
+
+Append to `memory/progress.md`:
+
+> Degraded mode active: no PM handoff. contract.json entities have pending-AC refs. AC traceability will be incomplete until PM provides AC IDs or user assigns them.
+
+This waiver is the audit trail that downstream phases (Phase 1/2) read to understand why BAC/IAC traceability has gaps.
+
+### 7. Self-Check
+
+- [ ] `contract.json` + `tokens.json` validate cleanly.
+- [ ] `phase-0-design-intake-report.md` cites the degraded-mode waiver in its Open items / risks section.
+- [ ] User has been surfaced the AC-traceability gap at the Phase 0 checkpoint.
+
+### AC Traceability Gap (must surface to user)
+
+In degraded mode, AC IDs from PM are MISSING. As a result:
+- Phase 1 BAC (Bidirectional AC) traceability will have gaps — components cannot be linked back to specific acceptance criteria.
+- Phase 2 IAC (Implementation AC) traceability will have gaps — entities cannot be tagged with the ACs they satisfy.
+
+The agent MUST surface this gap to the user at the Phase 0 checkpoint and recommend either (a) obtaining AC IDs from PM, or (b) user-assigned AC IDs (e.g., `AC-USER-001`) before Phase 1 begins.
 
 ## Verification
 

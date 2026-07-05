@@ -15,6 +15,10 @@
       "description": "Required non-null in family mode (hash of contract.json). Null only allowed when mode=standalone-fallback (no design package)."
     },
     "tech_stack_revision": { "type": "string", "minLength": 1 },
+    "mode_inference": {
+      "type": "string",
+      "description": "Recorded when project_mode is unset and inferred from existing directory layout. Explains how the mode was determined."
+    },
     "bindings": {
       "type": "array",
       "items": {
@@ -25,7 +29,68 @@
           "component_id": { "type": "string", "pattern": "^CMP-[A-Z0-9-]+$" },
           "engineering_component": { "type": "string", "minLength": 1 },
           "module": { "type": "string", "minLength": 1 },
-          "property_bindings": { "type": "object", "additionalProperties": { "type": "string" } }
+          "property_bindings": { "type": "object", "additionalProperties": { "type": "string" } },
+          "state_bindings": {
+            "type": "object",
+            "additionalProperties": { "type": "string" },
+            "description": "Maps component state names (from contract.json states[]) to engineering state implementation paths or variables."
+          },
+          "token_refs": {
+            "type": "array",
+            "items": { "type": "string" },
+            "uniqueItems": true,
+            "description": "Token names referenced by this component (from tokens.json). Used for cross-validation against contract.json token_refs."
+          },
+          "mock_api": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "path": { "type": "string", "description": "Path to mock handler file or directory" },
+              "endpoints": { "type": "array", "items": { "type": "string" }, "description": "List of mocked endpoint paths (e.g., GET /todos, POST /todos)" }
+            },
+            "description": "Mock API configuration for this component. Consumed by Phase 3 mock-to-real-switch to locate mock handlers."
+          },
+          "token_exceptions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["property", "value", "reason"],
+              "properties": {
+                "property": { "type": "string", "description": "CSS property that uses a hardcoded value" },
+                "value": { "type": "string", "description": "The hardcoded value used" },
+                "reason": { "type": "string", "description": "Documented reason for the exception" }
+              }
+            },
+            "description": "Documented exceptions to the token-only rule. Each exception must have a concrete reason."
+          },
+          "brand_overrides": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["property", "override_value", "source"],
+              "properties": {
+                "property": { "type": "string" },
+                "override_value": { "type": "string" },
+                "source": { "type": "string", "description": "Approved brand system or constitution reference" }
+              }
+            },
+            "description": "Intentional overrides of anti-pattern defaults per approved brand system. Accessibility, consistency, and evidence gates still apply."
+          },
+          "manual_verification": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["aspect", "reason"],
+              "properties": {
+                "aspect": { "type": "string", "description": "What aspect requires human verification (e.g., visual polish, motion feel, brand rendering)" },
+                "reason": { "type": "string", "description": "Why automated testing is not applicable" }
+              }
+            },
+            "description": "Components or aspects not amenable to automated testing. TDD does not fabricate tests for these; they are 👤 human-confirmation items."
+          }
         }
       }
     }

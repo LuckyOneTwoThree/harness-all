@@ -90,12 +90,12 @@ With the focused test green, improve only code touched by this endpoint when it 
 This skill owns the per-attempt fast verification inline (verify-fast is no longer a separate skill invocation). Keep `stage: act`, `status: running`, and the current iteration. Perform the 4 fast-verify duties before declaring the attempt outcome:
 
 1. **Validate tests** — reuse the exact green output from step 3 only when produced in the same execution context and neither command, code, nor attempt changed; otherwise rerun the affected test set. Reject `0 tests`, stale output, or a different command than claimed.
-2. **AC/BAC check** — confirm the stable AC/BAC IDs exercised by this endpoint have evidence. BAC-xxx IDs are produced by this skill in Phase 2 and will be verified by Phase 3 integration.
+2. **AC/BAC check + BAC reverse coverage** — confirm the stable AC/BAC IDs exercised by this endpoint have evidence. Additionally, perform **BAC reverse coverage**: verify that every endpoint implemented in this attempt has a corresponding BAC-xxx ID declared in `spec.md` (one BAC per endpoint, covering method+path+response shape+auth outcome). If an endpoint is implemented without a BAC, this is a `missing-bac` finding — do not pass until the BAC is allocated and recorded. This prevents BAC under-coverage from reaching Phase 3.
 3. **Changed-file security scan** — run the quick security scan on changed files and disposition every hit (auth bypass, SQL injection, secret leakage, error leakage).
 4. **Append terminal outcome** — append exactly one terminal PASSED/FAILED line to `iterations.log` for this attempt.
 
-On pass: `stage: verify`, `status: running`, `substage: inline-passed`, clear error. Continue to the next endpoint; set `substage: awaiting-full` when all planned endpoints are done.
-On failure: `stage: verify`, `status: retrying`, `substage: inline-failed`, concrete error, then route by cause. At the recommended failed-attempt limit, set `needs-human`. A failed attempt 10 triggers the hard breaker.
+On pass: `stage: verify`, `status: running`, `substage_progress[<active-phase>].verify_state: inline-passed`, clear error. Continue to the next endpoint; set `substage_progress[<active-phase>].verify_state: awaiting-full` when all planned endpoints are done.
+On failure: `stage: verify`, `status: retrying`, `substage_progress[<active-phase>].verify_state: inline-failed`, concrete error, then route by cause. At the recommended failed-attempt limit, set `needs-human`. A failed attempt 10 triggers the hard breaker.
 
 Do not append a second attempt record. This inline step writes the one terminal outcome.
 

@@ -27,8 +27,8 @@ description: Performance Optimization — measure→identify→fix→verify→gu
 ## Iron Rule
 **Measure before optimize.** Optimization without profile data is guessing, and guessing leads to premature optimization — adding complexity without improving the real problem.
 
-## Loop Type
-This skill corresponds to the **optimize** loop in LOOP.md: a maximum of 3 iterations; the stop condition is meeting the benchmark.
+## Workflow Type
+This skill is the **specialist ACT** for the `optimize` workflow (E) in `engineering-pipeline.md`. It replaces the default ACT sequence in the single active phase (Phase 1 frontend or Phase 2 backend). Recommended failed-attempt limit: 3; the stop condition is meeting the benchmark.
 
 ## Process
 
@@ -90,11 +90,11 @@ Common bottleneck quick reference:
 ### 4.5. Inline Verify-Fast (merged)
 
 - **Validate tests + benchmark re-measurement**: reuse the exact output from step 4 only when produced in the same execution context and neither command, code, nor attempt changed; otherwise rerun. Reject `0 tests`, stale output, or different commands.
-- **AC/DAC check**: every stable AC/DAC for this task has evidence; frontend tasks reference contract/binding by stable component ID.
+- **AC/BAC/IAC check**: every stable AC/BAC/IAC for this task has evidence; frontend tasks reference contract/binding by stable component ID.
 - **Changed-file security scan**: quick scan on changed files and disposition every hit (cite `verify/Reference/security-patterns.md` Patterns 1-3).
 - **Append terminal outcome**: append exactly one PASSED/FAILED line to `iterations.log`; do not append a second attempt record. The regression guard test from step 3 is already included in this attempt's mutations.
 
-Pass → `stage: verify, status: running, substage: inline-passed`, clear error; transition to `substage: awaiting-full` when handing off to verify-full. Fail → `stage: verify, status: retrying, substage: inline-failed`, concrete error. Numbers did not improve → return to IDENTIFY (domain-specific route, not a retry). At the recommended failed-attempt limit (3 for optimize), set `needs-human`. Never increment during failure handling.
+Pass → `stage: verify, status: running, substage_progress[<active-phase>].verify_state: inline-passed`, clear error; transition to `substage_progress[<active-phase>].verify_state: awaiting-full` when handing off to verify-full. Fail → `stage: verify, status: retrying, substage_progress[<active-phase>].verify_state: inline-failed`, concrete error. Numbers did not improve → return to IDENTIFY (domain-specific route, not a retry). At the recommended failed-attempt limit (3 for optimize), set `needs-human`. Never increment during failure handling.
 
 ### 5. GUARD — Recommend monitoring (no code mutation after terminal outcome)
 - The regression guard test was already added in step 3 (before the terminal outcome was appended). This step only **recommends** CI/monitoring integration; it does NOT mutate code or state after the per-attempt terminal outcome has been written:
@@ -123,7 +123,7 @@ Follow `.harness/loops/STATE_PROTOCOL.md`: increment once before mutation; the A
 
 ## Relationship with LOOP
 
-Corresponds to the optimize loop: MEASURE/IDENTIFY = PLAN, FIX (including regression guard test) = ACT, re-measurement data returns to verify, GUARD only recommends monitoring (no code mutation after terminal outcome). See `.harness/loops/LOOP.md`.
+Corresponds to the `optimize` workflow (E): MEASURE/IDENTIFY = PLAN, FIX (including regression guard test) = ACT, re-measurement data returns to verify, GUARD only recommends monitoring (no code mutation after terminal outcome). This skill is the specialist ACT that replaces the default ACT sequence in the single active phase (Phase 1 or Phase 2). See `.harness/loops/LOOP.md` and `.harness/rules/engineering-pipeline.md`.
 
 ## Division of Labor with Other Skills
 | Skill | Responsibility |

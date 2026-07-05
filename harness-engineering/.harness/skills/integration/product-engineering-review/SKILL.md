@@ -35,7 +35,7 @@ Failure here returns to orchestration; do not disguise incomplete feature work a
 
 ### 1. Contracts + Dependency (merged)
 
-**Cross-feature contracts** — inspect only boundaries actually used across features: exported API input/output/error semantics match callers; shared data entity names/types/lifecycle align with migrations; config/environment/feature-flag names have one meaning; semantic component IDs join to one current binding and preserve shared states/properties; global/scoped DAC evidence is not contradictory across pages/features.
+**Cross-feature contracts** — inspect only boundaries actually used across features: exported API input/output/error semantics match callers; shared data entity names/types/lifecycle align with migrations; config/environment/feature-flag names have one meaning; semantic component IDs join to one current binding and preserve shared states/properties; global/scoped AC/BAC/IAC evidence is not contradictory across pages/features.
 
 **Dependency and shared infrastructure** — one resolved version/major for shared dependencies with no peer/lock conflict; features import approved shared modules instead of reimplementing them; dependency direction follows the approved DAG; no new cycle. Use targeted searches and manifest/tool output. Do not claim semantic duplication solely from similar function names.
 

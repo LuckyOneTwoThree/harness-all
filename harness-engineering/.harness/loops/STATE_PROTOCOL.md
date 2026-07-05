@@ -59,7 +59,8 @@ Forbidden examples: `done → running`, `failed → retrying`, or any execution 
 | iteration | Domain execution stage, once per attempt |
 | stage | The stage currently entered |
 | status / last_error / last_error_at | Current stage based on observed outcome |
-| substage | Family-wide field with framework-local semantics. Engineering uses enum `{design-intake, frontend, backend, integration}` (see `state.schema.json`); PM uses its own sub-stage values documented in PM's LOOP.md |
+| substage | Family-wide field with framework-local semantics. Engineering uses enum `{design-intake, frontend, backend, integration}` (see `state.schema.json`); PM uses its own sub-stage values documented in PM's LOOP.md. Engineering ACT skills must NOT overwrite `substage` with verify state values — phase-internal verify progress goes in `substage_progress[<active-phase>].verify_state`. |
+| substage_progress[<phase>].verify_state | Active ACT skill (inline-passed / inline-failed / awaiting-full) or verify (full-running / full-passed / full-failed) |
 | hard_limit_reached | Verification or explicit user-authorized reset |
 | current_nested_task | Product-level orchestration only; aggregate progress remains in the canonical task board |
 

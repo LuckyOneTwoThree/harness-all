@@ -101,8 +101,8 @@ This skill owns the per-attempt fast verification inline. Keep `stage: act`, `st
 3. **Changed-file security scan** — typically no code changes here; if any analysis script changed, scan it.
 4. **Append terminal outcome** — append exactly one terminal PASSED/FAILED line to `iterations.log` for this attempt.
 
-On pass (all endpoints `consistent`): `stage: verify`, `status: running`, `substage: inline-passed`, clear error.
-On failure (one or more `mismatch`): `stage: verify`, `status: retrying`, `substage: inline-failed`, concrete error, then route by owning phase. At the recommended failed-attempt limit, set `needs-human`.
+On pass (all endpoints `consistent`): `stage: verify`, `status: running`, `substage_progress[<active-phase>].verify_state: inline-passed`, clear error.
+On failure (one or more `mismatch`): `stage: verify`, `status: retrying`, `substage_progress[<active-phase>].verify_state: inline-failed`, concrete error, then route by owning phase. At the recommended failed-attempt limit, set `needs-human`.
 
 Do not append a second attempt record. This inline step writes the one terminal outcome.
 

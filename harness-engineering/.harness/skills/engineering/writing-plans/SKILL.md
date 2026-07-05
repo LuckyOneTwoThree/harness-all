@@ -34,7 +34,7 @@ Standard and deep use the same artifact shape and state semantics. Deep adds arc
 1. **Allocate task directory** — use zero-padded kebab-case naming and do not reuse an existing task ID.
 2. **Write spec.md** from `.harness/templates/spec.md.template`:
    - one outcome-oriented goal;
-   - stable AC/DAC IDs with source/revision;
+   - stable AC/BAC/IAC IDs with source/revision;
    - in/out boundaries;
    - tasks with one independently verifiable result, normally 15–45 minutes;
    - expected files/tests and verification command;

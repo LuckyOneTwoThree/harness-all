@@ -2,11 +2,13 @@
 workflow_id: G
 name: release
 description: "Validate a selected release scope, review metadata/artifacts, and perform only user-authorized version and tag actions"
-default_mode: skip
+default_mode: none
 ---
 # Workflow: Release
 
 Release is a non-LOOP delivery path. It does not require every item on the global FEATURES board to be done—only every item explicitly included in this release scope.
+
+> **Matrix**: non-LOOP path (workflow `G`) — see `engineering-pipeline.md` Non-LOOP Paths. No phase routing, no state.yaml.
 
 ## Route
 

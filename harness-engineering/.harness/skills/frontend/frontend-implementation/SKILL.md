@@ -136,7 +136,16 @@ Anti-pattern defaults in design guidance are defaults, not universal bans. A pro
 - [ ] Mock API matches the PRD API contract; no fabricated endpoints.
 - [ ] Project-mode directory layout respected.
 - [ ] Accessibility contract implemented as written; gaps are explicit 👤 items.
-- [ ] Affected tests pass with AC/DAC evidence; non-testable items marked 👤.
+- [ ] Affected tests pass with AC/BAC/IAC evidence; non-testable items marked 👤.
+
+## Inline verify-fast (per attempt)
+
+frontend-implementation runs its own inline verify-fast after each component implementation attempt, BEFORE handing off to TDD. This is separate from TDD's inline verify-fast (which covers behavior-level test validation). The four duties:
+
+1. **Test validation**: confirm TDD's red-green cycle completed for the current component; reject if tests are 0, stale, or command doesn't match the planned outcome.
+2. **AC/BAC/IAC + Hard Gate check**: confirm the current component's `component_id` exists in `contract.json`; verify token references resolve to `tokens.json` entries (no missing tokens); verify mock API endpoints trace to PRD documented endpoints; verify accessibility contract items are implemented or marked 👤; verify `component-bindings.json` entry is complete (including `mock_api`, `token_refs`, `manual_verification` where applicable).
+3. **Changed-file security scan**: scan the component's changed files for hardcoded secrets/URLs, XSS-prone `dangerouslySetInnerHTML`, and hardcoded color/spacing values that should use tokens (cross-check against `token_exceptions`).
+4. **Terminal outcome**: append one `PASSED` or `FAILED` line to `iterations.log` with the component ID and verification summary.
 
 ## Relationship with LOOP
 

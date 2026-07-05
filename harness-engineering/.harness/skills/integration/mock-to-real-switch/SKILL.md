@@ -83,8 +83,8 @@ This skill owns the per-attempt fast verification inline. Keep `stage: act`, `st
 3. **Changed-file security scan** — confirm no secrets were committed to `.env` files that are tracked by VCS; `.env` files in VCS are flagged.
 4. **Append terminal outcome** — append exactly one terminal PASSED/FAILED line to `iterations.log` for this attempt.
 
-On pass: `stage: verify`, `status: running`, `substage: inline-passed`, clear error. Hand to `contract-verify` and `e2e-verification`.
-On failure: `stage: verify`, `status: retrying`, `substage: inline-failed`, concrete error, then route by cause. At the recommended failed-attempt limit, set `needs-human`.
+On pass: `stage: verify`, `status: running`, `substage_progress[<active-phase>].verify_state: inline-passed`, clear error. Hand to `contract-verify` and `e2e-verification`.
+On failure: `stage: verify`, `status: retrying`, `substage_progress[<active-phase>].verify_state: inline-failed`, concrete error, then route by cause. At the recommended failed-attempt limit, set `needs-human`.
 
 Do not append a second attempt record. This inline step writes the one terminal outcome.
 

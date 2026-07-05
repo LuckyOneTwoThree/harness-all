@@ -1,7 +1,23 @@
 {
   "schema_version": "1.0",
   "design_revision": "<source revision or design handoff id>",
-  "token_source": { "path": "artifacts/design-system/tokens.json", "sha256": "<sha256>" },
+  "token_source": { "path": "docs/design-system/tokens.json", "sha256": "<sha256>" },
+  "entities": [
+    {
+      "entity_id": "ENT-TODO",
+      "name": "Todo",
+      "fields": [
+        { "name": "id", "type": "string", "required": true, "unique": true },
+        { "name": "title", "type": "string", "required": true },
+        { "name": "completed", "type": "boolean", "required": true, "default": false },
+        { "name": "user_id", "type": "reference", "required": true, "reference": "ENT-USER" }
+      ],
+      "relationships": [
+        { "type": "many-to-one", "target": "ENT-USER", "from_field": "user_id" }
+      ],
+      "ac_refs": ["AC-F01-001", "AC-F01-003"]
+    }
+  ],
   "components": [
     {
       "component_id": "CMP-BUTTON-PRIMARY",

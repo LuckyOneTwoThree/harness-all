@@ -6,6 +6,8 @@ default_mode: standard
 ---
 # Workflow: Optimize
 
+> **Matrix**: workflow `E` — see `engineering-pipeline.md` Workflow × Phase × ACT Matrix. Activates exactly one phase (Phase 1 frontend or Phase 2 backend) with `performance-optimization` as specialist ACT; Phase 3 not invoked.
+
 ## Route
 
 1. session-start (on-demand) + Foundation gate.

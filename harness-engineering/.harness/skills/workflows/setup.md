@@ -2,11 +2,13 @@
 workflow_id: A
 name: setup
 description: "Validate and complete the project-owned configuration created by install.sh"
-default_mode: skip
+default_mode: none
 ---
 # Workflow: Setup
 
 Use for first-time initialization or incomplete `SOUL.md`, `constitution.md`, `PROJECT.md`, or `TECH_STACK.md`. This is configuration work, not a code LOOP.
+
+> **Matrix**: non-LOOP path (workflow `A`) — see `engineering-pipeline.md` Non-LOOP Paths. No phase routing, no state.yaml, no task_type.
 
 ## Route
 

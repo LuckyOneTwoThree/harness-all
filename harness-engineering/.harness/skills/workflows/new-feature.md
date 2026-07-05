@@ -8,6 +8,8 @@ default_mode: standard
 
 Use for one independently deliverable behavior/module. Use new-product-engineering for a coordinated multi-feature product, and quick-fix only when its risk gate passes.
 
+> **Matrix**: workflow `B` — see `engineering-pipeline.md` Workflow × Phase × ACT Matrix. Phase routing depends on `task_type`/`scope`: `full` activates Phases 0-3; `frontend` activates Phases 0-1; `backend` activates Phase 2 only; `incremental feature` runs incremental in prior phases and full Phase 3.
+
 ## Route
 
 Follow `.harness/rules/engineering-pipeline.md`:

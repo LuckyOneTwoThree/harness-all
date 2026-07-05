@@ -64,6 +64,7 @@ This skill performs **static code checks only** by default (zero-dependency prin
 
 5. **Structural verification** (using Agent tools, cross-platform)
    - Check component structure, accessibility baseline (Grep), and routing/page registration
+   - Static accessibility baseline uses the checklist in `Reference/wcag-checklist.md`
    - 完整正则模式与返回结构模板见 `Reference/frontend-check-patterns.md`
 
 6. **Security check** (frontend-specific)

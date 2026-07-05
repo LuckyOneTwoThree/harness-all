@@ -64,11 +64,11 @@ Before starting a migration, answer the following questions. If any item is not 
 - **Migrate one consumer at a time** (use Grep to find call sites and change them one by one). Do not batch-change multiple consumers before testing (errors accumulate, attribution is impossible).
 - For each migrated consumer, this skill owns the per-attempt fast verification inline (verify-fast is no longer a separate skill invocation). Keep `stage: act`, `status: running`, and the current iteration. Perform these 4 fast-verify duties before declaring the attempt outcome:
   1. **Validate tests + equivalence** — run the full test suite and confirm behavior matches the old system (equivalence); reject `0 tests`, stale output, or a different command than claimed.
-  2. **AC/DAC check** — confirm the stable AC/DAC IDs exercised by this task have evidence.
+  2. **AC/BAC/IAC check** — confirm the stable AC/BAC/IAC IDs exercised by this task have evidence.
   3. **Changed-file security scan** — run the quick security scan on changed files and disposition every hit.
   4. **Append terminal outcome** — append exactly one terminal PASSED/FAILED line to `iterations.log` for this attempt.
-- On pass: `stage: verify, status: running, substage: inline-passed`, clear error. Continue to the next consumer or hand off to verify-full (set `substage: awaiting-full` when all consumers are done).
-- On failure: `stage: verify, status: retrying, substage: inline-failed`, concrete error, then route by cause. At the recommended failed-attempt limit, set `needs-human`. A failed attempt 10 triggers the hard breaker.
+- On pass: `stage: verify, status: running, substage_progress[<active-phase>].verify_state: inline-passed`, clear error. Continue to the next consumer or hand off to verify-full (set `substage_progress[<active-phase>].verify_state: awaiting-full` when all consumers are done).
+- On failure: `stage: verify, status: retrying, substage_progress[<active-phase>].verify_state: inline-failed`, concrete error, then route by cause. At the recommended failed-attempt limit, set `needs-human`. A failed attempt 10 triggers the hard breaker.
 - Do not append a second attempt record. This inline step writes the one terminal outcome.
 
 ### 4. Verify Zero Active Usage

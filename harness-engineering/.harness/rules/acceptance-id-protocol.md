@@ -30,3 +30,23 @@ Each AC/BAC/IAC ID is tracked across `spec.md`, `evidence.md`, and handoff envel
 | `AC-xxx` | PM | engineering Phase 1/2/3 (per scope) | `spec.md` + `evidence.md` + handoff envelope `ac_ids` |
 | `BAC-xxx` | engineering Phase 2 (api-implementation / data-layer) | engineering Phase 3 (contract-verify / e2e-verification) | `spec.md` + `evidence.md` + phase-2-backend-report.md |
 | `IAC-xxx` | engineering Phase 3 (mock-to-real-switch / contract-verify / e2e-verification) | engineering Phase 3 (verify-full) | `spec.md` + `evidence.md` + phase-3-integration-report.md |
+
+## Allocation Granularity
+
+IDs are allocated per **independently verifiable behavior unit**, not per file or per line. One ID must have exactly one evidence citation.
+
+### AC-xxx (Product criterion)
+- **Granularity**: one AC per product-verifiable user behavior (e.g., "user can create a todo", "user can filter by status").
+- Allocated by PM in the PRD. Engineering consumes them; engineering never creates AC IDs.
+
+### BAC-xxx (Backend criterion)
+- **Granularity for `data-layer`**: one BAC per **entity behavior** — create, read, update, delete, relationship traversal, or constraint enforcement. Example: `BAC-F01-001` = "Todo entity: create with required fields"; `BAC-F01-002` = "Todo entity: user_id FK constraint enforced".
+- **Granularity for `api-implementation`**: one BAC per **endpoint contract** — method + path + response shape + auth outcome. Example: `BAC-F01-010` = "POST /api/todos returns 201 with created todo; 401 without auth; 422 on validation failure".
+- A single endpoint may satisfy multiple BACs if it has distinct auth/validation/error behaviors worth tracking separately.
+- **Reverse coverage** (per Phase 2 inline verify-fast): every implemented endpoint/entity behavior must have a corresponding BAC. An endpoint without a BAC is a `missing-bac` finding.
+
+### IAC-xxx (Integration criterion)
+- **Granularity for `mock-to-real-switch`**: one IAC per **switch unit** — a config flip or endpoint group migration from mock to real. Example: `IAC-F01-001` = "Todo API switched from /api/mock/todos to /api/todos".
+- **Granularity for `contract-verify`**: one IAC per **contract consistency check** — frontend ↔ backend shape match, or backend ↔ PRD contract match. Example: `IAC-F01-010` = "POST /api/todos request/response shape matches contract.json component TodoForm".
+- **Granularity for `e2e-verification`**: one IAC per **AC-driven user flow** — a complete end-to-end path traced from an AC. Example: `IAC-F01-020` = "E2E flow: user creates todo → appears in list → persists on refresh (traces AC-F01-001)".
+- IACs are the terminal acceptance layer: Phase 3 verify-full confirms every BAC has at least one IAC re-verifying it, and every AC has at least one IAC tracing it end-to-end.
