@@ -13,7 +13,8 @@
       "required": ["path", "sha256"],
       "properties": {
         "path": { "type": "string", "pattern": "^(docs/design-system/|artifacts/)", "description": "Path to tokens.json. In engineering, tokens.json lives at docs/design-system/tokens.json. The artifacts/ prefix is retained for handoff-package-relative paths." },
-        "sha256": { "type": "string", "pattern": "^([a-f0-9]{64}|<sha256>)$" }
+        "sha256": { "type": "string", "pattern": "^([a-f0-9]{64}|<sha256>)$" },
+        "provenance": { "type": "string", "enum": ["user-provided", "agent-inferred-from-prd", "handoff"], "description": "Origin of the tokens. 'agent-inferred-from-prd' is set when design-intake runs in PRD-only mode (no external design asset); downstream phases and verify use this to adjust expectations on visual fidelity." }
       }
     },
     "entities": {

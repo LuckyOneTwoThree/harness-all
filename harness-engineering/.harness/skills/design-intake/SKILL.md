@@ -8,15 +8,17 @@ description: Phase 0 skill. Ingests design assets (image / v0 code / md spec) an
 
 - Phase 0 of a feature/product flow that has visual design input.
 - User provides a design asset: reference image, hand-drawn sketch, mockup, v0-generated code, or a structured md spec.
+- **PRD-only mode**: no external design asset is provided; the agent derives tokens + component contract from PRD context alone (see step 2.5).
 - Reverse-engineer tokens + semantic component contract from any of the above asset types.
 - Incremental update: an existing `contract.json` exists and a new PRD/asset requires a diff-and-merge.
 
 ## Inputs
 
-- A design asset path (one of):
+- At least one input source (any of the following; **PRD alone suffices** when no design asset is available):
   - Image file (`.png` / `.jpg` / `.webp`) — reference screenshot, sketch, mockup.
   - Code dir / file (`tailwind.config.js`, `src/theme.ts`, `src/globals.css`, shadcn `components.json`, v0 export).
   - Markdown spec (`*.md`) with structured sections.
+  - PRD only — when no external design asset is provided, the agent derives tokens and components from PRD context (features / pages / entities / user_flows). See step 2.5 (PRD-Only Inference).
 - Product requirements: `docs/handoff/pm-to-engineering.md` (current pointer, validated by session-start; AC-xxx) or `artifacts/product/PRD.md`.
 - For incremental mode: existing `docs/handoff/contract.json` + `docs/design-system/tokens.json`.
 - `.harness/craft/anti-ai-slop.md`, `.harness/craft/color.md`, `.harness/craft/typography.md`.
@@ -25,7 +27,7 @@ description: Phase 0 skill. Ingests design assets (image / v0 code / md spec) an
 
 - `docs/design-system/tokens.json` (W3C format, `$value` + `$description`).
 - `docs/design-system/tokens.css` (CSS custom properties).
-- `docs/handoff/contract.json` (validates against `.harness/rules/component-contract.schema.json`; includes `entities[]` array surfacing PRD data model for Phase 2 consumption, and `token_source.path` pointing to `docs/design-system/tokens.json`).
+- `docs/handoff/contract.json` (validates against `.harness/rules/component-contract.schema.json`; includes `entities[]` array surfacing PRD data model for Phase 2 consumption, and `token_source.path` pointing to `docs/design-system/tokens.json`). In PRD-only mode, `token_source.provenance` is set to `"agent-inferred-from-prd"` and `design_revision` is `"agent-generated"`.
 - `loops/specs/<task>/phase-0-design-intake-report.md` (checkpoint artifact, see step 8).
 
 ## Process
@@ -37,8 +39,9 @@ Detect the asset type and route to the matching extractor:
 - Image → step 2 (multimodal extraction).
 - Code config → step 3 (code parsing).
 - Markdown spec → step 4 (md structuring).
+- No external design asset, but PRD is available → step 2.5 (PRD-Only Inference).
 
-If the asset is unparseable or missing, stop and surface a 👤 human intervention point (insufficient assets).
+If no input is available at all (no image, no code, no md spec, no PRD), stop and surface a 👤 human intervention point (insufficient inputs).
 
 ### 2. Multimodal Extraction (image)
 
@@ -53,7 +56,35 @@ Read the image with vision capability and extract:
 
 Anti AI-Slop check on the image itself: if the image is an AI-slop default (Inter + #6366f1 purple gradient + uniform radius), warn the user and ask whether to proceed or override. Record detected patterns as lint-watching items.
 
-Hard gate: do not proceed if no image provided, no AC-xxx from PM (image is style only, not product requirements), or image is pure noise.
+Hard gate: do not proceed only if no input is available at all (no image, no code, no md spec, no PRD draft). Any single input — including PRD alone — is sufficient to proceed.
+
+### 2.5 PRD-Only Inference (no external design asset)
+
+Triggered when the user provides no image / code / md spec but a PRD (or PRD draft) is available. The agent derives tokens and components from PRD context alone.
+
+**Inference inputs** (read from PRD):
+- `features[]` / `pages[]` — surface UI components needed (e.g., "login page" → Input + Button + Form; "dashboard" → Card + Chart + Table).
+- `entities[]` — surface data shapes that drive component properties (e.g., `Todo` entity → `TodoItem` component with `title`, `completed` props).
+- `user_flows[]` — surface interaction patterns (e.g., multi-step flow → Stepper / Wizard; CRUD → List + Detail + Form).
+- `non_functional_requirements` — surface constraints (e.g., "WCAG AA" → a11y contract; "mobile-first" → responsive breakpoints).
+- Product type / domain keywords — surface color/typography mood (e.g., fintech → conservative blues; creative tool → expressive palette).
+
+**Token inference**:
+- Choose a coherent color system (semantic primary/secondary/accent + neutrals + semantic states) aligned with product mood. Avoid AI-slop defaults (see `.harness/craft/anti-ai-slop.md`); if a default is chosen, record rationale in `tokens.json` `$description` for each token.
+- Choose typography pairing from `.harness/data/design/typography.csv` (or override with rationale).
+- Set spacing on 8dp grid; radius on a 3-tier scale (sm/md/lg); shadow on 3-tier elevation scale.
+- Mark every inferred token with `$description: "inferred from PRD — <reason>"` so downstream phases and verify know these are agent-authored, not user-authorized.
+
+**Component inference**:
+- For each page/feature in PRD, list the components needed. Each gets a stable `component_id` (`^CMP-[A-Z0-9-]+$`), `purpose`, `properties`, `states`, `token_refs`, and `accessibility` contract.
+- For components whose props/states cannot be fully inferred from PRD, append `"pending-confirmation"` to the `accessibility` array and surface as 👤 at Phase 0 checkpoint (not silent omission).
+- Component IDs are immutable; once assigned they survive into later phases even if the user later adds design assets.
+
+**Anti AI-Slop self-check**: after inference, run the anti-ai-slop checklist against the inferred tokens. If the result matches the AI-slop signature (Inter + #6366f1 + uniform radius), reconsider at least one dimension with rationale recorded. This is a warning, not a hard block — the agent may keep the choice if it serves the PRD context, but the rationale must be explicit.
+
+**Provenance**: in `contract.json`, set `design_revision: "agent-generated"` and `token_source.provenance: "agent-inferred-from-prd"` so downstream phases and verify know the design source is agent-authored.
+
+**Phase 0 checkpoint disclosure**: the `phase-0-design-intake-report.md` MUST include a "PRD-Only Inference" section listing: (a) which tokens were inferred and why, (b) which components were inferred and which have `pending-confirmation` accessibility, (c) a recommendation that a design pass be performed before production release.
 
 ### 3. Code Parsing (code config)
 
@@ -136,10 +167,11 @@ Produce `loops/specs/<task>/phase-0-design-intake-report.md` containing:
 
 | Point | Trigger | Action |
 |------|---------|--------|
-| Insufficient assets | No image / unparseable code / empty md | Pause, request more input |
+| Insufficient inputs | No image, no code, no md spec, AND no PRD draft | Pause, request at least one input |
 | Extraction failure | Vision parse returns noise / config unreadable | Pause, request cleaner asset |
 | Token conflict (incremental) | Same token name, different value | Pause, ask which wins |
-| AI-slop default detected | Image is Inter + #6366f1 + uniform radius | Warn, ask proceed or override |
+| AI-slop default detected (image mode) | Image is Inter + #6366f1 + uniform radius | Warn, ask proceed or override |
+| AI-slop default detected (PRD-only mode) | Inferred tokens match AI-slop signature | Warning only; agent may keep the choice with recorded rationale (see step 2.5) |
 | Component ID collision (incremental) | New component reuses retired ID | Pause, assign new ID |
 
 ## Degraded Mode Extraction (No PM Handoff)
@@ -221,7 +253,7 @@ The agent MUST surface this gap to the user at the Phase 0 checkpoint and recomm
 
 ## Verification
 
-- [ ] Asset classified and routed (evidence: report names the route).
+- [ ] Asset classified and routed (evidence: report names the route — image / code / md / PRD-only).
 - [ ] `tokens.json` conforms to W3C format (every entry has `$value`).
 - [ ] `tokens.css` contains matching `--*` custom properties.
 - [ ] No hardcoded hex survives in `tokens.json` (every value is a token).
@@ -229,6 +261,7 @@ The agent MUST surface this gap to the user at the Phase 0 checkpoint and recomm
 - [ ] No framework-specific type or implementation name in the contract.
 - [ ] `phase-0-design-intake-report.md` exists and is presented as a checkpoint.
 - [ ] Incremental mode (if active): diff summary present, no silent overrides.
+- [ ] PRD-only mode (if active): `token_source.provenance` = `"agent-inferred-from-prd"`, every inferred token has a `$description` noting its PRD-derived rationale, components with uninferable a11y carry `"pending-confirmation"` in their `accessibility` array, and the report includes the "PRD-Only Inference" section.
 
 ## Relationship with LOOP
 
