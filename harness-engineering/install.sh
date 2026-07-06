@@ -76,7 +76,9 @@ fi
 
 # Create the docs/ directory structure (only directories required by the engineering framework; design belongs to other harness family members)
 echo "→ Creating docs/ directory..."
-mkdir -p docs/product docs/engineering docs/acceptance docs/handoff/archive docs/handoff/receipts docs/handoff/packages docs/decisions
+mkdir -p docs/product docs/engineering docs/design-system docs/handoff/archive docs/handoff/receipts docs/handoff/packages docs/decisions
+# docs/design-system/ holds tokens.json + tokens.css produced by design-intake (Phase 0); place a .gitkeep so the empty directory is tracked
+touch docs/design-system/.gitkeep
 
 # Initialize PROJECT.md and TECH_STACK.md from templates (if they don't exist)
 if [ ! -f "docs/product/PROJECT.md" ]; then

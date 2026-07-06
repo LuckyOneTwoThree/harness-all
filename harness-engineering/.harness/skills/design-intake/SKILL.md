@@ -19,7 +19,7 @@ description: Phase 0 skill. Ingests design assets (image / v0 code / md spec) an
   - Code dir / file (`tailwind.config.js`, `src/theme.ts`, `src/globals.css`, shadcn `components.json`, v0 export).
   - Markdown spec (`*.md`) with structured sections.
   - PRD only — when no external design asset is provided, the agent derives tokens and components from PRD context (features / pages / entities / user_flows). See step 2.5 (PRD-Only Inference).
-- Product requirements: `docs/handoff/pm-to-engineering.md` (current pointer, validated by session-start; AC-xxx) or `artifacts/product/PRD.md`.
+- Product requirements: `docs/handoff/pm-to-engineering.md` (current pointer, validated by session-start; AC-xxx) or, when inside a handoff package, `docs/handoff/packages/<handoff_id>/artifacts/product/PRD.md` (package-relative path). In degraded mode without PM handoff, a user-provided PRD draft at `artifacts/product/PRD.md` (project root) is also accepted.
 - For incremental mode: existing `docs/handoff/contract.json` + `docs/design-system/tokens.json`.
 - `.harness/craft/anti-ai-slop.md`, `.harness/craft/color.md`, `.harness/craft/typography.md`.
 
@@ -80,6 +80,18 @@ Triggered when the user provides no image / code / md spec but a PRD (or PRD dra
 - For components whose props/states cannot be fully inferred from PRD, append `"pending-confirmation"` to the `accessibility` array and surface as 👤 at Phase 0 checkpoint (not silent omission).
 - Component IDs are immutable; once assigned they survive into later phases even if the user later adds design assets.
 
+**Entity inference** (when PRD has no explicit `entities[]`):
+- Derive entities from PRD `features[]` / `user_flows[]` (e.g., "user can create a todo" → `Todo` entity with `title`, `completed` fields). Each gets a stable `entity_id` (`^ENT-[A-Z0-9-]+$`), `name`, `fields[]` (each with `name`, `type`, `required`), optional `relationships[]` and `ac_refs[]`.
+- Entity IDs are immutable; once assigned they survive into later phases even if the user later adds design assets.
+
+**Page inference**:
+- If PRD has explicit `pages[]`: use them directly, assign each a `page_id` (`^PG-[A-Z0-9-]+$`), and link `component_refs` (the component_ids used on that page).
+- If PRD has only `features[]` / `user_flows[]`: infer pages by grouping features into user-facing screens (e.g., "todo CRUD" feature → `TodoListPage` + `TodoDetailPage`; "settings" feature → `SettingsPage`). Mark each inferred page with `inferred: true`.
+- Each page MUST have at least one `component_ref` — a page with no components is a planning gap, surface as 👤 at Phase 0 checkpoint.
+- Page IDs are immutable; once assigned they survive into later phases even if the user later adds design assets.
+- **Scope-aware skip**: if the workflow's `task_type` / `scope` is `backend` (Phase 1 will not run, no frontend pages to cover), skip page inference and omit `pages[]` from `contract.json`. Phase 1 Hard Gate 7 and Phase 3 step 3.5 both treat absent `pages[]` as a skip signal. If `task_type` is unset, default to including `pages[]` (safer assumption).
+- This step is the primary defense against "missing page" defects in Phase 1 (frontend-implementation Hard Gate 7) and Phase 3 (e2e-verification page flow coverage).
+
 **Anti AI-Slop self-check**: after inference, run the anti-ai-slop checklist against the inferred tokens. If the result matches the AI-slop signature (Inter + #6366f1 + uniform radius), reconsider at least one dimension with rationale recorded. This is a warning, not a hard block — the agent may keep the choice if it serves the PRD context, but the rationale must be explicit.
 
 **Provenance**: in `contract.json`, set `design_revision: "agent-generated"` and `token_source.provenance: "agent-inferred-from-prd"` so downstream phases and verify know the design source is agent-authored.
@@ -138,6 +150,8 @@ Required provenance: `schema_version` (`1.0`), `design_revision` (handoff ID), `
 
 Each component requires a stable `component_id` (`^CMP-[A-Z0-9-]+$`), semantic `name` + `purpose`, neutral `properties` (types: `string` / `boolean` / `number` / `enum` / `slot` / `collection` / `object`), `states`, `token_refs`, and `accessibility` constraints. Component IDs are immutable; removed IDs are retired, never reassigned.
 
+Generate `pages[]` array: for each page (from PRD `pages[]`, inferred in step 2.5 PRD-Only mode, or identified from design assets in image/code/md mode), write a `PG-xxx` entry with `name`, `component_refs` (component_ids used on this page), optional `path` (route path if known), `ac_refs` (AC IDs if available), and `inferred: true` if the page was inferred rather than explicitly listed. Page IDs are immutable; once assigned they survive into later phases. This array is the source of truth for page-level coverage checks in Phase 1 (frontend-implementation Hard Gate 7) and Phase 3 (e2e-verification page flow coverage).
+
 Hard boundary: design owns semantic intent, not framework selection. Never emit React/Vue/Svelte-specific types or prescribe `engineeringComponent` names.
 
 ### 7. Incremental Diff Mode (when existing contract exists)
@@ -145,8 +159,9 @@ Hard boundary: design owns semantic intent, not framework selection. Never emit 
 1. Read existing `docs/handoff/contract.json` + `docs/design-system/tokens.json`.
 2. Extract tokens + components from the new PRD / asset (steps 2-4).
 3. Compare: classify each token / component as `[added]` / `[modified]` / `[unchanged]` / `[superseded]`.
-4. Update the contract: `added` and `modified` (new IDs) replace old ones; old IDs go to `superseded_acs`. `unchanged` carries forward.
-5. Emit a diff summary section in `phase-0-design-intake-report.md`.
+4. Update the contract: `added` and `modified` (new IDs) replace old ones; old component IDs are **retired (marked as `[superseded]` in the diff summary, never reassigned to a new component)** — do NOT use `superseded_acs` (that field belongs to the handoff envelope batch metadata, not contract.json). `unchanged` carries forward.
+5. **Preserve existing `deviations[]` array unchanged** — incremental diff only updates tokens / components / entities / pages; deviations recorded by prior phases (Phase 1/2/3 manual adjustments) must survive into the new contract revision so downstream phases and PM triage retain the full deviation history. If a deviation is fully superseded by a new PRD change, append a `superseded_by` note to the deviation entry rather than removing it.
+6. Emit a diff summary section in `phase-0-design-intake-report.md`.
 
 Conflicts the agent cannot resolve autonomously pause for 👤 human decision.
 
@@ -162,6 +177,16 @@ Produce `loops/specs/<task>/phase-0-design-intake-report.md` containing:
 - Open items / risks / assumptions.
 
 **Hard checkpoint**: stop and wait for user confirmation before any downstream phase consumes the contract. Do not auto-proceed to Phase 1.
+
+### 9. Update state.yaml (Phase 0 ownership)
+
+Phase 0 does not run inside LOOP and has no verify step, so design-intake itself owns the `substage_progress.design-intake` update (per `engineering-pipeline.md` Phase 0 Exception). After the user confirms the checkpoint:
+
+- Set `substage_progress.design-intake.completed: true`.
+- Set `substage_progress.design-intake.user_confirmed: true` (only after explicit user confirmation; if the user requests changes, keep `user_confirmed: false` and rerun the affected extraction step).
+- Set `substage_progress.design-intake.report: "loops/specs/<task>/phase-0-design-intake-report.md"`.
+- Do NOT touch `verify_state` — Phase 0 has no verify step; `verify_state` remains absent or is set by Phase 1's first inline verify-fast.
+- If `state.yaml` does not yet exist (e.g., degraded mode without writing-plans), create a minimal one following `loops/state.schema.json` with `current_task`, `iteration: 0`, `stage: design-intake`, `status: running`, `started_at` (ISO-8601).
 
 ## 👤 Human Intervention Points
 

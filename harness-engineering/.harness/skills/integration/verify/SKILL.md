@@ -27,7 +27,7 @@ description: Owns verify-full (final delivery evidence gate); fast verification 
 
 ## Mode Selection
 
-- **verify-fast**: inlined into the ACT skill (test-driven-development / performance-optimization / migration). The ACT owner performs the 4 fast-verify duties (test validation / AC-DAC check / changed-file security scan / append terminal outcome) inline before declaring the attempt outcome. See each ACT skill's "Inline Verify-Fast" step. (Note: `systematic-debugging` is NOT an ACT skill — it is a diagnostic skill invoked by failure routing; it does not perform inline verify-fast.)
+- **verify-fast**: inlined into each ACT skill that owns a per-attempt outcome. The 9 ACT skills with inline verify-fast are: `frontend-implementation`, `data-layer`, `api-implementation`, `mock-to-real-switch`, `contract-verify`, `e2e-verification` (the 6 phase-specific ACT skills), plus `test-driven-development`, `performance-optimization`, `migration` (the 3 specialist ACT skills). The ACT owner performs the 4 fast-verify duties (test validation / AC-BAC-IAC check / changed-file security scan / append terminal outcome) inline before declaring the attempt outcome. See each ACT skill's "Inline Verify-Fast" step. (Note: `systematic-debugging` is NOT an ACT skill — it is a diagnostic skill invoked by failure routing; it does not perform inline verify-fast.)
 - **verify-full**: owned by this skill; runs once after all planned outcomes pass fast verification. Scope is the complete change.
 
 Do not run verify-full after every task — only once before code-review.

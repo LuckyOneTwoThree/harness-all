@@ -14,7 +14,8 @@ description: "Phase 2 skill. Use when designing the database schema, ORM models,
 ## Inputs
 
 - `docs/handoff/pm-to-engineering.md` (current pointer, validated by session-start) — PRD entities list + fields + relationships + the API contract section (drives query shapes). In degraded mode (no PM handoff), this is derived from user conversation + `contract.json`.
-- `docs/handoff/contract.json` — entities surfaced from Phase 0/1.
+- `docs/handoff/contract.json` — entities surfaced from Phase 0/1. **Read `entities[]` for the authoritative field list and `deviations[]` for Phase 1 contract deviations** (e.g., a field added to an entity during frontend review via `DEV-<task>-<N>` with `detected_at_phase: 1` and `field` touching `entities.<entity_id>.fields`). Deviations with `severity: major` require explicit user approval before schema change; `minor` additions are incorporated directly.
+- `loops/specs/<task>/phase-1-frontend-report.md` — Phase 1 downstream notes and contract deviation summary; surfaces manual adjustments that impact the data model (e.g., "DEV-<task>-1 added `priority` to entities.Todo — Phase 2 data-layer must add the column").
 - `docs/engineering/TECH_STACK.md` — ORM + database + `project_mode`.
 - `loops/specs/<task>/spec.md` and `state.yaml`.
 - `.harness/rules/engineering-pipeline.md`, `rules/security.md`, `constitution.md`.
@@ -49,6 +50,7 @@ When `project_mode` is unset, infer from the existing directory layout and recor
 2. The schema must cover every entity documented in the PRD. An undocumented entity is a planning gap; do not invent entities the PRD does not authorize.
 3. Every migration has both an `up` and a `down` script. The `down` script must actually reverse the `up` (dropping a column added; restoring the prior type), not be a stub.
 4. Schema changes are tested: model/repo tests fail first (Red), then pass (Green).
+5. **Field coverage (reverse)**: every field listed in `contract.json.entities[].fields[]` (the authoritative field list, including fields added via Phase 1 `deviations[]`) must map to a schema column with the correct type, nullability, and constraints. A missing field blocks the phase checkpoint; do not silently drop fields the contract authorizes. Fields added via `severity: major` deviations require explicit user approval before incorporation — if a major deviation is recorded but not yet approved, block the current outcome, surface the deviation to the user for approval, and do not proceed until approval is granted or the deviation is withdrawn.
 
 ## Process
 
@@ -119,6 +121,7 @@ Do not append a second attempt record. This inline step writes the one terminal 
 
 - [ ] Iteration increment occurred once before mutation.
 - [ ] Schema covers every PRD entity in scope (no missing, no invented).
+- [ ] Every field in `contract.json.entities[].fields[]` (including Phase 1 deviation additions) maps to a schema column; no authorized field silently dropped.
 - [ ] ORM models reflect the schema exactly; relationships typed; cascades documented.
 - [ ] Every migration has `up` + `down`; `down` verified to reverse `up`.
 - [ ] Sensitive columns handled per `rules/security.md`.

@@ -76,12 +76,12 @@ Phases 1-3 follow the full Canonical Phase Path.
 | optimize (E) | optimize (frontend) | — | ✓ performance-optimization | — | — (local verify + code-review) |
 | optimize (E) | optimize (backend) | — | — | ✓ performance-optimization | — (local verify + code-review) |
 | migration (F) | migration | — | — | ✓ migration (schema + ORM + data) | — (local verify + code-review) |
-| release (G) | release | — | — | — | ✓ verify (release scope only) |
 | new-product-engineering (H) | orchestration | per nested task | per nested task | per nested task | per nested task + cross-feature review |
 
 **Non-LOOP paths** (no phase routing, no task_type):
 - **setup (A)**: configuration initialization; no code delivery
 - **quick-fix (I)**: low-risk single-outcome path; scoped verification; no state file
+- **release (G)**: validate release scope, review metadata/artifacts, and perform user-authorized version/tag actions; release-scope verify is owned by `release.md` (not the Phase 3 verify skill); no state.yaml
 
 ### Routing Rules (per cell)
 
@@ -142,18 +142,19 @@ Resume order: (a) product state → `current_nested_task`; (b) nested task state
 
 ## Contract Deviation Protocol
 
-When Phase 1 or Phase 2 discovers that `contract.json` (Phase 0 output) needs to deviate from the original design contract (e.g., a component property is impractical, an entity field type is wrong, a token value is inaccessible), the agent must follow this protocol — **silent deviation is prohibited**.
+When any phase (1 / 2 / 3) discovers that `contract.json` (Phase 0 output) needs to deviate from the original design contract — whether due to engineering impracticality (a component property is impractical, an entity field type is wrong, a token value is inaccessible) or user manual adjustments during review — the agent must follow this protocol — **silent deviation is prohibited**.
 
-1. **Detect** — the ACT skill identifies the deviation: which `component_id` / `entity_id` / token needs to change, and why.
+1. **Detect** — the ACT skill (or the user, who informs the agent) identifies the deviation: which `component_id` / `entity_id` / token needs to change, and why.
 2. **Classify** — determine the deviation severity:
-   - **Minor** (token value adjustment, property default change, non-breaking field addition): does not affect downstream consumers. Record in `memory/progress.md` as a deviation note.
+   - **Minor** (token value adjustment, property default change, non-breaking field addition): does not affect downstream consumers.
    - **Major** (component property removed/renamed, entity field removed/retyped, breaking API shape change): affects downstream consumers. Requires user approval.
-3. **Record** — write a `contract-deviation` entry to `memory/progress.md` with: deviation ID (`DEV-<task>-<N>`), affected contract field, reason, severity, and proposed change.
-4. **Update contract.json** — for Minor deviations, the ACT skill updates `contract.json` directly and re-validates against `component-contract.schema.json`. For Major deviations, the agent surfaces to the user: "Contract deviation DEV-xxx requires changing <field>. This is a breaking change — approve?" Only after user approval does the agent update `contract.json`.
-5. **Propagate** — if the deviation affects Phase 1 (frontend), Phase 2 (backend) must be informed via `phase-N-report.md` notes. If the deviation affects Phase 2, Phase 3 (integration) must be informed. The deviation is also recorded in `evidence.md` under the current phase's block.
-6. **Phase 3 reconciliation** — `contract-verify` in Phase 3 cross-checks the final `contract.json` against both frontend implementation and backend implementation. Any unresolved deviation is flagged as a `mismatch` finding.
+3. **Record** — append a deviation entry to `contract.json.deviations[]` (NOT to `memory/progress.md`) with: stable ID (`DEV-<task>-<N>`), `field` (dotted path to affected contract field), `reason`, `severity`, `detected_at_phase` (1/2/3), and optional `proposed_change`. The `deviations[]` array is the single source of truth — downstream phases and session-end read it directly, no second-copy sync needed.
+4. **Update contract.json** — for Minor deviations, the ACT skill updates the affected contract field directly and re-validates against `component-contract.schema.json`. For Major deviations, the agent surfaces to the user: "Contract deviation DEV-xxx requires changing <field>. This is a breaking change — approve?" Only after user approval does the agent update `contract.json`.
+5. **Propagate** — because deviations live in `contract.json.deviations[]`, downstream phases that already read `contract.json` (Phase 2 data-layer/api-implementation, Phase 3 contract-verify) automatically see them. Still, surface concrete deviations in the phase report's `## Downstream notes` section so the next phase knows where to look.
+6. **Phase 3 reconciliation** — `contract-verify` in Phase 3 cross-checks the final `contract.json` (including `deviations[]`) against both frontend implementation and backend implementation. Deviations already recorded in `deviations[]` are recognized as intentional; only unrecorded drift surfaces as a `mismatch` finding.
+7. **Phase 3 special case** — if the user directs the agent to adjust the contract during Phase 3 (after contract-verify or even after verify-full), the agent MUST: (a) record the DEV entry in `contract.json.deviations[]` before making the change; (b) update `contract.json` and re-validate; (c) re-run `contract-verify` to confirm the new contract is consistent across frontend/backend/PRD-pointer; (d) if verify-full already passed, re-run verify-full for the affected scope; (e) record the deviation in `phase-3-integration-report.md` `## Downstream notes`.
 
-This protocol ensures contract changes are explicit, recorded, and propagated — never silent.
+This protocol ensures contract changes are explicit, recorded, and propagated — never silent. The single source of truth is `contract.json.deviations[]`; downstream phases and PM handoff both read from it.
 
 ## State and Artifact Ownership
 

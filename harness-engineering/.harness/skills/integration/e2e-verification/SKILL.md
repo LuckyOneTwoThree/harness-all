@@ -15,6 +15,8 @@ description: "Phase 3 integration skill. Use when verifying end-to-end user flow
 
 - Phase 1 frontend code + Phase 2 backend code (both confirmed).
 - `docs/handoff/pm-to-engineering.md` (current pointer, validated by session-start) — the acceptance-criteria list (AC-xxx) defining the user flows to verify. In degraded mode (no PM handoff), the AC list comes from `spec.md` (product AC section).
+- `docs/handoff/contract.json` — `pages[]` array for page flow coverage check (step 3.5). Each `page_id` with its `path` and `component_refs` drives the page-reachability warning.
+- `loops/specs/<task>/phase-2-backend-report.md` — Phase 2 checkpoint report (BAC IDs, endpoint paths, open risks). Read to understand backend behavior surface before driving AC flows against it.
 - `loops/specs/<task>/spec.md` — the AC/BAC/IAC IDs in scope and their evidence status.
 - `loops/specs/<task>/evidence.md` — evidence accumulated by `verify` so far.
 - `docs/engineering/TECH_STACK.md` — dev server start commands.
@@ -55,6 +57,14 @@ For each AC-xxx in scope:
 - For deterministic, API-reachable steps: drive the flow via the real backend (HTTP request → response → next request) and compare observed against expected. Capture actual responses.
 - For visual / interaction steps (layout, animation feel, copy tone, hover/focus behavior, brand-specific rendering): mark 👤 human-confirmation required with a concrete prompt for the user — never silently skip, never fabricate an automated pass.
 - Record the disposition: `pass` (with evidence) / `fail` (with defect citation) / `👤 human` (with the prompt).
+
+### 3.5 Page Flow Coverage (warning, not a hard block)
+
+Cross-check the AC flows against `contract.json.pages[]` (when present):
+
+- For each `page_id` in `pages[]`, determine whether at least one AC flow visits that page (by route path or by component_refs surfaced in the flow). A page with no AC visiting it is a **coverage warning**, not a hard block — surface it in `evidence.md` as `page-flow-coverage-warning: <page_id> not exercised by any AC flow` and surface a 👤 prompt asking the user to confirm the page is reachable and intentional.
+- Pages marked `inferred: true` (agent-inferred from features/user_flows, not PRD-explicit) are higher priority for this warning — an inferred page that no AC exercises may indicate the inference was wrong.
+- This check does not fail the phase checkpoint. It exists to surface the "page implemented but never visited" defect class that pure AC-driven verification misses when the PRD AC list itself has gaps. If `contract.json` has no `pages[]` array, this step is skipped.
 
 ### 4. Aggregate Findings
 
@@ -98,6 +108,7 @@ Do not append a second attempt record. This inline step writes the one terminal 
 - [ ] Every AC-xxx in scope has a disposition (pass / fail / 👤 human).
 - [ ] Every `fail` has a concrete defect citation.
 - [ ] Every `👤 human` item has a concrete prompt for the user.
+- [ ] Page flow coverage warning emitted for any `page_id` in `contract.json.pages[]` not exercised by an AC flow (skipped when `pages[]` absent).
 - [ ] No new E2E framework introduced.
 
 ## Relationship with LOOP

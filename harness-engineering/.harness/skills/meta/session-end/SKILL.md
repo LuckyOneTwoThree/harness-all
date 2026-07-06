@@ -50,6 +50,7 @@ Publish only when there is a real consumer need:
 
 - **`engineering-to-pm.md`**: engineering evidence with cross-framework implications. Publish when ANY of the following occurs:
   - **Scope/AC/feasibility impact** (high threshold): engineering evidence materially affects scope, AC meaning, feasibility, or product decision.
+  - **Contract drift from PRD** (high threshold): `contract.json.deviations[]` is non-empty — the user or agent made contract changes during engineering that diverge from the PRD-authorized contract (typically user manual adjustments during phase reviews). PM must know because the PRD's entity schema and API contract may need updating to match implemented reality. When this trigger fires, populate the `### Contract Deviations from PRD` section of `engineering-to-pm.md` directly from `contract.json.deviations[]`.
   - **TECH_STACK.md change** (medium threshold): `docs/engineering/TECH_STACK.md` modified (added/removed/upgrade of framework, runtime, or major dependency) — PM must know because PRD NFR constraints and Business Context Digest may reference the tech stack.
   - **Architecture decision change** (medium threshold): architecture pattern change (e.g., SSR→CSR, monolith→modular) that affects PRD assumptions or downstream design work.
   - **Multi-bugfix / refactor accumulation** (low threshold, periodic): when accumulated bugfix/refactor evidence has not been synced to PM for ≥ 1 release cycle, publish a lightweight engineering-to-pm summarizing changes so PM's knowledge-base stays current.
@@ -92,3 +93,9 @@ Never publish a draft as ready, reference producer-local files outside the packa
 - Estimating LOC from file count.
 - Auto-generating handoffs for irrelevant local work.
 - Duplicating memory-maintenance or handoff publication logic.
+
+## Relationship with LOOP
+
+- Phase: N/A (meta skill — runs at session boundary, not inside any phase's LOOP)
+- Role: session-end is the **session closer**, not a LOOP ACT. It does not own an iteration or an attempt outcome. It runs after the LOOP for the active task has reached a terminal state (or the user ends the session early), publishes `engineering-to-pm.md` when trigger conditions are met, delegates memory rotation to `memory-maintenance`, and writes the resume point.
+- Does NOT invoke `test-driven-development` or run `verify-fast`/`verify-full`.

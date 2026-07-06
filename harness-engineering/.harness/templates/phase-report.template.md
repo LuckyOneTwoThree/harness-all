@@ -39,9 +39,9 @@ created_at: <YYYY-MM-DDTHH:MM:SS±HH:MM>  # required: true — ISO-8601
 
 ## Contract deviations
 <!-- required: true -->
-<!-- Per the Contract Deviation Protocol in rules/engineering-pipeline.md. List DEV-<task>-<N> entries recorded in memory/progress.md during this phase, or "None". Silent deviation is prohibited. -->
+<!-- Per the Contract Deviation Protocol in rules/engineering-pipeline.md. Deviations are recorded in contract.json.deviations[] as the single source of truth. Here, list the DEV-<task>-<N> IDs recorded during this phase (or "None") and surface concrete impacts for downstream phases in `## Downstream notes`. Silent deviation is prohibited. -->
 - None
-- <!-- or --> DEV-<task>-<N>: <affected contract field> — severity: <Minor|Major> — <reason> — <proposed change>
+- <!-- or --> DEV-<task>-<N>: <affected contract field> — severity: <Minor|Major> — <reason> (recorded in contract.json.deviations[])
 
 ## Downstream notes
 <!-- required: true -->

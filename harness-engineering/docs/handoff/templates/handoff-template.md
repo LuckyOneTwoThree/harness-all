@@ -24,6 +24,8 @@ artifacts: []
 > Generated at: YYYY-MM-DD HH:MM
 > Source framework: <harness-pm / harness-engineering / ...>
 > Target framework: <harness-pm / harness-engineering / ...>
+>
+> **Template selection**: this is the generic handoff template. For `engineering → pm` handoffs (produced by `session-end`), use `engineering-to-pm-template.md` instead — it includes the `Contract Deviations from PRD` section populated from `contract.json.deviations[]`, which this generic template does not.
 
 ## Phase Summary
 

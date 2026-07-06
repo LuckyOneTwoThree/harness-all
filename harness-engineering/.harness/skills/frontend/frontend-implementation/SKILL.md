@@ -28,6 +28,7 @@ The agent reads **two layers simultaneously**. The contract layer constrains com
 ### Engineering context
 - `docs/engineering/TECH_STACK.md`
 - API contract section from `docs/handoff/pm-to-engineering.md` (current pointer, validated by session-start; drives mock API configuration)
+- `loops/specs/<task>/phase-0-design-intake-report.md` — Phase 0 checkpoint report (asset inventory, token summary, component list, anti-AI-slop observations, open items/risks). Read to understand extraction context and unresolved Phase 0 risks before consuming the contract.
 - `Reference/state-management-matrix.md`
 
 ## Outputs
@@ -50,11 +51,12 @@ When `project_mode` is unset, infer from the existing directory layout and recor
 ## Hard Gates
 
 1. Confirm `docs/engineering/TECH_STACK.md` declares framework + `project_mode` before writing any code.
-2. Validate `contract.json` against `.harness/rules/component-contract.schema.json`. Reject duplicate/unknown component IDs, framework-specific types in the contract, missing token provenance, or invalid hashes.
+2. Validate `contract.json` against `.harness/rules/component-contract.schema.json`. Reject duplicate/unknown component IDs, framework-specific types in the contract, missing token provenance, or invalid hashes. (Note: `token_source.provenance` is schema-optional but Phase 1 treats it as required — every contract must declare whether tokens are `user-provided`, `agent-inferred-from-prd`, or `handoff` so downstream phases can adjust visual-fidelity expectations accordingly.)
 3. Every implemented component must join by the stable `component_id` in `contract.json`. Never invent, rename, or silently drop a component ID.
 4. Code must reference tokens via `var(--token-*)` from `tokens.css`. Hardcoded color/spacing/radius/shadow values are prohibited unless an explicit documented exception exists in `component-bindings.json` `token_exceptions`.
 5. Mock API must be configured from the PRD API contract; do not invent endpoints or response shapes the PRD does not authorize.
 6. Accessibility contract from `contract.json` (role/keyboard/focus/aria) must be implemented as written; gaps are 👤 human-confirmation items, not silent omissions.
+7. Page coverage: every `page_id` in `contract.json.pages[]` must have a corresponding page file (route component / page component) implemented. Detect by Grep-ing the framework's route registration locations (e.g. `app/**/page.{tsx,jsx,vue,svelte}` for Next.js app router, `pages/**/*.{tsx,jsx,vue,svelte}` for pages router, `router.routes` / `createBrowserRouter` config for React Router). Missing pages block the phase checkpoint. If `contract.json` has no `pages[]` array (e.g., backend-only scope), this gate is skipped.
 
 ## Token Reference Constraint
 
@@ -106,6 +108,19 @@ Append/update one entry per implemented component with: schema version, `compone
 
 Hand off to `test-driven-development` as the ACT owner. TDD writes the failing test, mutates implementation, and runs affected tests. Components not amenable to automated testing (pure visual polish, motion feel, brand-specific rendering) are marked 👤 Human confirmation required in `component-bindings.json` `manual_verification` with a reason; TDD does not fabricate a test for them.
 
+### 6. Detect Manual Adjustments (before Phase 1 checkpoint)
+
+After verify-full passes and before the Phase 1 checkpoint is confirmed, the user may manually adjust frontend code (visual tweaks, prop changes, mock API edits, component add/remove). The agent detects these by comparing `component-bindings.json` (the agent's record of what was implemented) against the actual frontend code. For each drift detected:
+
+- **Visual-only drift** (token values / layout / motion / copy): no contract impact. Record a one-line summary in `phase-1-frontend-report.md` `## Downstream notes` so reviewers know manual visual tuning happened. Do NOT touch `contract.json`.
+- **Contract-affecting drift** (component props / states / mock API paths or response shapes / component added or removed): follow the Contract Deviation Protocol in `rules/engineering-pipeline.md`:
+  1. Update the affected field in `contract.json` (e.g., add a property to a component, edit an entity field).
+  2. Append a `DEV-<task>-<N>` entry to `contract.json.deviations[]` with `detected_at_phase: 1`, the affected `field`, `reason: "User manual adjustment during Phase 1 review"`, and `severity` (minor for non-breaking additions, major for breaking changes — major requires explicit user approval).
+  3. Re-validate `contract.json` against `component-contract.schema.json`.
+  4. Surface the deviation in `phase-1-frontend-report.md` `## Contract deviations` and `## Downstream notes` (e.g., "DEV-<task>-1 added `priority` to entities.Todo — Phase 2 data-layer must add the column; api-implementation must include it in the /api/todos response").
+
+This step is the primary mechanism by which Phase 2 (backend) learns what changed in Phase 1. Because Phase 2 skills already read `contract.json` as an input, they automatically see both the updated fields and the `deviations[]` list — no separate sync channel needed.
+
 ## Contract Precedence
 
 1. Semantic component intent/states/accessibility: `contract.json`.
@@ -135,6 +150,7 @@ Anti-pattern defaults in design guidance are defaults, not universal bans. A pro
 - [ ] Code references tokens via `var(--token-*)`; no hardcoded token-eligible values.
 - [ ] Mock API matches the PRD API contract; no fabricated endpoints.
 - [ ] Project-mode directory layout respected.
+- [ ] Every `page_id` in `contract.json.pages[]` has an implemented page file (Grep route registration locations). Skipped when `pages[]` is absent.
 - [ ] Accessibility contract implemented as written; gaps are explicit 👤 items.
 - [ ] Affected tests pass with AC/BAC/IAC evidence; non-testable items marked 👤.
 
@@ -145,7 +161,7 @@ frontend-implementation runs its own inline verify-fast after each component imp
 1. **Test validation**: confirm TDD's red-green cycle completed for the current component; reject if tests are 0, stale, or command doesn't match the planned outcome.
 2. **AC/BAC/IAC + Hard Gate check**: confirm the current component's `component_id` exists in `contract.json`; verify token references resolve to `tokens.json` entries (no missing tokens); verify mock API endpoints trace to PRD documented endpoints; verify accessibility contract items are implemented or marked 👤; verify `component-bindings.json` entry is complete (including `mock_api`, `token_refs`, `manual_verification` where applicable).
 3. **Changed-file security scan**: scan the component's changed files for hardcoded secrets/URLs, XSS-prone `dangerouslySetInnerHTML`, and hardcoded color/spacing values that should use tokens (cross-check against `token_exceptions`).
-4. **Terminal outcome**: append one `PASSED` or `FAILED` line to `iterations.log` with the component ID and verification summary.
+4. **Terminal outcome** — append exactly one terminal PASSED/FAILED line to `iterations.log` for this attempt (include the component ID and a brief verification summary).
 
 ## Relationship with LOOP
 

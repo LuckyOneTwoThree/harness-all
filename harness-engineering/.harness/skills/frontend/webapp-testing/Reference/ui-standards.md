@@ -1,6 +1,6 @@
 # UI Standards (Visual + Interaction + Anti AI-Slop)
 
-> Reference extracted from the legacy design framework's ui-design skill. Consumed by frontend implementation and review gates.
+> Reference extracted from craft rules (typography / color / common-rules) and consolidated for frontend use. Consumed by frontend implementation and review gates.
 
 ## Visual Standards
 

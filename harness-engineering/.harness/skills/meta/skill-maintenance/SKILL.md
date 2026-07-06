@@ -134,3 +134,9 @@ For skill location see INDEX.md; for skill-specific collaboration see the Proces
 session-start may lightly invoke this skill's check logic:
 - Anomaly found → report to the user, recommend running skill-maintenance
 - No anomaly → does not block session start
+
+## Relationship with LOOP
+
+- Phase: N/A (meta skill — maintains the skill registry, not inside any phase's LOOP)
+- Role: skill-maintenance is a **framework hygiene skill**, not a LOOP ACT. It does not own an iteration or an attempt outcome. It is invoked on-demand (by the user or by session-start's light check) to detect drift between the skill registry (INDEX.md / AGENTS.md) and actual SKILL.md files.
+- Does NOT invoke `test-driven-development` or run `verify-fast`/`verify-full`.

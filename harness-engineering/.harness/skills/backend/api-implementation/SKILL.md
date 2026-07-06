@@ -13,7 +13,8 @@ description: "Phase 2 backend ACT skill. Use when implementing API endpoints fro
 ## Inputs
 
 - `docs/handoff/pm-to-engineering.md` (current pointer, validated by session-start) — the API contract section (method, path, request/response shape, status codes, auth). In degraded mode (no PM handoff), this is derived from user conversation + `contract.json`.
-- `docs/handoff/contract.json` — entities surfaced from Phase 0/1.
+- `docs/handoff/contract.json` — entities surfaced from Phase 0/1. **Read `deviations[]` for Phase 1 contract deviations** that affect the API contract (e.g., a mock API path or response shape adjusted during frontend review via `DEV-<task>-<N>` with `detected_at_phase: 1` and `field` touching `components.<id>` mock API or an entity field exposed in a response). These deviations are the authoritative source for aligning endpoint paths/shapes with what the frontend actually consumes; `severity: major` deviations require explicit user approval.
+- `loops/specs/<task>/phase-1-frontend-report.md` — Phase 1 downstream notes and contract deviation summary; surfaces manual adjustments to mock API paths or response shapes (e.g., "DEV-<task>-2 changed /api/todos response to include `priority` — Phase 2 api-implementation must match").
 - Phase 1 mock API configuration (reference only; never copied verbatim — mock fixtures are not the source of truth).
 - `docs/engineering/TECH_STACK.md` — framework + `project_mode`.
 - `loops/specs/<task>/spec.md` and `state.yaml`.
@@ -43,6 +44,7 @@ When `project_mode` is unset, infer from the existing directory layout and recor
 2. Every implemented endpoint must trace to a documented PRD API contract entry. Do not invent endpoints, methods, or response fields the PRD does not authorize.
 3. Implement endpoints one-by-one against the contract; TDD — write the failing API test before the implementation.
 4. Input validation, error handling, and auth are mandatory, not optional polish.
+5. **Endpoint coverage (reverse)**: every endpoint documented in the PRD API contract (including paths/shapes adjusted via Phase 1 `deviations[]`) must have a corresponding implementation. A missing endpoint blocks the phase checkpoint; do not silently skip endpoints the contract authorizes. When a deviation adjusted a path or response shape, the implementation must match the deviated contract, not the original PRD text. If a `severity: major` deviation adjusted the API shape (e.g., response field renamed, status code changed) and the deviation is recorded but not yet approved by the user, block the current outcome, surface the deviation for approval, and do not proceed until approval is granted or the deviation is withdrawn.
 
 ## The 7 Standard Error Codes
 
@@ -121,6 +123,7 @@ Do not append a second attempt record. This inline step writes the one terminal 
 - [ ] Iteration increment occurred once before mutation.
 - [ ] API test failed for the intended reason before implementation.
 - [ ] Every implemented endpoint traces to a PRD contract entry.
+- [ ] Every PRD-documented endpoint (including Phase 1 deviation adjustments) has a corresponding implementation; paths/shapes match the deviated contract.
 - [ ] Input validation + the 7 standard error codes + auth are wired.
 - [ ] No endpoints, methods, or response fields invented beyond the PRD.
 - [ ] Inline fast-verify received actual output, not a prediction.

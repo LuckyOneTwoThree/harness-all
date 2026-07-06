@@ -8,6 +8,7 @@
 - Frontend: [e.g., React + TypeScript + Vite]
 - Backend: [e.g., Node.js + Hono]
 - Testing: [e.g., Vitest]
+- Project mode: [fullstack | separate] — fullstack = single app (e.g., Next.js/Remix) with co-located frontend + backend; separate = split frontend (React/Vue/Svelte) + backend (Express/Hono/Fastify). When unset, skills infer from the existing directory layout and record the inference in component-bindings.json `mode_inference` / `state.yaml`.
 
 ## Commands
 

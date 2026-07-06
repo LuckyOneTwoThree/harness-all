@@ -93,6 +93,19 @@ artifacts: []
 
 > Leave empty if no design contract issues were found during implementation.
 
+### Contract Deviations from PRD
+
+> Source: `contract.json.deviations[]` (single source of truth per the Contract Deviation Protocol in `rules/engineering-pipeline.md`). These are contract changes made during engineering — typically user manual adjustments during phase reviews or agent-detected impracticalities — that diverge from the PRD-authorized contract. PM triages each: accept (update PRD entity/API section to match implemented reality) / reject (engineering must realign to PRD) / defer (track for future resolution). Accepted deviations should be reflected in the next `pm-to-engineering.md` revision.
+>
+> The `Change` column uses `[added]` for new deviations in this batch, `[unchanged]` for carried-forward items pending prior decision, `[modified]` for refined items, `[superseded]` for withdrawn deviations.
+
+| Deviation ID | Affected field | Reason | Severity | Detected at phase | Affects AC | Change |
+|---|---|---|---|---|---|---|
+| DEV-<task>-1 | <e.g., entities.Todo.priority> | <e.g., User manual adjustment during Phase 1 review> | <minor/major> | <1/2/3> | <AC-xxx or none> | [added] |
+| DEV-<task>-2 | <e.g., components.CMP-TAG-INPUT removed> | <e.g., Merged into TodoForm during Phase 1> | major | 1 | AC-xxx | [added] |
+
+> Leave empty if `contract.json.deviations[]` is empty — no contract drift occurred this cycle.
+
 ### Open Items
 
 Issues for harness-pm to handle or confirm with harness-engineering:

@@ -15,6 +15,7 @@ description: "Phase 3 integration skill. Use when verifying frontend/backend con
 - Frontend code — the API call sites (paths, methods, request bodies, expected response types).
 - Backend code — the implemented routes (paths, methods, handlers, response shapes).
 - `docs/handoff/pm-to-engineering.md` (current pointer, validated by session-start) — the API contract section (the source of truth). In degraded mode (no PM handoff), the source of truth is `contract.json` derived from user conversation.
+- `loops/specs/<task>/phase-2-backend-report.md` — Phase 2 checkpoint report (BAC IDs, endpoint paths, migration files, open risks). Read to scope the contract-verification surface and to reconcile against the BAC list.
 - OpenAPI spec, when present (`docs/api/openapi.yaml` or `.json`) — enables deep mode.
 - `loops/specs/<task>/spec.md` and `state.yaml`.
 - `state.yaml.exploration_mode` — workflow mode (`deep` / `standard`).
@@ -44,8 +45,9 @@ Read the active workflow mode from `state.yaml.exploration_mode` (fall back to t
 ## Hard Gates
 
 1. `mock-to-real-switch` must have passed (the backend is reachable).
-2. Every PRD-documented endpoint must receive a disposition: `consistent` / `mismatch` / `frontend-only` / `backend-only`.
+2. Every PRD-documented endpoint must receive a disposition: `consistent` / `mismatch` / `frontend-only` / `backend-only` / `prd-only` (documented but neither side implements/calls).
 3. A `mismatch` requires a concrete citation (the differing field: path / method / request field / response field / status code / type).
+4. **Frontend endpoint coverage (reverse)**: every PRD-documented endpoint that the frontend is expected to consume (per `contract.json.pages[].component_refs` driving component API calls, or PRD `user_flows[]`) must be called by the frontend. A PRD endpoint with no frontend call site is a `frontend-missing-call` defect that blocks the phase checkpoint, unless the endpoint is explicitly server-only (e.g., webhook receiver, cron trigger) — in which case record the justification in `evidence.md`. This catches the "page implemented but API call forgotten" defect class. Deviations recorded in `contract.json.deviations[]` that adjusted endpoint paths/shapes are the authoritative target — the frontend must call the deviated path, not the original PRD text.
 
 ## Process
 
@@ -126,6 +128,7 @@ Do not append a second attempt record. This inline step writes the one terminal 
 
 - [ ] Iteration increment occurred once before mutation.
 - [ ] Every PRD-documented endpoint has a disposition.
+- [ ] Every frontend-expected endpoint (per pages/component_refs/user_flows) has a frontend call site; server-only endpoints have recorded justification.
 - [ ] Every `mismatch` has a concrete citation (field + differing value) and an owning phase.
 - [ ] Deep mode used OpenAPI actual output (when available); standard mode used Grep-based inventory.
 - [ ] No new validator dependency introduced.

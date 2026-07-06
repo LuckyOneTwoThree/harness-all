@@ -1,6 +1,6 @@
 # Lint Rules L001-L015
 
-> Reference extracted from the legacy design framework's verify skill. Mechanical rules executed by the Agent via built-in tools (Grep/Read) or an existing project script when available — never LLM hallucination. Consumed by frontend review gates and any design-output lint pass.
+> Mechanical rules executed by the Agent via built-in tools (Grep/Read) or an existing project script when available — never LLM hallucination. Consumed by frontend review gates and any design-output lint pass.
 
 ## Philosophy
 

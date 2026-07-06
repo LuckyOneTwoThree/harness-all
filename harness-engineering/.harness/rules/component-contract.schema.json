@@ -97,6 +97,40 @@
           "accessibility": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
         }
       }
+    },
+    "pages": {
+      "type": "array",
+      "description": "Pages identified from PRD or inferred from features/user_flows. Each page lists component_ids it uses. Enables page-level coverage checks in Phase 1 (every page must have a page file) and Phase 3 (every page must have e2e flow coverage). Optional field — absence means page-level coverage checks are skipped (e.g., backend-only scope).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["page_id", "name", "component_refs"],
+        "properties": {
+          "page_id": { "type": "string", "pattern": "^PG-[A-Z0-9-]+$", "description": "Stable page ID. Never renumbered." },
+          "name": { "type": "string", "minLength": 1 },
+          "path": { "type": "string", "description": "Route path (optional; inferred from framework routing if omitted). e.g. /todos or /users/:id" },
+          "component_refs": { "type": "array", "items": { "type": "string" }, "description": "component_ids used on this page. A page with no components is a planning gap." },
+          "ac_refs": { "type": "array", "items": { "type": "string" }, "description": "AC-xxx IDs from PRD that this page satisfies." },
+          "inferred": { "type": "boolean", "description": "true if the page was inferred from features/user_flows rather than explicitly listed in PRD. Downstream phases use this to adjust coverage expectations." }
+        }
+      }
+    },
+    "deviations": {
+      "type": "array",
+      "description": "Contract deviations from PRD recorded via the Contract Deviation Protocol in rules/engineering-pipeline.md. Each entry captures a change made during engineering (typically user manual adjustments after verify-full) that diverges from the PRD-authorized contract. Downstream phases (Phase 2 backend, Phase 3 integration) read this list to know what changed; session-end surfaces it to PM via engineering-to-pm.md for triage. Silent deviation is prohibited — every divergence must appear here.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "field", "reason", "severity", "detected_at_phase"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^DEV-[A-Za-z0-9-]+-\\d+$", "description": "Stable deviation ID (DEV-<task>-<N>), where <task> matches the current_task ID pattern (lowercase allowed). Never renumbered." },
+          "field": { "type": "string", "description": "Affected contract field, e.g. 'entities.Todo.priority' or 'components.CMP-TODO-ITEM.properties.priority' or 'token_source.path'" },
+          "reason": { "type": "string", "minLength": 1, "description": "Why the deviation was made (e.g. 'User manual adjustment during Phase 1 review')" },
+          "severity": { "enum": ["minor", "major"], "description": "Minor = non-breaking (default change, token value tweak); Major = breaking (property removed/renamed, entity field retyped, API shape change). Major requires user approval per the Contract Deviation Protocol." },
+          "detected_at_phase": { "enum": [1, 2, 3], "description": "Phase where the deviation was detected/recorded." },
+          "proposed_change": { "type": "string", "description": "Description of the change applied to contract.json (or to be applied if pending user approval)." }
+        }
+      }
     }
   }
 }

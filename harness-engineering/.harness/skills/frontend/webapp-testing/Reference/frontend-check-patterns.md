@@ -83,7 +83,7 @@ The following WCAG 2.1 AA checks **require a running DOM** and are **not perform
 - Dynamic focus order during keyboard navigation
 - Focus visibility (outline rings) under runtime conditions
 
-**The legacy design framework's design-review Axis 5 declares these are "deferred to engineering verify", but engineering's default static checks cannot cover them.** This is an acknowledged architectural boundary:
+**Axis 5 (deferred to engineering verify) acknowledges these are out of scope for engineering's default static checks.** This is an acknowledged architectural boundary:
 
 - If the user has **not** configured an E2E tool (Playwright/Cypress): verify stage records `DOM-level WCAG checks skipped (no E2E tool configured; static subset verified)` in evidence.md. This is an **explicit, auditable skip**, not a silent gap.
 - If the user **has** configured an E2E tool (approved in constitution.md dependency whitelist): verify stage invokes webapp-testing's opt-in DOM-check mode, which runs the user's E2E tool to execute the dynamic checks above.

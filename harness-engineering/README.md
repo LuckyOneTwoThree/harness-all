@@ -233,7 +233,7 @@ harness-engineering/
 │   ├── skills/
 │   │   ├── INDEX.md                   # Skill index (within 80 lines)
 │   │   ├── design-intake/             # 1 skill — Phase 0 ACT
-│   │   ├── frontend/                  # 3 skills — Phase 1 ACT
+│   │   ├── frontend/                  # 2 skills — Phase 1 ACT
 │   │   ├── backend/                   # 4 skills — Phase 2 ACT
 │   │   ├── integration/               # 6 skills — Phase 3 ACT
 │   │   ├── engineering/               # 8 cross-phase skills

@@ -79,7 +79,7 @@ When resuming a product-level workflow with an active `current_nested_task` and 
 
 The engineering pipeline divides work into 4 phases, each split into substages with explicit user-confirmation gates. On resume, read the active task's `state.yaml` for `substage` and `substage_progress`:
 
-1. Locate the current `substage` identifier and its entry in `substage_progress` (a list of `{substage, completed, user_confirmed}` records).
+1. Locate the current `substage` identifier and its entry in `substage_progress` (an object keyed by phase name — `design-intake` / `frontend` / `backend` / `integration`; each value is `{completed, user_confirmed, report, verify_state}`).
 2. Read `user_confirmed` for the current substage:
    - `user_confirmed: false` → the substage's work is complete but awaiting user confirmation. Prompt the user to confirm the previous phase's output before advancing. Do NOT enter the next substage.
    - `user_confirmed: true` → the substage is fully confirmed. Advance to the next substage per `engineering-pipeline.md`.
@@ -109,3 +109,9 @@ If progress/knowledge files are absent on a first session, initialize only the m
 - Loading every memory file unconditionally.
 - Reading `memory/baseline.json` at session-start (baseline.json is verify's input/output pair; session-start does not need it — only verify reads it as input, and session-end may refresh it when source files change).
 - Auto-repairing corrupt state or consuming an invalid handoff.
+
+## Relationship with LOOP
+
+- Phase: N/A (meta skill — runs at session boundary, not inside any phase's LOOP)
+- Role: session-start is the **session opener**, not a LOOP ACT. It does not own an iteration or an attempt outcome. It reads `state.yaml` to recover substage position, validates inbound PM handoff, writes `ac_change`, and hands off to the active phase's ACT (or to `writing-plans` for a new task).
+- Does NOT invoke `test-driven-development` or run `verify-fast`/`verify-full`.

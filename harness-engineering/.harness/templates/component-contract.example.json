@@ -29,8 +29,36 @@
         "content": { "type": "slot", "required": true }
       },
       "states": ["default", "hover", "active", "disabled", "loading"],
-      "used_by": ["P01", "P02"],
+      "used_by": ["PG-TODOLIST", "PG-TODODETAIL"],
       "accessibility": ["touch target >= 44px", "visible focus indicator"]
+    }
+  ],
+  "pages": [
+    {
+      "page_id": "PG-TODOLIST",
+      "name": "Todo List",
+      "path": "/todos",
+      "component_refs": ["CMP-BUTTON-PRIMARY"],
+      "ac_refs": ["AC-F01-001"],
+      "inferred": false
+    },
+    {
+      "page_id": "PG-TODODETAIL",
+      "name": "Todo Detail",
+      "path": "/todos/:id",
+      "component_refs": ["CMP-BUTTON-PRIMARY"],
+      "ac_refs": ["AC-F01-003"],
+      "inferred": true
+    }
+  ],
+  "deviations": [
+    {
+      "id": "DEV-001-todo-app-1",
+      "field": "entities.Todo.priority",
+      "reason": "User manual adjustment during Phase 1 review — added priority field to support sorting",
+      "severity": "minor",
+      "detected_at_phase": 1,
+      "proposed_change": "Add 'priority' field (type: number, required: false, default: 0) to entities.Todo; Phase 2 data-layer must add the column; api-implementation must include it in /api/todos response."
     }
   ]
 }
