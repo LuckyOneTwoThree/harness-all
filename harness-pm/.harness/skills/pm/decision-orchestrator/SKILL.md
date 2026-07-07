@@ -68,34 +68,15 @@ stages:
 
 ## Phase Execution Plan
 
-#### Call decision-dace
+> Compact routing table. Sub-skill Inputs/Outputs/Validation live in each sub-skill's SKILL.md — do not duplicate here. "Key upstream" notes only when the input source is non-obvious.
 
-```
-Skill: decision-dace
-Input:
-  okr_data: User-provided
-  kr_progress: docs/strategy/OKR.md (KR achievement progress from metrics tracking)
-  experiment_result: experiment-execution → experiment_result.json
-  analysis_result: analysis-anomaly → anomaly_report.json
-  business_context: User-provided (optional)
-  insight_library: decision-dace → insight_library.json (optional)
-Output: docs/metrics/decision-report.md ("DACE Decisions" section)
-Validation: Define phase goals quantifiable with baselines; Analyze phase covers all data sources; Conclude phase provides at least 2 decision options; Execute phase sets monitoring and rollback mechanisms; Insight narrative uses business language rather than data terminology; Each insight provides at least 2 decision options; Decision boundary annotation correct (auto/reference/human); Recommended actions have clear next steps and owners
-Mode: 🤖→👤
-```
+| Phase | Skill | Mode | Gate condition | Fail action |
+|-------|-------|------|----------------|-------------|
+| phase-1 | decision-dace | 🤖→👤 | Goals defined, data analyzed, insights generated, decision options provided | Supplement data or redefine goals |
+| phase-2 | decision-culture | 🤖→👤 | Reporting system operating normally (daily/weekly/monthly/quarterly) | Check upstream data sources or adjust report templates |
 
-#### Call decision-culture
-
-```
-Skill: decision-culture
-Input:
-  okr_data: decision-dace → dace_status.json
-  decision_records: decision-dace → decision_insight.json
-  team_feedback: User-provided (optional)
-Output: docs/metrics/decision-report.md ("Data Culture" section)
-Validation: Daily summary produces no noisy alerts when no anomalies exist; Weekly report includes OKR progress and experiment summary; Monthly report includes complete metric trends and deviation analysis; All data references in reports are traceable to data sources
-Mode: 🤖→👤
-```
+**Key upstream notes** (only for non-obvious cross-module inputs):
+- phase-1 decision-dace: experiment_result from experiment-orchestrator (experiment-execution → experiment_result.json); analysis_result from analysis-anomaly (anomaly_report.json); kr_progress from docs/strategy/OKR.md
 
 ### Phase Summary (post_pipeline)
 

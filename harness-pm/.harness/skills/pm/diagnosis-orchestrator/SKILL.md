@@ -95,61 +95,19 @@ stages:
 
 ## Phase Execution Plan
 
-#### Invoke diagnosis-health
+> Compact routing table. Sub-skill Inputs/Outputs/Validation live in each sub-skill's SKILL.md — do not duplicate here. "Key upstream" notes only when the input source is non-obvious.
 
-```
-Skill: diagnosis-health
-Input:
-  performance_data: APM/monitoring system
-  availability_data: monitoring system
-  user_satisfaction: feedback system
-  business_metrics: data analytics platform
-  competitor_dynamics: diagnosis-competition → competitor report (optional)
-Output: docs/monitoring/diagnosis-report.md ("Health Diagnosis" section)
-Validation: Data collection completeness ≥90%; scoring calculation accuracy; trend forecast deviation ±10%; bottleneck identification coverage ≥90%
-Mode: 🤖→👤
-```
+| Phase | Skill | Mode | Gate condition | Fail action |
+|-------|-------|------|----------------|-------------|
+| phase-1 | diagnosis-health | 🤖→👤 | Health score deviation within ±10% | Calibrate scoring model or supplement data |
+| phase-2 | diagnosis-competition | 🤖→👤 | Competitor dynamics tracked | Supplement competitor data sources or extend tracking period |
+| phase-3 | competitor-monitoring-report | 🤖→👤 | Competitor monitoring report confirmed by human review | Supplement analysis or modify response recommendations |
+| phase-4 | product-sunset-plan | 🤖→👤 | Product sunset plan confirmed by human review | Supplement analysis or modify migration plan |
 
-#### Invoke diagnosis-competition
-
-```
-Skill: diagnosis-competition
-Input:
-  competitor_data: competitor monitoring system
-  self_data: product data platform
-  market_data: industry report (optional)
-  historical_tracking: diagnosis-competition → historical report (optional)
-Output: docs/monitoring/diagnosis-report.md ("Competitor Diagnosis" section)
-Validation: Competitor coverage completeness ≥90%; feature change identification timeliness ≤7 days; strategy executability ≥80%
-Mode: 🤖→👤
-```
-
-#### Invoke competitor-monitoring-report
-
-```
-Skill: competitor-monitoring-report
-Input:
-  competitor_tracking: diagnosis-competition
-  competitor_analysis: market-competitor-analysis (optional)
-  monitoring_period: user-provided (optional)
-Output: docs/monitoring/diagnosis-report.md ("Competitor Monitoring Report" section)
-Validation: Dynamics coverage complete (product/market/sentiment 3 dimensions all analyzed); threat assessment evidence-based; response recommendations executable
-Mode: 🤖→👤
-```
-
-#### Invoke product-sunset-plan
-
-```
-Skill: product-sunset-plan
-Input:
-  health_diagnosis: diagnosis-health
-  retention_data: retention-management (optional)
-  sunset_target: user-provided (sunset target)
-  sunset_reason: user-provided (sunset reason)
-Output: docs/monitoring/product-sunset-plan.md
-Validation: Impact assessment complete (users/revenue/brand 3 dimensions); migration plan feasible; data disposal compliant; timeline executable
-Mode: 🤖→👤
-```
+**Key upstream notes** (only for non-obvious cross-module inputs):
+- phase-1 diagnosis-health: competitor_dynamics optionally from phase-2 diagnosis-competition (cross-phase, despite depends_on: [])
+- phase-3 competitor-monitoring-report: competitor_analysis optionally from market-competitor-analysis
+- phase-4 product-sunset-plan: retention_data optionally from retention-management
 
 ### Phase Summary (post_pipeline)
 

@@ -16,7 +16,10 @@ description: Owns verify-full (final delivery evidence gate); fast verification 
 - `constitution.md`, `spec.md`, raw `state.yaml` (fetched via the Read tool at verify-full entry, NOT from context memory; check `iteration` and `hard_limit_reached` before proceeding)
   - `ac_change` field, to cross-reference added ACs have evidence
 - current diff and ACT commands/output
-- `Reference/security-patterns.md`, `evidence-template.md`, `entropy-baseline.md`
+- Reference files (load on demand per check group, not all at once):
+  - `Reference/security-patterns.md` — load when running check group 2 (Constitution + Security)
+  - `Reference/evidence-template.md` — load when writing check group 4 (Evidence append)
+  - `Reference/entropy-baseline.md` — load when running check group 3 (Entropy comparison)
 - validated handoff/component/token artifacts when applicable
 
 ## Outputs

@@ -87,47 +87,47 @@ Any context without a downstream action belongs under Notes, not a new required 
 **PRD document**: `artifacts/product/PRD.md`
 **PRD structured data**: `artifacts/product/prd.json` (generated projection with matching source hash)
 
-**Acceptance criteria list (AC-xxx)**:
+**Acceptance criteria (AC-xxx)**:
 
-> The following ACs directly reuse the acceptance_criteria from the PRD, already numbered with ac_id.
+> ACs directly reuse the acceptance_criteria from the PRD, already numbered with ac_id.
 > harness-engineering's writing-plans skill should reuse these IDs as-is, do not renumber.
-> BAC-xxx (backend acceptance) and IAC-xxx (integration acceptance) are produced by engineering, not PM.
+> BAC-xxx (backend) and IAC-xxx (integration) are produced by engineering, not PM.
 >
-> **Batch delivery rule** (when `batch.type: incremental`):
-> - `ac_ids` envelope field MUST contain ALL valid AC IDs (unchanged + added + modified), never just the changed subset — this prevents AC loss if a previous handoff was never consumed.
-> - ACs marked `[unchanged]` may use a one-line summary + reference to the prior handoff (e.g., "see PM-ENGINEERING-20260704-001"); they do NOT need full Given-When-Then repetition.
-> - ACs marked `[added]` or `[modified]` MUST include the full Given-When-Then description.
-> - ACs marked `[superseded]` MUST include a pointer to the replacement AC ID (e.g., "superseded by AC-F01-002"); the superseded ID does NOT appear in `ac_ids` (only the replacement does).
+> **Full batch (`batch.type: full`)**: AC list is in `artifacts/product/prd.json` at `features[].acceptance_criteria[]` — engineering reads it directly; do NOT duplicate the full Given-When-Then here. Only record the AC count and any PM-side notes below.
+>
+> **Incremental batch (`batch.type: incremental`)** — use the table below with Change markers:
+> - `ac_ids` envelope field MUST contain ALL valid AC IDs (unchanged + added + modified), never just the changed subset.
+> - `[unchanged]`: one-line summary + reference to prior handoff (e.g., "see PM-ENGINEERING-20260704-001").
+> - `[added]`/`[modified]`: full Given-When-Then description.
+> - `[superseded]`: pointer to replacement AC ID; superseded ID does NOT appear in `ac_ids`.
+
+**AC count**: <N> ACs total (see `artifacts/product/prd.json` `features[].acceptance_criteria[]`).
+
+**Incremental batch changes** (skip this table when `batch.type: full`):
 
 | AC ID | Change | Description |
 |-------|--------|-------------|
-| AC-F01-001 | [added] | <full Given-When-Then or testable description> |
-| AC-F01-002 | [added] | <full testable description> |
-| AC-F02-001 | [added] | <full testable description; gaps are valid> |
+| AC-F01-001 | [unchanged] | (see PM-ENGINEERING-20260704-001) User login email verification |
+| AC-F06-001 | [added] | <full Given-When-Then for new feature> |
+| AC-F03-001 | [superseded] | superseded by AC-F03-002 — original checkout flow replaced |
+| AC-F03-002 | [added] | <full Given-When-Then for replacement AC> |
 
-> For incremental batches, the table would look like:
->
-> | AC ID | Change | Description |
-> |-------|--------|-------------|
-> | AC-F01-001 | [unchanged] | (see PM-ENGINEERING-20260704-001) User login email verification |
-> | AC-F02-001 | [unchanged] | (see PM-ENGINEERING-20260704-001) Password strength check |
-> | AC-F06-001 | [added] | <full Given-When-Then for new feature> |
-> | AC-F07-001 | [added] | <full Given-When-Then for new feature> |
-> | AC-F03-001 | [superseded] | superseded by AC-F03-002 — original checkout flow replaced |
-> | AC-F03-002 | [added] | <full Given-When-Then for replacement AC> |
+**PM-side notes on ACs** (optional, only when PM has context engineering needs):
+
+- <e.g., AC-F02-001 has a known ambiguity in error response shape; engineering should decide and record as DEV>
 
 ## Engineering-Consumable PRD Sections
 
-> harness-engineering's brainstorming should read these PRD sections as direct input (not just the AC-xxx list):
+> harness-engineering's brainstorming should read the PRD directly. The mapping below helps locate key sections; do not duplicate section content here.
 
-| PRD section | What engineering consumes | Where in prd.json |
+| PRD section | Where in prd.json | Engineering use |
 |------|------|------|
-| 3.2.1 Feature list | MoSCoW priorities, feature dependencies | `features[].priority` + `features[].dependencies` |
-| 3.2.5 Data model | Entities, fields, relationships (for ER design + migration) | `entities[]` |
-| 3.2.6 Interface definition | API contract input (method/path/params/response) | `features[].api_endpoints[]` (advisory; final API design by engineering) |
-| 4.2 Technical constraints | Architecture constraints, known tech debt | (in prd.md Section 4.2) |
-| 5.1-5.4 NFR | Performance, availability, security, observability targets | `non_functional_requirements[]` |
-| 7.1 Functional acceptance | AC-xxx (Happy Path + boundary + exception) | `features[].acceptance_criteria[]` |
+| 3.2.1 Feature list | `features[].priority` + `features[].dependencies` | MoSCoW priorities, feature dependencies |
+| 3.2.5 Data model | `entities[]` | ER design + migration |
+| 3.2.6 Interface definition | `features[].api_endpoints[]` | API contract input (advisory) |
+| 4.2 Technical constraints | (in prd.md Section 4.2) | Architecture constraints |
+| 5.1-5.4 NFR | `non_functional_requirements[]` | Performance/availability/security/observability targets |
+| 7.1 Functional acceptance | `features[].acceptance_criteria[]` | AC-xxx (Happy Path + boundary + exception) |
 
 ## Business Context Digest
 
@@ -148,11 +148,15 @@ Any context without a downstream action belongs under Notes, not a new required 
 
 ## Feature Priorities
 
-| Priority | Feature | Source | Notes |
-|--------|------|------|------|
-| P0 | <core feature 1> | PRD | MVP must-do |
-| P1 | <important feature 2> | PRD | Important but can be deferred |
-| P2 | <enhancement 3> | PRD | Optional |
+> Feature priorities are in `artifacts/product/prd.json` at `features[].priority` (MoSCoW). Do NOT duplicate the full priority table here.
+> Only surface features that need engineering attention (e.g., P0 features with technical risk, or priority overrides PM made during handoff).
+
+| Feature | Priority | Note for engineering |
+|--------|--------|----------------------|
+| <core feature 1> | P0 | <e.g., has complex real-time sync; architect early> |
+| <feature 2> | P1 | <e.g., can defer to Phase 2 backend> |
+
+> If no priority overrides, write "Priorities unchanged from PRD; see prd.json `features[].priority`."
 
 ## Tracking Plan (if any)
 

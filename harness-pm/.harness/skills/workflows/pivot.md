@@ -7,6 +7,8 @@ default_mode: deep
 
 # Workflow H: Strategic Adjustment
 
+> Shared pipeline conventions (mode selection, Exploration Gate, LOOP cycle, PRD quality gates, confidence propagation, handoff batch rules): see .harness/rules/pm-pipeline.md
+
 > Applicable scenario: Product transformation, repositioning, new market entry, major strategic direction adjustment
 > Core mode: Strategy retrospective → repositioning → LOOP validation → contract update
 > Default mode: deep (mandatory exploration first, pause dialog before each module)

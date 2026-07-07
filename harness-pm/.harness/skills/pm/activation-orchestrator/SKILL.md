@@ -68,31 +68,16 @@ stages:
 
 ## Phase Execution Plan
 
-#### Call activation-aha
+> Compact routing table. Sub-skill Inputs/Outputs/Validation live in each sub-skill's SKILL.md — do not duplicate here. "Key upstream" notes only when the input source is non-obvious.
 
-```
-Skill: activation-aha
-Inputs:
-  retention_data: analysis-retention → retention_analysis.json
-  user_behavior_data: User-provided
-  user_segment_data: User-provided (optional)
-Output: docs/growth/growth-strategy.md ("Aha Moment" section)
-Validation: Aha candidates pass correlation screening (≥0.5) and significance test; reach rate analysis includes time distribution and path analysis; shortest path identification includes friction point analysis; Onboarding optimization suggestions are directly executable
-Mode: 🤖→👤
-```
+| Phase | Skill | Mode | Gate condition | Fail action |
+|-------|-------|------|----------------|-------------|
+| phase-1 | activation-aha | 🤖→👤 | At least 1 Aha Moment candidate behavior produced, with retention lift and reach rate data | Expand behavior search scope |
+| phase-2 | activation-onboarding | 🤖→👤 | Onboarding paths and content designed for each user segment | Supplement segment data or extend analysis period |
 
-#### Call activation-onboarding
-
-```
-Skill: activation-onboarding
-Inputs:
-  onboarding_data: User-provided
-  aha_moment_data: docs/growth/growth-strategy.md ("Aha Moment" section)
-  user_segment_data: User-provided (optional)
-Output: docs/growth/growth-strategy.md ("Onboarding" section)
-Validation: Onboarding stage definition complete (Welcome → Activation Complete); drop-off analysis covers all stages and user segments; personalized guidance matches user segments; A/B tests include guardrail metrics (subsequent retention, paid conversion)
-Mode: 🤖→👤
-```
+**Key upstream notes** (only for non-obvious cross-module inputs):
+- phase-1 activation-aha: pulls retention_data from analysis-retention → retention_analysis.json (cross-orchestrator input from analysis-orchestrator, not local docs/)
+- phase-2 activation-onboarding: reads aha_moment_data from the "Aha Moment" section written by phase-1 in docs/growth/growth-strategy.md
 
 ### Phase Summary (post_pipeline)
 

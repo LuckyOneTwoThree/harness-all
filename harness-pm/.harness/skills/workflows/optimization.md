@@ -7,6 +7,8 @@ default_mode: standard
 
 # Workflow D: Data-Driven Optimization
 
+> Shared pipeline conventions (mode selection, Exploration Gate, LOOP cycle, PRD quality gates, confidence propagation, handoff batch rules): see .harness/rules/pm-pipeline.md
+
 > Applicable scenario: Existing product needs data-driven optimization of experience/performance/conversion
 > Core mode: Data diagnosis → iteration decision → LOOP solution validation
 
@@ -114,7 +116,6 @@ Have clear change requirements (user feedback/business needs/missing features)?
 |--------|---------|
 | Insufficient data | Supplement data collection, wait for sufficient data before optimizing |
 | Root cause unclear | Deep analysis, don't optimize surface symptoms |
-| LOOP iteration exceeds 3 times | Request human intervention |
 
 ## Next Steps
 

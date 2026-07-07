@@ -101,66 +101,17 @@ stages:
 
 ## Phase Execution Plan
 
-#### Handle Upstream Feedback (phase-0, conditional execution)
+> Compact routing table. Sub-skill Inputs/Outputs/Validation live in each sub-skill's SKILL.md — do not duplicate here. "Key upstream" notes only when the input source is non-obvious.
 
-phase-0 handles engineering feedback from harness-engineering. It runs an accept/reject/defer triage pattern and routes accepted items to the appropriate downstream.
+| Phase | Skill | Mode | Gate condition | Fail action |
+|-------|-------|------|----------------|-------------|
+| phase-0 | — (engineering-to-pm feedback triage, no sub-skill) | 🤖→👤 | Feedback suggestions have been evaluated, accept/reject decisions made | Annotate unprocessed feedback, do not block main flow |
+| phase-1 | design-prd | 🤖→👤 | All 4 PRD quality gates passed | Gate 1 or 2 failure blocks the flow, output missing items list |
+| phase-2 | change-impact-analysis | 🤖→👤 | Impact matrix covers all downstream outputs, rework list is actionable | Supplement missing downstream impact items |
 
-##### Branch B: Engineering Feedback (engineering-to-pm)
-
-```
-Trigger condition: a validated ready `engineering-to-pm` package exists (envelope status: ready)
-Action: Evaluate Engineering→PM feedback without granting Engineering write authority over the PRD; route accepted items to the appropriate downstream (PRD update via phase 1 / knowledge-base note)
-Input:
-  engineering_feedback: docs/handoff/engineering-to-pm.md + its portable package
-Process flow:
-  1. Validate envelope, consumer, manifest, hashes, freshness using `.harness/rules/handoff-protocol.md`
-  2. When envelope contains a `batch` field, use batch-aware detection: first-consumption guard (if no prior engineering-to-pm was consumed, treat all feedback as new) / incremental batch (use batch.added_acs as primary signal for new feedback) / full or legacy fallback (set-diff on Affects AC)
-  3. Pre-filter: if envelope contains batch.superseded_acs, identify feedback items whose owning ACs are in batch.superseded_acs. Mark these as "already-decided" and skip them in step 4 triage. Only triage items in batch.added_acs / batch.modified_acs as new feedback. (This implements the "do NOT re-triage already-decided items" rule from session-start 5a.)
-  4. Evaluate each remaining feedback item (Technical Constraints / User Feedback Themes / Suggested Product Adjustments / Design Issues) as accept / reject / defer with rationale and owner
-  5. ⏸ Human confirms any product-scope, acceptance-meaning, or feasibility change
-  6. For accepted items, route by type:
-     - PRD-impact items → defer to phase 1 (design-prd) for PRD update with 4 quality gates. Branch B only prepares the change request (list of accepted AC scope/meaning changes, new AC IDs to allocate, rationale) and hands off to phase 1. Do NOT directly edit PRD.md or regenerate prd.json in phase 0 — this preserves Core Principle 1 (quality gates cannot be bypassed) and AGENTS.md rule (PRD changes require 4 quality gates).
-     - Design Issues → surface to the user (design assets are user-owned: Figma/v0/md). PM does not intermediate design issues between engineering and the user; optionally note in PRD for visibility.
-     - Knowledge items → append to memory/knowledge-base.md (engineering constraints, TECH_STACK.md changes, architecture decisions)
-  7. Write a receipt and archive the feedback unchanged; never delete the source contract or package
-  8. Reference `ac_change`: session-start step 5a already wrote `state.yaml.ac_change` (machine-readable) + progress.md one-line summary when it scanned and routed this handoff. Branch B consumes `ac_change` to scope triage (added_acs / superseded_acs / affected_tasks) rather than re-deriving the diff. Do NOT re-record the diff here. If prd-orchestrator is invoked independently without a prior session-start (e.g., user directly triggers PRD update with a handoff), write `ac_change` here per `state.schema.json`.
-Output: docs/product/engineering-feedback-decisions/<handoff_id>.md + receipt + optional change request for phase 1 + optional knowledge-base.md update
-Validation: every feedback item has a decision; PRD-impact items are routed to phase 1 (not directly applied); history remains auditable
-Mode: 🤖→👤
-```
-
-> **Routing note**: Branch B step 6 explicitly closes the previous "PM has no skill route for engineering-to-pm" gap. PM session-start scans engineering-to-pm.md and routes accepted consumption to this phase-0 Branch B. Design Issues are surfaced to the user (design assets are user-owned), no longer routed to a separate design framework.
->
-> **Phase 1 trigger note**: phase 1 (design-prd) can be triggered by two paths: (a) regular path — user requests PRD generation/update; (b) Branch B path — phase 0 Branch B outputs a change request for accepted PRD-impact items. In path (b), design-prd consumes the change request, applies the PRD update, and runs all 4 quality gates as usual.
-
-#### Call design-prd
-
-```
-Skill: design-prd
-Input:
-  ideation_workshop: docs/product/PRD.md ("Creative Solutions" section)
-  strategic_output: User-provided
-  requirement_context: User-provided (product_name required)
-Output: docs/product/PRD.md
-Validation: All 4 PRD quality gates passed
-Mode: 🤖→👤
-```
-
-#### Call change-impact-analysis
-
-```
-Skill: change-impact-analysis
-Input:
-  prd_change: User-provided (PRD change content)
-  current_prd: docs/product/PRD.md
-Output: docs/product/PRD.md ("Change Impact Analysis" section)
-Validation: Impact matrix covers all downstream outputs; rework list is actionable
-Mode: 🤖→👤
-```
-
-> Note: Change impact analysis previously assessed the impact on design outputs such as IA/userflow/prototype/interaction-spec.
-> Visual/interaction design assets are now user-provided (Figma/v0/md). This phase assesses impact on the PRD itself, downstream handoff contracts, and notes design-asset impact for the user's awareness.
-> Impact assessment on design assets is surfaced to the user (design assets are user-owned); design asset paths are carried in pm-to-engineering.md.
+**Key upstream notes** (only for non-obvious cross-module inputs):
+- phase-0: inputs from harness-engineering (docs/handoff/engineering-to-pm.md + portable package), not local docs/
+- phase-1 design-prd: trigger paths are (a) regular user request, or (b) phase-0 Branch B accepted PRD-impact change request; design assets user-owned (Figma/v0/md), not generated here
 
 ### Phase Summary (post_pipeline)
 

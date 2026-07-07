@@ -77,43 +77,16 @@ stages:
 
 ## Phase Execution Plan
 
-#### Call iteration-backlog-grooming (phase-1)
+> Compact routing table. Sub-skill Inputs/Outputs/Validation live in each sub-skill's SKILL.md — do not duplicate here. "Key upstream" notes only when the input source is non-obvious.
 
-```
-Skill: iteration-backlog-grooming
-Inputs:
-  requirement_pool: Project management system (requirement pool)
-  tech_debt: Code quality platform (technical debt)
-  monitoring_alerts: monitoring-alert-detection → alert data (optional)
-  user_feedback: Feedback system (optional)
-  resource_constraints: User-provided (optional)
-  quality_metrics: Test platform/CI/CD (optional)
-  monitoring_data: monitoring-alert-detection (optional)
-Output: docs/monitoring/iteration-plan.md
-Validation: Output file generated and prioritized_items non-empty
-Mode: 🤖→👤
-Note: No cross-module dependencies, can execute independently. Outputs prioritized_items for iteration-retrospective or downstream consumption.
-```
+| Phase | Skill | Mode | Gate condition | Fail action |
+|-------|-------|------|----------------|-------------|
+| phase-1 | iteration-backlog-grooming | 🤖→👤 | iteration-backlog-grooming output file generated and prioritized_items non-empty | Handle per sub-skill failure reason, escalate to human if necessary |
+| phase-2 | iteration-retrospective | 👤↔🤖 | iteration-retrospective output file generated | Handle per sub-skill failure reason, escalate to human if necessary |
 
-#### Call iteration-retrospective (phase-2)
-
-```
-Skill: iteration-retrospective
-Inputs:
-  current_sprint_plan: User-provided or project management system (Sprint plan)
-  iteration_completion: User-provided or project management system (iteration completion)
-  resource_constraints: User-provided (optional)
-  trigger_event: Monitoring system/feedback system (optional)
-  change_request: User-provided (optional)
-  quality_metrics: Test platform/CI/CD
-  team_feedback: Retro tool (optional)
-  monitoring_data: monitoring-alert-detection (optional)
-  monitoring_alerts: monitoring-alert-detection (optional)
-Output: docs/monitoring/iteration-retrospective.md
-Validation: Output file generated and content complete
-Mode: 👤↔🤖
-Note: Iteration plan and completion data are provided by the user or read from the project management system.
-```
+**Key upstream notes** (only for non-obvious cross-module inputs):
+- phase-1 iteration-backlog-grooming: monitoring_alerts/monitoring_data optionally from monitoring-orchestrator (monitoring-alert-detection); no hard cross-module dependency, can execute independently
+- phase-2 iteration-retrospective: monitoring_data/monitoring_alerts optionally from monitoring-orchestrator (monitoring-alert-detection)
 
 ### Phase Summary (post_pipeline)
 

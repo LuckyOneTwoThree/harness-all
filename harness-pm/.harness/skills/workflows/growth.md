@@ -7,6 +7,8 @@ default_mode: standard
 
 # Workflow C: Growth Breakthrough
 
+> Shared pipeline conventions (mode selection, Exploration Gate, LOOP cycle, PRD quality gates, confidence propagation, handoff batch rules): see .harness/rules/pm-pipeline.md
+
 > Applicable scenario: Need to acquire users, improve retention, monetize
 > Core mode: Growth diagnosis → LOOP experiment validation → full release
 
@@ -63,7 +65,6 @@ default_mode: standard
 │             │                            │
 │             └── Fail → back to RESEARCH ─┘
 │                                          │
-│  Iteration limit: 3 times (growth type) │
 │  Note: Experiment execution is run by   │
 │  humans in real environment, AI only    │
 │  handles design + result analysis       │

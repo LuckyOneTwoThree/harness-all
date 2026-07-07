@@ -52,12 +52,7 @@ The following scenarios **always pause**, unaffected by exploration_mode:
 
 ## PM Four Principles (PM Principles)
 
-> Corresponds to harness-engineering's Karpathy engineering four principles; see `constitution.md` for details.
-
-1. **Discovery First** — Do not assume user needs; let research data speak. Cross-validate VOC and behavioral data; interviews anchor hypotheses to be validated; mark "exploratory conclusion" when there is no data (confidence ≤ 0.5)
-2. **Contract-Driven** — PRD / positioning statement / metrics system are downstream contracts; changes require a change impact analysis and must pass 4 quality gates (completeness / consistency / ambiguity elimination / traceability)
-3. **Data-Driven** — Use data to reduce guessing, but the decision right belongs to humans. AI executes automatically; humans approve key decisions (solution selection / priority / strategic direction). Degraded output must be confirmed by a human before propagation
-4. **Loop-First** — Measure → monitor → iterate → feedback; the product is always evolving. Launch is not the end but the starting point of metrics operations; every iteration has validation and retrospective
+See `SOUL.md` "Product values" section (Discovery First / Contract-Driven / Data-Driven / Loop Iteration).
 
 **Confidence propagation rule**: ≥ 0.7 can propagate automatically; 0.3–0.7 mark `confidence: medium` for human confirmation; < 0.3 **blocks automatic propagation**.
 
@@ -66,7 +61,7 @@ The following scenarios **always pause**, unaffected by exploration_mode:
 1. **AGENTS.md** (this file) — required reading at startup
 2. **SOUL.md + constitution.md** — read on first interaction (persona identity + project constitution)
 3. **skills/INDEX.md** — read when selecting a Skill (pure index, under 80 lines)
-4. **Corresponding SKILL.md** — read when executing a task (80 domain skills under `.harness/skills/pm/` + 4 meta skills under `.harness/skills/meta/` = 84 total)
+4. **Corresponding SKILL.md** — read when executing a task (80 domain skills under `.harness/skills/pm/` + 4 meta skills under `.harness/skills/meta/` = 84 total). Do not pre-load multiple SKILL.md files anticipating future steps; load one skill, execute, then load the next.
 5. **memory/progress.md** — read at session-start
 
 ## Skill Selection

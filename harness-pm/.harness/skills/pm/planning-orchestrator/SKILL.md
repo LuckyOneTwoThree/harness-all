@@ -94,82 +94,20 @@ stages:
 
 ## Phase Execution Plan
 
-### Phase 1: product-proposal
+> Compact routing table. Sub-skill Inputs/Outputs/Validation live in each sub-skill's SKILL.md — do not duplicate here. "Key upstream" notes only when the input source is non-obvious.
 
-- **Skill**: product-proposal
-- **Inputs**:
-  - competitor_analysis: Competitor analysis report (from market-competitor-analysis → competitor-analysis.md)
-  - tam_som: Market size data (from market-tam-som → tam-som.json)
-  - user_research_report: User research report (from user-research-report → user-research-report.md)
-  - opportunity_definition: Opportunity definition (from opportunity-definition → opportunity-definition.json)
-  - positioning_strategy: Positioning strategy (from docs/strategy/positioning.md (optional))
-  - product_name_category: Product name and category (user-provided)
-  - business_goal: Business goal (user-provided)
-  - resource_constraints: Resource constraints (optional, user-provided)
-- **Output**: `docs/strategy/PRODUCT_STRATEGY.md ("Product Proposal" section)`
-- **Validation**: Proposal document has been signed off by humans
-- **Execution mode**: 🤖→👤 AI suggests, human approves
-- **Gate**: Proposal document has been signed off by humans → Not passed: Resubmit after supplementing data
+| Phase | Skill | Mode | Gate condition | Fail action |
+|-------|-------|------|----------------|-------------|
+| phase-1 | product-proposal | 🤖→👤 | Proposal document has been signed off by humans | Resubmit after supplementing data |
+| phase-2 | strategic-analysis | 🤖→👤 | strategic-analysis.json has been generated, strategic conclusions have been integrated, human decision items have been confirmed | Items with confidence < 0.6 are escalated for human calibration; strategic direction must be selected by humans |
+| phase-3 | planning-north-star | 👤→🤖 | North Star Metric has been selected by humans | North Star must be a human decision |
+| phase-4 | planning-okr | 🤖→👤 | OKR has been confirmed by humans | OKR with achievement probability < 0.3 is escalated for adjustment |
+| phase-5 | planning-roadmap | 🤖→👤 | Roadmap resources have been approved by humans | Priority and resource allocation must be human decisions |
 
-### Phase 2: strategic-analysis
-
-- **Skill**: strategic-analysis
-- **Inputs**:
-  - exploration_output: Exploration phase output (from user-research-user-modeling / opportunity-definition)
-  - competitor_analysis: Competitor analysis data (from market-competitor-analysis → competitor-analysis.json)
-  - bmc: BMC business model canvas (from docs/strategy/business-strategy.md ("Business Model Canvas" section))
-  - market_data: Market data (from market-tam-som → tam-som.json, optional)
-  - industry_info: Industry information (from market-pest → pest.json, optional)
-  - internal_capability: Internal capability assessment (optional, user-provided)
-  - product_definition: Current product definition (optional, user-provided)
-  - market_definition: Current market definition (optional, user-provided)
-  - growth_goal: Growth goal (optional, from planning-okr → okr.json)
-- **Output**: `docs/strategy/PRODUCT_STRATEGY.md ("Strategic Analysis" section)`
-- **Validation**: strategic-analysis.json has been generated, framework selection is reasonable, all selected frameworks are fully analyzed, strategic conclusions have been integrated, human decision items have been confirmed
-- **Execution mode**: 🤖→👤 AI suggests, human approves
-- **Gate**: Strategic conclusions have been integrated, human decision items have been confirmed → Not passed: Items with confidence < 0.6 are escalated for human calibration; strategic direction must be selected by humans
-
-### Phase 3: Goal Setting (planning-north-star → planning-okr)
-
-This stage executes two sub-skills sequentially: first call planning-north-star to generate North Star Metric candidates, after human selection, then call planning-okr to generate OKR candidates based on the North Star Metric, for human confirmation.
-
-#### Step 1: planning-north-star
-
-- **Skill**: planning-north-star
-- **Inputs**:
-  - user_value_data: User value data (from user-research-user-modeling / user-research-voice-analysis)
-  - bmc: BMC business model canvas (from docs/strategy/business-strategy.md ("Business Model Canvas" section))
-  - business_status: Business status data (optional, user-provided)
-- **Output**: `docs/strategy/PRODUCT_STRATEGY.md ("North Star" section)` (north_star.json → output/metrics/north-star.json)
-- **Validation**: North Star Metric has been selected by humans
-- **Execution mode**: 👤→🤖 Human executes, AI assists
-- **Gate**: North Star Metric has been selected by humans → Not passed: Must be a human decision, AI only provides analytical support
-
-#### Step 2: planning-okr
-
-- **Skill**: planning-okr
-- **Inputs**:
-  - swot_strategy: SWOT strategic direction (from Stage 2 `docs/strategy/PRODUCT_STRATEGY.md ("Strategic Analysis" section)` swot.strategies)
-  - north_star: North Star Metric (from Stage 3 Step 1 `docs/strategy/PRODUCT_STRATEGY.md ("North Star" section)`)
-  - bmc: BMC business model canvas (optional, from docs/strategy/business-strategy.md ("Business Model Canvas" section)
-  - business_status: Business status data (optional, user-provided)
-- **Output**: `docs/strategy/OKR.md` (okr.json)
-- **Validation**: OKR has been confirmed by humans
-- **Execution mode**: 🤖→👤 AI suggests, human approves
-- **Gate**: OKR has been confirmed by humans → Not passed: Achievement probability < 0.3 is escalated for adjustment, > 0.9 is escalated to increase challenge
-
-### Phase 4: planning-roadmap
-
-- **Skill**: planning-roadmap
-- **Inputs**:
-  - okr: OKR objectives and Key Results (from Stage 3 `docs/strategy/OKR.md`)
-  - swot_strategy: SWOT strategic direction (from Stage 2 `docs/strategy/PRODUCT_STRATEGY.md ("Strategic Analysis" section)` swot.strategies)
-  - priority_score: Requirement priority score (optional, overridden by design-prd)
-  - resource_constraints: Resource constraints (optional, user-provided)
-- **Output**: `docs/strategy/roadmap.md` (roadmap.json)
-- **Validation**: Roadmap resources have been approved by humans
-- **Execution mode**: 🤖→👤 AI suggests, human approves
-- **Gate**: Roadmap resources have been approved by humans → Not passed: Priority and resource allocation must be human decisions
+**Key upstream notes** (only for non-obvious cross-module inputs):
+- phase-1 product-proposal: inputs from market-orchestrator (competitor-analysis, tam-som) and user-research-orchestrator (user-research-report), not local docs/
+- phase-2 strategic-analysis: inputs from market-orchestrator (competitor-analysis, tam-som, pest) and user-research-orchestrator (user-modeling, opportunity-definition)
+- phase-3 planning-north-star: inputs from user-research-orchestrator (user-modeling, voice-analysis), not local docs/
 
 ### Phase Summary (post_pipeline)
 

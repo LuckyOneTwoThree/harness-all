@@ -7,6 +7,8 @@ default_mode: skip
 
 # Workflow J: Periodic Health Check
 
+> Shared pipeline conventions (mode selection, Exploration Gate, LOOP cycle, PRD quality gates, confidence propagation, handoff batch rules): see .harness/rules/pm-pipeline.md
+
 > Applicable scenario: Product periodic checkup, quarterly health assessment, proactive issue discovery
 > Core mode: Health diagnosis → competitor snapshot → report output (no LOOP, lightweight)
 

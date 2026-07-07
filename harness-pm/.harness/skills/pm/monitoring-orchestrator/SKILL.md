@@ -78,50 +78,18 @@ stages:
 
 ## Phase Execution Plan
 
-#### Call monitoring-alert-detection
+> Compact routing table. Sub-skill Inputs/Outputs/Validation live in each sub-skill's SKILL.md — do not duplicate here. "Key upstream" notes only when the input source is non-obvious.
 
-```
-Skill: monitoring-alert-detection
-Input:
-  product_architecture: User-provided
-  metrics_system: metrics-system → metric_system.json
-  sla_requirements: User-provided
-  release_info: release-gradual → release_record.json (optional)
-  user_roles: User-provided
-  oncall_schedule: On-call management system → schedule
-Output: docs/monitoring/monitoring-config.md ("Alert Rules" section)
-Validation: Core path coverage ≥ 95%; each core path has at least 4 golden signals; alert noise rate < 15%; alert classification accuracy ≥ 85%; all roles have corresponding dashboards; alert severity accuracy ≥ 90%; escalation trigger timeliness 100%
-Mode: 🤖
-```
+| Phase | Skill | Mode | Gate condition | Fail action |
+|-------|-------|------|----------------|-------------|
+| phase-1 | monitoring-alert-detection | 🤖 | Monitoring alert detection complete (core path coverage ≥ 95%, alert noise rate < 15%) | Supplement monitoring config for missing paths, optimize alert rules |
+| phase-2 | monitoring-attribution | 🤖 | Attribution analysis complete (each alert event has root cause conclusion and impact assessment) | Supplement evidence data or manually investigate candidate root causes |
+| phase-3 | user-feedback-loop-report | 🤖→👤 | Feedback loop report confirmed by human review | Supplement analysis or revise improvement suggestions |
 
-#### Call monitoring-attribution
-
-```
-Skill: monitoring-attribution
-Input:
-  alert_events: monitoring-alert-detection → monitoring-alert-detection.json
-  classification: monitoring-alert-detection → alert classification
-  correlation: monitoring-alert-detection → correlation analysis
-  release_info: release-gradual → release_record.json (optional)
-  root_cause_kb: User-provided (optional)
-  product_architecture: User-provided (optional)
-Output: docs/monitoring/monitoring-config.md ("Attribution Model" section)
-Validation: Each alert event has root cause conclusion and evidence; impact scope quantified; remediation suggestions actionable with rollback plans; root cause confidence labeled
-Mode: 🤖
-```
-
-#### Call user-feedback-loop-report
-
-```
-Skill: user-feedback-loop-report
-Input:
-  voice_analysis: user-research-voice-analysis (optional)
-  anomaly_attribution: monitoring-attribution (optional)
-  feedback_data: User-provided
-Output: docs/monitoring/feedback-loop.md
-Validation: Closure rate calculable; unresolved P0 issues listed; improvement suggestions actionable
-Mode: 🤖→👤
-```
+**Key upstream notes** (only for non-obvious cross-module inputs):
+- phase-1 monitoring-alert-detection: metrics_system input from metrics-orchestrator (metrics-system → metric_system.json); release_info optionally from release-orchestrator (release-gradual → release_record.json)
+- phase-2 monitoring-attribution: release_info optionally from release-orchestrator (release-gradual → release_record.json)
+- phase-3 user-feedback-loop-report: voice_analysis optionally from user-research-voice-analysis
 
 ### Phase Summary (post_pipeline)
 

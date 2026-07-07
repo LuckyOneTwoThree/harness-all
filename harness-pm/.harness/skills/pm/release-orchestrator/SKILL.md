@@ -83,57 +83,17 @@ stages:
 
 ## Phase Execution Plan
 
-#### Call quality-acceptance
+> Compact routing table. Sub-skill Inputs/Outputs/Validation live in each sub-skill's SKILL.md — do not duplicate here. "Key upstream" notes only when the input source is non-obvious.
 
-```
-Skill: quality-acceptance
-Inputs:
-  acceptance_criteria: User-provided (acceptance criteria)
-  test_report: Test platform (test report)
-  launch_checklist: User-provided (launch checklist, optional)
-Output: docs/monitoring/release-notes.md ("Acceptance Report" section)
-Validation: Acceptance criteria verified item by item; risks listed; release recommendation executable
-Mode: 🤖→👤
-```
+| Phase | Skill | Mode | Gate condition | Fail action |
+|-------|-------|------|----------------|-------------|
+| phase-1 | quality-acceptance | 🤖→👤 | P0 issues=0, P1 issues≤3 | Fix P0 issues and re-accept |
+| phase-2 | release-auto-checklist | 🤖 | Release checklist all passed | Supplement missing items and re-check |
+| phase-3 | release-gradual | 🤖→👤 | Canary release monitoring metrics normal | Rollback and troubleshoot |
+| phase-4 | release-notes | 🤖 | Release notes confirmed by human | Supplement release notes content |
 
-#### Call release-auto-checklist
-
-```
-Skill: release-auto-checklist
-Inputs:
-  release_content: User-provided (release content)
-  env_config: User-provided (environment configuration)
-  dependency_list: User-provided (dependency list, optional)
-Output: docs/monitoring/release-notes.md ("Release Checklist" section)
-Validation: All check items covered; all blocking items resolved
-Mode: 🤖
-```
-
-#### Call release-gradual
-
-```
-Skill: release-gradual
-Inputs:
-  release_plan: User-provided (release plan)
-  gradual_strategy: User-provided (canary strategy, optional)
-  monitoring_config: monitoring-alert-detection → monitoring configuration (optional)
-Output: docs/monitoring/release-notes.md ("Canary Plan" section)
-Validation: Canary stage configuration complete; traffic rules clear; rollback conditions executable
-Mode: 🤖→👤
-```
-
-#### Call release-notes
-
-```
-Skill: release-notes
-Inputs:
-  release_content: User-provided (release content)
-  change_log: User-provided (change log)
-  user_impact: User-provided (user impact, optional)
-Output: docs/monitoring/release-notes.md ("Release Notes" section, overwrite)
-Validation: User, ops, and internal release notes all generated
-Mode: 🤖
-```
+**Key upstream notes** (only for non-obvious cross-module inputs):
+- phase-3 release-gradual: monitoring_config optionally from monitoring-orchestrator (monitoring-alert-detection → monitoring configuration)
 
 ### Phase Summary (post_pipeline)
 

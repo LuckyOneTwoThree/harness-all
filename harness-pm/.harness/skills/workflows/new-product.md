@@ -7,19 +7,11 @@ default_mode: deep
 
 # Workflow A: Build New Product from 0 to 1
 
+> Shared pipeline conventions (mode selection, Exploration Gate, LOOP cycle, PRD quality gates, confidence propagation, handoff batch rules): see .harness/rules/pm-pipeline.md
+
 > Applicable scenario: Complete product process for new product from 0 to 1
 > Core mode: Exploration Gate → LOOP validation → PRD output → Engineering handoff
 > Default mode: deep (mandatory exploration first, pause dialog before each module)
-
-## Mode Selection Guide
-
-| Mode | Stops | Feel | Suitable For |
-|------|-------|------|--------------|
-| `deep` (default) | 3 stops (Exploration Gate + Dialog 2/3) + 5 👤 | New domain / unclear direction / needs exploration | First-time PM, unfamiliar market |
-| `standard` | Module boundaries only | Balanced | Have ideas but need validation, routine iteration |
-| `skip` | No exploration stops, auto-run | Fastest but risky | Domain expert with data already in `docs/discovery/`; safety fallback triggers if exploration data missing |
-
-> Tip: Say "switch to standard/skip mode" anytime. Skip mode without prior exploration data auto-downgrades to standard (see AGENTS.md).
 
 ## Process
 
@@ -76,26 +68,8 @@ default_mode: deep
 │  ★ Exploration Gate (hard check +       │
 │    review, single stop)                 │
 │                                         │
-│  Objective checks (must all pass):      │
-│  - Target users clear? (Persona          │
-│    confidence ≥0.7)                     │
-│  - Core problem validated? (Problem     │
-│    statement human-confirmed)           │
-│  - Market opportunity viable? (TAM/SOM  │
-│    has data)                            │
-│  - Business model feasible? (Value      │
-│    proposition clear)                   │
-│                                         │
-│  ⏸ Review with user (minimum set):     │
-│  1. Do these findings match your       │
-│     understanding?                      │
-│  2. Is there any important missing      │
-│     information?                        │
-│  3. Moving to strategy phase next, is   │
-│     the direction right?                │
-│                                         │
-│  ⚠️ Forbidden: entering module 2        │
-│  directly without asking user           │
+│  (objective checks + review questions:  │
+│   see pm-pipeline.md Exploration Gate)  │
 └────────┬────────────────────────────────┘
          │ User confirmed
          ▼
@@ -151,12 +125,10 @@ default_mode: deep
 │             ▼                            │
 │  ┌─────────────────────────────────┐    │
 │  │ VALIDATE                        │    │
-│  │  - PRD 4 quality gates          │    │
-│  │  - Confidence check (≥0.7 auto  │    │
-│  │    pass)                        │    │
+│  │  - see pm-pipeline.md for       │    │
+│  │    VALIDATE criteria            │    │
 │  │  - Human approval (solution     │    │
 │  │    selection/priority)          │    │
-│  │  - Constitution compliance      │    │
 │  └──────────┬──────────────────────┘    │
 │             │                            │
 │             ├── Pass → exit LOOP ────────┼──→
@@ -243,9 +215,6 @@ default_mode: deep
 | Failure point | Handling |
 |--------|---------|
 | Exploration Gate not passed | Stop and ask user, supplement research data |
-| LOOP iteration exceeds 5 times | Request human intervention, don't force |
-| PRD quality gate not passed | Revise and re-validate, no skipping |
-| Confidence < 0.3 | Block, request human confirmation whether to continue |
 | Monitoring config missing | Must complete monitoring-orchestrator output before session-end |
 
 ## Next Steps

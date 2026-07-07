@@ -77,44 +77,17 @@ stages:
 
 ## Phase Execution Plan
 
-#### Call revenue-nrr
+> Compact routing table. Sub-skill Inputs/Outputs/Validation live in each sub-skill's SKILL.md — do not duplicate here. "Key upstream" notes only when the input source is non-obvious.
 
-```
-Skill: revenue-nrr
-Inputs:
-  revenue_data: User-provided (revenue data)
-  user_account_data: User-provided
-  user_behavior_data: User-provided (optional)
-Output: docs/growth/growth-strategy.md ("NRR Analysis" section)
-Validation: NRR calculation includes expansion, contraction, and churn components; churn warning covers activity, feature, financial, and organizational 4 signal types; expansion opportunity identification has scoring and recommendation strategy; multi-dimensional NRR calculation covers user segments and product lines
-Mode: 🤖→👤
-```
+| Phase | Skill | Mode | Gate condition | Fail action |
+|-------|-------|------|----------------|-------------|
+| phase-1 | revenue-nrr | 🤖→👤 | NRR calculation and trend tracking running normally, churn warnings and expansion opportunities identified | Improve revenue data collection |
+| phase-2 | revenue-funnel | 🤖→👤 | Registration-to-payment full-link conversion analysis complete, bottlenecks identified | Supplement funnel step definitions or data |
+| phase-3 | revenue-upsell | 🤖→👤 | Upgrade conversion strategy and personalized plan generated | Optimize upgrade signal identification or supplement user behavior data |
 
-#### Call revenue-funnel
-
-```
-Skill: revenue-funnel
-Inputs:
-  payment_funnel_data: User-provided (registration-to-payment full-link data)
-  conversion_data: docs/growth/growth-strategy.md ("NRR Analysis" section)
-  user_profile_data: User-provided (optional)
-Output: docs/growth/growth-strategy.md ("Revenue Funnel" section)
-Validation: Payment funnel covers the full link from registration to repurchase; barrier identification distinguishes qualitative and quantitative analysis; optimization suggestions ranked by impact coefficient × implementation difficulty; paywall timing suggestions based on user behavior data
-Mode: 🤖→👤
-```
-
-#### Call revenue-upsell
-
-```
-Skill: revenue-upsell
-Inputs:
-  user_behavior_data: User-provided
-  payment_history: docs/growth/growth-strategy.md ("NRR Analysis" section)
-  product_usage_data: User-provided (optional)
-Output: docs/growth/growth-strategy.md ("Upsell" section)
-Validation: Upgrade signal identification covers 4 signal types (usage/feature/behavior/intent); personalized content includes 3 elements: user name, usage, and benefits; A/B test design includes guardrail metrics; upgrade ROI calculation includes outreach cost
-Mode: 🤖→👤
-```
+**Key upstream notes** (only for non-obvious cross-module inputs):
+- phase-2 revenue-funnel: reads conversion_data from the "NRR Analysis" section written by phase-1 in docs/growth/growth-strategy.md
+- phase-3 revenue-upsell: reads payment_history from the "NRR Analysis" section written by phase-1 in docs/growth/growth-strategy.md
 
 ### Phase Summary (post_pipeline)
 

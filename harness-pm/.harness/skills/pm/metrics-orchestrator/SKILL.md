@@ -77,44 +77,13 @@ stages:
 
 ## Phase Execution Plan
 
-#### Call metrics-system
+> Compact routing table. Sub-skill Inputs/Outputs/Validation live in each sub-skill's SKILL.md — do not duplicate here. "Key upstream" notes only when the input source is non-obvious.
 
-```
-Skill: metrics-system
-Inputs:
-  product_context: User-provided (product type, North Star metric, OKR, business model)
-  existing_metrics: User-provided (existing metrics list)
-Output: docs/metrics/metrics-system.md
-Validation: North Star vanity metric check passed, L1-L2 breakdown complete (3-5 L2 per L1), actionable metrics trackable
-Mode: 🤖→👤
-```
-
-#### Call tracking-plan
-
-```
-Skill: tracking-plan
-Inputs:
-  PRD: User-provided (product feature description, user flows, core paths, business rules)
-  metric_system: docs/metrics/metrics-system.md
-  existing_tracking: User-provided (existing tracking list)
-Output: docs/metrics/tracking-plan.md
-Validation: Naming conventions passed, core path coverage ≥90%, PRD consistency ≥90%
-Mode: 🤖→👤
-```
-
-#### Call metrics-dashboard
-
-```
-Skill: metrics-dashboard
-Inputs:
-  metric_system: docs/metrics/metrics-system.md
-  tracking_plan: docs/metrics/tracking-plan.md
-  user_roles: User-provided
-  dashboard_platform: User-provided
-Output: docs/metrics/dashboard.md
-Validation: All metrics assigned to Dashboards, each Dashboard has at least 1 Widget, North Star metric appears on strategic Dashboard, alert rules fully configured
-Mode: 🤖→👤
-```
+| Phase | Skill | Mode | Gate condition | Fail action |
+|-------|-------|------|----------------|-------------|
+| phase-1 | metrics-system | 🤖→👤 | North Star metric selected by human | North Star metric must be a human decision; AI only provides candidates and analysis |
+| phase-2 | tracking-plan | 🤖→👤 | Tracking plan reviewed by human | Business logic correctness and privacy compliance must be confirmed by human |
+| phase-3 | metrics-dashboard | 🤖→👤 | Dashboard layout confirmed by human | Layout reasonableness and alert thresholds require human review |
 
 ### Phase Summary (post_pipeline)
 

@@ -7,6 +7,8 @@ default_mode: skip
 
 # Workflow E: Acceptance & Release
 
+> Shared pipeline conventions (mode selection, Exploration Gate, LOOP cycle, PRD quality gates, confidence propagation, handoff batch rules): see .harness/rules/pm-pipeline.md
+
 > Applicable scenario: Product feature acceptance, version release, gradual rollout
 > Core mode: Pre-release check (hard gate) → acceptance → release notes → handoff
 

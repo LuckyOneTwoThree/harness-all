@@ -85,64 +85,17 @@ stages:
 
 ## Phase Execution Plan
 
-#### Call analysis-anomaly
+> Compact routing table. Sub-skill Inputs/Outputs/Validation live in each sub-skill's SKILL.md — do not duplicate here. "Key upstream" notes only when the input source is non-obvious.
 
-```
-Skill: analysis-anomaly
-Inputs:
-  metrics_system: metrics-system → metric_system.json
-  real_time_data: User-provided (real-time metric snapshot exported from data platform)
-  alert_rules: User-provided
-  event_calendar: User-provided (optional)
-Output: docs/metrics/data-analysis-report.md ("Anomaly Analysis" section)
-Validation: Anomaly detection covers all key metrics; anomaly severity classified correctly (P0/P1/P2); root cause analysis supported by data; recommended actions are actionable
-Mode: 🤖
-```
+| Phase | Skill | Mode | Gate condition | Fail action |
+|-------|-------|------|----------------|-------------|
+| phase-1 | analysis-anomaly | 🤖 | Anomaly detection pipeline runs continuously without interruption | Immediately fix detection pipeline, start backup monitoring |
+| phase-2 | analysis-funnel | 🤖 | Core business funnel defined and data complete | Supplement funnel definition, ensure core path coverage |
+| phase-3 | analysis-retention | 🤖 | At least 1 Aha Moment candidate behavior produced | Expand behavior search scope or extend analysis period |
+| phase-4 | data-analysis-report | 🤖→👤 | Report executive summary complete, at least 3 action recommendations | Supplement analysis or mark recommendations for data supplementation |
 
-#### Call analysis-funnel
-
-```
-Skill: analysis-funnel
-Inputs:
-  funnel_definition: User-provided
-  event_data: User-provided
-  segment_config: User-provided (optional)
-  comparison_period: User-provided (optional)
-Output: docs/metrics/data-analysis-report.md ("Funnel Analysis" section)
-Validation: Funnel step definition complete, no omissions; conversion rate calculated based on full data; drop-off node identification includes cause hypotheses; multi-dimensional drill-down covers at least 3 dimensions
-Mode: 🤖
-```
-
-#### Call analysis-retention
-
-```
-Skill: analysis-retention
-Inputs:
-  user_behavior_data: User-provided
-  segment_definition: User-provided (optional)
-  cohort_config: User-provided (optional)
-  baseline_date: User-provided (optional)
-Output: docs/metrics/data-analysis-report.md ("Retention Analysis" section)
-Validation: Retention calculated based on full users rather than sampling; Cohort analysis covers time, channel, and behavior dimensions; Aha Moment candidates pass significance testing; churn warning model accuracy > 70%
-Mode: 🤖
-```
-
-#### Call data-analysis-report
-
-```
-Skill: data-analysis-report
-Inputs:
-  funnel_analysis: docs/metrics/data-analysis-report.md ("Funnel Analysis" section)
-  retention_analysis: docs/metrics/data-analysis-report.md ("Retention Analysis" section)
-  anomaly_detection: docs/metrics/data-analysis-report.md ("Anomaly Analysis" section)
-  decision_dace: decision-dace → decision_insight.json (optional)
-  metrics_system: metrics-system → metric_system.json (optional)
-  analysis_time_range: User-provided
-  product_info: User-provided (optional)
-Output: docs/metrics/data-analysis-report.md (consolidated coverage)
-Validation: Executive summary contains 3 key findings + Top 1 recommendation; core metric dashboard complete; funnel analysis includes biggest drop-off point and improvement opportunity; retention analysis includes lifecycle stages; each insight has data facts + business implications; at least 3 action recommendations, each with priority and validation method; data definitions and limitations explained
-Mode: 🤖→👤
-```
+**Key upstream notes** (only for non-obvious cross-module inputs):
+- phase-4 data-analysis-report: optionally pulls decision_dace from decision-dace → decision_insight.json and metrics_system from metrics-system → metric_system.json (cross-orchestrator inputs, not local docs/)
 
 ### Phase Summary (post_pipeline)
 

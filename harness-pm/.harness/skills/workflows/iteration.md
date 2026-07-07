@@ -7,6 +7,8 @@ default_mode: standard
 
 # Workflow B: Existing Product Feature Iteration
 
+> Shared pipeline conventions (mode selection, Exploration Gate, LOOP cycle, PRD quality gates, confidence propagation, handoff batch rules): see .harness/rules/pm-pipeline.md
+
 > Applicable scenario: Existing product needs to add features/change requirements/optimize experience
 > Core mode: Change impact analysis → LOOP validation → Engineering handoff
 
@@ -106,17 +108,7 @@ Have clear change requirements (user feedback/business needs/missing features)?
 
 ### Handoff batch rules (iteration scenario)
 
-When the iteration workflow produces a new pm-to-engineering.md, the handoff MUST follow the batch delivery protocol:
-
-| Field | Value for iteration handoff |
-|-------|-----------------------------|
-| `batch.type` | `incremental` (NOT `full` — `full` is only for first-time delivery) |
-| `batch.id` | Previous batch id + 1 (e.g., previous=1, this=2) |
-| `batch.added_acs` | New AC IDs allocated for new features in this iteration |
-| `batch.modified_acs` | AC IDs whose semantics changed (per acceptance-id-protocol, these get NEW IDs; old IDs go to `superseded_acs`) |
-| `batch.superseded_acs` | Old AC IDs replaced by new ones (modified_acs' old IDs + any withdrawn ACs) |
-| `batch.unchanged_acs` | All valid AC IDs from the previous handoff that are NOT in added/modified/superseded |
-| `ac_ids` (envelope) | MUST be FULL SET of valid AC IDs = `added_acs` + `modified_acs` (new IDs) + `unchanged_acs`. Never just the changed subset. |
+Iteration uses `incremental` batch (full vs incremental batch fields: see pm-pipeline.md Handoff Batch Rules).
 
 **Critical**: even though Module 3 Solution Design only updates the PRD for changed modules (line 73), the handoff's `ac_ids` envelope and `unchanged_acs` MUST include ALL valid ACs from the previous delivery. This ensures:
 - Engineering's session-start can correctly identify unchanged vs added ACs
@@ -137,7 +129,6 @@ When the iteration workflow produces a new pm-to-engineering.md, the handoff MUS
 |--------|---------|
 | Change scope unclear | Stop and ask user, clarify boundaries |
 | Insufficient data | Supplement data analysis, don't iterate by feel |
-| LOOP iteration exceeds 3 times | Request human intervention |
 
 ## Next Steps
 

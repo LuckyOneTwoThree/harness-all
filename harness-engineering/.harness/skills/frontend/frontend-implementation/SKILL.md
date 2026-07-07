@@ -29,7 +29,7 @@ The agent reads **two layers simultaneously**. The contract layer constrains com
 - `docs/engineering/TECH_STACK.md`
 - API contract section from `docs/handoff/pm-to-engineering.md` (current pointer, validated by session-start; drives mock API configuration)
 - `loops/specs/<task>/phase-0-design-intake-report.md` — Phase 0 checkpoint report (asset inventory, token summary, component list, anti-AI-slop observations, open items/risks). Read to understand extraction context and unresolved Phase 0 risks before consuming the contract.
-- `Reference/state-management-matrix.md`
+- For state management selection, see `Reference/state-management-matrix.md` (load when the component involves stateful logic and you need to decide between local/context/global state).
 
 ## Outputs
 

@@ -79,7 +79,7 @@ The following scenarios **always pause**, unaffected by exploration_mode:
 
 ## Karpathy Engineering Principles
 
-Four principles as a concrete supplement to the core rules: **Think Before Coding** (don't hide confusion, ask when uncertain), **Simplicity First** (no speculative abstractions), **Surgical Changes** (touch only what you must), **Goal-Driven Execution** (turn instructions into verifiable goals, iterate with LOOP).
+See `SOUL.md` "Engineering values" section (Think before coding / Evidence-driven / TDD-first / Simplicity first / Surgical changes / Goal-driven).
 
 > Full text with examples: `.harness/craft/karpathy-principles.md` — load on demand when deeper context is needed.
 
@@ -88,7 +88,7 @@ Four principles as a concrete supplement to the core rules: **Think Before Codin
 1. **AGENTS.md** (this file) — required reading at startup
 2. **SOUL.md + constitution.md** — read at first interaction (persona identity + project constitution)
 3. **skills/INDEX.md** — read when selecting a Skill (under 80 lines, pure index)
-4. **Corresponding SKILL.md** — read when executing a task (the `Inputs` section in SKILL.md declares dependent rules, auto-fetched)
+4. **Corresponding SKILL.md** — read when executing a task (the `Inputs` section in SKILL.md declares dependent rules, auto-fetched). Do not pre-load multiple SKILL.md files anticipating future steps; load one skill, execute, then load the next.
 5. **memory/progress.md** — read at session-start
 
 ## Skill Selection

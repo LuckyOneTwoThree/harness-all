@@ -7,6 +7,8 @@ default_mode: skip
 
 # Workflow F: Product Diagnosis & Sunset
 
+> Shared pipeline conventions (mode selection, Exploration Gate, LOOP cycle, PRD quality gates, confidence propagation, handoff batch rules): see .harness/rules/pm-pipeline.md
+
 > Applicable scenario: Product health decline, competitor threat tracking, product sunset decision
 > Core mode: Call diagnosis-orchestrator to complete diagnosis → human approval → downstream connection
 

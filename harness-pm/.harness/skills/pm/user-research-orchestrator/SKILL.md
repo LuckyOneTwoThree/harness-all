@@ -82,95 +82,15 @@ stages:
 
 ## Phase Execution Plan
 
-### Phase 1: Parallel Collection
+> Compact routing table. Sub-skill Inputs/Outputs/Validation live in each sub-skill's SKILL.md — do not duplicate here. "Key upstream" notes only when the input source is non-obvious.
 
-#### Call user-research-voice-analysis
-
-```
-Skill: user-research-voice-analysis
-Inputs:
-  app_reviews: user provided (app store reviews)
-  support_tickets: user provided (customer support ticket data)
-  social_mentions: user provided (optional, social media mentions)
-  community_posts: user provided (optional, community posts)
-  analysis_config: user provided (optional, analysis config)
-Output: docs/discovery/user-research.md (append "User Voice Analysis" section)
-Validation: sentiment_distribution non-empty, top_themes at least 3 themes, top_pain_points extracted, confidence annotated
-Mode: 🤖
-```
-
-#### Call user-research-behavior-analysis
-
-```
-Skill: user-research-behavior-analysis
-Inputs:
-  event_logs: user provided (behavior event logs)
-  funnel_data: user provided (funnel data)
-  heatmap_data: user provided (optional, heatmap data)
-  analysis_config: user provided (optional, analysis config)
-Output: docs/discovery/user-research.md (append "User Behavior Analysis" section)
-Validation: funnel_health non-empty, aha_moment_candidates extracted, feature_usage analysis complete, confidence annotated
-Mode: 🤖
-```
-
-⏸ **Stage Gate**: voice-analysis.json + behavior-analysis.json both generated and validation passed → Not passed: Supplement user feedback data or behavior data
-
-### Phase 2: User Modeling
-
-#### Call user-research-user-modeling
-
-```
-Skill: user-research-user-modeling
-Inputs:
-  voice_analysis: docs/discovery/user-research.md (append "User Voice Analysis" section)
-  behavior_analysis: docs/discovery/user-research.md (append "User Behavior Analysis" section)
-  survey_data: user provided (optional, survey data)
-  modeling_config: user provided (optional, modeling config)
-Output: docs/discovery/user-research.md (append "User Persona" section) + empathy-map.json + journey-map.json
-Validation: personas array non-empty, at least 1 Persona confidence ≥0.7, Empathy Map four quadrants complete, Journey Map stages complete
-Mode: 🤖→👤
-```
-
-⏸ **Stage Gate**: personas array non-empty, at least 1 Persona confidence ≥0.7 → Not passed: Flag modeling insufficient, recommend supplementing data or conducting interviews
-
-### Phase 3: Interview Assist
-
-#### Call user-research-interview-assist
-
-```
-Skill: user-research-interview-assist
-Inputs:
-  persona: docs/discovery/user-research.md (append "User Persona" section)
-  research_objectives: user provided (research objectives)
-  interview_config: user provided (interview config)
-  voice_analysis: docs/discovery/user-research.md (append "User Voice Analysis" section)
-  behavior_analysis: docs/discovery/user-research.md (append "User Behavior Analysis" section)
-Output: docs/discovery/user-research.md (append "Interview Script Record" section) + interview-insights.json
-Validation: interview-script.json core_modules non-empty, each core question has follow-up strategies; interview-insights.json validated_hypotheses or new_discoveries non-empty
-Mode: 👤→🤖
-```
-
-⏸ **Stage Gate**: interview-script.json generated, interview-insights.json generated after interview execution → Not passed: Check whether research objectives and interview config are complete
-
-### Phase 4: Research Report
-
-#### Call user-research-report
-
-```
-Skill: user-research-report
-Inputs:
-  voice_analysis: docs/discovery/user-research.md (append "User Voice Analysis" section)
-  behavior_analysis: docs/discovery/user-research.md (append "User Behavior Analysis" section)
-  persona: docs/discovery/user-research.md (append "User Persona" section)
-  interview_script: docs/discovery/user-research.md (append "Interview Script Record" section)
-  research_objectives: user provided (research objectives)
-  product_info: user provided (optional, product/category info)
-Output: docs/discovery/user-research.md (as summary section or overwrite) + user-research-report.json
-Validation: Executive summary includes 3 core findings + Top 1 recommendation, each Persona has representative user quotes, at least 3 action recommendations with priority
-Mode: 🤖→👤
-```
-
-⏸ **Stage Gate**: Executive summary includes 3 core findings + Top 1 recommendation → Not passed: Supplement upstream data and regenerate report
+| Phase | Skill | Mode | Gate condition | Fail action |
+|-------|-------|------|----------------|-------------|
+| phase-1a | user-research-voice-analysis | 🤖 | voice-analysis.json + behavior-analysis.json both generated and validation passed | Supplement user feedback data or behavior data |
+| phase-1b | user-research-behavior-analysis | 🤖 | voice-analysis.json + behavior-analysis.json both generated and validation passed | Supplement user feedback data or behavior data |
+| phase-2 | user-research-user-modeling | 🤖→👤 | persona.json generated | Supplement data or check sub-Skill execution results |
+| phase-3 | user-research-interview-assist | 👤→🤖 | interview-script.json generated | Supplement data or check sub-Skill execution results |
+| phase-4 | user-research-report | 🤖→👤 | Executive summary includes 3 core findings + Top 1 recommendation | Supplement upstream data and regenerate report |
 
 ### Phase Summary (post_pipeline)
 

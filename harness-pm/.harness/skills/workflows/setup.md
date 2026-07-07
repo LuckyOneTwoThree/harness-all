@@ -7,6 +7,8 @@ default_mode: skip
 
 # Workflow G: Project Initiation Guide
 
+> Shared pipeline conventions (mode selection, Exploration Gate, LOOP cycle, PRD quality gates, confidence propagation, handoff batch rules): see .harness/rules/pm-pipeline.md
+
 > Applicable scenario: New project using harness-pm for the first time, needs to initialize configuration files
 > Core mode: Guide filling in constitution.md / SOUL.md / PRODUCT_STRATEGY.md / PRD.md
 

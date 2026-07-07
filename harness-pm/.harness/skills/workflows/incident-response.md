@@ -7,6 +7,8 @@ default_mode: skip
 
 # Workflow I: Incident Response
 
+> Shared pipeline conventions (mode selection, Exploration Gate, LOOP cycle, PRD quality gates, confidence propagation, handoff batch rules): see .harness/rules/pm-pipeline.md
+
 > Applicable scenario: P0-level online incidents, major user complaints, security vulnerabilities and other emergencies
 > Core mode: Detection → diagnosis → fix release → retrospective (no LOOP, rapid response)
 

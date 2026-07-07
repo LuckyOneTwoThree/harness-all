@@ -92,57 +92,14 @@ stages:
 
 ## Phase Execution Plan
 
-#### Call validation-assumption-map
+> Compact routing table. Sub-skill Inputs/Outputs/Validation live in each sub-skill's SKILL.md — do not duplicate here. "Key upstream" notes only when the input source is non-obvious.
 
-```
-Skill: validation-assumption-map
-Inputs:
-  design_output: User-provided design assets (Figma/v0/md/image paths, optional)
-  prd: docs/product/PRD.md
-Output: docs/product/PRD.md ("Assumption Map" section)
-Validation: Maximum risk hypothesis identified, at least 1 hypothesis per feature point
-Mode: 🤖
-```
-
-#### Call validation-mvp
-
-```
-Skill: validation-mvp
-Inputs:
-  design_output: User-provided design assets (Figma/v0/md/image paths, optional)
-  assumption_map: docs/product/PRD.md ("Assumption Map" section)
-  resource_constraints: Optional
-Output: docs/product/PRD.md ("MVP Plan" section)
-Validation: MVP share < 60%, Must Have features all have hypothesis associations
-Mode: 🤖→👤
-```
-
-#### Call validation-experiment
-
-```
-Skill: validation-experiment
-Inputs:
-  assumption_map: docs/product/PRD.md ("Assumption Map" section)
-  mvp_scope: docs/product/PRD.md ("MVP Plan" section)
-  traffic_data: Optional (available traffic/user data)
-Output: docs/metrics/experiment-report.md ("Experiment Design" section)
-Validation: Experiment plan human-reviewed, includes validation method, sample size, duration, termination conditions
-Mode: 🤖→👤
-```
-
-#### Call validation-usability
-
-```
-Skill: validation-usability
-Inputs:
-  test_plan: docs/product/PRD.md ("Assumption Map" section)
-  participants: User-provided
-  test_scenarios: User-provided design assets (Figma/v0/md/image paths)
-  experiment_method: docs/metrics/experiment-report.md ("Experiment Design" section)
-Output: docs/product/PRD.md ("Usability Testing" section)
-Validation: Problem severity grading reasonable (P0/P1/P2/P3), insights correspond to assumption map
-Mode: 👤→🤖
-```
+| Phase | Skill | Mode | Gate condition | Fail action |
+|-------|-------|------|----------------|-------------|
+| phase-1 | validation-assumption-map | 🤖 | Maximum risk hypothesis identified, at least 1 hypothesis per feature point | At least 1 hypothesis per feature point, maximum risk hypothesis must have a validation plan |
+| phase-2 | validation-mvp | 🤖→👤 | MVP share < 60%, Must Have features all have hypothesis associations | MVP share > 60% escalate to human judgment, confirm whether to adjust |
+| phase-3 | validation-experiment | 🤖→👤 | Experiment plan human-reviewed, includes validation method, sample size, duration, termination conditions | All experiment plans must be human-reviewed |
+| phase-4 | validation-usability | 👤→🤖 | Problem severity grading reasonable (P0/P1/P2/P3), insights correspond to assumption map | Test execution must be led by a human researcher |
 
 ### Phase Summary (post_pipeline)
 

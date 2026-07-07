@@ -64,54 +64,13 @@ stages:
 
 ## Phase Execution Plan
 
-### Phase 1: Parallel Collection
+> Compact routing table. Sub-skill Inputs/Outputs/Validation live in each sub-skill's SKILL.md — do not duplicate here. "Key upstream" notes only when the input source is non-obvious.
 
-#### Invoke market-tam-som
-
-```
-Skill: market-tam-som
-Inputs:
-  category_keywords: User-provided (category keywords)
-  target_market: User-provided (target market geographic scope)
-  time_range: User-provided (estimation time range)
-Output: docs/discovery/market-analysis.md ("Market Size" section)
-Validation: TAM/SAM/SOM three-tier estimation complete, each tier includes range estimates (optimistic/neutral/conservative), key assumptions annotated
-Mode: 🤖→👤
-```
-
-#### Invoke market-pest
-
-```
-Skill: market-pest
-Inputs:
-  category_keywords: User-provided (category keywords)
-  target_market: User-provided (target market)
-Output: docs/discovery/market-analysis.md ("PEST Analysis" section)
-Validation: All four dimensions (political/economic/social/technological) scanned, at least 3 trend summaries per dimension
-Mode: 🤖
-```
-
-⏸ **Stage Gate**: tam-som.json + pest.json are both generated and pass validation → Not passed: Provide additional category keywords and target market information, or check sub-skill execution results
-
-### Phase 2: Competitive Analysis
-
-#### Invoke market-competitor-analysis
-
-```
-Skill: market-competitor-analysis
-Inputs:
-  competitor_list: User-provided (competitor list)
-  category_keywords: User-provided (category keywords)
-  monitor_config: User-provided (monitoring config, optional)
-  tam_som_ref: docs/discovery/market-analysis.md ("Market Size" section)
-  pest_ref: docs/discovery/market-analysis.md ("PEST Analysis" section)
-  product_info: User-provided (own product info, optional)
-Output: docs/discovery/market-analysis.md ("Competitive Analysis" section)
-Validation: Executive summary contains 3 core findings + Top 1 strategy, four quadrants populated, Feature Matrix updated, at least 3 differentiation strategies
-Mode: 🤖→👤
-```
-
-⏸ **Stage Gate**: Executive summary contains 3 core findings + Top 1 strategy, four quadrants populated, Feature Matrix updated → Not passed: Check whether the competitor list is sufficient or whether upstream data is complete
+| Phase | Skill | Mode | Gate condition | Fail action |
+|-------|-------|------|----------------|-------------|
+| phase-1a | market-tam-som | 🤖→👤 | tam-som.json + pest.json are both generated and pass validation | Provide additional category keywords and target market information, or check sub-skill execution results |
+| phase-1b | market-pest | 🤖 | tam-som.json + pest.json are both generated and pass validation | Provide additional category keywords and target market information, or check sub-skill execution results |
+| phase-2 | market-competitor-analysis | 🤖→👤 | Executive summary contains 3 core findings + Top 1 strategy, four quadrants are populated, Feature Matrix is updated | Check whether the competitor list is sufficient or whether upstream data is complete |
 
 ### Phase Summary (post_pipeline)
 

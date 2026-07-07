@@ -100,57 +100,19 @@ post_pipeline:
 
 ## Phase Execution Plan
 
-#### Call business-model-canvas
+> Compact routing table. Sub-skill Inputs/Outputs/Validation live in each sub-skill's SKILL.md — do not duplicate here. "Key upstream" notes only when the input source is non-obvious.
 
-```
-Skill: business-model-canvas
-Inputs:
-  product_context: from user-research-user-modeling / opportunity-definition
-  market_data: from market-competitor-analysis
-Output: docs/strategy/business-strategy.md ("Business Model Canvas" section)
-Validation: BMC 9 blocks all filled, assumptions annotated
-Mode: 🤖→👤
-```
+| Phase | Skill | Mode | Gate condition | Fail action |
+|-------|-------|------|----------------|-------------|
+| phase-1 | business-model-canvas | 🤖→👤 | BMC 9 blocks all filled, assumptions annotated | Fill in missing elements; those that cannot be filled are annotated as assumptions to be validated |
+| phase-2 | business-value-fit | 🤖 | Value proposition fit score ≥ 3.0 | Adjust value proposition or target users, re-validate |
+| phase-3 | business-pricing | 🤖→👤 | 3 pricing options generated | Supplement pricing options, ensure differentiation |
+| phase-4 | stakeholder-analysis | 🤖→👤 | Stakeholder map complete (power/interest grid + alignment risks) | Supplement stakeholder identification or re-assess alignment risks |
+| phase-5 | business-strategy-report | 🤖→👤 | Report executive summary complete, at least 2 strategic directions | Supplement strategic directions or flag 'strategic analysis supplementation recommended' |
 
-#### Call business-value-fit
-
-```
-Skill: business-value-fit
-Inputs:
-  bmc_value_proposition: from phase 1 docs/strategy/business-strategy.md ("Business Model Canvas" section)
-  user_research_data: from user-research-user-modeling / user-research-voice-analysis
-Output: docs/strategy/business-strategy.md ("Value Fit" section)
-Validation: Value proposition fit score ≥ 3.0
-Mode: 🤖
-```
-
-#### Call business-pricing
-
-```
-Skill: business-pricing
-Inputs:
-  bmc_data: from phase 1 docs/strategy/business-strategy.md ("Business Model Canvas" section)
-  competitor_pricing_data: from market-competitor-analysis → competitor-analysis.json
-  willingness_to_pay: user provided
-Output: docs/strategy/business-strategy.md ("Pricing Strategy" section)
-Validation: 3 pricing options generated
-Mode: 🤖→👤
-```
-
-#### Call business-strategy-report
-
-```
-Skill: business-strategy-report
-Inputs:
-  bmc: from phase 1 docs/strategy/business-strategy.md ("Business Model Canvas" section)
-  pricing_strategy: from phase 3 docs/strategy/business-strategy.md ("Pricing Strategy" section)
-  stakeholder_analysis: from phase 4 docs/strategy/business-strategy.md ("Stakeholder Analysis" section)
-  product_business_info: user provided
-  optional_inputs: SWOT, OKR, roadmap, positioning, value curve, differentiation assessment, North Star Metric
-Output: docs/strategy/business-strategy.md (consolidated overwrite)
-Validation: Report executive summary complete, at least 2 strategic directions
-Mode: 🤖→👤
-```
+**Key upstream notes** (only for non-obvious cross-module inputs):
+- phase-1 business-model-canvas: inputs from user-research-orchestrator (user-modeling) and market-orchestrator (competitor-analysis), not local docs/
+- phase-2 business-value-fit: inputs from user-research-orchestrator (user-modeling, voice-analysis), not local docs/
 
 ### Phase Summary (post_pipeline)
 

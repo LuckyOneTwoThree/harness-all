@@ -68,33 +68,16 @@ stages:
 
 ## Phase Execution Plan
 
-#### Call experiment-design
+> Compact routing table. Sub-skill Inputs/Outputs/Validation live in each sub-skill's SKILL.md — do not duplicate here. "Key upstream" notes only when the input source is non-obvious.
 
-```
-Skill: experiment-design
-Inputs:
-  hypothesis: User-provided (hypothesis statement)
-  available_traffic: User-provided (available traffic)
-  metrics_system: metrics-system → metrics.json (optional)
-  historical_data: analysis-funnel/analysis-retention (optional)
-Output: docs/metrics/experiment-report.md ("Experiment Design" section)
-Validation: Hypothesis structured (If-Then-Because-For); primary metric directly corresponds to hypothesis; guardrail metrics cover retention, revenue, and technical dimensions; sample size calculation parameters are justified
-Mode: 🤖→👤
-```
+| Phase | Skill | Mode | Gate condition | Fail action |
+|-------|-------|------|----------------|-------------|
+| phase-1 | experiment-design | 🤖→👤 | Experiment design confirmed by human review | Block experiment launch, revise and re-review |
+| phase-2 | experiment-execution | 🤖→👤 | Sufficient sample size and statistical testing complete, experiment report confirmed by human review | Extend experiment duration or increase traffic |
 
-#### Call experiment-execution
-
-```
-Skill: experiment-execution
-Inputs:
-  experiment_design: docs/metrics/experiment-report.md ("Experiment Design" section)
-  experiment_data: User-provided
-  termination_conditions: docs/metrics/experiment-report.md ("Experiment Design" section)
-  product_background: User-provided (optional)
-Output: docs/metrics/experiment-report.md ("Experiment Results" section)
-Validation: Experiment group traffic allocation correct; guardrail metrics did not trigger alerts; experiment data collection complete; statistical significance calculation correct; statistical conclusions consistent with data; action recommendations consistent with conclusions; guardrail metrics fully covered; heterogeneous effects analyzed (at least 3 segment dimensions)
-Mode: 🤖→👤
-```
+**Key upstream notes** (only for non-obvious cross-module inputs):
+- phase-1 experiment-design: optionally pulls historical_data from analysis-funnel/analysis-retention (cross-orchestrator inputs) and metrics_system from metrics-system → metrics.json
+- phase-2 experiment-execution: reads experiment_design and termination_conditions from the "Experiment Design" section written by phase-1 in docs/metrics/experiment-report.md
 
 ### Phase Summary (post_pipeline)
 

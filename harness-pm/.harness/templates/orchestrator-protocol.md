@@ -226,7 +226,15 @@ Orchestrator SKILL.md files must include the following sections (in addition to 
 6. **Exception Handling** — Table of exception types and handling strategies (extends §5)
 7. **Orchestration Protocol** — Reference to this protocol: `Follows the orchestrator-protocol.md orchestration protocol.`
 8. **Pipeline** — YAML pipeline definition (see §6 for format)
-9. **Phase Execution Plan** — Detailed call blocks for each phase using the §3.3 call specification format
+9. **Phase Execution Plan** — Compact table of phase → skill → mode → gate (one row per sub-skill). Do NOT duplicate Inputs/Output/Validation here — those live in each sub-skill's own SKILL.md. Only include a brief "key inputs from upstream" note when a sub-skill's input source is non-obvious (e.g., comes from a different module's output). Format:
+
+```
+| Phase | Skill | Mode | Gate condition | Fail action |
+|-------|-------|------|----------------|-------------|
+| phase-1 | <skill-name> | 🤖→👤 | <gate condition> | <fail action> |
+```
+
+Rationale: the orchestrator is the scheduler, not the executor. Sub-skill SKILL.md files already declare their own Inputs/Outputs/Validation. Duplicating them here bloats the orchestrator without adding value.
 10. **Phase Summary** — Post-pipeline output structure (see §6)
 11. **Phase Gates** — Table of gate conditions per phase with pass/fail criteria
 12. **Human Decision Points** — Table of decisions requiring human input, with context and options
