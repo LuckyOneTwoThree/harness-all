@@ -23,6 +23,8 @@
     "exploration_mode": { "type": "string", "enum": ["deep", "standard", "skip", "none"] },
     "hard_limit_reached": { "type": "boolean" },
     "current_nested_task": { "type": "string", "pattern": "^[0-9]{3}-[a-z0-9][a-z0-9-]*$" },
+    "current_task_index": { "type": "integer", "minimum": 0, "description": "Index of the current task within spec.md Task breakdown (0-based). Lightweight progress pointer — the authoritative task list and checkbox state live in spec.md, not here. Updated by ACT skill when advancing to the next planned outcome." },
+    "total_tasks": { "type": "integer", "minimum": 0, "description": "Total number of tasks in spec.md Task breakdown. Recorded at plan time to enable 'N of M tasks completed' progress surfacing without mirroring the full task list." },
     "ac_change": {
       "type": "object",
       "description": "Recorded by session-start's Batch-aware Detection step (5a) when a newly accepted handoff supersedes a previously consumed one. Null or absent when no AC-level change occurred.",

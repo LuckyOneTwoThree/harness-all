@@ -77,6 +77,7 @@ When an active task returns to PLAN:
 - Frontend tasks cite both semantic contract and engineering binding.
 - Dependency/schema/public API impacts are represented as tasks or explicitly n/a.
 - The plan does not prescribe speculative abstractions or unrelated cleanup.
+- **AC subset coverage**: in family mode (PM handoff exists), the set of Product AC-xxx IDs in `spec.md` MUST be a superset of the AC-xxx IDs in the PM handoff (`docs/handoff/pm-to-engineering.md`). A missing AC means the plan silently dropped a requirement — block the gate and add the missing AC (or explicitly mark it `superseded` with reason). In degraded mode (no PM handoff), skip this check and record `waiver: degraded-mode-no-pm-handoff` in `spec.md`.
 
 ## Relationship with LOOP
 

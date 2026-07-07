@@ -57,6 +57,8 @@ When `project_mode` is unset, infer from the existing directory layout and recor
 5. Mock API must be configured from the PRD API contract; do not invent endpoints or response shapes the PRD does not authorize.
 6. Accessibility contract from `contract.json` (role/keyboard/focus/aria) must be implemented as written; gaps are 👤 human-confirmation items, not silent omissions.
 7. Page coverage: every `page_id` in `contract.json.pages[]` must have a corresponding page file (route component / page component) implemented. Detect by Grep-ing the framework's route registration locations (e.g. `app/**/page.{tsx,jsx,vue,svelte}` for Next.js app router, `pages/**/*.{tsx,jsx,vue,svelte}` for pages router, `router.routes` / `createBrowserRouter` config for React Router). Missing pages block the phase checkpoint. If `contract.json` has no `pages[]` array (e.g., backend-only scope), this gate is skipped.
+8. **Component forward coverage**: every `component_id` in `contract.json.components[]` must have a corresponding entry in `component-bindings.json` `bindings[]` (i.e., be implemented). This is the forward direction — it catches "contract lists 10 components but only 7 were implemented". (Hard Gate 3 covers the reverse direction: every implemented component traces to a contract ID, catching invented IDs. Both directions are needed.) Exclude components marked `[superseded]` in the incremental diff summary (retired IDs should not have new implementations). A missing implementation blocks the phase checkpoint; surface as 👤 if the component is intentionally deferred (with reason in `component-bindings.json` `manual_verification`).
+9. **Mock API endpoint subset**: every endpoint path recorded in `component-bindings.json` `mock_api.endpoints[]` must trace to a documented PRD API contract entry (method + path). This catches the "agent fabricated a mock endpoint the PRD does not authorize" defect early at Phase 1, before Phase 2 backend begins (Phase 3 `contract-verify` Hard Gate 4 checks actual frontend call sites vs PRD; this gate checks mock configuration vs PRD — the two are complementary, not redundant). Unauthorized mock endpoints must either be removed or recorded as a contract deviation via the Contract Deviation Protocol in `rules/engineering-pipeline.md`.
 
 ## Token Reference Constraint
 
@@ -151,6 +153,8 @@ Anti-pattern defaults in design guidance are defaults, not universal bans. A pro
 - [ ] Mock API matches the PRD API contract; no fabricated endpoints.
 - [ ] Project-mode directory layout respected.
 - [ ] Every `page_id` in `contract.json.pages[]` has an implemented page file (Grep route registration locations). Skipped when `pages[]` is absent.
+- [ ] Every `component_id` in `contract.json.components[]` has a `component-bindings.json` entry (excluding `[superseded]`).
+- [ ] Every `mock_api.endpoints[]` path traces to a PRD-documented endpoint; unauthorized ones recorded as deviations.
 - [ ] Accessibility contract implemented as written; gaps are explicit 👤 items.
 - [ ] Affected tests pass with AC/BAC/IAC evidence; non-testable items marked 👤.
 

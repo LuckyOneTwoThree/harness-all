@@ -11,6 +11,7 @@
       - docs/handoff/contract.json               against .harness/rules/component-contract.schema.json
       - docs/engineering/component-bindings.json against .harness/rules/component-bindings.schema.json
       - loops/specs/*/state.yaml                 against .harness/loops/state.schema.json
+      - loops/specs/*/phase-*-report.md          structural check (frontmatter + section titles)
 
     Schema validation uses Test-Json (PowerShell 7+) when available, otherwise
     falls back to a manual subset of JSON Schema draft 2020-12 (type, required,
@@ -25,6 +26,15 @@
         that exists in tokens.json (when tokens.json is present).
       - Every entity ac_refs entry in contract.json entities[] matches
         ^AC-[A-Z][0-9]{2}-[0-9]{3}$.
+
+    Phase report structural check (loops/specs/*/phase-*-report.md):
+      - Frontmatter must contain 5 non-empty fields: phase, phase_name,
+        task_id, report_path, created_at (placeholder <...> values are treated
+        as empty).
+      - 8 required section titles must be present: Outcome summary, Acceptance
+        IDs produced, Artifacts produced, Evidence citations, Contract
+        deviations, Downstream notes, Open risks / pending items, and
+        Phase-specific mandatory sub-sections. Content is NOT validated.
 
     Missing artifact files are reported as [SKIP] (informational, not an error) -
     early-phase runs may not have produced them yet.
@@ -497,6 +507,97 @@ if ($null -eq $contractObj) {
         Write-Host "[FAIL] $cvLabel" -ForegroundColor Red
         foreach ($e in $cvErrors) { Write-Host "  - $e" -ForegroundColor Red; Fail "${cvLabel}: $e" }
         $failed++
+    }
+}
+
+# --- Validation: phase reports (frontmatter + section titles) --------------
+# Lightweight structural check: confirms frontmatter 5 fields exist and are
+# non-empty (not placeholders), and that 8 required section titles are present.
+# Does NOT validate section content — only structural completeness, so authors
+# cannot accidentally omit a mandatory section.
+$phaseReports = @()
+if (Test-Path -LiteralPath $stateSpecsDir -PathType Container) {
+    $phaseReports = @(Get-ChildItem -LiteralPath $stateSpecsDir -Recurse -File -Filter 'phase-*-report.md' -ErrorAction SilentlyContinue)
+}
+
+if ($phaseReports.Count -eq 0) {
+    Write-Host "[SKIP] phase reports: frontmatter + section titles (no phase-*-report.md files found)" -ForegroundColor DarkGray
+    $skipped++
+} else {
+    $requiredFrontmatter = @('phase', 'phase_name', 'task_id', 'report_path', 'created_at')
+    $requiredSections = @(
+        '## Outcome summary',
+        '## Acceptance IDs produced',
+        '## Artifacts produced',
+        '## Evidence citations',
+        '## Contract deviations',
+        '## Downstream notes',
+        '## Open risks / pending items',
+        '## Phase-specific mandatory sub-sections'
+    )
+    foreach ($report in $phaseReports) {
+        $reportErrors = @()
+        $reportRel = $report.FullName.Substring($root.Length).TrimStart([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar)
+        $content = Read-Utf8 $report.FullName
+        $lines = $content -split "`r?`n"
+
+        # Extract frontmatter between first two --- delimiters
+        $fmStart = -1
+        $fmEnd = -1
+        for ($i = 0; $i -lt $lines.Count; $i++) {
+            if ($lines[$i] -match '^\s*---\s*$') {
+                if ($fmStart -eq -1) { $fmStart = $i }
+                elseif ($fmEnd -eq -1) { $fmEnd = $i; break }
+            }
+        }
+
+        if ($fmStart -eq -1 -or $fmEnd -eq -1 -or $fmEnd -le $fmStart + 1) {
+            $reportErrors += "frontmatter block not found (missing --- delimiters)"
+        } else {
+            $fmFields = @{}
+            for ($i = $fmStart + 1; $i -lt $fmEnd; $i++) {
+                $fl = $lines[$i]
+                if ($fl -match '^\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*(.+)$') {
+                    $key = $matches[1]
+                    $rawVal = $matches[2]
+                    # Strip inline YAML comment (space-hash to end), outside quotes
+                    if ($rawVal -notmatch '^["'']') { $rawVal = ($rawVal -split '\s+#')[0] }
+                    $val = $rawVal.Trim()
+                    # Strip surrounding quotes
+                    if ($val -match '^"(.*)"$') { $val = $matches[1] }
+                    elseif ($val -match "^'(.*)'$") { $val = $matches[1] }
+                    # Treat placeholder <...> as empty (unfilled template)
+                    if ($val -match '^<[^>]*>$') { $val = '' }
+                    $fmFields[$key] = $val
+                }
+            }
+            foreach ($req in $requiredFrontmatter) {
+                if (-not $fmFields.ContainsKey($req)) {
+                    $reportErrors += "frontmatter missing required field '$req'"
+                } elseif ([string]::IsNullOrWhiteSpace($fmFields[$req])) {
+                    $reportErrors += "frontmatter field '$req' is empty or unfilled placeholder"
+                }
+            }
+        }
+
+        # Check required section titles (exact line match, allowing trailing whitespace)
+        foreach ($sec in $requiredSections) {
+            $pattern = '^\s*' + [regex]::Escape($sec) + '\s*$'
+            $found = $false
+            foreach ($ln in $lines) {
+                if ($ln -match $pattern) { $found = $true; break }
+            }
+            if (-not $found) { $reportErrors += "missing required section title '$sec'" }
+        }
+
+        if ($reportErrors.Count -eq 0) {
+            Write-Host "[PASS] phase report: $reportRel" -ForegroundColor Green
+            $passed++
+        } else {
+            Write-Host "[FAIL] phase report: $reportRel" -ForegroundColor Red
+            foreach ($e in $reportErrors) { Write-Host "  - $e" -ForegroundColor Red; Fail "phase report $reportRel : $e" }
+            $failed++
+        }
     }
 }
 

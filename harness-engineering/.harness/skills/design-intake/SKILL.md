@@ -172,6 +172,7 @@ Produce `loops/specs/<task>/phase-0-design-intake-report.md` containing:
 - Asset inventory (source path, type, extraction route).
 - Extracted token summary (counts per dimension).
 - Component list (IDs + names + purposes).
+- **NFR parsing table** — for each `non_functional_requirements` entry in the PRD (or each inferred NFR in degraded mode), list: the NFR text → how it maps to the contract (e.g., "WCAG AA" → `components[].accessibility[]` fields; "mobile-first" → token breakpoints; "max 200ms API response" → Phase 2 concern, surfaced as 👤 for backend). NFRs with no clear mapping are marked 👤 pending human decision. This is a checkpoint disclosure for human review, not a machine gate — the goal is to surface NFRs that would otherwise be silently dropped.
 - Anti AI-Slop observations.
 - Incremental diff summary (if incremental mode).
 - Open items / risks / assumptions.

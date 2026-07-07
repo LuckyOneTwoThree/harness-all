@@ -51,6 +51,7 @@ Pass requires no unresolved Critical/Major, current verify evidence, and all com
 
 - `stage: review`, `status: done`, clear error;
 - update each passing AC/BAC/IAC in `loops/specs/<task>/spec.md` from `[status: pending]` to `[status: done]` (per `engineering-pipeline.md` AC ownership and `spec.md.template` status suffix convention)
+- **verify all task checkboxes in `spec.md` Task breakdown section are `[x]` (not `[ ]`)** — an unchecked task means the plan was not fully executed; block `done` and route the unfinished task back through ACT.
 - one `code-review PASSED revision=<...>` event in iterations.log.
 
 Changes-required writes `stage: review`, `status: retrying` or `needs-human`; it never increments iteration. The next ACT attempt increments before mutation.
