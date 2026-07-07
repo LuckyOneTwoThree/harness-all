@@ -261,7 +261,7 @@ Append to `memory/progress.md`:
 
 > Degraded mode active: no PM handoff. contract.json entities have pending-AC refs. AC traceability will be incomplete until PM provides AC IDs or user assigns them.
 
-This waiver is the audit trail that downstream phases (Phase 1/2) read to understand why BAC/IAC traceability has gaps.
+This waiver is the audit trail that downstream phases (Phase 2/3) read to understand why BAC/IAC traceability has gaps.
 
 ### 7. Self-Check
 
@@ -272,8 +272,8 @@ This waiver is the audit trail that downstream phases (Phase 1/2) read to unders
 ### AC Traceability Gap (must surface to user)
 
 In degraded mode, AC IDs from PM are MISSING. As a result:
-- Phase 1 BAC (Bidirectional AC) traceability will have gaps — components cannot be linked back to specific acceptance criteria.
-- Phase 2 IAC (Implementation AC) traceability will have gaps — entities cannot be tagged with the ACs they satisfy.
+- Phase 2 BAC (Backend criterion) traceability will have gaps — entity behaviors/endpoints cannot be linked back to specific acceptance criteria.
+- Phase 3 IAC (Integration criterion) traceability will have gaps — integration flows cannot be tagged with the ACs they satisfy.
 
 The agent MUST surface this gap to the user at the Phase 0 checkpoint and recommend either (a) obtaining AC IDs from PM, or (b) user-assigned AC IDs (e.g., `AC-USER-001`) before Phase 1 begins.
 

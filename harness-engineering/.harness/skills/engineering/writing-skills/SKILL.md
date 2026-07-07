@@ -34,7 +34,7 @@ Criteria for creating a new skill:
 1. **Confirm the skill's positioning**
    - Name: lowercase-kebab-case, e.g. `refactoring-database`
    - One-sentence description: what it does + when to use it
-   - Category: `engineering` / `meta` (engineering or meta)
+   - Category: one of `design-intake` / `frontend` / `backend` / `integration` / `engineering` / `meta` (matches the 6 directories under `.harness/skills/`; `engineering` hosts cross-cutting skills like TDD/debugging/performance, `meta` hosts session/skill maintenance)
    - Is it inside LOOP? Which phase does it correspond to (PLAN/ACT/VERIFY/REVIEW/DEBUG)?
 
 2. **Create the directory and file**

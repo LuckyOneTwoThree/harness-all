@@ -83,5 +83,5 @@ Downstream frameworks should prioritize:
 
 ## Downstream Framework Usage Notes
 
-The downstream framework's brainstorming skill will auto-detect this file and read it.
+The downstream framework's session-start skill will auto-detect this file and read it.
 If not auto-detected, you can manually point the Agent to this file path to read it.

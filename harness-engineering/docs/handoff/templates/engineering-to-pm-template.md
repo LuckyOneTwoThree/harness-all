@@ -27,13 +27,13 @@ artifacts: []
 > Source framework: harness-engineering
 > Target framework: harness-pm
 >
-> **Template structure (5 core sections + 2 tail sections)**:
+> **Template structure (5 core sections + 4 tail sections)**:
 > 1. Phase Summary — one-sentence overview
 > 2. Engineering Metrics & Issues — quantified signals + known bugs/debt
 > 3. Issues & Adjustments — merged: user feedback + product suggestions + design issues + open items
 > 4. Implementation Summary — merged: tech stack + implemented features + key decisions
 > 5. Product-Level Engineering Feedback (product-level handoff only)
-> Tail: Suggested Next Steps + Risk Notes
+> Tail: 4-Phase Completion Status + Integration Results + Suggested Next Steps + Risk Notes
 
 ## Phase Summary
 
@@ -86,10 +86,10 @@ artifacts: []
 
 > Engineering-side design contract issues discovered during implementation. PM triages each item (accept/reject/defer) in prd-orchestrator phase 0 Branch B step 6; accepted design-impact items are NOT written directly to `pm-to-engineering.md` in phase 0 — they are staged in a session-level staging area and published by PM session-end step 6b via `pm-to-engineering.md` (preserving session-end's single-write authority over handoff publication).
 
-| Design issue | Affected component/page | Severity | Suggested design adjustment | Affects AC |
-|--------|---------|--------|---------|--------|
-| <e.g., missing button disabled state> | <Button component> | High/Medium/Low | <add disabled state spec> | AC-xxx |
-| <e.g., token inconsistency> | <color.primary> | Medium | <align with tokens.json> | AC-xxx |
+| Design issue | Affected component/page | Severity | Suggested design adjustment | Affects AC | Change |
+|--------|---------|--------|---------|--------|--------|
+| <e.g., missing button disabled state> | <Button component> | High/Medium/Low | <add disabled state spec> | AC-xxx | [added] |
+| <e.g., token inconsistency> | <color.primary> | Medium | <align with tokens.json> | AC-xxx | [added] |
 
 > Leave empty if no design contract issues were found during implementation.
 
@@ -163,6 +163,33 @@ Issues for harness-pm to handle or confirm with harness-engineering:
 ### Product Review Reference
 
 - **Full review evidence**: `loops/specs/<product-task>/product-review-evidence.md`
+
+## 4-Phase Completion Status
+
+> Per `session-end/SKILL.md` contract: report `completed` (bool) and `user_confirmed` (bool) for each of the 4 pipeline phases. Unconfirmed phases must be flagged so PM knows the engineering cycle is not yet fully gated. A phase marked `completed: true` but `user_confirmed: false` means the checkpoint report exists but the user has not yet confirmed it — PM should not treat the cycle as delivery-ready.
+
+| Phase | Name | Completed | User confirmed | Report path | Notes |
+|--------|------|-----------|----------------|-------------|-------|
+| 0 | design-intake | <true/false> | <true/false> | <loops/specs/<task>/phase-0-design-intake-report.md> | <e.g., degraded mode, AC gap pending> |
+| 1 | frontend | <true/false> | <true/false> | <loops/specs/<task>/phase-1-frontend-report.md> | <e.g., 2 components deferred to 👤> |
+| 2 | backend | <true/false> | <true/false> | <loops/specs/<task>/phase-2-backend-report.md> | <e.g., migration down-script verified on scratch DB> |
+| 3 | integration | <true/false> | <true/false> | <loops/specs/<task>/phase-3-integration-report.md> | <e.g., 1 AC routed to 👤 human> |
+
+## Integration Results
+
+> Phase 3 e2e validation results and contract-consistency results, per `session-end/SKILL.md` contract. Surface any contract drift detected during integration so PM understands the final implementation state vs the original PRD contract.
+
+### E2E Validation
+
+| IAC ID | Flow description | Result | Evidence |
+|--------|------------------|--------|----------|
+| IAC-xxx | <e.g., create-todo flow> | <pass/fail/👤human> | <evidence.md block heading or 👤 confirmation citation> |
+
+### Contract Consistency
+
+- AC/BAC/IAC reconciliation: <all-reconciled | mismatches: [list]>
+- Mock→real switch status: <success | partial | failed — details>
+- Contract deviations recorded in `contract.json.deviations[]`: <count> (see `## Contract Deviations from PRD` above for details)
 
 ## Suggested Next Steps
 

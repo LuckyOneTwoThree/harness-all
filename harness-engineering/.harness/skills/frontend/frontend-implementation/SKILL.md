@@ -34,7 +34,12 @@ The agent reads **two layers simultaneously**. The contract layer constrains com
 ## Outputs
 
 - Frontend component code (`.tsx` / `.vue` / `.svelte` per TECH_STACK) under the project-mode location below
-- `docs/engineering/component-bindings.json` — component implementation manifest (one entry per implemented component, joining by immutable `component_id` from `contract.json`)
+- `docs/engineering/component-bindings.json` — component implementation manifest (one entry per implemented component, joining by immutable `component_id` from `contract.json`). Required top-level fields per `.harness/rules/component-bindings.schema.json`:
+  - `schema_version` (`"1.0"`)
+  - `mode` (`family` when a validated design contract exists; `standalone-fallback` when no design package — determined by whether `docs/handoff/contract.json` is present and validated)
+  - `component_contract_sha256` (sha256 hex of `contract.json` content; required non-null in `family` mode, null only in `standalone-fallback`)
+  - `tech_stack_revision` (read from `docs/engineering/TECH_STACK.md` revision field; if absent, use the file's git commit hash or `<no-vcs>` literal)
+  - `bindings[]` (per-component entries; `mode_inference` recorded at top level when `mode` was inferred rather than declared)
 - Mock API configuration under the project-mode location below
 
 ## Project Mode Adaptation
@@ -166,6 +171,9 @@ frontend-implementation runs its own inline verify-fast after each component imp
 2. **AC/BAC/IAC + Hard Gate check**: confirm the current component's `component_id` exists in `contract.json`; verify token references resolve to `tokens.json` entries (no missing tokens); verify mock API endpoints trace to PRD documented endpoints; verify accessibility contract items are implemented or marked 👤; verify `component-bindings.json` entry is complete (including `mock_api`, `token_refs`, `manual_verification` where applicable).
 3. **Changed-file security scan**: scan the component's changed files for hardcoded secrets/URLs, XSS-prone `dangerouslySetInnerHTML`, and hardcoded color/spacing values that should use tokens (cross-check against `token_exceptions`).
 4. **Terminal outcome** — append exactly one terminal PASSED/FAILED line to `iterations.log` for this attempt (include the component ID and a brief verification summary).
+
+On pass: `stage: verify`, `status: running`, `substage_progress.frontend.verify_state: inline-passed`, clear error. Continue to the next planned outcome; set `substage_progress.frontend.verify_state: awaiting-full` when all planned outcomes are done and handing off to verify-full.
+On failure: `stage: verify`, `status: retrying`, `substage_progress.frontend.verify_state: inline-failed`, concrete error, then route by cause (see TDD's Failure Handling). At the recommended failed-attempt limit, set `needs-human`. A failed attempt 10 triggers the hard breaker.
 
 ## Relationship with LOOP
 

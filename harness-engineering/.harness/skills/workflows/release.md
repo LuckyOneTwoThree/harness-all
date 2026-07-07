@@ -8,7 +8,7 @@ default_mode: none
 
 Release is a non-LOOP delivery path. It does not require every item on the global FEATURES board to be done—only every item explicitly included in this release scope.
 
-> **Matrix**: non-LOOP path (workflow `G`) — see `engineering-pipeline.md` Non-LOOP Paths. No phase routing, no state.yaml.
+> **Matrix**: non-LOOP path (workflow `G`) — see `engineering-pipeline.md` Non-LOOP Paths. No phase routing, no state.yaml, no task_type.
 
 ## Route
 

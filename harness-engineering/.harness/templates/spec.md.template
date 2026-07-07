@@ -50,6 +50,10 @@
 
 [Briefly: which files to change, what modules to add, key design decisions]
 
+### Verification command
+
+[The exact command verify-full will run to validate this task's outcomes, e.g., `npm test -- --coverage src/features/todos` or `pytest tests/todos/ -v`. verify-full reads this field as the authoritative test command for the task; TDD's inline verify-fast may run a subset but must use the same runner.]
+
 ## Out of scope
 
 [Explicit boundaries to avoid scope creep]

@@ -17,7 +17,7 @@ Follow `.harness/rules/engineering-pipeline.md`:
 1. session-start (on-demand: skip if no active state + unambiguous handoff) + Foundation gate;
 2. Branch Isolation: ensure a dedicated branch or git worktree before mutation (per `engineering-pipeline.md` Canonical Path step 3);
 3. Plan: brainstorming (skip only when a validated upstream spec is already unambiguous) → writing-plans, executed as one continuous stage without pause between them unless a material user-owned decision surfaces;
-4. LOOP: test-driven-development with inline verify-fast (ACT owns the 4 fast-verify duties); route unknown failures to systematic-debugging;
+4. LOOP: execute the ACT sequence per `engineering-pipeline.md` Workflow × Phase × ACT Matrix for each active phase (Phase 1 frontend-implementation → TDD; Phase 2 data-layer → api-implementation → TDD; Phase 3 mock-to-real-switch → contract-verify → e2e-verification). Each ACT owns the 4 inline fast-verify duties; route unknown failures to systematic-debugging;
 5. verify-full once after all planned outcomes pass;
 6. code-review;
 7. session-end (on-demand: baseline only when source files changed).

@@ -121,6 +121,17 @@ Follow `.harness/loops/STATE_PROTOCOL.md`: increment once before mutation; the A
 - Optimizing without guarding (performance will silently regress)
 - Overusing memo/useMemo/cache (adds complexity without measured benefit)
 
+## Verification
+
+- [ ] Baseline numbers recorded before any change (step 1).
+- [ ] Only one bottleneck changed per attempt (step 3).
+- [ ] Regression guard test added in step 3 (before terminal outcome) and included in the attempt's mutations.
+- [ ] Re-measurement uses the same method/command as baseline (step 4).
+- [ ] Before/after comparison shows improvement; if not, returned to IDENTIFY.
+- [ ] Full test suite passes (no behavioral regression).
+- [ ] Inline verify-fast's 4 duties performed; terminal outcome appended to `iterations.log`.
+- [ ] GUARD step only recommends monitoring (no code mutation after terminal outcome).
+
 ## Relationship with LOOP
 
 Corresponds to the `optimize` workflow (E): MEASURE/IDENTIFY = PLAN, FIX (including regression guard test) = ACT, re-measurement data returns to verify, GUARD only recommends monitoring (no code mutation after terminal outcome). This skill is the specialist ACT that replaces the default ACT sequence in the single active phase (Phase 1 or Phase 2). See `.harness/loops/LOOP.md` and `.harness/rules/engineering-pipeline.md`.

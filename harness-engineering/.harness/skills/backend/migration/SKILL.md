@@ -64,7 +64,7 @@ Before starting a migration, answer the following questions. If any item is not 
 - **Migrate one consumer at a time** (use Grep to find call sites and change them one by one). Do not batch-change multiple consumers before testing (errors accumulate, attribution is impossible).
 - For each migrated consumer, this skill owns the per-attempt fast verification inline (verify-fast is no longer a separate skill invocation). Keep `stage: act`, `status: running`, and the current iteration. Perform these 4 fast-verify duties before declaring the attempt outcome:
   1. **Validate tests + equivalence** — run the full test suite and confirm behavior matches the old system (equivalence); reject `0 tests`, stale output, or a different command than claimed.
-  2. **AC/BAC/IAC check** — confirm the stable AC/BAC/IAC IDs exercised by this task have evidence.
+  2. **AC/BAC/IAC check** — confirm the stable AC/BAC/IAC IDs exercised by this task have evidence; cite component contract/binding by stable component ID when frontend code is touched (e.g., React/Vue major version upgrade touching component modules).
   3. **Changed-file security scan** — run the quick security scan on changed files and disposition every hit.
   4. **Append terminal outcome** — append exactly one terminal PASSED/FAILED line to `iterations.log` for this attempt.
 - On pass: `stage: verify, status: running, substage_progress[<active-phase>].verify_state: inline-passed`, clear error. Continue to the next consumer or hand off to verify-full (set `substage_progress[<active-phase>].verify_state: awaiting-full` when all consumers are done).
@@ -115,6 +115,18 @@ Follow `.harness/loops/STATE_PROTOCOL.md`: increment once before mutation; this 
 - Migration without test coverage (Beyonce Rule: if migration of untested code breaks, it's not the migration's fault)
 - Data migration without a rollback script
 - Adding new features to a deprecated old system
+
+## Verification
+
+- [ ] Migration Decision hard gate passed before starting (all 5 items satisfied).
+- [ ] Replacement built and tested before any deprecation (step 1).
+- [ ] Migration strategy explicitly chosen (Strangler Pattern default; step 2).
+- [ ] One consumer migrated per attempt; full test suite + equivalence confirmed each time (step 3).
+- [ ] Zero active usage proven before old code removal (step 4 — Grep + config + metrics).
+- [ ] Old code + tests + docs + config all removed together (step 5).
+- [ ] `docs/engineering/TECH_STACK.md` updated to reflect the migration (step 5).
+- [ ] Data migration (if applicable): rollback script exists, tested on backup data first.
+- [ ] Inline verify-fast's 4 duties performed; terminal outcome appended to `iterations.log`.
 
 ## Relationship with LOOP
 
