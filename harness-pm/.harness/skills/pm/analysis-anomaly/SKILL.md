@@ -102,9 +102,9 @@ Push based on anomaly severity:
 | standard | Full artifact (current default) | Full artifact, including all Step outputs |
 | deep | Full analysis + root cause inference chain + impact scope assessment + prevention mechanism design | Full artifact + extended analysis + deep inference |
 
-## Progressive-Disclosure Guidance
+## output-schema Guidance
 
-The detailed templates, examples, and depth-specific execution guidance are in [Reference/progressive-disclosure.md](Reference/progressive-disclosure.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
+The detailed templates, examples, and depth-specific execution guidance are in [Reference/output-schema.md](Reference/output-schema.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
 
 
 ## Output Validation Rules

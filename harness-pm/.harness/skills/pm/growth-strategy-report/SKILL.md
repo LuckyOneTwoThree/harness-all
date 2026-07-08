@@ -30,7 +30,7 @@ The core value of the growth strategy report lies in consolidating scattered gro
 
 🤖→👤 AI suggests, human approves
 
-## Input
+## Inputs
 
 | Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|

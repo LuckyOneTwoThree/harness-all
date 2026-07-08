@@ -20,10 +20,9 @@ description: Use when building a product metrics system. Metrics System Auto-Con
 
 ## Core Principles
 
-1. **Full Analysis**: Systematically analyze all available data without missing key dimensions
-2. **Real-time Awareness**: Metrics system design supports real-time monitoring and rapid response
-3. **Automated Attribution**: Anomaly fluctuations are automatically attributed to specific causes, reducing manual investigation
-4. **Explicit Decision Rules**: Every alert and escalation condition has clear quantitative rules
+1. **North Star First**: North Star metric is the single source of truth for the metrics hierarchy; every L1/L2 metric must trace back to it
+2. **Actionable over Vanity**: Every metric must have a clear owner and a decision it informs; vanity metrics (no actionable lever) are flagged and excluded
+3. **Hierarchy Coherence**: L1 metrics decompose the North Star; L2 metrics decompose L1; no orphan metrics that don't roll up
 
 ## Interaction Mode
 
@@ -191,7 +190,7 @@ FOR each L2 metric:
 
 **Output File**: `metric_system.json`
 
-> See [Reference/schema.md](./Reference/schema.md) for the Output Schema (top-level + metric_system nested object) and Output Validation Rules table.
+> See [Reference/output-schema.md](./Reference/output-schema.md) for the Output Schema (top-level + metric_system nested object) and Output Validation Rules table.
 
 ---
 

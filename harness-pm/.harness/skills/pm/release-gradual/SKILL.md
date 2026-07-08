@@ -141,7 +141,7 @@ Trigger conditions:
 
 ## Output Schema
 
-For complete Schema and validation rules, see [Reference/schema.md](./Reference/schema.md)
+For complete Schema and validation rules, see [Reference/output-schema.md](./Reference/output-schema.md)
 
 ## Upstream Change Response
 

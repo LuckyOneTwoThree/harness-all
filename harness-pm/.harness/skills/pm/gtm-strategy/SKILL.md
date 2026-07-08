@@ -29,7 +29,7 @@ The core of a Go-to-Market strategy is not "how to push the product out", but "h
 
 🤖→👤 AI suggests, human approves
 
-## Input
+## Inputs
 
 | Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|

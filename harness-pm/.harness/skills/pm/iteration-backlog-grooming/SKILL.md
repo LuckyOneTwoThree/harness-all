@@ -67,9 +67,9 @@ description: Used when grooming and prioritizing the product Backlog. Backlog gr
 
 **Important**: This Skill has no cross-module dependencies and does not depend on pm-project module outputs; it can execute independently. Resource constraints are provided directly by the user rather than retrieved from pm-project.
 
-## Progressive-Disclosure Guidance
+## execution-steps Guidance
 
-The detailed templates, examples, and depth-specific execution guidance are in [Reference/progressive-disclosure.md](Reference/progressive-disclosure.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
+The detailed templates, examples, and depth-specific execution guidance are in [Reference/execution-steps.md](Reference/execution-steps.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
 
 
 ## Output

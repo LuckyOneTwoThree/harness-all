@@ -2,7 +2,7 @@
 
 This file is referenced by `SKILL.md` for the `validation-experiment` skill.
 
-## Input
+## Inputs
 
 ```json
 {

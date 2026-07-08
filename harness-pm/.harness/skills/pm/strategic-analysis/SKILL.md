@@ -162,7 +162,7 @@ Output files: strategic-analysis.json + strategic-analysis.md
 
 ### Output Schema, Validation Rules, and JSON Example
 
-> See [Reference/output-schema-validation-example.md](./Reference/output-schema-validation-example.md) for the output JSON schema (framework_selection, swot, ansoff, porter, strategic_conclusions, metadata), per-framework field validation rules, and a complete strategic-analysis JSON example.
+> See [Reference/output-schema.md](./Reference/output-schema.md) for the output JSON schema (framework_selection, swot, ansoff, porter, strategic_conclusions, metadata), per-framework field validation rules, and a complete strategic-analysis JSON example.
 
 ## Decision Rules
 

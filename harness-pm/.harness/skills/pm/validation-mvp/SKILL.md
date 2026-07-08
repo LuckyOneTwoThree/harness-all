@@ -41,7 +41,7 @@ description: Used when defining the MVP feature scope. MVP scope auto-definition
 
 🤖→👤 AI suggests, human approves
 
-## Input
+## Inputs
 
 | Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|

@@ -48,7 +48,7 @@ The creative workshop integrates four methods: HMW problem reframing, SCAMPER st
 
 🤖→👤 AI suggests, human approves
 
-## Input
+## Inputs
 
 | Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
@@ -60,13 +60,58 @@ The creative workshop integrates four methods: HMW problem reframing, SCAMPER st
 
 ### Input Format
 
-> 📋 See [Reference/input-format.md](./Reference/input-format.md) for details
+```json
+{
+  "problem_statement": "Core problem description to be solved",
+  "user_research_data": {
+    "interviews": [
+      {
+        "user_id": "User identifier",
+        "quotes": ["Direct user quotes"],
+        "pain_points": ["Pain point description"],
+        "context": "Use scenario"
+      }
+    ],
+    "surveys": [
+      {
+        "question": "Survey question",
+        "responses": ["User responses"],
+        "insights": ["Key insights"]
+      }
+    ],
+    "behavior_data": {
+      "metrics": "Behavioral data metrics",
+      "patterns": ["User behavior patterns"]
+    }
+  },
+  "current_solution": {
+    "description": "Detailed description of the current product solution",
+    "features": ["Feature 1", "Feature 2"],
+    "limitations": ["Limitations of the current solution"]
+  },
+  "competitor_solutions": [
+    {
+      "competitor_name": "Competitor name",
+      "solution_description": "Competitor solution description",
+      "key_features": ["Key feature 1", "Key feature 2"],
+      "strengths": ["Strength 1", "Strength 2"],
+      "weaknesses": ["Weakness 1", "Weakness 2"]
+    }
+  ],
+  "product_context": {
+    "strategic_goals": ["Strategic goal 1", "Strategic goal 2"],
+    "resource_constraints": ["Resource constraint 1", "Resource constraint 2"],
+    "timeline": "Time constraints",
+    "risk_tolerance": "Risk appetite"
+  }
+}
+```
 
 ---
 
 ## Progressive-Disclosure Guidance
 
-The detailed templates, examples, and depth-specific execution guidance are in [Reference/progressive-disclosure.md](Reference/progressive-disclosure.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
+The detailed templates, examples, and depth-specific execution guidance are in [Reference/execution-steps.md](Reference/execution-steps.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
 
 
 ## Output
@@ -93,7 +138,7 @@ Markdown format creative workshop report, including:
 
 ## Output Validation Rules
 
-> 📋 See [Reference/validation-rules.md](./Reference/validation-rules.md) for details
+> 📋 See [Reference/quality-and-validation.md](./Reference/quality-and-validation.md) for details
 
 ## Decision Rules
 
@@ -122,13 +167,13 @@ Markdown format creative workshop report, including:
 
 ### Failure Handling
 
-> 📋 See [Reference/failure-handling.md](./Reference/failure-handling.md) for details
+> 📋 See [Reference/quality-and-validation.md](./Reference/quality-and-validation.md) for details
 
 ---
 
 ## Quality Check
 
-> 📋 See [Reference/quality-checklist.md](./Reference/quality-checklist.md) for details
+> 📋 See [Reference/quality-and-validation.md](./Reference/quality-and-validation.md) for details
 
 ---
 
@@ -145,4 +190,21 @@ Markdown format creative workshop report, including:
 
 ## Upstream Change Response
 
-> 📋 See [Reference/upstream-change-response.md](./Reference/upstream-change-response.md) for details
+### Upstream Change Impact
+
+| Upstream Change | Impact Scope | Response Strategy |
+|----------|----------|----------|
+| Problem Statement change | HMW statement focus direction | Annotate affected HMW, recommend human confirmation on whether to regenerate |
+| User research data update | HMW data support, source_data association | Annotate affected HMW, recommend human confirmation on whether to supplement data association |
+| Current solution change | SCAMPER substitute/modify dimension solutions | Annotate affected dimension solutions, recommend human confirmation on whether to regenerate |
+| Competitor solution data update | SCAMPER adapt dimension solutions | Annotate affected adapt solutions, recommend human confirmation on whether to supplement |
+| Product context change | Reverse thinking failure path priority, convergence strategic alignment score | Annotate affected scoring dimensions, recommend human confirmation on whether to re-score |
+
+### Downstream Notification Mechanism
+
+| Change Type | Notification Scope | Notification Method |
+|----------|----------|----------|
+| Convergence solution selection change | design-prd, validation-assumption-map | Mark solution change, trigger PRD and assumption map update |
+| Convergence solution deepening content change | design-prd | Mark deepening content change, trigger PRD feature specification update |
+| Comparison matrix score change | design-prd | Mark score change, trigger PRD priority adjustment |
+| MVP scope change | validation-mvp | Mark MVP scope change, trigger MVP definition update |

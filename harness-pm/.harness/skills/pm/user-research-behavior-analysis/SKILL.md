@@ -120,9 +120,9 @@ description: Used when diagnosing funnel health, discovering Aha Moments, and an
 | standard | Full deliverable (current default) | Complete deliverable, including all Step outputs |
 | deep | Full analysis + behavior sequence mining + user segmentation deep analysis + behavior prediction model | Full deliverable + extended analysis + deep inference |
 
-## Progressive-Disclosure Guidance
+## output-schema Guidance
 
-The detailed templates, examples, and depth-specific execution guidance are in [Reference/progressive-disclosure.md](Reference/progressive-disclosure.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
+The detailed templates, examples, and depth-specific execution guidance are in [Reference/output-schema.md](Reference/output-schema.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
 
 
 ## Decision Rules

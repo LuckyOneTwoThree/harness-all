@@ -52,7 +52,7 @@ description: Used when monitoring product metrics and detecting anomalies. Monit
 
 🤖 AI auto-execution (system configuration type)
 
-## Input
+## Inputs
 
 | Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
@@ -246,7 +246,7 @@ description: Used when monitoring product metrics and detecting anomalies. Monit
 | standard | Full monitoring system (current default) | Full artifact, including all Step 1-4 outputs |
 | deep | Full system + extended analysis | Full artifact + capacity planning + chaos engineering plan + SRE maturity assessment + decision records + risk assessment |
 
-> See [Reference/schema.md](./Reference/schema.md) for the Output JSON Schema, Output File Structure, Output Validation Rules, and Decision Rules table.
+> See [Reference/output-schema.md](./Reference/output-schema.md) for the Output JSON Schema, Output File Structure, Output Validation Rules, and Decision Rules table.
 
 ## Quality Checks
 

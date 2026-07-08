@@ -57,7 +57,7 @@ description: Use when you need to drive a team's data-driven decision culture. D
 
 🤖→👤 AI suggests, human approves
 
-## Input
+## Inputs
 
 | Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
@@ -153,7 +153,7 @@ Human-led quarterly review
 
 ## Output Validation Rules
 
-> See [Reference/schema.md](./Reference/schema.md) for the Output Validation Rules table.
+> See [Reference/output-schema.md](./Reference/output-schema.md) for the Output Validation Rules table.
 
 ## Upstream Change Response
 
@@ -213,7 +213,7 @@ When upstream files are missing, the user needs to provide the following informa
 
 ## Output
 
-> See [Reference/schema.md](./Reference/schema.md) for the Output JSON Schema and Output File Structure.
+> See [Reference/output-schema.md](./Reference/output-schema.md) for the Output JSON Schema and Output File Structure.
 
 ## Culture Promotion Principles
 

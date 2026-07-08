@@ -42,7 +42,7 @@ description: Used when assistance is needed for usability testing. Usability tes
 
 👤→🤖 Human executes, AI assists
 
-## Input
+## Inputs
 
 | Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|

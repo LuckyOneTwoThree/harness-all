@@ -150,9 +150,9 @@ stages:
       fail_action: "Confirm operational SOPs and emergency procedures"
 ```
 
-## Progressive-Disclosure Guidance
+## phase-execution Guidance
 
-The detailed templates, examples, and depth-specific execution guidance are in [Reference/progressive-disclosure.md](Reference/progressive-disclosure.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
+The detailed templates, examples, and depth-specific execution guidance are in [Reference/phase-execution.md](Reference/phase-execution.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
 
 
 ## Phase Gates

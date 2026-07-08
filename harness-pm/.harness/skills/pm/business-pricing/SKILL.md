@@ -127,7 +127,7 @@ description: Used when formulating or optimizing a product pricing strategy. Aut
 
 **Output File**: pricing_analysis.json
 
-> See [Reference/schema.md](./Reference/schema.md) for output validation rules, complete pricing analysis report JSON, and data flow specification (input/output directories).
+> See [Reference/output-schema.md](./Reference/output-schema.md) for output validation rules, complete pricing analysis report JSON, and data flow specification (input/output directories).
 
 ## Decision Rules
 

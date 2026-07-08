@@ -35,7 +35,7 @@ description: Use when you need to evaluate acquisition channels or optimize the 
 ## Interaction Mode
 🤖→👤 AI suggests, human approves
 
-## Input
+## Inputs
 
 | Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
@@ -218,7 +218,7 @@ Design A/B tests for optimization plans:
 
 **Output Schema**, full JSON example, and A/B test design template:
 
-> See [Reference/output-schema-and-example.md](./Reference/output-schema-and-example.md) for the output JSON schema (channel_assessment, funnel_analysis, optimization_suggestions, ab_test_designs), a complete acquisition_analysis example, and the A/B test YAML template.
+> See [Reference/output-schema.md](./Reference/output-schema.md) for the output JSON schema (channel_assessment, funnel_analysis, optimization_suggestions, ab_test_designs), a complete acquisition_analysis example, and the A/B test YAML template.
 
 ## Output Validation Rules
 

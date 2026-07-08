@@ -219,11 +219,11 @@ success_criteria:
 
 **Output Schema**, complete upsell_automation example, and **field validation rules**:
 
-> See [Reference/output-schema-validation-example.md](./Reference/output-schema-validation-example.md) for the output JSON schema (upgrade_signals, personalized_offers, ab_tests, tracking), a complete upsell_automation example (user upgrade signals, personalized offers, A/B test design, tracking metrics), and the field validation rules table (upgrade_signals[], personalized_offers[], ab_tests[], tracking).
+> See [Reference/output-schema.md](./Reference/output-schema.md) for the output JSON schema (upgrade_signals, personalized_offers, ab_tests, tracking), a complete upsell_automation example (user upgrade signals, personalized offers, A/B test design, tracking metrics), and the field validation rules table (upgrade_signals[], personalized_offers[], ab_tests[], tracking).
 
 ## Output Validation Rules
 
-> See [Reference/output-schema-validation-example.md](./Reference/output-schema-validation-example.md#output-validation-rules) for the field validation rules table (upgrade_signals, personalized_offers, ab_tests, tracking).
+> See [Reference/output-schema.md](./Reference/output-schema.md#output-validation-rules) for the field validation rules table (upgrade_signals, personalized_offers, ab_tests, tracking).
 
 ## Decision Rules
 

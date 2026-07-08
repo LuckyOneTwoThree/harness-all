@@ -191,7 +191,7 @@ When method = usability testing, this Skill only outputs **method selection + ex
 
 **Output Schema example** (experiment_plan.json with A/B test and usability test entries) and the **field validation rules table**:
 
-> See [Reference/output-schema-and-validation.md](./Reference/output-schema-and-validation.md) for the complete experiment_plan.json example (experiments array with EXP001 A/B_TEST and EXP002 USABILITY_TEST, approval_status, ai_recommendation) and the field validation rules table (experiments[].id/assumption_id/type/hypothesis/method/metrics/sample_size/duration/confidence_level/cost_estimate/result).
+> See [Reference/output-schema.md](./Reference/output-schema.md) for the complete experiment_plan.json example (experiments array with EXP001 A/B_TEST and EXP002 USABILITY_TEST, approval_status, ai_recommendation) and the field validation rules table (experiments[].id/assumption_id/type/hypothesis/method/metrics/sample_size/duration/confidence_level/cost_estimate/result).
 
 ## Decision Rules
 
@@ -232,7 +232,7 @@ When method = usability testing, this Skill only outputs **method selection + ex
 
 ## Output Validation Rules
 
-> See [Reference/output-schema-and-validation.md](./Reference/output-schema-and-validation.md#output-validation-rules) for the field validation rules table (experiments[].id/assumption_id/type/hypothesis/method/metrics/sample_size/duration/confidence_level/cost_estimate/result).
+> See [Reference/output-schema.md](./Reference/output-schema.md#output-validation-rules) for the field validation rules table (experiments[].id/assumption_id/type/hypothesis/method/metrics/sample_size/duration/confidence_level/cost_estimate/result).
 
 ## Upstream Change Response
 
@@ -256,4 +256,4 @@ When method = usability testing, this Skill only outputs **method selection + ex
 
 ## Usage Example
 
-> See [Reference/usage-example.md](./Reference/usage-example.md) for a complete end-to-end example: input (assumption_map + traffic_data), AI analysis (traffic assessment, hypothesis type, recommended method, experiment design), and output (validation_experiment JSON).
+> See [Reference/examples.md](./Reference/examples.md) for a complete end-to-end example: input (assumption_map + traffic_data), AI analysis (traffic assessment, hypothesis type, recommended method, experiment design), and output (validation_experiment JSON).

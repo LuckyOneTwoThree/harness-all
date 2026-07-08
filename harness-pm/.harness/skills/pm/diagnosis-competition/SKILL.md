@@ -36,7 +36,7 @@ description: Used when tracking competitor dynamics and formulating response str
 
 🤖→👤 AI suggests, human approves
 
-## Input
+## Inputs
 
 | Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
@@ -211,9 +211,9 @@ effect_tracking:
 | standard | Full artifact (current default) | Full artifact, including all Step outputs |
 | deep | Full diagnosis + competitor strategic reasoning + differentiation opportunity identification + competitive response roadmap | Full artifact + extended analysis + deep reasoning |
 
-## Progressive-Disclosure Guidance
+## output-schema Guidance
 
-The detailed templates, examples, and depth-specific execution guidance are in [Reference/progressive-disclosure.md](Reference/progressive-disclosure.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
+The detailed templates, examples, and depth-specific execution guidance are in [Reference/output-schema.md](Reference/output-schema.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
 
 
 ## Decision Rules

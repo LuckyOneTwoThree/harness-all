@@ -162,7 +162,7 @@ Assemble the above content into a complete report.
 | A/B test report | `docs/metrics/experiment-report.md ("Experiment Results" section)` | Human-readable complete report |
 | Structured report data | `docs/metrics/experiment-report.md ("Experiment Results" section)` | Machine-consumable structured report data |
 
-> See [Reference/schema.md](./Reference/schema.md) for output JSON schema and output validation rules.
+> See [Reference/output-schema.md](./Reference/output-schema.md) for output JSON schema and output validation rules.
 > See [Reference/examples.md](./Reference/examples.md) → "Experiment Result Data Example" for the result data YAML example.
 
 ## Decision Rules

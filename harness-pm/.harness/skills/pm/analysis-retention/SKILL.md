@@ -104,7 +104,7 @@ Output files: retention_curve_{date}.png, cohort_heatmap_{date}.png, aha_moment_
 
 **Output Schema** and full YAML example:
 
-> See [Reference/output-schema-and-example.md](./Reference/output-schema-and-example.md) for the JSON schema and complete retention_analysis YAML example (overall retention, cohort trend, Aha Moment candidates, churn risk, reports).
+> See [Reference/output-schema.md](./Reference/output-schema.md) for the JSON schema and complete retention_analysis YAML example (overall retention, cohort trend, Aha Moment candidates, churn risk, reports).
 
 ## Cohort Analysis Example
 

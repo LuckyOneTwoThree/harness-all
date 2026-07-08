@@ -142,7 +142,7 @@ Draw a perceptual map based on two core dimensions.
 
 **Structured data**: `competitor-analysis.json` (intermediate artifact, consumed by downstream skills for quadrant/intel data; not the primary deliverable).
 
-> See [Reference/schema.md](./Reference/schema.md) for the competitor-analysis.json Output Schema and Output Validation Rules.
+> See [Reference/output-schema.md](./Reference/output-schema.md) for the competitor-analysis.json Output Schema and Output Validation Rules.
 
 ## Decision Rules
 

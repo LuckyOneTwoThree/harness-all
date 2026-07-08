@@ -41,7 +41,7 @@ Trigger conditions:
 - iteration workflow triggers on clear change requirements from user feedback/business needs (change-driven path)
 - pivot workflow triggers on strategic direction changes (strategic-driven path)
 
-## Input
+## Inputs
 
 | Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
@@ -222,7 +222,7 @@ Change request
 
 **Output file**: `change_impact_report.json`
 
-> See [Reference/schema.md](./Reference/schema.md) for output JSON schema, final output structure, output field descriptions, and output validation rules.
+> See [Reference/output-schema.md](./Reference/output-schema.md) for output JSON schema, final output structure, output field descriptions, and output validation rules.
 > See [Reference/examples.md](./Reference/examples.md) → "Execution Log" for the execution log JSON example.
 
 ## Decision Rules

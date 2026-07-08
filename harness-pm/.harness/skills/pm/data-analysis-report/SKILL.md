@@ -150,9 +150,9 @@ Integrate all analysis data to distill insights and action recommendations:
 ```
 # {Product Name} Data Analysis Report ({Time Range})
 
-## Progressive-Disclosure Guidance
+## output-schema Guidance
 
-The detailed templates, examples, and depth-specific execution guidance are in [Reference/progressive-disclosure.md](Reference/progressive-disclosure.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
+The detailed templates, examples, and depth-specific execution guidance are in [Reference/output-schema.md](Reference/output-schema.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
 
 
 ## Output Validation Rules

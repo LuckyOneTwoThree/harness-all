@@ -30,7 +30,7 @@ description: Used when diagnosing product health. Automated product health diagn
 
 🤖→👤 AI suggests, human approves
 
-## Input
+## Inputs
 
 | Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
@@ -216,8 +216,8 @@ bottlenecks:
 4. Bottleneck List
 5. Improvement Recommendations
 
-## Progressive-Disclosure Guidance
-The detailed templates, examples, and depth-specific execution guidance are in [Reference/progressive-disclosure.md](Reference/progressive-disclosure.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
+## output-schema Guidance
+The detailed templates, examples, and depth-specific execution guidance are in [Reference/output-schema.md](Reference/output-schema.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
 
 
 ## Decision Rules

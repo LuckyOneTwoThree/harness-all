@@ -29,7 +29,7 @@ The core value of a product sunset plan lies in ensuring the product retirement 
 
 🤖→👤 AI suggests, human approves
 
-## Input
+## Inputs
 
 | Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
@@ -158,9 +158,9 @@ Assemble the above content into a complete sunset plan.
 | standard | Full artifact (current default) | Full artifact, including all Step outputs |
 | deep | Full sunset plan + user migration plan + data archival strategy + impact assessment report | Full artifact + extended analysis + deep reasoning |
 
-## Progressive-Disclosure Guidance
+## output-schema Guidance
 
-The detailed templates, examples, and depth-specific execution guidance are in [Reference/progressive-disclosure.md](Reference/progressive-disclosure.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
+The detailed templates, examples, and depth-specific execution guidance are in [Reference/output-schema.md](Reference/output-schema.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
 
 
 ## Quality Checks

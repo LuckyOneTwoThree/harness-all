@@ -177,7 +177,7 @@ Identify and assess key risks:
 
 **Output Schema validation rules** and a complete product-proposal.json example:
 
-> See [Reference/output-validation-and-example.md](./Reference/output-validation-and-example.md) for the full field validation rules table (proposal_metadata, executive_summary, product_definition, business_analysis, execution_plan, risk_assessment, decision_requests) and a complete product-proposal.json example.
+> See [Reference/output-schema.md](./Reference/output-schema.md) for the full field validation rules table (proposal_metadata, executive_summary, product_definition, business_analysis, execution_plan, risk_assessment, decision_requests) and a complete product-proposal.json example.
 
 ## Decision Rules
 

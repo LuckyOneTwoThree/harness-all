@@ -52,7 +52,7 @@ Skills are the organs of the framework. This skill ensures all organs are in the
 1. **Scan the actual skill directory**
    - Use Glob to scan all SKILL.md under `.harness/skills/meta/*/`
    - Use Glob to scan `.harness/skills/workflows/*.md`
-   - Use Glob to scan `.harness/skills/pm/*/SKILL.md` (80 PM skills, flat organization)
+   - Use Glob to scan `.harness/skills/pm/*/SKILL.md` (all PM skills under .harness/skills/pm/, flat organization)
    - Collect all actually existing skill/workflow names
 
 2. **Parse INDEX.md**
@@ -62,9 +62,9 @@ Skills are the organs of the framework. This skill ensures all organs are in the
 
    | Check item | Pass criteria | Failure handling |
    |------------|---------------|------------------|
-   | Meta skill completeness | All 4 skills under meta/ have SKILL.md | Mark "missing" |
-   | Workflow completeness | All 10 .md files under workflows/ exist | Mark "missing" |
-   | PM skill completeness | All 80 skill directories under pm/ have SKILL.md | Mark "skill missing" |
+   | Meta skill completeness | All meta skills under meta/ have SKILL.md | Mark "missing" |
+   | Workflow completeness | All .md files under workflows/ exist | Mark "missing" |
+   | PM skill completeness | All skill directories under pm/ have SKILL.md | Mark "skill missing" |
 
 4. **Check SKILL.md frontmatter**
    For each SKILL.md check whether it contains:
@@ -90,10 +90,10 @@ Skills are the organs of the framework. This skill ensures all organs are in the
 
    | Check item | Status | Details |
    |------------|--------|---------|
-   | Meta skill | ✓ / ✗ | 4/4 exist |
-   | Workflows | ✓ / ✗ | 10/10 exist |
-   | Workflow frontmatter | ✓ / ✗ | 10/10 have workflow_id+name+default_mode |
-   | PM skill | ✓ / ✗ | 80/80 skills exist |
+   | Meta skill | ✓ / ✗ | actual/expected exist (scan meta/) |
+   | Workflows | ✓ / ✗ | actual/expected exist (scan workflows/) |
+   | Workflow frontmatter | ✓ / ✗ | actual/expected have workflow_id+name+default_mode |
+   | PM skill | ✓ / ✗ | actual/expected skills exist (scan pm/) |
    | Frontmatter | ✓ / ✗ | [issue list or "none"] |
    ```
 
@@ -119,6 +119,7 @@ You cannot just write "check passed".
 - Deleting non-empty skill directories without user authorization
 - Modifying skill body content (only fix structure/registration)
 - Ignoring empty directories (an empty directory is a problem)
+- Hardcoding skill counts — always scan directories and report actual numbers (e.g. use "all PM skills under .harness/skills/pm/" instead of "80 PM skills"; report "actual/expected" instead of fixed counts like "80/80")
 
 ## Relationship with session-start
 session-start can lightly invoke this skill's check logic:

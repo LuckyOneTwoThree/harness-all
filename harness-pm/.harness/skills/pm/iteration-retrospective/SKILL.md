@@ -229,7 +229,7 @@ description: Used when assisting with iteration retrospectives. Iteration retros
 | standard | Full iteration retrospective (current default) | Full deliverable, includes all Step 1-5 outputs |
 | deep | Full retrospective + extended analysis | Full deliverable + competitor iteration comparison + long-term roadmap assessment + decision records |
 
-> See [Reference/schema.md](./Reference/schema.md) for output JSON schema, output file structure, and output validation rules.
+> See [Reference/output-schema.md](./Reference/output-schema.md) for output JSON schema, output file structure, and output validation rules.
 
 ## Decision Rules
 

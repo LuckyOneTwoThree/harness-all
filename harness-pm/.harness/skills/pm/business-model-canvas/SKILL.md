@@ -179,7 +179,7 @@ description: Triggered when designing or evaluating a product business model. Bu
 
 **Output files**: bmc.json, assumptions.json
 
-> See [Reference/schema.md](./Reference/schema.md) for output validation rules, complete Business Canvas JSON schema, and assumption list JSON.
+> See [Reference/output-schema.md](./Reference/output-schema.md) for output validation rules, complete Business Canvas JSON schema, and assumption list JSON.
 
 ## Decision Rules
 

@@ -23,10 +23,9 @@ description: Use when you need to generate a tracking plan. Tracking plan auto-g
 
 ## Core Principles
 
-1. **Comprehensive analysis**: Systematically analyze all available data without omitting key dimensions
-2. **Real-time awareness**: Metric system design supports real-time monitoring and rapid response
-3. **Automated attribution**: Automatically attribute anomalies to specific causes, reducing manual investigation
-4. **Explicit decision rules**: Every alert and escalation condition has clear quantitative rules
+1. **Tracking is a Contract**: Every event/property is a contract with engineering and analytics; changes require impact analysis, not silent edits
+2. **Naming is Documentation**: Event and property names are self-describing; consistent naming enables self-serve analytics without a lookup table
+3. **PRD Bidirectional Check**: Tracking must cover every PRD acceptance criterion; every tracking event must trace to a PRD feature — gaps in either direction are flagged
 
 ## Interaction Mode
 
@@ -39,7 +38,7 @@ This pipeline auto-generates the tracking plan, but key decision points require 
 
 ## Progressive-Disclosure Guidance
 
-The detailed templates, examples, and depth-specific execution guidance are in [Reference/progressive-disclosure.md](Reference/progressive-disclosure.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
+The detailed templates, examples, and depth-specific execution guidance are in [Reference/schemas.md](Reference/schemas.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
 
 
 ## Execution Steps
@@ -58,7 +57,7 @@ FOR each metric in metric_system:
   4. List the required tracking properties
 ```
 
-> 📋 For the derivation mapping table and output schema, see [Reference/step1-metric-mapping.md](./Reference/step1-metric-mapping.md)
+> 📋 For the derivation mapping table and output schema, see [Reference/steps-derivation.md](./Reference/steps-derivation.md)
 
 ---
 
@@ -76,7 +75,7 @@ FOR each metric in metric_system:
 5. Define feature tracking events
 ```
 
-> 📋 For the feature module/path/interaction example table, see [Reference/step2-prd-extraction.md](./Reference/step2-prd-extraction.md)
+> 📋 For the feature module/path/interaction example table, see [Reference/steps-derivation.md](./Reference/steps-derivation.md)
 
 ---
 
@@ -95,7 +94,7 @@ FOR each proposed_event:
   5. ELSE mark as a new tracking event
 ```
 
-> 📋 For similarity calculation rules and deduplication output, see [Reference/step3-dedup-rules.md](./Reference/step3-dedup-rules.md)
+> 📋 For similarity calculation rules and deduplication output, see [Reference/steps-derivation.md](./Reference/steps-derivation.md)
 
 ---
 
@@ -103,7 +102,7 @@ FOR each proposed_event:
 
 **🤖 AI processing**
 
-> 📋 For all quality check rules and outputs from 4.1 to 4.5, see [Reference/step4-quality-checks.md](./Reference/step4-quality-checks.md)
+> 📋 For all quality check rules and outputs from 4.1 to 4.5, see [Reference/steps-quality.md](./Reference/steps-quality.md)
 
 ---
 
@@ -111,7 +110,7 @@ FOR each proposed_event:
 
 **🤖 AI processing**
 
-> 📋 For the document structure schema, see [Reference/step5-document-schema.md](./Reference/step5-document-schema.md)
+> 📋 For the document structure schema, see [Reference/schemas.md](./Reference/schemas.md)
 
 ---
 
@@ -119,7 +118,7 @@ FOR each proposed_event:
 
 **🤖 AI processing**
 
-> 📋 For all consistency validation content from 6.1 to 6.4, see [Reference/step6-prd-consistency.md](./Reference/step6-prd-consistency.md)
+> 📋 For all consistency validation content from 6.1 to 6.4, see [Reference/steps-quality.md](./Reference/steps-quality.md)
 
 ---
 
@@ -137,13 +136,13 @@ FOR each proposed_event:
 
 **Output file**: `tracking_plan.json`
 
-> 📋 For the overall output schema and tracking_plan schema, see [Reference/output-schemas.md](./Reference/output-schemas.md)
+> 📋 For the overall output schema and tracking_plan schema, see [Reference/schemas.md](./Reference/schemas.md)
 
 ---
 
 ## Output Validation Rules
 
-> 📋 For the output field validation rules table, see [Reference/output-validation-rules.md](./Reference/output-validation-rules.md)
+> 📋 For the output field validation rules table, see [Reference/schemas.md](./Reference/schemas.md)
 
 ## Upstream Change Response
 
@@ -285,6 +284,6 @@ When any of the following conditions is met, escalate to manual handling:
 
 ### Escalation Output
 
-> 📋 For the escalation output schema, see [Reference/escalation-schema.md](./Reference/escalation-schema.md)
+> 📋 For the escalation output schema, see [Reference/schemas.md](./Reference/schemas.md)
 
 ---

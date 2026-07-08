@@ -13,11 +13,12 @@ description: Used when attribution analysis is needed for monitoring anomalies. 
 
 ## Mode Boundary
 
-> **PM owns product analytics alerts.** This skill produces product-level alert rules (business metric thresholds + notification config); does NOT configure infra dashboards or SLO alerting.
+> **PM owns product analytics root cause attribution.** This skill produces root cause analysis (5 Whys, impact scope, fix recommendations) for detected anomalies; does NOT generate alert rules (owned by `monitoring-alert-detection`) or configure infra dashboards/SLO alerting.
 
-| Alert Type | Owner |
+| Output Type | Owner |
 |------------|-------|
-| Product metric anomaly | PM (this skill) |
+| Anomaly root cause attribution | PM (this skill) |
+| Alert rule generation | monitoring-alert-detection (upstream) |
 
 ## Inputs
 - rules/security.md
@@ -54,7 +55,7 @@ description: Used when attribution analysis is needed for monitoring anomalies. 
 
 🤖 AI auto-execution (analysis type)
 
-## Input
+## Inputs
 
 | Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
@@ -84,7 +85,7 @@ description: Used when attribution analysis is needed for monitoring anomalies. 
 
 **Output**:
 
-> See [Reference/execution-step-output-examples.md](./Reference/execution-step-output-examples.md) § "Step 1.1" for the alert_validation YAML (alert_id, is_real, confidence, validation_checks, false_positive_reason).
+> See [Reference/examples.md](./Reference/examples.md) § "Step 1.1" for the alert_validation YAML (alert_id, is_real, confidence, validation_checks, false_positive_reason).
 
 #### 1.2 Root Cause Pattern Matching [Core]
 
@@ -115,13 +116,13 @@ description: Used when attribution analysis is needed for monitoring anomalies. 
 
 **5 Why Output Format**:
 
-> See [Reference/execution-step-output-examples.md](./Reference/execution-step-output-examples.md) § "Step 1.3" for the root_cause YAML (why_chain with question/answer/evidence, root_cause_summary, root_cause_category, confidence, evidence_list).
+> See [Reference/examples.md](./Reference/examples.md) § "Step 1.3" for the root_cause YAML (why_chain with question/answer/evidence, root_cause_summary, root_cause_category, confidence, evidence_list).
 
 #### 1.4 Candidate Root Cause Ranking [Conditional]
 
 **When multiple candidate root causes exist**:
 
-> See [Reference/execution-step-output-examples.md](./Reference/execution-step-output-examples.md) § "Step 1.4" for the candidate_root_causes YAML (rank, summary, confidence, evidence_count, supporting_factors, needs_human_investigation).
+> See [Reference/examples.md](./Reference/examples.md) § "Step 1.4" for the candidate_root_causes YAML (rank, summary, confidence, evidence_count, supporting_factors, needs_human_investigation).
 
 ### Step 2: Impact Assessment [Core]
 
@@ -141,13 +142,13 @@ description: Used when attribution analysis is needed for monitoring anomalies. 
 
 **Output**:
 
-> See [Reference/execution-step-output-examples.md](./Reference/execution-step-output-examples.md) § "Step 2.1" for the impact_scope YAML (level, affected_users, affected_features, business_metrics, revenue_impact, reputation_impact).
+> See [Reference/examples.md](./Reference/examples.md) § "Step 2.1" for the impact_scope YAML (level, affected_users, affected_features, business_metrics, revenue_impact, reputation_impact).
 
 #### 2.2 Impact Scope Dynamic Tracking [Conditional]
 
 **When the impact scope continues to expand**:
 
-> See [Reference/execution-step-output-examples.md](./Reference/execution-step-output-examples.md) § "Step 2.2" for the impact_trend YAML (trend, growth_rate_per_10min, auto_escalation_triggered).
+> See [Reference/examples.md](./Reference/examples.md) § "Step 2.2" for the impact_trend YAML (trend, growth_rate_per_10min, auto_escalation_triggered).
 
 ### Step 3: Remediation Suggestions [Core]
 
@@ -167,19 +168,19 @@ description: Used when attribution analysis is needed for monitoring anomalies. 
 
 **Output**:
 
-> See [Reference/execution-step-output-examples.md](./Reference/execution-step-output-examples.md) § "Step 3.1" for the remediation YAML (immediate_actions with step/command/rollback_command/expected_effect/risk_level, estimated_resolution_time).
+> See [Reference/examples.md](./Reference/examples.md) § "Step 3.1" for the remediation YAML (immediate_actions with step/command/rollback_command/expected_effect/risk_level, estimated_resolution_time).
 
 #### 3.2 Long-term Fix Plan [Deep]
 
 **Output**:
 
-> See [Reference/execution-step-output-examples.md](./Reference/execution-step-output-examples.md) § "Step 3.2" for the long_term_fixes YAML (description, priority, effort, owner, preventive, action_items).
+> See [Reference/examples.md](./Reference/examples.md) § "Step 3.2" for the long_term_fixes YAML (description, priority, effort, owner, preventive, action_items).
 
 #### 3.3 Human Escalation Decision [Conditional]
 
 **Output**:
 
-> See [Reference/execution-step-output-examples.md](./Reference/execution-step-output-examples.md) § "Step 3.3" for the needs_human_escalation YAML (escalation_reason, escalation_target, escalation_payload).
+> See [Reference/examples.md](./Reference/examples.md) § "Step 3.3" for the needs_human_escalation YAML (escalation_reason, escalation_target, escalation_payload).
 
 ### Step 4: Retrospective Suggestions [Deep]
 
@@ -187,7 +188,7 @@ description: Used when attribution analysis is needed for monitoring anomalies. 
 
 **Output**:
 
-> See [Reference/execution-step-output-examples.md](./Reference/execution-step-output-examples.md) § "Step 4" for the postmortem_suggestion YAML (triggered, trigger_condition, deadline, review_scope, action_items).
+> See [Reference/examples.md](./Reference/examples.md) § "Step 4" for the postmortem_suggestion YAML (triggered, trigger_condition, deadline, review_scope, action_items).
 
 ## Output
 

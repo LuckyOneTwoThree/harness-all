@@ -29,7 +29,7 @@ The core value of user feedback loop reports lies in ensuring every piece of use
 
 🤖→👤 AI suggests, human approves
 
-## Input
+## Inputs
 
 | Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|

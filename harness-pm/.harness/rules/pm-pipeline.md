@@ -76,6 +76,24 @@ All PRD-producing modules must pass these 4 gates before exit:
 3. **Ambiguity elimination** — no vague terms without definitions
 4. **Traceability** — every feature traces to an AC; every AC traces to a user need
 
+## PRD.md Write Ownership
+
+`docs/product/PRD.md` is written by multiple skills. To prevent data loss from overlapping writes:
+
+| Skill | Write Mode | Owned Sections |
+|------|-----------|---------------|
+| design-prd | Generate Mode: full overwrite; Import Mode: rewrite 9 core sections only | 9 core PRD sections (Problem Statement → Open Issues) |
+| change-impact-analysis | Append-only (replace own section) | "Change Impact Analysis" |
+| ideation-workshop | Append-only (replace own section) | "Creative Solutions" |
+| validation-assumption-map | Append-only (replace own section) | "Assumption Map" |
+| validation-mvp | Append-only (replace own section) | "MVP Plan" |
+| validation-usability | Append-only (replace own section) | "Usability Testing" |
+
+Rules:
+- Each section is owned by exactly one skill; no cross-writing
+- design-prd's `prd.json` projection covers only the 9 core sections; append-only sections are Markdown-only
+- If a downstream consumer needs an append-only section's data, that skill's own JSON output is the source of truth
+
 ## Confidence Propagation
 
 | Confidence | Action |
@@ -142,3 +160,33 @@ When PM hands off to engineering, the engineering framework follows its own `eng
 - PRD + stable AC IDs
 - Design asset paths
 - Business context digest
+
+## Orchestrator Handoff Chain
+
+The 17 orchestrators form a handoff chain that is **cyclic by design** (product work is a loop, not a one-way pipeline). The primary handoff path:
+
+```
+user-research-orchestrator → market-orchestrator
+        ↓
+business-orchestrator → planning-orchestrator
+        ↓
+prd-orchestrator → metrics-orchestrator
+        ↓
+monitoring-orchestrator → diagnosis-orchestrator → iteration-orchestrator
+        ↓ (loops back to prd-orchestrator for next iteration)
+release-orchestrator → monitoring-orchestrator (post-release tracking)
+
+Side chains:
+- analysis-orchestrator → decision-orchestrator → prd-orchestrator (data-driven decisions loop back to PRD)
+- experiment-orchestrator → decision-orchestrator (experiment results feed decisions)
+- growth-orchestrator (self-contained 8-phase pipeline; side exits to iteration-orchestrator)
+- activation-orchestrator → retention-management (activation completion routes to retention; growth-orchestrator phase-4 also dispatches retention-management — both paths are valid and idempotent)
+- revenue-orchestrator → growth-orchestrator (revenue optimization returns to growth diagnosis)
+- validation-orchestrator → prd-orchestrator (validation conclusions update PRD)
+```
+
+Key properties:
+- **Cyclic is intentional**: monitoring → diagnosis → iteration → prd → metrics → monitoring is the product iteration loop; it is NOT a circular dependency bug
+- **Multiple entry points**: any orchestrator can be entered standalone (e.g., health-check workflow enters diagnosis-orchestrator in snapshot_mode)
+- **Idempotent dispatch**: when two orchestrators can reach the same pipeline skill (e.g., retention-management via activation-orchestrator or growth-orchestrator), both paths produce the same output; the skill's own inputs determine behavior, not the caller
+- **Downstream connection declarations**: each orchestrator's SKILL.md declares its `downstream_connection` (primary + alternatives + special_cases); the chain above is the aggregate of those declarations

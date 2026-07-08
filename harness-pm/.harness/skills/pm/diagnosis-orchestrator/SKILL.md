@@ -156,6 +156,8 @@ Downstream handoff:
 
 ## Downstream Handoff
 
+> See Phase Summary `Downstream handoff` block above for the full YAML declaration (primary + alternatives + special_cases). The list below is a quick reference only.
+
 - Diagnosis complete → iteration-orchestrator (adjust iteration plan)
 - Lacks monitoring coverage → monitoring-orchestrator
 - Growth stagnation → growth-orchestrator

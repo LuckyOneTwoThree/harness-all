@@ -204,7 +204,7 @@ Output path: `docs/discovery/insight.md`
 
 Output files: insight-analysis.json + insight-analysis.md
 
-> See [Reference/schema.md](./Reference/schema.md) for output JSON schema and all module field validation rules (jtbd/requirement_layers/5whys/kano/priority_scoring).
+> See [Reference/output-schema.md](./Reference/output-schema.md) for output JSON schema and all module field validation rules (jtbd/requirement_layers/5whys/kano/priority_scoring).
 > See [Reference/examples.md](./Reference/examples.md) → "Output JSON Example" for the complete output JSON example.
 
 ## Decision Rules

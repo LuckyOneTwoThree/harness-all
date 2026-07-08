@@ -205,8 +205,17 @@ Strategic objectives → OKR → Key Results → Primary metrics → Functional 
 
 | Output Item | Format | Path | Description |
 |--------|------|------|------|
-| PRD document | Markdown | `docs/product/PRD.md` | Overwrites the file, including complete PRD content, quality gate results, and items requiring human confirmation |
+| PRD document | Markdown | `docs/product/PRD.md` | **Generate Mode**: overwrites the file with complete PRD content. **Import Mode**: preserves existing non-PRD sections (see Write Mode Convention below); rewrites only the 9 PRD sections. Includes quality gate results and items requiring human confirmation |
 | PRD structured data | JSON | `docs/product/prd.json` | Machine-consumable version; 7 top-level arrays (features/pages/entities/user_flows/non_functional_requirements/tracking_plan/traceability); consumed by downstream harness-engineering skills (design-brief, brainstorming) |
+
+### PRD.md Write Mode Convention
+
+`docs/product/PRD.md` is written to by multiple skills (design-prd, change-impact-analysis, ideation-workshop, validation-assumption-map, validation-mvp, validation-usability). To prevent data loss:
+
+- **design-prd** owns the 9 core PRD sections (Problem Statement → Success Metrics → ... → Open Issues). In Generate Mode it overwrites the entire file. In Import Mode it rewrites only these 9 sections and **preserves** any non-core sections appended by other skills.
+- **Other skills** (change-impact-analysis / ideation-workshop / validation-*) write to **named append-only sections** (e.g., "Change Impact Analysis", "Creative Solutions", "Assumption Map", "MVP Plan", "Usability Testing"). They MUST use append-or-replace-their-own-section semantics — never rewrite the full file or touch the 9 core sections.
+- **Section isolation rule**: each non-core section is owned by exactly one skill; no skill writes to another skill's section.
+- **design-prd's `prd.json` projection** covers only the 9 core sections; append-only sections are not projected to prd.json (they live as Markdown only). If a downstream consumer needs a section's data, that skill's own JSON output is the source of truth.
 
 **Complete output data structure and template**: See [Reference/output-schema.md](Reference/output-schema.md)
 

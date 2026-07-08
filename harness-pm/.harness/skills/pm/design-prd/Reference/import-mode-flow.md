@@ -92,3 +92,59 @@ Ready for session-end handoff production
 ```
 
 If IM-5 Gate fails on a NEW issue → loop back to IM-3 (max 2 rounds).
+
+## Import Mode Decision Tables
+
+> Used when design-prd runs in Import Mode (external PRD normalization). See [SKILL.md §Import Mode](../SKILL.md#import-mode-external-prd-normalization) and [import-audit-checklist.md](import-audit-checklist.md).
+
+### Mode Selection Decision
+
+| Condition | Mode | Rationale |
+|-----------|------|-----------|
+| PRD.md exists with real content AND user says "import" / "I have a PRD" | Import Mode | User has existing PRD; avoid overwriting |
+| PRD.md exists with real content BUT user says "regenerate" / "rewrite" | Generate Mode | User explicitly wants regeneration |
+| PRD.md is skeleton/placeholder (from setup) | Generate Mode | No real content to preserve |
+| PRD.md does not exist | Generate Mode | Nothing to import |
+| User provides external PRD path (not docs/product/PRD.md) | Import Mode | External document needs normalization |
+
+### User Decision Options per Severity
+
+| Severity | Adopt (apply fix) | Keep (preserve original) | Defer (postpone) | Acknowledge (advisory only) |
+|----------|-------------------|-------------------------|------------------|-----------------------------|
+| P0-Block | ✅ Allowed | ❌ Not allowed | ✅ Allowed (with owner+required_before) | ❌ N/A |
+| P1-Advise | ✅ Allowed | ✅ Allowed | ✅ Allowed | ❌ N/A |
+| P2-Advisory | ✅ Allowed | ✅ Allowed | ✅ Allowed | ✅ Allowed |
+
+### Decision Recording Locations
+
+| Decision Type | Recorded in PRD.md §9.3 Open Issues | Recorded in progress.md | Applied to PRD.md content |
+|---------------|-------------------------------------|-------------------------|----------------------------|
+| P0-Block → Adopt | ❌ (fixed, not an open issue) | ✅ (decision log) | ✅ (fix applied) |
+| P0-Block → Defer | ✅ (with deferred marker) | ✅ (decision log) | ✅ (deferred marker added) |
+| P1-Advise → Adopt | ❌ (fixed) | ✅ (decision log) | ✅ (fix applied) |
+| P1-Advise → Keep | ✅ (with user rationale) | ✅ (decision log) | ❌ (preserved byte-for-byte) |
+| P1-Advise → Defer | ✅ (with deferred marker) | ✅ (decision log) | ✅ (deferred marker added) |
+| P2-Advisory → Adopt | ❌ (fixed) | ✅ (decision log) | ✅ (fix applied) |
+| P2-Advisory → Acknowledge | ❌ (advisory only) | ✅ (decision log) | ❌ (preserved) |
+| P2-Advisory → Defer | ✅ (with deferred marker) | ✅ (decision log) | ✅ (deferred marker added) |
+
+### Gate Failure Recovery in Import Mode
+
+| Gate Failure Scenario | Recovery Action | Max Rounds |
+|----------------------|-----------------|------------|
+| Gate fails on issue user already decided (Keep/Defer) | ❌ Cannot happen (circuit-breaker prevents) | 0 |
+| Gate fails on NEW P0 issue (not in audit) | Present to user, offer Adopt/Defer only | 2 |
+| Gate fails on NEW P1 issue (not in audit) | Present to user, offer Adopt/Keep/Defer | 2 |
+| Gate fails after 2 self-correction rounds | Output problem report, require human intervention | — |
+| Gate 1 fails because user deferred a P0 but deferred marker is malformed | Prompt user to fix the deferred marker format (reason+owner+required_before) | 1 (marker format only) |
+
+### AC ID Assignment in Import Mode
+
+| External PRD AC State | Import Mode Action | Stable-ID Rule |
+|----------------------|-------------------|----------------|
+| AC already matches `AC-<feature>-<sequence>` format | Preserve as-is | ✅ Compliant |
+| AC uses non-standard format (e.g., "AC1", "验收标准1") | Assign new AC-xxx ID; record mapping in progress.md | New ID is immutable (no renumber/reuse) |
+| AC has no ID at all | Assign new AC-xxx ID | New ID is immutable |
+| AC ID has gaps (e.g., AC-F01-001, AC-F01-003, skipping 002) | Preserve gaps | ✅ Gaps are allowed per acceptance-id-protocol.md |
+| Two ACs share the same ID | Assign new ID to the duplicate; record in progress.md | Original ID preserved for first occurrence; new ID for duplicate |
+| AC ID format correct but content changed from previous version | Assign new ID; mark old ID as `superseded` with pointer to new ID | Per acceptance-id-protocol.md supersede rules |

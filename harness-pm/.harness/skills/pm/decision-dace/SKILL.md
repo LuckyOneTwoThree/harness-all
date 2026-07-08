@@ -39,7 +39,7 @@ description: Use when you need to execute a data-driven decision loop or transfo
 
 🤖→👤 AI suggests, human approves
 
-## Input
+## Inputs
 
 | Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|
@@ -90,7 +90,7 @@ description: Use when you need to execute a data-driven decision loop or transfo
 
 Automatically establish the OKR tracking system, define goals and success metrics (primary/supporting/guardrail).
 
-> 📋 See [Reference/step-define-conclude-execute.md](./Reference/step-define-conclude-execute.md) for details
+> 📋 See [Reference/steps.md](./Reference/steps.md) for details
 
 ### Step 2: Analyze (Insight Generation) 🤖 [Core]
 
@@ -100,43 +100,43 @@ Narrative insight transformation, decision recommendations, decision boundaries,
 
 Automatically collect and analyze data (metrics/experiments/events), perform anomaly detection, experiment summarization, and funnel analysis.
 
-> 📋 See [Reference/step-analyze.md](./Reference/step-analyze.md) for details
+> 📋 See [Reference/steps.md](./Reference/steps.md) for details
 
 #### 2.2 From Numbers to Stories [Core]
 
 Transform data analysis into business narrative, using business language rather than data terminology.
 
-> 📋 See [Reference/step-analyze.md](./Reference/step-analyze.md) (includes data language → business language mapping table and narrative templates)
+> 📋 See [Reference/steps.md](./Reference/steps.md) (includes data language → business language mapping table and narrative templates)
 
 #### 2.3 Decision Recommendation Generation [Conditional]
 
 Generate multiple actionable decision options (including expected effects, risks, confidence, resource requirements, timeline, prerequisites).
 
-> 📋 See [Reference/step-analyze.md](./Reference/step-analyze.md) for details
+> 📋 See [Reference/steps.md](./Reference/steps.md) for details
 
 #### 2.4 Decision Boundary Annotation [Deep]
 
 Distinguish data_decision / data_reference / human_decision, annotate auto-execution eligibility and human oversight requirements.
 
-> 📋 See [Reference/step-analyze.md](./Reference/step-analyze.md) for details
+> 📋 See [Reference/steps.md](./Reference/steps.md) for details
 
 #### 2.5 Insight Summary [Conditional]
 
 Summarize generated insights and their confidence and sources.
 
-> 📋 See [Reference/step-analyze.md](./Reference/step-analyze.md) for details
+> 📋 See [Reference/steps.md](./Reference/steps.md) for details
 
 ### Step 3: Conclude (Decision Options) 🤖→👤 [Core]
 
 AI-assisted human decision-making: AI generates decision recommendations (including priority, rationale, expected results, risk level), humans make the final decision.
 
-> 📋 See [Reference/step-define-conclude-execute.md](./Reference/step-define-conclude-execute.md) for details
+> 📋 See [Reference/steps.md](./Reference/steps.md) for details
 
 ### Step 4: Execute (Execution Tracking) 🤖 [Conditional]
 
 Track execution effectiveness, monitor core metrics and guardrail metrics, set monitoring alert thresholds.
 
-> 📋 See [Reference/step-define-conclude-execute.md](./Reference/step-define-conclude-execute.md) for details
+> 📋 See [Reference/steps.md](./Reference/steps.md) for details
 
 ## DACE Status Tracking
 
@@ -182,7 +182,31 @@ Generate corresponding narratives and decision options for different insight typ
 
 When upstream inputs change, adjust the corresponding phase according to the response strategy; when DACE status/insights themselves change, notify downstream decision-culture according to the notification mechanism.
 
-> 📋 See [Reference/upstream-response.md](./Reference/upstream-response.md) (includes upstream change response strategy table and downstream notification mechanism table)
+### Upstream Input Change Response Strategy
+
+When upstream inputs change, this Skill's response strategy:
+
+| Upstream Change | Impact Scope | Response Strategy |
+|----------|----------|----------|
+| OKR data change | Define phase goal definition | Redefine goals, update KR baselines and target values |
+| KR progress change | Analyze phase data analysis | Update deviation analysis, re-evaluate Conclude options |
+| Experiment results change | Analyze and Conclude phases | Update experiment data, re-evaluate decision options |
+| Analysis results update | Insight narrative and decision options | Update insight narrative, re-evaluate decision options |
+| Business context change | Action recommendations and priority | Re-evaluate action recommendations, update priority |
+| Historical insight library update | Duplicate insight detection | Perform deduplication check, merge similar insights |
+
+### Downstream Notification Mechanism
+
+When DACE status/insights themselves change, the notification mechanism for downstream:
+
+| Status/Insight Change Type | Notification Scope | Notification Method |
+|-------------------|----------|----------|
+| Conclude phase decision completed | decision-culture | Mark decision complete, trigger report update |
+| Execute phase execution effectiveness | decision-culture | Mark execution effectiveness, trigger culture report update |
+| KR progress behind >20% | decision-culture | Mark progress risk, trigger weekly report risk annotation |
+| data_decision type insight | decision-culture | Mark as auto-executable, trigger report update |
+| data_reference type insight | decision-culture | Mark as requiring human confirmation, trigger report update |
+| Insight merge/confidence increase | decision-culture | Mark insight update, trigger report update |
 
 ---
 

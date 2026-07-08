@@ -190,7 +190,7 @@ Output path: `docs/discovery/opportunity.md`
 
 Output files: opportunity-definition.json + opportunity-definition.md
 
-> See [Reference/schema.md](./Reference/schema.md) for output JSON schema and all module field validation rules (scoring/problem_statement/hmw/brief).
+> See [Reference/output-schema.md](./Reference/output-schema.md) for output JSON schema and all module field validation rules (scoring/problem_statement/hmw/brief).
 > See [Reference/examples.md](./Reference/examples.md) → "Output JSON Example" for the complete output JSON example.
 
 ## Decision Rules

@@ -194,7 +194,7 @@ Integrate all sections into a complete Markdown report:
 
 **user-research-report.json structure** — **Output Schema**, **field validation rules**, and a **complete JSON example**:
 
-> See [Reference/output-schema-validation-example.md](./Reference/output-schema-validation-example.md) for the output JSON schema (report_metadata, executive_summary, personas, journey, insights, recommendations), the field validation rules table (report_metadata, executive_summary, personas[].quotes, journey.stages[], insights[], recommendations[]), and a complete user-research-report.json example.
+> See [Reference/output-schema.md](./Reference/output-schema.md) for the output JSON schema (report_metadata, executive_summary, personas, journey, insights, recommendations), the field validation rules table (report_metadata, executive_summary, personas[].quotes, journey.stages[], insights[], recommendations[]), and a complete user-research-report.json example.
 
 ## Decision Rules
 

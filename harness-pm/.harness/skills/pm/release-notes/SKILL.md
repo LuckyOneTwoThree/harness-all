@@ -83,9 +83,9 @@ Assess the impact of each change on users:
 | Recommended | Doing improves experience | Recommend updating mobile to latest version |
 | No action needed | Takes effect automatically | Performance optimization auto-applied |
 
-## Progressive-Disclosure Guidance
+## output-schema Guidance
 
-The detailed templates, examples, and depth-specific execution guidance are in [Reference/progressive-disclosure.md](Reference/progressive-disclosure.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
+The detailed templates, examples, and depth-specific execution guidance are in [Reference/output-schema.md](Reference/output-schema.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
 
 
 ## Output Validation Rules

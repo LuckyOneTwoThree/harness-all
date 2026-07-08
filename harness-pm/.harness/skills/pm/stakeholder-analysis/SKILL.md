@@ -41,7 +41,7 @@ description: Used when stakeholder analysis, stakeholder alignment, or communica
 
 🤖→👤 AI suggests, human approves
 
-## Input
+## Inputs
 
 | Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|

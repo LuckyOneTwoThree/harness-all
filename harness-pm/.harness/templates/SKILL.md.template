@@ -32,10 +32,11 @@ description: One-sentence description, used for INDEX.md reference  # Required
 - [Quality gate rule 2]
 [Replaces the former `quality_gates` field. If this skill runs inside a LOOP, the iteration cap follows the LOOP.md default; the former `max_iterations` field is no longer used. Exception: orchestrator skills may use `## Phase Gates` instead — see orchestrator-protocol.md section 11]
 
-## Prohibited
+## Prohibited (optional)
 - Do not do X
 - Do not do Y
+[Include this section only if the skill has non-obvious prohibitions not already covered by Core Principles. Omit the section entirely if there are no additional prohibitions.]
 
-## Relationship with LOOP
+## Relationship with LOOP (optional)
 [Which LOOP stage this corresponds to (PLAN/RESEARCH/VALIDATE), and how it interacts]
-[If not inside a LOOP, describe the trigger timing]
+[Include only if the skill runs inside a LOOP or has non-obvious LOOP interaction. Omit for standalone skills.]

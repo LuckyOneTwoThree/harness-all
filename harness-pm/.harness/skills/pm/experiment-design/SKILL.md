@@ -160,7 +160,7 @@ Traffic
 
 Generate complete experiment configuration:
 
-> See [Reference/experiment-config-example.md](./Reference/experiment-config-example.md) for the full ab_test_design YAML example (experiment info, structured hypothesis, metrics, sample size, traffic split, termination conditions, variants, technical config, risk assessment).
+> See [Reference/examples.md](./Reference/examples.md) for the full ab_test_design YAML example (experiment info, structured hypothesis, metrics, sample size, traffic split, termination conditions, variants, technical config, risk assessment).
 
 ### Output Depth Tiers
 
@@ -178,7 +178,7 @@ Generate complete experiment configuration:
 
 **Output Schema** and validation rules:
 
-> See [Reference/output-schema-and-validation.md](./Reference/output-schema-and-validation.md) for the output JSON schema (hypothesis, primary_metric, guardrail_metrics, sample_size, traffic_allocation, termination_conditions, risk_assessment) and the field validation rules table.
+> See [Reference/output-schema.md](./Reference/output-schema.md) for the output JSON schema (hypothesis, primary_metric, guardrail_metrics, sample_size, traffic_allocation, termination_conditions, risk_assessment) and the field validation rules table.
 
 ### Required Outputs
 

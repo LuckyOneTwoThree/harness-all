@@ -32,7 +32,7 @@ description: Use when you need to identify and engineer Aha Moments. Aha Moment 
 
 🤖→👤 AI suggests, human approves
 
-## Input
+## Inputs
 
 | Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|

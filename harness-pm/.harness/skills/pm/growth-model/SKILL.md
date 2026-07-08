@@ -32,7 +32,7 @@ description: Use when you need to diagnose the product growth model. Growth Mode
 
 🤖→👤 AI suggests, human approves
 
-## Input
+## Inputs
 
 | Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|

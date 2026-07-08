@@ -99,7 +99,7 @@ Analyze drop-off rate for each step
 
 **Output Schema**, complete funnel_analysis YAML example, and **field validation rules**:
 
-> See [Reference/output-schema-validation-example.md](./Reference/output-schema-validation-example.md) for the output JSON schema (funnel_name, date_range, steps, overall_conversion, vs_last_period, critical_drop), a complete funnel_analysis YAML example (e-commerce purchase funnel with 4 steps, critical drop-off analysis with dimension breakdown and potential causes), and the field validation rules table.
+> See [Reference/output-schema.md](./Reference/output-schema.md) for the output JSON schema (funnel_name, date_range, steps, overall_conversion, vs_last_period, critical_drop), a complete funnel_analysis YAML example (e-commerce purchase funnel with 4 steps, critical drop-off analysis with dimension breakdown and potential causes), and the field validation rules table.
 
 ## Multi-Dimensional Drill-Down Example
 
@@ -174,7 +174,7 @@ funnel_definitions:
 
 ## Output Validation Rules
 
-> See [Reference/output-schema-validation-example.md](./Reference/output-schema-validation-example.md#output-validation-rules) for the field validation rules table (funnel_analysis, funnel_name, date_range, steps[], overall_conversion, vs_last_period, critical_drop).
+> See [Reference/output-schema.md](./Reference/output-schema.md#output-validation-rules) for the field validation rules table (funnel_analysis, funnel_name, date_range, steps[], overall_conversion, vs_last_period, critical_drop).
 
 ## Upstream Change Response
 

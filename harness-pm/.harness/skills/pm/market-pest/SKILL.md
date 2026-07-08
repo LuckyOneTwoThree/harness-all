@@ -96,7 +96,7 @@ Output file: `docs/discovery/market-analysis.md ("PEST Analysis" section)`
 
 **Output Schema**, validation rules, and JSON example:
 
-> See [Reference/output-schema-validation-example.md](./Reference/output-schema-validation-example.md) for the output JSON schema (political/economic/social/technological dimensions + alerts), the full field validation rules table (per-dimension trends and key_signals with impact assessment), and a complete PEST analysis JSON example.
+> See [Reference/output-schema.md](./Reference/output-schema.md) for the output JSON schema (political/economic/social/technological dimensions + alerts), the full field validation rules table (per-dimension trends and key_signals with impact assessment), and a complete PEST analysis JSON example.
 
 ## Decision Rules
 

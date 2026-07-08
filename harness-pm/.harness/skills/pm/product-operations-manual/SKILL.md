@@ -41,7 +41,7 @@ The core value of a product operations manual lies in enabling the team to corre
 
 🤖→👤 AI suggests, human approves
 
-## Input
+## Inputs
 
 | Input Item | Type | Required | Source | Description |
 |--------|------|------|------|------|

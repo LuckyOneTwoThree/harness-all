@@ -18,10 +18,9 @@ description: Use when configuring a product metrics Dashboard. Dashboard Auto-Co
 
 ## Core Principles
 
-1. **Full Analysis**: Systematically analyze all available data without missing key dimensions
-2. **Real-time Awareness**: Metrics system design supports real-time monitoring and rapid response
-3. **Automated Attribution**: Anomaly fluctuations are automatically attributed to specific causes, reducing manual investigation
-4. **Explicit Decision Rules**: Every alert and escalation condition has clear quantitative rules
+1. **Layered by Audience**: Dashboard layers map to roles (executive North Star → management L1 → operations L2); no single dashboard mixes audiences
+2. **Alerts Must Be Actionable**: Every alert rule has a documented response playbook; alerts without an owner or action are noise and must be removed
+3. **Visual Scan over Drill-down**: Default views answer "is it healthy?" in under 10 seconds; drill-down is for diagnosis, not status checking
 
 ## Interaction Mode
 
@@ -127,9 +126,9 @@ description: Use when configuring a product metrics Dashboard. Dashboard Auto-Co
 | standard | Full artifact (current default) | Full artifact, including all Step outputs |
 | deep | Full dashboard + drill-down analysis design + alert rule system + data governance specs | Full artifact + extended analysis + deep inference |
 
-## Progressive-Disclosure Guidance
+## output-schema Guidance
 
-The detailed templates, examples, and depth-specific execution guidance are in [Reference/progressive-disclosure.md](Reference/progressive-disclosure.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
+The detailed templates, examples, and depth-specific execution guidance are in [Reference/output-schema.md](Reference/output-schema.md). Load that file only when producing the full artifact or when a deep-mode decision requires it.
 
 
 ## Decision Rules

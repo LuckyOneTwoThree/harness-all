@@ -37,7 +37,7 @@ description: Used when assessing the fit between value propositions and user nee
 
 ### Required Inputs
 
-> See [Reference/input-and-step-examples.md](./Reference/input-and-step-examples.md) for the BMC value_propositions JSON and user research data JSON (persona_summary, problem_statement with pains/gains, opportunity_definition).
+> See [Reference/examples.md](./Reference/examples.md) for the BMC value_propositions JSON and user research data JSON (persona_summary, problem_statement with pains/gains, opportunity_definition).
 
 ## Execution Steps
 
@@ -62,7 +62,7 @@ description: Used when assessing the fit between value propositions and user nee
 
 **Output Format:**
 
-> See [Reference/input-and-step-examples.md](./Reference/input-and-step-examples.md) § "Step 1" for the pain_alignment JSON (covered_pains, uncovered_pains, pain_coverage_summary).
+> See [Reference/examples.md](./Reference/examples.md) § "Step 1" for the pain_alignment JSON (covered_pains, uncovered_pains, pain_coverage_summary).
 
 **Acceptance Criteria**:
 - All Pain Relievers matched with pains
@@ -81,7 +81,7 @@ description: Used when assessing the fit between value propositions and user nee
 
 **Output Format:**
 
-> See [Reference/input-and-step-examples.md](./Reference/input-and-step-examples.md) § "Step 2" for the gain_validation JSON (covered_gains, uncovered_gains, gain_summary).
+> See [Reference/examples.md](./Reference/examples.md) § "Step 2" for the gain_validation JSON (covered_gains, uncovered_gains, gain_summary).
 
 **Acceptance Criteria**:
 - All Gain Creators validated
@@ -108,7 +108,7 @@ Overall Fit Score = (Pain Alignment Score × 0.6) + (Gain Validation Score × 0.
 
 **Output Format:**
 
-> See [Reference/input-and-step-examples.md](./Reference/input-and-step-examples.md) § "Step 3" for the overall_fit_score JSON (score_breakdown, coverage_rate).
+> See [Reference/examples.md](./Reference/examples.md) § "Step 3" for the overall_fit_score JSON (score_breakdown, coverage_rate).
 
 ### Output Depth Tiers
 
@@ -126,7 +126,7 @@ Overall Fit Score = (Pain Alignment Score × 0.6) + (Gain Validation Score × 0.
 
 ### Output Validation Rules and Complete Assessment Report
 
-> See [Reference/output-validation-and-example.md](./Reference/output-validation-and-example.md) for the full field validation rules table (evaluation_metadata, pain_alignment, gain_validation, overall_fit_score, improvement_suggestions, warnings) and a complete evaluation_report JSON example.
+> See [Reference/output-schema.md](./Reference/output-schema.md) for the full field validation rules table (evaluation_metadata, pain_alignment, gain_validation, overall_fit_score, improvement_suggestions, warnings) and a complete evaluation_report JSON example.
 
 ## Decision Rules
 
