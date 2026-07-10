@@ -6,9 +6,9 @@
 
 # 🪢 harness-all
 
-### Personal AI Studio · Multi-Agent Framework Family
+### Agent-agnostic Product Delivery Harness for AI-native R&D
 
-> **A framework collection, not a single framework.** Each member is an independent, domain-specialized Agent framework. Current members: harness-pm (product) + harness-engineering (software engineering). The family is designed to grow — data / qa / security frameworks can be added on demand.
+> **A local-first governance & delivery protocol layer for AI product R&D — not another multi-agent runtime.** It sits *above* your Agent tools (Claude Code, Cursor, Trae, Codex, ...), giving them persistent project memory, domain SOPs, contract-based handoff, and quality gates that survive tool switches. Current domain packs: harness-pm (product) + harness-engineering (software engineering); the family grows on demand.
 
 ---
 
@@ -22,9 +22,61 @@
 
 ---
 
+## What this is — and what it isn't
+
+harness-all is **not** CrewAI, LangGraph, AutoGen/MAF, or Agent Orchestrator. Those are **Agent runtimes** — they decide which Agent runs this task, in what order, with what branching, and how they message each other *this time*.
+
+harness-all is a **governance & delivery layer** — it decides what long-term R&D process your project follows, what memory it keeps across sessions, how work is handed off and accepted across roles, and how the next session (or the next tool) picks up where the last one left off.
+
+```
+Agent runtime frameworks (CrewAI / LangGraph / MAF / Agent Orchestrator)
+  = Agent scheduling · execution engine · message passing · state graph
+
+harness-all
+  = Domain SOP + Memory + Contract Delivery + Quality Governance
+```
+
+The two layers are **orthogonal and composable**: a runtime can execute inside a harness workspace; a harness workspace can outlive any specific runtime.
+
+| Question | Agent runtimes | harness-all |
+|----------|:--------------:|:-----------:|
+| Which Agents run this task, in what order? | ✅ Core strength | ❌ Not our job |
+| How do Agents message each other in real time? | ✅ Core strength | ❌ Not our job |
+| What should the project remember 3 months from now? | ⚠️ Usually session-bound | ✅ Local files are the source of truth |
+| How do PM and Engineering hand off without info loss? | ⚠️ You build it yourself | ✅ Contract documents + AC numbering |
+| What counts as "done" — and who is allowed to say so? | ⚠️ You build it yourself | ✅ Review-owned completion + evidence gates |
+| If I switch from Claude Code to Codex, does the project survive? | ❌ Usually no | ✅ Tool-agnostic by design |
+
+**Other frameworks orchestrate Agents. harness-all orchestrates long-term R&D discipline, project context, and trusted delivery.**
+
+</div>
+
+---
+
+## What makes it different
+
+Five design choices that distinguish harness-all from both runtime frameworks and prompt libraries:
+
+**1. Roles are long-term domain workspaces, not one-off Agent personas.**
+A CrewAI role is a `role + goal + backstory` YAML served for one workflow. A harness framework is a persistent "department": it has its own constitution, skills, memory, progress, domain boundary, and outbound contracts — and it keeps working across sessions.
+
+**2. Contract-based delivery, not free-form Agent conversation.**
+PM → Engineering is not a chat message. It is a versioned package: PRD + AC numbering + API contract + design asset paths + routing fields + SHA-256 manifest + receipt. Consumers are read-only; reverse feedback flows through a separate outbound contract. This borrows from mature software-engineering practice (bounded context, API contract, event envelope, artifact provenance) rather than from multi-agent chat.
+
+**3. "Done" is a governance state, not an Agent's claim.**
+`status: done` is written exclusively by the code-review skill — never by verify. Combined with a hard circuit breaker at iteration 10, evidence-driven completion, and permanent AC IDs (supersede, never delete), this directly targets the Agent failure mode of confusing "generated output" with "finished work."
+
+**4. Local files are the source of truth; Agent tools are replaceable clients.**
+Markdown / YAML / JSON on disk is the only truth. Indexes can be rebuilt. The Agent tool (Claude Code today, Codex tomorrow, something unknown next year) is a replaceable execution client. Project knowledge, decisions, contracts, and audit trails do not live inside any vendor's chat history.
+
+**5. Frameworks are independent, with deliberately no shared mutable state.**
+109 skills are split across PM and Engineering. Each Agent loads only its own domain. Cross-domain collaboration transmits the minimum explicit contract — never a shared memory all Agents can read and pollute. This is more conservative than "one shared blackboard everyone writes to," but it is what keeps context clean and failure isolated in serious, long-running projects.
+
+---
+
 ## Framework Family
 
-harness-all is a **collection of independent Agent frameworks**. Each framework is a self-contained domain specialist (skills + workflows + memory + constitution). Frameworks collaborate via contract documents, not shared state.
+harness-all is a **collection of independent domain packs**. Each pack is a self-contained domain specialist (skills + workflows + memory + constitution). Packs collaborate via contract documents, not shared state.
 
 | Member | Type | Domain | Status | Skills | Workflows |
 |:------:|------|--------|:------:|:------:|:---------:|
@@ -36,13 +88,11 @@ harness-all is a **collection of independent Agent frameworks**. Each framework 
 
 > **The family is open-ended.** Software engineering is just one domain type; the same architecture (AGENTS.md + skills/ + LOOP + contract documents) supports any specialized Agent framework — data, QA, security, ML, DevOps, etc.
 
-</div>
-
 ---
 
 ## Pick Your Stack
 
-The family ships **2 core frameworks today** (pm + engineering). Each is fully functional on its own; combine them when you need cross-domain data flow.
+The family ships **2 core packs today** (pm + engineering). Each is fully functional on its own; combine them when you need cross-domain data flow.
 
 ```
 ┌─────────────────────────────────┐   ┌──────────────────────────────────────────────┐
@@ -55,9 +105,9 @@ The family ships **2 core frameworks today** (pm + engineering). Each is fully f
 └─────────────────────────────────┘   └──────────────────────────────────────────────┘
 ```
 
-> **Future modes**: when harness-data / harness-qa / harness-security are built, the same contract-document pattern extends naturally — each new framework adds new handoff document types (e.g., `engineering-to-qa.md`, `qa-to-engineering.md`). The architecture is designed for growth, not capped at 2.
+> **Future modes**: when harness-data / harness-qa / harness-security are built, the same contract-document pattern extends naturally — each new pack adds new handoff document types (e.g., `engineering-to-qa.md`, `qa-to-engineering.md`). The architecture is designed for growth, not capped at 2.
 
-Each framework is **self-sufficient** — engineering's design-intake supports a degraded mode with no upstream PM handoff, deriving a minimal contract from user conversation. When you combine frameworks, they collaborate via structured contract documents under `docs/handoff/`.
+Each pack is **self-sufficient** — engineering's design-intake supports a degraded mode with no upstream PM handoff, deriving a minimal contract from user conversation. When you combine packs, they collaborate via structured contract documents under `docs/handoff/`.
 
 ### End-to-end flow (Mode 2)
 
@@ -80,45 +130,47 @@ Each framework is **self-sufficient** — engineering's design-intake supports a
 
 ## Why harness
 
-**The problem**: Every AI conversation starts from zero. No project memory, no domain expertise, no quality gates.
+**The problem**: Every AI conversation starts from zero. No project memory, no domain expertise, no quality gates. And when you switch Agent tools, everything is lost again.
 
 ```
 ❌ Without a framework
   Conversation 1: "Write a PRD"        → Agent asks everything from scratch
   Conversation 2: "Implement this"     → Agent doesn't know the PRD
   Conversation 3: "Fix this bug"       → Agent doesn't know the architecture
-  ...every conversation is amnesiac
+  Switch from Claude Code to Cursor    → Start over, again
+  ...every conversation is amnesiac, every tool switch is a reset
 ```
 
-**harness gives AI Agents persistent project knowledge**:
+**harness gives AI Agents persistent project knowledge that survives tool switches**:
 
 | Without harness | With harness |
 |----------------|--------------|
 | Re-explain project every conversation | `knowledge-base.md` accumulates across sessions |
 | Forgets on close | `progress.md` auto-restores context |
+| Switching Agent tools = starting over | Local files are truth; tools are replaceable clients |
 | One Agent does everything poorly | Specialized Agent per domain |
 | "I think it's done" | LOOP engine + evidence gates + review-owned completion |
 | Verbal handoff, info lost | Structured contract documents with AC numbering + SHA-256 manifest |
 | Agent loops forever on failure | Hard circuit breaker at iteration 10 |
 | One-size-fits-all process | Three exploration modes (skip / standard / deep) |
 
-**One-line summary**: Prompt engineering teaches an Agent to do one thing; a framework gives it persistent memory, domain expertise, and engineering discipline that improves with use.
+**One-line summary**: Prompt engineering teaches an Agent to do one thing; a framework gives it persistent memory, domain expertise, and engineering discipline that improves with use — independent of which Agent tool you happen to run.
 
 ---
 
 ## Quick Start by Role
 
-### Choose your framework
+### Choose your pack
 
-The family is open-ended. Currently 2 core frameworks are built; each specializes in one domain and works independently.
+The family is open-ended. Currently 2 core packs are built; each specializes in one domain and works independently.
 
-| You are | Framework | Type | What it does |
+| You are | Pack | Type | What it does |
 |---------|-----------|------|-------------|
-| Product Manager | **harness-pm** | Product framework | Research → PRD → API Contract → Metrics → Iteration |
-| Developer (full-stack) | **harness-engineering** | Software engineering framework | 4-phase delivery: design parsing → frontend → backend → integration |
-| Data Engineer | *harness-data* (P1, to build) | Data framework | ETL · pipelines · metric production |
-| QA Engineer | *harness-qa* (P2, on demand) | QA framework | Automated testing · performance testing |
-| Security Engineer | *harness-security* (P3, on demand) | Security framework | Audit · compliance · penetration testing |
+| Product Manager | **harness-pm** | Product pack | Research → PRD → API Contract → Metrics → Iteration |
+| Developer (full-stack) | **harness-engineering** | Software engineering pack | 4-phase delivery: design parsing → frontend → backend → integration |
+| Data Engineer | *harness-data* (P1, to build) | Data pack | ETL · pipelines · metric production |
+| QA Engineer | *harness-qa* (P2, on demand) | QA pack | Automated testing · performance testing |
+| Security Engineer | *harness-security* (P3, on demand) | Security pack | Audit · compliance · penetration testing |
 
 ### Install
 
@@ -150,15 +202,15 @@ The install script creates the `.harness/` directory structure, copies core conf
 
 ### Start the Agent
 
-Open your AI Agent (e.g., Trae IDE) in the project directory. The Agent auto-reads:
+Open your AI Agent (e.g., Trae IDE, Claude Code, Cursor) in the project directory. The Agent auto-reads:
 1. `AGENTS.md` — mandatory startup rules
 2. `SOUL.md` + `constitution.md` — domain values and non-negotiable principles
 3. `skills/INDEX.md` → specific `SKILL.md` — on-demand skill loading
 4. `memory/progress.md` — cross-session context restore
 
-### Combine frameworks
+### Combine packs
 
-When using both frameworks, contract documents flow between them:
+When using both packs, contract documents flow between them:
 
 ```
 ┌──────────────┐   pm-to-engineering.md    ┌──────────────────┐
@@ -174,13 +226,13 @@ When using both frameworks, contract documents flow between them:
 └──────────────┘                           └──────────────────┘
 ```
 
-Copy the complete `docs/handoff/packages/<handoff_id>/` directory to the downstream framework. A Markdown contract alone is not portable — the consumer must verify its manifest and bundled artifacts.
+Copy the complete `docs/handoff/packages/<handoff_id>/` directory to the downstream pack. A Markdown contract alone is not portable — the consumer must verify its manifest and bundled artifacts.
 
 ---
 
 ## Framework Catalog
 
-### harness-pm — "Do the right thing" (Product framework)
+### harness-pm — "Do the right thing" (Product pack)
 
 Product exploration, market analysis, PRD generation, API contract spec, metrics operations. 84 skills (80 domain + 4 meta) including 17 orchestrators across 7 modules.
 
@@ -193,9 +245,9 @@ Product exploration, market analysis, PRD generation, API contract spec, metrics
 
 Core outputs: `PRD.md` / `pm-to-engineering.md`
 
-### harness-engineering — "Write good code" (Software engineering framework)
+### harness-engineering — "Write good code" (Software engineering pack)
 
-4-phase engineering delivery: design-intake → frontend → backend → integration. 26 skills (22 domain + 4 meta) + 9 workflows. This is the **software engineering** member of the family — other domain types (data, QA, security, etc.) are added as separate frameworks, not as skills inside engineering.
+4-phase engineering delivery: design-intake → frontend → backend → integration. 26 skills (22 domain + 4 meta) + 9 workflows. This is the **software engineering** member of the family — other domain types (data, QA, security, etc.) are added as separate packs, not as skills inside engineering.
 
 **Four phases**:
 
@@ -296,7 +348,7 @@ batch:
 
 ### Cross-framework reconciliation
 
-Each framework maintains its own `FEATURES.md` with lifecycle-appropriate status. Synchronization flows through handoff documents, not direct writes:
+Each pack maintains its own `FEATURES.md` with lifecycle-appropriate status. Synchronization flows through handoff documents, not direct writes:
 
 | PM status | Engineering status | Meaning |
 |-----------|---------------------|---------|
@@ -318,11 +370,13 @@ Each framework maintains its own `FEATURES.md` with lifecycle-appropriate status
 
 ## How It Works
 
-### Three-layer architecture
+### Architecture: current state and target direction
+
+**Today** — a three-layer, file-based, runtime-free system:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  Orchestration Layer (Future, non-goal)                         │
+│  Orchestration Layer (deferred — see trigger conditions below)   │
 │  • Multi-Agent scheduling · shared source of truth · cross-LOOP │
 └─────────────────────────────────────────────────────────────────┘
                           ↕  contract documents
@@ -332,7 +386,7 @@ Each framework maintains its own `FEATURES.md` with lifecycle-appropriate status
 │  │  harness-pm      │   │  harness-engineering             │    │
 │  │  (84 skills)     │   │  (26 skills, 4 phases)           │    │
 │  └──────────────────┘   └──────────────────────────────────┘    │
-│  + Extension frameworks: data (P1) / qa (P2) / security (P3)    │
+│  + Extension packs: data (P1) / qa (P2) / security (P3)         │
 └─────────────────────────────────────────────────────────────────┘
                           ↕  load chain
 ┌─────────────────────────────────────────────────────────────────┐
@@ -341,9 +395,33 @@ Each framework maintains its own `FEATURES.md` with lifecycle-appropriate status
 └─────────────────────────────────────────────────────────────────┘
 ```
 
+**Target direction** — four layers, with harness-all owning L1 + L2 and borrowing L3 rather than rebuilding it:
+
+```
+┌───────────────────────────────────────────────────────┐
+│ L4 Control Plane (Reins)                              │
+│ Project view · task graph · run monitor · contract    │
+│ chain · human approval                                │
+├───────────────────────────────────────────────────────┤
+│ L3 Runtime Adapters (borrow, don't rebuild)           │
+│ Claude Code / Codex / Cursor / Trae /                 │
+│ Agent Orchestrator / LangGraph / MAF                  │
+├───────────────────────────────────────────────────────┤
+│ L2 Governance Kernel                                  │
+│ LOOP · state machine · quality gate · policy ·        │
+│ validator (machine-enforced, not prompt-only)         │
+├───────────────────────────────────────────────────────┤
+│ L1 Domain Packs                                       │
+│ PM / Engineering / QA / Security / Data               │
+│ Skills · Memory Spec · Contract Schema · SOP          │
+└───────────────────────────────────────────────────────┘
+```
+
+**On the orchestration layer**: it is deferred, not abandoned. The current file-based contract protocol is the lowest-coupling collaboration method and is sufficient for 2 packs. We will revisit a minimal orchestration layer when trigger conditions are met — e.g., pack count ≥ 3, or cross-machine collaboration becomes a real need. Until then, humans act as the router, which is a deliberate trade-off for context cleanliness and auditability.
+
 ### Contract collaboration
 
-Frameworks pass structured requirements via `docs/handoff/` documents. Each document has a clear **producer** and **consumer**. Write access is one-directional — consumers read only, never modify.
+Packs pass structured requirements via `docs/handoff/` documents. Each document has a clear **producer** and **consumer**. Write access is one-directional — consumers read only, never modify.
 
 | Producer → Consumer | Document |
 |:---:|---|
@@ -377,19 +455,44 @@ Dependency info (when to use, inputs, outputs, quality gates) lives in body text
 
 ---
 
+## Honest Scope
+
+**What harness-all does well today**:
+- Persistent project memory that survives session resets and Agent tool switches
+- Domain-specialized workspaces with clean context boundaries
+- Contract-based cross-domain handoff with versioning, AC numbering, and audit trails
+- Engineering discipline: TDD, review-owned completion, hard circuit breaker, evidence gates
+- Three flow-intensity modes (skip / standard / deep) for different task sizes
+
+**What it does NOT do (and is not trying to do)**:
+- It is **not an Agent runtime**. It does not spawn Agent processes, schedule concurrent execution, or manage Agent heartbeats. For that, use CrewAI / LangGraph / MAF / Agent Orchestrator.
+- It does **not auto-route** cross-pack handoffs. Today, humans copy the handoff package to the downstream pack. (A minimal registry + CLI delivery is on the roadmap — see target architecture L4.)
+- It does **not provide a visual debugger** or real-time run monitor yet. State is human-readable files (`state.yaml`, `phase-N-report.md`, `progress.md`); a control plane (Reins) is planned.
+
+**Where rules currently live**:
+- Most governance rules (LOOP transitions, AC semantics, write-access isolation, quality gates) are encoded in `SKILL.md` Process / Quality gates / Prohibited sections and enforced by the Agent reading them.
+- A validator script (`scripts/validate.ps1`) checks structural consistency post-hoc.
+- **Forward direction**: migrate the most safety-critical rules (state transitions, iteration cap, done-permission, manifest integrity) from prompt-only to machine-enforced (L2 Governance Kernel) so they hold even if an Agent skips or forgets a rule.
+
+---
+
 ## Key Design Decisions
+
+### Why agent-agnostic, not agent-bound
+
+Agent tools (Claude Code, Cursor, Codex, Trae, Cline, ...) evolve fast and lock you into their session model. harness-all keeps project knowledge in local files that any tool can read, so switching tools does not reset your project. This is "framework lifecycle decoupled from Agent-tool lifecycle."
 
 ### Why a framework family, not a single framework
 
-A single framework loading all domain skills would explode the Agent's context and pollute its memory. The family architecture lets each Agent specialize in one domain (product / engineering / data / QA / security / ...). New domain frameworks can be added on demand without touching existing ones — they just add new handoff document types.
+A single framework loading all domain skills would explode the Agent's context and pollute its memory. The family architecture lets each Agent specialize in one domain (product / engineering / data / QA / security / ...). New domain packs can be added on demand without touching existing ones — they just add new handoff document types.
 
-### Why 2 core frameworks + 4 phases (v3.0.0)
+### Why 2 core packs + 4 phases (v3.0.0)
 
-The v2.x 3-framework split (pm/design/solo) had poor UI fidelity (solo received design via a parsed contract, losing visual nuance) and blocked frontend/backend parallelism. Consolidating engineering into one framework with 4 internal phases keeps the workspace unified; phase transitions use lightweight `phase-N-report.md` instead of full handoff envelopes. Design assets are now user-owned (Figma/v0/md).
+The v2.x 3-framework split (pm/design/solo) had poor UI fidelity (solo received design via a parsed contract, losing visual nuance) and blocked frontend/backend parallelism. Consolidating engineering into one pack with 4 internal phases keeps the workspace unified; phase transitions use lightweight `phase-N-report.md` instead of full handoff envelopes. Design assets are now user-owned (Figma/v0/md).
 
 ### Why independent, not unified
 
-Context explosion and memory pollution are the core pain points of AI Agent collaboration. A single Agent loading 109 skills wastes tokens and degrades output quality. Independent frameworks let each Agent specialize.
+Context explosion and memory pollution are the core pain points of AI Agent collaboration. A single Agent loading 109 skills wastes tokens and degrades output quality. Independent packs let each Agent specialize.
 
 ### Why contract documents, not shared state
 
@@ -417,16 +520,16 @@ Agents can hallucinate progress and loop forever on failure. Iteration 10 is the
 | [DOMAIN_BOUNDARIES.md](./DOMAIN_BOUNDARIES.md) | Normative ownership and routing rules |
 | [HANDOFF_PROTOCOL.md](./HANDOFF_PROTOCOL.md) | Versioned contract protocol |
 | [UPGRADING.md](./UPGRADING.md) | Conflict-safe framework upgrade process |
-| [harness-pm/README.md](./harness-pm/README.md) | PM framework details |
-| [harness-engineering/README.md](./harness-engineering/README.md) | Engineering framework details |
+| [harness-pm/README.md](./harness-pm/README.md) | PM pack details |
+| [harness-engineering/README.md](./harness-engineering/README.md) | Engineering pack details |
 
-Each framework's `AGENTS.md` is the mandatory entry point read by the Agent at startup.
+Each pack's `AGENTS.md` is the mandatory entry point read by the Agent at startup.
 
 ---
 
 ## License
 
-MIT License — see the LICENSE file in each framework's root directory.
+MIT License — see the LICENSE file in each pack's root directory.
 
 ### Maintainer
 
@@ -436,6 +539,8 @@ MIT License — see the LICENSE file in each framework's root directory.
 
 <div align="center">
 
-**harness-all** · Independence First · Contract Collaboration · Loop Verification · Security Red Lines
+**harness-all** · Other frameworks orchestrate Agents; we orchestrate long-term R&D discipline, project context, and trusted delivery.
+
+**Independence First · Contract Collaboration · Loop Verification · Security Red Lines**
 
 </div>
