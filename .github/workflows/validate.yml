@@ -13,12 +13,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Install powershell-yaml
+        shell: pwsh
+        run: Install-Module powershell-yaml -Scope CurrentUser -Force -AcceptLicense
       - name: Validate framework structure and protocol invariants
         shell: pwsh
         run: ./scripts/validate.ps1 -Strict
       - name: Test handoff package validator
         shell: pwsh
         run: ./scripts/test-handoff-validator.ps1
+      - name: Test artifacts validator
+        shell: pwsh
+        run: ./scripts/test-artifacts-validator.ps1
       - name: Check shell syntax
         shell: bash
         run: bash -n scripts/sync-base.sh harness-*/install.sh harness-engineering/.harness/hooks/*.sh harness-engineering/.harness/hooks/guards/*.sh harness-engineering/.harness/scripts/*.sh

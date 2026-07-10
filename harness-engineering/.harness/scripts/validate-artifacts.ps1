@@ -71,14 +71,14 @@ function Read-Utf8([string]$Path) { [IO.File]::ReadAllText($Path, [Text.Encoding
 $root = [IO.Path]::GetFullPath($FrameworkRoot).TrimEnd([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar)
 if (-not (Test-Path -LiteralPath $root -PathType Container)) { throw "FrameworkRoot not found: $root" }
 
-$contractSchemaPath = Join-Path $root '.harness\rules\component-contract.schema.json'
-$bindingsSchemaPath = Join-Path $root '.harness\rules\component-bindings.schema.json'
-$stateSchemaPath    = Join-Path $root '.harness\loops\state.schema.json'
+$contractSchemaPath = Join-Path $root '.harness/rules/component-contract.schema.json'
+$bindingsSchemaPath = Join-Path $root '.harness/rules/component-bindings.schema.json'
+$stateSchemaPath    = Join-Path $root '.harness/loops/state.schema.json'
 
-$contractArtifactPath = Join-Path $root 'docs\handoff\contract.json'
-$bindingsArtifactPath = Join-Path $root 'docs\engineering\component-bindings.json'
-$tokensArtifactPath   = Join-Path $root 'docs\design-system\tokens.json'
-$stateSpecsDir        = Join-Path $root 'loops\specs'
+$contractArtifactPath = Join-Path $root 'docs/handoff/contract.json'
+$bindingsArtifactPath = Join-Path $root 'docs/engineering/component-bindings.json'
+$tokensArtifactPath   = Join-Path $root 'docs/design-system/tokens.json'
+$stateSpecsDir        = Join-Path $root 'loops/specs'
 
 # --- Capability detection --------------------------------------------------
 $useTestJson = $false
@@ -90,6 +90,9 @@ if ($testJsonCmd) {
 $yamlMode = $null
 if (Get-Module -ListAvailable powershell-yaml -ErrorAction SilentlyContinue) { $yamlMode = 'module' }
 elseif (Get-Command yq -ErrorAction SilentlyContinue) { $yamlMode = 'yq' }
+elseif (Get-Command python -ErrorAction SilentlyContinue) {
+    try { $null = & python -c "import yaml" 2>&1; if ($LASTEXITCODE -eq 0) { $yamlMode = 'python' } } catch { }
+}
 
 # --- Helpers ---------------------------------------------------------------
 function ConvertTo-Hashtable([object]$Obj) {
@@ -277,6 +280,11 @@ function Convert-YamlFileToJson([string]$Path) {
     if ($yamlMode -eq 'yq') {
         return (& yq -o=json "$Path")
     }
+    if ($yamlMode -eq 'python') {
+        $result = & python -c "import yaml,json,sys; print(json.dumps(yaml.safe_load(open(sys.argv[1],encoding='utf-8')),ensure_ascii=False))" $Path 2>&1
+        if ($LASTEXITCODE -eq 0) { return [string]$result }
+        return $null
+    }
     return $null
 }
 
@@ -391,6 +399,24 @@ if (Test-Path -LiteralPath $stateSpecsDir -PathType Container) {
                     $failed++
                 } else {
                     $result = Test-JsonAgainstSchema $jsonText $schemaText
+                    # Post-schema check: enforce allOf/if-then for hard_limit_reached
+                    # coupling when Test-Json -Schema is unavailable (manual fallback
+                    # skips allOf). This is the hard circuit breaker safety constraint.
+                    if ($result.Valid -and -not $useTestJson) {
+                        try {
+                            $stateObj = $jsonText | ConvertFrom-Json
+                            if (($stateObj.PSObject.Properties.Name -contains 'hard_limit_reached') -and ($stateObj.hard_limit_reached -eq $true)) {
+                                $allOfErrs = @()
+                                if ([string]$stateObj.status -ne 'failed') { $allOfErrs += "hard_limit_reached=true requires status='failed' (got '$($stateObj.status)')" }
+                                if ([int]$stateObj.iteration -lt 10) { $allOfErrs += "hard_limit_reached=true requires iteration>=10 (got $($stateObj.iteration))" }
+                                if (-not ($stateObj.PSObject.Properties.Name -contains 'last_error')) { $allOfErrs += "hard_limit_reached=true requires last_error to be set" }
+                                if ($allOfErrs.Count -gt 0) {
+                                    $result.Valid = $false
+                                    $result.Errors = $allOfErrs
+                                }
+                            }
+                        } catch { }
+                    }
                     if ($result.Valid) {
                         Write-Host "[PASS] $yamlPath against $stateSchemaPath" -ForegroundColor Green
                         $passed++
