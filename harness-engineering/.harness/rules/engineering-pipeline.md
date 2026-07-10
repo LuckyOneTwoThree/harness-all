@@ -75,7 +75,8 @@ Phases 1-3 follow the full Canonical Phase Path.
 | refactor (D) | refactor | — | ✓ TDD | ✓ TDD | ✓ mock→real → contract-verify → e2e → verify |
 | optimize (E) | optimize (frontend) | — | ✓ performance-optimization | — | — (local verify + code-review) |
 | optimize (E) | optimize (backend) | — | — | ✓ performance-optimization | — (local verify + code-review) |
-| migration (F) | migration | — | — | ✓ migration (schema + ORM + data) | — (local verify + code-review) |
+| migration (F) | migration (backend) | — | — | ✓ migration (schema + ORM + data) | — (local verify + code-review) |
+| migration (F) | migration (frontend) | — | ✓ migration (component + framework) | — | — (local verify + code-review) |
 | new-product-engineering (H) | orchestration | per nested task | per nested task | per nested task | per nested task + cross-feature review |
 
 **Non-LOOP paths** (no phase routing, no task_type):

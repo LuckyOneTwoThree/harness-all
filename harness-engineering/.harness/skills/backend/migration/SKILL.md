@@ -86,7 +86,7 @@ Before removing the old code, you **must** prove there are no active consumers:
 - Update `docs/engineering/TECH_STACK.md`
 - If ADRs exist, write a new ADR recording the migration decision (supersede the old one)
 
-## Data Migration Specifics
+## Data Migration Specifics (backend scope only)
 
 Data migration (DB schema / data format) has additional requirements:
 - **Migration scripts must be generated** (required by constitution.md)

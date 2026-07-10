@@ -71,6 +71,12 @@ Record the diff in one authoritative place, plus a one-line summary in the sessi
 
 If removed or superseded ACs affect done tasks, surface this to the user before proceeding — per STATE_PROTOCOL.md fix task exception, done tasks are NOT re-opened; instead a `<original-task-id>-fix-<N>` task is created to address the withdrawn acceptance basis.
 
+**Self-check** (after writing `ac_change` to state.yaml):
+- [ ] `ac_change` field is present in `state.yaml` (not null/absent when a supersede occurred).
+- [ ] Superseded AC IDs do NOT appear in the current `ac_ids` list.
+- [ ] `affected_tasks` lists every task ID owning a removed/superseded AC.
+- [ ] If any affected task is `done`, a fix task creation is surfaced to the user (not silently skipped).
+
 ### 1b. Nested Task Switch (product-level resume only)
 
 When resuming a product-level workflow with an active `current_nested_task` and the user request advances to the next nested task, apply the Nested Task Switch Protocol per `engineering-pipeline.md`: verify the outgoing nested task is `status: done`, verify worktree cleanliness (`git status --porcelain`), confirm the shared product branch strategy, then update `current_nested_task` and append the switch record to progress.md. Do not advance if the outgoing task is non-terminal or the worktree is dirty.

@@ -40,7 +40,7 @@ Phase 0 (design-intake) does not run LOOP — see Phase 0 Exception in `engineer
 
 **Specialist ACT replacement** (per `engineering-pipeline.md` Workflow × Phase × ACT Matrix):
 - `optimize` workflow (E): the default ACT sequence is replaced by `performance-optimization` (specialist ACT) in the single active phase.
-- `migration` workflow (F): the default ACT sequence is replaced by `migration` (specialist ACT) in Phase 2.
+- `migration` workflow (F): the default ACT sequence is replaced by `migration` (specialist ACT) in the single active phase (Phase 1 for frontend scope, Phase 2 for backend scope).
 - `bugfix` workflow (C): the default ACT sequence is replaced by `test-driven-development` (regression test + fix) in the single active phase.
 
 The recommended limit is an escalation point. The hard cap (attempt 10) and attempt-10/11 behavior come only from `STATE_PROTOCOL.md`.
@@ -148,6 +148,17 @@ Failure routes by cause are defined in `engineering-pipeline.md` (Routing Rules)
 - recommended phase limit → `needs-human`
 - attempt 10 / attempt 11 → hard breaker per `STATE_PROTOCOL.md`
 - code-review finding → code-review response then ACT if code changes (code-review runs at Phase 3 for multi-phase workflows, or within the single active phase for single-phase workflows)
+
+## Failure Rollback Guidance
+
+When a phase fails beyond recovery or the hard circuit breaker triggers, follow these rollback strategies (advisory, not mandatory — the agent chooses based on project context):
+
+- **Revert to last green commit**: if a specific attempt introduced regressions, `git revert <commit>` or `git reset --hard <last-green-commit>` to restore the last known-good state. The `iterations.log` records which attempt introduced the failure.
+- **Create a revert commit** (preferred for shared branches): `git revert <commit>` preserves history while undoing the change.
+- **Reset to phase checkpoint**: if a phase's verify-full fails irrecoverably, reset to the last confirmed phase checkpoint. Confirmed phases remain terminal — do not re-open them; instead create a follow-up task.
+- **Hard breaker rollback**: when `hard_limit_reached: true` triggers, the task is `failed`. Roll back all uncommitted changes, preserve `state.yaml` and `iterations.log` for diagnosis, and surface to the user with a concrete failure summary.
+
+Rollback does not reset `substage_progress` — confirmed phases remain confirmed. After rollback, the task resumes from its last valid state (see Session Interrupt Recovery in `engineering-pipeline.md`).
 
 ## Completion Gate
 

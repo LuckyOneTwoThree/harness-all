@@ -29,7 +29,7 @@ When a subsequent handoff supersedes a previously produced one, the envelope MUS
 
 ## Consumer Gate
 
-Run `pwsh -File .harness/scripts/validate-handoff.ps1 -Package <package-path> -ExpectedConsumer <this-framework>` (or Windows PowerShell) and require exit code 0 before semantic review.
+Run `pwsh -File .harness/scripts/validate-handoff.ps1 -Package <package-path> -ExpectedConsumer <this-framework>` (or Windows PowerShell) and require exit code 0 before semantic review. **When PowerShell is unavailable**, execute the equivalent checks using Agent tools (Read + Grep): read `manifest.json`, verify every artifact path is package-relative (no absolute path or `..`), read each artifact to confirm existence and SHA-256/size match, and Grep the contract body to confirm `ac_ids` exactly equals unique AC IDs in the body.
 
 Before using a handoff, verify all of the following:
 

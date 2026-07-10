@@ -41,6 +41,8 @@ Run once, in this order (8 sub-checks merged into 4 groups):
 
 0. **Fetch current state via Read tool** — use the Read tool (not context memory) to load the raw `loops/specs/<task>/state.yaml`. Read the current `iteration` and `status` values. Reject if `status` is terminal (`done`/`failed`) or `hard_limit_reached: true`. Per `STATE_PROTOCOL.md`, verification must read raw `state.yaml`.
 
+0b. **Branch Isolation (soft)** — if git is available, confirm work is on a dedicated branch (not `main`/`master`). If on `main`/`master`, record a `branch-warning` finding in evidence.md (soft, not blocking — surface to user for awareness). If git is not available, record `branch check skipped (git not available)` in evidence.md.
+
 1. **Tests + AC/BAC/IAC** — full test command with actual runner output/summary; every stable AC/BAC/IAC has test/assertion/demo evidence (design constraints that cannot be automated route to 👤 human, not guessed).
 
    **👤 human soft gate**: items routed to 👤 human are NOT passed until the human explicitly confirms. Recording "routed to 👤 human" without confirmation is a `pending-human` state, not a pass. Evidence must cite the human's confirmation message, ticket, or explicit approval. A `pending-human` item blocks the phase checkpoint from being marked `completed: true`.

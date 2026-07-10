@@ -55,6 +55,8 @@ For each approved skip, state broken/unverified flows, blocked dependents, hando
 
 Findings cite producer/consumer, location, evidence, expected contract, and owning nested task. No arbitrary minimum count. A finding against a `done` task never reopens it; the fix task inherits the original spec's AC references and the original evidence as input.
 
+**Fix task re-verification scope**: when a fix task (created from a Critical/Major finding) completes, rerun only the **affected checkpoints** — not a full product-engineering-review. "Affected" means checkpoints whose contract boundaries or integration flows were touched by the fix task. The fix task's own verify-full + code-review covers task-level quality; the checkpoint rerun covers cross-feature consistency for the touched boundary only.
+
 ## Evidence Shape
 
 ```markdown
