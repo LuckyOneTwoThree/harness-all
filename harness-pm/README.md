@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-cross--platform-green.svg)](#cross-platform-compatibility)
 [![Principles](https://img.shields.io/badge/principles-PM%204-orange.svg)](#product-four-principles-in-detail)
-[![Workflows](https://img.shields.io/badge/workflows-10-purple.svg)](#workflows-in-detail)
+[![Workflows](https://img.shields.io/badge/workflows-11-purple.svg)](#workflows-in-detail)
 [![Skills](https://img.shields.io/badge/skills-84-red.svg)](#core-features)
 
 **[Quick Start](#quick-start)** · **[Directory Structure](#directory-structure)**

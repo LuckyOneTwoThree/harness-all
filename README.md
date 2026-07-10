@@ -15,7 +15,7 @@
 ![Version](https://img.shields.io/badge/version-v3.0-blue.svg?style=for-the-badge&logo=semver)
 ![Frameworks](https://img.shields.io/badge/frameworks-2-green.svg?style=for-the-badge&logo=github)
 ![Skills](https://img.shields.io/badge/skills-109-orange.svg?style=for-the-badge&logo=skill)
-![Workflows](https://img.shields.io/badge/workflows-19-purple.svg?style=for-the-badge&logo=git)
+![Workflows](https://img.shields.io/badge/workflows-20-purple.svg?style=for-the-badge&logo=git)
 ![Handoffs](https://img.shields.io/badge/handoffs-2-teal.svg?style=for-the-badge&logo=markdown)
 ![Loop Types](https://img.shields.io/badge/loop--types-10-red.svg?style=for-the-badge&logo=circleci)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge&logo=open-source-initiative)

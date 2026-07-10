@@ -262,12 +262,12 @@ Merged reference material for tracking-plan schemas: input schemas, output schem
 
 ### Metric System (from Pipeline 1)
 
-> 📋 For input JSON schema, see [input-schemas.md](./input-schemas.md)
+> 📋 For input JSON schema, see "Metric System" section above in this file
 
 ---
 
 ### Existing Tracking Inventory (Optional)
 
-> 📋 For input JSON schema, see [input-schemas.md](./input-schemas.md)
+> 📋 For input JSON schema, see "Existing Tracking Inventory" section above in this file
 
 ---
