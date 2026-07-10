@@ -32,6 +32,10 @@ default_mode: skip
 │ Pre-release check (★ hard gate)         │
 │                                         │
 │  - All PRD features accepted?           │
+│  - PRD is NOT in draft status?          │
+│    (if PRD.md contains "Status: DRAFT", │
+│     block release — require upgrade     │
+│     via new-product/iteration first)    │
 │  - PRODUCT_STRATEGY success metrics met?│
 │  - Tracking plan implemented?           │
 │  - Security compliance check passed?    │
@@ -78,6 +82,7 @@ default_mode: skip
 ## Key Checkpoints
 
 - [ ] All PRD features accepted? (Check AC item by item)
+- [ ] PRD is NOT in draft status? (Check PRD.md header — if "Status: DRAFT", block release)
 - [ ] Success metrics met? (Show data)
 - [ ] Tracking plan implemented? (Events collectible)
 - [ ] Security compliance check passed?
@@ -90,6 +95,7 @@ default_mode: skip
 | Failure point | Handling |
 |--------|---------|
 | Feature not accepted | No release, complete acceptance first |
+| PRD is in draft status | No release — upgrade to full PRD via new-product or iteration workflow first |
 | Success metrics not met | Analyze cause, decide whether to release |
 | Security compliance not passed | Fix before release, no ignoring |
 | Tracking not implemented | Call metrics-orchestrator to supplement tracking plan, then re-check |

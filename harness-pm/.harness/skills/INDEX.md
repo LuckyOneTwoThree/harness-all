@@ -10,8 +10,9 @@
 - **skill-maintenance** — Skill health check
 - **memory-maintenance** — Memory retention cleanup
 
-## Workflows (.harness/skills/workflows/, 10 in total)
+## Workflows (.harness/skills/workflows/, 11 in total)
 > `default_mode`: deep = mandatory exploration / standard = pause at module boundaries / skip = direct execution (user can switch at any time)
+- **quick-prd** [standard] — Fast PRD draft through conversational refinement (vibecoding/prototyping; skips full discovery, produces draft PRD with relaxed gates)
 - **new-product** [deep] — Build a new product from 0 to 1 (modules 1→2→3→4→7 monitoring prep)
 - **pivot** [deep] — Strategic adjustment (modules 1→2, strategic-level change)
 - **iteration** [standard] — Iterate on an existing product feature (modules 3→5→7, change-driven)

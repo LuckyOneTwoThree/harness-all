@@ -94,6 +94,17 @@ Rules:
 - design-prd's `prd.json` projection covers only the 9 core sections; append-only sections are Markdown-only
 - If a downstream consumer needs an append-only section's data, that skill's own JSON output is the source of truth
 
+## Draft PRD Status
+
+When design-prd runs with `draft_mode=true` (triggered by quick-prd workflow):
+- PRD.md header includes `> **Status**: DRAFT`
+- prd.json includes `metadata.status: "draft"`
+- Quality gates run in best-effort mode (Gate 1-3) or skipped (Gate 4)
+- Draft PRD can coexist with append-only sections from other skills
+- Draft PRD is usable for coding/handoff but NOT production-ready
+- **Upgrade path**: draft → validated via new-product or iteration workflow (design-prd Import Mode reads draft, applies full quality gates with `draft_mode=false`)
+- **Production launch block**: launch workflow must verify PRD.md does NOT contain "Status: DRAFT" before proceeding; if draft found, require upgrade first
+
 ## Confidence Propagation
 
 | Confidence | Action |

@@ -114,6 +114,26 @@ PRD validation uses 4 Quality Gates mapped to P0/P1/P2 severity. The unified mat
 
 > "best-effort" means: attempt check, record failures, but do not block generation.
 
+### Draft Mode (draft_mode=true)
+
+When `draft_mode=true` (triggered by quick-prd workflow or explicit user request), quality gates are further relaxed to allow fast PRD drafting without full upstream discovery:
+
+| Gate | Normal (quick/standard/deep) | Draft Mode |
+|------|------------------------------|------------|
+| Gate 1 (Completeness) | ✅ required (even in quick) | ⚠️ best-effort — missing sections marked "TBD (to be filled)" |
+| Gate 2 (Consistency) | varies by depth | ⚠️ best-effort — contradictions flagged but not blocking |
+| Gate 3 (Ambiguity) | varies by depth | ⚠️ best-effort — vague terms flagged but not blocking |
+| Gate 4 (Traceability) | varies by depth | ❌ skip |
+
+**Draft Mode output annotations**:
+- PRD.md header: `> **Status**: DRAFT — Generated in draft mode, not yet validated through full discovery`
+- prd.json: `metadata.status: "draft"`
+- All AI-inferred content fields retain `confidence: <0.3-0.7>` annotations per Principle 6
+
+**Draft Mode does NOT bypass Core Principle 1** ("Quality gates cannot be bypassed") — gates still run, they just operate in best-effort/skip mode rather than being skipped entirely. This is a degradation (allowed in standard mode per AGENTS.md), not a bypass.
+
+**Upgrade path**: A draft PRD can be upgraded to a full PRD by running design-prd in Import Mode with `draft_mode=false` (default). Import Mode reads the draft, applies full quality gates, and the user decides which draft content to Keep vs Adopt-fix.
+
 **Failure handling**:
 - Gate 1 failure: Block generation, output missing items list, provide supplementation guidance
 - Gate 2/3 failure: Identify inconsistent locations, output correction suggestions, record as items pending confirmation; auto-correct identifiable ambiguities (fuzzy quantifiers, dangling references); logical contradiction issues are NOT auto-corrected, output suspected_contradictions list with `needs_human_review: true`
@@ -198,6 +218,7 @@ Strategic objectives → OKR → Key Results → Primary metrics → Functional 
 | design_outputs | JSON/object | ○ | Upstream design phase | Prototypes, user flows |
 | metrics_outputs | JSON/object | ○ | Upstream metrics phase | Metric system, tracking plan |
 | requirement | JSON/object | Yes | Provided by user | Requirements context and manual override config |
+| draft_mode | boolean | No (default false) | quick-prd workflow or explicit user request | When true, produces a draft PRD with relaxed quality gates. PRD.md header marked `status: draft`, prd.json marked `metadata.status: "draft"`. See §Draft Mode below. |
 
 **Complete input data structure and validation rules**: See [Reference/input-schema.md](Reference/input-schema.md)
 

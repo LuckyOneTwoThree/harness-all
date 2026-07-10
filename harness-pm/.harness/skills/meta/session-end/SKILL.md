@@ -83,6 +83,12 @@ Archiving is required before the session ends; "bare exit" is not allowed — th
    **6a. Produce pm-to-engineering.md** (Product → Engineering)
    If this session completed a product design **handable to engineering** (e.g., PRD, API contract, design asset paths, instrumentation plan), produce `docs/handoff/pm-to-engineering.md` using the `docs/handoff/templates/pm-to-engineering-template.md` template:
 
+   **Draft PRD check**: Before producing handoff, read `docs/product/PRD.md` and check if it contains `> **Status**: DRAFT`. If yes:
+   - pm-to-engineering.md header must include `⚠️ DRAFT PRD — not yet validated through full discovery`
+   - progress.md must record `prd_status: draft`
+   - Prompt user: "Your PRD is in draft status. It's usable for coding but not production-ready. Upgrade to full PRD via new-product or iteration workflow before production launch."
+   - Do NOT block handoff production — draft PRD is intentionally handable to engineering for prototyping/coding
+
    **Trigger conditions** (any one met):
    - A feature status changed from `in_progress` to `approved` this session
    - The user explicitly requested "prepare handoff to engineering"
