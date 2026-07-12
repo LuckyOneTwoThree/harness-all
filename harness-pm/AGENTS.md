@@ -68,7 +68,7 @@ See `SOUL.md` "Product values" section (Discovery First / Contract-Driven / Data
 
 When you need to select a Skill, read `.harness/skills/INDEX.md` (pure index, under 80 lines).
 - PM methodology skills are under `.harness/skills/pm/` (7 modules, 80 domain skills) + 4 meta skills under `.harness/skills/meta/` = 84 total
-- Workflow orchestration is under `.harness/skills/workflows/`, read on demand (10 workflows)
+- Workflow orchestration is under `.harness/skills/workflows/`, read on demand (11 workflows)
 - Meta skills (session management / maintenance) are under `.harness/skills/meta/`
 
 ## Relationship with the harness Family

@@ -138,7 +138,7 @@ Archiving is required before the session ends; "bare exit" is not allowed — th
    - `id`: integer starting at 1; increment for each successive delivery on the same channel (pm-to-engineering maintains an independent counter)
    - `type`: `full` for the first delivery on the channel OR when re-broadcasting the complete AC set; `incremental` for subsequent deliveries that diff against the previous consumed handoff
    - `added_acs`: AC IDs newly introduced in this delivery (not present in the previous consumed handoff's ac_ids)
-   - `modified_acs`: AC IDs whose criterion text/scope changed (same ID, new content)
+   - `modified_acs`: AC IDs whose criterion text/scope changed under the same ID (reverse feedback channel only; forward delivery should use supersede + new ID per the stable AC principle)
    - `superseded_acs`: AC IDs explicitly retired and replaced by new IDs (these do NOT appear in ac_ids; only their replacements appear in added_acs)
    - `unchanged_acs`: AC IDs carried over with no change
 

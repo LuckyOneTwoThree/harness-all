@@ -89,8 +89,8 @@ Stage 1: Independent Work        Stage 2: Contract Collaboration    Stage 3: Orc
 
 | Category | Framework | Responsibility | Status | Skill Count |
 |------|------|------|------|---------|
-| Core | **harness-pm** | Strategy · Market · Product · PRD · Metrics · API Contract · Design Asset Path Collection | ✅ Built | 84 skills (80 domain + 4 meta) + 10 workflows |
-| Core | **harness-engineering** | 4-Phase Engineering Delivery: design-intake → frontend → backend → integration | ✅ Built | 26 skills (22 domain + 4 meta) + 9 workflows |
+| Core | **harness-pm** | Strategy · Market · Product · PRD · Metrics · API Contract · Design Asset Path Collection | ✅ Built | 84 skills (80 domain + 4 meta) + 11 workflows |
+| Core | **harness-engineering** | 4-Phase Engineering Delivery: design-intake → frontend → backend → integration | ✅ Built | 25 skills (21 domain + 4 meta) + 9 workflows |
 | Extension | harness-data | Data Pipeline · ETL · Metric Production | 📋 P1 To Build | - |
 | Extension | harness-qa | Quality Assurance · Automated Testing · Performance Testing | ⚠️ P2 On Demand | - |
 | Extension | harness-security | Security Audit · Compliance · Penetration Testing | ⚠️ P3 On Demand | - |
@@ -446,7 +446,7 @@ Scenario: Alice owns PM, Bob owns Engineering
 | Phase | Name | Input | Output | ACT Skills |
 |-------|------|-------|--------|------------|
 | 0 | design-intake | `pm-to-engineering.md` (PRD + API contract + design asset paths) **or** user-provided assets directly (degraded mode) | `contract.json` + `tokens.json` | design-intake |
-| 1 | frontend | `contract.json` + `tokens.json` + design assets (dual-input: contract layer + visual layer) | Frontend code (TDD, mock-backed) | frontend-implementation / component-design / webapp-testing |
+| 1 | frontend | `contract.json` + `tokens.json` + design assets (dual-input: contract layer + visual layer) | Frontend code (TDD, mock-backed) | frontend-implementation / webapp-testing |
 | 2 | backend | API contract from `contract.json` | Backend implementation (api + data + migration) | api-implementation / data-layer / migration / dependency-management |
 | 3 | integration | frontend + backend | mock→real switch + e2e verification + `engineering-to-pm.md` | mock-to-real-switch / e2e-verification / contract-verify / verify / code-review / product-engineering-review |
 
@@ -471,9 +471,9 @@ Scenario: Alice owns PM, Bob owns Engineering
 - **fullstack** (Next.js / Remix): one repo, `app/` (frontend) + `api/` (backend) + `lib/` (shared)
 - **separate** (React + Express): two roots, `contract.json` is the single source of truth joining them
 
-**Skill System** (26 skills = 22 domain + 4 meta):
+**Skill System** (25 skills = 21 domain + 4 meta):
 - design-intake (1): design-intake — Phase 0 ACT; parses user design assets into contract.json + tokens.json
-- frontend (3): frontend-implementation / component-design / webapp-testing — Phase 1 ACT
+- frontend (2): frontend-implementation / webapp-testing — Phase 1 ACT
 - backend (4): api-implementation / data-layer / migration / dependency-management — Phase 2 ACT
 - integration (6): mock-to-real-switch / e2e-verification / contract-verify / verify / code-review / product-engineering-review — Phase 3 ACT
 - engineering (8): brainstorming / writing-plans / test-driven-development / test-coverage / systematic-debugging / performance-optimization / writing-skills / writing-documentation — cross-phase planning + TDD + debugging + docs
@@ -978,8 +978,8 @@ harness-all is a multi-Agent framework family with **Independence First, Contrac
 | .harness/loops/LOOP.md | ✅ | ✅ |
 | .harness/skills/INDEX.md | ✅ | ✅ |
 | .harness/skills/meta/ | ✅ (4 skills) | ✅ (4 skills) |
-| .harness/skills/<domain>/ | ✅ (80 domain skills) | ✅ (22 domain skills) |
-| .harness/skills/workflows/ | ✅ (10 workflows) | ✅ (9 workflows) |
+| .harness/skills/<domain>/ | ✅ (80 domain skills) | ✅ (21 domain skills) |
+| .harness/skills/workflows/ | ✅ (11 workflows) | ✅ (9 workflows) |
 | .harness/rules/security.md | ✅ | ✅ |
 | .harness/rules/prompt-defense.md | ✅ | ✅ |
 | .harness/memory/ | ✅ | ✅ |

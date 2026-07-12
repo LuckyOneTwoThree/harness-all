@@ -337,7 +337,7 @@ batch:
   id: 2
   type: incremental  # or "full" for first delivery / re-broadcast
   added_acs: [AC-F01-004]           # new scope
-  modified_acs: [AC-F01-002]        # same ID, new content
+  modified_acs: [AC-F01-002]        # reverse feedback: same ID, requested change
   superseded_acs: [AC-F01-001]      # retired, replaced by AC-F01-004
   unchanged_acs: [AC-F01-003]
 ```

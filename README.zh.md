@@ -338,7 +338,7 @@ batch:
   id: 2
   type: incremental  # 或 "full"（首次交付 / 重新广播）
   added_acs: [AC-F01-004]           # 新增范围
-  modified_acs: [AC-F01-002]        # 同 ID，新内容
+  modified_acs: [AC-F01-002]        # 反向反馈：同 ID，请求修改
   superseded_acs: [AC-F01-001]      # 退役，被 AC-F01-004 替代
   unchanged_acs: [AC-F01-003]
 ```

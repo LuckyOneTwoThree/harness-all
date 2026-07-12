@@ -52,12 +52,13 @@ PLAN → RESEARCH → VALIDATE → Pass? DELIVER : Back to RESEARCH/PLAN
 - Iteration limit protection: single task exceeding 5 iterations returns to PLAN; total cycle exceeding 10 requests human intervention
 - Evidence-driven: no claiming conclusions hold without data support
 
-### 10 Workflows Cover the Full Product Lifecycle
+### 11 Workflows Cover the Full Product Lifecycle
 
 ```
 setup (project initiation) → new-product/iteration/growth/optimization/pivot (product work) → launch (release)
                                                     ↓
                                     diagnosis/incident-response/health-check (diagnosis and response)
+          quick-prd (fast PRD draft for vibecoding/prototyping, bypasses full discovery)
 ```
 
 | Workflow | Scenario | Iteration Limit |
@@ -72,6 +73,7 @@ setup (project initiation) → new-product/iteration/growth/optimization/pivot (
 | pivot | Strategic pivot | 5 |
 | incident-response | Crisis response (P0 incident) | No LOOP |
 | health-check | Periodic health check | No LOOP |
+| quick-prd | Fast PRD draft for vibecoding/prototyping (bypasses full discovery) | No LOOP |
 
 ### 80 PM Skills (7 modules = 17 orchestrators + 63 pipelines)
 
@@ -161,7 +163,7 @@ harness-pm/
 │   │   ├── INDEX.md                   # Skill index (within 80 lines)
 │   │   ├── meta/                      # 4 meta skills
 │   │   ├── pm/                        # 80 PM skills (7 modules, flat organization; selected skills include Reference/ subdirs)
-│   │   └── workflows/                 # 10 workflows
+│   │   └── workflows/                 # 11 workflows
 │   └── templates/                     # Document templates
 └── docs/                              # Human-readable docs (produced directly by skills)
     ├── discovery/                     # User research, market analysis

@@ -94,8 +94,9 @@ Phases 1-3 follow the full Canonical Phase Path.
 
 ### Bugfix Specialization
 
-- A bugfix touches **exactly one phase** (frontend → Phase 1, backend → Phase 2)
+- A bugfix defaults to **one owning phase** (frontend → Phase 1, backend → Phase 2). If root cause is proven to cross phase boundaries (even without contract changes), upgrade to refactor workflow — see cross-phase upgrade signals below.
 - **Bugfix contract change detection**: after systematic-debugging identifies the root cause and before writing-plans, the agent must check whether the fix requires changing the API contract (path / method / request shape / response shape / status code / auth behavior). If yes, the bugfix is **upgraded to refactor workflow** — a bugfix that changes the public contract is by definition a behavior change, not a defect repair. Surface to the user: "The root-cause fix requires changing the API contract (<specific change>). This is a behavior change — upgrading to refactor workflow." Record the detection result in `memory/progress.md` regardless of upgrade outcome.
+- **Cross-phase upgrade signals** (in addition to contract change detection above): root cause trace ends in a different phase's code; frontend symptom is caused by backend data shape change without API contract change; fix requires synchronized edits to both frontend and backend logic. When any signal is confirmed, surface to the user and upgrade to refactor workflow.
 - **Bugfix verify-full + code-review**: bugfix runs verify-full and code-review **within its single phase** (not as Phase 3). The phase's verify step writes evidence; code-review writes review.md and marks `status: done`. Phase 3 (integration) is not invoked because no cross-phase integration is needed for a single-phase defect repair.
 
 ### Optimize Specialization

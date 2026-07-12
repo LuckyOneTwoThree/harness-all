@@ -8,7 +8,7 @@ default_mode: standard
 
 Use for incorrect existing behavior. If the requested behavior is new rather than broken, route to new-feature.
 
-> **Matrix**: workflow `C` — see `engineering-pipeline.md` Workflow × Phase × ACT Matrix. Activates exactly one phase (Phase 1 frontend or Phase 2 backend); Phase 3 not invoked.
+> **Matrix**: workflow `C` — see `engineering-pipeline.md` Workflow × Phase × ACT Matrix. Defaults to one owning phase (Phase 1 frontend or Phase 2 backend); Phase 3 not invoked. If root cause crosses phase boundaries, upgrade to refactor workflow.
 
 ## Route
 
@@ -23,7 +23,7 @@ Use for incorrect existing behavior. If the requested behavior is new rather tha
 
 ## Specialization
 
-- A bugfix touches **exactly one phase** (frontend → Phase 1, backend → Phase 2); never spans multiple phases.
+- A bugfix defaults to **one owning phase** (frontend → Phase 1, backend → Phase 2). If root cause is proven to cross phase boundaries (e.g., backend error code causing frontend rendering failure), upgrade to refactor workflow for multi-phase coordination. See `engineering-pipeline.md` "Cross-phase upgrade signals" for details.
 - Recommended failed-attempt limit: 3.
 - Do not patch before reproduction unless an active incident requires a separately approved containment action.
 - Check sibling call sites only when the same proven root cause can affect them; do not expand into speculative cleanup.
