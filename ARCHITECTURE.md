@@ -62,7 +62,7 @@ Stage 1: Independent Work        Stage 2: Contract Collaboration    Stage 3: Orc
 │  Framework Layer (Current focus)                                │
 │  ┌────────────────────┐   ┌──────────────────────────────────┐  │
 │  │  harness-pm        │   │  harness-engineering             │  │
-│  │  (84 skills)       │   │  (26 skills, 4 phases)           │  │
+│  │  (84 skills)       │   │  (25 skills, 4 phases)           │  │
 │  │  Product · Strategy│   │  design-intake → frontend        │  │
 │  │  · PRD · Metrics   │   │  → backend → integration         │  │
 │  └────────────────────┘   └──────────────────────────────────┘  │
@@ -177,7 +177,7 @@ project-A/                    # Product project
 
 project-B/                    # Engineering project
 ├── .harness/                 # harness-engineering config
-│   ├── skills/               # 22 engineering skills
+│   ├── skills/               # 21 engineering skills
 │   ├── memory/               # engineering memory
 │   └── ...
 └── src/                      # Engineering code
@@ -633,7 +633,7 @@ All frameworks must follow:
 | Phase Summary | ✅ | What this delivery contains |
 | Deliverables List | ✅ | PRD path, API contract path, tracking plan path |
 | AC-xxx List | ✅ | Engineering ACs, for spec.md to reuse |
-| API Contract | ✅ | PM-owned API contract spec (endpoint / method / request / response / error codes); may be OpenAPI 3.0 in deep mode |
+| API Contract | ✅ | PM-owned business capability contract (actors / invariants / scale / latency expectations / failure impact). Technical endpoints, protocols, error codes, and OpenAPI 3.0 (deep mode) are derived by Engineering in Phase 0/2; PM does not own technical interface design. |
 | Business Context Digest | ✅ | Engineering-relevant business constraints, scale, concurrency, and performance expectations |
 | Design Asset Paths | ✅ | User-owned design assets (Figma URL / v0 export / local md / image files); PM collects paths only, never produces design output. Empty list = degraded mode (engineering derives minimal contract from PRD) |
 | Routing Fields | ✅ | `project_mode` (fullstack/separate) + `exploration_mode` (skip/standard/deep) + `task_type` + `scope` — drives engineering phase execution |
@@ -838,7 +838,7 @@ If multiple people + multiple Agents collaborate:
 - Design assets are user-owned (Figma/v0/md), removing the need for a separate design framework
 
 **Trade-off**:
-- Engineering framework is larger (26 skills vs solo's 19), but INDEX.md grouping by phase keeps it navigable
+- Engineering framework is larger (25 skills vs solo's 19), but INDEX.md grouping by phase keeps it navigable
 - Phase 0 design-intake is a new skill, but it replaces the entire legacy design framework (net reduction)
 
 ### Decision 3: Contract Documents vs Shared Source of Truth

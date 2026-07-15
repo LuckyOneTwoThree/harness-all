@@ -80,8 +80,8 @@ harness-all is a **collection of independent domain packs**. Each pack is a self
 
 | Member | Type | Domain | Status | Skills | Workflows |
 |:------:|------|--------|:------:|:------:|:---------:|
-| **harness-pm** | Core | Product · Strategy · Market · PRD · API Contract · Metrics | ✅ Built | 84 | 10 |
-| **harness-engineering** | Core | Software Engineering Delivery (4 phases: design-intake · frontend · backend · integration) | ✅ Built | 26 | 9 |
+| **harness-pm** | Core | Product · Strategy · Market · PRD · API Contract · Metrics | ✅ Built | 84 | 11 |
+| **harness-engineering** | Core | Software Engineering Delivery (4 phases: design-intake · frontend · backend · integration) | ✅ Built | 25 | 9 |
 | harness-data | Extension | Data Pipeline · ETL · Metric Production | 📋 P1 To Build | — | — |
 | harness-qa | Extension | Quality Assurance · Automated Testing · Performance Testing | ⚠️ P2 On Demand | — | — |
 | harness-security | Extension | Security Audit · Compliance · Penetration Testing | ⚠️ P3 On Demand | — | — |
@@ -247,7 +247,7 @@ Core outputs: `PRD.md` / `pm-to-engineering.md`
 
 ### harness-engineering — "Write good code" (Software engineering pack)
 
-4-phase engineering delivery: design-intake → frontend → backend → integration. 26 skills (22 domain + 4 meta) + 9 workflows. This is the **software engineering** member of the family — other domain types (data, QA, security, etc.) are added as separate packs, not as skills inside engineering.
+4-phase engineering delivery: design-intake → frontend → backend → integration. 25 skills (21 domain + 4 meta) + 9 workflows. This is the **software engineering** member of the family — other domain types (data, QA, security, etc.) are added as separate packs, not as skills inside engineering.
 
 **Four phases**:
 
@@ -384,7 +384,7 @@ Each pack maintains its own `FEATURES.md` with lifecycle-appropriate status. Syn
 │  Framework Layer (Current focus)                                │
 │  ┌──────────────────┐   ┌──────────────────────────────────┐    │
 │  │  harness-pm      │   │  harness-engineering             │    │
-│  │  (84 skills)     │   │  (26 skills, 4 phases)           │    │
+│  │  (84 skills)     │   │  (25 skills, 4 phases)           │    │
 │  └──────────────────┘   └──────────────────────────────────┘    │
 │  + Extension packs: data (P1) / qa (P2) / security (P3)         │
 └─────────────────────────────────────────────────────────────────┘

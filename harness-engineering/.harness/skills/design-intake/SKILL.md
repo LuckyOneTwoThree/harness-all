@@ -181,11 +181,24 @@ Produce `loops/specs/<task>/phase-0-design-intake-report.md` containing:
 
 ### 9. Update state.yaml (Phase 0 ownership)
 
-Phase 0 does not run inside LOOP and has no verify step, so design-intake itself owns the `substage_progress.design-intake` update (per `engineering-pipeline.md` Phase 0 Exception). After the user confirms the checkpoint:
+Phase 0 does not run inside LOOP and has no verify step, so design-intake itself owns the `substage_progress.design-intake` update (per `engineering-pipeline.md` Phase 0 Exception). State transitions are a strict 3-step machine:
 
-- Set `substage_progress.design-intake.completed: true`.
-- Set `substage_progress.design-intake.user_confirmed: true` (only after explicit user confirmation; if the user requests changes, keep `user_confirmed: false` and rerun the affected extraction step).
-- Set `substage_progress.design-intake.report: "loops/specs/<task>/phase-0-design-intake-report.md"`.
+**State machine** (authoritative — `engineering-pipeline.md` Phase 0 Exception + Checkpoint Discipline):
+
+| Step | When | `completed` | `user_confirmed` | `status` | Notes |
+|------|------|:---:|:---:|---|---|
+| S1 | Report generated, self-check passed, **before** user confirmation | `true` | `false` | `needs-human` | Surface the checkpoint; pause. Do NOT enter Phase 1. |
+| S2 | User confirms ("confirm phase 0", "proceed", etc.) | `true` | `true` | `running` | Advance to Phase 1 entry check. |
+| S3 | User requests changes / rejects | `false` | `false` | `running` | Append rejection reason to `iterations.log`; rerun the affected extraction step. |
+
+**Write ownership**: design-intake writes S1 and S3; the orchestrator (workflow / session-start on resume) writes S2 on explicit user confirmation. Session-start only restores the state — it does not repair or auto-advance a paused checkpoint.
+
+**Resume rule**: if a session restarts with `completed: true, user_confirmed: false, status: needs-human`, surface the pending checkpoint and wait. Do not auto-advance to Phase 1, do not re-run Phase 0 (the report already exists).
+
+**State.yaml fields written**:
+- `substage_progress.design-intake.completed` (per the S1/S2/S3 table above)
+- `substage_progress.design-intake.user_confirmed` (only `true` after explicit user confirmation per S2)
+- `substage_progress.design-intake.report: "loops/specs/<task>/phase-0-design-intake-report.md"` (written at S1, before the pause)
 - Do NOT touch `verify_state` — Phase 0 has no verify step; `verify_state` remains absent or is set by Phase 1's first inline verify-fast.
 - If `state.yaml` does not yet exist (e.g., degraded mode without writing-plans), create a minimal one following `loops/state.schema.json` with `current_task`, `iteration: 0`, `stage: design-intake`, `status: running`, `started_at` (ISO-8601).
 

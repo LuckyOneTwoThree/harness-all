@@ -6,7 +6,14 @@ default_mode: standard
 ---
 # Workflow: Refactor
 
-> **Matrix**: workflow `D` — see `engineering-pipeline.md` Workflow × Phase × ACT Matrix. Activates Phases 1-3 (full multi-phase: frontend TDD → backend TDD → integration mock→real → contract-verify → e2e → verify).
+> **Matrix**: workflow `D` — see `engineering-pipeline.md` Workflow × Phase × ACT Matrix. Activates Phases 1-3 by default (full multi-phase: frontend TDD → backend TDD → integration mock→real → contract-verify → e2e → verify).
+>
+> **Scope routing** (via `task_type=refactor` + `scope` field, per `engineering-pipeline.md` Task Type Routing):
+> - `scope=frontend` → Phase 1 only (TDD + local verify + code-review; Phases 2-3 skipped)
+> - `scope=backend` → Phase 2 only (TDD + local verify + code-review; Phases 1, 3 skipped)
+> - `scope=full` (default) → Phases 1-3 full multi-phase
+>
+> Choose scope by the refactor's actual blast radius, not by "fuller is safer". Single-module refactors (hook extraction, internal type rename, local state management replacement) should use `scope=frontend` or `scope=backend` to avoid unnecessary mock→real and e2e overhead.
 
 ## Route
 
