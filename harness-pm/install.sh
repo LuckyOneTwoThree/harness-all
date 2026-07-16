@@ -90,7 +90,7 @@ fi
 
 # Create runtime directories (not committed, but required at runtime)
 echo "→ Creating runtime directories..."
-mkdir -p .harness/memory/archives .harness/loops/specs .harness/gates
+mkdir -p .harness/memory/archives loops/specs .harness/gates
 mkdir -p output/approvals output/phase-reports output/metrics
 
 # Initialize progress.md from template (if it doesn't exist)

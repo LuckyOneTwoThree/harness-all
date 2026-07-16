@@ -61,7 +61,7 @@ All paths are package-relative. The manifest records the contract and every arti
 
 ## Consumer Gate and Receipt
 
-Before consumption, validate the schema version, ready status, target consumer, freshness/supersedes chain, envelope-manifest parity, path containment, hashes, and exact parity between envelope `ac_ids` and body AC IDs (including BAC-xxx and IAC-xxx where present). A failed delivery is not partially consumed; the last valid contract remains active.
+Before consumption, validate the schema version, ready status, target consumer, freshness/supersedes chain, envelope-manifest parity, path containment, hashes, and exact parity between envelope `ac_ids` and body AC IDs. Envelope `ac_ids` contains only cross-framework `AC-xxx` IDs; engineering-internal `BAC-xxx` / `IAC-xxx` do NOT appear in the envelope (per `acceptance-id-protocol.md`) — they are tracked in phase reports and `spec.md` instead. A failed delivery is not partially consumed; the last valid contract remains active.
 
 After acceptance or rejection, write `docs/handoff/receipts/<handoff_id>-receipt.json`. Consumers never edit the producer contract.
 

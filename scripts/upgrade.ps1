@@ -23,7 +23,7 @@ function Is-UserOwned([string]$Relative) {
     return $Relative -eq '.harness/FEATURES.md' -or
         $Relative -eq '.harness/harness.lock.json' -or
         $Relative -match '^\.harness/(memory|gates|upgrade-backups)(/|$)' -or
-        $Relative -match '^\.harness/loops/specs(/|$)'
+        $Relative -match '^loops/specs(/|$)'
 }
 
 $managed = New-Object System.Collections.Generic.List[object]
@@ -87,7 +87,7 @@ foreach ($item in $managed | Sort-Object Relative) { $fileHashes[$item.Relative]
 $version = ([System.IO.File]::ReadAllText((Join-Path $sourceRoot '.harness/VERSION'))).Trim()
 $newLock = [ordered]@{
     framework = $Framework; version = $version; generated_at = (Get-Date).ToUniversalTime().ToString('o'); files = $fileHashes
-    user_owned = @('SOUL.md', 'constitution.md', 'docs/**', 'output/**', '.harness/memory/**', '.harness/FEATURES.md', '.harness/loops/specs/**')
+    user_owned = @('SOUL.md', 'constitution.md', 'docs/**', 'output/**', '.harness/memory/**', '.harness/FEATURES.md', 'loops/specs/**')
 }
 [System.IO.File]::WriteAllText($lockPath, (($newLock | ConvertTo-Json -Depth 6) + [Environment]::NewLine), [System.Text.UTF8Encoding]::new($false))
 Write-Host "Upgrade applied: $($toWrite.Count) file(s); backup root: $backupRoot" -ForegroundColor Green

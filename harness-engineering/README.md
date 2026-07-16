@@ -273,7 +273,7 @@ harness-engineering/
 | `docs/product/PROJECT.md` | Product requirements (features + AC + milestones) | Produced by **harness-pm**, consumed by engineering |
 | `docs/engineering/TECH_STACK.md` | Tech stack (test/build/lint commands) | Filled via setup workflow |
 | `docs/engineering/ENGINEERING_PLAN.md` | Product-level engineering plan across features | Produced by `brainstorming` (product-level) |
-| `.harness/loops/specs/<feature>/spec.md` | Single-feature spec with **AC + BAC + IAC** | Produced by `writing-plans` |
+| `loops/specs/<feature>/spec.md` | Single-feature spec with **AC + BAC + IAC** | Produced by `writing-plans` |
 | `contract.json` | Phase 0 output — API contract | Produced by `design-intake` (Phase 0) |
 | `tokens.json` | Phase 0 output — design tokens | Produced by `design-intake` (Phase 0) |
 | `phase-N-report.md` | Inter-phase report | Produced at each phase checkpoint |
@@ -286,7 +286,7 @@ The framework's hard deliverables, in pipeline order:
 1. `docs/product/PROJECT.md` — produced by harness-pm, consumed by engineering.
 2. `docs/engineering/TECH_STACK.md` — test/build/lint contract.
 3. `docs/engineering/ENGINEERING_PLAN.md` — product-level multi-feature plan.
-4. `.harness/loops/specs/<feature>/spec.md` — single-feature spec carrying **AC-xxx + BAC-xxx + IAC-xxx**.
+4. `loops/specs/<feature>/spec.md` — single-feature spec carrying **AC-xxx + BAC-xxx + IAC-xxx**.
 5. `contract.json` — Phase 0 output, single source of truth for the API surface.
 6. `tokens.json` — Phase 0 output, design tokens for frontend consumption.
 7. `phase-N-report.md` — inter-phase report gating phase transition.

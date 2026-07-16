@@ -80,7 +80,7 @@ This skill is a **diagnostic skill invoked BY the active ACT skill or by LOOP fa
 
 **Update iterations.log (must append, overwriting is forbidden)**:
 - Tool approach: first Read the current iterations.log → append the new line → Write it back
-- Or terminal command: `echo "[YYYY-MM-DD HH:MM] iter=<N> stage=debug → root cause: <root cause>" >> .harness/loops/specs/<feature>/iterations.log`
+- Or terminal command: `echo "[YYYY-MM-DD HH:MM] iter=<N> stage=debug → root cause: <root cause>" >> loops/specs/<feature>/iterations.log`
 - Do not use Write to overwrite iterations.log directly (it would erase historical iteration records)
 
 Append format:

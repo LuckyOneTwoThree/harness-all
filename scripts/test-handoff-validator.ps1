@@ -208,6 +208,38 @@ try {
             -AddedAcs @('DAC-P01-001','DAC-GLOBAL-001') -EnvelopeAcIds @('DAC-P01-001','DAC-GLOBAL-001')
     }
 
+    # J6a (BAC/IAC regression): BAC IDs in envelope ac_ids must be rejected
+    # (envelope ac_ids contains only cross-framework AC-xxx; BAC/IAC are engineering-internal
+    # per acceptance-id-protocol.md and must not appear in cross-framework handoff)
+    Run-Scenario -Name 'J6a: BAC in envelope ac_ids rejected' -ExpectedResult 'fail' -Build {
+        Build-HandoffPackage -ScenarioName 'j6a-bac-in-envelope' -Mode 'family' -BatchId 1 -BatchType 'full' `
+            -AddedAcs @('AC-F01-001','BAC-F01-001') -EnvelopeAcIds @('AC-F01-001','BAC-F01-001')
+    }
+
+    # J6b (BAC/IAC regression): IAC IDs in envelope ac_ids must be rejected
+    Run-Scenario -Name 'J6b: IAC in envelope ac_ids rejected' -ExpectedResult 'fail' -Build {
+        Build-HandoffPackage -ScenarioName 'j6b-iac-in-envelope' -Mode 'family' -BatchId 1 -BatchType 'full' `
+            -AddedAcs @('AC-F01-001','IAC-F01-001') -EnvelopeAcIds @('AC-F01-001','IAC-F01-001')
+    }
+
+    # J6c (BAC/IAC regression): BAC/IAC in body but NOT in envelope must pass
+    # (validates that BAC/IAC are engineering-internal and do not participate in
+    # envelope/body AC ID parity check)
+    Run-Scenario -Name 'J6c: BAC/IAC in body only accepted' -ExpectedResult 'pass' -Build {
+        Build-HandoffPackage -ScenarioName 'j6c-bac-iac-body-only' -Mode 'family' -BatchId 1 -BatchType 'full' `
+            -AddedAcs @('AC-F01-001') -EnvelopeAcIds @('AC-F01-001') `
+            -BodyContent @'
+# Test Contract
+
+Acceptance criteria for: AC-F01-001
+- AC-F01-001: must pass
+
+Engineering-internal criteria (not in envelope):
+- BAC-F01-001: backend behavior
+- IAC-F01-001: integration behavior
+'@
+    }
+
     # Positive: valid reverse handoff (engineering->PM) with batch accepted
     Run-Scenario -Name 'valid reverse handoff (engineering->PM) accepted' -ExpectedResult 'pass' -ExpectedConsumer 'harness-pm' -Build {
         Build-HandoffPackage -ScenarioName 'reverse-valid' -Producer 'harness-engineering' -Consumer 'harness-pm' `

@@ -36,7 +36,7 @@ Context must be loaded before the session begins; working with "amnesia" is not 
    Read `.harness/memory/knowledge-base.md` to find product decisions, user insights, and pitfalls related to the current task.
 
 3. **Check in-progress tasks**
-   Scan `.harness/loops/specs/*/state.yaml` to find tasks with status `running` or `retrying`.
+   Scan `loops/specs/*/state.yaml` to find tasks with status `running` or `retrying`.
    If found, report to the user: "Found in-progress task X (phase Y, iteration Z). Continue?"
    Also read the `exploration_mode` field and report the current mode (e.g., "Current exploration mode: deep").
 

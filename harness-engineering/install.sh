@@ -98,7 +98,7 @@ fi
 
 # Create runtime directories (not committed, but required at runtime)
 echo "→ Creating runtime directories..."
-mkdir -p .harness/memory/archives .harness/loops/specs
+mkdir -p .harness/memory/archives loops/specs
 
 # Initialize progress.md from template (if it doesn't exist)
 if [ ! -f ".harness/memory/progress.md" ]; then

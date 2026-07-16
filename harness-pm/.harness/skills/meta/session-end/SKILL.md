@@ -38,7 +38,7 @@ Archiving is required before the session ends; "bare exit" is not allowed — th
    - Exploration mode (if this session used a workflow, record the current exploration_mode and switching history)
 
 2. **Batch update FEATURES.md**
-   Scan `.harness/loops/specs/*/state.yaml`:
+   Scan `loops/specs/*/state.yaml`:
    - Tasks with status `done` → change the corresponding feature status in FEATURES.md to `approved` or `review`
    - Tasks with status `running` → keep status as `in_progress`
    - Record the last updated date

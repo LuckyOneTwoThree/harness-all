@@ -41,7 +41,7 @@ errors=0
 RUNTIME_DIRS=(
   ".harness/memory"
   ".harness/memory/archives"
-  ".harness/loops/specs"
+  "loops/specs"
 )
 for d in "${RUNTIME_DIRS[@]}"; do
   mkdir -p "$d" 2>/dev/null
@@ -79,7 +79,7 @@ done
 REQUIRED_DIRS_COMMON=(
   ".harness/skills/workflows"
   ".harness/skills/meta"
-  ".harness/loops/specs"
+  "loops/specs"
   ".harness/memory"
   ".harness/memory/archives"
   ".harness/templates"

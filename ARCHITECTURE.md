@@ -490,7 +490,7 @@ Scenario: Alice owns PM, Bob owns Engineering
 - `docs/product/PROJECT.md` — Product requirements (engineering perspective; produced by harness-pm, consumed by engineering)
 - `docs/engineering/TECH_STACK.md` — Tech stack
 - `docs/engineering/ENGINEERING_PLAN.md` — Product-level engineering plan (feature inventory + shared infrastructure + dependency graph)
-- `.harness/loops/specs/<feature>/spec.md` — Single-feature spec (with AC + BAC + IAC)
+- `loops/specs/<feature>/spec.md` — Single-feature spec (with AC + BAC + IAC)
 - `contract.json` — Parsed design contract (Phase 0 output)
 - `tokens.json` — Design tokens (Phase 0 output)
 - `phase-N-report.md` — Inter-phase report (lightweight, same workspace)
