@@ -181,26 +181,15 @@ Produce `loops/specs/<task>/phase-0-design-intake-report.md` containing:
 
 ### 9. Update state.yaml (Phase 0 ownership)
 
-Phase 0 does not run inside LOOP and has no verify step, so design-intake itself owns the `substage_progress.design-intake` update (per `engineering-pipeline.md` Phase 0 Exception). State transitions are a strict 3-step machine:
+Phase 0 runs outside LOOP and has no verify step, so design-intake owns the `substage_progress.design-intake` update (per `engineering-pipeline.md` Phase 0 Exception). State transitions are a strict 3-step machine:
 
-**State machine** (authoritative — `engineering-pipeline.md` Phase 0 Exception + Checkpoint Discipline):
+- **S1 (pre-confirm)**: `completed=true, user_confirmed=false, status=needs-human` — surface checkpoint, pause; do NOT enter Phase 1.
+- **S2 (user confirms)**: `completed=true, user_confirmed=true, status=running` — orchestrator writes S2 on explicit user confirmation; advance to Phase 1.
+- **S3 (user rejects)**: `completed=false, user_confirmed=false, status=running` — append reason to `iterations.log`; rerun affected extraction step.
 
-| Step | When | `completed` | `user_confirmed` | `status` | Notes |
-|------|------|:---:|:---:|---|---|
-| S1 | Report generated, self-check passed, **before** user confirmation | `true` | `false` | `needs-human` | Surface the checkpoint; pause. Do NOT enter Phase 1. |
-| S2 | User confirms ("confirm phase 0", "proceed", etc.) | `true` | `true` | `running` | Advance to Phase 1 entry check. |
-| S3 | User requests changes / rejects | `false` | `false` | `running` | Append rejection reason to `iterations.log`; rerun the affected extraction step. |
+**Write ownership**: design-intake writes S1/S3; orchestrator writes S2. **Resume rule**: on restart with S1 state, surface pending checkpoint and wait — do not auto-advance or re-run Phase 0 (report already exists).
 
-**Write ownership**: design-intake writes S1 and S3; the orchestrator (workflow / session-start on resume) writes S2 on explicit user confirmation. Session-start only restores the state — it does not repair or auto-advance a paused checkpoint.
-
-**Resume rule**: if a session restarts with `completed: true, user_confirmed: false, status: needs-human`, surface the pending checkpoint and wait. Do not auto-advance to Phase 1, do not re-run Phase 0 (the report already exists).
-
-**State.yaml fields written**:
-- `substage_progress.design-intake.completed` (per the S1/S2/S3 table above)
-- `substage_progress.design-intake.user_confirmed` (only `true` after explicit user confirmation per S2)
-- `substage_progress.design-intake.report: "loops/specs/<task>/phase-0-design-intake-report.md"` (written at S1, before the pause)
-- Do NOT touch `verify_state` — Phase 0 has no verify step; `verify_state` remains absent or is set by Phase 1's first inline verify-fast.
-- If `state.yaml` does not yet exist (e.g., degraded mode without writing-plans), create a minimal one following `loops/state.schema.json` with `current_task`, `iteration: 0`, `stage: design-intake`, `status: running`, `started_at` (ISO-8601).
+**State.yaml fields**: `substage_progress.design-intake.{completed, user_confirmed, report: "loops/specs/<task>/phase-0-design-intake-report.md"}` (report written at S1). Do NOT touch `verify_state` (Phase 0 has no verify step). If `state.yaml` does not yet exist, create a minimal one per `loops/state.schema.json` with `current_task`, `iteration: 0`, `stage: design-intake`, `status: running`, `started_at` (ISO-8601).
 
 ## 👤 Human Intervention Points
 
